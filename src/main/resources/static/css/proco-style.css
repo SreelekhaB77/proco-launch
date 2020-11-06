@@ -1,0 +1,1438 @@
+/*
+Application Name: MT PRoCo Tool
+Author: Lokesh 
+Description: BMI - Ecom Business HTML5 Template.
+Version: 1.0
+Tags: light, white, single page, multipurpose, multi page, custom-colors, Bootstrap, responsive, html5, css3
+*/
+
+/* Table of Content
+==================================================
+#BASIC TYPOGRAPHY
+#BOOTSTRAP CSS OVERRIDE
+#HEADER	
+#MENU 
+#PROMO CREATION
+#PROMO LISTING
+#MEDIA QUERIES
+#FOOTER
+*/
+
+/*--------------------*/
+/* BASIC TYPOGRAPHY */
+/*--------------------*/
+body, html {
+	
+}
+
+body {
+	overflow-x: hidden !important;
+	background-color: #FFFFFF;
+	font-family: 'Open Sans' !important;
+}
+
+ul {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+/*a {
+  text-decoration: none;
+  color: #2f2f2f;
+}*/
+a:focus, a:hover {
+	outline: none;
+	text-decoration: none;
+}
+
+a, button {
+	outline: none ! important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: 'Open Sans' !important;
+}
+
+h2 {
+	font-size: 30px;
+	font-weight: bold;
+	line-height: 80px;
+	margin: 0;
+}
+
+label {
+	font-weight: normal !important;
+}
+
+img {
+	border: none;
+}
+
+textarea {
+	resize: none;
+}
+
+table {
+	margin-bottom: 10px !important;
+	
+}
+
+.middle-section {
+	margin-top: 80px;
+	margin-bottom: 54px
+}
+
+.dataTable {
+	margin-bottom: 0px !important;
+}
+/*------------------------*/
+/* HEADER */
+/*------------------------*/
+.login-header {
+	padding-left: 10px;
+	width: 8%;
+	text-align: right;
+}
+
+.login-header img {
+	height: 75px;
+	padding-top: 5px;
+}
+
+.login-btn {
+	width: 100px;
+	margin: 20px 38px 0 0;
+	padding: 5px;
+}
+
+.brand-name {
+	padding: 16px 10px 16px 0;
+	text-align: right;
+	font-size: 2em;
+	color: #fff;
+	margin-left: 70px;
+}
+
+div.login-box:hover {
+	box-shadow: 0px 0px 10px 4px #fff;
+	background: #fff;
+	color: red;
+}
+
+.user-header-bg {
+	background-color: #fff;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 99999;
+	height: 80px;
+	border-bottom: 6px solid #4E4A8B;
+	box-shadow: 0px 1px 10px 2px rgba(78, 74, 139, 0.82);
+}
+
+.header-title {
+	color: #6A6AAA;
+}
+
+.user-profile {
+	margin-top: 16px;
+}
+
+.user-profile img {
+	width: 40px;
+}
+
+.brand-logo {
+	padding: 10px 30px 10px 24px;
+	height: 80px;
+	margin-right: 15px;
+	background: #4E4A8B;
+	border-radius: 0px 40px 40px 0px;
+	border-right: 10px solid #6A6AAA;
+}
+
+/* .user-name {
+	margin-top: 25px;
+	padding-left: 14px;
+} */
+
+.user-vline {
+	height: 60px;
+	margin: 8px 30px 8px 45px;
+	width: 3px;
+	background-image: -webkit-linear-gradient(top, #fff 5%, #777 50%, #fff 95%);
+}
+
+.user-logout {
+	margin-top: 18px;
+	margin-right: 15px;
+	color: #801621 !important;
+}
+
+.user-logout a {
+	color: #801621 !important;
+}
+
+.logout-icon {
+	display: block;
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	font-size: 18px;
+	transform: rotate(90deg);
+}
+
+    .user-name{
+    /* 
+		margin-top: 14px;*/
+    display: table;
+    height: 80px;
+    }
+.user-name > li,.user-name > a{
+    display: table-cell; 
+    vertical-align: middle;
+}
+.user-name li a {
+	background-color: #fff !important;
+	color: #6A6AAA;
+}
+
+.user-info>li>a {
+	padding: 0 ! important;
+	padding-right: 15px ! important;
+	padding-left: 15px ! important;
+}
+
+.user-name a:hover {
+	background-color: none !important;
+}
+.user-info {
+	min-width: 168px;
+	position: absolute;
+	right: 10px !important;
+	padding: 0 !important;
+	padding: 0;
+	left: 0px;
+	top: 80%;
+	border-radius: 0;
+	z-index: 9999999;
+}
+
+.user-info ul {
+	padding-left: 0 !important;
+}
+
+.user-info li {
+	list-style-type: none !important;
+}
+
+.user-info li a {
+	padding: 8px;
+	display: block;
+	text-decoration: none;
+	text-align: right;
+}
+
+.user-info li a:hover {
+	list-style: none;
+	background-color: #276baa !important;
+	color: #ffffff;
+}
+/* loader css */
+.loader
+{
+    display: none;
+    width: 100%;
+    height: 100%;
+    background: #FFFFFF;
+    position: fixed;
+    text-align: center;
+    z-index: 999999;
+    overflow: auto;
+    opacity: 0.65;
+}
+    .user-vline{
+        
+    height: 60px;
+    margin: 8px 30px 8px 45px;
+    width: 3px;
+    background-image: -webkit-linear-gradient(top,#fff 5%,#777 50%,#fff 95%); 
+    }
+    .user-logout{
+        margin-top:18px;
+        margin-right:15px;
+        color:#801621!important;
+        
+    }
+.user-logout a{
+    color:#801621!important;
+}
+    .logout-icon{
+        display: block;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    font-size: 18px;
+    transform: rotate(90deg);
+    }
+    
+    .d-flex {
+    display: inline-flex;
+}
+#table-id-promo-list-table_length{
+text-align: left;
+    padding: 20px 0px;
+    color: rgb(41, 41, 10);
+}
+.table-id-promo-list-table_filter{
+	float: right;
+    text-align: right;
+    padding-left: 10px;
+    padding-top: 20px;
+    height: 75px;
+    border-left: 2px #e8e8e8 solid;
+}
+/*------------------------*/
+/* MENUS */
+/*------------------------*/
+.col-sm-4 {
+	margin-bottom: 15px;
+}
+
+.promo-create {
+	width: 100%;
+	height: 220px;
+	position: relative;
+	border-radius: 10px 10px 0px 0px;
+	box-shadow: 0px 0px 10px 0px #ccc;
+}
+
+.promo-create-bg {
+	background: #598c54;
+}
+
+.promo-listing-bg {
+	background: #6e82c9;
+}
+.promo-delete-bg {
+    background-color: #E00024;
+   
+}
+.promo-disagg-bg {
+	background: #7c539e;
+}
+
+.promo-collab-bg {
+	background: #333849;
+}
+
+.promo-dashboard-bg {
+	background: #ac7931;
+}
+
+.promo-create img {
+	position: absolute;
+	margin: auto;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: auto;
+}
+
+.promo-craete-txt {
+	width: 100%;
+	border-top: 1px solid #fff;
+	position: absolute;
+	bottom: 0;
+}
+
+.promo-create-txt-bg {
+	background: #436843;
+}
+
+.promo-listing-txt-bg {
+	background: #596aa3;
+}
+
+.promo-disagg-txt-bg {
+	background: #6e4293;
+}
+
+.promo-collab-txt-bg {
+	background: #2b2f3d;
+}
+
+.promo-dashboard-txt-bg {
+	background: #71491a;
+}
+
+.promo-craete-txt div {
+	padding: 8px;
+	text-align: center;
+	color: #fff;
+}
+
+.proco-home {
+	position: relative;
+}
+.gotocps {
+    float: right;
+}
+.gotocps a{
+	 color: dodgerblue;;
+    font-size: 27px;
+    text-decoration: underline;
+}
+/* new added tab report */
+
+img#libimg {
+    height: 144px;
+}
+
+.promo-lib-bg {
+    background-color: #fff;
+}
+
+.tab-label-proco-Signops-inactive {
+    padding-left: 17%;
+    line-height: 4.5;
+    font-size: 14px;
+}
+div#DataTables_Table_0_processing {
+    height: 50px;
+    text-align: center;
+    position: relative;
+    bottom: 63px;
+    /* background-color: mediumpurple; */
+    color: #fff;
+    line-height: 3;
+    background-image:  linear-gradient(to right, #8a8aab,#4e4a8b);
+    font-size: 17px;
+}
+.launchDiv {
+    width: 100%;
+    height: 220px;
+    position: relative;
+    border-radius: 10px 10px 0px 0px;
+    box-shadow: 0px 0px 10px 0px #ccc;
+    background-color: lightseagreen;
+    /* color: #fff; */
+}
+
+.launchDiv a {
+    color: #fff;
+    font-size: 25px;
+    font-weight: 600;
+    text-align: center;
+    line-height: 206px;
+    /* margin: 58px auto; */
+}
+
+/*------------------------*/
+/* PROMO CREATION */
+/*------------------------*/
+.proco-creation input, .proco-creation select {
+	color: #7986BE;
+}
+
+.promo-back {
+	color: #7986BE;
+	padding: 10px 0px;
+}
+
+.promo-back span {
+	width: 30px;
+}
+
+.promo-detail-txt {
+	color: #7986BE;
+	position: absolute;
+	bottom: 0;
+}
+
+.promo-form-details {
+	background: #e6e6e6;
+	padding: 15px 0px;
+}
+
+.third-block {
+	background: #f2c9f8;
+	padding: 15px 0px 0px 0px;
+}
+
+.promo-details {
+	position: relative;
+}
+
+.parent-table {
+	background: #c9e5a1;
+	margin-top: 10px;
+}
+
+.parent-table table>thead>tr>th>button, .child-table table>thead>tr>th>button
+	{
+	width: 100%;
+}
+
+.parent-table table>tbody>tr>td:first-child, .child-table table>tbody>tr>td:first-child
+	{
+	text-align: center;
+	vertical-align: middle;
+}
+
+.parent-table table>tbody>tr>td:first-child>div {
+	background: #426510;
+	border-radius: 10px;
+	color: #fff;
+}
+
+.child-table {
+	background: #faf692;
+	margin-top: 10px;
+}
+
+.child-table table>tbody>tr>td:first-child>div {
+	background: #757001;
+	border-radius: 10px;
+	color: #fff;
+}
+
+.promo-create-btn {
+	margin-top: 5px;
+}
+
+.promo-desc {
+	margin-top: 10px;
+	color: #7986BE;
+	font-weight: bold;
+}
+
+/*------------------------*/
+/* PROMO LISTING */
+/*------------------------*/
+.promo-list, .promo-upload {
+	margin-top: 5px;
+	padding: 8px 5px;
+	background: #85B73F;
+	color: #fff;
+}
+
+.promo-upload {
+	background: #337ab7 !important;
+}
+select.promolistselect {
+    border-radius: 15px !important;
+    background-color: #9894ce !important;
+    color: #fff !important;
+}
+
+.promo-list-btns {
+	margin-bottom: 30px;
+	margin-top: 10px;
+}
+
+.promo-list-btns button {
+	color: #fff;
+}
+
+.promo-delete-btn {
+	background: #FF464C;
+}
+
+.promo-primary-btn {
+	background: #455BA4;
+}
+
+.proco-home a:hover>div {
+	box-shadow: 0px 0px 15px 10px #ccc;
+}
+
+.upload-file {
+	border: 1px solid;
+	padding-top: 15px;
+}
+.upload-status-file {
+	width: 60%;
+	margin: 0 auto;
+}
+
+.dataTable thead tr {
+	background-color: #e6e6e6;
+}
+
+.dataTables_scrollBody {
+	max-height: 250px !important;
+}
+
+#upload-file {
+	opacity: 0;
+	position: absolute;
+	z-index: -1;
+}
+.input-group.upload-status-files {
+    width: 60%;
+    margin: 0 auto;
+}
+.file-name {
+	padding: 7px;
+	color: #2A8351;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	text-align: center;
+}
+
+.cust-file {
+	float: right;
+}
+
+.kam-collab {
+	padding: 8px;
+	background: #5675B9;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	color: #fff;
+}
+
+.search-field {
+	padding: 4px 0px 0px 10px;
+	width: 27%;
+	background: #ccc;
+	height: 34px;
+	position: absolute;
+	top: 0;
+	right: 0px;
+}
+
+.disaggre-details {
+	border: 1px solid #ccc;
+	height: 130px;
+	position: absolute;
+	width: 95%;
+	background: #fff;
+}
+
+.disaggre-details>h5 {
+	text-align: center;
+	text-decoration: underline;
+}
+
+.dis-agg-txt {
+	padding: 0px 10px;
+	bottom: 0;
+	position: absolute;
+	left: 0;
+}
+
+.dis-agg-val {
+	padding: 0px 10px;
+	bottom: 0;
+	position: absolute;
+	right: 20px;
+}
+/*------------------------*/
+/* MEDIA QUERIES */
+/*------------------------*/
+@media only screen and (min-width: 320px) and (max-width:480px) {
+	.user-header-bg {
+		height: 55px;
+	}
+	.brand-logo {
+		padding: 5px 20px 5px 15px;
+		height: 50px;
+		margin-right: 8px;
+	}
+	.header-title {
+		font-size: 14px;
+		line-height: 16px;
+		margin-top: 18px;
+	}
+	.common-header div:nth-child(2) {
+		background: #4E4A8B;
+		color: #fff !important;
+	}
+	.user-profile {
+		margin-top: 6px;
+		margin-left: 5px;
+	}
+	.user-name {
+		margin-top: 15px;
+		padding-left: 14px;
+	}
+	.user-vline {
+		height: 35px;
+	}
+	.user-logout {
+		margin-top: 8px;
+		margin-right: 15px;
+		color: #fff !important;
+	}
+	.promo-create {
+		height: 150px;
+	}
+	.promo-detail-txt {
+		position: relative;
+		padding: 0;
+	}
+	.middle-section {
+		margin-top: 100px;
+	}
+	.promo-create img {
+		bottom: 35px;
+		width: 60px;
+	}
+	.profile-details, .promo-uom {
+		float: none !important;
+	}
+	.user-logout {
+		float: right !important;
+	}
+	/*  .promo-uom .control-label, .promo-uom .col-md-9{
+        padding: 0;
+        
+    }*/
+	.promo-uom .col-md-9 {
+		margin-bottom: 5px;
+	}
+	.user-logout a {
+		color: #fff !important;
+	}
+	.disaggre-details {
+		position: relative;
+	}
+	.promo-primary-btn {
+		margin-top: 5px;
+	}
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1026px) {
+}
+
+@media only screen and (min-width: 1028px) and (max-width:1438px) {
+}
+
+@media only screen and (max-width:767px) {
+}
+
+/*------------------------*/
+/* FOOTER */
+/*------------------------*/
+footer {
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #4E4A8B;
+	height: 50px;
+	z-index: 999999;
+}
+
+footer .unilever-copyright {
+	padding: 15px 25px;
+	color: #fff;
+	font-size: 1em;
+}
+
+/*------------------------*/
+/* COMBO TREE */
+/*------------------------*/
+.comboTreeWrapper {
+	position: relative;
+	text-align: left !important;
+	width: 100% !important;
+}
+
+.comboTreeInputWrapper {
+	position: relative;
+}
+
+.comboTreeArrowBtn {
+	position: absolute;
+	top: 12px;
+	height: 0px !important;
+	width: 20px;
+	padding: 0;
+	margin: 0;
+	left: inherit !important;
+	right: 0;
+	border: none;
+}
+
+.comboTreeArrowBtn span {
+	font-size: 8px;
+	color: #7986BE;
+}
+
+.comboTreeDropDownContainer {
+	display: none;
+	background: #fff;
+	border: 1px solid #aaa;
+	max-height: 250px;
+	overflow-y: auto;
+	position: absolute;
+	width: 100%;
+	box-sizing: border-box;
+	z-index: 1;
+}
+
+.comboTreeDropDownContainer ul {
+	padding: 0px;
+	margin: 0;
+}
+
+.comboTreeDropDownContainer li {
+	list-style-type: none;
+	padding-left: 15px;
+	cursor: pointer;
+}
+
+.comboTreeDropDownContainer li:hover {
+	background-color: #ddd;
+}
+
+.comboTreeDropDownContainer li:hover ul {
+	background-color: #fff;
+}
+
+.comboTreeDropDownContainer li span.comboTreeItemTitle.comboTreeItemHover
+	{
+	background-color: #418EFF;
+	color: #fff;
+}
+
+span.comboTreeItemTitle {
+	display: block;
+	padding: 2px 4px;
+}
+
+.comboTreeDropDownContainer label {
+	cursor: pointer;
+	width: 100%;
+	display: block;
+}
+
+.comboTreeDropDownContainer .comboTreeItemTitle input {
+	position: relative;
+	top: 2px;
+	margin: 0px 4px 0px 0px;
+}
+
+.comboTreeParentPlus {
+	position: relative;
+	left: -12px;
+	top: 4px;
+	width: 4px;
+	float: left;
+}
+
+.ComboTreeItemParent ul {
+	display: none;
+}
+
+/*------------------------*/
+/* MULTISELECT */
+/*------------------------*/
+.multiselect {
+	width: 100%;
+	text-align: left;
+	color: #7986BE;
+}
+
+.multiselect b {
+	position: absolute;
+	right: 7px;
+	top: 14px;
+}
+
+.multiselect-native-select .btn-group {
+	width: 100%;
+}
+
+.multiselect-container {
+	width: 100%;
+}
+
+.promo-volume-txt-bg {
+	background: #a88702;
+}
+
+.promo-volume-bg {
+	background: #f7ca18;
+}
+
+.table thead tr th span {
+	width: 100% !important;
+}
+
+.multiselect-container {
+	max-height: 300px;
+	overflow: auto;
+}
+
+.sample-upload-file {
+	background: #3AB54A;
+	padding: 10px;
+	/*   width: 50%; */
+	font-size: larger;
+	margin-top: 20px;
+	color: #fff;
+	border-radius: 5px;
+}
+
+.sample-upload-file span {
+	margin-right: 10px;
+}
+
+.promo-create-btn {
+	margin-top: 5px;
+	text-align: right;
+}
+
+.promo-desc {
+	margin-top: 10px;
+	color: #7986BE;
+	font-weight: bold;
+}
+
+.upload-label {
+	font-size: 25px;
+	color: #000;
+	margin: 10px 0px 25px 0px;
+	text-align: center;
+}
+
+.upload-group {
+	width: 100%;
+	position: relative;
+	height: 49px;
+	border: 1px solid #92cdff;
+	border-radius: 5px;
+	margin: 30px 0px;
+}
+
+.btn-upload {
+	background: #00D6F8;
+	padding: 13px 12px !important;
+}
+
+#ezAlerts {
+	top: 100px !important;
+}
+
+.card-header {
+	background: aqua;
+	padding: 5px 5px;
+	margin: 5px 0px;
+}
+
+#accordion span.plus-minus-icon {
+	padding: 0px 5px;
+	float: right;
+}
+
+.proco-btn {
+	display: inline-block;
+	padding: 6px 12px;
+	margin-bottom: 0;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 1.42857143;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	-ms-touch-action: manipulation;
+	touch-action: manipulation;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	background-image: none;
+	border: 1px solid transparent;
+	border-top-color: transparent;
+	border-right-color: transparent;
+	border-bottom-color: transparent;
+	border-left-color: transparent;
+	border-radius: 4px;
+	color: #ffffff;
+}
+
+.proco-btn-success {
+	background-color: green;
+}
+
+.proco-btn-warning {
+	background-color: orange;
+}
+
+.proco-create-icon {
+	width: 55px;
+	height: 60px;
+	float: left;
+	padding-right: 10px;
+	background: url("../images/proco/icon-1.png") no-repeat center center;
+    background-size: 30px;
+	background-color: #598c54;
+}
+
+/* .proco-signop-icon {
+	width: 55px;
+	height: 60px;
+	float: left;
+	padding-right: 10px;
+	background: url("../images/proco/signop.png") no-repeat center center;
+    background-size: 30px;
+	background-color: #5bc0de;
+} */
+.proco-Signops-icon {
+    width: 55px;
+    height: 60px;
+    float: left;
+    padding-right: 10px;
+    background: url(../images/proco/signop.png) no-repeat center center;
+    background-size: 46px;
+    background-color: #5bc0de;
+    margin-left: -13px;
+}
+
+.launchupload-parent{
+	border: 2px dashed gray;
+	background-color: #f2f2f2;
+	margin: 20px 0 15px 0;
+	min-height: 320px;
+}
+
+.tab-label-proco-create-active {
+	font-size: 1em;
+	line-height:2em;
+    float: left;
+    height: 60px;
+    position: absolute;
+      left: 54px;
+    top: 8px;
+    color: #fff;
+    padding-top: 10px;
+}
+.proco-craetion-active a {
+	background-color: #598c54 !important;
+	position: relative;
+	height: 60px;
+	padding: 0 !important;
+}
+
+.tab-label-proco-create-inactive{
+    font-size: 1.2em;
+    line-height:2em;
+    float: left;
+    height: 60px;
+    position: absolute;
+    left: 70px;
+    top: 11px;
+    color: #598c54;
+}
+
+.proco-volume-icon {
+	width: 55px;
+	height: 60px;
+	float: left;
+	padding-right: 10px;
+	background: url("../images/proco/icon-6.png") no-repeat center center;
+    background-size: 45px;
+
+	background-color: #f7ca18;
+}
+
+.tab-label-proco-volume-active {
+	font-size: 1.3em;
+    line-height:2em;
+    float: left;
+    height: 40px;
+    position: absolute;
+    left: 61px;
+    top: 2px;
+    color: #fff;
+    padding-top: 10px;
+}
+.proco-volume-active a {
+	background-color: #f7ca18 !important;
+	position: relative;
+	height: 60px;
+	padding: 0 !important;
+}
+
+.tab-label-proco-volume-inactive{
+    font-size: 1.3em;
+    float: left;
+    height: 60px;
+    position: absolute;
+    left: 70px;
+    top: 17px;
+    color: #f7ca18;
+}
+
+
+.proco-disaggregation-icon {
+	width: 55px;
+	height: 60px;
+	float: left;
+	padding-right: 10px;
+	background: url("../images/proco/icon-3.png") no-repeat center center;
+    background-size: 45px;
+
+	background-color: #7c539e;
+}
+
+.tab-label-proco-disaggregation-active {
+	font-size: 1.750em;
+    float: left;
+    height: 60px;
+    position: absolute;
+    left: 70px;
+    top: 2px;
+    color: #fff;
+    padding-top: 10px;
+}
+.proco-disaggregation-active a {
+	background-color: #7c539e !important;
+	position: relative;
+	height: 60px;
+	padding: 0 !important;
+}
+
+.tab-label-proco-disaggregation-inactive{
+    font-size: 1.3em;
+    line-height:2em;
+    float: left;
+    height: 40px;
+    position: absolute;
+    left: 61px;
+    top: 11px;
+    color: #7c539e;
+}
+
+.proco-collaboration-icon {
+	width: 55px;
+	height: 60px;
+	float: left;
+	padding-right: 10px;
+	background: url("../images/proco/icon-4.png") no-repeat center center;
+    background-size: 45px;
+
+	background-color: #333849;
+}
+
+.tab-label-proco-collaboration-active {
+	font-size: 1.750em;
+    float: left;
+    height: 60px;
+    position: absolute;
+    left: 70px;
+    top: 2px;
+    color: #fff;
+    padding-top: 10px;
+}
+.proco-collaboration-active a {
+	background-color: #333849 !important;
+	position: relative;
+	height: 60px;
+	padding: 0 !important;
+}
+
+.tab-label-proco-collaboration-inactive{
+        font-size: 1.750em;
+    float: left;
+    height: 60px;
+    position: absolute;
+    left: 70px;
+    top: 11px;
+    color: #333849;
+}
+.proco-listing-icon {
+	width: 55px;
+	height: 60px;
+	float: left;
+	padding-right: 10px;
+	background: url("../images/proco/icon-2.png") no-repeat center center;
+    background-size: 30px;
+
+	background-color: #6e82c9;
+}
+.proco-deletion-icon{
+	width: 55px;
+	height: 60px;
+	float: left;
+	padding-right: 10px;
+	background: url("../images/proco/deletepromo.png") no-repeat center center;
+    background-size: 46px;
+    background-color: #E00024;
+}
+img#delimg {
+    height: 148px;
+}
+.proco-del-active a {
+    background-color: #E00024 !important;
+    position: relative;
+    height: 60px;
+    padding: 0 !important;
+}
+.tab-label-proco-del-inactive {
+    font-size: 1em;
+    line-height:3em;
+    float: left;
+    height: 40px;
+    position: absolute;
+    left: 70px;
+    top: 11px;
+    color: #de0701;
+}
+.tab-label-proco-listing-active {
+	font-size: 1.750em;
+    float: left;
+    height: 40px;
+    position: absolute;
+    left: 70px;
+    top: 2px;
+    color: #fff;
+    padding-top: 10px;
+}
+.tab-label-proco-status-inactive {
+    background-color: #fff;
+    height: 60px;
+    line-height: 4;
+    padding-left: 25%;
+}
+.proco-listing-active a {
+	background-color: #6e82c9 !important;
+	position: relative;
+	height: 60px;
+	padding: 0 !important;
+}
+.promo-lib-bg-active a{
+	background-color: #5bc0de !important;
+    position: relative;
+    height: 60px;
+    padding: 0 !important;
+        color: #fff;
+    line-height: 4;
+    
+}
+.tab-label-proco-status-inactive {
+    background-color: #fff;
+    height: 60px;
+    line-height: 4;
+    padding-left: 24%;
+}
+.tab-label-proco-listing-inactive{
+    font-size: 1.3em;
+    line-height: 2em;
+    float: left;
+    height: 40px;
+    position: absolute;
+    left: 61px;
+    top: 11px;
+    color: #6e82c9;
+}
+
+.dashboard a, .listing a,.collaboration a,.disaggregation a,.upload a, .create a, .promo-lib-bg a, .edit a, .track a, .coe-moc a, .coe-asset-management a, .coe-profile a, .coe-track a, .catman-pending a, .coe-hfs a{
+        padding: 0 !important;
+    position: relative;
+    height: 60px;
+    background-color: #fff !important;
+    outline: none;
+}
+.marginB10 {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.navbar-header h1{
+    color: #7986BE;
+    font-size: 2em;
+    margin-top: 4px;
+    margin-bottom: 0;
+}
+.navbar-header h1>span {
+    font-size: 0.6em;
+}
+i.icon-search {
+    float: right;
+    background: url(../images/proco/promolist.png) no-repeat center center;
+    height: 50px;
+    width: 50px;
+    /* margin-right: 14px; */
+    /* margin-top: 11px; */
+    position: relative;
+   /*  bottom: 376px;
+    left: 1606px; */
+}
+.download-btn {
+    text-align: right;
+    padding-top: 5px;
+}
+.ui-autocomplete{
+        max-height:200px;
+        overflow:auto;
+        
+}
+
+.dataTables_paginate{
+	text-align: right!important;
+}
+
+.Mt-VAT-link{
+    padding: 5px;
+    border-bottom: 2px solid;
+    border-top: 2px solid;
+    font-size: 18px;
+}
+.download-btn input {
+	color:#ffffff!important;
+}
+.col-table{
+	overflow:scroll;
+   display:block;
+	
+}
+
+.ui-datepicker-trigger {
+	padding: 6px;
+	position: absolute;
+	right: 16px;
+	top: 0;
+	z-index: 1000;
+	width: 33px;
+	height: 33px;
+}
+
+.ui-datepicker {
+	z-index: 999999 !important;
+}
+
+.modal-content {top: 70px;}
+
+
+.proco-measure-download-wrapper,
+.proco-measure-upload-wrapper {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+	color: #878787;
+}
+
+.proco-measure-upload-wrapper h2,
+.proco-measure-download-wrapper h2 {
+	font-size: 26px;
+}
+
+.proco-measure-download-wrapper .validate_dowload,
+.proco-measure-upload-wrapper .validate_upload  {
+	margin-top: 10px;
+}
+
+.proco-measure-upload-wrapper .input-group.upload-status-files {
+    width: 100%;
+}
+
+
+.launchupload-parent .upload-image i {
+	font-size: 85px;
+}
+
+<style>/*------------------------*/
+/* COMBO TREE */
+/*------------------------*/
+.comboTreeWrapper {
+	position: relative;
+	text-align: left !important;
+	width: 100% !important;
+}
+
+.comboTreeInputWrapper {
+	position: relative;
+}
+
+.comboTreeArrowBtn {
+	position: absolute;
+	top: 12px;
+	height: 0px !important;
+	width: 20px;
+	padding: 0;
+	margin: 0;
+	left: inherit !important;
+	right: 0;
+	border: none;
+}
+
+.comboTreeArrowBtn span {
+	font-size: 8px;
+	color: #7986BE;
+}
+
+.comboTreeDropDownContainer {
+	display: none;
+	background: #fff;
+	border: 1px solid #aaa;
+	max-height: 250px;
+	overflow-y: auto;
+	position: absolute;
+	width: 100%;
+	box-sizing: border-box;
+	z-index: 1;
+}
+
+.comboTreeDropDownContainer ul {
+	padding: 0px;
+	margin: 0;
+}
+
+.comboTreeDropDownContainer li {
+	list-style-type: none;
+	padding-left: 15px;
+	cursor: pointer;
+}
+
+.comboTreeDropDownContainer li:hover {
+	background-color: #ddd;
+}
+
+.comboTreeDropDownContainer li:hover ul {
+	background-color: #fff;
+}
+
+.comboTreeDropDownContainer li span.comboTreeItemTitle.comboTreeItemHover
+	{
+	background-color: #418EFF;
+	color: #fff;
+}
+
+span.comboTreeItemTitle {
+	display: block;
+	padding: 2px 4px;
+}
+
+.comboTreeDropDownContainer label {
+	cursor: pointer;
+	width: 100%;
+	display: block;
+}
+
+.comboTreeDropDownContainer .comboTreeItemTitle input {
+	position: relative;
+	top: 2px;
+	margin: 0px 4px 0px 0px;
+}
+
+.comboTreeParentPlus {
+	position: relative;
+	left: -12px;
+	top: 4px;
+	width: 4px;
+	float: left;
+}
+
+.ComboTreeItemParent ul {
+	display: none;
+}

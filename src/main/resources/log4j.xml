@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration debug="true"
+	xmlns:log4j='http://jakarta.apache.org/log4j/'>
+	<appender name="RollingAppender" class="org.apache.log4j.DailyRollingFileAppender">
+		<!-- <param name="File" value="/usr/IBM/WebSphere85/AppServer/profiles/shakti_node_profile/logs/shaktiappserver_01/vat.log" /> -->
+		<param name="File" value="/mtapp/logs/procolaunch.log" />
+		<!-- <param name="File" value="D://vat.log" /> -->
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[%p] %d %c %M - %m%n" />
+		</layout>
+	</appender>
+	<logger name="org.hibernate">
+		<level value="INFO" />
+		<appender-ref ref="RollingAppender" />
+	</logger>
+	<root>
+		<level value="DEBUG" />
+		<appender-ref ref="RollingAppender" />
+	</root>
+</log4j:configuration>

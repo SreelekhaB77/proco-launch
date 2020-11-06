@@ -1,0 +1,85 @@
+package com.hul.launch.service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.hul.launch.model.TblLaunchBasebacks;
+import com.hul.launch.request.AccountRequest;
+import com.hul.launch.request.DownloadLaunchClusterRequest;
+import com.hul.launch.request.SaveLaunchBasepacksListReq;
+import com.hul.launch.request.SaveLaunchClustersRequest;
+import com.hul.launch.request.SaveLaunchMasterRequest;
+import com.hul.launch.response.LaunchBasePackResponse;
+import com.hul.launch.response.StoreDetailsResponse;
+
+public interface LaunchBasepacksService {
+
+	public List<String> getSalesCategory();
+
+	public List<String> getBpClassification();
+
+	public List<TblLaunchBasebacks> getPsaCategory(String psaCat);
+
+	public List<TblLaunchBasebacks> getBrandPsaCategory(String psaCat, String salesCat);
+
+	public String saveLaunchDetails(SaveLaunchMasterRequest tblLaunchMaster, String userId);
+
+	public int saveLaunchBasepacks(SaveLaunchBasepacksListReq tblLaunchbasePacks, String userId);
+
+	public String saveBasepackByUpload(List<Object> list, String userId, String status, boolean isCreate,
+			boolean isFromUi, String launchId) throws Exception;
+
+	public List<ArrayList<String>> getbasepackDump(ArrayList<String> headerDetail, String userId);
+
+	public StoreDetailsResponse getLaunchStores(String launchId);
+
+	public List<String> getLaunchStores(List<String> accountList);
+
+	public List<String> getCustomerStoreFormat(List<String> launchStores);
+
+	public String getStoreCount(List<AccountRequest> list);
+
+	public List<String> getStoreFormat();
+
+	public List<String> getTownSpecificData();
+
+	public int saveLaunchClustersAndAcc(SaveLaunchClustersRequest saveLaunchClustersRequest, String userId);
+
+	public String updateLaunchDetails(SaveLaunchMasterRequest tblLaunchMaster, String userId);
+
+	public String saveClusterByUpload(List<Object> list, String userID, String string, boolean b, boolean c,
+			String launchId);
+
+	public List<LaunchBasePackResponse> getLaunchBasePackDetails(String basepackCode);
+
+	public List<String> getLaunchStores(List<String> liClusterName, List<String> accountl1String,
+			List<String> accountl2String, String classification);
+
+	public Object getCustomerStoreFormat(List<String> liClusterName, List<String> accountl1String,
+			List<String> accountl2String, String classification);
+
+	public String getStoreCountOnCust(String custStoreFormat, List<String> accountl1String,
+			List<String> accountl2String, List<String> liClusterName, String classification);
+
+	public String getStoreCountOnStore(String storeFormat, List<String> accountl1String, List<String> accountl2String,
+			List<String> liClusterName, String classification);
+
+	public String getStoreCountByClass(List<String> liClusterName, List<String> accountl1String,
+			List<String> accountl2String, String classification);
+
+	List<String> getBasepackCodeOnLaunchId(String launchId);
+
+	List<ArrayList<String>> getClusterDumpForStoreFormat(ArrayList<String> headerDetail, String userId,
+			DownloadLaunchClusterRequest downloadLaunchClusterRequest);
+
+	List<ArrayList<String>> getClusterDumpforCustomerStoreformat(ArrayList<String> headerDetail, String userId,
+			DownloadLaunchClusterRequest downloadLaunchClusterRequest);
+
+	public List<ArrayList<String>> getKamInputDumpForLaunch(ArrayList<String> headerDetail, String userId);
+
+	public String saveKamRequestByUpload(List<Object> list, String userID);
+
+	public String saveClusterByUploadForCluster(List<Object> list, String userID, String string, boolean b, boolean c,
+			String launchId);
+
+}

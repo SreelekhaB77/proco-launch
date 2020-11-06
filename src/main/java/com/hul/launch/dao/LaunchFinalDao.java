@@ -1,0 +1,93 @@
+package com.hul.launch.dao;
+
+import java.util.ArrayList; 
+import java.util.List;
+
+import com.hul.launch.model.LaunchBuildUpTemp;
+import com.hul.launch.model.LaunchStoreData;
+import com.hul.launch.request.SaveFinalLaunchListRequest;
+import com.hul.launch.response.LaunchFinalPlanResponse;
+
+/**
+ * 
+ * @author anshuman.shrivastava
+ *
+ **/
+
+public interface LaunchFinalDao {
+	List<LaunchFinalPlanResponse> getLaunchFinalRespose(String launchId);
+
+	String saveLaunchFinalBuildUp(SaveFinalLaunchListRequest saveFinalLaunchListRequest, String userId);
+
+	String saveLaunchBuildUpTemp(List<List<LaunchStoreData>> listLaunchStoreData, String launchId, String userId);
+
+	LaunchBuildUpTemp getFinalBuildUpDepoLevel(String depoCombo, String launchId);
+
+	List<String> getFinalBuildUpDepoLevelDistinct(String launchId);
+
+	LaunchBuildUpTemp getFinalBuildUpDepoLevelAll(String depoBasepack, String launchId);
+
+	LaunchBuildUpTemp getCldForDepoBasepack(String depoBasepack, String launchId);
+
+	LaunchBuildUpTemp getGsvForDepoBasepack(String substr, String launchId);
+
+	int updateFinalValue(String depoCombo, String launchId, LaunchBuildUpTemp launchBuildUpTemp, String userId);
+
+	LaunchFinalPlanResponse getSumOfForDepoBasepack(String basepack, String launchId);
+
+	String saveFinalValue(String depoBasepackFmcgModifiedChainCombo, String launchId,
+			LaunchBuildUpTemp launchBuildUpTemp, String userId);
+
+	void deleteAllBuildUp(String launchId);
+
+	List<ArrayList<String>> getFinalBuildUpDumptNew(String userId, String launchId);
+
+	List<ArrayList<String>> getFinalBuildUpDumptNew(String userId, String[] launchId);
+
+	List<ArrayList<String>> getFinalBuildUpDump(String userId, String[] launchId);
+
+	List<LaunchFinalPlanResponse> getLaunchFinalResposeKAM(String launchId, String forWhichKam);
+
+	List<String> getFinalBuildUpDepoLevelDistinctKAM(String launchId, String forWhichKam);
+
+	LaunchBuildUpTemp getFinalBuildUpDepoLevelAllKAM(String depoBasepack, String launchId, String forWhichKam);
+
+	LaunchBuildUpTemp getCldForDepoBasepackKAM(String depoBasepack, String launchId, String forWhichKam);
+
+	int updateFinalValueKAM(String depoCombo, String launchId, LaunchBuildUpTemp launchBuildUpTemp, String userId);
+
+	LaunchFinalPlanResponse getSumOfForDepoBasepackKAM(String basepack, String launchId, String forWhichKam);
+
+	void deleteAllBuildUpKAM(String launchId, String forWhichKam);
+
+	LaunchBuildUpTemp getFinalBuildUpDepoLevelKAM(String depoCombo, String launchId, String forWhichAcc);
+
+	String saveLaunchBuildUpTempKAM(List<List<LaunchStoreData>> listLaunchStoreData, String launchId,
+			String forWhichKam);
+
+	String saveFinalValueKAM(String depoBasepackFmcgModifiedChainCombo, String launchId,
+			LaunchBuildUpTemp launchBuildUpTemp, String forWhichKam);
+
+	void deleteAllTempCalKam(String launchId, String forWhichKam);
+
+	void deleteAllTempCal(String launchId);
+
+	LaunchBuildUpTemp getGsvForDepoBasepackKAM(String depoBasepack, String launchId, String forWhichKam);
+
+	String saveLaunchFinalBuildUpKAM(SaveFinalLaunchListRequest saveFinalLaunchListRequest, String userId,
+			String forWhichKam);
+
+	List<ArrayList<String>> getFinalBuildUpDumpNewKam(String userId, String launchId);
+
+	List<String> getKamAccount(String userId);
+
+	void deleteAllBuildUpKAM(String launchId, List<String> listOfKamAccounts);
+
+	void deleteAllBuildUpKAMBp(String launchId, List<String> listOfKamAccounts, List<String> bpCodes);
+
+	void deleteAllBuildUpKAMStore(String launchId, List<String> listOfKamAccounts, List<String> storeIds);
+
+	List<ArrayList<String>> getMstnClearanceDataDump(String userId, List<String> listOfLaunchData);
+
+	List<ArrayList<String>> getMstnClearanceDataDumpCoe(String userId, List<String> listOfLaunchData);
+}
