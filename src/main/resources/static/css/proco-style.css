@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+
 /*
 Application Name: MT PRoCo Tool
 Author: Lokesh 
@@ -28,7 +30,7 @@ body, html {
 body {
 	overflow-x: hidden !important;
 	background-color: #FFFFFF;
-	font-family: 'Open Sans' !important;
+	font-family: Roboto, "Helvetica Neue", sans-serif !important;
 }
 
 ul {
@@ -313,7 +315,7 @@ text-align: left;
 }
 
 .promo-listing-bg {
-	background: #6e82c9;
+	background: #85A2CE;
 }
 .promo-delete-bg {
     background-color: #E00024;

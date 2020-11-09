@@ -29,12 +29,9 @@
 	href="assets/css/custom-font.css">
 <link rel="stylesheet" type="text/css"
 	href="assets/css/font-awesome.css">
-<link rel="stylesheet"
-	href="assets/css/smart_wizard_theme_arrows.css" type="text/css" />
-<link rel="stylesheet"
-	href="assets/css/smart_wizard_theme_arrows.min.css" type="text/css" />
-<link rel="stylesheet" href="assets/css/smart_wizard.css"
-	type="text/css" />
+<link rel="stylesheet"	href="assets/css/smart_wizard_theme_arrows.css" type="text/css" />
+
+<link rel="stylesheet" href="assets/css/smart_wizard.css" type="text/css" />
 <link rel="stylesheet" type="text/css"
 	href="assets/css/fixedColumns.bootstrap.min.css">
 
@@ -61,7 +58,7 @@
 	<div class="container-fluid paddR10">
 		<div class="navbar-header marginB10">
 			<h1 class="SEGOEUIL-font pull-left">
-				TME Launch Plan <span>Dashboard</span>
+				TME Launch Plan Dashboard
 			</h1>
 			<button type="button" class="navbar-toggle collapsed pull-right"
 				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
@@ -78,25 +75,25 @@
 
 						<li role="presentation"
 							class="active col-md-3 col-sm-8 col-xs-12 launch-icon-active">
-							<a href="http://34.102.191.145/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
+							<a href="http://localhost:8083/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
 								<div class="tab-label-launch">Launch Plannning</div>
 						</a>
 						</li>
 						<li role="presentation"
 							class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
-							<a href="http://34.102.191.145/VisibilityAssetTracker/getAllLaunchData.htm"> <!-- <div class="launch-icon"></div> -->
+							<a href="http://localhost:8083/VisibilityAssetTracker/getAllLaunchData.htm"> <!-- <div class="launch-icon"></div> -->
 								<div class="tab-label-launch">Edit & Approve</div>
 						</a>
 						</li>
 						<li role="presentation"
 							class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
-							<a href="http://34.102.191.145/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
+							<a href="http://localhost:8083/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
 								<div class="tab-label-launch">Performance</div>
 						</a>
 						</li>
 						<li role="presentation"
 							class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
-							<a href="http://34.102.191.145/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
+							<a href="http://localhost:8083/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
 								<div class="tab-label-launch">Timelines</div>
 						</a>
 						</li>
@@ -189,7 +186,7 @@
 						aria-labelledby="headingOne" aria-expanded="false"
 						style="height: 0px; display: block;">
 						<div class="card-block">
-							<form action="http://34.102.191.145/VisibilityAssetTracker/saveLaunchDetails.htm" method="POST"
+							<form action="http://localhost:8083/VisibilityAssetTracker/saveLaunchDetails.htm" method="POST"
 								enctype="multipart/form-data" id="tmeLaunchBean"
 								class="form-horizontal" name="tmeLaunchBean"
 								onClick="javascript: submitLaunchForm();">
@@ -381,12 +378,12 @@
 									<div class="btnclass">
 										<button type="button" class="btn col-md-1 leftBtn"
 											id="addbasepack">
-											<span class="glyphicon glyphicon-plus" style="color: yellow"></span>
+											<span class="glyphicon glyphicon-plus" style="color: #ffffff;"></span>
 											Add Basepack
 										</button>
 										<button type="button" class="btn col-md-1 leftBtn"
 											id="delbasepack">
-											<span class="glyphicon glyphicon-minus" style="color: yellow"></span>
+											<span class="glyphicon glyphicon-minus" style="color: #ffffff;"></span>
 											Remove Basepack
 										</button>
 
@@ -395,7 +392,7 @@
 											<button type="button" class="btn col-md-3 rightBtn"
 												onClick="javascript: downloadLaunchBasepackTemplate();">
 												<span class="glyphicon glyphicon-arrow-down"
-													style="color: yellow"></span>Download launch pack template
+													style="color: #ffffff;"></span>Download launch pack template
 											</button>
 										</form>
 										<input type="button" value="Previous"
@@ -421,7 +418,7 @@
 						enctype="multipart/form-data" name="launchfileupload">
 						<div class="launchupload-parent">
 							<div class="col-md-12 col-sm-12 ddd">
-								<div style="text-align: center; color: #878787;">
+								<div style="text-align: center; color: #000000;">
 
 									<h2 class="SEGOEUIL-font">Upload Base Packs</h2>
 									<div class="upload-image">
@@ -435,7 +432,7 @@
 									<div class="input-group upload-file">
 										<input id="uploadsecscre" name="file" type="file" class="file">
 									</div>
-									<button class="validate_upload btn marginT10 btn-primary"
+									<button class="validate_upload btn marginT10 new-btn-primary"
 										id="btnSubmitBasePack">Upload Base Packs</button>
 
 								</div>
@@ -533,13 +530,13 @@
 										<button type="button" class="btn col-md-3 rightBtn"
 											onClick="downloadLaunchClusterTemplate();">
 											<span class="glyphicon glyphicon-arrow-down"
-												style="color: yellow"></span>Download Customer Store
+												style="color: #ffffff;"></span>Download Customer Store
 											Template
 										</button>
 										<button type="button" class="btn col-md-3 rightBtn"
 											onClick="downloadLaunchStrClusterTemplate();">
 											<span class="glyphicon glyphicon-arrow-down"
-												style="color: yellow"></span>Download Store Format Template
+												style="color: #ffffff;"></span>Download Store Format Template
 										</button>
 										<!-- <a href="#" class="btn btn-secondary sw-btn-prev disabled prev" disabled>Previous</a> -->
 										<input type="button" value="Previous"
@@ -565,7 +562,7 @@
 							<div
 								class="launchupload-parent basepcupload-parent col-md-12 col-sm-12">
 								<div class="col-md-12 col-sm-12 ddd">
-									<div style="text-align: center; color: #878787;">
+									<div style="text-align: center; color: #000000;">
 
 										<h2 class="SEGOEUIL-font">Upload Store format</h2>
 										<div class="upload-image">
@@ -579,7 +576,7 @@
 										<div class="input-group upload-file">
 											<input id="uploadcls" name="file" type="file" class="file">
 										</div>
-										<button class="validate_upload btn marginT10 btn-primary"
+										<button class="validate_upload btn marginT10 new-btn-primary"
 											id="launchstrFileUploadBtn">Upload Store format</button>
 
 									</div>
@@ -597,7 +594,7 @@
 							<div
 								class="launchupload-parent basepcupload-parent col-md-12 col-sm-12">
 								<div class="col-md-12 col-sm-12 ddd">
-									<div style="text-align: center; color: #878787;">
+									<div style="text-align: center; color: #000000;">
 
 										<h2 class="SEGOEUIL-font">Upload Customer Store format</h2>
 										<div class="upload-image">
@@ -613,7 +610,7 @@
 											<input id="uploadclsCust" name="file" type="file"
 												class="file">
 										</div>
-										<button class="validate_upload btn marginT10 btn-primary"
+										<button class="validate_upload btn marginT10 new-btn-primary"
 											id="launchCuststrFileUploadBtn">Upload Customer
 											Store format</button>
 
@@ -699,7 +696,7 @@
 							<button type="button" class="btn col-md-2 rightBtn"
 								onclick="downloadLaunchSellInTemplate()">
 								<span class="glyphicon glyphicon-arrow-down"
-									style="color: yellow"></span> Download sell-in template
+									style="color: #ffffff"></span> Download sell-in template
 							</button>
 							<!-- <a href="#" class="btn btn-secondary sw-btn-prev disabled prev">Previous</a> -->
 							<input type="button" value="Previous"
@@ -718,7 +715,7 @@
 							enctype="multipart/form-data" name="launchstrfileupload">
 							<div class="launchupload-parent strupload-parent">
 								<div class="col-md-12 col-sm-12 ddd">
-									<div style="text-align: center; color: #878787;">
+									<div style="text-align: center; color: #000000;">
 
 										<h2 class="SEGOEUIL-font">Upload Sell Ins</h2>
 										<div class="upload-image">
@@ -733,7 +730,7 @@
 										<div class="input-group upload-file">
 											<input id="uploadSellIn" name="file" type="file" class="file">
 										</div>
-										<button class="validate_upload btn marginT10 btn-primary"
+										<button class="validate_upload btn marginT10 new-btn-primary"
 											id="launchsellinFileUploadBtn">Upload Sell Ins</button>
 
 									</div>
@@ -842,7 +839,7 @@
 							<button type="button" class="btn col-md-3 leftBtn"
 								id="noVissiPlan">
 								<span class="glyphicon glyphicon-remove-sign"
-									style="color: yellow"></span>No visi to be planned
+									style="color: #ffffff;"></span>No visi to be planned
 							</button>
 							<!-- <button type="button" class="btn col-md-2 rightBtn">
 												<span class="glyphicon glyphicon-arrow-up" style="color: yellow"></span> UPLOAD
@@ -851,7 +848,7 @@
 							<button type="button" class="btn col-md-2 rightBtn"
 								onclick="downloadLaunchVisiPlanTemplate()">
 								<span class="glyphicon glyphicon-arrow-down"
-									style="color: yellow"></span> Download
+									style="color: #ffffff"></span> Download
 							</button>
 							<input type="button" value="Previous"
 								class="btn btn-secondary nxtclassification previousTme"
@@ -870,13 +867,12 @@
 							enctype="multipart/form-data" name="launchVisifileupload">
 							<div class="launchupload-parent visiupload-parent">
 								<div class="col-md-12 col-sm-12 ddd">
-									<div style="text-align: center; color: #878787;">
+									<div style="text-align: center; color: #000000;">
 
 										<h2 class="SEGOEUIL-font">Upload Visi Plans</h2>
 										<div class="upload-image">
 											<img src="assets/images/upload-icon-n-body.png" alt="" />
 										</div>
-
 										<div class="upload-max-size">Maximum Upload File
 											Size:2MB</div>
 										<span id="uploadVisiPlanErrorMsg"
@@ -886,7 +882,7 @@
 											<input id="uploadVisiPlan" name="file" type="file"
 												class="file">
 										</div>
-										<button class="validate_upload btn marginT10 btn-primary"
+										<button class="validate_upload btn marginT10 new-btn-primary"
 											id="launchVisiPlanFileUploadBtn">Upload Visi Plan</button>
 
 									</div>
@@ -965,7 +961,7 @@
 										<button type="button" class="btn col-md-2 rightBtn"
 											onclick="downloadFinalPlan()">
 											<span class="glyphicon glyphicon-arrow-down"
-												style="color: yellow"></span> Download Launch Plan
+												style="color: #ffffff"></span> Download Launch Plan
 										</button>
 										<input type="button" value="Previous"
 											class="btn btn-secondary nxtclassification previousTme"
@@ -1031,7 +1027,7 @@
 																<span id="annxr" style="display:none;"></span>
 														</div>
 														<div class="col-sm-10 col-md-1 subUpload">
-															<input class="validate_upload btn marginT10 btn-primary"
+															<input class="validate_upload btn marginT10 new-btn-primary"
 																id="annexureUploadBtn" type="button" value="Upload"
 																onclick="uploadAnnexureDoc('0')"></input>
 														</div>
@@ -1057,7 +1053,7 @@
 																<span id="baseart" style="display:none;"></span>
 														</div>
 														<div class="col-sm-10 col-md-1 subUpload">
-															<input class="validate_upload btn marginT10 btn-primary"
+															<input class="validate_upload btn marginT10 new-btn-primary"
 																id="artworkUploadBtn" onclick="uploadArtDoc('0')"
 																type="button" value="Upload"></input>
 														</div>
@@ -1083,7 +1079,7 @@
 																<span id="mdglnc" style="display: none;" ></span>
 														</div>
 														<div class="col-sm-10 col-md-1 subUpload">
-															<input class="validate_upload btn marginT10 btn-primary"
+															<input class="validate_upload btn marginT10 new-btn-primary"
 																id="mdgUploadBtn" type="button" value="Upload"
 																onclick="uploadmdgDoc('0')"></input>
 																
@@ -1268,7 +1264,7 @@ function ajaxLoader(w, h) {
 
 		$.ajax({
             type: "POST",
-            url: "http://34.102.191.145/VisibilityAssetTracker/getSalesCatOnBasepack.htm",
+            url: "http://localhost:8083/VisibilityAssetTracker/getSalesCatOnBasepack.htm",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             beforeSend: function() {
@@ -1319,7 +1315,7 @@ function ajaxLoader(w, h) {
         					
         					$.ajax({
         			            type: "POST",
-        			            url: "http://34.102.191.145/VisibilityAssetTracker/getPsaCategory.htm?salesCategory=" +salesCat,
+        			            url: "http://localhost:8083/VisibilityAssetTracker/getPsaCategory.htm?salesCategory=" +salesCat,
         			            contentType: "application/json; charset=utf-8",
         			            dataType: "json",
         			            beforeSend: function() {
@@ -1343,7 +1339,7 @@ function ajaxLoader(w, h) {
         			                	var salesCatStr = encodeURIComponent(salesCatVal);
                 						$.ajax({
                 				            type: "POST",
-                				            url: "http://34.102.191.145/VisibilityAssetTracker/getBrandOnPsaCat.htm?psaCategory="+branvalStr+"&salesCategory="+salesCatStr,
+                				            url: "http://localhost:8083/VisibilityAssetTracker/getBrandOnPsaCat.htm?psaCategory="+branvalStr+"&salesCategory="+salesCatStr,
                 				            contentType: "application/json; charset=utf-8",
                 				            dataType: "json",
                 				            beforeSend: function() {
@@ -1589,7 +1585,7 @@ function ajaxLoader(w, h) {
 		var launchId = $("#dynamicLaunchId").val();
 		if(lenvisi > 0){                                   
 		$.ajax({
-		    url: 'http://34.102.191.145/VisibilityAssetTracker/getLaunchVisiPlan.htm?launchId='+launchId,
+		    url: 'http://localhost:8083/VisibilityAssetTracker/getLaunchVisiPlan.htm?launchId='+launchId,
 		    dataType: 'json',
 		    type: 'get',
 		    contentType: 'application/json',

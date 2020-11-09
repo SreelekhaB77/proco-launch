@@ -29,13 +29,9 @@
 	href="assets/css/font-awesome.css">
 <link rel="stylesheet"
 	href="assets/css/smart_wizard_theme_arrows.css" type="text/css" />
-<link rel="stylesheet"
-	href="assets/css/smart_wizard_theme_arrows.min.css" type="text/css" />
-<link rel="stylesheet" href="assets/css/smart_wizard.css"
-	type="text/css" />
-<link rel="stylesheet" type="text/css"
-	href="assets/css/fixedColumns.bootstrap.min.css">
 
+<link rel="stylesheet" href="assets/css/smart_wizard.css" type="text/css" />
+<link rel="stylesheet" type="text/css" 	href="assets/css/fixedColumns.bootstrap.min.css">
 <script type="text/javascript">
 	history.pushState(null, null, '');
 	window.addEventListener('popstate', function(event) {
@@ -74,25 +70,25 @@
 
 							<li role="presentation"
 								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
-								<a href="http://34.102.191.145/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
+								<a href="http://localhost:8083/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Launch Plannning</div>
 							</a>
 							</li>
 							<li role="presentation"
 								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-active">
-								<a href="http://34.102.191.145/VisibilityAssetTracker/getAllLaunchData.htm"> <!-- <div class="launch-icon"></div> -->
+								<a href="http://localhost:8083/VisibilityAssetTracker/getAllLaunchData.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Edit & Approve</div>
 							</a>
 							</li>
 							<li role="presentation"
 								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
-								<a href="http://34.102.191.145/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
+								<a href="http://localhost:8083/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Performance</div>
 							</a>
 							</li>
 							<li role="presentation"
 								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
-								<a href="http://34.102.191.145/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
+								<a href="http://localhost:8083/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Timelines</div>
 							</a>
 							</li>
@@ -286,7 +282,7 @@
 													onClick="javascript: downloadEditLaunchRequest();"
 													id="downloadEditLaunchRequestId" disabled="disabled">
 													<span class="glyphicon glyphicon-arrow-down"
-														style="color: yellow"></span>Download Requests
+														style="color: #ffffff;"></span>Download Requests
 												</button>
 											</form>
 										</div>
@@ -301,7 +297,7 @@
 							enctype="multipart/form-data" name="launchfileupload">
 							<div class="launchupload-parent">
 								<div class="col-md-12 col-sm-12 ddd">
-									<div style="text-align: center; color: #878787;">
+									<div style="text-align: center; color: #000000;">
 
 										<h2 class="SEGOEUIL-font">Upload Approval Status</h2>
 										<div class="upload-image">
@@ -316,7 +312,7 @@
 											<input id="uploadsecscre" name="file" type="file"
 												class="file">
 										</div>
-										<button class="validate_upload btn marginT10 btn-primary"
+										<button class="validate_upload btn marginT10 new-btn-primary"
 											id="btnSubmitBasePack">Upload Approval Status</button>
 
 									</div>

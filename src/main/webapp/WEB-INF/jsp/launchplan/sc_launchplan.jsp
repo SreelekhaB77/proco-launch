@@ -67,12 +67,12 @@
 						<ul class="nav nav-pills">
 
 							<li role="presentation" class="active col-md-2 col-sm-8 col-xs-12 launch-icon-active">
-								<a href="http://34.102.191.145/VisibilityAssetTracker/getAllCompletedLaunchDataSc.htm"> <!-- <div class="launch-icon"></div> -->
+								<a href="http://localhost:8083/VisibilityAssetTracker/getAllCompletedLaunchDataSc.htm"> <!-- <div class="launch-icon"></div> -->
 										<div class="tab-label-launch">Launch Plannning</div>
 								</a>
 							</li>
 							<li role="presentation" class="active col-md-2 col-sm-8 col-xs-12 launch-icon-inactive">
-								<a href="http://34.102.191.145/VisibilityAssetTracker/getAllCompletedLaunchDataSc.htm"> <!-- <div class="launch-icon"></div> -->
+								<a href="http://localhost:8083/VisibilityAssetTracker/getAllCompletedLaunchDataSc.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Performance</div>
 								</a>
 							</li>
@@ -95,7 +95,7 @@
 					<button type="button" class="close" data-hide="alert">&times;</button>
 					<%-- <c:out value="${errorMsgUpload}"></c:out> --%>
 					<span>Error while uploading file.</span>
-					<!--  <a href="http://34.102.191.145/VisibilityAssetTracker/downloadTmeUploadErrorFile.htm" id="downloadTempFileLink">Click here to Download Error File</a> -->
+					<!--  <a href="http://localhost:8083/VisibilityAssetTracker/downloadTmeUploadErrorFile.htm" id="downloadTempFileLink">Click here to Download Error File</a> -->
 				</div>
 		
 

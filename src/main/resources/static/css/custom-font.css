@@ -1,17 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+
 /**code for custom fonts **/
 @font-face {
-	font-family: 'SEGOEUIL';
-	src: url('../fonts/SEGOEUIL/SEGOEUIL.eot');
-	src: local('SEGOEUIL'), url('../fonts/SEGOEUIL/SEGOEUIL.woff') format('woff'), url('../fonts/SEGOEUIL/SEGOEUILL.ttf') format('truetype');
+	/*font-family: 'SEGOEUIL';
+	src: url('../fonts/Roboto/roboto-regular.eot');
+	src: local('Roboto'), url('../fonts/Roboto/roboto-regular.woff') format('woff'), url('../fonts/Roboto/roboto-regular.ttf') format('truetype');
+*/
 }
 /* use this class to attach this font to any element */
 .SEGOEUIL-font{
-	font-family: 'SEGOEUIL' !important;
-	
+	font-family: Roboto, "Helvetica Neue", sans-serif !important;
 } 
 /***** Font Definition for Open Sans. This stylesheet comes from qrohlf.com/posts/better-opensans *****/
 
-/* Regular */
+/* Regular 
 @font-face {
     font-family: 'Open Sans';
     
@@ -24,9 +26,9 @@
     font-weight: 400;
     font-style: normal;
 
-}
+}*/
 
-/* Italic */
+/* Italic 
 @font-face {
     font-family: 'Open Sans';
     src: url('../fonts/OpenSans/OpenSans-Italic-webfont.eot');
@@ -38,9 +40,9 @@
     font-weight: 400;
     font-style: italic;
 
-}
+}*/
 
-/* Light */
+/* Light 
 @font-face {
     font-family: 'Open Sans';
     src: url('../fonts/OpenSans/OpenSans-Light-webfont.eot');
@@ -51,9 +53,9 @@
     font-weight: 200;
     font-style: normal;
 
-}
+}*/
 
-/* Light Italic */
+/* Light Italic 
 @font-face {
     font-family: 'Open Sans';
     src: url('../fonts/OpenSans/OpenSans-LightItalic-webfont.eot');
@@ -64,8 +66,8 @@
     font-weight: 200;
     font-style: italic;
 
-}
-/* Semibold */
+}*/
+/* Semibold 
 @font-face {
     font-family: 'Open Sans';
     src: url('../fonts/OpenSans/OpenSans-Semibold-webfont.eot');
@@ -76,9 +78,9 @@
     font-weight: 500;
     font-style: normal;
 
-}
+}*/
 
-/* Semibold Italic */
+/* Semibold Italic 
 @font-face {
     font-family: 'Open Sans';
     src: url('../fonts/OpenSans/OpenSans-SemiboldItalic-webfont.eot');
@@ -89,9 +91,9 @@
     font-weight: 500;
     font-style: italic;
 
-}
+}*/
 
-/* Bold */
+/* Bold 
 @font-face {
     font-family: 'Open Sans';
     src: url('../fonts/OpenSans/OpenSans-Bold-webfont.eot');
@@ -103,9 +105,9 @@
     font-weight: 700;
     font-style: normal;
 
-}
+}*/
 
-/* Bold Italic */
+/* Bold Italic
 @font-face {
     font-family: 'Open Sans';
     src: url('../fonts/OpenSans/OpenSans-BoldItalic-webfont.eot');
@@ -117,9 +119,9 @@
     font-weight: 700;
     font-style: italic;
 
-}
+} */
 
-/* Extra Bold */
+/* Extra Bold 
 @font-face {
     font-family: 'Open Sans';
     src: url('../fonts/OpenSans/OpenSans-ExtraBold-webfont.eot');
@@ -130,9 +132,9 @@
     font-weight: 900;
     font-style: normal;
 
-}
+}*/
 
-/* Extra Bold Italic */
+/* Extra Bold Italic 
 @font-face {
     font-family: 'Open Sans';
     src: url('../fonts/OpenSans-ExtraBoldItalic-webfont.eot');
@@ -143,10 +145,10 @@
     font-weight: 900;
     font-style: italic;
 
-}
+}*/
 
 .OpenSans-font{
-	font-family: 'Open Sans' !important;
+	font-family: Roboto, "Helvetica Neue", sans-serif !important
 	
 }
 /**Start MyriadPro-Regular font **/
@@ -157,18 +159,10 @@
 	src: local('MyriadPro-Regular'), url('../fonts/MyriadPro-Regular/MYRIADPRO-REGULAR.OTF') format('truetype');
 }
 
-/*Bold 
-@font-face {
-	font-family: 'MyriadPro-Regular';
-	src: url('../fonts/MyriadPro-Regular/MYRIADPRO-BOLD.OTF');
-	src: local('MyriadPro-Regular'), url('../fonts/MyriadPro-Regular/MYRIADPRO-BOLD.OTF') format('truetype');
-	font-weight: bold;
-    font-weight: 700;
-    font-style: normal;
-}*/
+
 /* use this class to attach this font to any element */
 .MyriadPro-Regular-font{
-	font-family: 'MyriadPro-Regular' !important;
+	font-family: Roboto, "Helvetica Neue", sans-serif !important
 	
 } 
 /**End MyriadPro-Regular font **/
