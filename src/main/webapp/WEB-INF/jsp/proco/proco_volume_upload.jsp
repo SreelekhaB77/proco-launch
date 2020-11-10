@@ -53,27 +53,27 @@
 
 						<li role="presentation"
 							class="col-md-2 col-sm-6 col-xs-12 proco-volume-active"><a
-							href="http://34.102.191.145/VisibilityAssetTracker/promoVolumeUpload.htm">
+							href="http://localhost:8083/VisibilityAssetTracker/promoVolumeUpload.htm">
 								<div class="proco-volume-icon"></div>
 								<div class="tab-label-proco-volume-active">Volume Upload</div>
 						</a></li>
 						
 						<li role="presentation"
 								class="col-md-2 col-sm-6 col-xs-12 disaggregation"><a
-								href="http://34.102.191.145/VisibilityAssetTracker/promoDisaggregation.htm">
+								href="http://localhost:8083/VisibilityAssetTracker/promoDisaggregation.htm">
 									<div class="proco-disaggregation-icon"></div>
 									<div class="tab-label-proco-disaggregation-inactive">Disaggregation</div>
 							</a></li>
 						
 						<li role="presentation"
 							class="col-md-2 col-sm-6 col-xs-12 listing"><a
-							href="http://34.102.191.145/VisibilityAssetTracker/promoListing.htm">
+							href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
 								<div class="proco-listing-icon"></div>
 								<div class="tab-label-proco-listing-inactive OpenSans-font">Promo Listing</div>
 						</a></li>
 
 						<li role="presentation"
-							class="col-md-2 col-sm-6 col-xs-12 listing"><a href="http://34.102.191.145/VisibilityAssetTracker/promoDeletion.htm">
+							class="col-md-2 col-sm-6 col-xs-12 listing"><a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
@@ -105,7 +105,7 @@
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${errorMsg}"></c:out>
 				<c:if test="${FILE_STATUS=='ERROR_FILE'}">
-					<a href="http://34.102.191.145/VisibilityAssetTracker/downloadPromotionVolumeErrorFile.htm" id="downloadTempFileLink">Click
+					<a href="http://localhost:8083/VisibilityAssetTracker/downloadPromotionVolumeErrorFile.htm" id="downloadTempFileLink">Click
 						here to Download Error File:</a>
 
 				</c:if>
@@ -119,7 +119,7 @@
 				<span class="promo-detail-txt"><b>SELECT PROMO VOLUME UPLOAD</b></span>
 
 			</div>
-			<form action="http://34.102.191.145/VisibilityAssetTracker/downloadPromosForVolumeUpload.htm" method="POST" enctype="multipart/form-data">
+			<form action="http://localhost:8083/VisibilityAssetTracker/downloadPromosForVolumeUpload.htm" method="POST" enctype="multipart/form-data">
 			
 			<div class="promo-form-details">
 				<div class="col-md-4">
@@ -276,7 +276,7 @@
 					</tr>
 				</thead>
 			</table>
-			<form:form action="http://34.102.191.145/VisibilityAssetTracker/uploadPromoVolume.htm" id="promoVolumeUpload"
+			<form:form action="http://localhost:8083/VisibilityAssetTracker/uploadPromoVolume.htm" id="promoVolumeUpload"
 				method="POST" modelAttribute="VolumeUploadBean"
 				enctype="multipart/form-data" onsubmit="return uploadValidation()">
 			<div class="promo-upload">PROMO UPLOAD</div>

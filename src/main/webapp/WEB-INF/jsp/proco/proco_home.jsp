@@ -38,7 +38,7 @@
     <c:if test="${roleId eq 'TME'}">
     <div class="col-md-6 col-md-offset-2">
           <div class="col-md-4 col-sm-4 col-xs-4">
-         <a href="http://34.102.191.145/VisibilityAssetTracker/promoCreation.htm">
+         <a href="http://localhost:8083/VisibilityAssetTracker/promoCreation.htm">
           <div class="promo-create promo-create-bg">
               <img src="assets/images/proco/icon-1.png"  class="img-responsive" alt="">
               <div class="promo-craete-txt promo-create-txt-bg"><div>Promo Creation</div></div>  
@@ -47,7 +47,7 @@
              
          </div>
           <div class="col-md-4 col-sm-4 col-xs-4 ">
-                <a href="http://34.102.191.145/VisibilityAssetTracker/promoListing.htm">
+                <a href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
            <div class="promo-create promo-listing-bg">
               <img src="assets/images/proco/icon-2.png " class="img-responsive" alt="">
                <div class="promo-craete-txt promo-listing-txt-bg"><div>Promo Listing</div></div>
@@ -55,7 +55,7 @@
                 </a>
              </div>
               <div class="col-md-4 col-sm-4 col-xs-4 ">
-                <a href="http://34.102.191.145/VisibilityAssetTracker/promoDeletion.htm">
+                <a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
 		           <div class="promo-create promo-delete-bg">
 		              <img src="assets/images/proco/deletepromo.png" class="img-responsive" id="delimg" alt="">
 		               <div class="promo-craete-txt promo-delete-txt-bg"><div>DROPPED OFFERS</div></div>
@@ -68,7 +68,7 @@
  <c:if test="${roleId eq 'DP'}">
   <div class="col-md-12 col-md-offset-1">
     <div class="col-md-2 col-sm-6 col-xs-6 " >
-            <a href="http://34.102.191.145/VisibilityAssetTracker/promoVolumeUpload.htm">
+            <a href="http://localhost:8083/VisibilityAssetTracker/promoVolumeUpload.htm">
            <div class="promo-create promo-volume-bg">
               <img src="assets/images/proco/icon-6.png"  class="img-responsive" alt="">
                 <div class="promo-craete-txt promo-volume-txt-bg"><div>Volume Upload</div></div>
@@ -77,7 +77,7 @@
              
           <div class="col-md-2 col-sm-6 col-xs-6 ">
          
-             <a href="http://34.102.191.145/VisibilityAssetTracker/promoDisaggregation.htm">
+             <a href="http://localhost:8083/VisibilityAssetTracker/promoDisaggregation.htm">
            <div class="promo-create promo-disagg-bg">
               <img src="assets/images/proco/icon-3.png"  class="img-responsive" alt="">
                  <div class="promo-craete-txt promo-disagg-txt-bg"><div>Promo Disaggregation</div></div>
@@ -86,7 +86,7 @@
               </div>
         
            <div class="col-md-2 col-sm-6 col-xs-6 ">
-                <a href="http://34.102.191.145/VisibilityAssetTracker/promoListing.htm">
+                <a href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
            <div class="promo-create promo-listing-bg">
               <img src="assets/images/proco/icon-2.png " class="img-responsive" alt="">
                <div class="promo-craete-txt promo-listing-txt-bg"><div>Promo Listing</div></div>
@@ -95,7 +95,7 @@
              </div>
              
              <div class="col-md-2 col-sm-4 col-xs-4 ">
-                <a href="http://34.102.191.145/VisibilityAssetTracker/promoDeletion.htm">
+                <a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
 		           <div class="promo-create promo-delete-bg">
 		              <img src="assets/images/proco/deletepromo.png" class="img-responsive" id="delimg" alt="">
 		               <div class="promo-craete-txt promo-delete-txt-bg"><div>Dropped Offer</div></div>
@@ -104,14 +104,14 @@
              </div>
              
              <div class="col-md-2 col-sm-6 col-xs-6 ">
-               <!--  <a href="http://34.102.191.145/VisibilityAssetTracker/getAllCompletedLaunchDataDp.htm">
+               <!--  <a href="http://localhost:8083/VisibilityAssetTracker/getAllCompletedLaunchDataDp.htm">
            <div class="promo-create comp-logofor-launch">
               <img src="assets/images/proco/icon-2.png " class="img-responsive" alt="">
                <div class="promo-craete-txt promo-listing-txt-bg"><div>Launch Tool</div></div>
             </div>
                 </a> -->
                 <div class="launchDiv">
-	                <a href="http://34.102.191.145/VisibilityAssetTracker/getAllCompletedLaunchDataDp.htm">
+	                <a href="http://localhost:8083/VisibilityAssetTracker/getAllCompletedLaunchDataDp.htm">
 						<div class="comp-logofor-launch">
 							<div class="mt-vat">Launch Tool</div>
 							
@@ -126,7 +126,7 @@
     <div class="col-md-6 col-md-offset-4">
      
             <div class="col-md-4 col-sm-6 col-xs-6 ">
-                 <a href="http://34.102.191.145/VisibilityAssetTracker/promoCollaboration.htm">
+                 <a href="http://localhost:8083/VisibilityAssetTracker/promoCollaboration.htm">
            <div class="promo-create promo-collab-bg">
               <img src="assets/images/proco/icon-4.png"  class="img-responsive" alt="">
                <div class="promo-craete-txt promo-collab-txt-bg"><div>KAM Collaboration</div></div>
@@ -135,7 +135,7 @@
               
               </div>
           	 <div class="col-md-4 col-sm-6 col-xs-6 ">
-                <a href="http://34.102.191.145/VisibilityAssetTracker/promoListing.htm">
+                <a href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
            <div class="promo-create promo-listing-bg">
               <img src="assets/images/proco/icon-2.png " class="img-responsive" alt="">
                <div class="promo-craete-txt promo-listing-txt-bg"><div>Promo Listing</div></div>
@@ -151,7 +151,7 @@
            <c:if test="${roleId eq 'NCMM'}">
     	<div class="col-md-4 col-md-offset-4">
           <div class="col-md-6 col-sm-6 col-xs-6">
-         <a href="http://34.102.191.145/VisibilityAssetTracker/promoCr.htm">
+         <a href="http://localhost:8083/VisibilityAssetTracker/promoCr.htm">
           <div class="promo-create promo-create-bg">
               <img src="assets/images/proco/icon-1.png"  class="img-responsive" alt="">
               <div class="promo-craete-txt promo-create-txt-bg"><div>Promo CR</div></div>  
@@ -160,7 +160,7 @@
              
          </div>
           <div class="col-md-6 col-sm-6 col-xs-6 ">
-                <a href="http://34.102.191.145/VisibilityAssetTracker/promoListing.htm">
+                <a href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
            <div class="promo-create promo-listing-bg">
               <img src="assets/images/proco/icon-2.png " class="img-responsive" alt="">
                <div class="promo-craete-txt promo-listing-txt-bg"><div>Promo Listing</div></div>
@@ -174,7 +174,7 @@
           <c:if test="${roleId eq 'NSCM'}">
     <div class="col-md-6 col-md-offset-2">
           <div class="col-md-4 col-sm-6 col-xs-6">
-         <a href="http://34.102.191.145/VisibilityAssetTracker/promoCr.htm">
+         <a href="http://localhost:8083/VisibilityAssetTracker/promoCr.htm">
           <div class="promo-create promo-create-bg">
               <img src="assets/images/proco/icon-1.png"  class="img-responsive" alt="">
               <div class="promo-craete-txt promo-create-txt-bg"><div>Promo CR</div></div>  
@@ -183,7 +183,7 @@
              
          </div>
           <div class="col-md-4 col-sm-6 col-xs-6 ">
-                <a href="http://34.102.191.145/VisibilityAssetTracker/promoListing.htm">
+                <a href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
            <div class="promo-create promo-listing-bg">
               <img src="assets/images/proco/icon-2.png " class="img-responsive" alt="">
                <div class="promo-craete-txt promo-listing-txt-bg"><div>Promo Listing</div></div>
@@ -192,7 +192,7 @@
              </div>
           
           <div class="col-md-4 col-sm-4 col-xs-4 ">
-                <a href="http://34.102.191.145/VisibilityAssetTracker/promoDeletion.htm">
+                <a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
 		           <div class="promo-create promo-delete-bg">
 		              <img src="assets/images/proco/deletepromo.png" class="img-responsive" id="delimg" alt="">
 		               <div class="promo-craete-txt promo-delete-txt-bg"><div>Promo Deletion</div></div>
