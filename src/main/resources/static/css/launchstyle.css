@@ -1434,6 +1434,10 @@ table#kam_launch_store_table input {
 	.container-fluid .sw-theme-arrows > ul.step-anchor > li{
 	width:13.9% !important;
 }
+
+.container-fluid .sw-theme-arrows > ul.kamLaunchUl li {
+    width: 12% !important;
+}
 }
 
 

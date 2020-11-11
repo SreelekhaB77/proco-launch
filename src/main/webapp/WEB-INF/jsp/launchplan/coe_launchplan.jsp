@@ -22,7 +22,6 @@
 <link rel="stylesheet" type="text/css" href="assets/css/custom-font.css">
 <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
 <link rel="stylesheet" href="assets/css/smart_wizard_theme_arrows.css" type="text/css" />
-<link rel="stylesheet" href="assets/css/smart_wizard_theme_arrows.min.css" type="text/css" />
 <link rel="stylesheet" href="assets/css/smart_wizard.css" type="text/css" />
 <!-- <link rel="stylesheet" type="text/css" href="assets/css/fixedColumns.bootstrap.min.css"> -->
 
@@ -49,7 +48,7 @@
 		<div class="container-fluid paddR10">
 			<div class="navbar-header marginB10">
 				<h1 class="SEGOEUIL-font pull-left">
-				COE	Launch Plan <span>Dashboard</span>
+				COE	Launch Plan Dashboard
 				</h1>
 				<button type="button" class="navbar-toggle collapsed pull-right"
 					data-toggle="collapse" data-target="#navbar" aria-expanded="false"

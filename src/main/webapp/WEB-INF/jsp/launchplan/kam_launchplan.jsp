@@ -29,12 +29,9 @@
 	href="assets/css/custom-font.css">
 <link rel="stylesheet" type="text/css"
 	href="assets/css/font-awesome.css">
-<link rel="stylesheet"
-	href="assets/css/smart_wizard_theme_arrows.css" type="text/css">
-<link rel="stylesheet"
-	href="assets/css/smart_wizard_theme_arrows.min.css" type="text/css">
-<link rel="stylesheet" href="assets/css/smart_wizard.css"
-	type="text/css">
+<link rel="stylesheet"	href="assets/css/smart_wizard_theme_arrows.css" type="text/css">
+
+<link rel="stylesheet" href="assets/css/smart_wizard.css" type="text/css">
 <link rel="stylesheet" type="text/css"
 	href="assets/css/fixedColumns.bootstrap.min.css">
 
@@ -62,7 +59,7 @@
 		<div class="container-fluid paddR10">
 			<div class="navbar-header marginB10">
 				<h1 class="SEGOEUIL-font pull-left">
-					KAM Launch Plan <span>Dashboard</span>
+					KAM Launch Plan Dashboard
 				</h1>
 				<button type="button" class="navbar-toggle collapsed pull-right"
 					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
@@ -152,9 +149,8 @@
 
 					<div class="paid-visi">
 						<div class="modal-header"
-							style="background-color: #028681; color: #fff;">
-							<button type="button" class="close" id="paidcrossBtn"
-								data-dismiss="modal">�</button>
+							style="background-color: #E95912; color: #fff;">
+							<button type="button" class="close" id="paidcrossBtn" data-dismiss="modal">X</button>
 							<h4 class="modal-title">Proposed New Launch MOC</h4>
 						</div>
 						<form action="#" id="mocChange" method="POST"
@@ -171,7 +167,7 @@
 											<div id="date-moc-error" class="cust-error error"
 												style="text-align: center; padding-bottom: 10px;">Please
 												enter remarks</div>
-											<button type="button" class="close" data-hide="alert">�</button>
+											<button type="button" class="close" data-hide="alert">X</button>
 										</div>
 
 										<div class="OpenSans-font">
@@ -207,12 +203,12 @@
 							</div>
 							<div class="modal-footer">
 								<button type="button"
-									class="btn btn-default pull-right resetBtn"
+									class="btn new-btn-primary pull-right resetBtn"
 									data-dismiss="modal" data-hide="alert" id="paidCancelBtn">CLOSE</button>
 								<button type="button" id="KamlanchMocBtn"
 									onclick="changeLaunchMoc()"
 									class="btn pull-right resetBtn marginR10"
-									style="background-color: #028681 !important; height: 33px; margin-right: 8px; color: #fff;">Submit</button>
+									style="background-color: #3B5999 !important; height: 33px; margin-right: 8px; color: #fff;">Submit</button>
 							</div>
 
 						</form>
@@ -237,9 +233,9 @@
 
 					<div class="paid-visi">
 						<div class="modal-header"
-							style="background-color: #028681; color: #fff;">
+							style="background-color: #E95912; color: #fff;">
 							<button type="button" class="close" id="paidcrossBtn"
-								data-dismiss="modal">�</button>
+								data-dismiss="modal">X</button>
 							<h4 class="modal-title">Reject Launch Details</h4>
 						</div>
 						<form action="#" id="rejRemarkForm" method="POST"
@@ -278,12 +274,12 @@
 							</div>
 							<div class="modal-footer">
 								<button type="button"
-									class="btn btn-default pull-right resetBtn"
-									data-dismiss="modal" data-hide="alert" id="paidRejCancelBtn">CLOSE</button>
+									class="btn new-btn-primary pull-right resetBtn"
+									data-dismiss="modal" data-hide="alert" id="paidRejCancelBtn" >Close</button>
 								<button type="button" onclick="rejectLaunch()"
 									id="KamlanchMocRejectBtn"
 									class="btn pull-right resetBtn marginR10"
-									style="background-color: #028681 !important; height: 33px; margin-right: 8px; color: #fff;">Submit</button>
+									style="background-color: #3B5999 !important; height: 33px; margin-right: 8px; color: #fff;">Submit</button>
 							</div>
 
 						</form>

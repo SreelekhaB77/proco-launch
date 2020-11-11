@@ -22,7 +22,7 @@
 <link rel="stylesheet" type="text/css" href="assets/css/custom-font.css">
 <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
 <link rel="stylesheet" href="assets/css/smart_wizard_theme_arrows.css" type="text/css" />
-<link rel="stylesheet" href="assets/css/smart_wizard_theme_arrows.min.css" type="text/css" />
+
 <link rel="stylesheet" href="assets/css/smart_wizard.css" type="text/css" />
 <link rel="stylesheet" type="text/css" href="assets/css/fixedColumns.bootstrap.min.css">
 
@@ -64,12 +64,12 @@
 					<div class="row">
 						<ul class="nav nav-pills">
 
-							<li role="presentation" class="active col-md-2 col-sm-8 col-xs-12 launch-icon-active">
+							<li role="presentation" class="active col-md-3 col-sm-8 col-xs-12 launch-icon-active">
 								<a href="http://localhost:8083/VisibilityAssetTracker/getAllCompletedLaunchDataDp.htm"> <!-- <div class="launch-icon"></div> -->
 										<div class="tab-label-launch">Launch Plannning</div>
 								</a>
 							</li>
-							<li role="presentation" class="active col-md-2 col-sm-8 col-xs-12 launch-icon-inactive">
+							<li role="presentation" class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
 								<a href="http://localhost:8083/VisibilityAssetTracker/getAllCompletedLaunchDataDp.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Performance</div>
 								</a>
