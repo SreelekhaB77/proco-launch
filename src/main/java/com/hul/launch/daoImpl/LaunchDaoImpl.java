@@ -1458,7 +1458,7 @@ public class LaunchDaoImpl implements LaunchDao {
 				batchUpdate4.executeUpdate();
 
 				Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
-						"UPDATE TBL_LAUNCH_MASTER SET SAMPLE_SHARED=?0,UPDATED_BY=?1,UPDATED_DATE=?2 WHERE LAUNCH_ID=?3");  //Sarin - Added Parameters position
+						"UPDATE TBL_LAUNCH_MASTER SET SAMPLE_SHARED=?,UPDATED_BY=?,UPDATED_DATE=? WHERE LAUNCH_ID=?");
 				query2.setParameter(0, null);
 				query2.setParameter(1, userId);
 				query2.setParameter(2, new Timestamp(new Date().getTime()));
@@ -1486,7 +1486,7 @@ public class LaunchDaoImpl implements LaunchDao {
 				batchUpdate3.executeUpdate();
 
 				Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
-						"UPDATE TBL_LAUNCH_MASTER SET SAMPLE_SHARED=?0,UPDATED_BY=?1,UPDATED_DATE=?2 WHERE LAUNCH_ID=?3");  //Sarin - Added Parameters position
+						"UPDATE TBL_LAUNCH_MASTER SET SAMPLE_SHARED=?,UPDATED_BY=?,UPDATED_DATE=? WHERE LAUNCH_ID=?");
 				query2.setParameter(0, null);
 				query2.setParameter(1, userId);
 				query2.setParameter(2, new Timestamp(new Date().getTime()));
@@ -1509,7 +1509,7 @@ public class LaunchDaoImpl implements LaunchDao {
 				batchUpdate2.executeUpdate();
 
 				Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
-						"UPDATE TBL_LAUNCH_MASTER SET SAMPLE_SHARED=?0,UPDATED_BY=?1,UPDATED_DATE=?2 WHERE LAUNCH_ID=?3");  //Sarin - Added Parameters position
+						"UPDATE TBL_LAUNCH_MASTER SET SAMPLE_SHARED=?,UPDATED_BY=?,UPDATED_DATE=? WHERE LAUNCH_ID=?");
 				query2.setParameter(0, null);
 				query2.setParameter(1, userId);
 				query2.setParameter(2, new Timestamp(new Date().getTime()));
@@ -1527,7 +1527,7 @@ public class LaunchDaoImpl implements LaunchDao {
 				batchUpdate1.executeUpdate();
 
 				Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
-						"UPDATE TBL_LAUNCH_MASTER SET SAMPLE_SHARED=?0,UPDATED_BY=?1,UPDATED_DATE=?2 WHERE LAUNCH_ID=?3");  //Sarin - Added Parameters position
+						"UPDATE TBL_LAUNCH_MASTER SET SAMPLE_SHARED=?,UPDATED_BY=?,UPDATED_DATE=? WHERE LAUNCH_ID=?");
 				query2.setParameter(0, null);
 				query2.setParameter(1, userId);
 				query2.setParameter(2, new Timestamp(new Date().getTime()));
@@ -1540,7 +1540,7 @@ public class LaunchDaoImpl implements LaunchDao {
 				batchUpdate0.executeUpdate();
 
 				Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
-						"UPDATE TBL_LAUNCH_MASTER SET SAMPLE_SHARED=?0,UPDATED_BY=?1,UPDATED_DATE=?2 WHERE LAUNCH_ID=?3");  //Sarin - Added Parameters position
+						"UPDATE TBL_LAUNCH_MASTER SET SAMPLE_SHARED=?,UPDATED_BY=?,UPDATED_DATE=? WHERE LAUNCH_ID=?");
 				query2.setParameter(0, null);
 				query2.setParameter(1, userId);
 				query2.setParameter(2, new Timestamp(new Date().getTime()));
@@ -1548,7 +1548,7 @@ public class LaunchDaoImpl implements LaunchDao {
 				query2.executeUpdate();
 			} else if (currentPage.equals("Launch_buildUp")) {
 				Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
-						"UPDATE TBL_LAUNCH_MASTER SET SAMPLE_SHARED=?0,UPDATED_BY=?1,UPDATED_DATE=?2 WHERE LAUNCH_ID=?3");  //Sarin - Added Parameters position
+						"UPDATE TBL_LAUNCH_MASTER SET SAMPLE_SHARED=?,UPDATED_BY=?,UPDATED_DATE=? WHERE LAUNCH_ID=?");
 				query2.setParameter(0, null);
 				query2.setParameter(1, userId);
 				query2.setParameter(2, new Timestamp(new Date().getTime()));
