@@ -57,7 +57,7 @@
               <div class="col-md-4 col-sm-4 col-xs-4 ">
                 <a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
 		           <div class="promo-create promo-delete-bg">
-		              <img src="assets/images/proco/deletepromo.png" class="img-responsive" id="delimg" alt="">
+		              <img src="assets/images/proco/deletepro.png" class="img-responsive" id="delimg" alt="">
 		               <div class="promo-craete-txt promo-delete-txt-bg"><div>DROPPED OFFERS</div></div>
 		            </div>
                 </a>
@@ -97,7 +97,7 @@
              <div class="col-md-2 col-sm-4 col-xs-4 ">
                 <a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
 		           <div class="promo-create promo-delete-bg">
-		              <img src="assets/images/proco/deletepromo.png" class="img-responsive" id="delimg" alt="">
+		              <img src="assets/images/proco/deletepro.png" class="img-responsive" id="delimg" alt="">
 		               <div class="promo-craete-txt promo-delete-txt-bg"><div>Dropped Offer</div></div>
 		            </div>
                 </a>
@@ -194,7 +194,7 @@
           <div class="col-md-4 col-sm-4 col-xs-4 ">
                 <a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
 		           <div class="promo-create promo-delete-bg">
-		              <img src="assets/images/proco/deletepromo.png" class="img-responsive" id="delimg" alt="">
+		              <img src="assets/images/proco/deletepro.png" class="img-responsive" id="delimg" alt="">
 		               <div class="promo-craete-txt promo-delete-txt-bg"><div>Promo Deletion</div></div>
 		            </div>
                 </a>

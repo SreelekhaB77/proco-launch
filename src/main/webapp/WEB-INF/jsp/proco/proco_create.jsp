@@ -38,7 +38,7 @@
     padding: 4px 0px 20px 0px;">
 	<div class="container-fluid paddR10">
 		<div class="navbar-header marginB10">
-			<h1 class="pull-left" style="color: #7986BE;">
+			<h1 class="pull-left" style="color: #000000;">
 				${roleId} <span>Visibility</span>
 			</h1>
 			<button type="button" class="navbar-toggle collapsed pull-right"
@@ -584,7 +584,7 @@
 				<form:textarea class="form-control" rows="3" placeholder="PROMO DESCRIPTION HERE..." path="promoDesc" id="promoDesc"></form:textarea>
 				<div class="promo-create-btn">
 					<!-- <button class="btn btn-primary" id="createPromo">CREATE PROMO</button> -->
-					<input class="btn btn-primary" type="button" id="createBtn" value="CREATE PROMO" onClick="javascript: validateForm();"></input>
+					<input class="btn new-btn-primary" type="button" id="createBtn" value="CREATE PROMO" onClick="javascript: validateForm();"></input>
 				</div>
 			</form:form>
 
@@ -614,7 +614,7 @@
 						</div>
 
 						<div class="" style="color: #fff; text-align: center">
-							<button class="btn btn-primary">UPLOAD</button>
+							<button class="btn new-btn-primary">UPLOAD</button>
 
 						</div>
 			</form:form>

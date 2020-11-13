@@ -38,7 +38,7 @@
     padding: 4px 0px 20px 0px;">
 	<div class="container-fluid paddR10">
 		<div class="navbar-header marginB10">
-			<h1 class="pull-left" style="color: #7986BE;">
+			<h1 class="pull-left" style="color: #000000;">
 				${roleId} <span>Visibility</span>
 			</h1>
 			<button type="button" class="navbar-toggle collapsed pull-right"
@@ -226,7 +226,7 @@
 		<div class="proco-creation form-horizontal">
 			<input type="hidden" id="roleId" value="${roleId}" />
 			<!-- <div class="promo-back"><a href="http://localhost:8083/VisibilityAssetTracker/procoHome.htm"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Listing</div> -->
-			<div class="promo-details" style="padding:20px 0px 0px 0px"><span style="color:#7986BE;font-weight:700;">SELECT PROMO LISTING</span>
+			<div class="promo-details" style="padding:20px 0px 0px 0px"><span style="color:#3F3F3F;font-weight:700;">SELECT PROMO LISTING</span>
 				<!-- <span class="promo-detail-txt"><b>SELECT PROMO LISTING</b></span> <span
 					class="pull-right promo-uom">
 					<div class="col-md-12">
@@ -247,7 +247,7 @@
 			</div>
 		<form action="http://localhost:8083/VisibilityAssetTracker/downloadDeletedPromo.htm" method="POST" enctype="multipart/form-data" id="download">
 		<input type="hidden" name="remarkText" id="remarkText" value="" />
-			<div class="promo-form-details">
+			<div class="promo-form-details proco-deletion-form">
 				<div class="col-md-4">
 					<div class="form-group">
 						<label for="unique-id" class="control-label col-md-4">CATEGORY</label>
@@ -370,7 +370,7 @@
 				<div class="clearfix"></div>
 			</div>
 		</form>
-			<div class="promo-list">PROMO LIST</div>
+			<div class="promo-list table-header-deletion">PROMO LIST</div>
 			<form>
 			<table id="table-id-promo-list-table" class="table table-striped table-bordered promo-list-table table-responsive" style="width: 100%;">
 				<thead>

@@ -38,7 +38,7 @@
     padding: 4px 0px 20px 0px;">
 	<div class="container-fluid paddR10">
 		<div class="navbar-header marginB10">
-			<h1 class="pull-left" style="color: #7986BE;">
+			<h1 class="pull-left" style="color: #000000;">
 				${roleId} <span>Visibility</span>
 			</h1>
 			<button type="button" class="navbar-toggle collapsed pull-right" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -53,7 +53,7 @@
 				<div class="row">
 					<ul class="nav nav-pills">
 					 <c:if test="${roleId eq 'TME'}">
-					 <li role="presentation" class="col-md-2 col-sm-6 col-xs-12 create"><a
+					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoCreation.htm">
 								<div class="proco-create-icon"></div>
 								<div class="tab-label-proco-create-inactive">Promo Creation</div>
@@ -61,13 +61,13 @@
 					 </c:if>
 					 
 					  <c:if test="${roleId eq 'DP'}">
-					  <li role="presentation" class="col-md-2 col-sm-6 col-xs-12 create"><a
+					  <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoVolumeUpload.htm">
 								<div class="proco-volume-icon"></div>
 								<div class="tab-label-proco-volume-inactive">Volume Upload</div>
 						</a></li>
 						
-						<li role="presentation" class="col-md-2 col-sm-6 col-xs-12 disaggregation"><a
+						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 disaggregation"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoDisaggregation.htm">
 								<div class="proco-disaggregation-icon"></div>
 								<div class="tab-label-proco-disaggregation-inactive">Disaggregation</div>
@@ -80,7 +80,7 @@
 								<div class="proco-disaggregation-icon"></div>
 								<div class="tab-label-proco-disaggregation-inactive">Disaggregation</div>
 						</a></li> -->
-					 <li role="presentation" class="col-md-2 col-sm-6 col-xs-12 collaboration"><a
+					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 collaboration"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoCollaboration.htm">
 								<div class="proco-collaboration-icon"></div>
 								<div class="tab-label-proco-collaboration-inactive">Collaboration</div>
@@ -88,7 +88,7 @@
 						</c:if>
 						
 						<c:if test="${roleId eq 'NCMM'}">
-					 <li role="presentation" class="col-md-2 col-sm-6 col-xs-12 create"><a
+					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoCr.htm">
 								<div class="proco-create-icon"></div>
 								<div class="tab-label-proco-create-inactive">Promo CR</div>
@@ -96,7 +96,7 @@
 					 </c:if>
 					 
 					 <c:if test="${roleId eq 'NSCM'}">
-					 <li role="presentation" class="col-md-2 col-sm-6 col-xs-12 create"><a
+					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoCr.htm">
 								<div class="proco-create-icon"></div>
 								<div class="tab-label-proco-create-inactive">Promo CR</div>
@@ -104,14 +104,14 @@
 					 </c:if>
 						
 						<li role="presentation"
-							class="col-md-2 col-sm-6 col-xs-12 proco-listing-active"><a
+							class="col-md-3 col-sm-6 col-xs-12 proco-listing-active"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
 								<div class="proco-listing-icon"></div>
 								<div class="tab-label-proco-create-active OpenSans-font">Promo Listing</div>
 						</a></li>
 						
 						<li role="presentation"
-							class="col-md-2 col-sm-6 col-xs-12 listing"><a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
+							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
@@ -160,7 +160,7 @@
 		<div class="proco-creation form-horizontal">
 			<input type="hidden" id="roleId" value="${roleId}" />
 			<!-- <div class="promo-back"><a href="http://localhost:8083/VisibilityAssetTracker/procoHome.htm"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Listing</div> -->
-			<div class="promo-details" style="padding:20px 0px 0px 0px"><span style="color:#7986BE;font-weight:700;">SELECT PROMO LISTING</span>
+			<div class="promo-details" style="padding:20px 0px 0px 0px"><span style="color:#3F3F3F;font-weight:700;">SELECT PROMO LISTING</span>
 				<!-- <span class="promo-detail-txt"><b>SELECT PROMO LISTING</b></span> <span
 					class="pull-right promo-uom">
 					<div class="col-md-12">
@@ -181,7 +181,7 @@
 			</div>
 		<form action="http://localhost:8083/VisibilityAssetTracker/downloadPromoFromListing.htm" method="POST" enctype="multipart/form-data" id="download">
 		<input type="hidden" name="remarkText" id="remarkText" value="" />
-			<div class="promo-form-details">
+			<div class="promo-form-details proco-listing-form">
 				<div class="col-md-4">
 					<div class="form-group">
 						<label for="unique-id" class="control-label col-md-4">CATEGORY</label>
@@ -304,7 +304,7 @@
 				<div class="clearfix"></div>
 			</div>
 		</form>
-			<div class="promo-list">PROMO LIST</div>
+			<div class="promo-list table-header-listing">PROMO LIST</div>
 			<form>
 			<table id="table-id-promo-list-table" class="table table-striped table-bordered promo-list-table table-responsive" style="width: 100%;">
 				<thead>
@@ -416,7 +416,7 @@
 					</div>
 
 					<div class="" style="color: #fff; text-align: center">
-						<button class="btn btn-primary">UPLOAD</button>
+						<button class="btn new-btn-primary">UPLOAD</button>
 
 					</div>
 				</div>
