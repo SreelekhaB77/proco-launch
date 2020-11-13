@@ -22,7 +22,7 @@ public class HibernateConfiguration {
 	public DataSource dataSource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-		dataSource.setUrl("jdbc:mysql://34.70.97.54:3306/MODTRD");
+		dataSource.setUrl("jdbc:mysql://34.70.97.54:3306/MODTRD?zeroDateTimeBehavior=convertToNull");
 		dataSource.setUsername("root");
 		dataSource.setPassword("n6FagchIeg9pBtrh");
 		return dataSource;

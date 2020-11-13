@@ -731,7 +731,7 @@ function coeDocument(){
          dataType: 'json',
          type: 'get',
          contentType: 'application/json',
-         data:  JSON.stringify({ launchIds: LaunchStr }),
+         //data:  JSON.stringify({ launchIds: LaunchStr }),
          processData: false,
          beforeSend: function() {
              ajaxLoader(spinnerWidth, spinnerHeight);
