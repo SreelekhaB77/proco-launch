@@ -50,7 +50,7 @@ public class VisibilityPlanDaoImpl implements VisibilityPlanDao {
 		try {
 			//Garima - changes for VARCHAR_FORMAT
 			//Query query = sessionFactory.getCurrentSession().createNativeQuery("select MOC from TBL_VAT_MOC_MASTER WHERE TIMESTAMP_FORMAT(MOC,'MMYYYY') >= (SELECT TIMESTAMP_FORMAT(VARCHAR_FORMAT(DATE (TIMESTAMP_FORMAT(MOC, 'MMYYYY')) - 5 MONTH , 'MMYYYY'),'MMYYYY') from TBL_VAT_MOC_MASTER where STATUS='Y' AND MOC_GROUP='GROUP_ONE' ) AND MOC_GROUP='GROUP_ONE' order by TIMESTAMP_FORMAT(MOC,'MMYYYY') LIMIT 24");
-			Query query = sessionFactory.getCurrentSession().createNativeQuery("select MOC from TBL_VAT_MOC_MASTER WHERE DATE_FORMAT(STR_TO_DATE(MOC,'%m%d%Y'), '%m%Y') >= (SELECT DATE_FORMAT(DATE_SUB(STR_TO_DATE(MOC,'%m%d%Y'), INTERVAL 5 MONTH), '%m%Y') from TBL_VAT_MOC_MASTER where STATUS='Y' AND MOC_GROUP='GROUP_ONE' ) AND MOC_GROUP='GROUP_ONE' order by DATE_FORMAT(STR_TO_DATE(MOC,'%m%d%Y'), '%m%Y') LIMIT 24");
+			Query query = sessionFactory.getCurrentSession().createNativeQuery("select MOC from TBL_VAT_MOC_MASTER WHERE DATE_FORMAT(STR_TO_DATE(concat('01',MOC),'%d%m%Y'), '%m%Y') >= (SELECT DATE_FORMAT(DATE_SUB(STR_TO_DATE(concat('01',MOC),'%d%m%Y'), INTERVAL 5 MONTH), '%m%Y') from TBL_VAT_MOC_MASTER where STATUS='Y' AND MOC_GROUP='GROUP_ONE' ) AND MOC_GROUP='GROUP_ONE' order by DATE_FORMAT(STR_TO_DATE(concat('01',MOC),'%d%m%Y'), '%m%Y') LIMIT 24");
 			List<String> list = query.list();
 			return list;
 		} catch (Exception e) {

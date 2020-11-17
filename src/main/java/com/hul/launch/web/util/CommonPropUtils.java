@@ -6,17 +6,18 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
+
 public class CommonPropUtils extends PropertyPlaceholderConfigurer {
 	static Logger					logger		= Logger.getLogger(CommonPropUtils.class);
 	private static CommonPropUtils	instance	= null;
 	public static Properties		prop		= new Properties();
 	static InputStream				in			= null;
 	public static String			machineType	= null;
-	
+
 	protected CommonPropUtils() {
 		// Exists only to defeat instantiation.
 	}
-	
+
 	static {
 		if (((String) System.getProperty("os.name")).startsWith("Win")) {
 			machineType = GlobalConstants_en.MACHINE_TYPE_WIN;
@@ -24,8 +25,9 @@ public class CommonPropUtils extends PropertyPlaceholderConfigurer {
 			machineType = GlobalConstants_en.MACHINE_TYPE_LNX;
 		}
 	}
-	
-	public static CommonPropUtils getInstance() {
+
+	//kiran - changes for applicationproperties.properties
+	/*public static CommonPropUtils getInstance() {
 		if (instance == null) {
 			instance = new CommonPropUtils();
 		}
@@ -37,8 +39,21 @@ public class CommonPropUtils extends PropertyPlaceholderConfigurer {
 			logger.error("Error in getInstance()", e);
 		}
 		return instance;
+	}*/
+
+	public static CommonPropUtils getInstance() {
+		if (instance == null) {
+			instance = new CommonPropUtils();
+		}
+		ClassLoader loader = CommonPropUtils.class.getClassLoader();
+		try (InputStream resourceStream = loader.getResourceAsStream("ApplicationProperties.properties")) {
+			prop.load(resourceStream);
+		} catch (Exception ex) {
+			logger.error(ex.getMessage());
+		}
+		return instance;
 	}
-	
+
 	public String getProperty(String propertyName) {
 		return prop.getProperty(propertyName);
 	}
