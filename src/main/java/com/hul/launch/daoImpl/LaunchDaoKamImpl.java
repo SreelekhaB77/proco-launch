@@ -610,7 +610,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		try {
 			PreparedStatement stmt = sessionImpl.connection().prepareStatement(
 					"select DISTINCT abc.ACCOUNT_NAME ACCOUNT_NAME,ACCOUNT_NAME_L2,HUL_STORE_FORMAT,CLUSTER,REPORTING_CODE,"
-							+ "tvcom.KAM_MAIL_ID from modtrd.tbl_launch_buildup_temp abc,TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE "
+							+ "tvcom.KAM_MAIL_ID from MODTRD.TBL_LAUNCH_BUILDUP_TEMP abc,TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE "
 							+ "tvcom.HUL_OUTLET_CODE = abc.HFS_CODE AND LAUNCH_ID = '" + launchId
 							+ "' AND UPPER(tvcom.KAM_MAIL_ID) = '" + kamMailId + "'");
 			ResultSet rs = stmt.executeQuery();
@@ -699,7 +699,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			String kamMailId = userId.concat("@unilever.com").toUpperCase();
 			Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
 					"select DISTINCT ACCOUNT_NAME_L2,abc.ACCOUNT_NAME ACCOUNT_NAME,HUL_STORE_FORMAT,CLUSTER,REPORTING_CODE"
-							+ " from modtrd.tbl_launch_buildup_temp abc,TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE "
+							+ " from MODTRD.TBL_LAUNCH_BUILDUP_TEMP abc,TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE "
 							+ "tvcom.HUL_OUTLET_CODE = abc.HFS_CODE AND LAUNCH_ID = '" + launchId
 							+ "' AND UPPER(tvcom.KAM_MAIL_ID) = '" + kamMailId + "'");
 

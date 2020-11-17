@@ -205,8 +205,8 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 			List<Object> ifSavedAlready = query2.list();
 			if (ifSavedAlready.isEmpty()) {
 				Query query1 = sessionFactory.getCurrentSession().createNativeQuery(
-						"SELECT tlm.LAUNCH_NAME,tlm.LAUNCH_MOC,TLTFC.BP_NAME,DEPOT,CLUSTER,TLTFC.FINAL_CLD_N,TLTFC.FINAL_CLD_N1, "
-								+ "TLTFC.FINAL_CLD_N2,tlm.LAUNCH_ID, TLTFC.MODIFIED_CHAIN FROM TBL_LAUNCH_TEMP_FINAL_CAL tltfc, "
+						"SELECT tlm.LAUNCH_NAME,tlm.LAUNCH_MOC,tltfc.BP_NAME,DEPOT,CLUSTER,tltfc.FINAL_CLD_N,tltfc.FINAL_CLD_N1, "
+								+ "tltfc.FINAL_CLD_N2,tlm.LAUNCH_ID, tltfc.MODIFIED_CHAIN FROM TBL_LAUNCH_TEMP_FINAL_CAL tltfc, "
 								+ "TBL_LAUNCH_MASTER tlm WHERE tlm.LAUNCH_ID = tltfc.LAUNCH_ID AND SAMPLE_SHARED IS NOT NULL AND "
 								+ "tltfc.LAUNCH_ID IN (:listOfLaunchData)");
 				query1.setParameterList("listOfLaunchData", listOfLaunchData);
@@ -264,8 +264,8 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 		List<LaunchScMstnClearanceResponse> listOfCompletedLaunch = new ArrayList<>();
 		try {
 			Query query1 = sessionFactory.getCurrentSession().createNativeQuery(
-					"SELECT tlm.LAUNCH_NAME,tlm.LAUNCH_MOC,TLTFC.BP_NAME,DEPOT,CLUSTER,TLTFC.FINAL_CLD_N,TLTFC.FINAL_CLD_N1,"
-							+ "TLTFC.FINAL_CLD_N2,tlm.LAUNCH_ID, TLTFC.MODIFIED_CHAIN FROM TBL_LAUNCH_TEMP_FINAL_CAL tltfc, "
+					"SELECT tlm.LAUNCH_NAME,tlm.LAUNCH_MOC,tltfc.BP_NAME,DEPOT,CLUSTER,tltfc.FINAL_CLD_N,tltfc.FINAL_CLD_N1,"
+							+ "tltfc.FINAL_CLD_N2,tlm.LAUNCH_ID, tltfc.MODIFIED_CHAIN FROM TBL_LAUNCH_TEMP_FINAL_CAL tltfc, "
 							+ "TBL_LAUNCH_MASTER tlm WHERE tlm.LAUNCH_ID = tltfc.LAUNCH_ID AND SAMPLE_SHARED IS NOT NULL AND "
 							+ "tltfc.LAUNCH_ID IN (:listOfLaunchData)");
 			query1.setParameterList("listOfLaunchData", listOfLaunchData);
