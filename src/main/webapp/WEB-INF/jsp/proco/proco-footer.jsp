@@ -10,7 +10,7 @@
 <body>
 	<footer>
 	<div class="text-center unilever-copyright">
-		&copy; Unilever
+		Hindustan Unilever Limited &copy; Unilever Limited
 <script type="text/javascript">
 		//	document.write(new Date().getFullYear());
 		</script>

@@ -50,7 +50,7 @@
     padding: 4px 0px 20px 0px;">
 	<div class="container-fluid paddR10">
 		<div class="navbar-header marginB10">
-			<h1 class="pull-left" style="color: #7986BE;">
+			<h1 class="pull-left" style="color: #000000;">
 				${roleId} <span>Visibility</span>
 			</h1>
 			<button type="button" class="navbar-toggle collapsed pull-right"
@@ -65,16 +65,16 @@
 		<div id="navbar" class="navbar-collapse collapse">
 			<div class="">
 				<div class="row">
-					<ul class="nav nav-pills">
+					<ul class="nav nav-pills nav-no-margin">
 
-						 <li role="presentation" class="col-md-2 col-sm-6 col-xs-12 create"><a
+						 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoVolumeUpload.htm">
 								<div class="proco-volume-icon"></div>
 								<div class="tab-label-proco-volume-inactive">Volume Upload</div>
 						</a></li>
 
 						<li role="presentation"
-							class="col-md-2 col-sm-6 col-xs-12 proco-disaggregation-active"><a
+							class="col-md-3 col-sm-6 col-xs-12 proco-disaggregation-active"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoDisaggregation.htm">
 								<div class="proco-disaggregation-icon"></div>
 								<div class="tab-label-proco-disaggregation-active">Disaggregation</div>
@@ -89,14 +89,14 @@
 						</a></li> -->
 
 						<li role="presentation"
-							class="col-md-2 col-sm-6 col-xs-12 listing"><a
+							class="col-md-3 col-sm-6 col-xs-12 listing"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
 								<div class="proco-listing-icon"></div>
 								<div class="tab-label-proco-create-inactive OpenSans-font">Promo Listing</div>
 						</a></li>
 
 						<li role="presentation"
-							class="col-md-2 col-sm-6 col-xs-12 listing"><a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
+							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
@@ -135,7 +135,7 @@
 			<div class="proco-creation form-horizontal">
 
 				<div class="promo-details" style="padding: 20px 0px 0px 0px;">
-					<span class="" style="color: #7986BE">DETAILS OF THE PROMO
+					<span class="" style="color: #3F3F3F">DETAILS OF THE PROMO
 						PLAN VOLUME DISAGGREGATION</span>
 					<!--  <span class="pull-right promo-uom">
                 <div class="col-md-12">
@@ -152,7 +152,7 @@
 					<!--     <div class="clearfix"></div> -->
 				</div>
 
-				<div class="promo-form-details" style="margin-bottom: 10px;">
+				<div class="promo-form-details proco-disaggregation-form" style="margin-bottom: 10px;">
 					<div class="row">
 						<div class="col-md-12">
 							<div class="col-md-2">

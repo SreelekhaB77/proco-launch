@@ -44,7 +44,7 @@
     padding: 4px 0px 20px 0px;">
 	<div class="container-fluid paddR10">
 		<div class="navbar-header marginB10">
-			<h1 class="pull-left" style="color: #7986BE;">
+			<h1 class="pull-left" style="color: #000000;">
 				${roleId} <span>Visibility</span>
 			</h1>
 			<button type="button" class="navbar-toggle collapsed pull-right"
@@ -62,9 +62,9 @@
 					<ul class="nav nav-pills">
 					
 					<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 proco-listing-active"><a
+							class="col-md-3 col-sm-6 col-xs-12 proco-tracker-active"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoStatusTracker.htm">
-								<div class="proco-listing-icon"></div>
+								<div class="proco-tracker-icon"></div>
 								<div class="tab-label-proco-create-active OpenSans-font">Promo Status Tracker</div>
 						</a></li>
 						
@@ -141,7 +141,7 @@
 		<div class="proco-creation form-horizontal">
 			<input type="hidden" id="roleId" value="${roleId}" />
 			<!-- <div class="promo-back"><a href="http://localhost:8083/VisibilityAssetTracker/procoHome.htm"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Listing</div> -->
-			<div class="promo-details" style="padding:20px 0px 0px 0px"><span style="color:#7986BE;font-weight:700;">PROMO STATUS TRACKER</span>
+			<div class="promo-details" style="padding:20px 0px 0px 0px"><span style="color:#3F3F3F;font-weight:700;">PROMO STATUS TRACKER</span>
 				<!-- <span class="promo-detail-txt"><b>SELECT PROMO LISTING</b></span> <span
 					class="pull-right promo-uom">
 					<div class="col-md-12">
@@ -161,7 +161,7 @@
 				<div class="clearfix"></div> -->
 			</div>
 		<form action="http://localhost:8083/VisibilityAssetTracker/downloadPromoStatusTracker.htm" method="POST" enctype="multipart/form-data" id="download">
-			<div class="promo-form-details">
+			<div class="promo-form-details proco-tracker-form">
 				<div class="col-md-4">
 					<div class="form-group">
 						<label for="unique-id" class="control-label col-md-4">CATEGORY</label>
@@ -295,7 +295,7 @@
 				<div class="clearfix"></div>
 			</div>
 		</form>
-			<div class="promo-list">PROMO LIST</div>
+			<div class="promo-list table-header-tracker">PROMO LIST</div>
 			<form>
 			<table class="table table-striped table-bordered promo-list-table"
 				cellspacing="0" style="width: 100%;overflow-x: scroll;display: block;">
@@ -357,7 +357,7 @@
 																<span id="baseart" style="display:none;"></span>
 														</div>
 														<div class="col-sm-10 col-md-1 subUpload">
-															<input class="validate_upload btn marginT10 btn-primary"
+															<input class="validate_upload btn marginT10 new-btn-primary"
 																id="artworkUploadBtn" onclick="uploadArtDoc('0')"
 																type="button" value="Upload"></input>
 														</div>
@@ -383,7 +383,7 @@
 									<div class="input-group upload-status-files">
 										<input id="uploadsecscre" name="file" type="file" class="file">
 									</div>
-									<input class="validate_upload btn marginT10 btn-primary" onclick="uploadArtDoc('0')" type="button"
+									<input class="validate_upload btn marginT10 new-btn-primary" onclick="uploadArtDoc('0')" type="button"
 										id="btnSubmitBasePack" value="Upload" />
 
 								</div>

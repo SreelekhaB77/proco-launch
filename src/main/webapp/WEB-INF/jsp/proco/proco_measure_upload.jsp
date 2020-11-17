@@ -51,7 +51,7 @@ footer {
     padding: 4px 0px 20px 0px;">
 	<div class="container-fluid paddR10">
 		<div class="navbar-header marginB10">
-			<h1 class="pull-left" style="color: #7986BE;">
+			<h1 class="pull-left" style="color: #000000;">
 				${roleId} <span>Visibility</span>
 			</h1>
 			<button type="button" class="navbar-toggle collapsed pull-right"
@@ -140,7 +140,7 @@ footer {
 			
 		
 		
-		 <div class="promo-upload">PROCO MEASURE REPORT UPLOAD</div>
+		 <div class="promo-measure-upload">PROCO MEASURE REPORT UPLOAD</div>
 							<div class="row">
 								<div class="col-md-6 col-sm-6 ddd">
 									<form id="coeStatusMeasFileUpload" class="form-horizontal" action="http://localhost:8083/VisibilityAssetTracker/uploadProcoMeasureReport.htm" method="post" enctype="multipart/form-data" name="coeStatusFileUpload">
@@ -161,7 +161,7 @@ footer {
 												<div class="input-group upload-status-files">
 													<input id="uploadmeasscre" name="file" type="file" class="file">
 												</div>
-												<input class="validate_upload btn marginT10 btn-primary" type="submit" id="btnSubmitBasePack" value="Upload" />
+												<input class="validate_upload btn marginT10 new-btn-primary" type="submit" id="btnSubmitBasePack" value="Upload" />
 												<a href="http://localhost:8083/VisibilityAssetTracker/downloadSampleMeasureReport.htm" class="validate_upload btn marginT10 btn-primary" id="btnSubmitBasePack">Promo Measure Template</a>
 											</div>
 										</div>
@@ -181,7 +181,7 @@ footer {
 												<input id="MocYear" name="MocYear" type="hidden" class="form-control" />
 												<input id="MocMonth" name="MocMonth" type="hidden" class="form-control" />
 											</div>
-											<input class="validate_dowload btn marginT10 btn-primary" type="submit" value="Download" />
+											<input class="validate_dowload btn marginT10 new-btn-primary" type="submit" value="Download" />
 										</div>
 									</div>
 								</form>

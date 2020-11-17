@@ -23,7 +23,6 @@
 <link rel="stylesheet" type="text/css" href="assets/css/custom-font.css">
 <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
 <link rel="stylesheet" href="assets/css/smart_wizard_theme_arrows.css" type="text/css" />
-<link rel="stylesheet" href="assets/css/smart_wizard_theme_arrows.min.css" type="text/css" />
 <link rel="stylesheet" href="assets/css/smart_wizard.css" type="text/css" />
 <link rel="stylesheet" type="text/css" href="assets/css/fixedColumns.bootstrap.min.css">
 
