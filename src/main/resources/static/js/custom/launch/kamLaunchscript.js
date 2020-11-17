@@ -814,7 +814,7 @@ function saveBuildUp() {
         dataType: 'json',
         type: 'get',
         contentType: 'application/json',
-        data: JSON.stringify( { "launchIds": kamlnchId} ),
+        //data: JSON.stringify( { "launchIds": kamlnchId} ),
         processData: false,
         beforeSend: function() {
             ajaxLoader(spinnerWidth, spinnerHeight);

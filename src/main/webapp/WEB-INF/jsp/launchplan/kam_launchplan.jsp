@@ -375,9 +375,9 @@
 
 					<div class="paid-visi">
 						<div class="modal-header"
-							style="background-color: #028681; color: #fff;">
+							style="background-color: #E95912; color: #fff;">
 							<button type="button" class="close" id="paidcrossBtn"
-								data-dismiss="modal">�</button>
+								data-dismiss="modal">X</button>
 							<h4 class="modal-title">Remarks for change in documents sample</h4>
 						</div>
 						<form action="#" id="docSampRemarkForm" method="POST"
@@ -411,10 +411,10 @@
 							</div>
 							<div class="modal-footer">
 								<button type="button"
-									class="btn btn-default pull-right resetBtn"
+									class="btn new-btn-primary pull-right resetBtn"
 									data-dismiss="modal" data-hide="alert" id="paidRejCancelBtn">CLOSE</button>
 								<button type="button" onclick="docSamLaunch()" id="KamDocSamBtn" class="btn pull-right resetBtn marginR10"
-									style="background-color: #028681 !important; height: 33px; margin-right: 8px; color: #fff;">Submit</button>
+									style="background-color: #3B5999 !important; height: 33px; margin-right: 8px; color: #fff;">Submit</button>
 							</div>
 
 						</form>
