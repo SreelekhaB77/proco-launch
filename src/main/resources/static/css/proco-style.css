@@ -326,7 +326,7 @@ text-align: left;
 }
 
 .promo-collab-bg {
-	background: #333849;
+	background: #7705BC;
 }
 
 .promo-dashboard-bg {
@@ -363,7 +363,7 @@ text-align: left;
 }
 
 .promo-collab-txt-bg {
-	background: #2b2f3d;
+	background: #7705BC;
 }
 
 .promo-dashboard-txt-bg {
@@ -526,7 +526,8 @@ div#DataTables_Table_0_processing {
 }
 
 .promo-upload {
-	background: #03437A !important;
+	/*  background: #03437A !important;  */
+	background: #3B5999 !important;
 }
 select.promolistselect {
 	border: 0.5px solid #03437A;
@@ -863,11 +864,11 @@ span.comboTreeItemTitle {
 }
 
 .promo-volume-txt-bg {
-	background: #F18C10;
+	background: #F18C10 !important;
 }
 
 .promo-volume-bg {
-	background: #F18C10;
+	background: #F18C10 !important;
 }
 
 .table thead tr th span {
@@ -1001,7 +1002,7 @@ span.comboTreeItemTitle {
     padding-right: 10px;
     background: url(../images/proco/signop.png) no-repeat center center;
     background-size: 46px;
-    background-color: #5bc0de;
+    background-color: #00ACEE;
     margin-left: -13px;
 }
 
@@ -1048,8 +1049,7 @@ span.comboTreeItemTitle {
 	padding-right: 10px;
 	background: url("../images/proco/icon-6.png") no-repeat center center;
     background-size: 45px;
-
-	background-color: #f7ca18;
+	background-color: #F18C10;
 }
 
 .tab-label-proco-volume-active {
@@ -1062,9 +1062,10 @@ span.comboTreeItemTitle {
     top: 2px;
     color: #fff;
     padding-top: 10px;
+    background: #F18C10;
 }
 .proco-volume-active a {
-	background-color: #f7ca18 !important;
+	background-color: #F18C10 !important;
 	position: relative;
 	height: 60px;
 	padding: 0 !important;
@@ -1077,7 +1078,7 @@ span.comboTreeItemTitle {
     position: absolute;
     left: 70px;
     top: 17px;
-    color: #f7ca18;
+    color: #F18C10;
 }
 
 
@@ -1089,11 +1090,11 @@ span.comboTreeItemTitle {
 	background: url("../images/proco/icon-3.png") no-repeat center center;
     background-size: 45px;
 
-	background-color: #7c539e;
+	background-color: #3B5999;
 }
 
 .tab-label-proco-disaggregation-active {
-	font-size: 1.750em;
+	font-size: 1.3em;
     float: left;
     height: 60px;
     position: absolute;
@@ -1103,7 +1104,7 @@ span.comboTreeItemTitle {
     padding-top: 10px;
 }
 .proco-disaggregation-active a {
-	background-color: #7c539e !important;
+	background-color: #3B5999 !important;
 	position: relative;
 	height: 60px;
 	padding: 0 !important;
@@ -1127,8 +1128,7 @@ span.comboTreeItemTitle {
 	padding-right: 10px;
 	background: url("../images/proco/icon-4.png") no-repeat center center;
     background-size: 45px;
-
-	background-color: #333849;
+	background-color: #7705BC;
 }
 
 .tab-label-proco-collaboration-active {
@@ -1142,7 +1142,7 @@ span.comboTreeItemTitle {
     padding-top: 10px;
 }
 .proco-collaboration-active a {
-	background-color: #333849 !important;
+	background-color: #7705BC !important;
 	position: relative;
 	height: 60px;
 	padding: 0 !important;
@@ -1218,11 +1218,11 @@ img#delimg {
 	padding: 0 !important;
 }
 .promo-lib-bg-active a{
-	background-color: #5bc0de !important;
+	background-color: #00ACEE !important;
     position: relative;
     height: 60px;
     padding: 0 !important;
-        color: #fff;
+    color: #fff;
     line-height: 4;
     
 }
@@ -1478,6 +1478,11 @@ span.comboTreeItemTitle {
 	padding: 15px 0px;
 }
 
+.proco-collab-form {
+	background: #F7E9FF;
+	padding: 15px 0px;
+}
+
 .table-header-listing {
 	background: #85A2CE;
 }
@@ -1490,6 +1495,54 @@ span.comboTreeItemTitle {
 	color: #3F3F3F;
 }
 
+.proco-volume-form {
+	background: #F9ECDC;
+	padding: 15px 0px;
+}
+
+.table-header-volume {
+	background: #F18C10;
+}
+
+.proco-disaggregation-form {
+	background: #E4E9F3;
+	padding: 15px 0px;
+}
+
+.nav-no-margin>li+li {
+	margin: 0;
+}
+
+.proco-tracker-icon {
+	width: 55px;
+	height: 60px;
+	float: left;
+	padding-right: 10px;
+	background: url("../images/proco/icon-2.png") no-repeat center center;
+    background-size: 30px;
+	background-color: #1171FC;
+}
+
+.proco-tracker-active a {
+	background-color: #1171FC !important;
+	position: relative;
+	height: 60px;
+	padding: 0 !important;
+}
+
+.proco-tracker-form {
+	background: #E5EFFE;
+	padding: 15px 0px;
+}
+
+.table-header-tracker {
+	background: #1171FC;
+}
+
+.promo-measure-upload {
+	background: #00ACEE !important;	
+	color: #fff;
+}
 
 /* MT portal ends here */
 

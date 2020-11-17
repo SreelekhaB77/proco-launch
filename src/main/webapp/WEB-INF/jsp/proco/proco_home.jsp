@@ -67,13 +67,18 @@
           </c:if>
  <c:if test="${roleId eq 'DP'}">
   <div class="col-md-12 col-md-offset-1">
-    <div class="col-md-2 col-sm-6 col-xs-6 " >
-            <a href="http://localhost:8083/VisibilityAssetTracker/promoVolumeUpload.htm">
-           <div class="promo-create promo-volume-bg">
-              <img src="assets/images/proco/icon-6.png"  class="img-responsive" alt="">
-                <div class="promo-craete-txt promo-volume-txt-bg"><div>Volume Upload</div></div>
-            </div>
-              </a></div>
+           <div class="col-md-2 col-sm-6 col-xs-6 " >
+              <a href="http://localhost:8083/VisibilityAssetTracker/promoVolumeUpload.htm">
+                 <div class="promo-create promo-volume-bg">
+                    <img src="assets/images/proco/icon-6.png"  class="img-responsive" alt="">
+                    <div class="promo-craete-txt promo-volume-txt-bg">
+                       <div>
+                          Volume Upload
+                       </div>
+                    </div>
+                 </div>
+              </a>
+           </div>
              
           <div class="col-md-2 col-sm-6 col-xs-6 ">
          

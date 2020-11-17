@@ -34,7 +34,7 @@
     padding: 4px 0px 20px 0px;">
 	<div class="container-fluid paddR10">
 		<div class="navbar-header marginB10">
-			<h1 class="pull-left" style="color: #7986BE;">
+			<h1 class="pull-left" style="color: #000000;">
 				${roleId} <span>Visibility</span>
 			</h1>
 			<button type="button" class="navbar-toggle collapsed pull-right"
@@ -49,31 +49,31 @@
 		<div id="navbar" class="navbar-collapse collapse">
 			<div class="">
 				<div class="row">
-					<ul class="nav nav-pills">
+					<ul class="nav nav-pills nav-no-margin">
 
 						<li role="presentation"
-							class="col-md-2 col-sm-6 col-xs-12 proco-volume-active"><a
+							class="col-md-3 col-sm-6 col-xs-12 proco-volume-active"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoVolumeUpload.htm">
 								<div class="proco-volume-icon"></div>
 								<div class="tab-label-proco-volume-active">Volume Upload</div>
 						</a></li>
 						
 						<li role="presentation"
-								class="col-md-2 col-sm-6 col-xs-12 disaggregation"><a
+								class="col-md-3 col-sm-6 col-xs-12 disaggregation"><a
 								href="http://localhost:8083/VisibilityAssetTracker/promoDisaggregation.htm">
 									<div class="proco-disaggregation-icon"></div>
 									<div class="tab-label-proco-disaggregation-inactive">Disaggregation</div>
 							</a></li>
 						
 						<li role="presentation"
-							class="col-md-2 col-sm-6 col-xs-12 listing"><a
+							class="col-md-3 col-sm-6 col-xs-12 listing"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
 								<div class="proco-listing-icon"></div>
 								<div class="tab-label-proco-listing-inactive OpenSans-font">Promo Listing</div>
 						</a></li>
 
 						<li role="presentation"
-							class="col-md-2 col-sm-6 col-xs-12 listing"><a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
+							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
@@ -121,7 +121,7 @@
 			</div>
 			<form action="http://localhost:8083/VisibilityAssetTracker/downloadPromosForVolumeUpload.htm" method="POST" enctype="multipart/form-data">
 			
-			<div class="promo-form-details">
+			<div class="promo-form-details proco-volume-form">
 				<div class="col-md-4">
 					<div class="form-group">
 						<label for="unique-id" class="control-label col-md-4">CATEGORY</label>
@@ -248,7 +248,7 @@
 			</form>
 			
 			<!-- Listing table -->
-			<div class="promo-list">PROMO LIST</div>
+			<div class="promo-list table-header-volume">PROMO LIST</div>
 			
 			<table class="table table-striped table-bordered promo-list-table"
 				style="width: 100%;overflow-x: scroll;display: block;">
@@ -303,7 +303,7 @@
 					</div>
 
 					<div class="" style="color: #fff; text-align: center">
-						<button class="btn btn-primary">UPLOAD</button>
+						<button class="btn new-btn-primary">UPLOAD</button>
 
 					</div>
 				</div>

@@ -31,7 +31,7 @@
 		style="position: relative; top: 80px; z-index: 2; background-image: none ! important; border: none ! important; background: #F6F3F3; padding: 4px 0px 20px 0px;">
 		<div class="container-fluid paddR10">
 			<div class="navbar-header marginB10">
-				<h1 class="pull-left" style="color: #7986BE;">
+				<h1 class="pull-left" style="color: #000000;">
 					${roleId} <span>Visibility</span>
 				</h1>
 				<button type="button" class="navbar-toggle collapsed pull-right"
@@ -106,7 +106,7 @@
 		<div class="proco-creation form-horizontal">
 
 			<div class="promo-details" style="padding: 20px 0px 0px 0px;">
-				<span class="" style="color: #7986BE">DETAILS OF THE PROMO
+				<span class="" style="color: #3F3F3F">DETAILS OF THE PROMO
 					KAM COLLABORATION</span>
 				<!--  <span class="pull-right promo-uom">
                 <div class="col-md-12">
@@ -126,7 +126,7 @@
 			<form action="http://localhost:8083/VisibilityAssetTracker/downloadPromosForKamUpload.htm" method="POST"
 				enctype="multipart/form-data">
 
-				<div class="promo-form-details" style="margin-bottom: 10px;">
+				<div class="promo-form-details proco-collab-form" style="margin-bottom: 10px;">
 					<div class="row">
 						<div class="col-md-12">
 							<div class="col-md-2">
@@ -336,7 +336,7 @@
 				</table>
 				<div class="download-btn">
 					<select id="level" class="btn btn-primary" name="level"
-						style="color: white; background-color: #8a6565;">
+						style="color: white; background-color: #3B5999;">
 						<option selected="selected">L1 Depot level</option>
 						<option>L2 Depot level</option>
 					</select> <input id="download" type="submit" class="btn btn-primary"
@@ -371,11 +371,11 @@
 
 						<div class="" style="color: #fff; text-align: center">
 							<select id="level" class="btn btn-primary" name="level"
-								style="color: white; background-color: #8a6565;">
+								style="color: white; background-color: #3B5999;">
 								<option selected="selected">L1 Depot level</option>
 								<option>L2 Depot level</option>
 							</select>
-							<button class="btn btn-primary">UPLOAD</button>
+							<button class="btn new-btn-primary">UPLOAD</button>
 							
 						</div>
 					</div>
