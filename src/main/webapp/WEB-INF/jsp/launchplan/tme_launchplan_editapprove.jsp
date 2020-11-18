@@ -495,9 +495,9 @@
 
 					<div class="paid-visi">
 						<div class="modal-header"
-							style="background-color: #028681; color: #fff;">
+							style="background-color: #E95912; color: #fff;">
 							<button type="button" class="close" id="paidcrossBtn"
-								data-dismiss="modal">�</button>
+								data-dismiss="modal">X</button>
 							<h4 class="modal-title">Approve Request(s)</h4>
 						</div>
 						<form action="#" id="rejRemarkForm" method="POST"
@@ -514,7 +514,7 @@
 											<div id="kamMoc-error" class="cust-error error"
 												style="text-align: center; padding-bottom: 10px;">Please
 												enter remarks</div>
-											<button type="button" class="close" data-hide="alert">�</button>
+											<button type="button" class="close" data-hide="alert">x</button>
 										</div>
 
 										<div class="OpenSans-font">
@@ -539,12 +539,12 @@
 							</div>
 							<div class="modal-footer">
 								<button type="button"
-									class="btn btn-default pull-right resetBtn"
-									data-dismiss="modal" data-hide="alert" id="apprCancelBtn">CLOSE</button>
+									class="btn btn-default pull-right resetBtn new-btn-primary"
+									data-dismiss="modal" data-hide="alert" id="apprCancelBtn">Close</button>
 								<button type="button" onclick='approveKamInputs()'
 									id="tmeRemrs"
 									class="btn pull-right resetBtn marginR10"
-									style="background-color: #028681 !important; height: 33px; margin-right: 8px; color: #fff;">Approve</button>
+									style="background-color: #3B5999 !important; height: 33px; margin-right: 8px; color: #fff;">Approve</button>
 							</div>
 
 						</form>
@@ -598,9 +598,9 @@
 
 					<div class="paid-visi">
 						<div class="modal-header"
-							style="background-color: #028681; color: #fff;">
+							style="background-color: #E95912; color: #fff;">
 							<button type="button" class="close" id="paidcrossBtn"
-								data-dismiss="modal">�</button>
+								data-dismiss="modal">X</button>
 							<h4 class="modal-title">Reject Request(s)</h4>
 						</div>
 						<form action="#" id="rejRemarkForm" method="POST"
@@ -642,12 +642,12 @@
 							</div>
 							<div class="modal-footer">
 								<button type="button"
-									class="btn btn-default pull-right resetBtn"
-									data-dismiss="modal" data-hide="alert" id="tmeRejCancelBtn">CLOSE</button>
+									class="btn btn-default pull-right resetBtn new-btn-primary"
+									data-dismiss="modal" data-hide="alert" id="tmeRejCancelBtn">Close</button>
 								<button type="button" onclick='rejectKamInputs()'
 									id="tmeRemrs"
 									class="btn pull-right resetBtn marginR10"
-									style="background-color: #028681 !important; height: 33px; margin-right: 8px; color: #fff;">Reject</button>
+									style="background-color: #3B5999 !important; height: 33px; margin-right: 8px; color: #fff;">Reject</button>
 							</div>
 
 						</form>
