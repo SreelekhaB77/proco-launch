@@ -243,7 +243,7 @@
 				<div class="clearfix"></div>
 			</div>
 			<div class="download-btn">
-				<input type="submit" class="btn btn-primary" value="PROMO DOWNLOAD"></input>
+				<input type="submit" class="btn new-btn-download" value="PROMO DOWNLOAD"></input>
 			</div>
 			</form>
 			

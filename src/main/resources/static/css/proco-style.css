@@ -1544,6 +1544,10 @@ span.comboTreeItemTitle {
 	color: #fff;
 }
 
+.new-btn-download {
+	background: #3B5999 !important;
+}
+
 /* MT portal ends here */
 
 /* New header styles */

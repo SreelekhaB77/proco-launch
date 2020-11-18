@@ -451,7 +451,7 @@
 			</div> -->
 			<%--  <c:if test="${roleId eq 'TME'}"> --%>
 			<div class="download-btn">
-				<input type="button" class="btn btn-primary" value="PROMO DOWNLOAD" onclick="javascript: downloadPromotionFile();"></input>
+				<input type="button" class="btn new-btn-download" value="PROMO DOWNLOAD" onclick="javascript: downloadPromotionFile();"></input>
 			</div>
 			<%-- </c:if> --%>
 			<%-- <c:if test="${roleId eq 'TME'}">

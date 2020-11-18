@@ -336,7 +336,7 @@
 				<div class="clearfix"></div>
 			</div>
 			<div class="download-btn">
-				<input type="button" class="btn btn-primary" value="PROMO DOWNLOAD" onclick="javascript: downloadPromotionFile();"></input>
+				<input type="button" class="btn new-btn-download" value="PROMO DOWNLOAD" onclick="javascript: downloadPromotionFile();"></input>
 			</div>
 		<%-- <div class="promo-upload">PROMO UPLOAD</div>		
 			<form action="#" method="POST" enctype="multipart/form-data" id="coeStatusFileUpload" class="form-horizontal" name="tmeFileUploadBean">
