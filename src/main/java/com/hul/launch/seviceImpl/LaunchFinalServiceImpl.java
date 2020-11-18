@@ -20,6 +20,7 @@ import com.hul.launch.dao.LaunchFinalDao;
 import com.hul.launch.dao.LaunchSellInDao;
 import com.hul.launch.dao.LaunchVisiPlanDao;
 import com.hul.launch.model.LaunchBuildUpTemp;
+import com.hul.launch.model.LaunchFinalCalVO;
 import com.hul.launch.model.LaunchSellIn;
 import com.hul.launch.model.LaunchStoreData;
 import com.hul.launch.model.LaunchVisiPlanning;
@@ -99,7 +100,7 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 					launchDataResonse.getClassification(), liClusterName));
 			whichVisi++;
 		}
-		launchFinalDao.deleteAllBuildUp(launchId);
+		//launchFinalDao.deleteAllBuildUp(launchId);  //Sarin Changes 18Nov2020
 		// Save Build temp data
 		launchFinalDao.saveLaunchBuildUpTemp(listOfAllLaunchStoreData, launchId, userId);
 
@@ -159,6 +160,7 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 		}
 
 		launchFinalDao.deleteAllTempCal(launchId);
+		List<LaunchFinalCalVO> launchDataList = new ArrayList<>();
 		for (String depoBasepackFmcgModifiedChainClusCombo : allDistinctFinalBuildsCombo) {
 			LaunchBuildUpTemp launchBuildUpTemp = new LaunchBuildUpTemp();
 			LaunchBuildUpTemp listOfBuildUps = launchFinalDao
@@ -213,10 +215,18 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 			launchBuildUpTemp.setSELLIN_UNITS_N2(Double.toString(finalUnitsN2));
 			launchBuildUpTemp.setSTORE_COUNT(listOfBuildUps.getSTORE_COUNT());
 			launchBuildUpTemp.setCLUSTER(listOfBuildUps.getCLUSTER());
-			launchFinalDao.saveFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp, userId);
+			LaunchFinalCalVO  launchFinalCalVO = new LaunchFinalCalVO();
+			launchFinalCalVO.setDepoBasePack(depoBasepackFmcgModifiedChainClusCombo);
+			launchFinalCalVO.setLaunchId(launchId);
+			launchFinalCalVO.setLaunchBuildUpTemp(launchBuildUpTemp);
+			launchFinalCalVO.setUserId(userId);
+			launchDataList.add(launchFinalCalVO);
+			/*launchFinalDao.saveFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp, userId);
 			launchFinalDao.updateFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp,
-					userId);
+					userId);*/
 		}
+		launchFinalDao.saveFinalValue(launchDataList);
+		launchFinalDao.updateFinalValue(launchDataList);
 
 		List<LaunchFinalPlanResponse> listOfFinalFinal = new ArrayList<>();
 		for (LaunchFinalPlanResponse launchFinalPlanResponse : listOfFinal) {

@@ -9,11 +9,12 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
 import org.apache.log4j.Logger;
-import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.internal.SessionImpl;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -23,6 +24,7 @@ import com.hul.launch.dao.LaunchFinalDao;
 import com.hul.launch.dao.LaunchSellInDao;
 import com.hul.launch.model.LaunchBuildUpTemp;
 import com.hul.launch.model.LaunchBuildUpTempCal;
+import com.hul.launch.model.LaunchFinalCalVO;
 import com.hul.launch.model.LaunchStoreData;
 import com.hul.launch.request.SaveFinalLaunchListRequest;
 import com.hul.launch.request.SaveFinalLaunchRequest;
@@ -372,9 +374,18 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 	@Override
 	public String saveLaunchBuildUpTemp(List<List<LaunchStoreData>> listLaunchStoreData, String launchId,
 			String userId) {
+		PreparedStatement batchUpdate = null;  //Sarin Changes 18Nov2020
+
 		try {
 			Session session = sessionFactory.getCurrentSession();
 			SessionImpl sessionImpl = (SessionImpl) session;
+
+			//Sarin Changes 18Nov2020
+			batchUpdate = sessionImpl.connection().prepareStatement("DELETE from TBL_LAUNCH_BUILDUP_TEMP where LAUNCH_ID= ?");
+			batchUpdate.setString(1, launchId);
+			batchUpdate.executeUpdate();
+			//Sarin Changes 18Nov2020 - ends
+
 			try (PreparedStatement preparedStatement = sessionImpl.connection()
 					.prepareStatement(TBL_LAUNCH_BUILDUP_TEMP, Statement.RETURN_GENERATED_KEYS)) {
 				for (List<LaunchStoreData> saveLaunchStoreData : listLaunchStoreData) {
@@ -906,7 +917,7 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 							+ "REVISED_SELLIN_FOR_STORE_N1,SUM(REVISED_SELLIN_FOR_STORE_N2) REVISED_SELLIN_FOR_STORE_N2"
 							+ " FROM TBL_LAUNCH_BUILDUP_TEMP WHERE LAUNCH_ID = '" + launchId
 							+ "' AND CONCAT(DEPOT , ',' , SKU_NAME) = '" + depoBasepack + "'");
-							//+ "' AND DEPOT || ',' || SKU_NAME = '" + depoBasepack + "'");
+			//+ "' AND DEPOT || ',' || SKU_NAME = '" + depoBasepack + "'");
 			// AND BUILDUP_ACCOUNT = '" + forWhichKam + "'
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -1075,6 +1086,58 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 		}
 		return returnSuccess;
 	}
+	
+	//Sarin Changes 18Nov2020 - Starts
+	@Override
+	public int updateFinalValue(List<LaunchFinalCalVO> launchFinalVoList) {
+		int returnSuccess = 0;
+		int counter = 0;
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			SessionImpl sessionImpl = (SessionImpl) session;
+			//Garima - changes for concatenation
+			for(LaunchFinalCalVO launchFinalCalVo : launchFinalVoList) {
+				counter++;
+				PreparedStatement preparedStatement = sessionImpl.connection().prepareStatement("UPDATE TBL_LAUNCH_BUILDUP_TEMP SET SELLIN_VALUE_N='"
+						+ launchFinalCalVo.getLaunchBuildUpTemp().getSELLIN_VALUE_N() + "',SELLIN_VALUE_N1='"
+						+ launchFinalCalVo.getLaunchBuildUpTemp().getSELLIN_VALUE_N1() + "',SELLIN_VALUE_N2='"
+						+ launchFinalCalVo.getLaunchBuildUpTemp().getSELLIN_VALUE_N2() + "',UPDATED_BY='" + launchFinalCalVo.getUserId() + "',UPDATED_DATE='"
+						+ new Timestamp(new Date().getTime()) + "'" + " WHERE LAUNCH_ID= '" + launchFinalCalVo.getLaunchId()
+						+ "' AND CONCAT(DEPOT , ',' , SKU_NAME , ',' ,  FMCG_CSP_CODE , ',' , MODIFIED_CHAIN , ',' ,CLUSTER) = '" + launchFinalCalVo.getDepoBasePack() + "'");
+				preparedStatement.addBatch();
+				
+				if(counter%10==0 || counter == launchFinalVoList.size())
+					preparedStatement.executeBatch();
+				
+				returnSuccess = 1;
+			}
+				
+				/*
+				 * query2 = sessionFactory.getCurrentSession()
+				 * .createNativeQuery("UPDATE TBL_LAUNCH_BUILDUP_TEMP SET SELLIN_VALUE_N='" +
+				 * launchFinalCalVo.getLaunchBuildUpTemp().getSELLIN_VALUE_N() +
+				 * "',SELLIN_VALUE_N1='" +
+				 * launchFinalCalVo.getLaunchBuildUpTemp().getSELLIN_VALUE_N1() +
+				 * "',SELLIN_VALUE_N2='" +
+				 * launchFinalCalVo.getLaunchBuildUpTemp().getSELLIN_VALUE_N2() +
+				 * "',UPDATED_BY='" + launchFinalCalVo.getUserId() + "',UPDATED_DATE='" + new
+				 * Timestamp(new Date().getTime()) + "'" + " WHERE LAUNCH_ID= '" +
+				 * launchFinalCalVo.getLaunchId() +
+				 * "' AND CONCAT(DEPOT , ',' , SKU_NAME , ',' ,  FMCG_CSP_CODE , ',' , MODIFIED_CHAIN , ',' ,CLUSTER) = '"
+				 * + launchFinalCalVo.getDepoBasePack() + "'"); // +
+				 * "' AND DEPOT || ',' || SKU_NAME || ',' ||  FMCG_CSP_CODE || ',' || MODIFIED_CHAIN || ',' "
+				 * // + " || CLUSTER = '" + depoCombo + "'");
+				 */				
+				//returnSuccess = query2.executeUpdate();
+			//}
+			
+		} catch (Exception e) {
+			returnSuccess = 0;
+			e.printStackTrace();
+		}
+		return returnSuccess;
+	}
+	//Sarin Changes 18Nov2020 - Ends
 
 	@Override
 	public int updateFinalValueKAM(String depoCombo, String launchId, LaunchBuildUpTemp launchBuildUpTemp,
@@ -1321,6 +1384,55 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 			} catch (Exception e) {
 				logger.error("Exception: " + e);
 				return e.toString();
+			}
+
+		} catch (Exception e) {
+			logger.error("Exception: " + e);
+			return e.toString();
+		}
+
+		return "Saved Successfully";
+	}
+
+	@Override
+	public String saveFinalValue(List<LaunchFinalCalVO> launchFinalVoList) {
+		int counter = 0;
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			SessionImpl sessionImpl = (SessionImpl) session;
+			for(LaunchFinalCalVO launchFunalCalVo : launchFinalVoList) {
+				counter++;
+				String[] depoBasepackLevel = launchFunalCalVo.getDepoBasePack().split(",");
+
+				try (PreparedStatement preparedStatement = sessionImpl.connection()
+						.prepareStatement(TBL_LAUNCH_TEMP_FINAL_CAL, Statement.RETURN_GENERATED_KEYS)) {
+					preparedStatement.setString(1, launchFunalCalVo.getLaunchId());
+					preparedStatement.setString(2, depoBasepackLevel[0]);
+					preparedStatement.setString(3, depoBasepackLevel[1]);
+					preparedStatement.setString(4, depoBasepackLevel[2]);
+					preparedStatement.setString(5, depoBasepackLevel[3]);
+					preparedStatement.setString(6, launchFunalCalVo.getLaunchBuildUpTemp().getREVISED_SELLIN_FOR_STORE_N());
+					preparedStatement.setString(7, launchFunalCalVo.getLaunchBuildUpTemp().getREVISED_SELLIN_FOR_STORE_N1());
+					preparedStatement.setString(8, launchFunalCalVo.getLaunchBuildUpTemp().getREVISED_SELLIN_FOR_STORE_N2());
+					preparedStatement.setString(9, launchFunalCalVo.getLaunchBuildUpTemp().getSELLIN_VALUE_CLD_N());
+					preparedStatement.setString(10, launchFunalCalVo.getLaunchBuildUpTemp().getSELLIN_VALUE_CLD_N1());
+					preparedStatement.setString(11, launchFunalCalVo.getLaunchBuildUpTemp().getSELLIN_VALUE_CLD_N2());
+					preparedStatement.setString(12, launchFunalCalVo.getLaunchBuildUpTemp().getSELLIN_UNITS_N());
+					preparedStatement.setString(13, launchFunalCalVo.getLaunchBuildUpTemp().getSELLIN_UNITS_N1());
+					preparedStatement.setString(14, launchFunalCalVo.getLaunchBuildUpTemp().getSELLIN_UNITS_N2());
+					preparedStatement.setString(15, launchFunalCalVo.getLaunchBuildUpTemp().getSELLIN_VALUE_N());
+					preparedStatement.setString(16, launchFunalCalVo.getLaunchBuildUpTemp().getSELLIN_VALUE_N1());
+					preparedStatement.setString(17, launchFunalCalVo.getLaunchBuildUpTemp().getSELLIN_VALUE_N2());
+					preparedStatement.setString(18, launchFunalCalVo.getLaunchBuildUpTemp().getSTORE_COUNT());
+					preparedStatement.setString(19, depoBasepackLevel[4]);
+					preparedStatement.addBatch();
+					if(counter%10==0 || counter == launchFinalVoList.size())
+						preparedStatement.executeBatch();
+
+				} catch (Exception e) {
+					logger.error("Exception: " + e);
+					return e.toString();
+				}
 			}
 
 		} catch (Exception e) {

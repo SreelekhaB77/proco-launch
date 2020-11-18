@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hul.launch.model.LaunchBuildUpTemp;
+import com.hul.launch.model.LaunchFinalCalVO;
 import com.hul.launch.model.LaunchStoreData;
 import com.hul.launch.request.SaveFinalLaunchListRequest;
 import com.hul.launch.response.LaunchFinalPlanResponse;
@@ -32,6 +33,8 @@ public interface LaunchFinalDao {
 	LaunchBuildUpTemp getGsvForDepoBasepack(String substr, String launchId);
 
 	int updateFinalValue(String depoCombo, String launchId, LaunchBuildUpTemp launchBuildUpTemp, String userId);
+	
+	public int updateFinalValue(List<LaunchFinalCalVO> launchFinalVoList); //Sarin Changes 18Nov2020
 
 	LaunchFinalPlanResponse getSumOfForDepoBasepack(String basepack, String launchId);
 
@@ -90,4 +93,6 @@ public interface LaunchFinalDao {
 	List<ArrayList<String>> getMstnClearanceDataDump(String userId, List<String> listOfLaunchData);
 
 	List<ArrayList<String>> getMstnClearanceDataDumpCoe(String userId, List<String> listOfLaunchData);
+	
+	public String saveFinalValue(List<LaunchFinalCalVO> launchFinalVoList);
 }
