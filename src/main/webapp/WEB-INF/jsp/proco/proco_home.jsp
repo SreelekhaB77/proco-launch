@@ -36,7 +36,7 @@
     
     		 <input type="hidden" id="roleId" value="${roleId}"/>
     <c:if test="${roleId eq 'TME'}">
-    <div class="col-md-6 col-md-offset-2">
+    <div class="col-md-6 col-md-offset-3">
           <div class="col-md-4 col-sm-4 col-xs-4">
          <a href="http://localhost:8083/VisibilityAssetTracker/promoCreation.htm">
           <div class="promo-create promo-create-bg">

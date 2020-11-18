@@ -36,7 +36,7 @@
 			<img src="assets/images/logo.png"
 				style="height: 75px; padding-top: 5px;"logo">
 		</div>
-		<div class="brand-name SEGOEUIL-font">MT PLANNING</div>
+		<div class="brand-name SEGOEUIL-font">MT PLANNING 123</div>
 		</header>
 		<div class="body-content" style="margin-top: 80px; display: none;">
 			<div class="row">
