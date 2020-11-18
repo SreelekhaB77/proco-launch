@@ -87,5 +87,56 @@ public class FilePaths {
 			log.info("FilePaths - Loading File paths Details - Excepiton - While Loading File Path"
 					+ e.getLocalizedMessage());
 		}
+		File file = new File(FILE_TEMPUPLOAD_PATH);
+		if(!file.exists())
+			file.mkdirs();
+		file = new File(FILE_TEMPDOWNLOAD_PATH);
+		if(!file.exists())
+			file.mkdirs();
+		file = new File(FILE_TEMPDOWNLOAD_PATH_STORE_PERMISSION);
+		if(!file.exists())
+			file.mkdirs();
+		file = new File(FILE_TEMP_DOWNLOAD_PATH_UPDATE_STORE_PERMISSION);
+		if(!file.exists())
+			file.mkdirs();
+		file = new File(IMAGE_UPLOAD_PATH);
+		if(!file.exists())
+			file.mkdirs();
+		file = new File(IMAGE_DOWNLOAD_PATH);
+		if(!file.exists())
+			file.mkdirs();
+		file = new File(VIDEO_DOWNLOAD_PATH);
+		if(!file.exists())
+			file.mkdirs();
+		file = new File(FILE_PAID_VISIBILITY);
+		if(!file.exists())
+			file.mkdirs();
+		file = new File(KAM_UPLOAD_LETTER_FILE_PATH);
+		if(!file.exists())
+			file.mkdirs();
+		file = new File(CPS_KAM_UPLOAD_FILE_PATH);
+		if(!file.exists())
+			file.mkdirs();
+		file = new File(LAUNCH_ANNEXURE_UPLOAD_FILE_PATH);
+		if(!file.exists())
+			file.mkdirs();
+		file = new File(LAUNCH_ARTWORK_UPLOAD_FILE_PATH);
+		if(!file.exists())
+			file.mkdirs();
+		file = new File(LAUNCH_MDG_UPLOAD_FILE_PATH);
+		if(!file.exists())
+			file.mkdirs();
+		file = new File(LAUNCH_KAM_REQUESTS_UPLOAD);
+		if(!file.exists())
+			file.mkdirs();
+		file = new File(CPS_KAM_FILE_DOWNLOAD_PATH);
+		if(!file.exists())
+			file.mkdirs();
+		file = new File(COE_DOWNLOAD_ZIPPED_LETTER_FILE_PATH);
+		if(!file.exists())
+			file.mkdirs();
+		file = new File(FILE_IMAGE_PATH);
+		if(!file.exists())
+			file.mkdirs();
 	}
 }
