@@ -106,7 +106,17 @@
 			           <div class="user-name home-cls">
 				                    <a href="http://localhost:8083/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" style="color:#035597;" aria-hidden="true"></i></a>
 				    		 </div>		
-			          </c:if> 		                
+			          </c:if> 	
+			            <c:if test="${roleId eq 'NSCM'}">
+			           <div class="user-name home-cls">
+				                    <a href="http://localhost:8083/VisibilityAssetTracker/procoHome.htm"><i class="fa fa-home" style="color:#035597;" aria-hidden="true"></i></a>
+				    		 </div>		
+			          </c:if> 	
+			           <c:if test="${roleId eq 'NCMM'}">
+			           <div class="user-name home-cls">
+				                    <a href="http://localhost:8083/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" style="color:#035597;" aria-hidden="true"></i></a>
+				    		 </div>		
+			          </c:if> 			                
 	    	     	</div>
 	    	     	  <ul class="nav pull-right user-name">
 				<li class="dropdown"><a class="dropdown-toggle " href="#"
