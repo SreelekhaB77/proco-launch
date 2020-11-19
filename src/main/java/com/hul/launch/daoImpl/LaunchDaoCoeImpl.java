@@ -40,13 +40,16 @@ public class LaunchDaoCoeImpl implements LaunchDaoCoe {
 							+ " tlc WHERE LAUNCH_ID IN (:launchIds)");
 			query2.setParameterList("launchIds", launchIds);
 			Iterator<Object> iterator = query2.list().iterator();
-
+			
 			while (iterator.hasNext()) {
 				Object[] obj1 = (Object[]) iterator.next();
 				TblLaunchMaster tblLaunchMaster = new TblLaunchMaster();
-				tblLaunchMaster.setAnnexureDocName(obj1[0].toString());
-				tblLaunchMaster.setArtworkPackshotsDocName(obj1[1].toString());
-				tblLaunchMaster.setMdgDecName(obj1[2].toString());
+				if(obj1[0]!=null)
+					tblLaunchMaster.setAnnexureDocName(obj1[0].toString());
+				if(obj1[1]!=null)
+					tblLaunchMaster.setArtworkPackshotsDocName(obj1[1].toString());
+				if(obj1[2]!=null)
+					tblLaunchMaster.setMdgDecName(obj1[2].toString());
 				listOfCompletedLaunch.add(tblLaunchMaster);
 			}
 		} catch (Exception ex) {

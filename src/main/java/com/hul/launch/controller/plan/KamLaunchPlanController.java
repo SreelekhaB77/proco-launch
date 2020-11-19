@@ -641,8 +641,9 @@ public class KamLaunchPlanController {
 	}
 
 	@RequestMapping(value = "{launchId}/downloadMdgDeckDataKam.htm", method = RequestMethod.GET)
-	public @ResponseBody ModelAndView downloadMdgDeckDataKam(@PathVariable("launchId") String launchId, Model model,
+	public ModelAndView downloadMdgDeckDataKam(@PathVariable("launchId") String launchId, Model model,
 			HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("in downloadMdgDeckDataKam");
 		try {
 			InputStream is;
 			String downloadLink = "", absoluteFilePath = "";
@@ -652,8 +653,10 @@ public class KamLaunchPlanController {
 			List<TblLaunchMaster> listOfLaunchMaster = launchServiceCoe.getAllLaunchData(listOfLaunchData);
 			if (!listOfLaunchMaster.isEmpty()) {
 				for (TblLaunchMaster tblLaunchMaster : listOfLaunchMaster) {
+					System.out.println("in tblLaunchMaster "+tblLaunchMaster.getMdgDecName());
 					String downloadFileName = absoluteFilePath + tblLaunchMaster.getMdgDecName();
 					downloadLink = downloadFileName;
+					System.out.println("downloadlink "+downloadLink);
 					is = new FileInputStream(new File(downloadLink));
 					response.setContentType("application/force-download");
 					response.setHeader("Content-Disposition",
@@ -666,8 +669,8 @@ public class KamLaunchPlanController {
 			logger.error("Exception: ", e);
 			ModelAndView modelAndView = new ModelAndView();
 			modelAndView.addObject("Error", e.toString());
-			return modelAndView;
+			return null;
 		}
-		return new ModelAndView("productsPage");
+		return null;
 	}
 }
