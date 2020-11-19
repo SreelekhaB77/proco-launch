@@ -545,12 +545,8 @@ select.promolistselect {
 	color: #fff;
 }
 
-.promo-delete-btn {
-	background: #FF464C;
-}
-
-.promo-primary-btn {
-	background: #455BA4;
+.promo-delete-btn, .promo-primary-btn {
+	background: #3B5999;
 }
 
 .proco-home a:hover>div {
@@ -1544,7 +1540,69 @@ span.comboTreeItemTitle {
 	color: #fff;
 }
 
+.new-btn-download {
+	background: #3B5999 !important;
+}
+
+.succ-alert-success {
+	background: #72EF36 !important;
+	color: #fff;
+	border-radius: 3px;
+}
+
+.err-alert-danger {
+	background: #EF403D !important;
+	color: #fff;
+	border-radius: 3px;
+}
+
+#ezAlerts-header {
+	background: #659319;
+	color: #fff;
+}
+
 /* MT portal ends here */
+
+/* New MODAL styles */
+
+#ezAlerts-header button, .modal-header button {
+	color: #fff;
+	opacity: 1;
+}
+
+#ezAlerts-footer button {
+	width: 20%;
+	background: #00ACEE;
+}
+
+.proco-modal-header {
+	background: #659319;
+	color: #fff;
+	border: 0;
+}
+
+.proco-disagrrate-modal-header {
+	background: #03437A;
+	color: #fff;
+	border: 0;
+}
+
+#SaveDetails {
+	width: 20%;
+	background: #3B5999;
+	color: #fff;
+	border: 3px;
+}
+
+.chnage-close {
+	width: 20%;
+	background: #0BABD8;
+	color: #fff;
+	border: 3px;
+}
+
+
+/* New MODAL styles ends here */
 
 /* New header styles */
 

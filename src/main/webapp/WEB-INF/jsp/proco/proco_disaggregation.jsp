@@ -112,14 +112,14 @@
 	<!-- Main jumbotron for a primary marketing message or call to action -->
 	<div class="container-fluid container-bg middle-section">
 		<c:if test="${success!=null}">
-			<div class="alert alert-success sucess-msg" id="successblock"
+			<div class="alert succ-alert-success sucess-msg" id="successblock"
 				style="display: block">
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${success}"></c:out>
 			</div>
 		</c:if>
 		<c:if test="${errorMsg!=null}">
-			<div class="alert alert-danger sucess-msg" id="errorblock">
+			<div class="alert err-alert-danger sucess-msg" id="errorblock">
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${errorMsg}"></c:out>
 				<c:if test="${FILE_STATUS=='ERROR_FILE'}">
@@ -451,7 +451,7 @@
 							<div class="promo-create-btn pull-right">
 								<button class="btn btn-primary" id="disaggregateBtn"
 									disabled="disabled">DISAGGREGATE</button>
-									<input class="btn btn-primary" id="addDepot" disabled="disabled" data-toggle="modal" data-target="#add-depot" type="button" value="ADD DEPOT" onClick="javascript: getBranch();">
+									<input class="btn btn-primary" id="addDepot"  data-toggle="modal" data-target="#add-depot" type="button" value="ADD DEPOT" onClick="javascript: getBranch();">
 							</div>
 						</div>
 					</div>
@@ -500,7 +500,7 @@
 
       <div class="modal-dialog">
       <div class="modal-content">
-		<div class="modal-header">
+		<div class="modal-header proco-disagrrate-modal-header">
 			<button type="button" class="close" data-dismiss="modal">&times;</button>
 			<h4 class="modal-title">Add Depot</h4>
 		</div>

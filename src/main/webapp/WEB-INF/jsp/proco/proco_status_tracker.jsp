@@ -96,7 +96,7 @@
 	<div class="container-fluid container-bg middle-section">
 	
 	<c:if test="${FILE_STATUS=='SUCCESS_FILE'}">
-			<div class="alert alert-success sucess-msg" id="successblock"
+			<div class="alert succ-alert-success sucess-msg" id="successblock"
 				style="display: block">
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${success}"></c:out>
@@ -104,7 +104,7 @@
 			</div>
 		</c:if>
 		<c:if test="${errorMsg!=null}">
-			<div class="alert alert-danger sucess-msg" id="errorblock">
+			<div class="alert err-alert-danger sucess-msg" id="errorblock">
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${errorMsg}"></c:out>
 				<c:if test="${FILE_STATUS=='ERROR_FILE'}">
@@ -336,7 +336,7 @@
 				<div class="clearfix"></div>
 			</div>
 			<div class="download-btn">
-				<input type="button" class="btn btn-primary" value="PROMO DOWNLOAD" onclick="javascript: downloadPromotionFile();"></input>
+				<input type="button" class="btn new-btn-download" value="PROMO DOWNLOAD" onclick="javascript: downloadPromotionFile();"></input>
 			</div>
 		<%-- <div class="promo-upload">PROMO UPLOAD</div>		
 			<form action="#" method="POST" enctype="multipart/form-data" id="coeStatusFileUpload" class="form-horizontal" name="tmeFileUploadBean">

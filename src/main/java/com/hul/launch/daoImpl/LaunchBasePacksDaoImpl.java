@@ -1050,18 +1050,14 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			if (accountl1String.isEmpty() || accountl1String.contains("ALL CUSTOMERS")) {
 				if (liCluster.isEmpty() || liCluster.contains("ALL INDIA")) {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							/*"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE UPPER(CURRENT_STORE_FORMAT) IN "
-									+ "(:listOfStoreFormat) AND LAUNCH_FORMAT IN (" + launchClassification + ")");*/
 							"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE UPPER(CURRENT_STORE_FORMAT) IN "
-							+ "(:listOfStoreFormat)");
+									+ "(:listOfStoreFormat) AND LAUNCH_FORMAT IN (" + launchClassification + ")");
 					queryToGetCustomeChainL1.setParameterList("listOfStoreFormat", listOfStoreFormat);
 				} else {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							/*"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE FINAL_CLUSTER IN (:liCluster) AND "
-									+ " UPPER(CURRENT_STORE_FORMAT) IN (:listOfStoreFormat) AND LAUNCH_FORMAT IN ("
-									+ launchClassification + ")");*/
 							"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE FINAL_CLUSTER IN (:liCluster) AND "
-							+ " UPPER(CURRENT_STORE_FORMAT) IN (:listOfStoreFormat) ");
+									+ " UPPER(CURRENT_STORE_FORMAT) IN (:listOfStoreFormat) AND LAUNCH_FORMAT IN ("
+									+ launchClassification + ")");
 					queryToGetCustomeChainL1.setParameterList("liCluster", liCluster);
 					queryToGetCustomeChainL1.setParameterList("listOfStoreFormat", listOfStoreFormat);
 
@@ -1069,23 +1065,18 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			} else {
 				if (liCluster.isEmpty() || liCluster.contains("ALL INDIA")) {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							/*"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE UPPER(CURRENT_STORE_FORMAT) IN (:listOfStoreFormat)"
-									+ "  AND ACCOUNT_NAME IN (:accountl1String) AND ACCOUNT_NAME != '' AND DP_CHAIN IN(:accountl2String) AND LAUNCH_FORMAT IN ("
-									+ launchClassification + ")");*/
 							"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE UPPER(CURRENT_STORE_FORMAT) IN (:listOfStoreFormat)"
-							+ "  AND ACCOUNT_NAME IN (:accountl1String) AND ACCOUNT_NAME != '' AND DP_CHAIN IN(:accountl2String)");
+									+ "  AND ACCOUNT_NAME IN (:accountl1String) AND ACCOUNT_NAME != '' AND DP_CHAIN IN(:accountl2String) AND LAUNCH_FORMAT IN ("
+									+ launchClassification + ")");
 					queryToGetCustomeChainL1.setParameterList("listOfStoreFormat", listOfStoreFormat);
 					queryToGetCustomeChainL1.setParameterList("accountl1String", accountl1String);
 					queryToGetCustomeChainL1.setParameterList("accountl2String", accountl2String);
 				} else {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							/*"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE FINAL_CLUSTER IN (:liCluster) AND "
+							"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE FINAL_CLUSTER IN (:liCluster) AND "
 									+ " UPPER(CURRENT_STORE_FORMAT) IN (:listOfStoreFormat) AND ACCOUNT_NAME IN (:accountl1String) "
 									+ " AND ACCOUNT_NAME != '' AND DP_CHAIN IN(:accountl2String) AND LAUNCH_FORMAT IN ("
-									+ launchClassification + ")");*/
-							"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE FINAL_CLUSTER IN (:liCluster) AND "
-							+ " UPPER(CURRENT_STORE_FORMAT) IN (:listOfStoreFormat) AND ACCOUNT_NAME IN (:accountl1String) "
-							+ " AND ACCOUNT_NAME != '' AND DP_CHAIN IN(:accountl2String) ");
+									+ launchClassification + ")");
 					queryToGetCustomeChainL1.setParameterList("liCluster", liCluster);
 					queryToGetCustomeChainL1.setParameterList("listOfStoreFormat", listOfStoreFormat);
 					queryToGetCustomeChainL1.setParameterList("accountl1String", accountl1String);
