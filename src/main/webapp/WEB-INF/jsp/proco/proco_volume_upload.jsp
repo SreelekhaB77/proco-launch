@@ -95,13 +95,13 @@
 			<span></span>
 	</div>
 	<c:if test="${FILE_STATUS=='SUCCESS_FILE'}">
-			<div class="alert alert-success sucess-msg" id="successblock">
+			<div class="alert succ-alert-success sucess-msg" id="successblock">
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${success}"></c:out>
 			</div>
 		</c:if>
 		<c:if test="${errorMsg!=null}">
-			<div class="alert alert-danger sucess-msg" id="errorblock">
+			<div class="alert err-alert-danger sucess-msg" id="errorblock">
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${errorMsg}"></c:out>
 				<c:if test="${FILE_STATUS=='ERROR_FILE'}">

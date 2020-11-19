@@ -88,14 +88,14 @@
 
 		<input type="hidden" id="roleId" value="${roleId}" />
 		<c:if test="${FILE_STATUS=='SUCCESS_FILE'}">
-			<div class="alert alert-success sucess-msg" id="successblock"
+			<div class="alert succ-alert-success sucess-msg" id="successblock"
 				style="display: block">
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${success}"></c:out>
 			</div>
 		</c:if>
 		<c:if test="${errorMsg!=null}">
-			<div class="alert alert-danger sucess-msg" id="errorblock">
+			<div class="alert err-alert-danger sucess-msg" id="errorblock">
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${errorMsg}"></c:out>
 				<c:if test="${FILE_STATUS=='ERROR_FILE'}">
@@ -106,7 +106,7 @@
 			</div>
 		</c:if>
 		<%-- <c:if test="${FILE_STATUS=='ERROR_FILE'}">
-			<div class="alert alert-danger  sucess-msg" id="errorblock">
+			<div class="alert alert-danger sucess-msg" id="errorblock">
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<a href="#" id="downloadTempFileLink"
 					onclick="javascript:downloadCoeErrorFile();">Click here to
@@ -636,13 +636,13 @@
 		<div id="add-depot" class="modal fade" role="dialog">
       <div class="modal-dialog">
       <div class="modal-content">
-		<div class="modal-header">
+		<div class="modal-header proco-modal-header">
 			<button type="button" class="close" data-dismiss="modal">&times;</button>
 			<h4 class="modal-title">Reason</h4>
 		</div>
 		<div class="modal-body">
 			<div class="row">
-<form id="pwdform" method="post" action="" class="form-horizontal" style="padding: 10px 0;">
+<form id="pwdform" method="post" action="" class="form-horizontal">
 					<div class="col-md-12" id="msg-1">
 						<div id="msg-error" class="alert alert-danger fade in"></div>
 						<div id="msg-success" class="alert alert-success fade in"></div>
