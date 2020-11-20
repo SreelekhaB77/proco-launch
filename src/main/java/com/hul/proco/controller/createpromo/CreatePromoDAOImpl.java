@@ -1346,7 +1346,9 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 			sdf.setLenient(false);
 			List<String> changesList = new ArrayList<String>();
 			List<String> basePackList = new ArrayList<String>();
-			String pidGenerateQuery="select (case when max(pid) is null then '000001' else lpad(varchar((max(cast(pid as integer))+1)),6,0) end) AS " + 
+			//Commented By Sarin - Change in Cast - 20Nov2020
+			//String pidGenerateQuery="select (case when max(pid) is null then '000001' else lpad(varchar((max(cast(pid as integer))+1)),6,0) end) AS " + 
+			String pidGenerateQuery="select (case when max(pid) is null then '000001' else LPAD(CAST(MAX(CAST(PID AS UNSIGNED)) + 1 AS CHAR),6,0) END) AS " + 
 					" PID FROM TBL_PROCO_PROMOTION_MASTER WHERE MOC=:moc and YEAR=:year";
 			for (int i = 0; i < bean.length; i++) {
 				boolean offerDropped = false;
