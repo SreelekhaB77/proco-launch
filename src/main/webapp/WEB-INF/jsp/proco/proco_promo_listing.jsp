@@ -39,7 +39,7 @@
 	<div class="container-fluid paddR10">
 		<div class="navbar-header marginB10">
 			<h1 class="pull-left" style="color: #000000;">
-				${roleId} <span>Visibility</span>
+				MT PROCO TOOL - ${roleId} <span>Visibility</span>
 			</h1>
 			<button type="button" class="navbar-toggle collapsed pull-right" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
 				<span class="sr-only">Toggle navigation</span> <span
@@ -149,11 +149,11 @@
 			</div>
 		</c:if>
 	
-        <div class="alert alert-danger error-msg" id="promoSelectErrorMsg" style="display:none">
+        <div class="alert err-alert-danger error-msg" id="promoSelectErrorMsg" style="display:none">
              	<button type="button" class="close" data-hide="alert">&times;</button>
                 <span>Please select Promotion. </span>
          		</div>
- <!--             <div class="alert alert-success sucess-msg" id="successblock1" style="display:none">
+ <!--             <div class="alert succ-alert-success sucess-msg" id="successblock1" style="display:none">
              	<button type="button" class="close" data-hide="alert">&times;</button>
                 <span>Promotion Uploaded Successfully</span>
          	</div> -->
@@ -439,8 +439,8 @@
 			<div class="row">
 <form id="pwdform" method="post" action="http://localhost:8083/VisibilityAssetTracker/deletePromotion.htm" class="form-horizontal" style="padding: 10px 0;">
 					<div class="col-md-12" id="msg-1">
-						<div id="msg-error" class="alert alert-danger fade in"></div>
-						<div id="msg-success" class="alert alert-success fade in"></div>
+						<div id="msg-error" class="alert err-alert-danger fade in"></div>
+						<div id="msg-success" class="alert succ-alert-success fade in"></div>
 						<input type="hidden" id="promoIdList" name="promoIdList" value=""/>
 						<div class="OpenSans-font">
 							<span id="suredel">Are you sure you want to delete selected promos?</span>	

@@ -51,7 +51,7 @@
 	<div class="container-fluid paddR10">
 		<div class="navbar-header marginB10">
 			<h1 class="pull-left" style="color: #000000;">
-				${roleId} <span>Visibility</span>
+				MT PROCO TOOL - ${roleId} <span>Visibility</span>
 			</h1>
 			<button type="button" class="navbar-toggle collapsed pull-right"
 				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
@@ -135,7 +135,7 @@
 			<div class="proco-creation form-horizontal">
 
 				<div class="promo-details" style="padding: 20px 0px 0px 0px;">
-					<span class="" style="color: #3F3F3F">DETAILS OF THE PROMO
+					<span class="" style="color: #3F3F3F; font-weight:700;">DETAILS OF THE PROMO
 						PLAN VOLUME DISAGGREGATION</span>
 					<!--  <span class="pull-right promo-uom">
                 <div class="col-md-12">
@@ -508,8 +508,8 @@
 			<div class="row">
 <form id="pwdform" method="post" action="" class="form-horizontal" style="padding: 10px 0;">
 					<div class="col-md-12" id="msg-1">
-						<div id="msg-error" class="alert alert-danger fade in"></div>
-						<div id="msg-success" class="alert alert-success fade in"></div>
+						<div id="msg-error" class="alert err-alert-danger fade in"></div>
+						<div id="msg-success" class="alert succ-alert-success fade in"></div>
 						<div class="OpenSans-font">
 								<div class="form-group">
 								<label for="tme_oldPassword" class="col-sm-5 control-label">Branch Code</label>

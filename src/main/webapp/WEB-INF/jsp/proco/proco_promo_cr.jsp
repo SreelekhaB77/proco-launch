@@ -46,7 +46,7 @@
 	<div class="container-fluid paddR10">
 		<div class="navbar-header marginB10">
 			<h1 class="pull-left" style="color: #000000;">
-				${roleId} <span>Visibility</span>
+				MT PROCO TOOL - ${roleId} <span>Visibility</span>
 			</h1>
 			<button type="button" class="navbar-toggle collapsed pull-right"
 				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
@@ -113,18 +113,18 @@
 			</div>
 		</c:if>
 	
-        <div class="alert alert-danger error-msg" id="promoSelectErrorMsg" style="display:none">
+        <div class="alert err-alert-danger error-msg" id="promoSelectErrorMsg" style="display:none">
              	<button type="button" class="close" data-hide="alert">&times;</button>
                 <span>Please select Promotion. </span>
          		</div>
- <!--             <div class="alert alert-success sucess-msg" id="successblock1" style="display:none">
+ <!--             <div class="alert succ-alert-success sucess-msg" id="successblock1" style="display:none">
              	<button type="button" class="close" data-hide="alert">&times;</button>
                 <span>Promotion Uploaded Successfully</span>
          	</div> -->
 		<div class="proco-creation form-horizontal">
 			<input type="hidden" id="roleId" value="${roleId}" />
 			<!-- <div class="promo-back"><a href="http://localhost:8083/VisibilityAssetTracker/procoHome.htm"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Listing</div> -->
-			<div class="promo-details" style="padding:20px 0px 0px 0px"><span style="color:#7986BE;font-weight:700;">SELECT PROMOS FOR CR</span>
+			<div class="promo-details" style="padding:20px 0px 0px 0px"><span style="color:#3F3F3F;font-weight:700;">SELECT PROMOS FOR CR</span>
 				<!-- <span class="promo-detail-txt"><b>SELECT PROMO LISTING</b></span> <span
 					class="pull-right promo-uom">
 					<div class="col-md-12">
@@ -269,7 +269,7 @@
 				<div class="clearfix"></div>
 			</div>
 		</form>
-			<div class="promo-list">PROMO LIST</div>
+			<div class="promo-list table-header-cr">PROMO LIST</div>
 			<form>
 			<table class="table table-striped table-bordered promo-list-table"
 				cellspacing="0" style="width: 100%;overflow-x: scroll;display: block;">
@@ -333,8 +333,8 @@
 			<div class="row">
 <form id="pwdform" method="post" action="" class="form-horizontal" style="padding: 10px 0;">
 					<div class="col-md-12" id="msg-1">
-						<div id="msg-error" class="alert alert-danger fade in"></div>
-						<div id="msg-success" class="alert alert-success fade in"></div>
+						<div id="msg-error" class="alert err-alert-danger fade in"></div>
+						<div id="msg-success" class="alert succ-alert-success fade in"></div>
 						<div class="OpenSans-font">
 							<div class="form-group">
 								<label for="tme_confirmPwd" class="col-sm-5 control-label">Reason</label>

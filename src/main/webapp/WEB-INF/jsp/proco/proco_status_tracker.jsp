@@ -45,7 +45,7 @@
 	<div class="container-fluid paddR10">
 		<div class="navbar-header marginB10">
 			<h1 class="pull-left" style="color: #000000;">
-				${roleId} <span>Visibility</span>
+				MT PROCO TOOL - ${roleId} <span>Visibility</span>
 			</h1>
 			<button type="button" class="navbar-toggle collapsed pull-right"
 				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
@@ -115,11 +115,11 @@
 			</div>
 		</c:if>
 	
-        <div class="alert alert-danger error-msg" id="promoSelectErrorMsg" style="display:none">
+        <div class="alert err-alert-danger error-msg" id="promoSelectErrorMsg" style="display:none">
              	<button type="button" class="close" data-hide="alert">&times;</button>
                 <span>Please select Promotion. </span>
          		</div>
- <!--             <div class="alert alert-success sucess-msg" id="successblock1" style="display:none">
+ <!--             <div class="alert succ-alert-success sucess-msg" id="successblock1" style="display:none">
              	<button type="button" class="close" data-hide="alert">&times;</button>
                 <span>Promotion Uploaded Successfully</span>
          	</div> -->
@@ -130,11 +130,11 @@
 				<span></span>
 			</div> --%>
 			
-			<div class="alert alert-success" id="successblockUpload" style="display:none;" data-hide="alert">
+			<div class="alert succ-alert-success" id="successblockUpload" style="display:none;" data-hide="alert">
 			  <a href="#" class="close" aria-label="close">&times;</a>
 			  <strong>Success! </strong> File uploaded successfully.
 			</div>
-			<div class="alert alert-danger" id="erorblockUpload" style="display:none;" data-hide="alert">
+			<div class="alert err-alert-danger" id="erorblockUpload" style="display:none;" data-hide="alert">
 			  <a href="#" class="close" aria-label="close">&times;</a>
 			  <strong>Error! </strong> <span>File does not contain any data.</span>
 			</div>

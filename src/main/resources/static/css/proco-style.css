@@ -437,6 +437,8 @@ div#DataTables_Table_0_processing {
 /*------------------------*/
 .proco-creation input, .proco-creation select {
 	color: #666666;
+	border: 0.5px solid #03437A;
+	border-radius: 3px;
 }
 
 .promo-back {
@@ -450,6 +452,7 @@ div#DataTables_Table_0_processing {
 
 .promo-detail-txt {
 	color: #3F3F3F;
+	left: -14px;
 	position: absolute;
 	bottom: 0;
 }
@@ -843,6 +846,8 @@ span.comboTreeItemTitle {
 	width: 100%;
 	text-align: left;
 	color: #666666;
+	border: 0.5px solid #03437A;
+	background: #fff;
 }
 
 .multiselect b {
@@ -980,6 +985,7 @@ span.comboTreeItemTitle {
 	background: url("../images/proco/icon-1.png") no-repeat center center;
     background-size: 30px;
 	background-color: #659319;
+	border-radius: 3px 0px 0px 3px;
 }
 
 /* .proco-signop-icon {
@@ -1010,13 +1016,13 @@ span.comboTreeItemTitle {
 }
 
 .tab-label-proco-create-active {
-	font-size: 1em;
-	line-height:2em;
+	font-size: 1.7em;
+	/*line-height:2em;*/
     float: left;
     height: 60px;
     position: absolute;
-      left: 54px;
-    top: 8px;
+    left: 87px;
+    top: 4px;
     color: #fff;
     padding-top: 10px;
 }
@@ -1028,13 +1034,13 @@ span.comboTreeItemTitle {
 }
 
 .tab-label-proco-create-inactive{
-    font-size: 1.2em;
+    font-size: 1.7em;
     line-height:2em;
     float: left;
     height: 60px;
     position: absolute;
-    left: 70px;
-    top: 11px;
+    left: 100px;
+    top: 7.5px;
     color: #3F3F3F;
 }
 
@@ -1046,18 +1052,19 @@ span.comboTreeItemTitle {
 	background: url("../images/proco/icon-6.png") no-repeat center center;
     background-size: 45px;
 	background-color: #F18C10;
+	border-radius: 3px 0px 0px 3px;
 }
 
 .tab-label-proco-volume-active {
-	font-size: 1.3em;
+	font-size: 1.7em;
     line-height:2em;
     float: left;
     height: 40px;
     position: absolute;
-    left: 61px;
+    left: 100px;
     top: 2px;
     color: #fff;
-    padding-top: 10px;
+    padding-top: 6px;
     background: #F18C10;
 }
 .proco-volume-active a {
@@ -1068,12 +1075,12 @@ span.comboTreeItemTitle {
 }
 
 .tab-label-proco-volume-inactive{
-    font-size: 1.3em;
+    font-size: 1.7em;
     float: left;
     height: 60px;
     position: absolute;
-    left: 70px;
-    top: 17px;
+    left: 100px;
+    top: 14px;
     color: #F18C10;
 }
 
@@ -1090,12 +1097,12 @@ span.comboTreeItemTitle {
 }
 
 .tab-label-proco-disaggregation-active {
-	font-size: 1.3em;
+	font-size: 1.7em;
     float: left;
     height: 60px;
     position: absolute;
-    left: 70px;
-    top: 2px;
+    left: 100px;
+    top: 3px;
     color: #fff;
     padding-top: 10px;
 }
@@ -1107,14 +1114,14 @@ span.comboTreeItemTitle {
 }
 
 .tab-label-proco-disaggregation-inactive{
-    font-size: 1.3em;
+    font-size: 1.7em;
     line-height:2em;
     float: left;
     height: 40px;
     position: absolute;
-    left: 61px;
-    top: 11px;
-    color: #7c539e;
+    left: 100px;
+    top: 6px;
+    color: #3F3F3F;
 }
 
 .proco-collaboration-icon {
@@ -1132,7 +1139,7 @@ span.comboTreeItemTitle {
     float: left;
     height: 60px;
     position: absolute;
-    left: 70px;
+    left: 100px;
     top: 2px;
     color: #fff;
     padding-top: 10px;
@@ -1149,7 +1156,7 @@ span.comboTreeItemTitle {
     float: left;
     height: 60px;
     position: absolute;
-    left: 70px;
+    left: 100px;
     top: 11px;
     color: #333849;
 }
@@ -1160,7 +1167,7 @@ span.comboTreeItemTitle {
 	padding-right: 10px;
 	background: url("../images/proco/icon-2.png") no-repeat center center;
     background-size: 30px;
-
+	border-radius: 3px 0px 0px 3px;
 	background-color: #85A2CE;
 }
 .proco-deletion-icon{
@@ -1171,6 +1178,7 @@ span.comboTreeItemTitle {
 	background: url("../images/proco/deletepro.png") no-repeat center center;
     background-size: 30px;
     background-color: #E95912;
+    border-radius: 3px 0px 0px 3px;
 }
 img#delimg {
     height: 148px;
@@ -1182,14 +1190,14 @@ img#delimg {
     padding: 0 !important;
 }
 .tab-label-proco-del-inactive {
-    font-size: 1em;
-    line-height:3em;
+    font-size: 1.7em;
+    line-height:2em;
     float: left;
     height: 40px;
     position: absolute;
-    left: 70px;
-    top: 11px;
-    color: #de0701;
+    left: 100px;
+    top: 6px;
+    color: #3F3F3F;
 }
 .tab-label-proco-listing-active {
 	font-size: 1.750em;
@@ -1229,14 +1237,14 @@ img#delimg {
     padding-left: 24%;
 }
 .tab-label-proco-listing-inactive{
-    font-size: 1.3em;
+    font-size: 1.7em;
     line-height: 2em;
     float: left;
     height: 40px;
     position: absolute;
-    left: 61px;
-    top: 11px;
-    color: #6e82c9;
+    left: 100px;
+    top: 6px;
+    color: #3F3F3F;
 }
 
 .dashboard a, .listing a,.collaboration a,.disaggregation a,.upload a, .create a, .promo-lib-bg a, .edit a, .track a, .coe-moc a, .coe-asset-management a, .coe-profile a, .coe-track a, .catman-pending a, .coe-hfs a{
@@ -1255,7 +1263,7 @@ img#delimg {
 	color: #000000;
     font-size: 2.1em;
     margin-top: 20px;
-    margin-left: 25px;
+    margin-left: 0px;
 }
 
 i.icon-search {
@@ -1477,6 +1485,10 @@ span.comboTreeItemTitle {
 .proco-collab-form {
 	background: #F7E9FF;
 	padding: 15px 0px;
+}
+
+.table-header-cr {
+	background: #659319;
 }
 
 .table-header-listing {

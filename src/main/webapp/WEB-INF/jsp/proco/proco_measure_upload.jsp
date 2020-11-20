@@ -52,7 +52,7 @@ footer {
 	<div class="container-fluid paddR10">
 		<div class="navbar-header marginB10">
 			<h1 class="pull-left" style="color: #000000;">
-				${roleId} <span>Visibility</span>
+				MT PROCO TOOL - ${roleId} <span>Visibility</span>
 			</h1>
 			<button type="button" class="navbar-toggle collapsed pull-right"
 				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
@@ -119,16 +119,16 @@ footer {
 				</c:if>
 			</div>
 		</c:if>
-		<div class="alert alert-danger" id="MocDownloadErorblockUpload" style="display:none;" data-hide="alert">
+		<div class="alert err-alert-danger" id="MocDownloadErorblockUpload" style="display:none;" data-hide="alert">
 			  <a href="#" class="close" aria-label="close">�</a>
 			  <strong>Error! </strong> <span>Please select the MOC.</span>
 		</div>
                	
-         	<div class="alert alert-success alert-dismissible" id="successblockUpload" style="display:none;">
+         	<div class="alert succ-alert-success alert-dismissible" id="successblockUpload" style="display:none;">
 			  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 			  <strong>Success! </strong> File uploaded successfully.
 			</div>
-			<div class="alert alert-danger" id="erorblockUpload" style="display:none;" data-hide="alert">
+			<div class="alert err-alert-danger" id="erorblockUpload" style="display:none;" data-hide="alert">
 			  <a href="#" class="close" aria-label="close">&times;</a>
 			  <strong>Error! </strong> <span>File does not contain any data.</span>
 			</div>
