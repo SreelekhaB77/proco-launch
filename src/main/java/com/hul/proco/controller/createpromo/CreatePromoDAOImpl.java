@@ -1703,8 +1703,9 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 			query.setString(39, pid);
 			// query.setInteger(40, 1);
 			query.setInteger(40, 1);
-			query.setString(41, bean.getStartDateForDb());
-			query.setString(42, bean.getEndDateForDb());
+			//kiran - changes from string to date
+			query.setDate(41, new SimpleDateFormat("dd/MM/yyyy").parse(bean.getStartDateForDb()));
+			query.setDate(42, new SimpleDateFormat("dd/MM/yyyy").parse(bean.getEndDateForDb()));
 			if (isCreate) {
 				query.setString(43, promoId);
 			} else {
