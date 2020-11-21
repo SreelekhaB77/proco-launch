@@ -2179,7 +2179,9 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 			}
 
 			Query qryTogetStartDateOfMoc = sessionFactory.getCurrentSession().createNativeQuery(
-					"SELECT VARCHAR_FORMAT(START_DATE,'DD/MM/YYYY') FROM TBL_VAT_MOC_MASTER WHERE MOC_NAME=:moc AND MOC_YEAR=:year AND MOC_GROUP ='GROUP_ONE'");
+					//Sarin Date Format Changes
+					//"SELECT VARCHAR_FORMAT(START_DATE,'DD/MM/YYYY') FROM TBL_VAT_MOC_MASTER WHERE MOC_NAME=:moc AND MOC_YEAR=:year AND MOC_GROUP ='GROUP_ONE'");
+					"SELECT DATE_FORMAT(START_DATE,'%d/%m/%Y') FROM TBL_VAT_MOC_MASTER WHERE MOC_NAME=:moc AND MOC_YEAR=:year AND MOC_GROUP ='GROUP_ONE'");
 			qryTogetStartDateOfMoc.setString("moc", moc);
 			qryTogetStartDateOfMoc.setString("year", year);
 			String startDateStr = (String) qryTogetStartDateOfMoc.uniqueResult();
@@ -2393,8 +2395,10 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 			qryToSaveStatus.setInteger(1, status);
 			qryToSaveStatus.setString(2, remark);
 			qryToSaveStatus.setString(3, userId);
-			String date = CommonUtils.getDateInMmDdYyyyFormat();
-			qryToSaveStatus.setString(4, date);
+			//Sarin Changes 21Nov20
+			//String date = CommonUtils.getDateInMmDdYyyyFormat();
+			String date = CommonUtils.getCurrentDateInddMMyyyy();
+			qryToSaveStatus.setDate(4, new SimpleDateFormat("dd/MM/yyyy").parse(date));
 			qryToSaveStatus.setString(5, basePack);
 			qryToSaveStatus.executeUpdate();
 
