@@ -88,7 +88,7 @@ public class LaunchVisiPlanDaoImpl implements LaunchVisiPlanDao {
 		List<String> liReturn = null;
 		try {
 			Session session = sessionFactory.getCurrentSession();
-			Query query = session.createNativeQuery("SELECT DISTINCT ASSET_TYPE FROM TBL_VAT_VISIBILITY_PLAN_MASTER");
+			Query query = session.createNativeQuery("SELECT DISTINCT ASSET_TYPE FROM TBL_VAT_VISIBILITY_PLAN_MASTER ORDER BY ASSET_TYPE ");
 			liReturn = query.list();
 		} catch (Exception e) {
 			e.printStackTrace();

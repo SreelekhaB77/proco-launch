@@ -1327,11 +1327,11 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 			//Garima - chanegs for VARCHAR_FORMAT
 			//"SELECT DISTINCT VARCHAR_FORMAT(START_DATE,'MM/DD/YYYY') FROM TBL_VAT_MOC_MASTER WHERE MOC=:moc AND MOC_GROUP ='GROUP_ONE' ");
 			Query queryToStartDate = sessionFactory.getCurrentSession().createNativeQuery(
-					"SELECT DISTINCT DATE_FORMAT(START_DATE,'%m/%d/%Y') FROM TBL_VAT_MOC_MASTER WHERE MOC=:moc AND MOC_GROUP ='GROUP_ONE' ");
+					"SELECT DISTINCT DATE_FORMAT(START_DATE,'%d/%m/%Y') FROM TBL_VAT_MOC_MASTER WHERE MOC=:moc AND MOC_GROUP ='GROUP_ONE' ");
 			//Garima - changes for VARCHAR_FORMAT
 			//"SELECT DISTINCT VARCHAR_FORMAT(END_DATE,'MM/DD/YYYY') FROM TBL_VAT_MOC_MASTER WHERE MOC=:moc AND MOC_GROUP ='GROUP_ONE' ");
 			Query queryToEndDate = sessionFactory.getCurrentSession().createNativeQuery(
-					"SELECT DISTINCT DATE_FORMAT(END_DATE,'%m/%d/%Y') FROM TBL_VAT_MOC_MASTER WHERE MOC=:moc AND MOC_GROUP ='GROUP_ONE' ");
+					"SELECT DISTINCT DATE_FORMAT(END_DATE,'%d/%m/%Y') FROM TBL_VAT_MOC_MASTER WHERE MOC=:moc AND MOC_GROUP ='GROUP_ONE' ");
 			
 			//Garima - changes for VARCHAR_FORMAT
 			//"SELECT DISTINCT VARCHAR_FORMAT(START_DATE,'DD/MM/YYYY') FROM TBL_VAT_MOC_MASTER WHERE MOC=:moc AND MOC_GROUP ='GROUP_ONE' ");
@@ -1342,7 +1342,8 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 			Query queryToEndDateUi = sessionFactory.getCurrentSession().createNativeQuery(
 					"SELECT DISTINCT DATE_FORMAT(END_DATE,'%d/%m/%Y') FROM TBL_VAT_MOC_MASTER WHERE MOC=:moc AND MOC_GROUP ='GROUP_ONE' ");
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd/yyyy");
+			//SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd/yyyy");
+			SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
 			sdf.setLenient(false);
 			List<String> changesList = new ArrayList<String>();
 			List<String> basePackList = new ArrayList<String>();
@@ -2649,8 +2650,11 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 			qryToSaveStatus.setInteger(1, status);
 			qryToSaveStatus.setString(2, remark);
 			qryToSaveStatus.setString(3, userId);
-			String date = CommonUtils.getDateInMmDdYyyyFormat();
-			qryToSaveStatus.setString(4, date);
+			//Sarin Changes 21Nov20
+			//String date = CommonUtils.getDateInMmDdYyyyFormat();
+			//qryToSaveStatus.setString(4, date);
+			String date = CommonUtils.getCurrentDateInddMMyyyy();
+			qryToSaveStatus.setDate(4, new SimpleDateFormat("dd/MM/yyyy").parse(date));
 			qryToSaveStatus.executeUpdate();
 
 		} catch (Exception e) {

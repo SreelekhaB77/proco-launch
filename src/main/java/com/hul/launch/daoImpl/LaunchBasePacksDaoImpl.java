@@ -73,7 +73,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 		try {
 			Session session = sessionFactory.getCurrentSession();
 			query = session
-					.createNativeQuery("SELECT DISTINCT CATEGORY AS sales_category FROM TBL_VAT_COMM_PRODUCT_MASTER WHERE PRODUCT_FLAG ='1'");
+					.createNativeQuery("SELECT DISTINCT CATEGORY AS sales_category FROM TBL_VAT_COMM_PRODUCT_MASTER WHERE PRODUCT_FLAG ='1' ORDER BY CATEGORY ");  //Sarin Changes - Added OrderBy
 			liReturn = query.list();
 
 		} catch (Exception e) {
@@ -91,7 +91,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			Session session = sessionFactory.getCurrentSession();
 			Query query = session.createNativeQuery(
 					"SELECT DISTINCT SS_CATEGORY FROM TBL_VAT_COMM_PRODUCT_MASTER AS tvcpm WHERE CATEGORY =  '"
-							+ salesCat + "' AND SS_CATEGORY IS NOT NULL");
+							+ salesCat + "' AND SS_CATEGORY IS NOT NULL ORDER BY SS_CATEGORY ");  //Sarin Changes - Added By OrderBy
 			List<String> listOfData = query.list();
 			listOfData.forEach(item -> {
 				TblLaunchBasebacks tblLaunchBasebacks = new TblLaunchBasebacks();
@@ -114,7 +114,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			Session session = sessionFactory.getCurrentSession();
 			Query query = session.createNativeQuery(
 					"SELECT DISTINCT BRAND FROM TBL_VAT_COMM_PRODUCT_MASTER AS tvcpm WHERE SS_CATEGORY = '" + psaCat
-							+ "' AND CATEGORY = '"+salesCat+"' AND BRAND IS NOT NULL");
+							+ "' AND CATEGORY = '"+salesCat+"' AND BRAND IS NOT NULL ORDER BY BRAND ");  //Sarin Changes - Added OrderBy
 			List<String> listOfData = query.list();
 			listOfData.forEach(item -> {
 				TblLaunchBasebacks psaCatData = new TblLaunchBasebacks();
@@ -753,7 +753,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 	public List<String> getBpClassification() {
 		try {
 			Query queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-					"SELECT DISTINCT BP_CLASSIFICATION FROM TBL_VAT_COMM_PRODUCT_MASTER tvcpm WHERE BP_CLASSIFICATION <> ''");
+					"SELECT DISTINCT BP_CLASSIFICATION FROM TBL_VAT_COMM_PRODUCT_MASTER tvcpm WHERE BP_CLASSIFICATION <> '' ORDER BY BP_CLASSIFICATION ");  //Sarin Changes - Added OrderBy
 			return queryToGetCustomeChainL1.list();
 		} catch (Exception ex) {
 			logger.debug("Exception :", ex);
