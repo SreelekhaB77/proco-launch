@@ -3153,14 +3153,13 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 				//Garima - changes for concatenation
 				queryToGetClusters = sessionFactory.getCurrentSession().createNativeQuery(
 						"SELECT DISTINCT CONCAT(ACCOUNT_NAME , ':' , DP_CHAIN) AS CUSTOMER_CHAIN_L2 FROM TBL_VAT_COMM_OUTLET_MASTER "
-								+ "tpcm WHERE FINAL_CLUSTER IN (:liClusterCode)");
+								+ "tpcm WHERE FINAL_CLUSTER IN (:liClusterCode) ORDER BY CONCAT(ACCOUNT_NAME , ':' , DP_CHAIN) ");
 				//		"SELECT DISTINCT ACCOUNT_NAME || ':' || DP_CHAIN AS CUSTOMER_CHAIN_L2 FROM TBL_VAT_COMM_OUTLET_MASTER "
 				queryToGetClusters.setParameterList("liClusterCode", liClusterCode);
 			} else {
 				//Garima - changes for concatenation
 				queryToGetClusters = sessionFactory.getCurrentSession().createNativeQuery(
-						"SELECT DISTINCT CONCAT(ACCOUNT_NAME , ':' , DP_CHAIN) AS CUSTOMER_CHAIN_L2 FROM TBL_VAT_COMM_OUTLET_MASTER "
-								+ "tpcm");
+						"SELECT DISTINCT CONCAT(ACCOUNT_NAME , ':' , DP_CHAIN) AS CUSTOMER_CHAIN_L2 FROM TBL_VAT_COMM_OUTLET_MASTER tpcm ORDER BY CONCAT(ACCOUNT_NAME , ':' , DP_CHAIN) ");
 				//		"SELECT DISTINCT ACCOUNT_NAME || ':' || DP_CHAIN AS CUSTOMER_CHAIN_L2 FROM TBL_VAT_COMM_OUTLET_MASTER "
 			}
 			Iterator<Object> clusterIterator = queryToGetClusters.list().iterator();
