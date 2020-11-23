@@ -115,7 +115,7 @@
 	
 		<div class="proco-creation form-horizontal">
 			<!--   <div class="promo-back"><a href="Home.html"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Volume Upload</div> -->
-			<div class="promo-details " style="margin-top: 20px;">
+			<div class="promo-details" style="margin-top: 20px;">
 				<span class="promo-detail-txt"><b>SELECT PROMO VOLUME UPLOAD</b></span>
 
 			</div>
@@ -179,7 +179,7 @@
 						<label class="control-label col-md-4" for="uom">L2-CUST
 							CHAIN (s)</label>
 						<div class="col-md-8 switch-dynamic">
-							<input type="text" class="form-control" id="customerChainL2" name="customerChainL2"
+							<input type="text" class="form-control proco-volume-input" id="customerChainL2" name="customerChainL2"
 								value="ALL CUSTOMERS" readonly="true"></input>
 						</div>
 

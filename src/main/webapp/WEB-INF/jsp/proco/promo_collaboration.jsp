@@ -210,7 +210,7 @@
 										<!--   <select class="form-control" id="cust_chainL2" multiple="multiple">
                     <option>ALL CUSTOMERS</option>
                     </select> -->
-										<input type="text" class="form-control" value="ALL CUSTOMERS"
+										<input type="text" class="form-control proco-collab-input" value="ALL CUSTOMERS"
 											id="cust_chainL2" disabled="true" placeholder="ALL CUSTOMERS">
 									</div>
 

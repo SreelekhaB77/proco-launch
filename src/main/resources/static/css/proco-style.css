@@ -399,8 +399,9 @@ img#libimg {
 
 .tab-label-proco-Signops-inactive {
     padding-left: 17%;
-    line-height: 4.5;
-    font-size: 14px;
+    line-height: 2.5;
+    font-size: 1.7em;
+    color: #3F3F3F;
 }
 div#DataTables_Table_0_processing {
     height: 50px;
@@ -1227,14 +1228,18 @@ img#delimg {
     height: 60px;
     padding: 0 !important;
     color: #fff;
-    line-height: 4;
+    line-height: 2.5;
+    font-size: 1.7em;
     
 }
 .tab-label-proco-status-inactive {
     background-color: #fff;
     height: 60px;
-    line-height: 4;
+    line-height: 2.5;
     padding-left: 24%;
+    font-size: 1.7em;
+    color: #3F3F3F;
+    border-radius: 3px;
 }
 .tab-label-proco-listing-inactive{
     font-size: 1.7em;
@@ -1264,6 +1269,7 @@ img#delimg {
     font-size: 2.1em;
     margin-top: 20px;
     margin-left: 0px;
+    font-weight: 400;
 }
 
 i.icon-search {
@@ -1550,10 +1556,15 @@ span.comboTreeItemTitle {
 .promo-measure-upload {
 	background: #00ACEE !important;	
 	color: #fff;
+	padding: 2px;
+    padding-left: inherit;
+    margin-top: 20px;
+    font-weight: 700;
 }
 
 .new-btn-download {
 	background: #3B5999 !important;
+	color: #fff;
 }
 
 .succ-alert-success {
@@ -1572,6 +1583,35 @@ span.comboTreeItemTitle {
 	background: #659319;
 	color: #fff;
 }
+
+.proco-create-input[disabled], .proco-create-input[readonly] {
+	background: #E8EFDD;
+}
+
+.proco-disaggregate-input[disabled], .proco-disaggregate-input[readonly] {
+	background: #E4E9F3;
+}
+
+.proco-volume-input[disabled], .proco-volume-input[readonly] {
+	background: #F9ECDC;
+}
+
+.proco-listing-input[disabled], .proco-listing-input[readonly] {
+	background: #D9DFF2;
+}
+
+.proco-deletion-input[disabled], .proco-deletion-input[readonly] {
+	background: #EED4CC;
+}
+
+.proco-tracker-input[disabled], .proco-tracker-input[readonly] {
+	background: #E5EFFE;
+}
+
+.proco-collab-input[disabled], .proco-collab-input[readonly] {
+	background: #F7E9FF;
+}
+
 
 /* MT portal ends here */
 

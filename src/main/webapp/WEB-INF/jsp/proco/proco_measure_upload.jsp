@@ -162,7 +162,7 @@ footer {
 													<input id="uploadmeasscre" name="file" type="file" class="file">
 												</div>
 												<input class="validate_upload btn marginT10 new-btn-primary" type="submit" id="btnSubmitBasePack" value="Upload" />
-												<a href="http://localhost:8083/VisibilityAssetTracker/downloadSampleMeasureReport.htm" class="validate_upload btn marginT10 btn-primary" id="btnSubmitBasePack">Promo Measure Template</a>
+												<a href="http://localhost:8083/VisibilityAssetTracker/downloadSampleMeasureReport.htm" class="validate_upload btn marginT10 new-btn-download" id="btnSubmitBasePack">Promo Measure Template</a>
 											</div>
 										</div>
 									</div>
@@ -181,7 +181,7 @@ footer {
 												<input id="MocYear" name="MocYear" type="hidden" class="form-control" />
 												<input id="MocMonth" name="MocMonth" type="hidden" class="form-control" />
 											</div>
-											<input class="validate_dowload btn marginT10 new-btn-primary" type="submit" value="Download" />
+											<input class="validate_dowload btn marginT10 new-btn-download" type="submit" value="Download" />
 										</div>
 									</div>
 								</form>

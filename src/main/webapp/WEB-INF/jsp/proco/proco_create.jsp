@@ -297,7 +297,7 @@
 							<label class="control-label col-md-4" for="uom">L2-CUST
 								CHAIN (s)</label>
 							<div class="col-md-8 switch-dynamic">
-								<form:input type="text" class="form-control" id="cust-chain"
+								<form:input type="text" class="form-control proco-create-input" id="cust-chain"
 									value="ALL CUSTOMERS" readonly="true" path="customerChainL2" />
 							</div>
 
