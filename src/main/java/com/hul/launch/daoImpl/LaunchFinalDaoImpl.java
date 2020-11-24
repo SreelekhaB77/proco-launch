@@ -1897,4 +1897,125 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 		}
 		return downloadedData;
 	}
+
+	@Override
+	public List<LaunchBuildUpTemp> getFinalBuildUpDepoLevelAllList(List<String> depoBasePackList, String launchId) {
+		LaunchBuildUpTemp launchBuildUpTemp = new LaunchBuildUpTemp();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		List<LaunchBuildUpTemp> launchBuildTempList = new ArrayList<LaunchBuildUpTemp>();
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			SessionImpl sessionImpl = (SessionImpl) session;
+			//Garima - changes for concatenation
+			for(String depoBasepack : depoBasePackList) {
+				stmt = sessionImpl.connection().prepareStatement(
+						"SELECT SUM(REVISED_SELLIN_FOR_STORE_N) REVISED_SELLIN_FOR_STORE_N, SUM(REVISED_SELLIN_FOR_STORE_N1) "
+								+ "REVISED_SELLIN_FOR_STORE_N1,SUM(REVISED_SELLIN_FOR_STORE_N2) REVISED_SELLIN_FOR_STORE_N2"
+								+ " FROM TBL_LAUNCH_BUILDUP_TEMP WHERE LAUNCH_ID = '" + launchId
+								+ "' AND CONCAT(DEPOT , ',' , SKU_NAME) = '" + depoBasepack + "' ");
+				//				+ "' AND DEPOT || ',' || SKU_NAME = '" + depoBasepack + "' ");
+				rs = stmt.executeQuery();
+				while (rs.next()) {
+					launchBuildUpTemp.setREVISED_SELLIN_FOR_STORE_N(rs.getString("REVISED_SELLIN_FOR_STORE_N"));
+					launchBuildUpTemp.setREVISED_SELLIN_FOR_STORE_N1(rs.getString("REVISED_SELLIN_FOR_STORE_N1"));
+					launchBuildUpTemp.setREVISED_SELLIN_FOR_STORE_N2(rs.getString("REVISED_SELLIN_FOR_STORE_N2"));
+				}
+				launchBuildTempList.add(launchBuildUpTemp);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			launchBuildUpTemp.setError(e.toString());
+		} finally {
+			try {
+				stmt.close();
+				rs.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return launchBuildTempList;
+	}
+
+	@Override
+	public List<LaunchBuildUpTemp> getCldForDepoBasepackList(List<String> depoBasePackList, String launchId) {
+		LaunchBuildUpTemp launchBuildUpTemp = new LaunchBuildUpTemp();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		List<LaunchBuildUpTemp> launchBuildTempList = new ArrayList<LaunchBuildUpTemp>();
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			SessionImpl sessionImpl = (SessionImpl) session;
+			for(String depoBasepack : depoBasePackList) {
+				//Garima - changes for concatenation
+				stmt = sessionImpl.connection()
+						.prepareStatement("SELECT CLD_SIZE FROM TBL_LAUNCH_BUILDUP_TEMP WHERE LAUNCH_ID = '" + launchId
+								+ "' AND CONCAT(DEPOT , ',' , SKU_NAME) = '" + depoBasepack + "' ");
+				//+ "' AND DEPOT || ',' || SKU_NAME = '" + depoBasepack + "' ");
+				rs = stmt.executeQuery();
+				while (rs.next()) {
+					launchBuildUpTemp.setCLD_SIZE(rs.getString("CLD_SIZE"));
+				}
+				launchBuildTempList.add(launchBuildUpTemp);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			launchBuildUpTemp.setError(e.toString());
+		} finally {
+			try {
+				stmt.close();
+				rs.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return launchBuildTempList;
+	}
+
+	@Override
+	public List<LaunchBuildUpTemp> getFinalBuildUpDepoLeveList(List<String> depoBasepackFmcgModifiedChainClusComboList,
+			String launchId) {
+		LaunchBuildUpTemp launchBuildUpTemp = new LaunchBuildUpTemp();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		List<LaunchBuildUpTemp> launchBuildUpTempList = new ArrayList<LaunchBuildUpTemp>();
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			SessionImpl sessionImpl = (SessionImpl) session;
+			//Garima - changes for concatenation
+			//stmt = sessionImpl.connection().prepareStatement(
+			//		"SELECT SUM(REVISED_SELLIN_FOR_STORE_N) REVISED_SELLIN_FOR_STORE_N, SUM(REVISED_SELLIN_FOR_STORE_N1)"
+			//		+ " REVISED_SELLIN_FOR_STORE_N1,SUM(REVISED_SELLIN_FOR_STORE_N2) REVISED_SELLIN_FOR_STORE_N2, "
+			//		+ " count(*) TOTAL_STORES FROM TBL_LAUNCH_BUILDUP_TEMP WHERE LAUNCH_ID = '" + launchId
+			//		+ "' AND DEPOT || ',' || SKU_NAME || ',' ||  FMCG_CSP_CODE || ',' || MODIFIED_CHAIN || ',' || CLUSTER = '"
+			//		+ depoCombo + "'");
+			for(String depoBasepackFmcgModifiedChainClusCombo : depoBasepackFmcgModifiedChainClusComboList) {
+				stmt = sessionImpl.connection().prepareStatement(
+						"SELECT SUM(REVISED_SELLIN_FOR_STORE_N) REVISED_SELLIN_FOR_STORE_N, SUM(REVISED_SELLIN_FOR_STORE_N1)"
+								+ " REVISED_SELLIN_FOR_STORE_N1,SUM(REVISED_SELLIN_FOR_STORE_N2) REVISED_SELLIN_FOR_STORE_N2, "
+								+ " count(*) TOTAL_STORES FROM TBL_LAUNCH_BUILDUP_TEMP WHERE LAUNCH_ID = '" + launchId
+								+ "' AND CONCAT(DEPOT , ',' , SKU_NAME,',' ,FMCG_CSP_CODE ,',', MODIFIED_CHAIN, ',' , CLUSTER) = '"
+								+ depoBasepackFmcgModifiedChainClusCombo + "'");
+				rs = stmt.executeQuery();
+				while (rs.next()) {
+					launchBuildUpTemp.setREVISED_SELLIN_FOR_STORE_N(rs.getString("REVISED_SELLIN_FOR_STORE_N"));
+					launchBuildUpTemp.setREVISED_SELLIN_FOR_STORE_N1(rs.getString("REVISED_SELLIN_FOR_STORE_N1"));
+					launchBuildUpTemp.setREVISED_SELLIN_FOR_STORE_N2(rs.getString("REVISED_SELLIN_FOR_STORE_N2"));
+					launchBuildUpTemp.setSTORE_COUNT(rs.getString("TOTAL_STORES"));
+				}
+				launchBuildUpTempList.add(launchBuildUpTemp);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			launchBuildUpTemp.setError(e.toString());
+		} finally {
+			try {
+				stmt.close();
+				rs.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return launchBuildUpTempList;
+	}
 }

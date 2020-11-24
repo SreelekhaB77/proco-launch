@@ -95,4 +95,10 @@ public interface LaunchFinalDao {
 	List<ArrayList<String>> getMstnClearanceDataDumpCoe(String userId, List<String> listOfLaunchData);
 	
 	public String saveFinalValue(List<LaunchFinalCalVO> launchFinalVoList);
+	
+	public List<LaunchBuildUpTemp> getFinalBuildUpDepoLevelAllList(List<String> depoBasePackList, String launchId);
+	
+	public List<LaunchBuildUpTemp> getCldForDepoBasepackList(List<String> depoBasePackList, String launchId);
+	
+	public List<LaunchBuildUpTemp> getFinalBuildUpDepoLeveList(List<String> depoBasepackFmcgModifiedChainClusComboList, String launchId);
 }

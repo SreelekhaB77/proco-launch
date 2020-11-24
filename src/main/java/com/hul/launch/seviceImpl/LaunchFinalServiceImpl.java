@@ -121,12 +121,17 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 		}
 
 		Map<String, Map<String, String>> finalData = new HashMap<>();
+		List<String> depoBasePackList = new ArrayList<String>();
 		for (String depoBasepack : setOfStrings) {
-			Map<String, String> depobasepackCalculation = new HashMap<>();
-			LaunchBuildUpTemp listOfBuildUps = launchFinalDao.getFinalBuildUpDepoLevelAll(depoBasepack, launchId);
-			LaunchBuildUpTemp cldValue = launchFinalDao.getCldForDepoBasepack(depoBasepack, launchId);
-			double originalCldN = Double.parseDouble(listOfBuildUps.getREVISED_SELLIN_FOR_STORE_N())
-					/ Double.parseDouble(cldValue.getCLD_SIZE());
+			depoBasePackList.add(depoBasepack);
+		}
+		//for (String depoBasepack : setOfStrings) {
+		Map<String, String> depobasepackCalculation = new HashMap<>();
+		List<LaunchBuildUpTemp> listOfBuildUpDepo = launchFinalDao.getFinalBuildUpDepoLevelAllList(depoBasePackList, launchId);
+		List<LaunchBuildUpTemp> cldDepo = launchFinalDao.getCldForDepoBasepackList(depoBasePackList, launchId);
+		for(int i=0;i<depoBasePackList.size();i++){
+			double originalCldN = Double.parseDouble(listOfBuildUpDepo.get(i).getREVISED_SELLIN_FOR_STORE_N())
+					/ Double.parseDouble(cldDepo.get(i).getCLD_SIZE());
 			depobasepackCalculation.put("originalCldN", Double.toString(originalCldN));
 			double maxOfOriginalCldN = BigDecimal.valueOf(Math.max(5, originalCldN)).setScale(0, BigDecimal.ROUND_UP)
 					.doubleValue();
@@ -134,8 +139,8 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 			double factorN = maxOfOriginalCldN / originalCldN;
 			depobasepackCalculation.put("factorN", Double.toString(factorN));
 
-			double originalCldN1 = Double.parseDouble(listOfBuildUps.getREVISED_SELLIN_FOR_STORE_N1())
-					/ Double.parseDouble(cldValue.getCLD_SIZE());
+			double originalCldN1 = Double.parseDouble(listOfBuildUpDepo.get(i).getREVISED_SELLIN_FOR_STORE_N1())
+					/ Double.parseDouble(cldDepo.get(i).getCLD_SIZE());
 			depobasepackCalculation.put("originalCldN1", Double.toString(originalCldN1));
 			double maxOfOriginalCldN1 = BigDecimal
 					.valueOf(Math.max(0, (originalCldN + originalCldN1) - maxOfOriginalCldN))
@@ -145,8 +150,8 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 			double factorN1 = maxOfOriginalCldN1 / originalCldN1;
 			depobasepackCalculation.put("factorN1", Double.toString(factorN1));
 
-			double originalCldN2 = Double.parseDouble(listOfBuildUps.getREVISED_SELLIN_FOR_STORE_N2())
-					/ Double.parseDouble(cldValue.getCLD_SIZE());
+			double originalCldN2 = Double.parseDouble(listOfBuildUpDepo.get(i).getREVISED_SELLIN_FOR_STORE_N2())
+					/ Double.parseDouble(cldDepo.get(i).getCLD_SIZE());
 			depobasepackCalculation.put("originalCldN2", Double.toString(originalCldN2));
 			double maxOfOriginalCldN2 = BigDecimal
 					.valueOf(Math.max(0,
@@ -156,51 +161,59 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 			depobasepackCalculation.put("maxOfOriginalCldN2", Double.toString(maxOfOriginalCldN2));
 			double factorN2 = maxOfOriginalCldN2 / originalCldN2;
 			depobasepackCalculation.put("factorN2", Double.toString(factorN2));
-			finalData.put(depoBasepack, depobasepackCalculation);
+			finalData.put(depoBasePackList.get(i), depobasepackCalculation);
 		}
+		//}
 
 		launchFinalDao.deleteAllTempCal(launchId);
+		List<String> depoBasepackFmcgModifiedChainClusComboList = new ArrayList<String>();
 		List<LaunchFinalCalVO> launchDataList = new ArrayList<>();
+		List<String> substrList = new ArrayList<>();
+		char character = ',';
 		for (String depoBasepackFmcgModifiedChainClusCombo : allDistinctFinalBuildsCombo) {
-			LaunchBuildUpTemp launchBuildUpTemp = new LaunchBuildUpTemp();
-			LaunchBuildUpTemp listOfBuildUps = launchFinalDao
-					.getFinalBuildUpDepoLevel(depoBasepackFmcgModifiedChainClusCombo, launchId);
-			String substr = "";
 			List<Integer> list = new ArrayList<>();
-			char character = ',';
+			depoBasepackFmcgModifiedChainClusComboList.add(depoBasepackFmcgModifiedChainClusCombo);
 			for (int i = 0; i < depoBasepackFmcgModifiedChainClusCombo.length(); i++) {
 				if (depoBasepackFmcgModifiedChainClusCombo.charAt(i) == character) {
 					list.add(i);
 				}
 			}
-			substr = depoBasepackFmcgModifiedChainClusCombo.substring(0, list.get(1));
-			LaunchBuildUpTemp cldValue = launchFinalDao.getCldForDepoBasepack(substr, launchId);
-			Map<String, String> calculationData = finalData.get(substr);
-			double cldWithFactorsN = (Double.parseDouble(listOfBuildUps.getREVISED_SELLIN_FOR_STORE_N())
-					/ Double.parseDouble(cldValue.getCLD_SIZE())) * Double.parseDouble(calculationData.get("factorN"));
+			String substr = depoBasepackFmcgModifiedChainClusCombo.substring(0, list.get(1));
+			substrList.add(substr);
+		}
+		LaunchBuildUpTemp launchBuildUpTemp = new LaunchBuildUpTemp();
+		List<LaunchBuildUpTemp> listOfBuildUpsList = launchFinalDao
+				.getFinalBuildUpDepoLeveList(depoBasepackFmcgModifiedChainClusComboList, launchId);
 
-			double cldWithFactorsN1 = (Double.parseDouble(listOfBuildUps.getREVISED_SELLIN_FOR_STORE_N1())
-					/ Double.parseDouble(cldValue.getCLD_SIZE())) * Double.parseDouble(calculationData.get("factorN1"));
 
-			double cldWithFactorsN2 = (Double.parseDouble(listOfBuildUps.getREVISED_SELLIN_FOR_STORE_N2())
-					/ Double.parseDouble(cldValue.getCLD_SIZE())) * Double.parseDouble(calculationData.get("factorN2"));
+		List<LaunchBuildUpTemp> cldValueList = launchFinalDao.getCldForDepoBasepackList(substrList, launchId);
+		for(int i=0;i<depoBasepackFmcgModifiedChainClusComboList.size();i++) {
+			Map<String, String> calculationData = finalData.get(substrList.get(i));
+			double cldWithFactorsN = (Double.parseDouble(listOfBuildUpsList.get(i).getREVISED_SELLIN_FOR_STORE_N())
+					/ Double.parseDouble(cldValueList.get(i).getCLD_SIZE())) * Double.parseDouble(calculationData.get("factorN"));
+
+			double cldWithFactorsN1 = (Double.parseDouble(listOfBuildUpsList.get(i).getREVISED_SELLIN_FOR_STORE_N1())
+					/ Double.parseDouble(cldValueList.get(i).getCLD_SIZE())) * Double.parseDouble(calculationData.get("factorN1"));
+
+			double cldWithFactorsN2 = (Double.parseDouble(listOfBuildUpsList.get(i).getREVISED_SELLIN_FOR_STORE_N2())
+					/ Double.parseDouble(cldValueList.get(i).getCLD_SIZE())) * Double.parseDouble(calculationData.get("factorN2"));
 
 			double finalCldN = Math.ceil(cldWithFactorsN);
 			double finalCldN1 = Math.ceil(cldWithFactorsN1);
 			double finalCldN2 = Math.ceil(cldWithFactorsN2);
 
-			double finalUnitsN = finalCldN * Double.parseDouble(cldValue.getCLD_SIZE());
-			double finalUnitsN1 = finalCldN1 * Double.parseDouble(cldValue.getCLD_SIZE());
-			double finalUnitsN2 = finalCldN2 * Double.parseDouble(cldValue.getCLD_SIZE());
+			double finalUnitsN = finalCldN * Double.parseDouble(cldValueList.get(i).getCLD_SIZE());
+			double finalUnitsN1 = finalCldN1 * Double.parseDouble(cldValueList.get(i).getCLD_SIZE());
+			double finalUnitsN2 = finalCldN2 * Double.parseDouble(cldValueList.get(i).getCLD_SIZE());
 
-			LaunchBuildUpTemp gsvValue = launchFinalDao.getGsvForDepoBasepack(substr, launchId);
+			LaunchBuildUpTemp gsvValue = launchFinalDao.getGsvForDepoBasepack(substrList.get(i), launchId);
 			double finalValueN = finalUnitsN * Double.parseDouble(gsvValue.getGSV());
 			double finalValueN1 = finalUnitsN1 * Double.parseDouble(gsvValue.getGSV());
 			double finalValueN2 = finalUnitsN2 * Double.parseDouble(gsvValue.getGSV());
 
-			launchBuildUpTemp.setREVISED_SELLIN_FOR_STORE_N(listOfBuildUps.getREVISED_SELLIN_FOR_STORE_N());
-			launchBuildUpTemp.setREVISED_SELLIN_FOR_STORE_N1(listOfBuildUps.getREVISED_SELLIN_FOR_STORE_N1());
-			launchBuildUpTemp.setREVISED_SELLIN_FOR_STORE_N2(listOfBuildUps.getREVISED_SELLIN_FOR_STORE_N2());
+			launchBuildUpTemp.setREVISED_SELLIN_FOR_STORE_N(listOfBuildUpsList.get(i).getREVISED_SELLIN_FOR_STORE_N());
+			launchBuildUpTemp.setREVISED_SELLIN_FOR_STORE_N1(listOfBuildUpsList.get(i).getREVISED_SELLIN_FOR_STORE_N1());
+			launchBuildUpTemp.setREVISED_SELLIN_FOR_STORE_N2(listOfBuildUpsList.get(i).getREVISED_SELLIN_FOR_STORE_N2());
 
 			launchBuildUpTemp.setSELLIN_VALUE_N(Double.toString(finalValueN));
 			launchBuildUpTemp.setSELLIN_VALUE_N1(Double.toString(finalValueN1));
@@ -213,10 +226,10 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 			launchBuildUpTemp.setSELLIN_UNITS_N(Double.toString(finalUnitsN));
 			launchBuildUpTemp.setSELLIN_UNITS_N1(Double.toString(finalUnitsN1));
 			launchBuildUpTemp.setSELLIN_UNITS_N2(Double.toString(finalUnitsN2));
-			launchBuildUpTemp.setSTORE_COUNT(listOfBuildUps.getSTORE_COUNT());
-			launchBuildUpTemp.setCLUSTER(listOfBuildUps.getCLUSTER());
+			launchBuildUpTemp.setSTORE_COUNT(listOfBuildUpsList.get(i).getSTORE_COUNT());
+			launchBuildUpTemp.setCLUSTER(listOfBuildUpsList.get(i).getCLUSTER());
 			LaunchFinalCalVO  launchFinalCalVO = new LaunchFinalCalVO();
-			launchFinalCalVO.setDepoBasePack(depoBasepackFmcgModifiedChainClusCombo);
+			launchFinalCalVO.setDepoBasePack(depoBasepackFmcgModifiedChainClusComboList.get(i));
 			launchFinalCalVO.setLaunchId(launchId);
 			launchFinalCalVO.setLaunchBuildUpTemp(launchBuildUpTemp);
 			launchFinalCalVO.setUserId(userId);
@@ -542,7 +555,7 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 				double maxOfOriginalCldN2 = BigDecimal
 						.valueOf(Math.max(0,
 								(originalCldN + originalCldN1 + originalCldN2)
-										- (maxOfOriginalCldN + maxOfOriginalCldN1)))
+								- (maxOfOriginalCldN + maxOfOriginalCldN1)))
 						.setScale(0, BigDecimal.ROUND_UP).doubleValue();
 
 				depobasepackCalculation.put("maxOfOriginalCldN2", Double.toString(maxOfOriginalCldN2));
@@ -703,7 +716,7 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 				double maxOfOriginalCldN2 = BigDecimal
 						.valueOf(Math.max(0,
 								(originalCldN + originalCldN1 + originalCldN2)
-										- (maxOfOriginalCldN + maxOfOriginalCldN1)))
+								- (maxOfOriginalCldN + maxOfOriginalCldN1)))
 						.setScale(0, BigDecimal.ROUND_UP).doubleValue();
 
 				depobasepackCalculation.put("maxOfOriginalCldN2", Double.toString(maxOfOriginalCldN2));
@@ -843,7 +856,7 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 				double maxOfOriginalCldN2 = BigDecimal
 						.valueOf(Math.max(0,
 								(originalCldN + originalCldN1 + originalCldN2)
-										- (maxOfOriginalCldN + maxOfOriginalCldN1)))
+								- (maxOfOriginalCldN + maxOfOriginalCldN1)))
 						.setScale(0, BigDecimal.ROUND_UP).doubleValue();
 
 				depobasepackCalculation.put("maxOfOriginalCldN2", Double.toString(maxOfOriginalCldN2));
@@ -985,7 +998,7 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 				double maxOfOriginalCldN2 = BigDecimal
 						.valueOf(Math.max(0,
 								(originalCldN + originalCldN1 + originalCldN2)
-										- (maxOfOriginalCldN + maxOfOriginalCldN1)))
+								- (maxOfOriginalCldN + maxOfOriginalCldN1)))
 						.setScale(0, BigDecimal.ROUND_UP).doubleValue();
 
 				depobasepackCalculation.put("maxOfOriginalCldN2", Double.toString(maxOfOriginalCldN2));
@@ -1130,7 +1143,7 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 				double maxOfOriginalCldN2 = BigDecimal
 						.valueOf(Math.max(0,
 								(originalCldN + originalCldN1 + originalCldN2)
-										- (maxOfOriginalCldN + maxOfOriginalCldN1)))
+								- (maxOfOriginalCldN + maxOfOriginalCldN1)))
 						.setScale(0, BigDecimal.ROUND_UP).doubleValue();
 
 				depobasepackCalculation.put("maxOfOriginalCldN2", Double.toString(maxOfOriginalCldN2));
