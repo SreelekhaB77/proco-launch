@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hul.launch.dao.LaunchBasePacksDao;
@@ -30,8 +32,9 @@ import com.hul.launch.response.LaunchFinalPlanResponse;
 import com.hul.launch.service.LaunchFinalService;
 
 @Service
-@Transactional
+@Transactional(isolation=Isolation.READ_COMMITTED)
 public class LaunchFinalServiceImpl implements LaunchFinalService {
+	private static final Logger logger = Logger.getLogger(LaunchFinalServiceImpl.class.getName());
 
 	@Autowired
 	LaunchFinalDao launchFinalDao;
@@ -50,6 +53,7 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 
 	@Override
 	public List<LaunchFinalPlanResponse> getLaunchFinalRespose(String launchId, String userId) {
+		long startTime = System.currentTimeMillis();
 		List<LaunchFinalPlanResponse> listOfFinal = launchFinalDao.getLaunchFinalRespose(launchId);
 		LaunchDataResponse launchDataResonse = launchDao.getSpecificLaunchData(launchId);
 		List<LaunchVisiPlanning> visiSkuCalModel = launchVisiPlanDao.getVisiByLaunchId(launchId);
@@ -102,10 +106,14 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 		}
 		//launchFinalDao.deleteAllBuildUp(launchId);  //Sarin Changes 18Nov2020
 		// Save Build temp data
+		long startTime1 = System.currentTimeMillis();
 		launchFinalDao.saveLaunchBuildUpTemp(listOfAllLaunchStoreData, launchId, userId);
-
+		long endTime1 = System.currentTimeMillis();
+		logger.info("duration of saveLaunchBuildUpTemp method "+(endTime1-startTime1));
+		long startTime2 = System.currentTimeMillis();
 		List<String> allDistinctFinalBuildsCombo = launchFinalDao.getFinalBuildUpDepoLevelDistinct(launchId);
-
+		long endTime2 = System.currentTimeMillis();
+		logger.info("duration of allDistinctFinalBuildsCombo method "+(endTime2-startTime2));
 		Set<String> setOfStrings = new HashSet<>();
 		for (String deboBasepackFmcgModifiedChainClusCombo : allDistinctFinalBuildsCombo) {
 			String substr = "";
@@ -127,8 +135,14 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 		}
 		//for (String depoBasepack : setOfStrings) {
 		Map<String, String> depobasepackCalculation = new HashMap<>();
+		long startTime3 = System.currentTimeMillis();
 		List<LaunchBuildUpTemp> listOfBuildUpDepo = launchFinalDao.getFinalBuildUpDepoLevelAllList(depoBasePackList, launchId);
+		long endTime3 = System.currentTimeMillis();
+		logger.info("duration of getFinalBuildUpDepoLevelAllList method "+(endTime3-startTime3));
+		long startTime4 = System.currentTimeMillis();
 		List<LaunchBuildUpTemp> cldDepo = launchFinalDao.getCldForDepoBasepackList(depoBasePackList, launchId);
+		long endTime4 = System.currentTimeMillis();
+		logger.info("duration of getCldForDepoBasepackList method "+(endTime4-startTime4));
 		for(int i=0;i<depoBasePackList.size();i++){
 			double originalCldN = Double.parseDouble(listOfBuildUpDepo.get(i).getREVISED_SELLIN_FOR_STORE_N())
 					/ Double.parseDouble(cldDepo.get(i).getCLD_SIZE());
@@ -164,8 +178,10 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 			finalData.put(depoBasePackList.get(i), depobasepackCalculation);
 		}
 		//}
-
+		long startTime5 = System.currentTimeMillis();
 		launchFinalDao.deleteAllTempCal(launchId);
+		long endTime5 = System.currentTimeMillis();
+		logger.info("duration of deleteAllTempCal method "+(endTime5-startTime5));
 		List<String> depoBasepackFmcgModifiedChainClusComboList = new ArrayList<String>();
 		List<LaunchFinalCalVO> launchDataList = new ArrayList<>();
 		List<String> substrList = new ArrayList<>();
@@ -182,11 +198,16 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 			substrList.add(substr);
 		}
 		LaunchBuildUpTemp launchBuildUpTemp = new LaunchBuildUpTemp();
+		long startTime6 = System.currentTimeMillis();
 		List<LaunchBuildUpTemp> listOfBuildUpsList = launchFinalDao
 				.getFinalBuildUpDepoLeveList(depoBasepackFmcgModifiedChainClusComboList, launchId);
-
-
+		long endTime6 = System.currentTimeMillis();
+		logger.info("duration of getFinalBuildUpDepoLeveList method "+(endTime6-startTime6));
+		long startTime7 = System.currentTimeMillis();
 		List<LaunchBuildUpTemp> cldValueList = launchFinalDao.getCldForDepoBasepackList(substrList, launchId);
+		long endTime7 = System.currentTimeMillis();
+		logger.info("duration of getCldForDepoBasepackList method "+(endTime7-startTime7));
+		long startTime8 = System.currentTimeMillis();
 		for(int i=0;i<depoBasepackFmcgModifiedChainClusComboList.size();i++) {
 			Map<String, String> calculationData = finalData.get(substrList.get(i));
 			double cldWithFactorsN = (Double.parseDouble(listOfBuildUpsList.get(i).getREVISED_SELLIN_FOR_STORE_N())
@@ -238,10 +259,18 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 			launchFinalDao.updateFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp,
 					userId);*/
 		}
+		long endTime8 = System.currentTimeMillis();
+		logger.info("duration of getGsvForDepoBasepack method "+(endTime8-startTime8));
+		long startTime9 = System.currentTimeMillis();
 		launchFinalDao.saveFinalValue(launchDataList);
+		long endTime9 = System.currentTimeMillis();
+		logger.info("duration of saveFinalValue method "+(endTime9-startTime9));
+		long startTime10 = System.currentTimeMillis();
 		launchFinalDao.updateFinalValue(launchDataList);
-
+		long endTime10 = System.currentTimeMillis();
+		logger.info("duration of saveFinalValue method "+(endTime10-startTime10));
 		List<LaunchFinalPlanResponse> listOfFinalFinal = new ArrayList<>();
+		long startTime11 = System.currentTimeMillis();
 		for (LaunchFinalPlanResponse launchFinalPlanResponse : listOfFinal) {
 			LaunchFinalPlanResponse toReturn = launchFinalDao
 					.getSumOfForDepoBasepack(launchFinalPlanResponse.getSkuName(), launchId);
@@ -249,7 +278,10 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 			toReturn.setSkuName(launchFinalPlanResponse.getSkuName());
 			listOfFinalFinal.add(toReturn);
 		}
-
+		long endTime11 = System.currentTimeMillis();
+		logger.info("duration of getSumOfForDepoBasepack method "+(endTime11-startTime11));
+		long endTime = System.currentTimeMillis();
+		logger.info("duration of getLaunchFinalRespose method "+(endTime-startTime));
 		return listOfFinalFinal;
 	}
 
