@@ -120,7 +120,7 @@ footer {
 			</div>
 		</c:if>
 		<div class="alert err-alert-danger" id="MocDownloadErorblockUpload" style="display:none;" data-hide="alert">
-			  <a href="#" class="close" aria-label="close">&times;</a>
+			  <a href="#" class="close new-close-btn" aria-label="close">&times;</a>
 			  <strong>Error! </strong> <span>Please select the MOC.</span>
 		</div>
                	
