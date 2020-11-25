@@ -458,6 +458,10 @@ div#DataTables_Table_0_processing {
 	bottom: 0;
 }
 
+.promo-vol-left {
+	left: 0px;
+}
+
 .promo-form-details {
 	background: #E8EFDD;
 	padding: 15px 0px;
@@ -971,7 +975,7 @@ span.comboTreeItemTitle {
 }
 
 .proco-btn-success {
-	background-color: green;
+	background-color: #659319;
 }
 
 .proco-btn-warning {

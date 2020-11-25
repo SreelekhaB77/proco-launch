@@ -116,7 +116,7 @@
 		<div class="proco-creation form-horizontal">
 			<!--   <div class="promo-back"><a href="Home.html"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Volume Upload</div> -->
 			<div class="promo-details" style="margin-top: 20px;">
-				<span class="promo-detail-txt"><b>SELECT PROMO VOLUME UPLOAD</b></span>
+				<span class="promo-detail-txt promo-vol-left"><b>SELECT PROMO VOLUME UPLOAD</b></span>
 
 			</div>
 			<form action="http://localhost:8083/VisibilityAssetTracker/downloadPromosForVolumeUpload.htm" method="POST" enctype="multipart/form-data">
