@@ -2168,13 +2168,13 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 			Query qryTogetMinStatusOfOriginalOps = sessionFactory.getCurrentSession()
 					.createNativeQuery("SELECT MIN(STATUS_ID) FROM TBL_PROCO_STATUS_TRACKER WHERE PROMO_ID=:promoId");
 			qryTogetMinStatusOfOriginalOps.setString("promoId", originalId);
-			Integer minStatus = (Integer) qryTogetMinStatusOfOriginalOps.uniqueResult();
+			Integer minStatus = (Integer)qryTogetMinStatusOfOriginalOps.uniqueResult();
 
 			if (!promoId.equals(originalId)) {
 				Query qryTogetCountOfOriginalOps = sessionFactory.getCurrentSession().createNativeQuery(
 						"select count(ORIGINAL_ID) from TBL_PROCO_PROMOTION_MASTER where ORIGINAL_ID=:promoId");
 				qryTogetCountOfOriginalOps.setString("promoId", originalId);
-				opsCount = (Integer) qryTogetCountOfOriginalOps.uniqueResult();
+				opsCount = ((BigInteger) qryTogetCountOfOriginalOps.uniqueResult()).intValue();
 			} else {
 				opsCount = 1;
 			}
