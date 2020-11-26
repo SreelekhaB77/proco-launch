@@ -23,10 +23,12 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.document.AbstractXlsView;
 
 import com.hul.launch.web.util.CommonUtils;
 
+@Component("ProcoMeasureExpoExcelView")
 public class ProcoMeasureResportExport  extends AbstractXlsView {
 	static Logger logger = Logger.getLogger(ProcoMeasureResportExport.class);
 	
