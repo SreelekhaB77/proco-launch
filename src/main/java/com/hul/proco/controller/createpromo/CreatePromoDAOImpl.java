@@ -2757,7 +2757,7 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 		List<String> customerChainL1 = new ArrayList<>();
 		try {
 			Query queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-					"SELECT DISTINCT A.CUSTOMER_CHAIN_L1 FROM TBL_PROCO_CUSTOMER_MASTER AS A INNER JOIN TBL_PROCO_KAM_MAPPING AS B ON A.CUSTOMER_CHAIN_L1=B.CUSTOMER_CHAIN_L1 WHERE B.USER_ID=:userId");
+					"SELECT DISTINCT A.CUSTOMER_CHAIN_L1 FROM TBL_PROCO_CUSTOMER_MASTER AS A INNER JOIN TBL_PROCO_KAM_MAPPING AS B ON A.CUSTOMER_CHAIN_L1=B.CUSTOMER_CHAIN_L1 WHERE B.USER_ID=:userId ORDER BY A.CUSTOMER_CHAIN_L1");
 			queryToGetCustomeChainL1.setString("userId", userId);
 			customerChainL1 = queryToGetCustomeChainL1.list();
 		} catch (Exception e) {
@@ -2774,7 +2774,7 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 		List<String> customerChainL1List2 = new ArrayList<String>();
 		if (customerChainL1.contains("ALL CUSTOMERS")) {
 			Query queryToGetBranches = sessionFactory.getCurrentSession()
-					.createNativeQuery("SELECT DISTINCT ACCOUNT_NAME FROM TBL_VAT_COMM_OUTLET_MASTER");
+					.createNativeQuery("SELECT DISTINCT ACCOUNT_NAME FROM TBL_VAT_COMM_OUTLET_MASTER ORDER BY ACCOUNT_NAME");
 			customerChainL1List = queryToGetBranches.list();
 		} else {
 			String[] split = customerChainL1.split(",");
@@ -2788,7 +2788,7 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 			//Garima - changes for concatenation
 			Query queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
 					"SELECT DISTINCT ACCOUNT_NAME, CONCAT(ACCOUNT_NAME, ':' , DP_CHAIN) AS CUSTOMER_CHAIN_L2 FROM "
-							+ " TBL_VAT_COMM_OUTLET_MASTER WHERE ACCOUNT_NAME IN(:customerChainL1)");
+							+ " TBL_VAT_COMM_OUTLET_MASTER WHERE ACCOUNT_NAME IN(:customerChainL1) ORDER BY ACCOUNT_NAME ");
 			//		"SELECT DISTINCT ACCOUNT_NAME, ACCOUNT_NAME || ':' || DP_CHAIN AS CUSTOMER_CHAIN_L2 FROM "
 			//		+ "TBL_VAT_COMM_OUTLET_MASTER WHERE ACCOUNT_NAME IN(:customerChainL1)");
 			queryToGetCustomeChainL1.setParameterList("customerChainL1", customerChainL1List);
@@ -2822,7 +2822,7 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 			// GeographyBean geographyBean = new GeographyBean();
 			// geographyBean.setTitle("ALL INDIA");
 			Query queryToGetBranches = sessionFactory.getCurrentSession().createNativeQuery(
-					"SELECT DISTINCT ACCOUNT_NAME FROM TBL_VAT_COMM_OUTLET_MASTER WHERE ACCOUNT_NAME != ''");
+					"SELECT DISTINCT ACCOUNT_NAME FROM TBL_VAT_COMM_OUTLET_MASTER WHERE ACCOUNT_NAME != '' ORDER BY ACCOUNT_NAME ");
 			Iterator branchIterator = queryToGetBranches.list().iterator();
 			List<BranchBean> listOfBranchBean = new ArrayList<BranchBean>();
 			while (branchIterator.hasNext()) {
