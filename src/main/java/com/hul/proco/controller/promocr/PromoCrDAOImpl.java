@@ -348,7 +348,7 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 		List<String> catList = new ArrayList<>();
 		try {
 			Query query = sessionFactory.getCurrentSession()
-					.createNativeQuery("SELECT DISTINCT(CATEGORY) FROM TBL_PROCO_PRODUCT_MASTER WHERE ACTIVE = 1");
+					.createNativeQuery("SELECT DISTINCT(CATEGORY) FROM TBL_PROCO_PRODUCT_MASTER WHERE ACTIVE = 1 ORDER BY CATEGORY");
 			catList = query.list();
 		} catch (Exception ex) {
 			logger.debug("Exception: ", ex);
@@ -363,7 +363,7 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 		List<String> brandList = new ArrayList<>();
 		try {
 			Query query = sessionFactory.getCurrentSession()
-					.createNativeQuery("SELECT DISTINCT(BRAND) FROM TBL_PROCO_PRODUCT_MASTER WHERE ACTIVE = 1");
+					.createNativeQuery("SELECT DISTINCT(BRAND) FROM TBL_PROCO_PRODUCT_MASTER WHERE ACTIVE = 1 ORDER BY BRAND");
 			brandList = query.list();
 		} catch (Exception ex) {
 			logger.debug("Exception: ", ex);

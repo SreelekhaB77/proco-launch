@@ -481,7 +481,8 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 		Object[] obj = null;
 		try {
 			Query queryToGetBasepackDeatails = sessionFactory.getCurrentSession().createNativeQuery(
-					"SELECT BASEPACK_DESC,CATEGORY,BRAND FROM TBL_PROCO_PRODUCT_MASTER WHERE BASEPACK=:basepack AND ACTIVE=1");
+					//"SELECT BASEPACK_DESC,CATEGORY,BRAND FROM TBL_PROCO_PRODUCT_MASTER WHERE BASEPACK=:basepack AND ACTIVE=1");
+					"SELECT CATEGORY,BRAND,BASEPACK_DESC FROM TBL_PROCO_PRODUCT_MASTER WHERE BASEPACK=:basepack AND ACTIVE=1");
 			queryToGetBasepackDeatails.setString("basepack", basepack);
 			List<Object[]> objList = queryToGetBasepackDeatails.list();
 			obj = objList.get(0);
