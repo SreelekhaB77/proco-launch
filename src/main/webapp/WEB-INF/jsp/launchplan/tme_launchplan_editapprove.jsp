@@ -49,11 +49,11 @@
 	</div>
 	<input type="hidden" value="" id="dynamicLaunchId">
 	<nav class="navbar navbar-inverse navbar-fixed-top container-bg"
-		style="position: relative; top: 80px; z-index: 2; background-image: none ! important; border: none ! important;">
+		style="position: relative; top: 120px; z-index: 2; background-image: none ! important; border: none ! important;">
 		<div class="container-fluid paddR10">
 			<div class="navbar-header marginB10">
 				<h1 class="SEGOEUIL-font pull-left">
-					TME Launch Plan <span>Dashboard</span>
+					Launch Planning Tool 
 				</h1>
 				<button type="button" class="navbar-toggle collapsed pull-right"
 					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
@@ -495,7 +495,7 @@
 
 					<div class="paid-visi">
 						<div class="modal-header"
-							style="background-color: #E95912; color: #fff;">
+							style="background-color: #3B5999; color: #fff;">
 							<button type="button" class="close" id="paidcrossBtn"
 								data-dismiss="modal">X</button>
 							<h4 class="modal-title">Approve Request(s)</h4>
@@ -598,7 +598,7 @@
 
 					<div class="paid-visi">
 						<div class="modal-header"
-							style="background-color: #E95912; color: #fff;">
+							style="background-color: #3B5999; color: #fff;">
 							<button type="button" class="close" id="paidcrossBtn"
 								data-dismiss="modal">X</button>
 							<h4 class="modal-title">Reject Request(s)</h4>

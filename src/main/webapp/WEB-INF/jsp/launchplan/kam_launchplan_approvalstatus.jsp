@@ -55,11 +55,11 @@
 	<input type="hidden" value="" id="kamLnchDet">
 
 	<nav class="navbar navbar-inverse navbar-fixed-top container-bg"
-		style="position: relative; top: 80px; z-index: 2; background-image: none ! important; border: none ! important;">
+		style="position: relative; top: 120px; z-index: 2; background-image: none ! important; border: none ! important;">
 		<div class="container-fluid paddR10">
 			<div class="navbar-header marginB10">
 				<h1 class="SEGOEUIL-font pull-left">
-					KAM Launch Plan <span>Dashboard</span>
+					Launch Planning Tool
 				</h1>
 				<button type="button" class="navbar-toggle collapsed pull-right"
 					data-toggle="collapse" data-target="#navbar" aria-expanded="false"

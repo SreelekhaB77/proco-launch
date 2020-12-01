@@ -55,11 +55,11 @@
 	<input type="hidden" value="" id="kamLnchDet">
 	
 	<nav class="navbar navbar-inverse navbar-fixed-top container-bg"
-		style="position: relative; top: 80px; z-index: 2; background-image: none ! important; border: none ! important;">
+		style="position: relative; top: 120px; z-index: 2; background-image: none ! important; border: none ! important;">
 		<div class="container-fluid paddR10">
 			<div class="navbar-header marginB10">
 				<h1 class="SEGOEUIL-font pull-left">
-					KAM Launch Plan Dashboard
+					Launch Planning Tool
 				</h1>
 				<button type="button" class="navbar-toggle collapsed pull-right"
 					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
@@ -149,7 +149,7 @@
 
 					<div class="paid-visi">
 						<div class="modal-header"
-							style="background-color: #E95912; color: #fff;">
+							style="background-color: #3B5999; color: #fff;">
 							<button type="button" class="close" id="paidcrossBtn" data-dismiss="modal">X</button>
 							<h4 class="modal-title">Proposed New Launch MOC</h4>
 						</div>
@@ -233,7 +233,7 @@
 
 					<div class="paid-visi">
 						<div class="modal-header"
-							style="background-color: #E95912; color: #fff;">
+							style="background-color: #3B5999; color: #fff;">
 							<button type="button" class="close" id="paidcrossBtn"
 								data-dismiss="modal">X</button>
 							<h4 class="modal-title">Reject Launch Details</h4>
@@ -304,7 +304,7 @@
 
 					<div class="paid-visi">
 						<div class="modal-header"
-							style="background-color: #028681; color: #fff;">
+							style="background-color: #3B5999; color: #fff;">
 							<button type="button" class="close" id="paidcrossBtn"
 								data-dismiss="modal">�</button>
 							<h4 class="modal-title">Reject Basepack(s)</h4>
@@ -375,7 +375,7 @@
 
 					<div class="paid-visi">
 						<div class="modal-header"
-							style="background-color: #E95912; color: #fff;">
+							style="background-color: #3B5999; color: #fff;">
 							<button type="button" class="close" id="paidcrossBtn"
 								data-dismiss="modal">X</button>
 							<h4 class="modal-title">Remarks for change in documents sample</h4>

@@ -63,7 +63,7 @@ table {
 }
 
 .middle-section {
-	margin-top: 105px !important;
+	margin-top: 136px !important;
 	margin-bottom: 54px
 }
 
@@ -878,9 +878,10 @@ footer .unilever-copyright {
 
 .navbar-header h1{
     color: #000000;
-    font-size: 2.1em;
-    margin-top: 20px;
+    font-size: 23px;
+    margin-top: 10px;
     margin-left: 25px;
+    font-weight:300;
 }
 .navbar-header h1>span {
     font-size: 0.6em;
@@ -890,6 +891,10 @@ footer .unilever-copyright {
 	.container>.navbar-collapse, .container>.navbar-header {
 	margin-left: 0 ! important;
 	padding: 6px 0px;
+}
+.container > .navbar-header, .container-fluid>.navbar-header{
+	background:#D6D7D9;	
+	padding:0;
 }
 .navbar-inverse {
 	background-image: none ! important;
@@ -1198,7 +1203,7 @@ border-style: solid;
 	/* left: 30px; */
 	height: 60px;
 	width: 55px;
-	margin-left: 26px;
+	margin-left: 25px;
 }
 #headingOne a{
 	color: #035597;
@@ -1384,13 +1389,15 @@ table#kam_launch_store_table input {
 	
 }
 .left-hul-cls{
-    width: 20%;
+    width: 18%;
     padding: 1rem 0;   
     float:left;
     
 	}
 .left-hul-cls img{
-	width:18rem;
+	width:24rem;
+	margin-left:25px;
+	margin-top:10px;
 }
 .right-hul-cls{
 	width:80%;
@@ -1404,17 +1411,17 @@ table#kam_launch_store_table input {
     left: 0;
     right: 0;
     top: 0;
-    height: 1rem;
+    height: 1.5rem;
     background: #7705BC;
-    border-radius: 0 0 0.75rem 0.75rem;
+    border-radius: 0 0 1.2rem 1.2rem;
 }
 .product-logo-cls{
-	width:9.375rem;
+	width:12.375rem;
 	float:left;
-	padding-top:2rem;
+	padding-top:3rem;
 }
-.product-logo-cls img{width:9rem;}
-.user-details-cls{float:right;margin-top:10px;}
+.product-logo-cls img{width:16rem;}
+.user-details-cls{float:right;margin-top:30px;}
 .logo-sml-cls img{width:5rem;}
 .home-cls a{font-size:25px;}
 
@@ -1441,9 +1448,11 @@ table#kam_launch_store_table input {
 }
 
 
-.gotonewlaunch{float:left;margin-top:5px;}
-/* New header styles ends here */
+.gotonewlaunch{float:left;margin-top:8px;}
+.user-header-bg{height:120px;}
+.user-name li a{font-size:1.5rem;}
 
+/* New header styles ends here */
 
 /* MTP custom fonts */
 /*.container-fluid .sw-theme-arrows > ul.step-anchor > li.active > a{
@@ -1464,10 +1473,13 @@ table#kam_launch_store_table input {
     border: 2px solid #00ACEE;
     }
 .modal-header{
-	background:#E95912;
+	background:#3B5999;
 }
 .close{opacity:1 !important;color:#ffffff;}
 .modal-title{color:#fff;}
-.modal-content .btn-info{text-transform: uppercase;font-weight: 600;background:#00ACEE;width:80px;}
-.alert-danger{font-weight:700;}
-/* MTP custom fonts ends here */
+.modal-content .btn-info{text-transform: uppercase;font-weight: 600;background:#3B5999;width:80px;}
+.alert-danger{font-weight:700;background: #C75B55;color: #fff;}
+.nav-pills{float:left;width:100%;margin-top:10px;}
+.alert-success{background:#6DB06D;color: #FFFFFF;font-weight: 500;}
+
+/* MTP custom fonts ends here */ 
