@@ -90,7 +90,8 @@ $(document)
 						} else {
 							$('#msg-error').hide();
 							document.forms[0].method = "POST";
-							document.forms[0].action = 'coeDashboardDownloadRequest.htm?dateStart='+startDate+'&dateEnd='+endDate+'&moc='+moc+'&userName='+userId;
+							//document.forms[0].action = 'coeDashboardDownloadRequest.htm?dateStart='+startDate+'&dateEnd='+endDate+'&moc='+moc+'&userName='+userId;
+							document.forms[0].action = 'coeDashboardDownloadRequest.htm';
 							document.forms[0].submit();
 							$('.popupLoader').hide();
 							return true;
