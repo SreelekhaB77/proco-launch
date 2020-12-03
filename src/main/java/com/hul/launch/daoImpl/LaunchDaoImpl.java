@@ -1562,11 +1562,16 @@ public class LaunchDaoImpl implements LaunchDao {
 			return e.toString();
 		} finally {
 			try {
-				batchUpdate0.close();
-				batchUpdate1.close();
-				batchUpdate2.close();
-				batchUpdate3.close();
-				batchUpdate4.close();
+				if (batchUpdate0 != null)
+					batchUpdate0.close();
+				if (batchUpdate1 != null)
+					batchUpdate1.close();
+				if (batchUpdate2 != null)
+					batchUpdate2.close();
+				if (batchUpdate3 != null)
+					batchUpdate3.close();
+				if (batchUpdate4 != null)
+					batchUpdate4.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 				return e.toString();

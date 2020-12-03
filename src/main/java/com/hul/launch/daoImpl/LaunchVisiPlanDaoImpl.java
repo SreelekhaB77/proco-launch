@@ -248,14 +248,14 @@ public class LaunchVisiPlanDaoImpl implements LaunchVisiPlanDao {
 
 	@Override
 	public int getShelvesByVisiName(String visiName) {
-		String toReturn = "";
+		String toReturn = "0";
 		Session session = sessionFactory.getCurrentSession();
 		SessionImpl sessionImpl = (SessionImpl) session;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
 			stmt = sessionImpl.connection().prepareStatement(
-					"SELECT DISTINCT NO_OF_SHELVES FROM TBL_VAT_VISIBILITY_PLAN_MASTER WHERE ASSET_TYPE =  '" + visiName
+					"SELECT DISTINCT NO_OF_SHELVES FROM TBL_VAT_VISIBILITY_PLAN_MASTER WHERE NO_OF_SHELVES IS NOT NULL AND ASSET_TYPE =  '" + visiName
 							+ "'");
 
 			rs = stmt.executeQuery();
