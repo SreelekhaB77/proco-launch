@@ -317,18 +317,18 @@ public class DisaggregationDAOImpl implements DisaggregationDAO {
 				}
 
 				Query QueryTogetDepots = sessionFactory.getCurrentSession().createNativeQuery(
-						"select DISTINCT C.DEPOT from TBL_PROCO_PROMOTION_DEPOT_LEVEL AS B INNER JOIN TBL_PROCO_PROMOTION_MASTER AS A ON A.PROMO_ID = B.PROMO_ID AND  B.BASEPACK = A.P1_BASEPACK INNER JOIN TBL_PROCO_CUSTOMER_MASTER AS C ON A.CUSTOMER_CHAIN_L1 = C.CUSTOMER_CHAIN_L1 AND B.DEPOT = C.DEPOT WHERE A.PROMO_ID=:promoId AND A.ACTIVE=1");
+						"select C.DEPOT from TBL_PROCO_PROMOTION_DEPOT_LEVEL AS B INNER JOIN TBL_PROCO_PROMOTION_MASTER AS A ON A.PROMO_ID = B.PROMO_ID AND  B.BASEPACK = A.P1_BASEPACK INNER JOIN TBL_PROCO_CUSTOMER_MASTER AS C ON A.CUSTOMER_CHAIN_L1 = C.CUSTOMER_CHAIN_L1 AND B.DEPOT = C.DEPOT WHERE A.PROMO_ID=:promoId AND A.ACTIVE=1 GROUP BY C.DEPOT");
 				QueryTogetDepots.setString("promoId", PromoIdBasePack[0]);
 				List depotList = QueryTogetDepots.list();
 
 				Query QueryTogetBranches = sessionFactory.getCurrentSession().createNativeQuery(
-						"select DISTINCT BRANCH from TBL_PROCO_PROMOTION_DEPOT_LEVEL WHERE PROMO_ID=:promoId AND ACTIVE=1 AND BASEPACK=:basepack ");
+						"select BRANCH from TBL_PROCO_PROMOTION_DEPOT_LEVEL WHERE PROMO_ID=:promoId AND ACTIVE=1 AND BASEPACK=:basepack GROUP BY BRANCH");
 				QueryTogetBranches.setString("promoId", PromoIdBasePack[0]);
 				QueryTogetBranches.setString("basepack", basepack);
 				List branchList = QueryTogetBranches.list();
 
 				Query QueryTogetCLusters = sessionFactory.getCurrentSession().createNativeQuery(
-						"select DISTINCT CLUSTER from TBL_PROCO_PROMOTION_DEPOT_LEVEL WHERE PROMO_ID=:promoId AND ACTIVE=1 AND BASEPACK=:basepack");
+						"select CLUSTER from TBL_PROCO_PROMOTION_DEPOT_LEVEL WHERE PROMO_ID=:promoId AND ACTIVE=1 AND BASEPACK=:basepack GROUP BY CLUSTER");
 				QueryTogetCLusters.setString("promoId", PromoIdBasePack[0]);
 				QueryTogetCLusters.setString("basepack", basepack);
 				List clusterList = QueryTogetCLusters.list();
@@ -468,7 +468,7 @@ public class DisaggregationDAOImpl implements DisaggregationDAO {
 						}
 					}
 					Query query = sessionFactory.getCurrentSession().createNativeQuery(
-							"INSERT INTO TBL_PROCO_PROMOTION_DISAGGREGATION_DEPOT_LEVEL(PROMO_ID,BASEPACK,DEPOT,TOTAL_SALE,PERCENTAGE,QUANTITY,MOCS,ACTIVE,BRANCH,CLUSTER) VALUES(?,?,?,?,?,?,?,1,?,?)");
+							"INSERT INTO TBL_PROCO_PROMOTION_DISAGGREGATION_DEPOT_LEVEL(PROMO_ID,BASEPACK,DEPOT,TOTAL_SALE,PERCENTAGE,QUANTITY,MOCS,ACTIVE,BRANCH,CLUSTER) VALUES(?0,?1,?2,?3,?4,?5,?6,1,?7,?8)");
 					Query queryToCheck = sessionFactory.getCurrentSession().createNativeQuery(
 							"SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_DISAGGREGATION_DEPOT_LEVEL WHERE PROMO_ID=:promoId AND BASEPACK=:basepack");
 
@@ -629,25 +629,25 @@ public class DisaggregationDAOImpl implements DisaggregationDAO {
 				}
 
 				Query QueryTogetL2 = sessionFactory.getCurrentSession().createNativeQuery(
-						"select DISTINCT C.CUSTOMER_CHAIN_L2 from TBL_PROCO_PROMOTION_DEPOT_LEVEL AS B INNER JOIN TBL_PROCO_PROMOTION_MASTER AS A ON A.PROMO_ID = B.PROMO_ID AND A.P1_BASEPACK = B.BASEPACK INNER JOIN TBL_PROCO_CUSTOMER_MASTER AS C ON A.CUSTOMER_CHAIN_L1 = C.CUSTOMER_CHAIN_L1 AND B.DEPOT = C.DEPOT WHERE A.PROMO_ID=:promoId AND A.ACTIVE=1");
+						"select C.CUSTOMER_CHAIN_L2 from TBL_PROCO_PROMOTION_DEPOT_LEVEL AS B INNER JOIN TBL_PROCO_PROMOTION_MASTER AS A ON A.PROMO_ID = B.PROMO_ID AND A.P1_BASEPACK = B.BASEPACK INNER JOIN TBL_PROCO_CUSTOMER_MASTER AS C ON A.CUSTOMER_CHAIN_L1 = C.CUSTOMER_CHAIN_L1 AND B.DEPOT = C.DEPOT WHERE A.PROMO_ID=:promoId AND A.ACTIVE=1 GROUP BY C.CUSTOMER_CHAIN_L2");
 				QueryTogetL2.setString("promoId", promoIdBasePack[0]);
 				List<String> l2List = new ArrayList<String>();
 				l2List = QueryTogetL2.list();
 
 				Query QueryTogetBranches = sessionFactory.getCurrentSession().createNativeQuery(
-						"select DISTINCT BRANCH from TBL_PROCO_PROMOTION_DEPOT_LEVEL WHERE PROMO_ID=:promoId AND ACTIVE=1 AND BASEPACK=:basepack");
+						"select BRANCH from TBL_PROCO_PROMOTION_DEPOT_LEVEL WHERE PROMO_ID=:promoId AND ACTIVE=1 AND BASEPACK=:basepack GROUP BY BRANCH");
 				QueryTogetBranches.setString("promoId", promoIdBasePack[0]);
 				QueryTogetBranches.setString("basepack", promoIdBasePack[1]);
 				List branchList = QueryTogetBranches.list();
 
 				Query QueryTogetCLusters = sessionFactory.getCurrentSession().createNativeQuery(
-						"select DISTINCT CLUSTER from TBL_PROCO_PROMOTION_DEPOT_LEVEL WHERE PROMO_ID=:promoId AND ACTIVE=1 AND BASEPACK=:basepack");
+						"select CLUSTER from TBL_PROCO_PROMOTION_DEPOT_LEVEL WHERE PROMO_ID=:promoId AND ACTIVE=1 AND BASEPACK=:basepack GROUP BY CLUSTER");
 				QueryTogetCLusters.setString("promoId", promoIdBasePack[0]);
 				QueryTogetCLusters.setString("basepack", promoIdBasePack[1] );
 				List clusterList = QueryTogetCLusters.list();
 
 				Query QueryTogetDepots = sessionFactory.getCurrentSession().createNativeQuery(
-						"select DISTINCT C.DEPOT from TBL_PROCO_PROMOTION_DEPOT_LEVEL AS B INNER JOIN TBL_PROCO_PROMOTION_MASTER AS A ON A.PROMO_ID = B.PROMO_ID INNER JOIN TBL_PROCO_CUSTOMER_MASTER AS C ON A.CUSTOMER_CHAIN_L1 = C.CUSTOMER_CHAIN_L1 AND B.DEPOT = C.DEPOT WHERE A.PROMO_ID=:promoId AND C.CUSTOMER_CHAIN_L2=:customerChainL2 AND A.ACTIVE=1");
+						"select C.DEPOT from TBL_PROCO_PROMOTION_DEPOT_LEVEL AS B INNER JOIN TBL_PROCO_PROMOTION_MASTER AS A ON A.PROMO_ID = B.PROMO_ID INNER JOIN TBL_PROCO_CUSTOMER_MASTER AS C ON A.CUSTOMER_CHAIN_L1 = C.CUSTOMER_CHAIN_L1 AND B.DEPOT = C.DEPOT WHERE A.PROMO_ID=:promoId AND C.CUSTOMER_CHAIN_L2=:customerChainL2 AND A.ACTIVE=1 GROUP BY C.DEPOT");
 				for (int i = 0; i < l2List.size(); i++) { // for every l2
 					mocsToStoreInDb = "";
 					List<String> listOfDepot = new ArrayList<String>();
@@ -1007,7 +1007,7 @@ public class DisaggregationDAOImpl implements DisaggregationDAO {
 		boolean res = true;
 		try {
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(
-					"INSERT INTO TBL_PROCO_PROMO_DISAGG_L2_DEPOT_LEVEL(PROMO_ID,CUSTOMER_CHAIN_L2,DEPOT,TOTAL_SALE,PERCENTAGE,QUANTITY,ACTIVE,BRANCH,CLUSTER,BASEPACK) VALUES(?,?,?,?,?,?,1,?,?,?)");
+					"INSERT INTO TBL_PROCO_PROMO_DISAGG_L2_DEPOT_LEVEL(PROMO_ID,CUSTOMER_CHAIN_L2,DEPOT,TOTAL_SALE,PERCENTAGE,QUANTITY,ACTIVE,BRANCH,CLUSTER,BASEPACK) VALUES(?0,?1,?2,?3,?4,?5,1,?6,?7,?8)");
 
 			Query QueryTogetDepotsForCl = sessionFactory.getCurrentSession().createNativeQuery(
 					"select DISTINCT CONCAT(CONCAT(CONCAT(CONCAT(C.DEPOT,':'),C.BRANCH),':'),C.CLUSTER) from TBL_PROCO_PROMOTION_DEPOT_LEVEL AS B INNER JOIN TBL_PROCO_PROMOTION_MASTER AS A ON A.PROMO_ID = B.PROMO_ID AND B.BASEPACK = A.P1_BASEPACK INNER JOIN TBL_PROCO_CUSTOMER_MASTER AS C ON A.CUSTOMER_CHAIN_L1 = C.CUSTOMER_CHAIN_L1 AND B.DEPOT = C.DEPOT WHERE A.PROMO_ID=:promoId AND A.ACTIVE=1 AND C.CUSTOMER_CHAIN_L2=:customerChainL2 AND C.BRANCH IN(:branch) AND C.CLUSTER IN(:cluster)");
