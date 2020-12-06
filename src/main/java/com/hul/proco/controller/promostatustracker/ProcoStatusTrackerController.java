@@ -6,9 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,15 +29,16 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hul.launch.web.util.CommonPropUtils;
-import com.hul.launch.web.util.CommonUtils;
-import com.hul.launch.web.util.FilePaths;
-import com.hul.launch.web.util.UploadUtil;
 import com.hul.proco.controller.createpromo.CreatePromoService;
 import com.hul.proco.controller.listingPromo.PromoListingBean;
 import com.hul.proco.controller.listingPromo.PromoListingJsonObject;
 import com.hul.proco.controller.listingPromo.PromoMeasureReportBean;
 import com.hul.proco.controller.promocr.PromoCrService;
+import com.hul.launch.web.util.CommonPropUtils;
+import com.hul.launch.web.util.CommonUtils;
+import com.hul.launch.web.util.FilePaths;
+import com.hul.launch.web.util.UploadUtil;
+
 
 @Controller
 public class ProcoStatusTrackerController {
@@ -341,7 +344,7 @@ public class ProcoStatusTrackerController {
 			} else {
 				promoId = promoIdValue;
 			}
-			ArrayList<String> headerList = procoStatusTrackerService.getHeaderListForPromoStatusTracker(userId);
+			ArrayList<String> headerList = procoStatusTrackerService.getHeaderListForPromoStatusTracker();
 			downloadedData = procoStatusTrackerService.getPromotionStatusTracker(headerList, cagetory, brand, basepack, custChainL1,
 					custChainL2, geography, offerType, modality, year, moc, userId, 1,promoId);
 			if (downloadedData != null) {
@@ -356,6 +359,96 @@ public class ProcoStatusTrackerController {
 				response.flushBuffer();
 			}
 		} catch (Exception e) {
+			logger.debug("Exception: ", e);
+			return null;
+		}
+		return null;
+	}
+	
+	
+	@RequestMapping(value = "downloadCustomerPortalPromoStatusTracker.htm", method = RequestMethod.POST)
+	public ModelAndView downloadCustomerportalStatusTracker(HttpServletRequest request, HttpServletResponse response,
+			Model model) {
+		try {
+			Calendar calendar = Calendar.getInstance();
+			int year = calendar.get(Calendar.YEAR);
+			int Month = calendar.get(Calendar.MONTH);
+			int day   = calendar.get(Calendar.DATE);
+			String MocWhr = "";
+			String YerWhr = "";
+			Month = Month + 1;
+			int DecMonth = Month - 1;
+			if( Month >= 10 ) {
+				for( int i = DecMonth; i <= (Month + 4); i++ ) {
+					if(i > 12) {
+						if(!MocWhr.equals("")) {
+							MocWhr += " OR ";
+						}
+						MocWhr += "(A.YEAR, A.MOC) = ('"+(year+1)+"', 'MOC"+( i - 12 )+"')";
+					} else {
+						if(!MocWhr.equals("")) {
+							MocWhr += " OR ";
+						}
+						MocWhr += "(A.YEAR, A.MOC) = ('"+(year)+"', 'MOC"+i+"')";
+					}
+				}
+			} else if ( Month <= 2) {
+				for( int i = DecMonth; i <= (Month + 4); i++ ) {
+					if(i < 1) {
+						if(!MocWhr.equals("")) {
+							MocWhr += " OR ";
+						}
+						MocWhr += "(A.YEAR, A.MOC) = ('"+(year-1)+"', 'MOC"+( 12 + i )+"')";
+					} else {
+						if(!MocWhr.equals("")) {
+							MocWhr += " OR ";
+						}
+						MocWhr += "(A.YEAR, A.MOC) = ('"+(year)+"', 'MOC"+( i )+"')";
+					}
+				}
+			} else {
+				for( int i = DecMonth; i <= (Month + 4); i++ ) {
+					if(!MocWhr.equals("")) {
+						MocWhr += " OR ";
+					}
+					MocWhr += "(A.YEAR, A.MOC) = ('"+(year)+"', 'MOC"+( i )+"')";
+				}
+			}
+			
+			
+			MocWhr += " ";
+			String userId = (String) request.getSession().getAttribute("UserID");
+			
+			ArrayList<String> headerList = procoStatusTrackerService.getHeaderListForPromoStatusTracker(userId, false);
+			List<ArrayList<String>> downloadedData = procoStatusTrackerService.getPromotionStatusTrackerCustomerPortal(headerList, "all", "all", "all", "all",
+					"all", "all", "all", "all", YerWhr, MocWhr, userId, 1,"all");
+			if (downloadedData != null) {
+				response.setContentType("text/csv");
+		        response.setHeader("Content-Disposition", "attachment; filename=COE_PROMO_DOWNLOAD_"+ CommonUtils.getCurrentDate_YYYY_MM_DD() +".csv;");
+		        ServletOutputStream os = response.getOutputStream();
+				/* Multi-cluster row starts here */
+				//List<ArrayList<String>> downCusData = new ArrayList<ArrayList<String>>();
+				boolean isNext = false;
+				for( int v = 0; v < downloadedData.size(); v++ ) {
+					ArrayList<String> downSingCusData = null;
+					downSingCusData = downloadedData.get(v);
+					
+					
+					//downCusData.add(downSingCusData);
+					String str = "\"" + String.join("\",\"", downSingCusData) + "\"";
+					os.write(str.getBytes("UTF-8"));  
+					os.write("\r\n".getBytes("UTF-8"));
+				}
+				os.close();
+				
+				/* Multi-cluster row ends here */
+				
+				
+		              
+		        response.flushBuffer();
+			}
+		}
+		catch (Exception e) {
 			logger.debug("Exception: ", e);
 			return null;
 		}
@@ -467,16 +560,13 @@ public class ProcoStatusTrackerController {
 		String ModRes = "";
 		try {
 			if (!CommonUtils.isFileEmpty(file)) {
-				//if (CommonUtils.isFileSizeExceeds(file)) {
 				if (CommonUtils.isMearsureReportFileSizeExceeds(file)) {
 					model.addAttribute("errorMsg", commUtils.getProperty("File.Size.Exceeds"));
 					ModRes = "File Size Exceeds";
 				} else {
 
 					if (UploadUtil.movefile(file, fileName)) {
-
 						int excelColumnCount = UploadUtil.readExcelCellCount(fileName);
-						//if(excelColumnCount == 62) {
 						if(excelColumnCount == 63) {
 							List<PromoMeasureReportBean> promoMeasureReportBeanList = procoStatusTrackerService.readPromoMeasureReport(fileName);
 							promoMeasureReportBeanArray = promoMeasureReportBeanList.toArray(new PromoMeasureReportBean[promoMeasureReportBeanList.size()]);

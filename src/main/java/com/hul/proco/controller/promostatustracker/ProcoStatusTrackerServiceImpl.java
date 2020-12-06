@@ -40,6 +40,23 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 		return procoStatusTrackerDao.getPromotionStatusTracker(headerList, cagetory, brand, basepack, custChainL1, custChainL2, geography, offerType, modality, year, moc, userId, active, promoId);
 	}
 	
+	@Override
+	public List<ArrayList<String>> getPromotionStatusTrackerCustomerPortal(ArrayList<String> headerList, String cagetory,
+			String brand, String basepack, String custChainL1, String custChainL2, String geography, String offerType,
+			String modality, String year, String moc, String userId, int active, String promoId) {
+		return procoStatusTrackerDao.getPromotionStatusTrackerCustomerPortal(headerList, cagetory, brand, basepack, custChainL1, custChainL2, geography, offerType, modality, year, moc, userId, active, promoId);
+	}
+	
+	
+	@Override
+	public String disaggrigateQty(String promoId, String cluster, String baseback) {
+		return procoStatusTrackerDao.disaggrigateQty(promoId, cluster, baseback);
+	}
+	
+	public boolean batchCustomerStatusTrackerReport(List<ArrayList<String>> dataObj) {
+		return procoStatusTrackerDao.batchCustomerStatusTrackerReport(dataObj);
+	}
+	
 	/**
 	 * @return
 	 */
@@ -76,9 +93,9 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 	}
 	
 	@Override 
-	public ArrayList<String> getHeaderListForPromoStatusTracker(String UserId){
+	public ArrayList<String> getHeaderListForPromoStatusTracker(String UserId, boolean isCron){
 		ArrayList<String> headerList = new ArrayList<String>();
-		if(procoStatusTrackerDao.getUserRoleId(UserId) == 2) {
+		if(procoStatusTrackerDao.getUserRoleId(UserId) == 2 || isCron) {
 			headerList.add("Promo Id");
 			headerList.add("Original Id");
 			headerList.add("Start Date");

@@ -34,6 +34,8 @@ public class FilePaths {
 	public static String LAUNCH_ARTWORK_UPLOAD_FILE_PATH;
 	public static String LAUNCH_MDG_UPLOAD_FILE_PATH;
 	public static String LAUNCH_KAM_REQUESTS_UPLOAD;
+	public static String CREATIVES_TME_FILES;
+	public static String CUSTOMERPORTALSTATUSEXP;
 
 	static {
 		try {
@@ -45,6 +47,10 @@ public class FilePaths {
 			} else {
 				MAIN_PATH_FOR_ALL = CommonPropUtils.getInstance().getProperty("COMMON_PATH_FOR_LNX");
 			}
+			
+			CUSTOMERPORTALSTATUSEXP = MAIN_PATH_FOR_ALL + appendString + "CUSTOMER_PORTAL" + appendString;
+			CREATIVES_TME_FILES = MAIN_PATH_FOR_ALL + appendString + "CREATIVE" + appendString;
+			
 			log.info("FilePaths - MAIN_PATH_FOR_ALL :  " + MAIN_PATH_FOR_ALL.toString());
 			log.info("FilePaths - Setting File Paths Details");
 			FILE_TEMPUPLOAD_PATH = MAIN_PATH_FOR_ALL + appendString + "uploads".trim() + appendString + "files"
@@ -136,6 +142,12 @@ public class FilePaths {
 		if(!file.exists())
 			file.mkdirs();
 		file = new File(FILE_IMAGE_PATH);
+		if(!file.exists())
+			file.mkdirs();
+		file = new File(CUSTOMERPORTALSTATUSEXP);
+		if(!file.exists())
+			file.mkdirs();
+		file = new File(CREATIVES_TME_FILES);
 		if(!file.exists())
 			file.mkdirs();
 	}

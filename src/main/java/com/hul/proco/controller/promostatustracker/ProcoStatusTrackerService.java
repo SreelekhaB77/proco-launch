@@ -19,9 +19,14 @@ public interface ProcoStatusTrackerService {
 	public List<ArrayList<String>> getPromotionStatusTracker(ArrayList<String> headerList,String cagetory, String brand,
 			String basepack, String custChainL1, String custChainL2, String geography, String offerType, String modality, 
 			String year, String moc, String userId, int active,String promoId);
+	public List<ArrayList<String>> getPromotionStatusTrackerCustomerPortal(ArrayList<String> headerList, String cagetory,
+			String brand, String basepack, String custChainL1, String custChainL2, String geography, String offerType,
+			String modality, String year, String moc, String userId, int active, String promoId);
 	
 	public ArrayList<String> getHeaderListForPromoStatusTracker();
-	public ArrayList<String> getHeaderListForPromoStatusTracker(String userId);
+	public ArrayList<String> getHeaderListForPromoStatusTracker(String userId, boolean isCron);
+	
+	public String disaggrigateQty(String promoId, String cluster, String baseback);
 	
 	public ArrayList<ArrayList<String>> getProcoStatusMasterValues();
 	
@@ -40,6 +45,8 @@ public interface ProcoStatusTrackerService {
 	public ArrayList<String> getHeaderListForProcoMeasureReport();
 	
 	public List<ArrayList<String>> getProcoMeasureReportErrorDetails(ArrayList<String> headerList, String userId);
+
+	public boolean batchCustomerStatusTrackerReport(List<ArrayList<String>> downloadedData);
 	
 
 }
