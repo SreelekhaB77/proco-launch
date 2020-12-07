@@ -108,9 +108,11 @@ public class LaunchVisiPlanDaoImpl implements LaunchVisiPlanDao {
 			batchUpdate.setInt(1, saveLaunchVisiPlanRequestList.getLaunchId());
 			batchUpdate.executeUpdate();
 			List<SaveLaunchVisiPlanRequest> liRequests = saveLaunchVisiPlanRequestList.getListOfVisiPlans();
-			for (SaveLaunchVisiPlanRequest tblLaunchVisiPlan : liRequests) {
-				try (PreparedStatement preparedStatement = sessionImpl.connection()
-						.prepareStatement(TBL_LAUNCH_VISIPLAN)) {
+			try (PreparedStatement preparedStatement = sessionImpl.connection()
+					.prepareStatement(TBL_LAUNCH_VISIPLAN)) {
+				for (SaveLaunchVisiPlanRequest tblLaunchVisiPlan : liRequests) {
+					/*try (PreparedStatement preparedStatement = sessionImpl.connection()
+						.prepareStatement(TBL_LAUNCH_VISIPLAN)) {*/
 					preparedStatement.setInt(1, saveLaunchVisiPlanRequestList.getLaunchId());
 					preparedStatement.setString(2, tblLaunchVisiPlan.getAccount());
 					preparedStatement.setString(3, tblLaunchVisiPlan.getFormat());
@@ -133,11 +135,14 @@ public class LaunchVisiPlanDaoImpl implements LaunchVisiPlanDao {
 					preparedStatement.setString(20, tblLaunchVisiPlan.getDepthPerShelf4());
 					preparedStatement.setString(21, tblLaunchVisiPlan.getFacingsPerShelf5());
 					preparedStatement.setString(22, tblLaunchVisiPlan.getDepthPerShelf5());
-					preparedStatement.executeUpdate();
-				} catch (Exception e) {
-					logger.error("Exception: " + e);
+					preparedStatement.addBatch();
+					//preparedStatement.executeUpdate();
 				}
+				preparedStatement.executeBatch();
+			} catch (Exception e) {
+				logger.error("Exception: " + e);
 			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.toString();
