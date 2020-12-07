@@ -261,6 +261,7 @@
 						<th>END DATE</th>
 						<th>MOC</th>
 						<th>CUSTOMER CHAIN L1</th>
+						<th>SALES CATEGORY</th>
 						<th>BASEPACK</th>
 						<th>OFFER DESCRIPTION</th>
 						<th>OFFER TYPE</th>

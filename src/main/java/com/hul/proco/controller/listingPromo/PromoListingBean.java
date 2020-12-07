@@ -34,6 +34,7 @@ public class PromoListingBean {
 	private String solCodeDescription;
 	private String promotionMechanics;
 	private String solCodeStatus;
+	private String category;
 	
 	private MultipartFile file;
 
@@ -263,6 +264,14 @@ public class PromoListingBean {
 
 	public void setUom(String uom) {
 		this.uom = uom;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 }

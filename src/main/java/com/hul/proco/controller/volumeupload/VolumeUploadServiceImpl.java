@@ -31,6 +31,7 @@ public class VolumeUploadServiceImpl implements VolumeUploadService {
 		headerList.add("MOC");
 		headerList.add("Customer Chain L1");
 		headerList.add("Customer Chain L2");
+		headerList.add("Sales Category");
 		headerList.add("Offer Description");
 		headerList.add("P1 Basepack");
 		headerList.add("P1 Pack Ratio");

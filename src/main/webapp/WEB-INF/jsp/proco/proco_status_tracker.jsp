@@ -365,33 +365,47 @@
 
 												</div>
 											</form> --%>
-	 <form id="coeStatusFileUpload" class="form-horizontal" action="#" 
-						enctype="multipart/form-data" name="coeStatusFileUpload">
-						<div class="launchupload-parent">
-							<div class="col-md-12 col-sm-12 ddd">
-								<div style="text-align: center; color: #878787;">
+						
+						
+						<div class="col-md-6 col-sm-6 ddd">
+								<div class="launchupload-parent" style="min-height: 275px !important;">
+									<div style="text-align: center; color: #878787;">
 
-									<h2 class="SEGOEUIL-font">Status Upload File</h2>
-									<div class="upload-image">
-										<img src="assets/images/upload-icon-n-body.png" alt="" />
-									</div>
-
-									<div class="upload-max-size">Maximum Upload File Size
-										:2MB</div>
-									<span id="uploadErrorMsg" style="display: none; color: red">Please
-										upload .xls or .xlsx file</span>
-									<div class="input-group upload-status-files">
-										<input id="uploadsecscre" name="file" type="file" class="file">
-									</div>
-									<input class="validate_upload btn marginT10 new-btn-primary" onclick="uploadArtDoc('0')" type="button"
-										id="btnSubmitBasePack" value="Upload" />
-
+										<h2 class="SEGOEUIL-font">Customer Portal Status Download</h2>
+										<div class="upload-image">
+											<i class="fa fa-download" aria-hidden="true"></i>
+										</div>
+	
+										<form style="display: inline-block;" action="downloadCustomerPortalPromoStatusTracker.htm" method="post">
+											<input type="submit" class="btn btn-primary" value="Download" ></input>
+										</form>
 								</div>
 							</div>
-
 						</div>
-
-					</form>
+	 
+						<div class="col-md-6 col-sm-6 ddd">
+							<form id="coeStatusFileUpload" class="form-horizontal" action="#" 
+								enctype="multipart/form-data" name="coeStatusFileUpload">
+								<div class="launchupload-parent" style="min-height: 275px !important;">
+									<div style="text-align: center; color: #878787;">
+										<h2 class="SEGOEUIL-font">Promo Status Upload File</h2>
+										<div class="upload-image">
+											<!-- <img src="assets/images/upload-icon-n-body.png" alt="" /> -->
+											<i class="fa fa-upload" aria-hidden="true"></i>
+										</div>
+										<div class="upload-max-size">Maximum Upload File Size
+											:2MB</div>
+										<span id="uploadErrorMsg" style="display: none; color: red">Please
+											upload .xls or .xlsx file</span>
+										<div class="input-group upload-status-files">
+											<input id="uploadsecscre" name="file" type="file" class="file">
+										</div>
+										<input class="validate_upload btn marginT10 new-btn-primary" onclick="uploadArtDoc('0')" type="button"
+											id="btnSubmitBasePack" value="Upload" />
+									</div>
+								</div>
+							</form>
+						</div>
 						
 											
 		</div>

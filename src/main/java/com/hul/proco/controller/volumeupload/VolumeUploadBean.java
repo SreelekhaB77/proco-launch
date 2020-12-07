@@ -37,6 +37,9 @@ public class VolumeUploadBean {
 		this.quantity = quantity;
 	}
 
+	@Column(name = "Sales Category")
+	private String salesCategory;
+	
 	@Column(name = "Offer Value")
 	private String offerValue = "";
 
