@@ -45,13 +45,13 @@
 <body class="Verdana-font">
 	<jsp:include page="../proco/proco-header.jsp" />
 	<nav class="navbar navbar-inverse navbar-fixed-top container-bg"
-		style="position:relative;top: 80px;z-index: 2;background-image: none! important;
+		style="position:relative;top: 115px;z-index: 2;background-image: none! important;
     border: none! important;background: #F6F3F3;
     padding: 4px 0px 20px 0px;">
 	<div class="container-fluid paddR10">
 		<div class="navbar-header marginB10">
 			<h1 class="pull-left" style="color: #000000;">
-				MT PROCO TOOL - ${roleId} <span>Visibility</span>
+				Promotion Planning Tool  
 			</h1>
 			<button type="button" class="navbar-toggle collapsed pull-right"
 				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
@@ -134,8 +134,8 @@
 		<form action="http://localhost:8083/VisibilityAssetTracker/disaggregatePromos.htm" method="POST" name="dc">
 			<div class="proco-creation form-horizontal">
 
-				<div class="promo-details" style="padding: 20px 0px 0px 0px;">
-					<span class="" style="color: #3F3F3F; font-weight:700;">DETAILS OF THE PROMO
+				<div class="promo-details" style="padding: 10px;">
+					<span class="" style="color: #fff; font-weight:600;">DETAILS OF THE PROMO
 						PLAN VOLUME DISAGGREGATION</span>
 					<!--  <span class="pull-right promo-uom">
                 <div class="col-md-12">

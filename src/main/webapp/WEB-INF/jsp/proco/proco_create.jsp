@@ -33,13 +33,13 @@
 	<jsp:include page="../proco/proco-header.jsp" />
 
 	<nav class="navbar navbar-inverse navbar-fixed-top container-bg"
-		style="position:relative;top: 80px;z-index: 2;background-image: none! important;
+		style="position:relative;top: 115px;z-index: 2;background-image: none! important;
     border: none! important;background: #F6F3F3;
     padding: 4px 0px 20px 0px;">
 	<div class="container-fluid paddR10">
 		<div class="navbar-header marginB10">
 			<h1 class="pull-left" style="color: #000000;">
-				MT PROCO TOOL - ${roleId} <span>Visibility</span>
+				Promotion Planning Tool
 			</h1>
 			<button type="button" class="navbar-toggle collapsed pull-right"
 				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
@@ -85,7 +85,6 @@
 
 	<!-- Main jumbotron for a primary marketing message or call to action -->
 	<div class="container-fluid container-bg middle-section">
-
 		<input type="hidden" id="roleId" value="${roleId}" />
 		<c:if test="${FILE_STATUS=='SUCCESS_FILE'}">
 			<div class="alert succ-alert-success sucess-msg" id="successblock"
@@ -271,7 +270,7 @@
 							</div>
 							<div class="col-md-4">
 								
-								<select class="form-contro" id="kittingValDrop" path="kittingValDrop">
+								<select class="form-contro" id="kittingValDrop" path="kittingValDrop" style="height:30px;">
 									<option value="">SELECT</option>
 									<option value="%">%</option>
 									<option value="ABS">ABS</option>

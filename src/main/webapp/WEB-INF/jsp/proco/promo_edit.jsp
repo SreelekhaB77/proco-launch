@@ -33,13 +33,13 @@
 	<jsp:include page="../proco/proco-header.jsp" />
 
 	<nav class="navbar navbar-inverse navbar-fixed-top container-bg"
-		style="position:relative;top: 80px;z-index: 2;background-image: none! important;
+		style="position:relative;top: 115px;z-index: 2;background-image: none! important;
     border: none! important;background: #F6F3F3;
     padding: 4px 0px 20px 0px;">
 	<div class="container-fluid paddR10">
 		<div class="navbar-header marginB10">
 			<h1 class="pull-left" style="color: #000000;">
-				MT PROCO TOOL - ${roleId} <span>Visibility</span>
+				Promotion Planning Tool  
 			</h1>
 			<button type="button" class="navbar-toggle collapsed pull-right"
 				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
@@ -80,8 +80,6 @@
 					</ul>
 				</div>
 			</div>
-
-
 		</div>
 		<!--/.navbar-collapse -->
 	</div>

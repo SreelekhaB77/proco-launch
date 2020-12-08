@@ -40,13 +40,13 @@
 	<jsp:include page="../proco/proco-header.jsp" />
 
 	<nav class="navbar navbar-inverse navbar-fixed-top container-bg"
-		style="position:relative;top: 80px;z-index: 2;background-image: none! important;
+		style="position:relative;top: 115px;z-index: 2;background-image: none! important;
     border: none! important;background: #F6F3F3;
     padding: 4px 0px 20px 0px;">
 	<div class="container-fluid paddR10">
 		<div class="navbar-header marginB10">
 			<h1 class="pull-left" style="color: #000000;">
-				MT PROCO TOOL - ${roleId} <span>Visibility</span>
+				Promotion Planning Tool
 			</h1>
 			<button type="button" class="navbar-toggle collapsed pull-right"
 				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
@@ -124,7 +124,7 @@
 		<div class="proco-creation form-horizontal">
 			<input type="hidden" id="roleId" value="${roleId}" />
 			<!-- <div class="promo-back"><a href="http://localhost:8083/VisibilityAssetTracker/procoHome.htm"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Listing</div> -->
-			<div class="promo-details" style="padding:20px 0px 0px 0px"><span style="color:#3F3F3F;font-weight:700;">SELECT PROMOS FOR CR</span>
+			<div class="promo-details" style="padding:10px;"><span style="color:#fff;font-weight:600;">SELECT PROMOS FOR CR</span>
 				<!-- <span class="promo-detail-txt"><b>SELECT PROMO LISTING</b></span> <span
 					class="pull-right promo-uom">
 					<div class="col-md-12">
@@ -192,7 +192,7 @@
 						<label for="unique-id" class="control-label col-md-4">BRAND</label>
 						<div class="col-md-8">
 							<select class="form-control" id="brand" name="brand">
-								<option>ALL BRANDS</option>
+								<option>ALL BRANDS </option>
 								<c:forEach var="brand" items="${brands}">
 									<option value="${brand}">${brand}</option>
 								</c:forEach>
@@ -211,7 +211,7 @@
 					</div>
 
 					<div class="form-group">
-						<label class="control-label col-md-4" for="uom">MODALITY</label>
+						<label class="control-label col-md-4" for="uom">MODALITY </label>
 						<div class="col-md-8">
 							<select class="form-control" id="modality" name="modality">
 								<option>ALL MODALITIES</option>
@@ -292,7 +292,7 @@
 						<th>KITTING VALUE</th>
 						<th>STATUS</th>
 						<th>REASON FOR CHANGE</th>
-						<th>REMARK</th>
+						<th>REMARK </th>
 						<th>CHANGES MADE</th>
 					</tr>
 				</thead>

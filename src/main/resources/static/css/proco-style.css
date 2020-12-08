@@ -304,21 +304,23 @@ text-align: left;
 
 .promo-create {
 	width: 100%;
-	height: 220px;
+	height: 245px;
 	position: relative;
 	border-radius: 9px 9px 9px 9px;
 	box-shadow: 0px 0px 10px 0px #ccc;
+	font-size:18px;
+	font-weight:500;
 }
 
 .promo-create-bg {
-	background: #659319;
+	background: #035597;
 }
 
 .promo-listing-bg {
-	background: #85A2CE;
+	background: #035597;
 }
 .promo-delete-bg {
-    background-color: #E95912;
+    background-color: #035597;
    
 }
 .promo-disagg-bg {
@@ -351,11 +353,11 @@ text-align: left;
 }
 
 .promo-create-txt-bg {
-	background: #659319;
+	background: #035597;
 }
 
 .promo-listing-txt-bg {
-	background: #85A2CE;
+	background: #035597;
 }
 
 .promo-disagg-txt-bg {
@@ -452,10 +454,10 @@ div#DataTables_Table_0_processing {
 }
 
 .promo-detail-txt {
-	color: #3F3F3F;
-	left: -14px;
+	color: #fff;
+	left: 0px;
 	position: absolute;
-	bottom: 0;
+	bottom: 5px;
 }
 
 .promo-vol-left {
@@ -463,21 +465,23 @@ div#DataTables_Table_0_processing {
 }
 
 .promo-form-details {
-	background: #E8EFDD;
+	background: #D6E3F6;
 	padding: 15px 0px;
 }
 
 .third-block {
-	background: #F3EDA9;
+	background: #85A2CE;
 	padding: 15px 0px 0px 0px;
 }
 
 .promo-details {
 	position: relative;
+	background: #035597 !important;
+	color:#fff;
 }
 
 .parent-table {
-	background: #C7D8AC;
+	background: #D4D4D4;
 	margin-top: 10px;
 }
 
@@ -493,7 +497,7 @@ div#DataTables_Table_0_processing {
 }
 
 .parent-table table>tbody>tr>td:first-child>div {
-	background: #659319;
+	background: #055497;
 	border-radius: 11px;
 	color: #fff;
 	width: 25px;
@@ -501,12 +505,12 @@ div#DataTables_Table_0_processing {
 }
 
 .child-table {
-	background: #C7D8AC;
+	background: #D4D4D4;
 	margin-top: 10px;
 }
 
 .child-table table>tbody>tr>td:first-child>div {
-	background: #93B35D;
+	background: #055497;
 	border-radius: 11px;
 	color: #fff;
 	width: 25px;
@@ -975,11 +979,11 @@ span.comboTreeItemTitle {
 }
 
 .proco-btn-success {
-	background-color: #659319;
+	background-color: #055497;
 }
 
 .proco-btn-warning {
-	background-color: #93B35D;
+	background-color: #055497;
 }
 
 .proco-create-icon {
@@ -989,7 +993,7 @@ span.comboTreeItemTitle {
 	padding-right: 10px;
 	background: url("../images/proco/icon-1.png") no-repeat center center;
     background-size: 30px;
-	background-color: #659319;
+	background-color: #035597;
 	border-radius: 3px 0px 0px 3px;
 }
 
@@ -1001,7 +1005,7 @@ span.comboTreeItemTitle {
 	background: url("../images/proco/signop.png") no-repeat center center;
     background-size: 30px;
 	background-color: #5bc0de;
-} */
+}  */
 .proco-Signops-icon {
     width: 55px;
     height: 60px;
@@ -1009,7 +1013,7 @@ span.comboTreeItemTitle {
     padding-right: 10px;
     background: url(../images/proco/signop.png) no-repeat center center;
     background-size: 46px;
-    background-color: #00ACEE;
+    background-color: #035597;
     margin-left: -13px;
 }
 
@@ -1032,7 +1036,7 @@ span.comboTreeItemTitle {
     padding-top: 10px;
 }
 .proco-craetion-active a {
-	background-color: #659319 !important;
+	background-color: #035597 !important;
 	position: relative;
 	height: 60px;
 	padding: 0 !important;
@@ -1056,7 +1060,7 @@ span.comboTreeItemTitle {
 	padding-right: 10px;
 	background: url("../images/proco/icon-6.png") no-repeat center center;
     background-size: 45px;
-	background-color: #F18C10;
+	background-color: #3B5999;
 	border-radius: 3px 0px 0px 3px;
 }
 
@@ -1070,10 +1074,10 @@ span.comboTreeItemTitle {
     top: 2px;
     color: #fff;
     padding-top: 6px;
-    background: #F18C10;
+    background: #3B5999;
 }
 .proco-volume-active a {
-	background-color: #F18C10 !important;
+	background-color: #3B5999 !important;
 	position: relative;
 	height: 60px;
 	padding: 0 !important;
@@ -1129,14 +1133,14 @@ span.comboTreeItemTitle {
     color: #3F3F3F;
 }
 
-.proco-collaboration-icon {
+.proco-collaboration-icon { 
 	width: 55px;
 	height: 60px;
 	float: left;
 	padding-right: 10px;
 	background: url("../images/proco/icon-4.png") no-repeat center center;
     background-size: 45px;
-	background-color: #7705BC;
+	background-color: #035597;
 }
 
 .tab-label-proco-collaboration-active {
@@ -1150,7 +1154,7 @@ span.comboTreeItemTitle {
     padding-top: 10px;
 }
 .proco-collaboration-active a {
-	background-color: #7705BC !important;
+	background-color: #035597 !important;
 	position: relative;
 	height: 60px;
 	padding: 0 !important;
@@ -1173,7 +1177,7 @@ span.comboTreeItemTitle {
 	background: url("../images/proco/icon-2.png") no-repeat center center;
     background-size: 30px;
 	border-radius: 3px 0px 0px 3px;
-	background-color: #85A2CE;
+	background-color: #035597;
 }
 .proco-deletion-icon{
 	width: 55px;
@@ -1182,14 +1186,14 @@ span.comboTreeItemTitle {
 	padding-right: 10px;
 	background: url("../images/proco/deletepro.png") no-repeat center center;
     background-size: 30px;
-    background-color: #E95912;
+    background-color: #035597;
     border-radius: 3px 0px 0px 3px;
 }
 img#delimg {
     height: 148px;
 }
 .proco-del-active a {
-    background-color: #E95912 !important;
+    background-color: #035597 !important;
     position: relative;
     height: 60px;
     padding: 0 !important;
@@ -1221,13 +1225,13 @@ img#delimg {
     padding-left: 25%;
 }
 .proco-listing-active a {
-	background-color: #85A2CE !important;
+	background-color: #035597 !important;
 	position: relative;
 	height: 60px;
 	padding: 0 !important;
 }
 .promo-lib-bg-active a{
-	background-color: #00ACEE !important;
+	background-color: #035597 !important;
     position: relative;
     height: 60px;
     padding: 0 !important;
@@ -1270,10 +1274,10 @@ img#delimg {
 
 .navbar-header h1{
 	color: #000000;
-    font-size: 2.1em;
-    margin-top: 20px;
-    margin-left: 0px;
-    font-weight: 400;
+    font-size: 23px;
+    margin-top: 14px;
+    margin-left: 19px;
+    font-weight: 300;
 }
 
 i.icon-search {
@@ -1461,11 +1465,11 @@ span.comboTreeItemTitle {
 /* MT portal */
 
 #headingOne {
-	background: #659319 !important;
+	background: #035597 !important;
 }
 
 #headingTwo {
-	background: #93B35D !important;
+	background: #035597 !important;
 }
 
 #headingOne div>a, #headingTwo div>a, .promo-create-btn input {
@@ -1488,17 +1492,17 @@ span.comboTreeItemTitle {
 }
 
 .proco-deletion-form{
-	background: #EED4CC;
+	background: #D6E3F6;
 	padding: 15px 0px;
 }
 
 .proco-collab-form {
-	background: #F7E9FF;
+	background: #D9DFF2;
 	padding: 15px 0px;
 }
 
 .table-header-cr {
-	background: #659319;
+	background: #035597;
 }
 
 .table-header-listing {
@@ -1506,7 +1510,7 @@ span.comboTreeItemTitle {
 }
 
 .table-header-deletion {
-	background: #E95912;
+	background: #035597 !important;
 }
 
 .promo-form-details label {
@@ -1514,12 +1518,12 @@ span.comboTreeItemTitle {
 }
 
 .proco-volume-form {
-	background: #F9ECDC;
+	background: #D9DFF2;
 	padding: 15px 0px;
 }
 
 .table-header-volume {
-	background: #F18C10;
+	background: #3B5999;
 }
 
 .proco-disaggregation-form {
@@ -1538,11 +1542,11 @@ span.comboTreeItemTitle {
 	padding-right: 10px;
 	background: url("../images/proco/icon-2.png") no-repeat center center;
     background-size: 30px;
-	background-color: #1171FC;
+	background-color: #035597;
 }
 
 .proco-tracker-active a {
-	background-color: #1171FC !important;
+	background-color: #035597 !important;
 	position: relative;
 	height: 60px;
 	padding: 0 !important;
@@ -1554,13 +1558,13 @@ span.comboTreeItemTitle {
 }
 
 .table-header-tracker {
-	background: #1171FC;
+	background: #035597;
 }
 
 .promo-measure-upload {
-	background: #00ACEE !important;	
+	background: #035597 !important;	
 	color: #fff;
-	padding: 2px;
+	padding: 10px;
     padding-left: inherit;
     margin-top: 20px;
     font-weight: 700;
@@ -1584,20 +1588,20 @@ span.comboTreeItemTitle {
 }
 
 #ezAlerts-header {
-	background: #659319;
+	background: #035597 !important;
 	color: #fff;
 }
 
 .proco-create-input[disabled], .proco-create-input[readonly] {
-	background: #E8EFDD;
+	background: #D9DFF2;
 }
 
 .proco-disaggregate-input[disabled], .proco-disaggregate-input[readonly] {
-	background: #E4E9F3;
+	background: #D9DFF2;
 }
 
 .proco-volume-input[disabled], .proco-volume-input[readonly] {
-	background: #F9ECDC;
+	background: #D9DFF2;
 }
 
 .proco-listing-input[disabled], .proco-listing-input[readonly] {
@@ -1605,15 +1609,15 @@ span.comboTreeItemTitle {
 }
 
 .proco-deletion-input[disabled], .proco-deletion-input[readonly] {
-	background: #EED4CC;
+	background: #D9DFF2;
 }
 
 .proco-tracker-input[disabled], .proco-tracker-input[readonly] {
-	background: #E5EFFE;
+	background: #D9DFF2;
 }
 
 .proco-collab-input[disabled], .proco-collab-input[readonly] {
-	background: #F7E9FF;
+	background: #D9DFF2;
 }
 
 .new-close-btn {
@@ -1664,20 +1668,22 @@ span.comboTreeItemTitle {
 
 /* New MODAL styles ends here */
 
-/* New header styles */
+* New header styles */
 
 .header-cls{
 	margin:0 20px;
 	
 }
 .left-hul-cls{
-    width: 20%;
+    width: 18%;
     padding: 1rem 0;   
     float:left;
     
 	}
 .left-hul-cls img{
-	width:18rem;
+	width:24rem;
+	margin-left:25px;
+	margin-top:10px;
 }
 .right-hul-cls{
 	width:80%;
@@ -1691,17 +1697,17 @@ span.comboTreeItemTitle {
     left: 0;
     right: 0;
     top: 0;
-    height: 1rem;
+    height: 1.5rem;
     background: #7705BC;
-    border-radius: 0 0 0.75rem 0.75rem;
+    border-radius: 0 0 1.2rem 1.2rem;
 }
 .product-logo-cls{
-	width:9.375rem;
+	width:12.375rem;
 	float:left;
-	padding-top:2rem;
+	padding-top:3rem;
 }
-.product-logo-cls img{width:9rem;}
-.user-details-cls{float:right;margin-top:0;}
+.product-logo-cls img{width:16rem;}
+.user-details-cls{float:right;margin-top:30px;}
 .logo-sml-cls img{width:5rem;}
 .home-cls a{font-size:25px;}
 
@@ -1729,9 +1735,18 @@ span.comboTreeItemTitle {
 
 
 .gotonewlaunch{float:left;margin-top:0;}
+.user-header-bg{height:120px;}
+.user-name li a{font-size:1.5rem;}
+
 /* New header styles ends here */
 
-
+.container > .navbar-header, .container-fluid>.navbar-header {
+    background: #D6D7D9;
+    padding: 0;
+    width: 102%;
+    margin-left: -1%;
+}
+.form-horizontal{margin-top:45px;}
 
 
 

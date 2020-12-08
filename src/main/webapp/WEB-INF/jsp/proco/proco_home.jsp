@@ -36,15 +36,14 @@
     
     		 <input type="hidden" id="roleId" value="${roleId}"/>
     <c:if test="${roleId eq 'TME'}">
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-6 col-md-offset-3" style="margin-top:50px;">
           <div class="col-md-4 col-sm-4 col-xs-4">
          <a href="http://localhost:8083/VisibilityAssetTracker/promoCreation.htm">
           <div class="promo-create promo-create-bg">
               <img src="assets/images/proco/icon-1.png"  class="img-responsive" alt="">
               <div class="promo-craete-txt promo-create-txt-bg"><div>Promo Creation</div></div>  
             </div>
-             </a>
-             
+             </a>             
          </div>
           <div class="col-md-4 col-sm-4 col-xs-4 ">
                 <a href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
@@ -58,7 +57,7 @@
                 <a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
 		           <div class="promo-create promo-delete-bg">
 		              <img src="assets/images/proco/deletepro.png" class="img-responsive" id="delimg" alt="">
-		               <div class="promo-craete-txt promo-delete-txt-bg"><div>DROPPED OFFERS</div></div>
+		               <div class="promo-craete-txt promo-delete-txt-bg"><div>Dropped Offers</div></div>
 		            </div>
                 </a>
              </div>

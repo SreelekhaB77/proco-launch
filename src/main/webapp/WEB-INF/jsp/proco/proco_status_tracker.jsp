@@ -43,7 +43,7 @@
     border: none! important;background: #F6F3F3;
     padding: 4px 0px 20px 0px;">
 	<div class="container-fluid paddR10">
-		<div class="navbar-header marginB10">
+		<div class="navbar-header" style="margin-bottom:17px;">
 			<h1 class="pull-left" style="color: #000000;">
 				Promotion Planning Tool
 			</h1>

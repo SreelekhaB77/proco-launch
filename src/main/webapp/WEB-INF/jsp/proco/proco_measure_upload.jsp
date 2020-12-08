@@ -46,13 +46,13 @@ footer {
 	</div>
 
 	<nav class="navbar navbar-inverse navbar-fixed-top container-bg"
-		style="position:relative;top: 80px;z-index: 2;background-image: none! important;
+		style="position:relative;top: 115px;z-index: 2;background-image: none! important;
     border: none! important;background: #F6F3F3;
     padding: 4px 0px 20px 0px;">
 	<div class="container-fluid paddR10">
 		<div class="navbar-header marginB10">
 			<h1 class="pull-left" style="color: #000000;">
-				MT PROCO TOOL - ${roleId} <span>Visibility</span>
+				Promotion Planning Tool
 			</h1>
 			<button type="button" class="navbar-toggle collapsed pull-right"
 				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
@@ -109,7 +109,7 @@ footer {
 			</div>
 		</c:if>
 		<c:if test="${errorMsg!=null}">
-			<div class="alert err-alert-danger sucess-msg" id="errorblock">
+			<div class="alert err-alert-danger sucess-msg" id="errorblock" style="margin-top:35px;">
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${errorMsg}"></c:out>
 				<c:if test="${FILE_STATUS=='ERROR_FILE'}">
@@ -119,16 +119,16 @@ footer {
 				</c:if>
 			</div>
 		</c:if>
-		<div class="alert err-alert-danger" id="MocDownloadErorblockUpload" style="display:none;" data-hide="alert">
+		<div class="alert err-alert-danger" id="MocDownloadErorblockUpload" style="display:none; margin-top:35px;" data-hide="alert">
 			  <a href="#" class="close new-close-btn" aria-label="close">&times;</a>
 			  <strong>Error! </strong> <span>Please select the MOC.</span>
 		</div>
                	
-         	<div class="alert succ-alert-success alert-dismissible" id="successblockUpload" style="display:none;">
+         	<div class="alert succ-alert-success alert-dismissible" id="successblockUpload" style="display:none;margin-top:35px;">
 			  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 			  <strong>Success! </strong> File uploaded successfully.
 			</div>
-			<div class="alert err-alert-danger" id="erorblockUpload" style="display:none;" data-hide="alert">
+			<div class="alert err-alert-danger" id="erorblockUpload" style="display:none;margin-top:35px;" data-hide="alert">
 			  <a href="#" class="close" aria-label="close">&times;</a>
 			  <strong>Error! </strong> <span>File does not contain any data.</span>
 			</div>
@@ -169,7 +169,7 @@ footer {
 								</form> 
 							</div>
 							<div class="col-md-6 col-sm-6 ddd">
-							 	<form action="http://localhost:8083/VisibilityAssetTracker/downloadMeasureReport.htm" id="download-measure-report" method="POST" onsubmit="downloadMeasureReport(event)">
+							 	<form style="margin-top:45px;" action="http://localhost:8083/VisibilityAssetTracker/downloadMeasureReport.htm" id="download-measure-report" method="POST" onsubmit="downloadMeasureReport(event)">
 							 		<div class="launchupload-parent">
 										<div class="proco-measure-download-wrapper">
 											<h2 class="SEGOEUIL-font">Measure Report Download File</h2>
