@@ -209,6 +209,8 @@ $(document).ready(function() {
 												{
 													"mData" : "customer_chain_l1"
 												}, {
+													"mData" : "category"
+												}, {
 													"mData" : "basepack"
 												}, {
 													"mData" : "offer_desc"

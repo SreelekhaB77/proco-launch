@@ -48,7 +48,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 
 			//Garima - changes for VARCHAR_FORMAT
 			promoQuery = "SELECT * FROM (SELECT A.PROMO_ID, A.P1_BASEPACK, A.OFFER_DESC, A.OFFER_TYPE, A.OFFER_MODALITY, A.GEOGRAPHY, A.QUANTITY, A.UOM, A.OFFER_VALUE, A.MOC, A.CUSTOMER_CHAIN_L1, A.KITTING_VALUE, E.STATUS, DATE_FORMAT(A.START_DATE,'%d/%m/%Y'), DATE_FORMAT(A.END_DATE,'%d/%m/%Y'),A.ORIGINAL_ID,A.REASON,A.REMARK,A.UPDATE_STAMP, "
-					+ " A.INVESTMENT_TYPE,A.SOL_CODE,A.PROMOTION_MECHANICS,A.SOL_CODE_STATUS,ROW_NUMBER() OVER (ORDER BY A.UPDATE_STAMP DESC) AS ROW_NEXT FROM TBL_PROCO_PROMOTION_MASTER AS A "
+					+ " A.INVESTMENT_TYPE,A.SOL_CODE,A.PROMOTION_MECHANICS,A.SOL_CODE_STATUS,ROW_NUMBER() OVER (ORDER BY A.UPDATE_STAMP DESC) AS ROW_NEXT, C.CATEGORY FROM TBL_PROCO_PROMOTION_MASTER AS A "
 					+ " INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK=C.BASEPACK INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON A.STATUS=E.STATUS_ID ";
 			
 			if (roleId.equalsIgnoreCase("KAM")) {
@@ -186,6 +186,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				promoBean.setSolCode(obj[20] == null ? "" : obj[20].toString());
 				promoBean.setPromotionMechanics(obj[21] == null ? "" : obj[21].toString());
 				promoBean.setSolCodeStatus(obj[22] == null ? "" : obj[22].toString());
+				promoBean.setCategory(obj[24] == null ? "" : obj[24].toString());
 				
 				promoList.add(promoBean);
 			}

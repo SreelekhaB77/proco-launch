@@ -1152,7 +1152,7 @@ public class TMELaunchPlanController {
 							flg = false;
 							List<Object> errorList = map.get("ERROR");
 							successMessage = (String) errorList.get(0);
-							savedData = "ERROR";
+							//savedData = "ERROR";
 						} else if (map.containsKey("DATA")) {
 							List<Object> list = map.get("DATA");
 							savedData = launchBasepacksService.saveBasepackByUpload(list, userID, "CREATED BY TME",

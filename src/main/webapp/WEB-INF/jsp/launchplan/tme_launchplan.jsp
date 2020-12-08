@@ -1180,9 +1180,9 @@ function ajaxLoader(w, h) {
 }
 
 
-	$("#annexfile, #annexureUploadBtn, #artworkUploadBtn, #artfile, #mdgfile, #mdgUploadBtn").attr('disabled', true);
+	/*$("#annexfile, #annexureUploadBtn, #artworkUploadBtn, #artfile, #mdgfile, #mdgUploadBtn").attr('disabled', true);*/
 
-	$(document).on('change', '[name="sampleYesorno"]', function(){
+	/*$(document).on('change', '[name="sampleYesorno"]', function(){
 		if($('[name="sampleYesorno"]:checked').val() == '1'){
 			$("#annexfile, #annexureUploadBtn, #artworkUploadBtn, #artfile, #mdgfile, #mdgUploadBtn").removeAttr('disabled');
 			$("#tmemdgFileUpload .btn.btn-primary.btn-file").removeAttr('disabled');
@@ -1194,7 +1194,7 @@ function ajaxLoader(w, h) {
 			$("#tmeartworkFileUpload .btn.btn-primary.btn-file").attr('disabled', true);
 			$("#tmeannexFileUploadBean .btn.btn-primary.btn-file").attr('disabled', true);
 		}
-	});
+	});*/
 	
   var data = '${geographyJson}';
   var clus = '${geographyJson}';
