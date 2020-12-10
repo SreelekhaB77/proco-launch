@@ -304,7 +304,7 @@ text-align: left;
 
 .promo-create {
 	width: 100%;
-	height: 245px;
+	height: 220px;
 	position: relative;
 	border-radius: 9px 9px 9px 9px;
 	box-shadow: 0px 0px 10px 0px #ccc;
@@ -418,20 +418,21 @@ div#DataTables_Table_0_processing {
 }
 .launchDiv {
     width: 100%;
-    height: 220px;
+    height: 243px;
     position: relative;
-    border-radius: 10px 10px 0px 0px;
+    border-radius: 10px 10px;
     box-shadow: 0px 0px 10px 0px #ccc;
-    background-color: #394046;
+    background-color: #035597;
     /* color: #fff; */
 }
 
 .launchDiv a {
-    color: #FF9764;
-    font-size: 25px;
+    color: #fff;
+    font-size: 23px;
     font-weight: 600;
     text-align: center;
-    line-height: 206px;
+    line-height: 256px;
+    font-weight: 400;
     /* margin: 58px auto; */
 }
 
@@ -874,11 +875,11 @@ span.comboTreeItemTitle {
 }
 
 .promo-volume-txt-bg {
-	background: #F18C10 !important;
+	background: #035597 !important;
 }
 
 .promo-volume-bg {
-	background: #F18C10 !important;
+	background: #035597 !important;
 }
 
 .table thead tr th span {
