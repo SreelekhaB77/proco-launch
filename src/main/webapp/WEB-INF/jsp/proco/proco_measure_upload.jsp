@@ -103,7 +103,7 @@ footer {
 	
 	<c:if test="${FILE_STATUS=='SUCCESS_FILE'}">
 			<div class="alert succ-alert-success sucess-msg" id="successblock"
-				style="display: block">
+				style="display: block" style="margin-top:35px;">
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${success}"></c:out>
 			</div>

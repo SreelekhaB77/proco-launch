@@ -97,14 +97,14 @@
 	
 	<c:if test="${FILE_STATUS=='SUCCESS_FILE'}">
 			<div class="alert succ-alert-success sucess-msg" id="successblock"
-				style="display: block">
+				style="display: block;margin-top:35px;">
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${success}"></c:out>
 				<span></span>
 			</div>
 		</c:if>
 		<c:if test="${errorMsg!=null}">
-			<div class="alert err-alert-danger sucess-msg" id="errorblock">
+			<div class="alert err-alert-danger sucess-msg" id="errorblock" style="margin-top:35px;" >
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${errorMsg}"></c:out>
 				<c:if test="${FILE_STATUS=='ERROR_FILE'}">
