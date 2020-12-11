@@ -306,7 +306,7 @@
 						<div class="modal-header"
 							style="background-color: #3B5999; color: #fff;">
 							<button type="button" class="close" id="paidcrossBtn"
-								data-dismiss="modal">�</button>
+								data-dismiss="modal">X</button>
 							<h4 class="modal-title">Reject Basepack(s)</h4>
 						</div>
 						<form action="#" id="rejBaseRemarkForm" method="POST"
