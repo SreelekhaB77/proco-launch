@@ -467,7 +467,7 @@ label.checkbox {
 	border: 2px dashed gray;
 	background-color: #f2f2f2;
 	margin: 20px 0 15px 0;
-	min-height: 320px;
+	min-height: 350px;
 }
 .upload-image {
 	/* background: url(../images/upload-icon-n-body.png) no-repeat; */
