@@ -96,10 +96,10 @@
 	
 	<c:if test="${FILE_STATUS=='SUCCESS_FILE'}">
 			<div class="alert succ-alert-success sucess-msg" id="successblock"
-				style="display: block" style="margin-top:35px;">
+				style="display: block;margin-top:35px;">
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${success}"></c:out>
-			</div>
+			</div> 
 		</c:if>
 		<c:if test="${errorMsg!=null}">
 			<div class="alert err-alert-danger sucess-msg" id="errorblock" style="margin-top:35px;">
@@ -107,7 +107,7 @@
 				<c:out value="${errorMsg}"></c:out>
 				<c:if test="${FILE_STATUS=='ERROR_FILE'}">
 					<a href="http://localhost:8083/VisibilityAssetTracker/downloadPromotionEditErrorFile.htm" id="downloadTempFileLink">Click
-						here to Download Error File:</a>
+						here to Download Error File: </a>
 
 				</c:if>
 			</div>
