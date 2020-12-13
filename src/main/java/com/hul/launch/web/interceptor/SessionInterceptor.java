@@ -34,6 +34,7 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 		String contextPath = CommonPropUtils.getInstance().getProperty(
 				"application.root.context.path");
 		
+		String loadbalancerurl="localhost:8083";
 		User loginBean = null;
 		
 		allowedUriList.add(contextPath);
@@ -58,7 +59,8 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 		}
 		
 		if (null == request.getSession(false)) {
-			response.sendRedirect("/jsp/404/errorPage.jsp");
+			//response.sendRedirect("/jsp/404/errorPage.jsp");
+			response.sendRedirect("http://"+loadbalancerurl+"/VisibilityAssetTracker/assets/js/errorPage.jsp");
 			return false;
 		}
 		
@@ -86,8 +88,9 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 				logger.error("Error Occured ", e);
 			}
 		}
-		request.getRequestDispatcher("/jsp/404/errorPage.jsp").forward(request,
-				response);
+		/*request.getRequestDispatcher("/jsp/404/errorPage.jsp").forward(request,
+				response);*/
+		response.sendRedirect("http://"+loadbalancerurl+"/VisibilityAssetTracker/assets/js/errorPage.jsp");
 		return false;
 	}
 	
