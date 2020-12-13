@@ -90,7 +90,7 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 		}
 		/*request.getRequestDispatcher("/jsp/404/errorPage.jsp").forward(request,
 				response);*/
-		response.sendRedirect("http://"+loadbalancerurl+"/VisibilityAssetTracker/assets/js/errorPage.jsp");
+		//response.sendRedirect("http://"+loadbalancerurl+"/VisibilityAssetTracker/assets/js/errorPage.jsp");
 		return false;
 	}
 	
