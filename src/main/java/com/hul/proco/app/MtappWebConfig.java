@@ -42,4 +42,9 @@ public class MtappWebConfig implements WebMvcConfigurer {
 		registry.addResourceHandler("/assets/fonts/**").addResourceLocations("classpath:/static/fonts/");
 	}
 	
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(new SessionInterceptor());
+	}
+	
 }
