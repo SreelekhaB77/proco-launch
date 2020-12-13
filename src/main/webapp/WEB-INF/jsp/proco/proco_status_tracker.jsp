@@ -376,7 +376,7 @@
 											<i class="fa fa-download" aria-hidden="true"></i>
 										</div>
 	
-										<form style="display: inline-block;" action="downloadCustomerPortalPromoStatusTracker.htm" method="post">
+										<form style="display: inline-block;" action="http://localhost:8083/VisibilityAssetTracker/downloadCustomerPortalPromoStatusTracker.htm" method="post">
 											<input type="submit" class="btn btn-primary" value="Download" ></input>
 										</form>
 								</div>
