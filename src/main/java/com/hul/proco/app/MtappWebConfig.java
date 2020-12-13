@@ -1,19 +1,27 @@
 package com.hul.proco.app;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.BeanNameViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import com.hul.launch.web.interceptor.SessionInterceptor;
+
+
 @EnableWebMvc
 @Configuration
 @ComponentScan
 public class MtappWebConfig implements WebMvcConfigurer {
+	
+	@Autowired
+	private SessionInterceptor sessionInterceptor;
 
 	@Bean
 	public BeanNameViewResolver beanNameViewResolver() {
@@ -34,5 +42,10 @@ public class MtappWebConfig implements WebMvcConfigurer {
 		registry.addResourceHandler("/assets/images/**").addResourceLocations("classpath:/static/images/");
 		registry.addResourceHandler("/assets/js/**").addResourceLocations("classpath:/static/js/");
 		registry.addResourceHandler("/assets/fonts/**").addResourceLocations("classpath:/static/fonts/");
+	}
+	
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(sessionInterceptor);
 	}
 }
