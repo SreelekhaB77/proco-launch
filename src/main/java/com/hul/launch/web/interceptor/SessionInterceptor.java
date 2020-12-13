@@ -39,7 +39,6 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 		allowedUriList.add(contextPath);
 		allowedUriList.add(contextPath + "/loginForm.htm");
 		allowedUriList.add(contextPath + "/loginRequest.htm");
-		allowedUriList.add(contextPath + "/assets/**");
 		
 		// 1 mt
 		if (rquestUri != null && rquestUri.contains("OneMtLoginRequest.htm")) {

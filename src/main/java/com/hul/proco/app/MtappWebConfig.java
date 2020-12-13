@@ -44,7 +44,7 @@ public class MtappWebConfig implements WebMvcConfigurer {
 	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(new SessionInterceptor());
+		registry.addInterceptor(new SessionInterceptor()).excludePathPatterns("/assets/css/**","/assets/images/**","/assets/js/**","/assets/fonts/**");
 	}
 	
 }
