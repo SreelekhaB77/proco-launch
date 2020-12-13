@@ -12,9 +12,8 @@ import org.apache.log4j.Logger;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.hul.launch.model.User;
 import com.hul.launch.web.util.CommonPropUtils;
-
+import com.hul.visibility.models.User;
 
 public class SessionInterceptor extends HandlerInterceptorAdapter {
 	static Logger											logger			= Logger.getLogger(SessionInterceptor.class);

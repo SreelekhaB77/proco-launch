@@ -20,8 +20,6 @@ import com.hul.launch.web.interceptor.SessionInterceptor;
 @ComponentScan
 public class MtappWebConfig implements WebMvcConfigurer {
 	
-	@Autowired
-	private SessionInterceptor sessionInterceptor;
 
 	@Bean
 	public BeanNameViewResolver beanNameViewResolver() {
@@ -44,8 +42,4 @@ public class MtappWebConfig implements WebMvcConfigurer {
 		registry.addResourceHandler("/assets/fonts/**").addResourceLocations("classpath:/static/fonts/");
 	}
 	
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(sessionInterceptor);
-	}
 }
