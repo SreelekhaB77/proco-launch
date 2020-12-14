@@ -14,6 +14,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.hul.launch.web.util.CommonPropUtils;
 import com.hul.visibility.models.User;
+import com.mtapputil.PropertyUtil;
 
 public class SessionInterceptor extends HandlerInterceptorAdapter {
 	static Logger											logger			= Logger.getLogger(SessionInterceptor.class);
@@ -34,7 +35,7 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 		String contextPath = CommonPropUtils.getInstance().getProperty(
 				"application.root.context.path");
 		
-		String loadbalancerurl="localhost:8083";
+		String loadbalancerurl=PropertyUtil.getPropertyUtil().getProperty("loadbalancerip");
 		User loginBean = null;
 		
 		allowedUriList.add(contextPath);
