@@ -215,7 +215,7 @@
 			</div>
 		</c:if>
 	
-        <div class="alert err-alert-danger error-msg" id="promoSelectErrorMsg" style="margin-top:35px;">
+        <div class="alert err-alert-danger error-msg hide" id="promoSelectErrorMsg" style="margin-top:35px;">
              	<button type="button" class="close" data-hide="alert">&times;</button>
                 <span>Please select Promotion. </span>
          		</div>
