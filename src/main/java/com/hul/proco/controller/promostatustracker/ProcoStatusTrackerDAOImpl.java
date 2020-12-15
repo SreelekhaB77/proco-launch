@@ -646,55 +646,94 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 	@Override
 	public String uploadPromoMeasureReport(PromoMeasureReportBean[] promoMeasureReportBeanArray) throws Exception {
 		String response = null;
+		List<String> responseResult = null;
 		ArrayList<String> responseList = new ArrayList<String>();
+		PreparedStatement query = null;
 		try {
 
 			Query queryToCheck = sessionFactory.getCurrentSession()
 					.createNativeQuery("select count(1) from TBL_PROCO_MEASURE_REPORT_TEMP");
-			Integer recCount = (Integer) queryToCheck.uniqueResult();
+			//Sarin - changes BigInt to Int
+			//Integer recCount = (Integer) queryToCheck.uniqueResult();
+			Integer recCount = ((BigInteger)queryToCheck.uniqueResult()).intValue();
 
 			if (recCount.intValue() > 0) {
 				Query queryToDelete = sessionFactory.getCurrentSession()
 						.createNativeQuery("DELETE from TBL_PROCO_MEASURE_REPORT_TEMP");
 				queryToDelete.executeUpdate();
 			}
-			Query query = sessionFactory.getCurrentSession().createNativeQuery(
-					"INSERT INTO TBL_PROCO_MEASURE_REPORT_TEMP(PROMOTION_ID,PROMOTION_NAME,CREATED_BY,PROMOTION_MECHANICS,PROMOTION_START_DATE,PROMOTION_END_DATE,CUSTOMER,PRODUCT,PROMOTION_STATUS,CATEGORY,INVESTMENT_TYPE,MOC,SUBMISSION_DATE,PROMOTION_TYPE,PROMOTION_VOLUME_DURING,PLANNED_INVESTMENT_AMOUNT,ROW_NO,CHILD_ACCOUNT_NAME,PARENT_ACCOUNT_NAME,SUB_BRAND) VALUES (?0,?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19)"); // Sarin
-																																																																																																																// -
-																																																																																																																// Added
-																																																																																																																// Parameters
-																																																																																																																// position
+			
+			//Sarin added - starts
+			Query queryToCheckInvestmentType = sessionFactory.getCurrentSession().createNativeQuery("SELECT DISTINCT INVESTMENT_TYPE FROM TBL_PROCO_INVESTMENT_TYPE_MASTER");
+			List<String> lstInvestmentType = queryToCheckInvestmentType.list();
+
+			Query queryToCheckPromotionMechanics = sessionFactory.getCurrentSession().createNativeQuery("SELECT DISTINCT PROMO_MECHANICS FROM TBL_PROCO_MECHANICS_MASTER");
+			List<String> lstPromoMechanics = queryToCheckPromotionMechanics.list();
+
+			Query queryToCheckPromotionStatus = sessionFactory.getCurrentSession().createNativeQuery("SELECT DISTINCT SOLCODE_STATUS FROM TBL_PROCO_SOLCODE_STATUS_MASTER");
+			List<String> lstSolCodeStatus = queryToCheckPromotionStatus.list();
+
+			Query queryToCheckCreatedBy = sessionFactory.getCurrentSession().createNativeQuery("SELECT DISTINCT CREATED_BY FROM TBL_PROCO_CREATED_BY_MASTER");
+			List<String> lstCreatedBy = queryToCheckCreatedBy.list();
+			
+			Session session = sessionFactory.getCurrentSession();
+			SessionImpl sessionImpl = (SessionImpl) session;
+			query = sessionImpl.connection().prepareStatement(
+						"INSERT INTO TBL_PROCO_MEASURE_REPORT_TEMP(PROMOTION_ID,PROMOTION_NAME,CREATED_BY,PROMOTION_MECHANICS,PROMOTION_START_DATE,PROMOTION_END_DATE,CUSTOMER,PRODUCT,PROMOTION_STATUS,CATEGORY,INVESTMENT_TYPE,MOC,SUBMISSION_DATE,PROMOTION_TYPE,PROMOTION_VOLUME_DURING,PLANNED_INVESTMENT_AMOUNT,ROW_NO,CHILD_ACCOUNT_NAME,PARENT_ACCOUNT_NAME,SUB_BRAND,ERROR_MSG) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			//ends
+				
+			//Query query = sessionFactory.getCurrentSession().createNativeQuery(
+			//		"INSERT INTO TBL_PROCO_MEASURE_REPORT_TEMP(PROMOTION_ID,PROMOTION_NAME,CREATED_BY,PROMOTION_MECHANICS,PROMOTION_START_DATE,PROMOTION_END_DATE,CUSTOMER,PRODUCT,PROMOTION_STATUS,CATEGORY,INVESTMENT_TYPE,MOC,SUBMISSION_DATE,PROMOTION_TYPE,PROMOTION_VOLUME_DURING,PLANNED_INVESTMENT_AMOUNT,ROW_NO,CHILD_ACCOUNT_NAME,PARENT_ACCOUNT_NAME,SUB_BRAND) VALUES (?0,?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19)"); // Sarin Added Parameter position
+			
 			for (int i = 0; i < promoMeasureReportBeanArray.length; i++) {
-				query.setString(0, promoMeasureReportBeanArray[i].getPromotionId());
-				query.setString(1, promoMeasureReportBeanArray[i].getPromotionName());
-				query.setString(2, promoMeasureReportBeanArray[i].getCreatedBy());
-				query.setString(3, promoMeasureReportBeanArray[i].getPromotionMechanics());
-				query.setString(4, promoMeasureReportBeanArray[i].getPromotionStartDate());
-				query.setString(5, promoMeasureReportBeanArray[i].getPromotionEndDate());
-				query.setString(6, promoMeasureReportBeanArray[i].getCustomer());
+				query.setString(1, promoMeasureReportBeanArray[i].getPromotionId());
+				query.setString(2, promoMeasureReportBeanArray[i].getPromotionName());
+				query.setString(3, promoMeasureReportBeanArray[i].getCreatedBy());
+				query.setString(4, promoMeasureReportBeanArray[i].getPromotionMechanics());
+				query.setString(5, promoMeasureReportBeanArray[i].getPromotionStartDate());
+				query.setString(6, promoMeasureReportBeanArray[i].getPromotionEndDate());
+				query.setString(7, promoMeasureReportBeanArray[i].getCustomer());
 				// query.setString(7, promoMeasureReportBeanArray[i].getProduct());
-				query.setString(7, promoMeasureReportBeanArray[i].getProduct().replace(",", ";"));
-				query.setString(8, promoMeasureReportBeanArray[i].getPromotionStatus());
-				query.setString(9, promoMeasureReportBeanArray[i].getCategory());
-				query.setString(10, promoMeasureReportBeanArray[i].getInvestmentType());
-				query.setString(11, promoMeasureReportBeanArray[i].getMoc());
-				query.setString(12, promoMeasureReportBeanArray[i].getSubmissionDate());
-				query.setString(13, promoMeasureReportBeanArray[i].getPromotionType());
-				query.setString(14, promoMeasureReportBeanArray[i].getPromotionVolumeDuring());
-				query.setString(15, promoMeasureReportBeanArray[i].getPlannedInvestmentAmount());
-				query.setInteger(16, i);
-				query.setString(17, "");
+				query.setString(8, promoMeasureReportBeanArray[i].getProduct().replace(",", ";"));
+				query.setString(9, promoMeasureReportBeanArray[i].getPromotionStatus());
+				query.setString(10, promoMeasureReportBeanArray[i].getCategory());
+				query.setString(11, promoMeasureReportBeanArray[i].getInvestmentType());
+				query.setString(12, promoMeasureReportBeanArray[i].getMoc());
+				query.setString(13, promoMeasureReportBeanArray[i].getSubmissionDate());
+				query.setString(14, promoMeasureReportBeanArray[i].getPromotionType());
+				query.setString(15, promoMeasureReportBeanArray[i].getPromotionVolumeDuring());
+				query.setString(16, promoMeasureReportBeanArray[i].getPlannedInvestmentAmount());
+				//query.setInteger(16, i);
+				query.setInt(17, i);
 				query.setString(18, "");
+				query.setString(19, "");
 
-				query.setString(19, promoMeasureReportBeanArray[i].getSubBrand());
-
-				int executeUpdate = query.executeUpdate();
+				query.setString(20, promoMeasureReportBeanArray[i].getSubBrand());
+				
+				responseResult = validateRecord(promoMeasureReportBeanArray[i], i, lstInvestmentType, lstPromoMechanics, lstSolCodeStatus, lstCreatedBy);
+				response = responseResult.get(0);
+				String errormsg = responseResult.get(1);
+				if (response.equals("ERROR_FILE")) {
+					responseList.add(response);
+				}
+				
+				if (errormsg.length() > 0) {
+					query.setString(21, errormsg);
+				} else {
+					query.setString(21, null);
+				}
+				
+				query.addBatch();
+				if(i==promoMeasureReportBeanArray.length - 1 || i%50==0) {
+					query.executeBatch();
+				}
+				/*int executeUpdate = query.executeUpdate();
 				if (executeUpdate > 0) {
 					response = validateRecord(promoMeasureReportBeanArray[i], i);
 					if (response.equals("ERROR_FILE")) {
 						responseList.add(response);
 					}
-				}
+				}*/
 			}
 
 			if (!responseList.contains("ERROR_FILE")) {
@@ -761,10 +800,13 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 			 * +
 			 * "MOC,MOC_YEAR) AS RN FROM TBL_PROCO_MEASURE_REPORT_temp) AS A WHERE RN > 1";
 			 */
-
-			String removeDublicateSql = "delete  FROM  (SELECT ROW_NUMBER() OVER (PARTITION BY PROMOTION_ID, PROMOTION_NAME, SCOPE,PROCESS,IS_CLAIMED,PRODUCT,CLIAM_VALUE,"
+			
+			//Sarin Changes - MySQL Compatible - Added below
+			/*String removeDublicateSql = "delete  FROM  (SELECT ROW_NUMBER() OVER (PARTITION BY PROMOTION_ID, PROMOTION_NAME, SCOPE,PROCESS,IS_CLAIMED,PRODUCT,CLIAM_VALUE,"
 					+ "PROMO_VOLUMN_IN_THOUSAND,TOTAL_INVESTMENT_IN_LACS,SUPPORING_REQUIRED,PROMOTION_START_DATE,PROMOTION_END_DATE,SIGNED_OFF_SHARED_DATE,PROMOTION_STATUS,"
-					+ "MOC,MOC_YEAR) AS RN FROM TBL_PROCO_MEASURE_REPORT_TEMP) AS A WHERE RN > 1";
+					+ "MOC,MOC_YEAR) AS RN FROM TBL_PROCO_MEASURE_REPORT_TEMP) AS A WHERE RN > 1"; */
+			String removeDublicateSql = "DELETE A FROM TBL_PROCO_MEASURE_REPORT_TEMP A INNER JOIN (SELECT ROW_NUMBER() OVER (PARTITION BY PROMOTION_ID, PROMOTION_NAME, SCOPE,PROCESS,IS_CLAIMED,PRODUCT,CLIAM_VALUE,PROMO_VOLUMN_IN_THOUSAND,TOTAL_INVESTMENT_IN_LACS,SUPPORING_REQUIRED,PROMOTION_START_DATE,PROMOTION_END_DATE,SIGNED_OFF_SHARED_DATE,PROMOTION_STATUS,MOC,MOC_YEAR) AS RN, PROMOTION_ID, CUSTOMER FROM TBL_PROCO_MEASURE_REPORT_TEMP) B ON B.CUSTOMER = A.CUSTOMER AND B.PROMOTION_ID = A.PROMOTION_ID AND B.RN > 1";
+			
 			updateAccountName();
 
 			String crateNewSql = "INSERT INTO TBL_PROCO_MEASURE_REPORT_MASTER (PROMOTION_ID, PROMOTION_NAME, SCOPE,PROCESS,"
@@ -1268,7 +1310,9 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 		try {
 			int executeUpdate = 0;
 			String getSolcodeSql = "SELECT DISTINCT PROMOTION_ID FROM TBL_PROCO_MEASURE_REPORT_TEMP";
-			String updateTotalInvestmentInLacSql = "UPDATE TBL_PROCO_MEASURE_REPORT_TEMP SET TOTAL_INVESTMENT_IN_LACS=(SELECT CAST( ROUND((DEC(SUM(PLANNED_INVESTMENT_AMOUNT),15,2)/100000),2) AS DECIMAL(15,2)) FROM TBL_PROCO_MEASURE_REPORT_TEMP WHERE PROMOTION_ID=:solcode1)WHERE PROMOTION_ID=:solcode2";
+			//Sarin changes migration
+			//String updateTotalInvestmentInLacSql = "UPDATE TBL_PROCO_MEASURE_REPORT_TEMP SET TOTAL_INVESTMENT_IN_LACS=(SELECT CAST(ROUND((CAST(SUM(PLANNED_INVESTMENT_AMOUNT) AS DECIMAL(15,2))/100000),2) AS DECIMAL(15,2)) FROM TBL_PROCO_MEASURE_REPORT_TEMP WHERE PROMOTION_ID=:solcode1)WHERE PROMOTION_ID=:solcode2";
+			String updateTotalInvestmentInLacSql = "UPDATE TBL_PROCO_MEASURE_REPORT_TEMP AS A INNER JOIN (SELECT CAST(ROUND((CAST(SUM(PLANNED_INVESTMENT_AMOUNT) AS DECIMAL(15,2))/100000),2) AS DECIMAL(15,2)) AS PLAN_INVEST FROM TBL_PROCO_MEASURE_REPORT_TEMP WHERE PROMOTION_ID=:solcode1) AS B ON 1=1 SET A.TOTAL_INVESTMENT_IN_LACS = B.PLAN_INVEST WHERE A.PROMOTION_ID=:solcode2";
 			Query getSolcodeQuery = sessionFactory.getCurrentSession().createNativeQuery(getSolcodeSql);
 			List<String> solcodeList = getSolcodeQuery.list();
 			if (solcodeList.size() != 0) {
@@ -1350,7 +1394,7 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 
 	}
 
-	private synchronized String validateRecord(PromoMeasureReportBean bean, int row) throws Exception {
+	/* private synchronized String validateRecord(PromoMeasureReportBean bean, int row) throws Exception {
 		String res = "SUCCESS_FILE";
 		String errorMsg = "";
 		try {
@@ -1389,7 +1433,9 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 			Query queryToCheckCreatedBy = sessionFactory.getCurrentSession()
 					.createNativeQuery("SELECT COUNT(1) FROM TBL_PROCO_CREATED_BY_MASTER WHERE CREATED_BY=:createdBy");
 			queryToCheckCreatedBy.setString("createdBy", bean.getCreatedBy());
-			Integer createdByCount = (Integer) queryToCheckCreatedBy.uniqueResult();
+			// Sarin - bigint to int changes
+			//Integer createdByCount = (Integer) queryToCheckCreatedBy.uniqueResult();
+			Integer createdByCount = ((BigInteger)queryToCheckCreatedBy.uniqueResult()).intValue();
 
 			if (investmentTypeCount != null && investmentTypeCount == 0) {
 				res = "ERROR_FILE";
@@ -1447,6 +1493,114 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 			throw new Exception();
 		}
 		return res;
+	} */
+	
+	private synchronized List<String> validateRecord(PromoMeasureReportBean bean, int row, List<String> lstInvestmentType, List<String> lstPromoMechanics, 
+			List<String> lstSolCodeStatus, List<String> lstCreatedBy) throws Exception {
+		String res = "SUCCESS_FILE";
+		String errorMsg = "";
+		List<String> lstResult = new ArrayList<String>();
+		Integer investmentTypeCount = 0;
+		Integer promotionMechanicsCount = 0;
+		Integer promotionStatusCount = 0;
+		Integer createdByCount = 0;
+		try {
+			if (lstInvestmentType != null && lstInvestmentType.size() > 0) {
+				for (String sInvType: lstInvestmentType) {
+					if (bean.getInvestmentType().equals(sInvType)) {
+						investmentTypeCount = 1;
+					}
+				}
+			}
+
+			if (lstPromoMechanics != null && lstPromoMechanics.size() > 0) {
+				for (String sPromoMech: lstPromoMechanics) {
+					if (bean.getPromotionMechanics().equals(sPromoMech)) {
+						promotionMechanicsCount = 1;
+					}
+				}
+			}
+
+			if (lstSolCodeStatus != null && lstSolCodeStatus.size() > 0) {
+				for (String sSolStatus: lstSolCodeStatus) {
+					if (bean.getPromotionStatus().equals(sSolStatus)) {
+						promotionStatusCount = 1;
+					}
+				}
+			}
+
+			Query queryToCheckPromotionIdExisting = sessionFactory.getCurrentSession().createNativeQuery(
+					"SELECT COUNT(1) FROM TBL_PROCO_MEASURE_REPORT_MASTER WHERE PROMOTION_ID=:promotionId");
+			queryToCheckPromotionIdExisting.setString("promotionId", bean.getPromotionId());
+			Integer existingPromotionIdCount = ((BigInteger) queryToCheckPromotionIdExisting.uniqueResult()).intValue();
+
+			if (lstCreatedBy != null && lstCreatedBy.size() > 0) {
+				for (String sCreatedBy: lstCreatedBy) {
+					if (bean.getCreatedBy().equals(sCreatedBy)) {
+						createdByCount = 1;
+					}
+				}
+			}
+
+			if (investmentTypeCount != null && investmentTypeCount == 0) {
+				res = "ERROR_FILE";
+				errorMsg = errorMsg + "Invalid InvestmentType entered.^";
+				//updateErrorMessageInTemp(errorMsg, row);
+			}
+
+			if (promotionMechanicsCount != null && promotionMechanicsCount == 0) {
+				res = "ERROR_FILE";
+				errorMsg = errorMsg + "Invalid Promotion Mechanics entered.^";
+				//updateErrorMessageInTemp(errorMsg, row);
+			}
+
+			if (promotionStatusCount != null && promotionStatusCount == 0) {
+				res = "ERROR_FILE";
+				errorMsg = errorMsg + "Invalid Promotion Status entered.^";
+				//updateErrorMessageInTemp(errorMsg, row);
+			}
+
+			if (createdByCount != null && createdByCount == 0) {
+				res = "ERROR_FILE";
+				errorMsg = errorMsg + "Invalid Created By entered.^";
+				//updateErrorMessageInTemp(errorMsg, row);
+			}
+
+			if (bean.getPromotionId().length() > 8 || bean.getPromotionId().length() < 8
+					|| !isNumeric(bean.getPromotionId())) {
+				res = "ERROR_FILE";
+				errorMsg = errorMsg + "Solcode(promotionId) shuld be 8 digit number.^";
+				//updateErrorMessageInTemp(errorMsg, row);
+
+			}
+
+			if (!bean.getPromotionStatus().equals("Financial Close")
+					&& !bean.getPromotionStatus().equals("AmendApproved")) {
+				if (existingPromotionIdCount != null && existingPromotionIdCount > 0) {
+					res = "ERROR_FILE";
+					errorMsg = errorMsg
+							+ "Solcode(promotionId) already exist, So we can't create again as per status  ^";
+					//updateErrorMessageInTemp(errorMsg, row);
+				}
+			}
+
+			if (bean.getPromotionStatus().equals("Financial Close")
+					|| bean.getPromotionStatus().equals("AmendApproved")) {
+				if (existingPromotionIdCount != null && existingPromotionIdCount == 0) {
+					res = "ERROR_FILE";
+					errorMsg = errorMsg
+							+ "Solcode(promotionId) doen't exist, So we can't update/drop as per as per status  ^";
+					//updateErrorMessageInTemp(errorMsg, row);
+				}
+			}
+			lstResult.add(res);
+			lstResult.add(errorMsg);
+		} catch (Exception e) {
+			logger.debug("Exception: ", e);
+			throw new Exception();
+		}
+		//return res;
+		return lstResult;
 	}
 
 	public static boolean isNumeric(String str) {
