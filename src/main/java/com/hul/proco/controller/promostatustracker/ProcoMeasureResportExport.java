@@ -23,10 +23,15 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.document.AbstractXlsView;
 
+import com.hul.launch.web.util.CommonPropUtils;
 import com.hul.launch.web.util.CommonUtils;
+import com.mtapputil.PropertyUtil;
 
 @Component("ProcoMeasureExpoExcelView")
 public class ProcoMeasureResportExport  extends AbstractXlsView {
@@ -310,15 +315,20 @@ public class ProcoMeasureResportExport  extends AbstractXlsView {
 				BalCell.setCellStyle(Sstyle);
 				BalCell.setCellValue("Mayur Mallecha");
 				
+				//Resource resource = new ClassPathResource("classpath:/resources/images/proco/signature.png");
+				//ResourceLoader rsLoader = null;
+				//Resource resource = rsLoader.getResource("file:/resources/images/proco/signature.png");
+		        //InputStream inputStream = resource.getInputStream();
+				
 				 InputStream inputStream;
 				 inputStream = getServletContext().getResourceAsStream("/resources/images/proco/signature.png");
 				
 				   //Get the contents of an InputStream as a byte[].
-				   byte[] bytes = IOUtils.toByteArray(inputStream);
+				   byte[] bytes = null; //= IOUtils.toByteArray(inputStream);
 				   //Adds a picture to the workbook
-				   int pictureIdx = workbook.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
+				   //int pictureIdx = workbook.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
 				   //close the input stream
-				   inputStream.close();
+				   //inputStream.close();
 				   //Returns an object that handles instantiating concrete classes
 				   CreationHelper helper = workbook.getCreationHelper();
 				   //Creates the top-level drawing patriarch.
@@ -334,7 +344,7 @@ public class ProcoMeasureResportExport  extends AbstractXlsView {
 				   anchor.setRow2(intr+7); //Row 4
 		
 				   //Creates a picture
-				   Picture pict = drawing.createPicture(anchor, pictureIdx);
+				   //Picture pict = drawing.createPicture(anchor, pictureIdx);
 				
 				   
 				intr = intr + 7;
