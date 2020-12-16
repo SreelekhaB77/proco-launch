@@ -43,7 +43,7 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 		List<String> customerChainL1 = new ArrayList<>();
 		try {
 			Query queryToGetCustomeChainL1 = sessionFactory.getCurrentSession()
-					.createNativeQuery("SELECT DISTINCT CUSTOMER_CHAIN_L1 FROM TBL_PROCO_CUSTOMER_MASTER ORDER BY CUSTOMER_CHAIN_L1");
+					.createNativeQuery("SELECT CUSTOMER_CHAIN_L1 FROM TBL_PROCO_CUSTOMER_MASTER GROUP BY CUSTOMER_CHAIN_L1 ORDER BY CUSTOMER_CHAIN_L1");
 			customerChainL1 = queryToGetCustomeChainL1.list();
 		} catch (Exception e) {
 			logger.debug("Exception: ", e);
@@ -2670,7 +2670,7 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 		List<String> promoIds = new ArrayList<>();
 		try {
 			Query queryToGetPromoIds = sessionFactory.getCurrentSession()
-					.createNativeQuery("SELECT DISTINCT PROMO_ID FROM TBL_PROCO_STATUS_TRACKER");
+					.createNativeQuery("SELECT PROMO_ID FROM TBL_PROCO_STATUS_TRACKER GROUP BY PROMO_ID");
 			promoIds = queryToGetPromoIds.list();
 		} catch (Exception e) {
 			logger.debug("Exception: ", e);
