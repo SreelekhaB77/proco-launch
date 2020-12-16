@@ -323,7 +323,7 @@
 											<div id="date-moc-error" class="cust-error error"
 												style="text-align: center; padding-bottom: 10px;">Please
 												select date or moc</div>
-											<button type="button" class="close" data-hide="alert">�</button>
+											<button type="button" class="close" data-hide="alert">X</button>
 										</div>
 
 										<div class="OpenSans-font">
@@ -345,12 +345,12 @@
 							</div>
 							<div class="modal-footer">
 								<button type="button"
-									class="btn btn-default pull-right resetBtn"
+									class="btn new-btn-primary pull-right resetBtn"
 									data-dismiss="modal" data-hide="alert" id="baseRejCancelBtn">CLOSE</button>
 								<button type="button" onclick="rejectLaunchBaseScreen2()"
 									id="KamlanchMocRejectBtnscrn2"
 									class="btn pull-right resetBtn marginR10"
-									style="background-color: #028681 !important; height: 33px; margin-right: 8px; color: #fff;">Submit</button>
+									style="background-color: #3B5999 !important; height: 33px; margin-right: 8px; color: #fff;">Submit</button>
 							</div>
 
 						</form>
