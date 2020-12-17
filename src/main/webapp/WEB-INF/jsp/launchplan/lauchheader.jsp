@@ -113,7 +113,7 @@
 	    	     	</div>
 	    	     	  <ul class="nav pull-right user-name">
 				<li class="dropdown"><a class="dropdown-toggle " href="#"
-					data-toggle="dropdown"> 
+					data-toggle="dropdown">  
 						<span class="profile-name">WELCOME <c:out
 								value="${username}"></c:out></span> <strong class="fa fa-angle-down"></strong></a>
 					<div class="dropdown-menu user-info">
