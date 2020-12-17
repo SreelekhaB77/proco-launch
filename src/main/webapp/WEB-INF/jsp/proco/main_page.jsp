@@ -33,10 +33,9 @@
 	<div class="container-fluid">
 		<header style="position: fixed;    z-index: 999999;">
 		<div class="pull-left login-header">
-			<img src="assets/images/logo.png"
-				style="height: 75px; padding-top: 5px;"logo">
+			<img src="assets/images/logo.png"	style="height: 75px; padding-top: 5px;"logo">
 		</div>
-		<div class="brand-name SEGOEUIL-font">MT PLANNING 123</div>
+		<div class="brand-name SEGOEUIL-font">MT PLANNING</div>
 		</header>
 		<div class="body-content" style="margin-top: 80px; display: none;">
 			<div class="row">

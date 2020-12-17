@@ -36,8 +36,7 @@
 		<div class="row">
 	<div class="common-header">
 		<div class="col-xs-12 col-sm-6 col-md-6">
-		<img src="assets/images/HUL_IQ_Logo.jpg" class="img-responsive pull-left" style="padding:0px;height:80px;" alt="logo">
-		
+		<img src="assets/images/HUL_IQ_Logo.jpg" class="img-responsive pull-left" style="padding:0px;height:80px;" alt="logo">		
 		</div>
 		
 		<div class="col-md-6 col-sm-6 col-xs-12">

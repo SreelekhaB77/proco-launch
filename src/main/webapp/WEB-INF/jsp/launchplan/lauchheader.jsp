@@ -77,8 +77,8 @@
  	<!--  as per CP header -->
     <div class="row header-cls">
     	  <div class="left-hul-cls">
-    	  		<div class="logo-dt-cls"><a href="#"> <img src="assets/images/logo_unilever.png" class="pull-left" alt="logo"></a></div>
-    	  		<div class="logo-sml-cls"><a href="#"><img src="assets/images/logo_unilever_m.png" class="pull-left" alt="logo"></a></div>
+    	  		<div class="logo-dt-cls"> <img src="assets/images/logo_unilever.png" class="pull-left" alt="logo"></div>
+    	  		<div class="logo-sml-cls"><img src="assets/images/logo_unilever_m.png" class="pull-left" alt="logo"></div>
     	  </div>
     	  <div class="right-hul-cls">
     	        <div class="product-logo-cls"><img src="assets/images/logo_1mt_blue.png" class="pull-left" alt="logo"></div>
