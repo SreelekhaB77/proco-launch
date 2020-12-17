@@ -368,7 +368,7 @@
 						
 						
 						<div class="col-md-6 col-sm-6 ddd">
-								<div class="launchupload-parent" style="min-height: 275px !important;">
+								<div class="procoupload-parent" style="min-height: 275px !important;">
 									<div style="text-align: center; color: #878787;">
 
 										<h2 class="SEGOEUIL-font">Customer Portal Status Download</h2>
@@ -386,7 +386,7 @@
 						<div class="col-md-6 col-sm-6 ddd">
 							<form id="coeStatusFileUpload" class="form-horizontal" action="#" 
 								enctype="multipart/form-data" name="coeStatusFileUpload">
-								<div class="launchupload-parent" style="min-height: 275px !important;">
+								<div class="procoupload-parent" style="min-height: 275px !important;">
 									<div style="text-align: center; color: #878787;">
 										<h2 class="SEGOEUIL-font">Promo Status Upload File</h2>
 										<div class="upload-image">

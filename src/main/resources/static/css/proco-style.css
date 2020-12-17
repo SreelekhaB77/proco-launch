@@ -1025,6 +1025,13 @@ span.comboTreeItemTitle {
 	min-height: 320px;
 }
 
+.procoupload-parent {
+	border: 2px dashed gray;
+	background-color: #f2f2f2;
+	margin: 45px 0 15px 0;
+	min-height: 320px;
+}
+
 .tab-label-proco-create-active {
 	font-size: 1.7em;
 	/*line-height:2em;*/
@@ -1364,6 +1371,10 @@ i.icon-search {
 
 
 .launchupload-parent .upload-image i {
+	font-size: 85px;
+}
+
+.procoupload-parent .upload-image i {
 	font-size: 85px;
 }
 
