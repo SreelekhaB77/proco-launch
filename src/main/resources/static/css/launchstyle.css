@@ -1481,5 +1481,6 @@ table#kam_launch_store_table input {
 .alert-danger{font-weight:700;background: #C75B55;color: #fff;}
 .nav-pills{float:left;width:100%;margin-top:10px;}
 .alert-success{background:#6DB06D;color: #FFFFFF;font-weight: 500;}
-
+.modal-header .close{color:black !important;}
+.modal-header .close{color:black !important;}
 /* MTP custom fonts ends here */ 

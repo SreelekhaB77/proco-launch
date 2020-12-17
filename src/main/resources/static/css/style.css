@@ -3457,4 +3457,4 @@ input#chkPassport {
 a:-webkit-any-link {
 	text-decoration:none;
 	}
-
+.modal-header .close{color:black !important;}
