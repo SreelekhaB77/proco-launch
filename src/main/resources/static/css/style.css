@@ -57,12 +57,21 @@ label {
 	width: 100%;
 	z-index: 99999;
 }
-.chnagepwd-reset , .chnage-close{
+
+.chnagepwd-reset {
 
    width: 100px;
     float: right;
     margin: 0 10px 0 0;
 }
+
+.chnage-close {
+	width: 100px;
+	background: #0BABD8;
+	margin: 0 10px 0 0;
+}
+
+
 .comp-logo img {
 	height: 80px;
 	padding: 15px 10px 15px 25px;
@@ -3457,4 +3466,5 @@ input#chkPassport {
 a:-webkit-any-link {
 	text-decoration:none;
 	}
-.modal-header .close{color:black !important;}
+.modal-header .close{color:black !important;} 
+
