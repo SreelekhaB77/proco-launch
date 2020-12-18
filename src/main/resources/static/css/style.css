@@ -2833,12 +2833,26 @@ padding:0;
 and (min-width : 414px) 
 and (max-width : 736px) 
 and (orientation : portrait) { 
-
+/*
 .chnagepwd-reset , .chnage-close {
 
    width: 100px;
     float: right;
     margin: 0 10px 0 0;
+}
+*/
+.chnagepwd-reset {
+
+   width: 100px;
+    float: right;
+    margin: 0 10px 0 0;
+}
+
+.chnage-close {
+	width: 100px;
+	background: #0BABD8;
+	margin: 0 10px 0 0;
+	color: #fff;
 }
 
 
@@ -3467,5 +3481,5 @@ input#chkPassport {
 a:-webkit-any-link {
 	text-decoration:none;
 	}
-.modal-header .close{color:black !important;} 
+.modal-header {color:black !important;} 
 
