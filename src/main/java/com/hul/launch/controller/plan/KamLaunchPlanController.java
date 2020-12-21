@@ -393,6 +393,7 @@ public class KamLaunchPlanController {
 	}
 
 	@RequestMapping(value = "downloadStoreListFile.htm", method = RequestMethod.GET)
+	//public ModelAndView downloadUpdatedBaseFile(@RequestParam("launchId") String launchId, HttpServletRequest request,
 	public ModelAndView downloadUpdatedBaseFile(@RequestParam("launchId") String launchId, HttpServletRequest request,
 			Model model, HttpServletResponse response) {
 		InputStream is;
@@ -607,15 +608,17 @@ public class KamLaunchPlanController {
 	}
 
 	@RequestMapping(value = "{launchId}/downloadAnnexureListDataKam.htm", method = RequestMethod.GET)
-	public @ResponseBody ModelAndView downloadAnnexureListDataKam(@PathVariable("launchId") String launchId,
+	//public @ResponseBody ModelAndView downloadAnnexureListDataKam(@PathVariable("launchId") String launchId, //Sarin
+	public @ResponseBody String downloadAnnexureListDataKam(@PathVariable("launchId") String launchId,
 			Model model, HttpServletRequest request, HttpServletResponse response) {
-		try {
+		Gson gson = new Gson();
+		
 			InputStream is;
 			String downloadLink = "";
 			String absoluteFilePath = FilePaths.LAUNCH_ANNEXURE_UPLOAD_FILE_PATH;
 			String appendString = File.separator;
 			absoluteFilePath = absoluteFilePath + appendString;
-
+		try {
 			List<String> listOfLaunchData = Arrays.asList(launchId);
 			List<TblLaunchMaster> listOfLaunchMaster = launchServiceCoe.getAllLaunchData(listOfLaunchData);
 			if (!listOfLaunchMaster.isEmpty()) {
@@ -633,11 +636,19 @@ public class KamLaunchPlanController {
 			}
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
+			/*
 			ModelAndView modelAndView = new ModelAndView();
 			modelAndView.addObject("Error", e.toString());
 			return modelAndView;
+			*/
+			Map<String, String> map = new HashMap<>();
+			map.put("Error", e.toString());
+			return gson.toJson(map);
 		}
-		return new ModelAndView("productsPage");
+		//return new ModelAndView("productsPage");
+		Map<String, String> map = new HashMap<>();
+		map.put("FileToDownload", downloadLink);
+		return gson.toJson(map);
 	}
 
 	@RequestMapping(value = "{launchId}/downloadMdgDeckDataKam.htm", method = RequestMethod.GET)

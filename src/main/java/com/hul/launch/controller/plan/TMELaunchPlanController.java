@@ -861,9 +861,10 @@ public class TMELaunchPlanController {
 	}
 
 	@RequestMapping(value = "downloadLaunchBasepackTemplate.htm", method = RequestMethod.GET)
-	public @ResponseBody ModelAndView downloadLaunchBasepackTemplate(Model model, HttpServletRequest request,
+	//public @ResponseBody ModelAndView downloadLaunchBasepackTemplate(Model model, HttpServletRequest request, //Sarin
+	public @ResponseBody String downloadLaunchBasepackTemplate(Model model, HttpServletRequest request,
 			HttpServletResponse response) {
-		try {
+		Gson gson = new Gson();
 			InputStream is;
 			String downloadLink = "", absoluteFilePath = "";
 			List<ArrayList<String>> downloadedData = new ArrayList<ArrayList<String>>();
@@ -871,6 +872,7 @@ public class TMELaunchPlanController {
 			String fileName = UploadUtil.getFileName("Basepack.Template.file", "",
 					CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 			String downloadFileName = absoluteFilePath + fileName;
+		try {
 			ArrayList<String> headerDetail = getBasepackHeaders();
 			downloadedData.add(headerDetail);
 			String userId = (String) request.getSession().getAttribute("UserID");
@@ -887,11 +889,19 @@ public class TMELaunchPlanController {
 			}
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
+			/*
 			ModelAndView modelAndView = new ModelAndView();
 			modelAndView.addObject("Error", e.toString());
 			return modelAndView;
+			*/
+			Map<String, String> map = new HashMap<>();
+			map.put("Error", e.toString());
+			return gson.toJson(map);
 		}
-		return new ModelAndView("productsPage");
+		//return new ModelAndView("productsPage");
+		Map<String, String> map = new HashMap<>();
+		map.put("FileToDownload", fileName);
+		return gson.toJson(map);
 	}
 
 	@RequestMapping(value = "downloadClusterTemplateforStoreformat.htm", method = RequestMethod.POST)
@@ -927,18 +937,21 @@ public class TMELaunchPlanController {
 	}
 
 	@RequestMapping(value = "downloadKamInputs.htm", method = RequestMethod.GET)
-	public @ResponseBody ModelAndView downloadKamInputs(Model model, HttpServletRequest request,
+	//public @ResponseBody ModelAndView downloadKamInputs(Model model, HttpServletRequest request,  //Sarin
+	public @ResponseBody String downloadKamInputs(Model model, HttpServletRequest request,
 			HttpServletResponse response) {
+		Gson gson = new Gson();
 		String absoluteFilePath = "";
 		String downloadLink = "";
 		InputStream is;
 		ModelAndView modelAndView = new ModelAndView();
-		try {
+		
 			List<ArrayList<String>> downloadedData = new ArrayList<>();
 			absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
 			String fileName = UploadUtil.getFileName("KamQueriesList.Template.file", "",
 					CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 			String downloadFileName = absoluteFilePath + fileName;
+		try {
 			ArrayList<String> headerDetail = getKamInputsDownload();
 			downloadedData.add(headerDetail);
 			String userId = (String) request.getSession().getAttribute("UserID");
@@ -957,10 +970,18 @@ public class TMELaunchPlanController {
 
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
+			/*
 			modelAndView.addObject("Error", e.toString());
 			return modelAndView;
+			*/
+			Map<String, String> map = new HashMap<>();
+			map.put("Error", e.toString());
+			return gson.toJson(map);
 		}
-		return modelAndView;
+		//return modelAndView;
+		Map<String, String> map = new HashMap<>();
+		map.put("FileToDownload", fileName);
+		return gson.toJson(map);
 	}
 
 	@RequestMapping(value = "downloadClusterTempforCustStoreformat.htm", method = RequestMethod.POST)

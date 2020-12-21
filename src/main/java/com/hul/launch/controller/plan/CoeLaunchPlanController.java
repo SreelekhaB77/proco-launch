@@ -335,9 +335,11 @@ public class CoeLaunchPlanController {
 	}
 
 	@RequestMapping(value = "{launchIds}/downloadLaunchCoeBasepackTemplate.htm", method = RequestMethod.GET)
-	public @ResponseBody ModelAndView downloadLaunchBasepackTemplate(@PathVariable("launchIds") String launchIds,
+	//public @ResponseBody ModelAndView downloadLaunchBasepackTemplate(@PathVariable("launchIds") String launchIds, //Sarin Prod Changes
+	public @ResponseBody String downloadLaunchBasepackTemplate(@PathVariable("launchIds") String launchIds,
 			Model model, HttpServletRequest request, HttpServletResponse response) {
-		try {
+		Gson gson = new Gson();
+		
 			InputStream is;
 			String downloadLink = "", absoluteFilePath = "";
 			List<ArrayList<String>> downloadedData = new ArrayList<ArrayList<String>>();
@@ -348,6 +350,7 @@ public class CoeLaunchPlanController {
 			ArrayList<String> headerDetail = getBasepackHeadersCoe();
 			downloadedData.add(headerDetail);
 			String userId = (String) request.getSession().getAttribute("UserID");
+		try {
 			String[] launchId = launchIds.split(",");
 			List<String> listOfLaunchData = Arrays.asList(launchId);
 			List<ArrayList<String>> listDownload = launchService.getbasepackDump(headerDetail, userId,
@@ -364,17 +367,27 @@ public class CoeLaunchPlanController {
 			}
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
+			/*
 			ModelAndView modelAndView = new ModelAndView();
 			modelAndView.addObject("Error", e.toString());
 			return modelAndView;
+			*/
+			Map<String, String> map = new HashMap<>();
+			map.put("Error", e.toString());
+			return gson.toJson(map);
 		}
-		return new ModelAndView("productsPage");
+		//return new ModelAndView("productsPage");
+		Map<String, String> map = new HashMap<>();
+		map.put("FileToDownload", fileName);
+		return gson.toJson(map);
 	}
 
 	@RequestMapping(value = "{launchIds}/downloadLaunchBuildUpCoeTemplate.htm", method = RequestMethod.GET)
-	public @ResponseBody ModelAndView downloadLaunchBuildUpCoeTemplate(@PathVariable("launchIds") String launchIds,
+	//public @ResponseBody ModelAndView downloadLaunchBuildUpCoeTemplate(@PathVariable("launchIds") String launchIds,
+	public @ResponseBody String downloadLaunchBuildUpCoeTemplate(@PathVariable("launchIds") String launchIds,  //Sarin Prod Changes
 			Model model, HttpServletRequest request, HttpServletResponse response) {
-		try {
+		Gson gson = new Gson();
+		
 			InputStream is;
 			String downloadLink = "", absoluteFilePath = "";
 			List<ArrayList<String>> downloadedData = new ArrayList<ArrayList<String>>();
@@ -382,6 +395,7 @@ public class CoeLaunchPlanController {
 			String fileName = UploadUtil.getFileName("BuildUp.Template.file", "",
 					CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 			String downloadFileName = absoluteFilePath + fileName;
+		try {
 			ArrayList<String> headerDetail = getLaunchBuildUpHeadersCoe();
 			downloadedData.add(headerDetail);
 			String userId = (String) request.getSession().getAttribute("UserID");
@@ -399,18 +413,28 @@ public class CoeLaunchPlanController {
 			}
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
+			/*
 			ModelAndView modelAndView = new ModelAndView();
 			modelAndView.addObject("Error", e.toString());
 			return modelAndView;
+			*/
+			Map<String, String> map = new HashMap<>();
+			map.put("Error", e.toString());
+			return gson.toJson(map);
 		}
-		return new ModelAndView("productsPage");
+		//return new ModelAndView("productsPage");
+		Map<String, String> map = new HashMap<>();
+		map.put("FileToDownload", fileName);
+		return gson.toJson(map);
 	}
 
 	@RequestMapping(value = "{launchIds}/downloadLaunchListingTrackerCoeTemplate.htm", method = RequestMethod.GET)
-	public @ResponseBody ModelAndView downloadLaunchListingTrackerCoeTemplate(
+	//public @ResponseBody ModelAndView downloadLaunchListingTrackerCoeTemplate(
+	public @ResponseBody String downloadLaunchListingTrackerCoeTemplate(
 			@PathVariable("launchIds") String launchIds, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
-		try {
+		Gson gson = new Gson();
+		
 			InputStream is;
 			String downloadLink = "", absoluteFilePath = "";
 			List<ArrayList<String>> downloadedData = new ArrayList<ArrayList<String>>();
@@ -420,6 +444,7 @@ public class CoeLaunchPlanController {
 			String downloadFileName = absoluteFilePath + fileName;
 			ArrayList<String> headerDetail = getLaunchListingTrackerCoe();
 			downloadedData.add(headerDetail);
+		try {
 			String userId = (String) request.getSession().getAttribute("UserID");
 			String[] launchId = launchIds.split(",");
 			List<String> listOfLaunchData = Arrays.asList(launchId);
@@ -437,11 +462,19 @@ public class CoeLaunchPlanController {
 			}
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
+			/*
 			ModelAndView modelAndView = new ModelAndView();
 			modelAndView.addObject("Error", e.toString());
 			return modelAndView;
+			*/
+			Map<String, String> map = new HashMap<>();
+			map.put("Error", e.toString());
+			return gson.toJson(map);
 		}
-		return new ModelAndView("productsPage");
+		//return new ModelAndView("productsPage");
+		Map<String, String> map = new HashMap<>();
+		map.put("FileToDownload", fileName);
+		return gson.toJson(map);
 	}
 
 	@RequestMapping(value = "{launchIds}/downloadLaunchMSTNClearanceCoe.htm", method = RequestMethod.GET)
@@ -511,9 +544,11 @@ public class CoeLaunchPlanController {
 	}
 
 	@RequestMapping(value = "{launchIds}/downloadLaunchStoreListCoe.htm", method = RequestMethod.GET)
-	public @ResponseBody ModelAndView downloadLaunchStoreListCoe(@PathVariable("launchIds") String launchIds,
+	//public @ResponseBody ModelAndView downloadLaunchStoreListCoe(@PathVariable("launchIds") String launchIds,  //Sarin prod changes
+	public @ResponseBody String downloadLaunchStoreListCoe(@PathVariable("launchIds") String launchIds,
 			Model model, HttpServletRequest request, HttpServletResponse response) {
-		try {
+		Gson gson = new Gson();
+		
 			InputStream is;
 			String downloadLink = "", absoluteFilePath = "";
 			List<ArrayList<String>> downloadedData = new ArrayList<ArrayList<String>>();
@@ -521,6 +556,7 @@ public class CoeLaunchPlanController {
 			String fileName = UploadUtil.getFileName("LaunchStoreList.Template.file", "",
 					CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 			String downloadFileName = absoluteFilePath + fileName;
+		try {
 			ArrayList<String> headerDetail = getLaunchStoreListCoe();
 			downloadedData.add(headerDetail);
 			String userId = (String) request.getSession().getAttribute("UserID");
@@ -540,24 +576,34 @@ public class CoeLaunchPlanController {
 			}
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
+			/*
 			ModelAndView modelAndView = new ModelAndView();
 			modelAndView.addObject("Error", e.toString());
 			return modelAndView;
+			*/
+			Map<String, String> map = new HashMap<>();
+			map.put("Error", e.toString());
+			return gson.toJson(map);
 		}
-		return new ModelAndView("productsPage");
+		//return new ModelAndView("productsPage");
+		Map<String, String> map = new HashMap<>();
+		map.put("FileToDownload", fileName);
+		return gson.toJson(map);
 	}
 
 	@RequestMapping(value = "{launchId}/downloadAnnexureListDataCoe.htm", method = RequestMethod.GET)
-	public @ResponseBody ModelAndView downloadAnnexureListDataCoe(@PathVariable("launchId") String launchId,
+	//public @ResponseBody ModelAndView downloadAnnexureListDataCoe(@PathVariable("launchId") String launchId, //Sarin Prod changes
+	public @ResponseBody String downloadAnnexureListDataCoe(@PathVariable("launchId") String launchId,
 			Model model, HttpServletRequest request, HttpServletResponse response) {
-		try {
+		Gson gson = new Gson();
+		
 			InputStream is;
 			String downloadLink = "";
 			List<ArrayList<String>> downloadedData = new ArrayList<ArrayList<String>>();
 			String absoluteFilePath = FilePaths.LAUNCH_ANNEXURE_UPLOAD_FILE_PATH;
 			String appendString = File.separator;
 			absoluteFilePath = absoluteFilePath + appendString;
-
+		try {
 			ArrayList<String> headerDetail = getLaunchStoreListCoe();
 			downloadedData.add(headerDetail);
 			List<String> listOfLaunchData = Arrays.asList(launchId);
@@ -577,22 +623,32 @@ public class CoeLaunchPlanController {
 			}
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
+			/*
 			ModelAndView modelAndView = new ModelAndView();
 			modelAndView.addObject("Error", e.toString());
 			return modelAndView;
+			*/
+			Map<String, String> map = new HashMap<>();
+			map.put("Error", e.toString());
+			return gson.toJson(map);
 		}
-		return new ModelAndView("productsPage");
+		//return new ModelAndView("productsPage");
+		Map<String, String> map = new HashMap<>();
+		map.put("FileToDownload", downloadLink);
+		return gson.toJson(map);
 	}
 
 	@RequestMapping(value = "{launchId}/downloadMdgDeckDataCoe.htm", method = RequestMethod.GET)
-	public @ResponseBody ModelAndView downloadMdgDeckDataCoe(@PathVariable("launchId") String launchId, Model model,
+	//public @ResponseBody ModelAndView downloadMdgDeckDataCoe(@PathVariable("launchId") String launchId, Model model,
+	public @ResponseBody String downloadMdgDeckDataCoe(@PathVariable("launchId") String launchId, Model model,
 			HttpServletRequest request, HttpServletResponse response) {
-		try {
+		Gson gson = new Gson();
+		
 			InputStream is;
 			String downloadLink = "", absoluteFilePath = "";
 			List<ArrayList<String>> downloadedData = new ArrayList<>();
 			absoluteFilePath = FilePaths.LAUNCH_MDG_UPLOAD_FILE_PATH;
-
+		try {
 			ArrayList<String> headerDetail = getLaunchStoreListCoe();
 			downloadedData.add(headerDetail);
 			List<String> listOfLaunchData = Arrays.asList(launchId);
@@ -612,11 +668,19 @@ public class CoeLaunchPlanController {
 			}
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
+			/*
 			ModelAndView modelAndView = new ModelAndView();
 			modelAndView.addObject("Error", e.toString());
 			return modelAndView;
+			*/
+			Map<String, String> map = new HashMap<>();
+			map.put("Error", e.toString());
+			return gson.toJson(map);
 		}
-		return new ModelAndView("productsPage");
+		//return new ModelAndView("productsPage");
+		Map<String, String> map = new HashMap<>();
+		map.put("FileToDownload", downloadLink);
+		return gson.toJson(map);
 	}
 
 	private ArrayList<String> getBasepackHeadersCoe() {
