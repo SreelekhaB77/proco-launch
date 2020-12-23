@@ -348,7 +348,9 @@ function CoeLaunch(){
 function coedownloadLaunchBasepackTemplate() {
 	var launchIdsArr =  getlaunchId().toString();
 	
-	window.open("/VisibilityAssetTracker/"+launchIdsArr+"/downloadLaunchCoeBasepackTemplate.htm");
+	window.location.assign("/VisibilityAssetTracker/"+launchIdsArr+"/downloadLaunchCoeBasepackTemplate.htm");  //Sarin
+	//window.open("/VisibilityAssetTracker/"+launchIdsArr+"/downloadLaunchCoeBasepackTemplate.htm");
+	//window.location.assign(launchIdsArr+"/downloadFinalBuildUpKamTemplate.htm");
 	
 }
 
@@ -555,7 +557,8 @@ function saveBuildUp(){
 function coedownloadListTemplate() {
 	var launchIdsArr =  getlaunchId().toString();
 	
-	window.open("/VisibilityAssetTracker/"+launchIdsArr+"/downloadLaunchListingTrackerCoeTemplate.htm");
+	window.location.assign("/VisibilityAssetTracker/"+launchIdsArr+"/downloadLaunchListingTrackerCoeTemplate.htm");  //Sarin prod changes
+	//window.open("/VisibilityAssetTracker/"+launchIdsArr+"/downloadLaunchListingTrackerCoeTemplate.htm");
 	
 }
 
@@ -669,7 +672,8 @@ function coedownloadAnnex() {
 	var launchIdsArr =  getlaunchId();
 	for(var i=0; i<launchIdsArr.length; i++){
 		//window.open( "/VisibilityAssetTracker/"+launchIdsArr+"/downloadAnnexureListDataCoe.htm" );
-		window.open(launchIdsArr[i]+"/downloadAnnexureListDataCoe.htm");
+		//window.open(launchIdsArr[i]+"/downloadAnnexureListDataCoe.htm");
+		window.location.assign(launchIdsArr[i]+"/downloadAnnexureListDataCoe.htm");  //Sarin changes
 	}
 	
 }
@@ -706,7 +710,8 @@ function coedownloadArtWork() {
 function coedownloadMdgDeckTemplate() {
 	var launchIdsArr =  getlaunchId();
 	for(var i = 0; i< launchIdsArr.length; i++){
-		window.open(launchIdsArr[i]+"/downloadMdgDeckDataCoe.htm");
+		//window.open(launchIdsArr[i]+"/downloadMdgDeckDataCoe.htm");
+		window.location.assign(launchIdsArr[i]+"/downloadMdgDeckDataCoe.htm"); //Sarin changes
 	}
 	
 }

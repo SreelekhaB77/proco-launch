@@ -1182,7 +1182,8 @@ function artworkdocCall() {
 function kamdownAnnexureDoc() {
 	var launchId =  $( ".kamLnchDetscr1:checked" ).val();
 	
-	window.open("/VisibilityAssetTracker/"+launchId+"/downloadAnnexureListDataKam.htm");	
+	window.location.assign("/VisibilityAssetTracker/"+launchId+"/downloadAnnexureListDataKam.htm");
+	//window.open("/VisibilityAssetTracker/"+launchId+"/downloadAnnexureListDataKam.htm"); //Sarin	
 }
 
 // download for mdg
