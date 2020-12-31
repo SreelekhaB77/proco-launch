@@ -1,0 +1,40 @@
+steps:
+- id: "Fetching mtapputil" 
+  name: gcr.io/cloud-builders/gcloud
+  args:
+    - source
+    - repos
+    - clone 
+    - moderntrade-common-util
+- id: "Building mtapputil and vatcps"
+  name: gcr.io/cloud-builders/mvn
+  entrypoint: bash
+  args:
+    - -c
+    - |
+      mvn -f /workspace/moderntrade-common-util/pom.xml clean install 
+      mvn clean install
+- id: "Deploying vatcps into ${_JUMP_STAGING_VM}"
+  name: gcr.io/cloud-builders/gcloud
+  args:
+    - compute
+    - scp
+    - target/vatcps.war
+    - $_JUMP_STAGING_VM:/tmp
+    - --zone=$_JUMP_STAGING_VM_ZONE
+#- id: "Restarting ${_JUMP_STAGING_VM}"
+#  name: gcr.io/cloud-builders/gcloud
+#  entrypoint: bash
+#  args:
+#    - -c
+#    - |
+#     gcloud compute instances stop $_JUMP_STAGING_VM
+#     gcloud compute instances start $_JUMP_STAGING_VM
+#- id: "Restarting ${_STAGING_VM}"
+#  name: gcr.io/cloud-builders/gcloud
+#  entrypoint: bash
+#  args:
+#    - -c
+#    - |
+#     gcloud compute instances stop $_STAGING_VM
+#     gcloud compute instances start $_STAGING_VM 
