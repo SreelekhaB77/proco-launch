@@ -20,4 +20,6 @@ public interface PromoCrDAO {
 	public List<String> getAllBrands();
 
 	public List<String> getAllBasepacks();
+
+	public List<List<String>> getAllProductMaster();
 }

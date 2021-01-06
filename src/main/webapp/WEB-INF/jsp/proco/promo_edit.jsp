@@ -57,20 +57,20 @@
 
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 proco-craetion-active"><a
-							href="http://localhost:8083/VisibilityAssetTracker/promoCreation.htm">
+							href="http://34.120.182.42/VisibilityAssetTracker/promoCreation.htm">
 								<div class="proco-create-icon"></div>
 								<div class="tab-label-proco-create-active">Promo Edit</div>
 						</a></li>
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 listing"><a
-							href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
+							href="http://34.120.182.42/VisibilityAssetTracker/promoListing.htm">
 								<div class="proco-listing-icon"></div>
 								<div class="tab-label-proco-create-inactive OpenSans-font">Promo
 									Listing</div>
 						</a></li>
 
 						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
+							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="http://34.120.182.42/VisibilityAssetTracker/promoDeletion.htm">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
@@ -101,7 +101,7 @@
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${errorMsg}"></c:out>
 				<c:if test="${FILE_STATUS=='ERROR_FILE'}">
-					<a href="http://localhost:8083/VisibilityAssetTracker/downloadPromotionErrorFile.htm" id="downloadTempFileLink">Click
+					<a href="http://34.120.182.42/VisibilityAssetTracker/downloadPromotionErrorFile.htm" id="downloadTempFileLink">Click
 						here to Download Error File:</a>
 
 				</c:if>
@@ -120,11 +120,11 @@
 		<div class="proco-creation form-horizontal">
 
 			<!-- <div class="promo-back">
-				<a href="http://localhost:8083/VisibilityAssetTracker/procoHome.htm"><span
+				<a href="http://34.120.182.42/VisibilityAssetTracker/procoHome.htm"><span
 					class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promotion
 				Creation
 			</div> -->
-			<form:form action="http://localhost:8083/VisibilityAssetTracker/updatePromotion.htm"
+			<form:form action="http://34.120.182.42/VisibilityAssetTracker/updatePromotion.htm"
 				modelAttribute="CreatePromotionBean" enctype="multipart/form-data"
 				method="POST" id="updatePromoForm">
 				<input type="hidden" name="reasonText" id="reasonText" value="" />
@@ -684,7 +684,7 @@
 			$.ajax({
 			type : "POST",
 			contentType : "application/json; charset=utf-8",
-			url : "http://localhost:8083/VisibilityAssetTracker/getMocMonthForProco.htm?startDate=" + $('#startdate').val()+"&endDate="+$('#enddate').val(),
+			url : "http://34.120.182.42/VisibilityAssetTracker/getMocMonthForProco.htm?startDate=" + $('#startdate').val()+"&endDate="+$('#enddate').val(),
 			success : function(data) {
 				if(data.length>0){
 				$('#moc').val(data);

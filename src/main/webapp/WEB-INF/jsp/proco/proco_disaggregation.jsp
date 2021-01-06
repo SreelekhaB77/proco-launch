@@ -68,14 +68,14 @@
 					<ul class="nav nav-pills nav-no-margin">
 
 						 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
-							href="http://localhost:8083/VisibilityAssetTracker/promoVolumeUpload.htm">
+							href="http://34.120.182.42/VisibilityAssetTracker/promoVolumeUpload.htm">
 								<div class="proco-volume-icon"></div>
 								<div class="tab-label-proco-volume-inactive">Volume Upload</div>
 						</a></li>
 
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 proco-disaggregation-active"><a
-							href="http://localhost:8083/VisibilityAssetTracker/promoDisaggregation.htm">
+							href="http://34.120.182.42/VisibilityAssetTracker/promoDisaggregation.htm">
 								<div class="proco-disaggregation-icon"></div>
 								<div class="tab-label-proco-disaggregation-active">Disaggregation</div>
 						</a></li>
@@ -83,20 +83,20 @@
 						
 						<!-- <li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 collaboration"><a
-							href="http://localhost:8083/VisibilityAssetTracker/promoCollaboration.htm">
+							href="http://34.120.182.42/VisibilityAssetTracker/promoCollaboration.htm">
 								<div class="proco-collaboration-icon"></div>
 								<div class="tab-label-proco-collaboration-inactive">Collaboration</div>
 						</a></li> -->
 
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 listing"><a
-							href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
+							href="http://34.120.182.42/VisibilityAssetTracker/promoListing.htm">
 								<div class="proco-listing-icon"></div>
 								<div class="tab-label-proco-create-inactive OpenSans-font">Promo Listing</div>
 						</a></li>
 
 						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
+							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="http://34.120.182.42/VisibilityAssetTracker/promoDeletion.htm">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
@@ -123,7 +123,7 @@
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${errorMsg}"></c:out>
 				<c:if test="${FILE_STATUS=='ERROR_FILE'}">
-					<a href="http://localhost:8083/VisibilityAssetTracker/downloadPromotionErrorFile.htm" id="downloadTempFileLink">Click
+					<a href="http://34.120.182.42/VisibilityAssetTracker/downloadPromotionErrorFile.htm" id="downloadTempFileLink">Click
 						here to Download Error File:</a>
 
 				</c:if>
@@ -131,7 +131,7 @@
 		</c:if>
 
 
-		<form action="http://localhost:8083/VisibilityAssetTracker/disaggregatePromos.htm" method="POST" name="dc">
+		<form action="http://34.120.182.42/VisibilityAssetTracker/disaggregatePromos.htm" method="POST" name="dc">
 			<div class="proco-creation form-horizontal">
 
 				<div class="promo-details" style="padding: 10px;">

@@ -98,7 +98,7 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 			// GeographyBean geographyBean = new GeographyBean();
 			// geographyBean.setTitle("ALL INDIA");
 			Query queryToGetBranches = sessionFactory.getCurrentSession()
-					.createNativeQuery("SELECT DISTINCT BRANCH_CODE,BRANCH FROM TBL_PROCO_CUSTOMER_MASTER ORDER BY BRANCH_CODE,BRANCH");
+					.createNativeQuery("SELECT BRANCH_CODE,BRANCH FROM TBL_PROCO_CUSTOMER_MASTER GROUP BY BRANCH_CODE,BRANCH ORDER BY BRANCH_CODE,BRANCH");
 			Iterator branchIterator = queryToGetBranches.list().iterator();
 			List<BranchBean> listOfBranchBean = new ArrayList<BranchBean>();
 			while (branchIterator.hasNext()) {
@@ -107,7 +107,7 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 				branchBean.setTitle(obj[0].toString() + ":" + obj[1].toString());
 				listOfBranchBean.add(branchBean);
 				Query queryToGetClusters = sessionFactory.getCurrentSession().createNativeQuery(
-						"SELECT DISTINCT CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER WHERE BRANCH=:branch ORDER BY CLUSTER_CODE,CLUSTER ");
+						"SELECT CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER WHERE BRANCH=:branch GROUP BY CLUSTER_CODE,CLUSTER ORDER BY CLUSTER_CODE,CLUSTER ");
 				queryToGetClusters.setString("branch", obj[1].toString());
 				Iterator clusterIterator = queryToGetClusters.list().iterator();
 				List<ClusterBean> listOfClusterBean = new ArrayList<ClusterBean>();
@@ -157,13 +157,13 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 		Gson gson = new Gson();
 		try {
 			Query queryToGetYears = sessionFactory.getCurrentSession().createNativeQuery(
-					"select distinct MOC_YEAR from TBL_VAT_MOC_MASTER where MOC_YEAR >= (SELECT MOC_YEAR from TBL_VAT_MOC_MASTER where status ='Y' AND MOC_GROUP ='GROUP_ONE') AND MOC_GROUP ='GROUP_ONE'  ");
+					"select MOC_YEAR from TBL_VAT_MOC_MASTER where MOC_YEAR >= (SELECT MOC_YEAR from TBL_VAT_MOC_MASTER where status ='Y' AND MOC_GROUP ='GROUP_ONE') AND MOC_GROUP ='GROUP_ONE' GROUP BY MOC_YEAR ");
 			List<String> yearsList = queryToGetYears.list();
 			if (yearsList != null) {
 				map.put("years", yearsList);
 			}
 			Query queryToGetQuarter = sessionFactory.getCurrentSession()
-					.createNativeQuery("select distinct MOC_QUARTER from TBL_VAT_MOC_MASTER WHERE MOC_GROUP ='GROUP_ONE'");
+					.createNativeQuery("select MOC_QUARTER from TBL_VAT_MOC_MASTER WHERE MOC_GROUP ='GROUP_ONE' GROUP BY MOC_QUARTER ");
 			List<String> quartersList = queryToGetQuarter.list();
 			if (quartersList != null) {
 				List<QuarterBean> listOfQuarterBean = new ArrayList<QuarterBean>();
@@ -171,7 +171,7 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 					QuarterBean quarterBean = new QuarterBean();
 					quarterBean.setTitle(quartersList.get(i));
 					Query queryToGetMoc = sessionFactory.getCurrentSession().createNativeQuery(
-							"SELECT distinct MOC_NAME FROM TBL_VAT_MOC_MASTER WHERE MOC_QUARTER=:quarter AND MOC_GROUP ='GROUP_ONE' ");
+							"SELECT MOC_NAME FROM TBL_VAT_MOC_MASTER WHERE MOC_QUARTER=:quarter AND MOC_GROUP ='GROUP_ONE' GROUP BY MOC_NAME ");
 					queryToGetMoc.setString("quarter", quartersList.get(i));
 					List<String> mocList = queryToGetMoc.list();
 					if (mocList != null) {
@@ -2822,7 +2822,7 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 			// GeographyBean geographyBean = new GeographyBean();
 			// geographyBean.setTitle("ALL INDIA");
 			Query queryToGetBranches = sessionFactory.getCurrentSession().createNativeQuery(
-					"SELECT DISTINCT ACCOUNT_NAME FROM TBL_VAT_COMM_OUTLET_MASTER WHERE ACCOUNT_NAME != '' ORDER BY ACCOUNT_NAME ");
+					"SELECT ACCOUNT_NAME FROM TBL_VAT_COMM_OUTLET_MASTER WHERE ACCOUNT_NAME != '' GROUP BY ACCOUNT_NAME ORDER BY ACCOUNT_NAME ");
 			Iterator branchIterator = queryToGetBranches.list().iterator();
 			List<BranchBean> listOfBranchBean = new ArrayList<BranchBean>();
 			while (branchIterator.hasNext()) {
@@ -3200,7 +3200,7 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 		List<String> customerChainL1 = new ArrayList<>();
 		try {
 			Query queryToGetCustomeChainL1 = sessionFactory.getCurrentSession()
-					.createNativeQuery("SELECT DISTINCT ACCOUNT_NAME CUSTOMER_CHAIN_L1 FROM TBL_VAT_COMM_OUTLET_MASTER ORDER BY ACCOUNT_NAME");
+					.createNativeQuery("SELECT ACCOUNT_NAME CUSTOMER_CHAIN_L1 FROM TBL_VAT_COMM_OUTLET_MASTER GROUP BY ACCOUNT_NAME ORDER BY ACCOUNT_NAME");
 			customerChainL1 = queryToGetCustomeChainL1.list();
 		} catch (Exception e) {
 			logger.debug("Exception: ", e);
@@ -3210,4 +3210,68 @@ public class CreatePromoDAOImpl implements CreatePromoDAO {
 	}
 	
 
+		//Sarin Changes Performance
+		@SuppressWarnings("unchecked")
+		@Override
+		public List<List<String>> getPromoDetails() {
+			List<List<String>> listPromo = new ArrayList<List<String>>();
+			
+			List<String> listPromoMaster = null;
+			
+			List<String> listCustomerL1Chain = null;
+			List<String> listOfferTypes = null;
+			List<String> listPromoId = null;
+			/*
+			List<String> listCategory = null;
+			List<String> listBrand = null;
+			List<String> listBasepack = null;
+			*/
+			String qryCustomerL1Chain = "SELECT CUSTOMER_CHAIN_L1 FROM TBL_PROCO_CUSTOMER_MASTER GROUP BY CUSTOMER_CHAIN_L1 ORDER BY CUSTOMER_CHAIN_L1";
+			String qryOfferTypes = "SELECT OFFER_TYPE FROM TBL_PROCO_OFFER_TYPE";
+			String qryPromoId = "SELECT PROMO_ID FROM TBL_PROCO_STATUS_TRACKER GROUP BY PROMO_ID";
+			
+			//String qryPromoMaster = "SELECT PROMOMASTER FROM (SELECT ROW_NUMBER() OVER (ORDER BY CUSTOMER_CHAIN_L1) AS ROW_NO, CUSTOMER_CHAIN_L1 AS PROMOMASTER FROM TBL_PROCO_CUSTOMER_MASTER GROUP BY CUSTOMER_CHAIN_L1 UNION ALL SELECT 1 AS ROW_NO, 'END1#' AS PROMOMASTER UNION ALL SELECT 1 AS ROW_NO, OFFER_TYPE  AS PROMOMASTER FROM TBL_PROCO_OFFER_TYPE UNION ALL SELECT 1 AS ROW_NO, 'END2#' AS PROMOMASTER UNION ALL SELECT 1 AS ROW_NO, PROMO_ID  AS PROMOMASTER FROM TBL_PROCO_STATUS_TRACKER GROUP BY PROMO_ID UNION ALL SELECT 1 AS ROW_NO, 'END3#' AS PROMOMASTER UNION ALL SELECT ROW_NUMBER() OVER (ORDER BY CATEGORY) AS ROW_NO, CATEGORY  AS PROMOMASTER FROM TBL_PROCO_PRODUCT_MASTER WHERE ACTIVE = 1 GROUP BY CATEGORY UNION ALL SELECT 1 AS ROW_NO, 'END4#' AS PROMOMASTER UNION ALL  SELECT ROW_NUMBER() OVER (ORDER BY BRAND) AS ROW_NO, BRAND  AS PROMOMASTER FROM TBL_PROCO_PRODUCT_MASTER WHERE ACTIVE = 1 GROUP BY BRAND  UNION ALL SELECT 1 AS ROW_NO, 'END5#' AS PROMOMASTER UNION ALL SELECT ROW_NUMBER() OVER (ORDER BY BASEPACK_DESC) AS ROW_NO, REPLACE(BASEPACK_DESC, '''', '')  AS PROMOMASTER FROM TBL_PROCO_PRODUCT_MASTER WHERE ACTIVE = 1 UNION ALL SELECT 1 AS ROW_NO, 'END6#' AS PROMOMASTER ) AS A";
+			Query queryPromo = null;
+			try {
+				/*
+				queryPromo = sessionFactory.getCurrentSession().createNativeQuery(qryPromoMaster);
+				listPromoMaster = queryPromo.list();
+				int posCustL1 = listPromoMaster.indexOf("END1#");
+				int posOfferType = listPromoMaster.indexOf("END2#");
+				int posPromoId = listPromoMaster.indexOf("END3#");
+				int posCategory = listPromoMaster.indexOf("END4#");
+				int posBrand = listPromoMaster.indexOf("END5#");
+				int posBasepack = listPromoMaster.indexOf("END6#");
+				listCustomerL1Chain = listPromoMaster.subList(0, posCustL1);
+				listOfferTypes = listPromoMaster.subList(posCustL1 + 1, posOfferType);
+				listPromoId = listPromoMaster.subList(posOfferType + 1, posPromoId);
+				listCategory = listPromoMaster.subList(posPromoId + 1, posCategory);
+				listBrand = listPromoMaster.subList(posCategory + 1, posBrand);
+				listBasepack = listPromoMaster.subList(posBrand + 1, posBasepack);
+				listPromo.add(0, listCustomerL1Chain);
+				listPromo.add(1, listOfferTypes);
+				listPromo.add(2, listPromoId);
+				listPromo.add(3, listCategory);
+				listPromo.add(4, listBrand);
+				listPromo.add(5, listBasepack);
+				*/
+				queryPromo = sessionFactory.getCurrentSession().createNativeQuery(qryCustomerL1Chain);
+				listCustomerL1Chain = queryPromo.list();
+				listPromo.add(0, listCustomerL1Chain);
+				
+				queryPromo = sessionFactory.getCurrentSession().createNativeQuery(qryOfferTypes);
+				listOfferTypes = queryPromo.list();
+				listPromo.add(1, listOfferTypes);
+				
+				queryPromo = sessionFactory.getCurrentSession().createNativeQuery(qryPromoId);
+				listPromoId = queryPromo.list();
+				listPromo.add(2, listPromoId);
+				
+				
+			} catch (Exception ex) {
+				logger.debug("Exception: ", ex);
+				return null;
+			}
+			return listPromo;
+		}
 }

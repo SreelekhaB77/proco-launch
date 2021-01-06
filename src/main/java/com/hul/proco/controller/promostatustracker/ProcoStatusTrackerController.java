@@ -57,19 +57,44 @@ public class ProcoStatusTrackerController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "promoStatusTracker.htm", method = RequestMethod.GET)
 	public ModelAndView getpromoStatusTrackerPage(HttpServletRequest request, Model model) {
+		long startTime = System.currentTimeMillis();
 		String roleId = (String) request.getSession().getAttribute("roleId");
 		model.addAttribute("roleId", roleId);
+		//Sarin Changes Performance - Commented and added below
+		/*
 		List<String> customerChainL1 = createPromoService.getCustomerChainL1();
 		List<String> offerTypes = createPromoService.getOfferTypes();
+		*/
+		List<List<String>> lstPromoDetails = createPromoService.getPromoDetails();
+		List<String> customerChainL1 = lstPromoDetails.get(0);
+		List<String> offerTypes = lstPromoDetails.get(1);
+		//Sarin Changes Performance - Ends
 		Map<Integer, String> modality = createPromoService.getModality();
 		Map<String, Object> yearAndMoc = createPromoService.getYearAndMoc(false);
 		String geographyJson = createPromoService.getGeography(false);
 		List<String> yearList = (List<String>) yearAndMoc.get("years");
 		String mocJson = (String) yearAndMoc.get("moc");
+		//Sarin Changes Performance - Commented and added below
+		/*
 		List<String> category = promoCrService.getAllCategories();
 		List<String> brand = promoCrService.getAllBrands();
 		List<String> basepacks = promoCrService.getAllBasepacks();
 		List<String> promoIds = createPromoService.getPromoIds();
+		*/
+		//Sarin Changes Performance
+		List<List<String>> lstProductMaster = promoCrService.getAllProductMaster();
+		List<String> category = lstProductMaster.get(0);
+		List<String> brand = lstProductMaster.get(1);
+		List<String> basepacks = lstProductMaster.get(2);
+
+		//List<String> category = lstPromoDetails.get(3);
+		//List<String> brand = lstPromoDetails.get(4);
+		//List<String> basepacks = lstPromoDetails.get(5);
+		
+		List<String> promoIds = lstPromoDetails.get(2);
+		//Sarin Changes Performance - Ends
+		long endTime = System.currentTimeMillis();
+		logger.info("duration of Promo page intialization: "+(endTime-startTime));
 		model.addAttribute("geographyJson", geographyJson);
 		model.addAttribute("mocJson", mocJson);
 		model.addAttribute("years", yearList);
@@ -92,6 +117,7 @@ public class ProcoStatusTrackerController {
 			@RequestParam("basepack") String basepackValue, @RequestParam("geography") String geographyValue,
 			@RequestParam("moc") String mocValue, @RequestParam("promoId") String promoId,HttpServletRequest request) {
 
+		long startTime = System.currentTimeMillis();
 		String userId = (String) request.getSession().getAttribute("UserID");
 		String searchParameter = request.getParameter("sSearch");
 		Integer pageDisplayStart = Integer.valueOf(request.getParameter("iDisplayStart"));
@@ -174,11 +200,15 @@ public class ProcoStatusTrackerController {
 				(pageNumber * pageDisplayLength), cagetory, brand, basepack, custChainL1, custChainL2, geography,
 				offerType, modality, year, moc, userId, 1,promoIdVal,searchParameter);
 
+		long endTime = System.currentTimeMillis();
+		logger.info("duration of Promo pagination: "+(endTime-startTime));
+		
 		PromoListingJsonObject jsonObj = new PromoListingJsonObject();
 		jsonObj.setJsonBean(promoList);
 		jsonObj.setiTotalDisplayRecords(rowCount);
 		jsonObj.setiTotalRecords(rowCount);
 
+		
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String json = gson.toJson(jsonObj);
 		return json;
