@@ -63,21 +63,21 @@
 					<ul class="nav nav-pills">
 					<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 proco-craetion-active"><a
-							href="http://localhost:8083/VisibilityAssetTracker/promoCr.htm">
+							href="http://34.120.128.205/VisibilityAssetTracker/promoCr.htm">
 								<div class="proco-create-icon"></div>
 								<div class="tab-label-proco-create-active">Promo CR</div>
 						</a></li>
 						
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 listing"><a
-							href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
+							href="http://34.120.128.205/VisibilityAssetTracker/promoListing.htm">
 								<div class="proco-listing-icon"></div>
 								<div class="tab-label-proco-create-inactive OpenSans-font">Promo Listing</div>
 						</a></li>
 
 						
 						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
+							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="http://34.120.128.205/VisibilityAssetTracker/promoDeletion.htm">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
@@ -106,7 +106,7 @@
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${errorMsg}"></c:out>
 				<c:if test="${FILE_STATUS=='ERROR_FILE'}">
-					<a href="http://localhost:8083/VisibilityAssetTracker/downloadPromotionEditErrorFile.htm" id="downloadTempFileLink">Click
+					<a href="http://34.120.128.205/VisibilityAssetTracker/downloadPromotionEditErrorFile.htm" id="downloadTempFileLink">Click
 						here to Download Error File: </a>
 
 				</c:if>
@@ -123,7 +123,7 @@
          	</div> -->
 		<div class="proco-creation form-horizontal">
 			<input type="hidden" id="roleId" value="${roleId}" />
-			<!-- <div class="promo-back"><a href="http://localhost:8083/VisibilityAssetTracker/procoHome.htm"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Listing</div> -->
+			<!-- <div class="promo-back"><a href="http://34.120.128.205/VisibilityAssetTracker/procoHome.htm"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Listing</div> -->
 			<div class="promo-details" style="padding:10px;"><span style="color:#fff;font-weight:600;">SELECT PROMOS FOR CR</span>
 				<!-- <span class="promo-detail-txt"><b>SELECT PROMO LISTING</b></span> <span
 					class="pull-right promo-uom">
@@ -143,7 +143,7 @@
 				</span>
 				<div class="clearfix"></div> -->
 			</div>
-		<form action="http://localhost:8083/VisibilityAssetTracker/rejectCr.htm" method="POST" enctype="multipart/form-data" id="download">
+		<form action="http://34.120.128.205/VisibilityAssetTracker/rejectCr.htm" method="POST" enctype="multipart/form-data" id="download">
 		<input type="hidden" name="promoIdList" id="promoIdList" value="" />
 			<input type="hidden" name="remark" id="remark" value="" />
 			<div class="promo-form-details">
@@ -423,7 +423,7 @@
     						});
 
     				if(promoIdList.length>0){
-    				$("#approveCr").attr("href", "http://localhost:8083/VisibilityAssetTracker/approveCr.htm?promoid="+promoIdList);
+    				$("#approveCr").attr("href", "http://34.120.128.205/VisibilityAssetTracker/approveCr.htm?promoid="+promoIdList);
     				} else{
         				$('#promoSelectErrorMsg').show().find('span').html('Please select Promotion.');
         				}

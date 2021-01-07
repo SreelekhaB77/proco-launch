@@ -54,7 +54,7 @@
 					<ul class="nav nav-pills nav-no-margin">
 					 <c:if test="${roleId eq 'TME'}">
 					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
-							href="http://localhost:8083/VisibilityAssetTracker/promoCreation.htm">
+							href="http://34.120.128.205/VisibilityAssetTracker/promoCreation.htm">
 								<div class="proco-create-icon"></div>
 								<div class="tab-label-proco-create-inactive">Promo Creation</div>
 						</a></li>
@@ -62,13 +62,13 @@
 					 
 					  <c:if test="${roleId eq 'DP'}">
 					  <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
-							href="http://localhost:8083/VisibilityAssetTracker/promoVolumeUpload.htm">
+							href="http://34.120.128.205/VisibilityAssetTracker/promoVolumeUpload.htm">
 								<div class="proco-volume-icon"></div>
 								<div class="tab-label-proco-volume-inactive">Volume Upload</div>
 						</a></li>
 						
 						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 disaggregation"><a
-							href="http://localhost:8083/VisibilityAssetTracker/promoDisaggregation.htm">
+							href="http://34.120.128.205/VisibilityAssetTracker/promoDisaggregation.htm">
 								<div class="proco-disaggregation-icon"></div>
 								<div class="tab-label-proco-disaggregation-inactive">Disaggregation</div>
 						</a></li>
@@ -76,12 +76,12 @@
 					  </c:if>
 					   <c:if test="${roleId eq 'KAM'}">
 					    <!-- <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 disaggregation"><a
-							href="http://localhost:8083/VisibilityAssetTracker/promoDisaggregation.htm">
+							href="http://34.120.128.205/VisibilityAssetTracker/promoDisaggregation.htm">
 								<div class="proco-disaggregation-icon"></div>
 								<div class="tab-label-proco-disaggregation-inactive">Disaggregation</div>
 						</a></li> -->
 					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 collaboration"><a
-							href="http://localhost:8083/VisibilityAssetTracker/promoCollaboration.htm">
+							href="http://34.120.128.205/VisibilityAssetTracker/promoCollaboration.htm">
 								<div class="proco-collaboration-icon"></div>
 								<div class="tab-label-proco-collaboration-inactive">Collaboration</div>
 						</a></li>
@@ -89,7 +89,7 @@
 						
 						<c:if test="${roleId eq 'NCMM'}">
 					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
-							href="http://localhost:8083/VisibilityAssetTracker/promoCr.htm">
+							href="http://34.120.128.205/VisibilityAssetTracker/promoCr.htm">
 								<div class="proco-create-icon"></div>
 								<div class="tab-label-proco-create-inactive">Promo CR</div>
 						</a></li>
@@ -97,7 +97,7 @@
 					 
 					 <c:if test="${roleId eq 'NSCM'}">
 					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
-							href="http://localhost:8083/VisibilityAssetTracker/promoCr.htm">
+							href="http://34.120.128.205/VisibilityAssetTracker/promoCr.htm">
 								<div class="proco-create-icon"></div>
 								<div class="tab-label-proco-create-inactive">Promo CR</div>
 						</a></li>
@@ -105,13 +105,13 @@
 						
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 proco-listing-active"><a
-							href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
+							href="http://34.120.128.205/VisibilityAssetTracker/promoListing.htm">
 								<div class="proco-listing-icon"></div>
 								<div class="tab-label-proco-create-active OpenSans-font">Promo Listing</div>
 						</a></li>
 						
 						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
+							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="http://34.120.128.205/VisibilityAssetTracker/promoDeletion.htm">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
@@ -142,7 +142,7 @@
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${errorMsg}"></c:out>
 				<c:if test="${FILE_STATUS=='ERROR_FILE'}">
-					<a href="http://localhost:8083/VisibilityAssetTracker/downloadPromotionEditErrorFile.htm" id="downloadTempFileLink">Click
+					<a href="http://34.120.128.205/VisibilityAssetTracker/downloadPromotionEditErrorFile.htm" id="downloadTempFileLink">Click
 						here to Download Error File:</a>
 
 				</c:if>
@@ -159,7 +159,7 @@
          	</div> -->
 		<div class="proco-creation form-horizontal">
 			<input type="hidden" id="roleId" value="${roleId}" />
-			<!-- <div class="promo-back"><a href="http://localhost:8083/VisibilityAssetTracker/procoHome.htm"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Listing</div> -->
+			<!-- <div class="promo-back"><a href="http://34.120.128.205/VisibilityAssetTracker/procoHome.htm"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Listing</div> -->
 			<div class="promo-details" style="padding:10px 10px;"><span style="color:#fff;font-weight:600;">SELECT PROMO LISTING</span>
 				<!-- <span class="promo-detail-txt"><b>SELECT PROMO LISTING</b></span> <span
 					class="pull-right promo-uom">
@@ -179,7 +179,7 @@
 				</span>
 				<div class="clearfix"></div> -->
 			</div>
-		<form action="http://localhost:8083/VisibilityAssetTracker/downloadPromoFromListing.htm" method="POST" enctype="multipart/form-data" id="download">
+		<form action="http://34.120.128.205/VisibilityAssetTracker/downloadPromoFromListing.htm" method="POST" enctype="multipart/form-data" id="download">
 		<input type="hidden" name="remarkText" id="remarkText" value="" />
 			<div class="promo-form-details proco-listing-form">
 				<div class="col-md-4">
@@ -391,7 +391,7 @@
 			</div>
 			</c:if>
 			<c:if test="${roleId eq 'TME'}">
-			<form:form action="http://localhost:8083/VisibilityAssetTracker/uploadPromoEdit.htm" id="promoEditUpload"
+			<form:form action="http://34.120.128.205/VisibilityAssetTracker/uploadPromoEdit.htm" id="promoEditUpload"
 				method="POST" modelAttribute="VolumeUploadBean"
 				enctype="multipart/form-data" onsubmit="return uploadValidation()">
 			<div class="promo-upload">PROMO UPLOAD</div>
@@ -437,7 +437,7 @@
 		</div>
 		<div class="modal-body">
 			<div class="row">
-<form id="pwdform" method="post" action="http://localhost:8083/VisibilityAssetTracker/deletePromotion.htm" class="form-horizontal" style="padding: 10px 0;">
+<form id="pwdform" method="post" action="http://34.120.128.205/VisibilityAssetTracker/deletePromotion.htm" class="form-horizontal" style="padding: 10px 0;">
 					<div class="col-md-12" id="msg-1">
 						<div id="msg-error" class="alert err-alert-danger fade in"></div>
 						<div id="msg-success" class="alert succ-alert-success fade in"></div>
@@ -529,7 +529,7 @@
       						});
 
       				if(promoIdList.length>0){
-      				$("#duplicate_promo").attr("href", "http://localhost:8083/VisibilityAssetTracker/duplicatePromotion.htm?promoid="+promoIdList);
+      				$("#duplicate_promo").attr("href", "http://34.120.128.205/VisibilityAssetTracker/duplicatePromotion.htm?promoid="+promoIdList);
       				} else{
       					$('#promoSelectErrorMsg').show().find('span').html('Please select Promotion.');
           				}
@@ -544,7 +544,7 @@
         						});
 
         				if(promoIdList.length>0){
-        				$("#edit_promo").attr("href", "http://localhost:8083/VisibilityAssetTracker/editPromotion.htm?promoid="+promoIdList);
+        				$("#edit_promo").attr("href", "http://34.120.128.205/VisibilityAssetTracker/editPromotion.htm?promoid="+promoIdList);
         				} else{
             				$('#promoSelectErrorMsg').show().find('span').html('Please select Promotion.');
             				}
@@ -561,7 +561,7 @@
       				if(promoIdList.length>0){
       				  $("#delete_promo").attr("data-toggle", "modal");
   	  				$("#delete_promo").attr("href", "data-target=#add-depot");
-      				//$("#delete_promo").attr("href", "http://localhost:8083/VisibilityAssetTracker/deletePromotion.htm?promoid="+promoIdList);
+      				//$("#delete_promo").attr("href", "http://34.120.128.205/VisibilityAssetTracker/deletePromotion.htm?promoid="+promoIdList);
       				
       				
       			/* 	$.ajax({
@@ -597,7 +597,7 @@
 
         		  $('#create_promo').on('click',function(){
       		        
-        			$("#create_promo").attr("href", "http://localhost:8083/VisibilityAssetTracker/promoCreation.htm");
+        			$("#create_promo").attr("href", "http://34.120.128.205/VisibilityAssetTracker/promoCreation.htm");
         			
           		  });
 
