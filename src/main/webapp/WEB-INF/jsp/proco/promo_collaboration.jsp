@@ -50,25 +50,25 @@
 
 							<!-- <li role="presentation"
 								class="col-md-3 col-sm-6 col-xs-12 disaggregation"><a
-								href="http://localhost:8083/VisibilityAssetTracker/promoDisaggregation.htm">
+								href="http://34.120.182.42/VisibilityAssetTracker/promoDisaggregation.htm">
 									<div class="proco-disaggregation-icon"></div>
 									<div class="tab-label-proco-disaggregation-inactive">Disaggregation</div>
 							</a></li> -->
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 proco-collaboration-active"><a
-							href="http://localhost:8083/VisibilityAssetTracker/promoCollaboration.htm">
+							href="http://34.120.182.42/VisibilityAssetTracker/promoCollaboration.htm">
 								<div class="proco-collaboration-icon"></div>
 								<div class="tab-label-proco-collaboration-active">Collaboration</div>
 						</a></li>
 
 						 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 listing">
-						 <a	href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
+						 <a	href="http://34.120.182.42/VisibilityAssetTracker/promoListing.htm">
 									<div class="proco-listing-icon"></div>
 									<div class="tab-label-proco-create-inactive OpenSans-font">Promo Listing</div>
 						 </a></li>
 						
 						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 listing">
-						<a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
+						<a href="http://34.120.182.42/VisibilityAssetTracker/promoDeletion.htm">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
@@ -95,7 +95,7 @@
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${errorMsg}"></c:out>
 				<c:if test="${FILE_STATUS=='ERROR_FILE'}">
-					<a href="http://localhost:8083/VisibilityAssetTracker/downloadKamErrorFile.htm?level=${level}" id="downloadTempFileLink">Click
+					<a href="http://34.120.182.42/VisibilityAssetTracker/downloadKamErrorFile.htm?level=${level}" id="downloadTempFileLink">Click
 						here to Download Error File:</a>
 
 				</c:if>
@@ -122,7 +122,7 @@
 				<!--     <div class="clearfix"></div> -->
 			</div>
 
-			<form action="http://localhost:8083/VisibilityAssetTracker/downloadPromosForKamUpload.htm" method="POST"
+			<form action="http://34.120.182.42/VisibilityAssetTracker/downloadPromosForKamUpload.htm" method="POST"
 				enctype="multipart/form-data">
 
 				<div class="promo-form-details proco-collab-form" style="margin-bottom: 10px;">
@@ -342,7 +342,7 @@
 						value="KAM DOWNLOAD" disabled="disabled"></input>
 				</div>
 			</form>
-			<form:form action="http://localhost:8083/VisibilityAssetTracker/uploadKam.htm" id="kamUpload" method="POST"
+			<form:form action="http://34.120.182.42/VisibilityAssetTracker/uploadKam.htm" id="kamUpload" method="POST"
 				modelAttribute="L1CollaborationBean" enctype="multipart/form-data"
 				onsubmit="return uploadValidation()">
 				<div class="promo-upload">KAM COLLABORATION</div>
