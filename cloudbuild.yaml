@@ -14,27 +14,30 @@ steps:
     - |
       mvn -f /workspace/moderntrade-common-util/pom.xml clean install 
       mvn clean install
-- id: "Deploying vatcps into ${_JUMP_STAGING_VM}"
+- id: "Deploying into  mt-application-srv"
   name: gcr.io/cloud-builders/gcloud
   args:
     - compute
     - scp
     - target/vatcps.war
-    - $_JUMP_STAGING_VM:/tmp
-    - --zone=$_JUMP_STAGING_VM_ZONE
-#- id: "Restarting ${_JUMP_STAGING_VM}"
-#  name: gcr.io/cloud-builders/gcloud
-#  entrypoint: bash
-#  args:
-#    - -c
-#    - |
-#     gcloud compute instances stop $_JUMP_STAGING_VM
-#     gcloud compute instances start $_JUMP_STAGING_VM
-#- id: "Restarting ${_STAGING_VM}"
-#  name: gcr.io/cloud-builders/gcloud
-#  entrypoint: bash
-#  args:
-#    - -c
-#    - |
-#     gcloud compute instances stop $_STAGING_VM
-#     gcloud compute instances start $_STAGING_VM 
+    - _DEV_APP_VM:/home/sftp_user
+    - --zone=asia-south1-a
+    - --impersonate-service-account=$_SERVICE_ACCOUNT_EMA
+- id: "Restarting ${_DEV_APP_VM}"
+  name: gcr.io/cloud-builders/gcloud
+  entrypoint: bash
+  args:
+    - -c
+    - |
+     gcloud compute instances stop $_DEV_APP_VM
+     gcloud compute instances start $_DEV_APP_VM
+- id: "Creating Image from ${_DEV_APP_VM}"
+  name: gcr.io/cloud-builders/gcloud
+  entrypoint: bash
+  args:
+    - -c
+    -  |
+     current_date=`date '+%Y_%m_%d`
+     new_image=`echo $_DEV_APP_VM-image-v$current_date`
+     echo $new_image > /workspace/new_image_name.txt
+     gcloud compute images create $new_image --source-disk=$_DEV_APP_VM --source-disk-zone=asia-south1-a --storage-location=asia-south1
