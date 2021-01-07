@@ -20,7 +20,7 @@ steps:
     - compute
     - scp
     - target/vatcps.war
-    - _DEV_APP_VM:/home/sftp_user
+    - mt-application-srv:/home/sftp_user
     - --zone=asia-south1-a
     - --impersonate-service-account=$_SERVICE_ACCOUNT_EMA
 - id: "Restarting ${_DEV_APP_VM}"
@@ -29,8 +29,8 @@ steps:
   args:
     - -c
     - |
-     gcloud compute instances stop $_DEV_APP_VM
-     gcloud compute instances start $_DEV_APP_VM
+     gcloud compute instances stop  mt-application-srv
+     gcloud compute instances start  mt-application-srv
 - id: "Creating Image from ${_DEV_APP_VM}"
   name: gcr.io/cloud-builders/gcloud
   entrypoint: bash
