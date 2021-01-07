@@ -1,18 +1,10 @@
 steps:
-- id: "Fetching source" 
-  name: gcr.io/cloud-builders/gcloud
-  args:
-    - source
-    - repos
-    - clone 
-    - moderntrade-common-util
 - id: "Building Artifact"
   name: gcr.io/cloud-builders/mvn
   entrypoint: bash
   args:
     - -c
-    - |
-      mvn -f /workspace/moderntrade-common-util/pom.xml clean install 
+    - | 
       mvn clean install
 - id: "Deploying into VM"
   name: gcr.io/cloud-builders/gcloud
@@ -20,7 +12,7 @@ steps:
     - compute
     - scp
     - target/$_ARTIFACT_NAME
-    - $_VM_NAME:/home/sftp_user
+    - $_VM_NAME:/home/appuser
     - --zone=$_VM_ZONE
     - --impersonate-service-account=$_SERVICE_ACCOUNT_EMAIL
 - id: "Restarting the service in VM"
