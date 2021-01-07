@@ -1,12 +1,12 @@
 steps:
-- id: "Fetching mtapputil" 
+- id: "Fetching source" 
   name: gcr.io/cloud-builders/gcloud
   args:
     - source
     - repos
     - clone 
     - moderntrade-common-util
-- id: "Building mtapputil and vatcps"
+- id: "Building Artifact"
   name: gcr.io/cloud-builders/mvn
   entrypoint: bash
   args:
@@ -14,30 +14,48 @@ steps:
     - |
       mvn -f /workspace/moderntrade-common-util/pom.xml clean install 
       mvn clean install
-- id: "Deploying into  mt-application-srv"
+- id: "Deploying into VM"
   name: gcr.io/cloud-builders/gcloud
   args:
     - compute
     - scp
-    - target/vatcps.war
-    - mt-application-srv:/home/sftp_user
-    - --zone=asia-south1-a
-    - --impersonate-service-account=$_SERVICE_ACCOUNT_EMA
-- id: "Restarting ${_DEV_APP_VM}"
+    - target/$_ARTIFACT_NAME
+    - $_VM_NAME:/home/sftp_user
+    - --zone=$_VM_ZONE
+    - --impersonate-service-account=$_SERVICE_ACCOUNT_EMAIL
+- id: "Restarting the service in VM"
   name: gcr.io/cloud-builders/gcloud
   entrypoint: bash
   args:
     - -c
     - |
-     gcloud compute instances stop  mt-application-srv
-     gcloud compute instances start  mt-application-srv
-- id: "Creating Image from ${_DEV_APP_VM}"
+      gcloud compute ssh $_VM_NAME --zone=$_VM_ZONE --command="kill -9 `ps -ef | grep 'java -jar $_ARTIFACT_NAME' | head -1 | awk '{print $2}'`;nohup java -jar $_ARTIFACT_NAME > $_ARTIFACT_LOG_FILE_NAME &"
+- id: "Creating Image"
   name: gcr.io/cloud-builders/gcloud
   entrypoint: bash
   args:
     - -c
     -  |
-     current_date=`date '+%Y_%m_%d`
-     new_image=`echo $_DEV_APP_VM-image-v$current_date`
-     echo $new_image > /workspace/new_image_name.txt
-     gcloud compute images create $new_image --source-disk=$_DEV_APP_VM --source-disk-zone=asia-south1-a --storage-location=asia-south1
+       current_date=`date '+%Y-%m-%d-%H%M%S'`
+       new_image=`echo $_VM_NAME-image-v$current_date`
+       echo $new_image > /workspace/new_image_name.txt
+       gcloud compute images create $new_image --source-disk=$_VM_NAME --source-disk-zone=$_VM_ZONE --storage-location=$_IMAGE_REGION --force
+- id: "Creating Template"
+  name: gcr.io/cloud-builders/gcloud
+  entrypoint: bash
+  args:
+    - -c
+    -  |
+       current_date=`date '+%Y-%m-%d-%H%M%S'`
+       new_image=`cat /workspace/new_image_name.txt`
+       new_template=`echo $_VM_NAME-template-v$current_date`
+       echo $new_template > /workspace/new_template.txt
+       gcloud beta compute instance-templates create $new_template --machine-type=$_MACHINE_TYPE --subnet=projects/modern-trade-292305/regions/asia-south1/subnetworks/dev-subnet-1 --no-address --metadata=startup-script=\#\!\ /bin/bash$'\n'nohup\ java\ -jar\ /home/appuser/mtappgateway.jar\ \>\ mtappgateway.log\ \&$'\n'nohup\ java\ -jar\ /home/appuser/$_ARTIFACT_NAME\ \>\ vatcps.log\ \&$'\n'nohup\ java\ -jar\ /home/appuser/procolaunch.war\ \>\ procolaunch.log\ \& --maintenance-policy=MIGRATE --service-account=177858875177-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --region=$_IMAGE_REGION --tags=$_TAG_NAME --image=$new_image --image-project=$PROJECT_ID --boot-disk-size=100GB --boot-disk-type=pd-standard --boot-disk-device-name=$new_template --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any
+- id: "Rolling out update to  MIG"
+  name: gcr.io/cloud-builders/gcloud
+  entrypoint: bash
+  args:
+    - -c
+    -  |
+       new_template=`cat /workspace/new_template.txt`
+       gcloud compute instance-groups managed rolling-action start-update $_MIG_GRP_NAME --version=template=$new_template --zone=$_VM_ZONE
