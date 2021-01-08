@@ -6,7 +6,7 @@ steps:
     - repos
     - clone 
     - moderntrade-common-util
-- id: "Building Artifacts"
+- id: "Building Artifact"
   name: gcr.io/cloud-builders/mvn
   entrypoint: bash
   args:
