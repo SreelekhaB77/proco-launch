@@ -29,4 +29,4 @@ steps:
   args:
     - -c
     - |
-      gcloud compute ssh $_VM_NAME --zone=$_VM_ZONE --command="kill -9 `ps -ef | grep 'java -jar procolaunch.war' | head -1 | awk '{print $2}'`;nohup java -jar procolaunch.war > procolaunch.log &"
+      gcloud compute ssh $_VM_NAME --zone=$_VM_ZONE --command="kill -9 `ps -ef | grep 'java -jar $_ARTIFACT_NAME' | head -1 | awk '{print $2}'`;nohup java -jar $_ARTIFACT_NAME > $_ARTIFACT_LOG_FILE_NAME &"
