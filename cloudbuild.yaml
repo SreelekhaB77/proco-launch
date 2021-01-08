@@ -1,40 +1,32 @@
 steps:
-- id: "Fetching mtapputil" 
+- id: "Fetching source" 
   name: gcr.io/cloud-builders/gcloud
   args:
     - source
     - repos
     - clone 
     - moderntrade-common-util
-- id: "Building mtapputil and vatcps"
+- id: "Building Artifacts"
   name: gcr.io/cloud-builders/mvn
   entrypoint: bash
   args:
     - -c
-    - |
-      mvn -f /workspace/moderntrade-common-util/pom.xml clean install 
+    - | 
+      mvn -f /workspace/moderntrade-common-util/pom.xml clean install
       mvn clean install
-- id: "Deploying vatcps into ${_JUMP_STAGING_VM}"
+- id: "Deploying into VM"
   name: gcr.io/cloud-builders/gcloud
   args:
     - compute
     - scp
-    - target/vatcps.war
-    - $_JUMP_STAGING_VM:/tmp
-    - --zone=$_JUMP_STAGING_VM_ZONE
-#- id: "Restarting ${_JUMP_STAGING_VM}"
-#  name: gcr.io/cloud-builders/gcloud
-#  entrypoint: bash
-#  args:
-#    - -c
-#    - |
-#     gcloud compute instances stop $_JUMP_STAGING_VM
-#     gcloud compute instances start $_JUMP_STAGING_VM
-#- id: "Restarting ${_STAGING_VM}"
-#  name: gcr.io/cloud-builders/gcloud
-#  entrypoint: bash
-#  args:
-#    - -c
-#    - |
-#     gcloud compute instances stop $_STAGING_VM
-#     gcloud compute instances start $_STAGING_VM 
+    - target/$_ARTIFACT_NAME
+    - $_VM_NAME:/home/appuser
+    - --zone=$_VM_ZONE
+    - --impersonate-service-account=$_SERVICE_ACCOUNT_EMAIL
+- id: "Restarting the service in VM"
+  name: gcr.io/cloud-builders/gcloud
+  entrypoint: bash
+  args:
+    - -c
+    - |
+      gcloud compute ssh $_VM_NAME --zone=$_VM_ZONE --command="kill -9 `ps -ef | grep 'java -jar procolaunch.war' | head -1 | awk '{print $2}'`;nohup java -jar procolaunch.war > procolaunch.log &"
