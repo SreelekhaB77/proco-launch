@@ -276,7 +276,7 @@
 											 <input type="button" value="Previous" class="btn btn-secondary nxtclassification previousdp" id="dpprevlnchBuild" style="float: left;" />
 											<!--   <button type="button" class="btn col-md-2 rightBtn"><span class="glyphicon glyphicon-arrow-down" style="color:yellow"></span>  Download</button> -->
 											<form id="dpdownloadbuildbasepck" method="post">
-												<button type="button" class="btn col-md-2 rightBtn"
+												<button type="button" class="btn rightBtn"
 													onClick="javascript: dpdownloadLaunchBasepackTemplate();">
 													<span class="glyphicon glyphicon-arrow-down"
 														style="color: yellow"></span>Download launch pack template
