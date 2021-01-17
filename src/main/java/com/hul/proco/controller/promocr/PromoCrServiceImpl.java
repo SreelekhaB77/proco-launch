@@ -52,6 +52,12 @@ public class PromoCrServiceImpl implements PromoCrService {
 	public List<String> getAllBasepacks() {
 		return promoCrDAO.getAllBasepacks();
 	}
+
+	//Sarin Changes Performance
+	@Override
+	public List<List<String>> getAllProductMaster() {
+		return promoCrDAO.getAllProductMaster();
+	}
 	
 	
 }

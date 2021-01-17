@@ -68,5 +68,7 @@ public interface CreatePromoService {
 	public List<String> getClusterOnCustomerList(List<String> customerList);
 
 	public List<String> getCustomerChainL1ForLaunch();
+	
+	public List<List<String>> getPromoDetails();  //Sarin Changes Performance
 
 }

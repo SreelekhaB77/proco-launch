@@ -273,6 +273,7 @@ public class DisaggregationDAOImpl implements DisaggregationDAO {
 		Set<String> yearSet = new HashSet<String>();
 		AddDepotBean addDepotBean = new AddDepotBean();
 		boolean isDepotAdded = false;
+		long startTime = System.currentTimeMillis();
 		try {
 			for (int pi = 0; pi < promoId.length; pi++) {
 				totalOfDepot = 0;
@@ -539,6 +540,8 @@ public class DisaggregationDAOImpl implements DisaggregationDAO {
 					}
 				}
 			}
+			long endForTime = System.currentTimeMillis();
+			logger.info("duration of for loop PromoDisaggregation: "+(endForTime-startTime));
 			if (!res1.equals("")) {
 				res1 = "Failed to disaggregate " + res1 + " promos. No sales data.";
 			}
@@ -554,12 +557,17 @@ public class DisaggregationDAOImpl implements DisaggregationDAO {
 				res = disaggregatePromosL2(promoId, mocs, userId);
 			}
 			if (res.equals("")) {
+				long startTimeSave = System.currentTimeMillis();
 				for (int i = 0; i < promoId.length; i++) {
 					//createPromoDAOImpl.saveStatusInStatusTracker(promoId[0], 4, "", userId);
 					String PromoIdBasePack[]= promoId[i].split(",");
 					createPromoDAOImpl.saveStatusInStatusTracker(PromoIdBasePack[0], 4, "", userId,PromoIdBasePack[1]);
 				}
+				long endTimeSave = System.currentTimeMillis();
+				logger.info("duration of PromoDisaggregation Save: "+(endTimeSave-startTimeSave));
 			}
+			long endTime = System.currentTimeMillis();
+			logger.info("duration of PromoDisaggregation: "+(endTime-startTime));
 		} catch (Exception e) {
 			logger.debug("Exception: ", e);
 			return e.getMessage();
