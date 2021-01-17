@@ -70,25 +70,25 @@
 
 							<li role="presentation"
 								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
-								<a href="http://localhost:8083/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
+								<a href="https://vat.hulcd.com/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Launch Plannning</div>
 							</a>
 							</li>
 							<li role="presentation"
 								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-active">
-								<a href="http://localhost:8083/VisibilityAssetTracker/getAllLaunchData.htm"> <!-- <div class="launch-icon"></div> -->
+								<a href="https://vat.hulcd.com/VisibilityAssetTracker/getAllLaunchData.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Edit & Approve</div>
 							</a>
 							</li>
 							<li role="presentation"
 								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
-								<a href="http://localhost:8083/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
+								<a href="https://vat.hulcd.com/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Performance</div>
 							</a>
 							</li>
 							<li role="presentation"
 								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
-								<a href="http://localhost:8083/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
+								<a href="https://vat.hulcd.com/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Timelines</div>
 							</a>
 							</li>
