@@ -324,7 +324,7 @@ text-align: left;
    
 }
 .promo-disagg-bg {
-	background: #3B5999;
+	background: #035597 !important;
 }
 
 .promo-collab-bg {
@@ -361,7 +361,7 @@ text-align: left;
 }
 
 .promo-disagg-txt-bg {
-	background: #3B5999;
+	background: #035597 !important;
 }
 
 .promo-collab-txt-bg {
@@ -1642,8 +1642,8 @@ span.comboTreeItemTitle {
 /* New MODAL styles */
 
 #ezAlerts-header button, .modal-header button {
-	color: #fff;
-	opacity: 1;
+	color: #000;
+    opacity: 0.5; 
 }
 
 #ezAlerts-footer button {

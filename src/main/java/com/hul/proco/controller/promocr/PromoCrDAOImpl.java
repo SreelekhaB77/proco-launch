@@ -348,7 +348,7 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 		List<String> catList = new ArrayList<>();
 		try {
 			Query query = sessionFactory.getCurrentSession()
-					.createNativeQuery("SELECT DISTINCT(CATEGORY) FROM TBL_PROCO_PRODUCT_MASTER WHERE ACTIVE = 1 ORDER BY CATEGORY");
+					.createNativeQuery("SELECT CATEGORY FROM TBL_PROCO_PRODUCT_MASTER WHERE ACTIVE = 1 GROUP BY CATEGORY ORDER BY CATEGORY");
 			catList = query.list();
 		} catch (Exception ex) {
 			logger.debug("Exception: ", ex);
@@ -380,6 +380,40 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 			Query query = sessionFactory.getCurrentSession()
 					.createNativeQuery("SELECT REPLACE ( BASEPACK_DESC, '''', '') FROM TBL_PROCO_PRODUCT_MASTER WHERE ACTIVE = 1");
 			list = query.list();
+		} catch (Exception ex) {
+			logger.debug("Exception: ", ex);
+			return null;
+		}
+		return list;
+	}
+	
+	//Sarin Changes Performance
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<List<String>> getAllProductMaster() {
+		List<List<String>> list = new ArrayList<List<String>>();
+		//List<String> listProductMaster = null;
+		List<String> listCategory = null;
+		List<String> listBrand = null;
+		List<String> listBasepack = null;
+		String qryCategory = "SELECT CATEGORY FROM (SELECT ROW_NUMBER() OVER (ORDER BY CATEGORY) AS ROW_NO, CATEGORY FROM TBL_PROCO_PRODUCT_MASTER WHERE ACTIVE = 1 GROUP BY CATEGORY) A";
+		String qryBrand = "SELECT BRAND FROM (SELECT ROW_NUMBER() OVER (ORDER BY BRAND) AS ROW_NO, BRAND FROM TBL_PROCO_PRODUCT_MASTER WHERE ACTIVE = 1 GROUP BY BRAND) A";
+		String qryBasepack = "SELECT BASEPACK_DESC FROM (SELECT ROW_NUMBER() OVER (ORDER BY BASEPACK_DESC) AS ROW_NO, REPLACE(BASEPACK_DESC, '''', '') AS BASEPACK_DESC FROM TBL_PROCO_PRODUCT_MASTER WHERE ACTIVE = 1) A";
+		Query queryPM = null;
+		try {
+			queryPM = sessionFactory.getCurrentSession().createNativeQuery(qryCategory);
+			listCategory = queryPM.list();
+			list.add(0, listCategory);
+			
+			queryPM = sessionFactory.getCurrentSession().createNativeQuery(qryBrand);
+			listBrand = queryPM.list();
+			list.add(1, listBrand);
+			
+			queryPM = sessionFactory.getCurrentSession().createNativeQuery(qryBasepack);
+			listBasepack = queryPM.list();
+			list.add(2, listBasepack);
+			
+			
 		} catch (Exception ex) {
 			logger.debug("Exception: ", ex);
 			return null;

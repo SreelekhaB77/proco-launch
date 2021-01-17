@@ -320,11 +320,18 @@ public class ProcoMeasureResportExport  extends AbstractXlsView {
 				//Resource resource = rsLoader.getResource("file:/resources/images/proco/signature.png");
 		        //InputStream inputStream = resource.getInputStream();
 				
+		        
+
+
 				 InputStream inputStream;
-				 inputStream = getServletContext().getResourceAsStream("/resources/images/proco/signature.png");
+				 inputStream = getServletContext().getResourceAsStream("/resources/images/proco/signature.png");				
+				 //inputStream = this.getClass().getResourceAsStream("/assets/images/proco/signature.png");
+
+
 				
 				   //Get the contents of an InputStream as a byte[].
-				   byte[] bytes = null; //= IOUtils.toByteArray(inputStream);
+				   //byte[] bytes = IOUtils.toByteArray(inputStream);
+				 	byte[] bytes;
 				   //Adds a picture to the workbook
 				   //int pictureIdx = workbook.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
 				   //close the input stream
