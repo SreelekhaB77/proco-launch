@@ -63,19 +63,19 @@
 					
 					<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 proco-tracker-active"><a
-							href="http://34.120.128.205/VisibilityAssetTracker/promoStatusTracker.htm">
+							href="http://localhost:8083/VisibilityAssetTracker/promoStatusTracker.htm">
 								<div class="proco-tracker-icon"></div>
 								<div class="tab-label-proco-create-active OpenSans-font">Promo Status Tracker</div>
 						</a></li>
 						
 						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="http://34.120.128.205/VisibilityAssetTracker/promoDeletion.htm">
+							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
 						
 						  <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 promo-lib-bg">
-							<a href="http://34.120.128.205/VisibilityAssetTracker/ProcoMeasureReportUploadPage.htm" id="measHref" >
+							<a href="http://localhost:8083/VisibilityAssetTracker/ProcoMeasureReportUploadPage.htm" id="measHref" >
 								<div class="proco-Signops-icon"></div>
 								<div class="tab-label-proco-Signops-inactive OpenSans-font">Upload Measure Report</div>
 							</a>
@@ -108,7 +108,7 @@
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${errorMsg}"></c:out>
 				<c:if test="${FILE_STATUS=='ERROR_FILE'}">
-					<a href="http://34.120.128.205/VisibilityAssetTracker/downloadPromotionEditErrorFile.htm" id="downloadTempFileLink">Click
+					<a href="http://localhost:8083/VisibilityAssetTracker/downloadPromotionEditErrorFile.htm" id="downloadTempFileLink">Click
 						here to Download Error File:</a>
 
 				</c:if>
@@ -140,7 +140,7 @@
 			</div>
 		<div class="proco-creation form-horizontal">
 			<input type="hidden" id="roleId" value="${roleId}" />
-			<!-- <div class="promo-back"><a href="http://34.120.128.205/VisibilityAssetTracker/procoHome.htm"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Listing</div> -->
+			<!-- <div class="promo-back"><a href="http://localhost:8083/VisibilityAssetTracker/procoHome.htm"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Listing</div> -->
 			<div class="promo-details" style="padding:10px;"><span style="color:#fff;font-weight:700;">PROMO STATUS TRACKER</span>
 				<!-- <span class="promo-detail-txt"><b>SELECT PROMO LISTING</b></span> <span
 					class="pull-right promo-uom">
@@ -160,7 +160,7 @@
 				</span>
 				<div class="clearfix"></div> -->
 			</div>
-		<form action="http://34.120.128.205/VisibilityAssetTracker/downloadPromoStatusTracker.htm" method="POST" enctype="multipart/form-data" id="download">
+		<form action="http://localhost:8083/VisibilityAssetTracker/downloadPromoStatusTracker.htm" method="POST" enctype="multipart/form-data" id="download">
 			<div class="promo-form-details proco-tracker-form">
 				<div class="col-md-4">
 					<div class="form-group">
@@ -376,7 +376,7 @@
 											<i class="fa fa-download" aria-hidden="true"></i>
 										</div>
 	
-										<form style="display: inline-block;" action="http://34.120.128.205/VisibilityAssetTracker/downloadCustomerPortalPromoStatusTracker.htm" method="post">
+										<form style="display: inline-block;" action="http://localhost:8083/VisibilityAssetTracker/downloadCustomerPortalPromoStatusTracker.htm" method="post">
 											<input type="submit" class="btn btn-primary" value="Download" ></input>
 										</form>
 								</div>

@@ -34,9 +34,9 @@
 						<span class="profile-name">WELCOME <c:out value="${username}"></c:out></span> <strong class="caret"></strong></a>
 					<div class="dropdown-menu user-info">
 						<ul>
-							<li><a href="http://34.120.128.205/VisibilityAssetTracker/tmeEditPassword.htm" data-toggle="modal" class="modelClick"
+							<li><a href="http://localhost:8083/VisibilityAssetTracker/tmeEditPassword.htm" data-toggle="modal" class="modelClick"
 								data-target="#change_pswd">CHANGE PASSWORD</a></li>
-							<li><a href="http://34.120.128.205/VisibilityAssetTracker/logoutForm.htm" class="modelClick">LOGOUT</a></li>
+							<li><a href="http://localhost:8083/VisibilityAssetTracker/logoutForm.htm" class="modelClick">LOGOUT</a></li>
 						</ul>
 					</div></li>
 			</ul>
@@ -44,22 +44,22 @@
 	        	 <c:if test="${roleId eq 'KAM'}">
 	          
 	                 <div class="user-name pull-left">
-	                    <a href="http://34.120.128.205/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" aria-hidden="true"></i></a>
+	                    <a href="http://localhost:8083/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" aria-hidden="true"></i></a>
 	                </div>
 	             </c:if> 
 		          <c:if test="${roleId eq 'NCMM'}">
 		           <div class="user-name pull-left">
-		                    <a href="http://34.120.128.205/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" aria-hidden="true"></i></a>
+		                    <a href="http://localhost:8083/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" aria-hidden="true"></i></a>
 		                </div>
 		          </c:if>
 		          <c:if test="${roleId eq 'TME'}">
 		           <div class="user-name pull-left">
-		                    <a href="http://34.120.128.205/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" aria-hidden="true"></i></a>
+		                    <a href="http://localhost:8083/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" aria-hidden="true"></i></a>
 		                </div>
 		          </c:if>
 		          <c:if test="${roleId eq 'COE'}">
 		           <div class="user-name pull-left">
-		                    <a href="http://34.120.128.205/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" aria-hidden="true"></i></a>
+		                    <a href="http://localhost:8083/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" aria-hidden="true"></i></a>
 		                </div>
 		          </c:if>
 		          
@@ -84,37 +84,37 @@
 				     
 				      <c:if test="${roleId eq 'TME'}">
 				      <div class="user-name home-cls">
-				                    <a href="http://34.120.128.205/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" style="color:#035597;" aria-hidden="true"></i></a>
+				                    <a href="http://localhost:8083/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" style="color:#035597;" aria-hidden="true"></i></a>
 				    		 </div>				          
 			          </c:if> 
 			          <c:if test="${roleId eq 'COE'}">
 			            <div class="user-name home-cls">
-				                    <a href="http://34.120.128.205/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" style="color:#035597;" aria-hidden="true"></i></a>
+				                    <a href="http://localhost:8083/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" style="color:#035597;" aria-hidden="true"></i></a>
 				    		 </div>		
 			          </c:if> 
 			           <c:if test="${roleId eq 'KAM'}">
 			             <div class="user-name home-cls">
-				                    <a href="http://34.120.128.205/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" style="color:#035597;" aria-hidden="true"></i></a>
+				                    <a href="http://localhost:8083/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" style="color:#035597;" aria-hidden="true"></i></a>
 				    		 </div>		
 			          </c:if> 
 			           <c:if test="${roleId eq 'DP'}">			          
 			                  <div class="user-name home-cls">
-				                    <a href="http://34.120.128.205/VisibilityAssetTracker/procoHome.htm"><i class="fa fa-home" style="color:#035597;" aria-hidden="true"></i></a>
+				                    <a href="http://localhost:8083/VisibilityAssetTracker/procoHome.htm"><i class="fa fa-home" style="color:#035597;" aria-hidden="true"></i></a>
 				    		 </div>		
 			          </c:if> 
 			           <c:if test="${roleId eq 'SC'}">
 			           <div class="user-name home-cls">
-				                    <a href="http://34.120.128.205/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" style="color:#035597;" aria-hidden="true"></i></a>
+				                    <a href="http://localhost:8083/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" style="color:#035597;" aria-hidden="true"></i></a>
 				    		 </div>		
 			          </c:if> 	
 			            <c:if test="${roleId eq 'NSCM'}">
 			           <div class="user-name home-cls">
-				                    <a href="http://34.120.128.205/VisibilityAssetTracker/procoHome.htm"><i class="fa fa-home" style="color:#035597;" aria-hidden="true"></i></a>
+				                    <a href="http://localhost:8083/VisibilityAssetTracker/procoHome.htm"><i class="fa fa-home" style="color:#035597;" aria-hidden="true"></i></a>
 				    		 </div>		
 			          </c:if> 	
 			           <c:if test="${roleId eq 'NCMM'}">
 			           <div class="user-name home-cls">
-				                    <a href="http://34.120.128.205/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" style="color:#035597;" aria-hidden="true"></i></a>
+				                    <a href="http://localhost:8083/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" style="color:#035597;" aria-hidden="true"></i></a>
 				    		 </div>		
 			          </c:if> 			                
 	    	     	</div>
@@ -125,9 +125,9 @@
 								value="${username}"></c:out></span> <strong class="fa fa-angle-down"></strong></a>
 					<div class="dropdown-menu user-info">
 						<ul>
-							<li><a href="http://34.120.128.205/VisibilityAssetTracker/tmeEditPassword.htm" data-toggle="modal" class="modelClick"
+							<li><a href="http://localhost:8083/VisibilityAssetTracker/tmeEditPassword.htm" data-toggle="modal" class="modelClick"
 								data-target="#change_pswd">CHANGE PASSWORD</a></li>
-							<li><a href="http://34.120.128.205/VisibilityAssetTracker/logoutForm.htm" class="modelClick">LOGOUT</a></li>
+							<li><a href="http://localhost:8083/VisibilityAssetTracker/logoutForm.htm" class="modelClick">LOGOUT</a></li>
 						</ul>
 					</div>
 				</li>
