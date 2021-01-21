@@ -61,7 +61,7 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 		
 		if (null == request.getSession(false)) {
 			//response.sendRedirect("/jsp/404/errorPage.jsp");
-			response.sendRedirect("http://"+loadbalancerurl+"/VisibilityAssetTracker/assets/js/errorPage.jsp");
+			response.sendRedirect("https://"+loadbalancerurl+"/VisibilityAssetTracker/assets/js/errorPage.jsp");
 			return false;
 		}
 		

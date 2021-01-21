@@ -164,11 +164,15 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 			if (searchParameter != null && searchParameter.length() > 0) {
 				promoQuery += " AND UCASE(A.PROMO_ID) LIKE UCASE('%" + searchParameter + "%')";
 			}
+			//Sarin Changes Performances
+			promoQuery += " GROUP BY A.PROMO_ID,A.P1_BASEPACK,A.OFFER_DESC,A.OFFER_TYPE,A.OFFER_MODALITY,A.GEOGRAPHY,A.QUANTITY,A.UOM,A.OFFER_VALUE,A.MOC,A.CUSTOMER_CHAIN_L1,A.KITTING_VALUE,E.STATUS,DATE_FORMAT(A.START_DATE,'%d/%m/%Y'),DATE_FORMAT(A.END_DATE,'%d/%m/%Y'),A.CUSTOMER_CHAIN_L2, D.REMARK,A.REASON,A.REMARK,DATE_FORMAT(D.CHANGE_DATE,'%d/%m/%Y'),A.ORIGINAL_ID,A.CHANGES_MADE,D.USER_ID,A.UPDATE_STAMP,A.INVESTMENT_TYPE,A.SOL_CODE,A.SOL_CODE_DESC,A.PROMOTION_MECHANICS,A.SOL_CODE_STATUS ";
 			if (pageDisplayLength == 0) {
-				promoQuery += " ) AS PROMO_TEMP ORDER BY PROMO_TEMP.UPDATE_STAMP ASC";
+				//promoQuery += " ) AS PROMO_TEMP ORDER BY PROMO_TEMP.UPDATE_STAMP ASC";
+				promoQuery += " ) AS PROMO_TEMP ";
 			} else {
 				promoQuery += " ) AS PROMO_TEMP WHERE ROW_NEXT BETWEEN " + pageDisplayStart + " AND "
-						+ pageDisplayLength + "" + " ORDER BY PROMO_TEMP.UPDATE_STAMP ASC";
+						//+ pageDisplayLength + "" + " ORDER BY PROMO_TEMP.UPDATE_STAMP ASC";
+						+ pageDisplayLength + "";
 			}
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQuery);
 			List<Object[]> list = query.list();

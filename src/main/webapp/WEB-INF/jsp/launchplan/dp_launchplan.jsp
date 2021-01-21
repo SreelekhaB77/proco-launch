@@ -65,12 +65,12 @@
 						<ul class="nav nav-pills">
 
 							<li role="presentation" class="active col-md-3 col-sm-8 col-xs-12 launch-icon-active">
-								<a href="http://localhost:8083/VisibilityAssetTracker/getAllCompletedLaunchDataDp.htm"> <!-- <div class="launch-icon"></div> -->
+								<a href="https://vat.hulcd.com/VisibilityAssetTracker/getAllCompletedLaunchDataDp.htm"> <!-- <div class="launch-icon"></div> -->
 										<div class="tab-label-launch">Launch Plannning</div>
 								</a>
 							</li>
 							<li role="presentation" class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
-								<a href="http://localhost:8083/VisibilityAssetTracker/getAllCompletedLaunchDataDp.htm"> <!-- <div class="launch-icon"></div> -->
+								<a href="https://vat.hulcd.com/VisibilityAssetTracker/getAllCompletedLaunchDataDp.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Performance</div>
 								</a>
 							</li>
@@ -276,8 +276,7 @@
 											 <input type="button" value="Previous" class="btn btn-secondary nxtclassification previousdp" id="dpprevlnchBuild" style="float: left;" />
 											<!--   <button type="button" class="btn col-md-2 rightBtn"><span class="glyphicon glyphicon-arrow-down" style="color:yellow"></span>  Download</button> -->
 											<form id="dpdownloadbuildbasepck" method="post">
-												<button type="button" class="btn col-md-2 rightBtn"
-													onClick="javascript: dpdownloadLaunchBasepackTemplate();">
+												<button type="button" class="btn rightBtn" onClick="javascript: dpdownloadLaunchBasepackTemplate();">
 													<span class="glyphicon glyphicon-arrow-down"
 														style="color: yellow"></span>Download launch pack template
 												</button>

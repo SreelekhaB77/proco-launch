@@ -439,7 +439,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 		List<String> liReturn = null;
 		try {
 			Query queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-					"SELECT DISTINCT TOWN_CLASSIFICATION FROM TBL_VAT_COMM_OUTLET_MASTER where ACCOUNT_NAME != ''");
+					"SELECT TOWN_CLASSIFICATION FROM TBL_VAT_COMM_OUTLET_MASTER where ACCOUNT_NAME != '' GROUP BY TOWN_CLASSIFICATION");
 			liReturn = queryToGetCustomeChainL1.list();
 		} catch (Exception ex) {
 			logger.debug("Exception :", ex);
