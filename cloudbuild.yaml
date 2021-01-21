@@ -14,7 +14,7 @@ steps:
     - |
       mvn -f /workspace/moderntrade-common-util/pom.xml clean install 
       mvn clean install
-- id: "Deploying into VM"
+- id: "Deploying into dev VM"
   name: gcr.io/cloud-builders/gcloud
   args:
     - compute
@@ -23,7 +23,7 @@ steps:
     - $_VM_NAME:/home/sftp_user
     - --zone=$_VM_ZONE
     - --impersonate-service-account=$_SERVICE_ACCOUNT_EMAIL
-- id: "Restarting the service in VM"
+- id: "Restarting the service in dev VM"
   name: gcr.io/cloud-builders/gcloud
   entrypoint: bash
   args:
