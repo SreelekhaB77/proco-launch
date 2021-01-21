@@ -64,4 +64,6 @@ public interface CreatePromoDAO {
 	public List<String> getRegionOnCustomerList(List<String> customerList);
 
 	List<String> getCustomerChainL1ForLaunch();
+
+	public List<List<String>> getPromoDetails();
 }

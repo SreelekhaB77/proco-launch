@@ -282,4 +282,11 @@ public class CreatePromoServiceImpl implements CreatePromoService {
 		return createPromoDAO.getCustomerChainL1ForLaunch();
 	}
 
+	//Sarin Changes Performance
+	@Override
+	@Transactional
+	public List<List<String>> getPromoDetails() {
+		return createPromoDAO.getPromoDetails();
+	}
+
 }
