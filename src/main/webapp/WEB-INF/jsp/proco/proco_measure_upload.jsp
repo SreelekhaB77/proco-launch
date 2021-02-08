@@ -69,19 +69,19 @@ footer {
 					<ul class="nav nav-pills">
 					
 					<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 proco-listing-inactive">
-						<a href="http://34.120.182.42/VisibilityAssetTracker/promoStatusTracker.htm">
+						<a href="http://localhost:8083/VisibilityAssetTracker/promoStatusTracker.htm">
 								<div class="proco-listing-icon"></div>
 								<div class="tab-label-proco-status-inactive OpenSans-font">Promo Status Tracker</div>
 						</a></li>
 						
 						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 listing">
-						<a href="http://34.120.182.42/VisibilityAssetTracker/promoDeletion.htm" style="margin-top: 10px;margin-left: -23px;">
+						<a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm" style="margin-top: 10px;margin-left: -23px;">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
 						
 						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-lib-bg-active">
-							<a href="http://34.120.182.42/VisibilityAssetTracker/ProcoMeasureReportUploadPage.htm" style="margin-top: 10px;">
+							<a href="http://localhost:8083/VisibilityAssetTracker/ProcoMeasureReportUploadPage.htm" style="margin-top: 10px;">
 								<div class="proco-Signops-icon"></div>
 								<div class="tab-label-proco-Signops-active OpenSans-font">Upload Measure Report</div>
 							</a>
@@ -113,7 +113,7 @@ footer {
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${errorMsg}"></c:out>
 				<c:if test="${FILE_STATUS=='ERROR_FILE'}">
-					<a href="http://34.120.182.42/VisibilityAssetTracker/downloadPromotionEditErrorFile.htm" id="downloadTempFileLink">Click
+					<a href="http://localhost:8083/VisibilityAssetTracker/downloadPromotionEditErrorFile.htm" id="downloadTempFileLink">Click
 						here to Download Error File:</a>
 
 				</c:if>
@@ -143,7 +143,7 @@ footer {
 		 <div class="promo-measure-upload">PROCO MEASURE REPORT UPLOAD</div>
 							<div class="row">
 								<div class="col-md-6 col-sm-6 ddd">
-									<form id="coeStatusMeasFileUpload" class="form-horizontal" action="http://34.120.182.42/VisibilityAssetTracker/uploadProcoMeasureReport.htm" method="post" enctype="multipart/form-data" name="coeStatusFileUpload">
+									<form id="coeStatusMeasFileUpload" class="form-horizontal" action="http://localhost:8083/VisibilityAssetTracker/uploadProcoMeasureReport.htm" method="post" enctype="multipart/form-data" name="coeStatusFileUpload">
 		
 									<div class="launchupload-parent">
 										<div class="proco-measure-upload-wrapper">
@@ -162,14 +162,14 @@ footer {
 													<input id="uploadmeasscre" name="file" type="file" class="file">
 												</div>
 												<input class="validate_upload btn marginT10 new-btn-primary" type="submit" id="btnSubmitBasePack" value="Upload" />
-												<a href="http://34.120.182.42/VisibilityAssetTracker/downloadSampleMeasureReport.htm" class="validate_upload btn marginT10 new-btn-download" id="btnSubmitBasePack">Promo Measure Template</a>
+												<a href="http://localhost:8083/VisibilityAssetTracker/downloadSampleMeasureReport.htm" class="validate_upload btn marginT10 new-btn-download" id="btnSubmitBasePack">Promo Measure Template</a>
 											</div>
 										</div>
 									</div>
 								</form> 
 							</div>
 							<div class="col-md-6 col-sm-6 ddd">
-							 	<form style="margin-top:45px;" action="http://34.120.182.42/VisibilityAssetTracker/downloadMeasureReport.htm" id="download-measure-report" method="POST" onsubmit="downloadMeasureReport(event)">
+							 	<form style="margin-top:45px;" action="http://localhost:8083/VisibilityAssetTracker/downloadMeasureReport.htm" id="download-measure-report" method="POST" onsubmit="downloadMeasureReport(event)">
 							 		<div class="launchupload-parent">
 										<div class="proco-measure-download-wrapper">
 											<h2 class="SEGOEUIL-font">Measure Report Download File</h2>
@@ -191,7 +191,7 @@ footer {
 					
 					
 					
-	<%-- <form:form action="http://34.120.182.42/VisibilityAssetTracker/uploadProcoMeasureReport.htm" id="coeStatusMeasFileUpload"
+	<%-- <form:form action="http://localhost:8083/VisibilityAssetTracker/uploadProcoMeasureReport.htm" id="coeStatusMeasFileUpload"
 				method="POST" modelAttribute="VolumeUploadBean"
 				enctype="multipart/form-data" onsubmit="return uploadMeasureValidation()">
 			<div class="promo-upload">PROMO MEASURE UPLOAD</div>

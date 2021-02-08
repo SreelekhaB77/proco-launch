@@ -75,25 +75,25 @@
 
 						<li role="presentation"
 							class="active col-md-3 col-sm-8 col-xs-12 launch-icon-active">
-							<a href="http://34.120.182.42/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
+							<a href="http://localhost:8083/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
 								<div class="tab-label-launch">Launch Plannning</div>
 						</a>
 						</li>
 						<li role="presentation"
 							class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
-							<a href="http://34.120.182.42/VisibilityAssetTracker/getAllLaunchData.htm"> <!-- <div class="launch-icon"></div> -->
+							<a href="http://localhost:8083/VisibilityAssetTracker/getAllLaunchData.htm"> <!-- <div class="launch-icon"></div> -->
 								<div class="tab-label-launch">Edit & Approve</div>
 						</a>
 						</li>
 						<li role="presentation"
 							class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
-							<a href="http://34.120.182.42/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
+							<a href="http://localhost:8083/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
 								<div class="tab-label-launch">Performance</div>
 						</a>
 						</li>
 						<li role="presentation"
 							class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
-							<a href="http://34.120.182.42/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
+							<a href="http://localhost:8083/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
 								<div class="tab-label-launch">Timelines</div>
 						</a>
 						</li>
@@ -186,7 +186,7 @@
 						aria-labelledby="headingOne" aria-expanded="false"
 						style="height: 0px; display: block;">
 						<div class="card-block">
-							<form action="http://34.120.182.42/VisibilityAssetTracker/saveLaunchDetails.htm" method="POST"
+							<form action="http://localhost:8083/VisibilityAssetTracker/saveLaunchDetails.htm" method="POST"
 								enctype="multipart/form-data" id="tmeLaunchBean"
 								class="form-horizontal" name="tmeLaunchBean"
 								onClick="javascript: submitLaunchForm();">
@@ -1264,7 +1264,7 @@ function ajaxLoader(w, h) {
 
 		$.ajax({
             type: "POST",
-            url: "http://34.120.182.42/VisibilityAssetTracker/getSalesCatOnBasepack.htm",
+            url: "http://localhost:8083/VisibilityAssetTracker/getSalesCatOnBasepack.htm",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             beforeSend: function() {
@@ -1315,7 +1315,7 @@ function ajaxLoader(w, h) {
         					
         					$.ajax({
         			            type: "POST",
-        			            url: "http://34.120.182.42/VisibilityAssetTracker/getPsaCategory.htm?salesCategory=" +salesCat,
+        			            url: "http://localhost:8083/VisibilityAssetTracker/getPsaCategory.htm?salesCategory=" +salesCat,
         			            contentType: "application/json; charset=utf-8",
         			            dataType: "json",
         			            beforeSend: function() {
@@ -1339,7 +1339,7 @@ function ajaxLoader(w, h) {
         			                	var salesCatStr = encodeURIComponent(salesCatVal);
                 						$.ajax({
                 				            type: "POST",
-                				            url: "http://34.120.182.42/VisibilityAssetTracker/getBrandOnPsaCat.htm?psaCategory="+branvalStr+"&salesCategory="+salesCatStr,
+                				            url: "http://localhost:8083/VisibilityAssetTracker/getBrandOnPsaCat.htm?psaCategory="+branvalStr+"&salesCategory="+salesCatStr,
                 				            contentType: "application/json; charset=utf-8",
                 				            dataType: "json",
                 				            beforeSend: function() {
@@ -1585,7 +1585,7 @@ function ajaxLoader(w, h) {
 		var launchId = $("#dynamicLaunchId").val();
 		if(lenvisi > 0){                                   
 		$.ajax({
-		    url: 'http://34.120.182.42/VisibilityAssetTracker/getLaunchVisiPlan.htm?launchId='+launchId,
+		    url: 'http://localhost:8083/VisibilityAssetTracker/getLaunchVisiPlan.htm?launchId='+launchId,
 		    dataType: 'json',
 		    type: 'get',
 		    contentType: 'application/json',

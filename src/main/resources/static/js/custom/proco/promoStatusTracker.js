@@ -426,7 +426,7 @@ $(document).ready(function() {
 				            });
 				       
 				       
-				       //promoTable.columns.adjust().draw();  //Commented By Sarin
+				       promoTable.columns.adjust().draw();
 				       
 				       $('.filter-ref').on('keyup', function() {
 				    	   promoTable.columns(0).search(this.value).draw();
