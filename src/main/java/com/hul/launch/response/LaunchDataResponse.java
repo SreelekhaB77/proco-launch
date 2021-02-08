@@ -23,6 +23,7 @@ public class LaunchDataResponse {
 	private String launchFinalStatus;
 	private String launchMocKam;
 	private String launchSubmissionDate;
+	private String accountName;
 
 	public String getLaunchSubmissionDate() {
 		return launchSubmissionDate;
@@ -193,4 +194,14 @@ public class LaunchDataResponse {
 	public void setUpdatedDate(Date updatedDate) {
 		this.updatedDate = updatedDate;
 	}
+
+	public String getAccountName() {
+		return accountName;
+	}
+
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
+	}
+	
+	
 }

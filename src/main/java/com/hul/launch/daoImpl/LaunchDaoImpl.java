@@ -312,10 +312,19 @@ public class LaunchDaoImpl implements LaunchDao {
 							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' AND DATE(TRANSLATE('GHIJ-DE-AB', LAUNCH_DATE, 'ABCDEFGHIJ')) > NOW()");*/
 			
 			stmt = sessionImpl.connection().prepareStatement(
-					"SELECT LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE,"
+					/*"SELECT LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE,"
 							+ " CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,"
 							+ " CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE,LAUNCH_MOC,LAUNCH_SUBMISSION_DATE FROM TBL_LAUNCH_MASTER tlc WHERE"
-							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' ");
+							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' ");*/
+					
+					"SELECT tlc.LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE,"
+                    + " CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,"
+                    + " tlc.CREATED_BY, tlc.CREATED_DATE,tlc.UPDATED_BY, tlc.UPDATED_DATE,LAUNCH_MOC,LAUNCH_SUBMISSION_DATE,"
+                    + " GROUP_CONCAT(DISTINCT ACCOUNT_NAME) AS ACCOUNT_NAME"
+                    + " FROM TBL_LAUNCH_MASTER tlc,TBL_LAUNCH_BUILDUP_TEMP tlbt WHERE"
+                    + " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' AND tlbt.LAUNCH_ID=tlc.LAUNCH_ID");
+
+
 							//+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()");
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -339,6 +348,7 @@ public class LaunchDaoImpl implements LaunchDao {
 				launchDataResponse.setUpdatedDate(rs.getDate(16));
 				launchDataResponse.setLaunchMoc(rs.getString(17));
 				launchDataResponse.setLaunchSubmissionDate(rs.getString(18));
+				launchDataResponse.setAccountName(rs.getString(19));
 				listOfCompletedLaunch.add(launchDataResponse);
 			}
 		} catch (Exception ex) {
