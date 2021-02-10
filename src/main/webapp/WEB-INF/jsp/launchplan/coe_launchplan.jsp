@@ -168,7 +168,7 @@
 											         <td>${launch.launchMoc}</td>
 											         <td>${launch.createdDate}</td>
 											         <td>${launch.createdBy}</td>
-											         <td>${launch.accountName}</td>
+											         <td><textarea rows="3" cols="75">${launch.accountName}</textarea></td>
 											        
 											       </tr>
 											     </c:forEach>
