@@ -166,6 +166,22 @@
 							<div class="card-block">
 								<div class="child-table">
 									<div class="detail_table">
+									
+									<div class="col-md-3" style="margin-right: -11%;padding-top: 5px;margin-left: -14px;">						       
+											<label for="cars">Select MOC:</label>
+											<select name="moc" id="moc">
+											<option value="1">012020</option>
+											<option value="2">022020</option>
+											<option value="3">032020</option>
+											<option value="4">042020</option>
+											<option value="4">052020</option>
+											<option value="4">062020</option>
+											<option value="4">072020</option>
+											<option value="4">082020</option>
+											</select>
+										</div>
+									
+									
 										<table
 											class="table table-striped table-bordered table-responsive"
 											id="editDet" cellspacing="0" cellpadding="0"
