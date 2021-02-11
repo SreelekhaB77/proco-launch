@@ -171,6 +171,12 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 		return launchDaoKam.getLaunchAccounts(launchId, userId);
 
 	}
+	
+	@Override
+	@Transactional
+	public List<String> getAllMoc() {
+		return launchDaoKam.getAllMoc();
+	}
 
 	
 

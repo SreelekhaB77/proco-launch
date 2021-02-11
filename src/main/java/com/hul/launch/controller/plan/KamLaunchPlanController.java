@@ -97,12 +97,10 @@ public class KamLaunchPlanController {
 			String userId = (String) request.getSession().getAttribute("UserID");
 			listOfLaunch = launchServiceKam.getAllCompletedLaunchData(userId);
 			int  launchId =listOfLaunch.get(0).getLaunchId();
-			//kavitha retrviewing
-			LaunchDataResponse dataResponse = new LaunchDataResponse();
-			//dataResponse = launchServiceKam.requestChengeAccountByLaunchIdKam(launchId, userId);
-			listOfLaunch.add(dataResponse);
+			//Q1 sprint kavitha
+			List<String> kammoclist=launchServiceKam.getAllMoc();
+			model.addAttribute("kammoclist",kammoclist);
 			
-			//String accounts=launchServiceKam.requestChengeAccountByLaunchIdKam(launchId,userId);
 			//for display records
 			
 			

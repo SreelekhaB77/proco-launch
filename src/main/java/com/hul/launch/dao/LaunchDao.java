@@ -83,4 +83,6 @@ public interface LaunchDao {
 	String deleteAllNextPageData(String launchId, String currentPage, String userId);
 
 	String deleteAllKamData(String launchId);
+	
+	public List<String> getAllMoc();
 }

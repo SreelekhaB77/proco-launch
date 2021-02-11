@@ -133,7 +133,11 @@ public class TMELaunchPlanController {
 					throw new Exception(listOfLaunch.get(0).getError());
 				}
 			}
+			//Q1 sprint kavitha 2021
+			List<String> tmemoclist=launchService.getAllMoc();
+			model.addAttribute("tmemoclist",tmemoclist);
 			model.addAttribute("listOfLaunchData", listOfLaunch);
+			
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			ModelAndView modelAndView = new ModelAndView();
