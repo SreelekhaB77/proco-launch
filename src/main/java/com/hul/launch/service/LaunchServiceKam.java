@@ -17,6 +17,7 @@ import com.hul.launch.response.LaunchDataResponse;
 import com.hul.launch.response.LaunchFinalPlanResponse;
 import com.hul.launch.response.LaunchKamBasepackResponse;
 import com.hul.launch.response.LaunchMstnClearanceResponseKam;
+import com.hul.launch.response.StoreDetailsResponse;
 
 public interface LaunchServiceKam {
 
@@ -60,5 +61,10 @@ public interface LaunchServiceKam {
 	public List<LaunchMstnClearanceResponseKam> getMstnClearanceByLaunchIdKam(String launchId, String userId);
 
 	public List<ArrayList<String>> getUpdatedVisiFile(String launchId);
+	
+	public List<String> getLaunchAccounts(String launchId, String userId);
+	
+	
+	
 
 }

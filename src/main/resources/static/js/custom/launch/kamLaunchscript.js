@@ -110,7 +110,39 @@ $(document).ready(function() {
 	
 	// code for moc in change moc pop up
 	$(document).on( "click", "#mockamChange", function(){
+		//kavitha
+		var launchId=$('.kamLnchDetscr1:checked').val();
 		
+	    $('#successblock').hide();
+		 $.ajax({
+				type : "GET",
+				dataType: 'json',
+				//contentType : "application/json; charset=utf-8",
+				cache : false,
+				url : "getUpcomingLaunchMocByLaunchIdsKam.htm?launchId="+launchId,
+				success : function(data) {
+					console.log(data);
+					var accounts=data.responseData.lisOfAcc;
+					
+					var option ="<option value='select'>Select Account</option>";
+					for (var i = 0; i < accounts.length; i++) {
+					  option += "<option value='"+accounts[i] +"'>"+accounts[i]+"</option>"
+					}
+					console.log(option);
+					$("#paid-kamlaunch-acc").empty().append(option);
+					//alert(parsed);
+					/*var parsed = $.parseJSON(data);
+					if(parsed<=60){
+						$('#add-depot').modal('show');
+					}else{
+						$('#add-depot').modal('hide');
+						$("#createPromoForm").submit();
+					}*/
+				},
+				error : function(error) {
+					console.log(error)
+				}
+			});
 		//$('#kamMocremarks').val('');
 		var checked_field = $( "[name=editLaunchscr1KAMLaunch]:checked" );
 		var launchDate = "";
@@ -136,6 +168,7 @@ $(document).ready(function() {
             option += "<option value='"+lastMonth + "" + lastYear+"'>"+lastMonth + "" + lastYear+"</option>"
         }
 		$("#paid-kamlaunch-moc").empty().append(option);
+		
 	});
 	
 	
@@ -371,14 +404,21 @@ $(document).ready(function() {
 	
 // change request moc
 	function changeLaunchMoc() {
-	    
+	    //kavitha
 		// var kamlnchId = getkamlaunchId();
+		
+		var kamAcc = $('#paid-kamlaunch-acc').val();
 		var kamMocremarks = $('#kamMocremarks').val();
 		var kammoc = $('#paid-kamlaunch-moc').val();
 
+		
 		var kamNewRemark = $('#paid-kamlaunch-moc').val();
 		var kamlnchId = parseInt($( ".kamLnchDetscr1:checked" ).val());
-		if(kamMocremarks == ''){
+		if(kamAcc == ''){
+			$('#kamAccErrorMsg').show();
+			return false;
+		}
+		else if(kamMocremarks == ''){
 			$('#kamRemakErrorMsg').show();
 			return false;
 		}
@@ -387,6 +427,7 @@ $(document).ready(function() {
 			return false;
 		}
 		else{
+			$('#kamAccErrorMsg').hide();
 			$('#kamRemakErrorMsg').hide();
 			$('#kamRemakErrorMsgMoc').hide();
 	    $.ajax({
@@ -394,7 +435,7 @@ $(document).ready(function() {
 	        dataType: 'json',
 	        type: 'post',
 	        contentType: 'application/json',
-	        data: JSON.stringify( { "launchId": kamlnchId, "mocToChange" : kamNewRemark, "mocChangeRemark" : kamMocremarks } ),
+	        data: JSON.stringify( { "launchId": kamlnchId ,"mocAccount": kamAcc,"mocToChange" : kamNewRemark, "mocChangeRemark" : kamMocremarks } ),
 	        processData: false,
 	        beforeSend: function() {
 	            ajaxLoader(spinnerWidth, spinnerHeight);
@@ -422,6 +463,8 @@ $(document).ready(function() {
 	    });
 		}
 	}
+	
+	
 // reject launch
 	
 function rejectLaunch() {

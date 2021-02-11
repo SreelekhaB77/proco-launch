@@ -171,6 +171,24 @@
 										</div>
 
 										<div class="OpenSans-font">
+										
+										<div class="form-group">
+												<label for="downloadmoc" class="col-sm-4 control-label">Account:</label>
+												<div class="col-sm-6 offset-col-md-2">
+													<span id="#kamAccErrorMsg"
+													style="display: none; color: red; margin-left: 17px;">Please
+													select Account.</span>
+													<select type="text" class="form-control"
+														id="paid-kamlaunch-acc" name="Account">
+														<!-- <option value="Select">Select</option> -->
+														
+													</select>
+
+												</div>
+
+											</div>
+										
+										
 											<div class="form-group">
 												<label for="downloadmoc" class="col-sm-4 control-label">Moc:</label>
 												<div class="col-sm-6 offset-col-md-2">
@@ -472,22 +490,6 @@
 							<div class="card-block">
 								<div class="child-table">
 									<div class="detail_table">
-									
-									 <div class="col-md-3" style="margin-right: -11%;padding-top: 5px;margin-left: -14px;">						       
-											<label for="cars">Select MOC:</label>
-											<select name="moc" id="moc">
-											<option value="1">012020</option>
-											<option value="2">022020</option>
-											<option value="3">032020</option>
-											<option value="4">042020</option>
-											<option value="4">052020</option>
-											<option value="4">062020</option>
-											<option value="4">072020</option>
-											<option value="4">082020</option>
-											</select>
-										</div>
-									
-									
 										<table class="table table-striped table-bordered"
 											id="kambasepack_add" cellspacing="0" cellpadding="0"
 											style="width: 100% ! important">
