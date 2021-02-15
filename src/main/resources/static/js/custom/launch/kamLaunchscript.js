@@ -1563,7 +1563,7 @@ function loadKamLauches(kamselectedmoc) {
 				  
 
 			  },
-			"sAjaxSource" : "http://localhost:8083/VisibilityAssetTracker/getAllCompletedLaunchKamData.htm",
+			"sAjaxSource" : "getAllCompletedLaunchKamData.htm",
 			  "fnServerParams" : function(aoData) {
 					aoData.push({ "name": "kamMoc", "value": kamselectedmoc });
 				},
