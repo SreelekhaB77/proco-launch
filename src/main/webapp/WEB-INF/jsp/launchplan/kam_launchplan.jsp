@@ -171,6 +171,7 @@
 										</div>
 
 										<div class="OpenSans-font">
+										
 											<div class="form-group">
 												<label for="downloadmoc" class="col-sm-4 control-label">Moc:</label>
 												<div class="col-sm-6 offset-col-md-2">
@@ -186,6 +187,26 @@
 												</div>
 
 											</div>
+											
+											<!-- Kavitha changes Q1Sprint Feb2021 -->
+											<div class="form-group">
+												<label for="downloadaccount" class="col-sm-4 control-label">Account:</label>
+												<div class="col-sm-6 offset-col-md-2">
+													<span id="#kamAccErrorMsg"
+													style="display: none; color: red; margin-left: 17px;">Please
+													select Account.</span>
+													<!-- <input type="text" class="form-control" id="kamlaunchaccounts" path="kamlaunchaccounts" /> -->
+													
+													<select type="text" class="form-control"
+														id="paid-kamlaunch-acc" name="Account" multiple="multiple">
+														<!-- <option value="Select">Select</option> -->
+													
+													</select>
+
+												</div>
+
+											</div>
+											
 											<div class="form-group">
 												<label for="downloadmoc" class="col-sm-4 control-label">Enter
 													Remarks:</label> <span id="kamRemakErrorMsg"
@@ -465,13 +486,25 @@
 								</a>
 							</div>
 						</div>
-
+						
 						<div id="collapseOne" class="collapse" role="tabpanel"
 							aria-labelledby="headingOne" aria-expanded="false"
 							style="height: 0px; display: block;">
 							<div class="card-block">
 								<div class="child-table">
 									<div class="detail_table">
+										<!-- Sarin Sprint1 Changes Feb2021 -->
+										<!-- <span class="coe-text"><div class="userlist col-md-3"> -->
+										<div class="col-md-3">
+											<label for="sel1" class="userlist-space">MOC:</label>
+											 <select id="kamMocCol" class="form-control" style="width: 100px;">
+														<option value="All">All</option>
+															<c:forEach items="${kammoclist}" var="mocVal">
+																	<option value="${mocVal}"><c:out value="${mocVal}"></c:out></option>
+															</c:forEach>
+											 </select></div>
+										<!-- </span> -->
+										 
 										<table class="table table-striped table-bordered"
 											id="kambasepack_add" cellspacing="0" cellpadding="0"
 											style="width: 100% ! important">
@@ -493,7 +526,7 @@
 
 												</tr>
 											</thead>
-											<tbody>
+											<!-- <tbody>
 												<c:forEach items="${listOfLaunch}" var="launch">
 													<tr>
 														<td><input type="checkbox" name="editLaunchscr1KAMLaunch"
@@ -504,7 +537,7 @@
 														<td>${launch.createdBy}</td>
 													</tr>
 												</c:forEach>
-											</tbody>
+											</tbody> -->
 										</table>
 
 										<div class="btnclass">

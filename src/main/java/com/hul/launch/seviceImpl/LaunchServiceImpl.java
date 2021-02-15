@@ -277,4 +277,11 @@ public class LaunchServiceImpl implements LaunchService {
 	public String deleteAllKamData(String launchId) {
 		return launchDao.deleteAllKamData(launchId);
 	}
+	
+	@Override
+	@Transactional
+	public List<String> getAllMoc() {
+		return launchDao.getAllMoc();
+	}
+
 }

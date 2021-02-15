@@ -17,10 +17,12 @@ import com.hul.launch.response.LaunchDataResponse;
 import com.hul.launch.response.LaunchFinalPlanResponse;
 import com.hul.launch.response.LaunchKamBasepackResponse;
 import com.hul.launch.response.LaunchMstnClearanceResponseKam;
+import com.hul.launch.response.StoreDetailsResponse;
 
 public interface LaunchServiceKam {
 
-	public List<LaunchDataResponse> getAllCompletedLaunchData(String userId);
+	//public List<LaunchDataResponse> getAllCompletedLaunchData(String userId);
+	public List<LaunchDataResponse> getAllCompletedLaunchData(String userId, String launchMOC);  //Sarin Changes - QiSprint Feb2021
 
 	public List<LaunchKamBasepackResponse> getKamBasepackData(List<String> launchIds, String userId);
 
@@ -60,5 +62,10 @@ public interface LaunchServiceKam {
 	public List<LaunchMstnClearanceResponseKam> getMstnClearanceByLaunchIdKam(String launchId, String userId);
 
 	public List<ArrayList<String>> getUpdatedVisiFile(String launchId);
+	
+	public List<String> getLaunchAccounts(String launchId, String userId);
+	
+	public List<String> getAllMoc();
+	
 
 }

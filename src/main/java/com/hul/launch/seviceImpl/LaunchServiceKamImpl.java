@@ -4,11 +4,16 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hul.launch.dao.LaunchDaoKam;
@@ -21,6 +26,7 @@ import com.hul.launch.request.SampleSharedReqKam;
 import com.hul.launch.request.SaveLaunchStore;
 import com.hul.launch.request.SaveLaunchStoreList;
 import com.hul.launch.request.SaveVisiRequestVatKamList;
+import com.hul.launch.response.GetLaunchMocForKamResponse;
 import com.hul.launch.response.KamChangeReqRemarks;
 import com.hul.launch.response.LaunchDataResponse;
 import com.hul.launch.response.LaunchFinalPlanResponse;
@@ -36,8 +42,10 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 	LaunchDaoKam launchDaoKam;
 
 	@Override
-	public List<LaunchDataResponse> getAllCompletedLaunchData(String account) {
-		return launchDaoKam.getAllCompletedKamLaunchData(account);
+	//public List<LaunchDataResponse> getAllCompletedLaunchData(String account) {
+	public List<LaunchDataResponse> getAllCompletedLaunchData(String account, String launchMOC) {  //Sarin Changes - QiSprint Feb2021
+		//return launchDaoKam.getAllCompletedKamLaunchData(account);
+		return launchDaoKam.getAllCompletedKamLaunchData(account, launchMOC);
 	}
 
 	@Override
@@ -156,5 +164,22 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	
+	@Override
+	@Transactional
+	public List<String> getLaunchAccounts(String launchId, String userId) {
+
+		return launchDaoKam.getLaunchAccounts(launchId, userId);
+
+	}
+	
+	@Override
+	@Transactional
+	public List<String> getAllMoc() {
+		return launchDaoKam.getAllMoc();
+	}
+
+	
 
 }

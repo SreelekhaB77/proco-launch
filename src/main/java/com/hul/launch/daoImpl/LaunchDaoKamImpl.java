@@ -27,6 +27,7 @@ import com.hul.launch.dao.LoginDao;
 import com.hul.launch.exception.GlobleKamException;
 import com.hul.launch.model.LaunchVisiPlanning;
 import com.hul.launch.model.SaveUploadededLaunchStore;
+import com.hul.launch.model.TblLaunchMaster;
 import com.hul.launch.model.User;
 import com.hul.launch.request.ChangeMocRequestKam;
 import com.hul.launch.request.GetKamLaunchRejectRequest;
@@ -42,6 +43,7 @@ import com.hul.launch.response.LaunchDataResponse;
 import com.hul.launch.response.LaunchFinalPlanResponse;
 import com.hul.launch.response.LaunchKamBasepackResponse;
 import com.hul.launch.response.LaunchMstnClearanceResponseKam;
+import com.hul.proco.controller.createpromo.ClusterBean;
 
 @Repository
 public class LaunchDaoKamImpl implements LaunchDaoKam {
@@ -137,9 +139,9 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			while (iterator.hasNext()) {
 				Object[] obj = (Object[]) iterator.next();
 
-				Query query3 = sessionFactory.getCurrentSession()
-						.createNativeQuery("SELECT LAUNCH_BASEPACK FROM TBL_LAUNCH_BASEPACK_KAM WHERE LAUNCH_ACCOUNT = '"
-								+ userId + "' AND LAUNCH_ID = '" + obj[13].toString() + "'");
+				Query query3 = sessionFactory.getCurrentSession().createNativeQuery(
+						"SELECT LAUNCH_BASEPACK FROM TBL_LAUNCH_BASEPACK_KAM WHERE LAUNCH_ACCOUNT = '" + userId
+								+ "' AND LAUNCH_ID = '" + obj[13].toString() + "'");
 				List<String> listOfBp = query3.list();
 				List<String> bpIds = new ArrayList<>();
 				if (!listOfBp.isEmpty()) {
@@ -173,7 +175,8 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 	}
 
 	@Override
-	public List<LaunchDataResponse> getAllCompletedKamLaunchData(String account) {
+	//public List<LaunchDataResponse> getAllCompletedKamLaunchData(String account) {
+	public List<LaunchDataResponse> getAllCompletedKamLaunchData(String account, String launchMOC) {  //Sarin Changes - QiSprint Feb2021
 		Session session = sessionFactory.getCurrentSession();
 		SessionImpl sessionImpl = (SessionImpl) session;
 		List<LaunchDataResponse> listOfCompletedLaunch = new ArrayList<>();
@@ -186,18 +189,31 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		ResultSet rs3 = null;
 		ResultSet rsSS = null;
 		try {
-			//kiran - translate changes
-			/*stmt = sessionImpl.connection().prepareStatement(
-					"SELECT LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE,"
-							+ " CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,"
-							+ " CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE,LAUNCH_MOC,LAUNCH_SUBMISSION_DATE FROM TBL_LAUNCH_MASTER tlc WHERE"
-							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED NOT IN ('1','2') AND DATE(TRANSLATE('GHIJ-DE-AB', LAUNCH_DATE, 'ABCDEFGHIJ')) > NOW()");*/
+			// kiran - translate changes
+			/*
+			 * stmt = sessionImpl.connection().prepareStatement(
+			 * "SELECT LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE,"
+			 * +
+			 * " CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,"
+			 * +
+			 * " CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE,LAUNCH_MOC,LAUNCH_SUBMISSION_DATE FROM TBL_LAUNCH_MASTER tlc WHERE"
+			 * +
+			 * " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED NOT IN ('1','2') AND DATE(TRANSLATE('GHIJ-DE-AB', LAUNCH_DATE, 'ABCDEFGHIJ')) > NOW()"
+			 * );
+			 */
+
+			//Sarin Changes - QiSprint Feb2021
+			if (launchMOC.equalsIgnoreCase("All")) {
+				launchMOC = "";
+			}
 			
 			stmt = sessionImpl.connection().prepareStatement(
 					"SELECT LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE,"
 							+ " CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,"
 							+ " CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE,LAUNCH_MOC,LAUNCH_SUBMISSION_DATE FROM TBL_LAUNCH_MASTER tlc WHERE"
-							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED NOT IN ('1','2') AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()");
+							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED NOT IN ('1','2') AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()"
+							+ " AND LAUNCH_MOC LIKE '%" + launchMOC + "%'");
+			
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				stmt2 = sessionImpl.connection()
@@ -374,6 +390,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 
 	@Override
 	public String requestChengeMocByLaunchIdKam(ChangeMocRequestKam changeMocRequestKam, String userId) {
+
 		String responseText = "";
 		ResultSet rs = null;
 		Session session = sessionFactory.getCurrentSession();
@@ -388,6 +405,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			preparedStatement.setTimestamp(6, new Timestamp(new Date().getTime()));
 			preparedStatement.setString(7, userId);
 			preparedStatement.setString(8, "PENDING");
+			
 			preparedStatement.executeUpdate();
 			rs = preparedStatement.getGeneratedKeys();
 			int reqId = 0;
@@ -401,6 +419,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 				preparedStatementInside.setTimestamp(3, new Timestamp(new Date().getTime()));
 				preparedStatementInside.setString(4, "REJECTED BY KAM");
 				preparedStatementInside.setString(5, changeMocRequestKam.getMocChangeRemark());
+				
 				preparedStatementInside.executeUpdate();
 			} catch (Exception e) {
 				logger.error("Exception: " + e);
@@ -408,11 +427,17 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			}
 
 			Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
-					"UPDATE TBL_LAUNCH_MASTER SET LAUNCH_MOC_KAM=?0, UPDATED_BY=?1,UPDATED_DATE=?2 WHERE LAUNCH_ID=?3");  //Sarin - Added Parameters position
+					"UPDATE TBL_LAUNCH_MASTER SET LAUNCH_MOC_KAM=?0, UPDATED_BY=?1,UPDATED_DATE=?2,KAM_ACCOUNT=?3 WHERE LAUNCH_ID=?4"); // Sarin
+																															// -
+																															// Added
+																															// Parameters
+																															// position
 			query2.setParameter(0, changeMocRequestKam.getMocToChange());
 			query2.setParameter(1, userId);
 			query2.setParameter(2, new Timestamp(new Date().getTime()));
-			query2.setParameter(3, changeMocRequestKam.getLaunchId());
+			query2.setParameter(3, changeMocRequestKam.getMocAccount());
+			query2.setParameter(4, changeMocRequestKam.getLaunchId());
+
 			query2.executeUpdate();
 
 			responseText = "Saved Successfully";
@@ -429,6 +454,84 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		}
 		return responseText;
 	}
+	// kavitha
+	/*
+	 * @Override public LaunchDataResponse requestChengeAccountByLaunchIdKam(int
+	 * launchId,String userId) { Session session =
+	 * sessionFactory.getCurrentSession(); SessionImpl sessionImpl = (SessionImpl)
+	 * session; PreparedStatement stmt = null; ResultSet rs = null; try {
+	 * LaunchDataResponse launchDataResponse = null; stmt =
+	 * sessionImpl.connection().
+	 * prepareStatement("SELECT ud.ACCOUNT_NAME,clu.CLUSTER_ACCOUNT "
+	 * +" FROM tbl_vat_user_details ud,tbl_launch_clusters clu "
+	 * +" WHERE ud.USERID='"+userId+"' AND clu.CLUSTER_LAUNCH_ID='" +launchId+ "'");
+	 * rs = stmt.executeQuery(); while (rs.next()) { launchDataResponse = new
+	 * LaunchDataResponse();
+	 * launchDataResponse.setAccountName(rs.getString("ACCOUNT_NAME"));
+	 * launchDataResponse.setKamAccount(rs.getString("CLUSTER_ACCOUNT")); } return
+	 * launchDataResponse; } catch (Exception ex) { logger.debug("Exception :", ex);
+	 * return null; } finally { try { stmt.close(); rs.close(); } catch (Exception
+	 * e) { e.printStackTrace(); } }
+	 * 
+	 * }
+	 */
+		//kavitha working code
+
+	public List<String> getLaunchAccounts(String launchId, String userId) {
+	
+		List<String> listOfAccounts = new ArrayList<String>();
+		String usrAccont = "";
+		String lunchAccont = "";
+		String[] accountplit;
+		try {
+			Query  query3 = sessionFactory.getCurrentSession()
+						  .createNativeQuery("SELECT ud.ACCOUNT_NAME,clu.CLUSTER_ACCOUNT "
+						  +" FROM tbl_vat_user_details ud,tbl_launch_clusters clu "
+						  +" WHERE ud.USERID='"+userId+"' AND clu.CLUSTER_LAUNCH_ID='" +launchId+ "'");
+			Iterator itr = query3.list().iterator();
+			while (itr.hasNext()) {
+				Object[] obj = ((Object[]) itr.next());
+				usrAccont = obj[0].toString();
+				lunchAccont = obj[1].toString();
+			}
+			//System.out.println(usrAccont + ": " + lunchAccont);
+			if (lunchAccont.equalsIgnoreCase("ALL CUSTOMERS")) {
+				accountplit = usrAccont.split(",");
+			} else {
+				accountplit = lunchAccont.split(",");
+			}
+			
+			for (int i = 0; i < accountplit.length; i++) {
+				listOfAccounts.add(accountplit[i]);
+			}
+		} catch (Exception ex) {
+			logger.debug("Exception: ", ex);
+		}
+ 	  
+	  return listOfAccounts;
+	 
+	 }
+		 
+	 //Q1 sprint kavitha feb2021 
+		@SuppressWarnings("unchecked")
+		@Override
+		public List<String> getAllMoc() {
+			try {
+				
+				Query query = sessionFactory.getCurrentSession().createNativeQuery(
+						"SELECT DISTINCT LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc WHERE "
+						+ "SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED NOT IN ('1','2') "
+						+ "AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()");
+					
+				List<String> list = query.list();
+				return list;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+	
+	
 
 	@Override
 	public String rejectBasepacksByBasepackIdsKam(RejectBasepackRequestKam rejectBasepackRequestKam, String userId) {

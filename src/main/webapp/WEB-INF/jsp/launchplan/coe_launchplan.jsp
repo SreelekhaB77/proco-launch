@@ -179,6 +179,11 @@
 											<input type="button" onclick="CoeLaunch()" value="Launch Details" class="btn btn-secondary nxtclassification" id="coelnchDets" style="float: right;" />
 										</div>
 										
+										<div class="coebtnclass">
+											<input type="button"  value="Download" class="btn btn-secondary nxtclassification" id="coelnchDets" style="float: left;" />
+										</div>
+										
+										
 									</div>
 
 								</div>

@@ -28,7 +28,8 @@ public interface LaunchDaoKam {
 
 	List<LaunchKamBasepackResponse> getKamBasepackData(List<String> listOfLaunchData, String userId);
 
-	List<LaunchDataResponse> getAllCompletedKamLaunchData(String account);
+	//List<LaunchDataResponse> getAllCompletedKamLaunchData(String account);
+	List<LaunchDataResponse> getAllCompletedKamLaunchData(String account, String launchMOC); //Sarin Changes - QiSprint Feb2021
 
 	String getUpcomingLaunchMocByLaunchIdsKam(String launchId);
 
@@ -66,5 +67,13 @@ public interface LaunchDaoKam {
 	List<LaunchFinalPlanResponse> getLaunchBuildUpByLaunchIdTme(String launchId);
 
 	List<LaunchMstnClearanceResponseKam> getMstnClearanceByLaunchIdKam(String launchId, String userId);
+	
+	public List<String> getLaunchAccounts(String launchId, String userId);
+	
+	public List<String> getAllMoc();
+	
+	
+	
+	
 
 }
