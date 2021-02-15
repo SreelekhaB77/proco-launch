@@ -486,7 +486,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		try {
 			Query  query3 = sessionFactory.getCurrentSession()
 						  .createNativeQuery("SELECT ud.ACCOUNT_NAME,clu.CLUSTER_ACCOUNT "
-						  +" FROM tbl_vat_user_details ud,tbl_launch_clusters clu "
+						  +" FROM TBL_VAT_USER_DETAILS ud,TBL_LAUNCH_CLUSTERS clu "
 						  +" WHERE ud.USERID='"+userId+"' AND clu.CLUSTER_LAUNCH_ID='" +launchId+ "'");
 			Iterator itr = query3.list().iterator();
 			while (itr.hasNext()) {
