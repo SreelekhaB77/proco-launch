@@ -175,7 +175,8 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 	}
 
 	@Override
-	public List<LaunchDataResponse> getAllCompletedKamLaunchData(String account) {
+	//public List<LaunchDataResponse> getAllCompletedKamLaunchData(String account) {
+	public List<LaunchDataResponse> getAllCompletedKamLaunchData(String account, String launchMOC) {  //Sarin Changes - QiSprint Feb2021
 		Session session = sessionFactory.getCurrentSession();
 		SessionImpl sessionImpl = (SessionImpl) session;
 		List<LaunchDataResponse> listOfCompletedLaunch = new ArrayList<>();
@@ -201,11 +202,18 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			 * );
 			 */
 
+			//Sarin Changes - QiSprint Feb2021
+			if (launchMOC.equalsIgnoreCase("All")) {
+				launchMOC = "";
+			}
+			
 			stmt = sessionImpl.connection().prepareStatement(
 					"SELECT LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE,"
 							+ " CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,"
 							+ " CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE,LAUNCH_MOC,LAUNCH_SUBMISSION_DATE FROM TBL_LAUNCH_MASTER tlc WHERE"
-							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED NOT IN ('1','2') AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()");
+							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED NOT IN ('1','2') AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()"
+							+ " AND LAUNCH_MOC LIKE '%" + launchMOC + "%'");
+			
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				stmt2 = sessionImpl.connection()

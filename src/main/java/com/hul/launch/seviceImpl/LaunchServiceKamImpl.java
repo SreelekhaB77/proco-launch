@@ -42,8 +42,10 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 	LaunchDaoKam launchDaoKam;
 
 	@Override
-	public List<LaunchDataResponse> getAllCompletedLaunchData(String account) {
-		return launchDaoKam.getAllCompletedKamLaunchData(account);
+	//public List<LaunchDataResponse> getAllCompletedLaunchData(String account) {
+	public List<LaunchDataResponse> getAllCompletedLaunchData(String account, String launchMOC) {  //Sarin Changes - QiSprint Feb2021
+		//return launchDaoKam.getAllCompletedKamLaunchData(account);
+		return launchDaoKam.getAllCompletedKamLaunchData(account, launchMOC);
 	}
 
 	@Override

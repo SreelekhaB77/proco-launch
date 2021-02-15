@@ -21,7 +21,8 @@ import com.hul.launch.response.StoreDetailsResponse;
 
 public interface LaunchServiceKam {
 
-	public List<LaunchDataResponse> getAllCompletedLaunchData(String userId);
+	//public List<LaunchDataResponse> getAllCompletedLaunchData(String userId);
+	public List<LaunchDataResponse> getAllCompletedLaunchData(String userId, String launchMOC);  //Sarin Changes - QiSprint Feb2021
 
 	public List<LaunchKamBasepackResponse> getKamBasepackData(List<String> launchIds, String userId);
 

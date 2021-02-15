@@ -81,8 +81,11 @@ $(document).ready(function() {
 	 
 	});
 	
+	loadKamLauches('All');
+	//var kamselectedmoc = $('#kamMocCol').val(); //'All';
 	// $("#kambasepack_add").dataTable().fnDestroy();
 	  // setTimeout(function(){
+				 /*
 			     kambaseoTable = $('#kambasepack_add').DataTable( {
 			    	"scrollY":       "280px",
 			    		"destroy": true,  
@@ -102,47 +105,35 @@ $(document).ready(function() {
 			                  "sLengthMenu": "Records per page _MENU_ ",
 			                  
 			
-			              }
+			              },
+						"sAjaxSource" : "http://localhost:8083/VisibilityAssetTracker/getAllCompletedLaunchKamData.htm",
+						  "fnServerParams" : function(aoData) {
+								aoData.push({ "name": "kamMoc", "value": kamselectedmoc });
+							},
+							//"aaData": data,
+							"aoColumns" : [
+									{
+									  mData: 'launchId',
+									  "mRender": function(data, type, full) {
+										  // value="${launch.launchId}">
+										return '<input type="checkbox" name="editLaunchscr1KAMLaunch" 															class="radioln kamLnchDetscr1" onchange = "onChangeChkKamLaunchDetails(this, this.value)" value=' + data + '>';
+									  }
+									},
+									{mData : 'launchName'},
+									{mData : 'launchMoc'},
+									{mData : 'createdDate'},
+									{mData : 'createdBy'}, 
+								],
 	    	    	    });
-			    
+			    */
 			    
     // }, 800 );
 	
 	// code for moc in change moc pop up
 	$(document).on( "click", "#mockamChange", function(){
-		//kavitha
-		var launchId=$('.kamLnchDetscr1:checked').val();
 		
 	    $('#successblock').hide();
-		 $.ajax({
-				type : "GET",
-				dataType: 'json',
-				//contentType : "application/json; charset=utf-8",
-				cache : false,
-				url : "getUpcomingLaunchMocByLaunchIdsKam.htm?launchId="+launchId,
-				success : function(data) {
-					console.log(data);
-					var accounts=data.responseData.lisOfAcc;
-					
-					var option ="<option value='select'>Select Account</option>";
-					for (var i = 0; i < accounts.length; i++) {
-					  option += "<option value='"+accounts[i] +"'>"+accounts[i]+"</option>"
-					}
-					console.log(option);
-					$("#paid-kamlaunch-acc").empty().append(option);
-					//alert(parsed);
-					/*var parsed = $.parseJSON(data);
-					if(parsed<=60){
-						$('#add-depot').modal('show');
-					}else{
-						$('#add-depot').modal('hide');
-						$("#createPromoForm").submit();
-					}*/
-				},
-				error : function(error) {
-					console.log(error)
-				}
-			});
+		
 		//$('#kamMocremarks').val('');
 		var checked_field = $( "[name=editLaunchscr1KAMLaunch]:checked" );
 		var launchDate = "";
@@ -152,7 +143,6 @@ $(document).ready(function() {
 			var launch_date = date.split("/");
 			launchMocDate = launch_date[1] + "/" + launch_date[0] + "/" + launch_date[2];
 		}
-		
 		
 		var today = new Date(launchMocDate),
         yy = today.getFullYear(),
@@ -169,9 +159,54 @@ $(document).ready(function() {
         }
 		$("#paid-kamlaunch-moc").empty().append(option);
 		
+		loadselectedkamAccounts();  //Sarin Changes Q1Sprint Feb2021
+		//loadKamAccounts();  
+		
 	});
 	
+	//Sarin Changes Q1Sprint Feb2021 - Starts
 	
+	function loadselectedkamAccounts() {
+		var launchId=$('.kamLnchDetscr1:checked').val();
+		 $.ajax({
+			type : "GET",
+			dataType: 'json',
+			//contentType : "application/json; charset=utf-8",
+			cache : false,
+			url : "getUpcomingLaunchMocByLaunchIdsKam.htm?launchId="+launchId,
+			async : false,
+			success : function(data) {
+				//console.log(data);
+				var accounts=data.responseData.lisOfAcc;
+				//accounts=data.responseData.lisOfAcc;
+				
+				var option = ""; //"<option value='select'>Select Account</option>";
+				for (var i = 0; i < accounts.length; i++) {
+				  option += "<option value='"+accounts[i] +"'>"+accounts[i]+"</option>"
+				}
+				console.log(option);
+				//$("#paid-kamlaunch-acc").empty().append(option); 
+				$('#paid-kamlaunch-acc').empty();
+				$('#paid-kamlaunch-acc').multiselect("destroy");
+				$("#paid-kamlaunch-acc").empty().append(option); 
+				loadKamAccounts();
+				
+				//alert(parsed);
+				/*var parsed = $.parseJSON(data);
+				if(parsed<=60){
+					$('#add-depot').modal('show');
+				}else{
+					$('#add-depot').modal('hide');
+					$("#createPromoForm").submit();
+				}*/
+				
+			},
+			error : function(error) {
+				console.log(error)
+			}
+		});
+	}
+	//Sarin Changes Q1Sprint Feb2021 - Ends
 	
 
 	
@@ -385,7 +420,17 @@ $(document).ready(function() {
 	     	
 	 });
 	
+	$("#kamMocCol").on('change', function () {
+		$("#kamlaunchDetailsTab").click();
+		$("#kam_basepack_add").dataTable().fnDestroy();
+		//kambaseoTable.draw();
+		var kamselectedmoc = $(this).val(); //'All';
+		loadKamLauches(kamselectedmoc);	
+			     
+    });
+	 
 });
+	
 	function leaveAStepCallback(obj) {
 		var step_num = obj.attr('rel');
 		return validateSteps(step_num);
@@ -407,7 +452,8 @@ $(document).ready(function() {
 	    //kavitha
 		// var kamlnchId = getkamlaunchId();
 		
-		var kamAcc = $('#paid-kamlaunch-acc').val();
+		var kamAcc = ($('#paid-kamlaunch-acc').val()).toString();
+		//alert(kamAcc);
 		var kamMocremarks = $('#kamMocremarks').val();
 		var kammoc = $('#paid-kamlaunch-moc').val();
 
@@ -435,7 +481,7 @@ $(document).ready(function() {
 	        dataType: 'json',
 	        type: 'post',
 	        contentType: 'application/json',
-	        data: JSON.stringify( { "launchId": kamlnchId ,"mocAccount": kamAcc,"mocToChange" : kamNewRemark, "mocChangeRemark" : kamMocremarks } ),
+	        data: JSON.stringify( { "launchId": kamlnchId,"mocToChange" : kamNewRemark, "mocChangeRemark" : kamMocremarks,"mocAccount": kamAcc } ),
 	        processData: false,
 	        beforeSend: function() {
 	            ajaxLoader(spinnerWidth, spinnerHeight);
@@ -1424,3 +1470,123 @@ function ajaxLoader(w, h) {
         
     });
 }
+
+//Sarin Changes Q1Sprint Feb2021 - Starts
+function loadKamAccounts() {
+	$('#paid-kamlaunch-acc').multiselect({
+		includeSelectAllOption : true,
+		numberDisplayed : 2,
+		/* buttonWidth: '100px', */
+		nonSelectedText : 'ALL CUSTOMERS',
+		selectAllText : 'ALL CUSTOMERS',
+		onChange : function(option, checked, select) {
+			 var custChainSelectedData = [];
+			 var selectedOptionsChange = $('#paid-kamlaunch-acc option:selected');
+			 var totalLen = $('#paid-kamlaunch-acc option').length;
+
+				if (selectedOptionsChange.length > 0 && selectedOptionsChange.length < totalLen){
+					selectAll = false;
+				}else if(selectedOptionsChange.length == totalLen){
+					selectAll = true;
+				}
+			 
+				for (var i = 0; i < selectedOptionsChange.length; i++) {
+					custChainSelectedData.push(selectedOptionsChange[i].value);
+
+				}
+				if(selectAll == true){
+					//custChainL1 = "ALL";
+				}else{
+					//custChainL1 = custChainSelectedData.toString();
+				}
+		 
+			//promoTable.draw();
+		},
+		onDropdownHide : function(event) {
+			
+			var selVals = [];
+			var selectedOptions = $('#paid-kamlaunch-acc option:selected');
+			if (selectedOptions.length > 0 && selectAll == false) {
+				for (var i = 0; i < selectedOptions.length; i++) {
+					selVals.push(selectedOptions[i].value);
+				}
+				/*
+				var strData = selVals.toString();
+				$('.switch-dynamic')
+						.html(
+								'<select class="form-control" name="cust-chain" id="customerChainL2" multiple="multiple"><option values="ALL CUSTOMERS">ALL CUSTOMERS</option>');
+
+				getCustChainValues(strData);
+
+			} else {
+				$('.switch-dynamic')
+						.html(
+								'<input type="text" name="cust-chain" class="form-control" id="customerChainL2" value="ALL CUSTOMERS" readonly="true">'); */
+			}
+			
+		},
+		
+		onSelectAll : function() {
+			//custChainL1 = "ALL";
+			//promoTable.draw();
+			selectAll = true;
+		},
+		onDeselectAll : function() {
+			//custChainL1 = "ALL";
+			//promoTable.draw();
+			/*$('.switch-dynamic')
+					.html(
+							'<input type="text" class="form-control" name="cust-chain" id="customerChainL2" value="ALL CUSTOMERS" readonly="readonly">');*/
+		}
+
+	});
+}
+
+function loadKamLauches(kamselectedmoc) {
+	kambaseoTable = $('#kambasepack_add').DataTable( {
+		"scrollY":       "280px",
+			"destroy": true,  
+			"paging":  true,
+			"ordering": false,
+			"searching": false,
+			"lengthMenu" : [
+				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
+				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
+			"oLanguage": {
+				  "sSearch": '<i class="icon-search"></i>',
+				  "sEmptyTable": "No Pending Launch.",
+				  "oPaginate": {
+					  "sNext": "&rarr;",
+					  "sPrevious": "&larr;"
+				  },
+				  "sLengthMenu": "Records per page _MENU_ ",
+				  
+
+			  },
+			"sAjaxSource" : "http://localhost:8083/VisibilityAssetTracker/getAllCompletedLaunchKamData.htm",
+			  "fnServerParams" : function(aoData) {
+					aoData.push({ "name": "kamMoc", "value": kamselectedmoc });
+				},
+				//"aaData": data,
+				"aoColumns" : [
+						{
+						  mData: 'launchId',
+						  "mRender": function(data, type, full) {
+							return '<input type="checkbox" name="editLaunchscr1KAMLaunch" class="radioln kamLnchDetscr1" onchange = "onChangeChkKamLaunchDetails(this, this.value)" value=' + data + '>';
+						  }
+						},
+						{mData : 'launchName'},
+						//{mData : 'launchMoc'},
+						{
+						  mData: 'launchMoc',
+						  "mRender": function(data, type, full) {
+							return full.launchMoc + '<input type = "hidden" class="mocDate"  value=' + full.launchDate + '>';
+						  }
+						},
+						{mData : 'createdDate'},
+						{mData : 'createdBy'}, 
+					],
+			});
+	kambaseoTable.draw();
+}
+//Sarin Changes Q1Sprint Feb2021 - Ends
