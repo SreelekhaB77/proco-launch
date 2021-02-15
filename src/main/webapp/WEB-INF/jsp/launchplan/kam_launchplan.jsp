@@ -490,6 +490,16 @@
 							<div class="card-block">
 								<div class="child-table">
 									<div class="detail_table">
+									
+									<div class="col-md-3">
+                                            <label for="sel1" class="userlist-space custom-label-align">MOC:</label>
+                                             <select id="mocCol" class="form-control custom-select-align">
+                                                        <option value="All">All</option>
+                                                            <c:forEach items="${kammoclist}" var="mocVal">
+                                                                    <option value="${mocVal}"><c:out value="${mocVal}"></c:out></option>
+                                                            </c:forEach>
+                                             </select></div>
+                                             
 										<table class="table table-striped table-bordered"
 											id="kambasepack_add" cellspacing="0" cellpadding="0"
 											style="width: 100% ! important">
