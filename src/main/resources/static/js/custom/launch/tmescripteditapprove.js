@@ -810,16 +810,16 @@ function loadTmeLauches(tmeselectedmoc) {
 						{
 						  mData: 'launchId',
 						  "mRender": function(data, type, full) {
-							return '<input type="checkbox"  value=' + data + '>';
+							return '<input type="checkbox" name="editLaunchscr1" class="editlaunchsel" value=' + data + '>';
 						  }
 						},
 						{mData : 'launchName'},
 						//{mData : 'launchMoc'},
 						{
 						  mData: 'launchMoc',
-						  "mRender": function(data, type, full) {
-							return full.launchMoc + '<input type = "hidden" class="mocDate"  value=' + full.launchDate + '>';
-						  }
+						  //"mRender": function(data, type, full) {
+							//return full.launchMoc + '<input type = "hidden" class="mocDate"  value=' + full.launchDate + '>';
+						  //}
 						},
 						{mData : 'launchFinalStatus'},
 						 
