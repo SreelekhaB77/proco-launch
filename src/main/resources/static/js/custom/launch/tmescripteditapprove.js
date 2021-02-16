@@ -51,6 +51,8 @@
 			   $('input[type="checkbox"]').not(this).prop('checked', false);
 			 
 			});
+			
+			loadTmeLauches('All');
 	
 		$("#editDet").dataTable().fnDestroy();
   				   // setTimeout(function(){
@@ -776,6 +778,7 @@ function nextQueryAns() {
          }
      });
 }
+
 //Q1 sprint feb 2021 kavitha starts
 function loadTmeLauches(tmeselectedmoc) {
 	tmebaseoTable = $('#editDet').DataTable( {

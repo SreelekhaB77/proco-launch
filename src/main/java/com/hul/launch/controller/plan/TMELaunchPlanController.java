@@ -128,14 +128,16 @@ public class TMELaunchPlanController {
 			String userId = (String) request.getSession().getAttribute("UserID");
 			//listOfLaunch = launchService.getAllLaunchData(userId);
 			listOfLaunch = launchService.getAllLaunchData(userId,tmeMoc);
+			//Q1 sprint kavitha 2021
+			List<String> tmemoclist=launchService.getAllMoc();
+			model.addAttribute("tmemoclist",tmemoclist);
+			
 			if (!listOfLaunch.isEmpty()) {
 				if (null != listOfLaunch.get(0).getError()) {
 					throw new Exception(listOfLaunch.get(0).getError());
 				}
 			}
-			//Q1 sprint kavitha 2021
-			List<String> tmemoclist=launchService.getAllMoc();
-			model.addAttribute("tmemoclist",tmemoclist);
+			
 			model.addAttribute("listOfLaunchData", listOfLaunch);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
