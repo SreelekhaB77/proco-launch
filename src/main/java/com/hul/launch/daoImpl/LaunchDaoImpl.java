@@ -88,9 +88,11 @@ public class LaunchDaoImpl implements LaunchDao {
 	public void setSessionFactory(SessionFactory sf) {
 		this.sessionFactory = sf;
 	}
-
+//Q1 sprint 2021 feb kavitha
 	@Override
-	public List<LaunchDataResponse> getAllLaunchData(String userid) {
+	//public List<LaunchDataResponse> getAllLaunchData(String userid) 
+	public List<LaunchDataResponse> getAllLaunchData(String userId, String launchMOC)
+	{
 		List<LaunchDataResponse> liLaunchData = new ArrayList<>();
 		Session session = sessionFactory.getCurrentSession();
 		SessionImpl sessionImpl = (SessionImpl) session;
@@ -105,13 +107,18 @@ public class LaunchDaoImpl implements LaunchDao {
 							+ " LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc, TBL_LAUNCH_STAGE_STATUS tlss WHERE "
 							+ " tlc.LAUNCH_ID = tlss.LAUNCH_ID AND DATE(TRANSLATE('GHIJ-DE-AB', LAUNCH_DATE, 'ABCDEFGHIJ')) > NOW()");*/
 			
+			//Kavitha Changes - Q1 Sprint Feb2021
+			if (launchMOC.equalsIgnoreCase("All")) {
+				launchMOC = "";
+			}
+			
 			stmt = sessionImpl.connection().prepareStatement(
 					"SELECT tlc.LAUNCH_ID LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, "
 							+ " LAUNCH_BUSINESS_CASE, CATEGORY_SIZE, CLASSIFICATION, tlc.CREATED_BY CREATED_BY, "
 							+ " tlc.CREATED_DATE CREATED_DATE, tlss.LAUNCH_FINAL_STATUS LAUNCH_FINAL_STATUS, "
 							+ " LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc, TBL_LAUNCH_STAGE_STATUS tlss WHERE "
 							+ " tlc.LAUNCH_ID = tlss.LAUNCH_ID AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() "
-							+ " AND tlc.CREATED_BY = '" + userid + "'");
+							+ " AND tlc.CREATED_BY = '" + userId + "' AND LAUNCH_MOC LIKE '%" + launchMOC + "%'");
 
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -1657,9 +1664,10 @@ public class LaunchDaoImpl implements LaunchDao {
 		try {
 			
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(
-					"SELECT DISTINCT LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc "
-					+ "WHERE SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED NOT IN ('1','2') "
-					+ "AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()");
+					"SELECT DISTINCT LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc WHERE  "
+					+ "date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() "
+					//+ "AND tlc.CREATED_BY = "
+					);
 				
 			List<String> list = query.list();
 			return list;
@@ -1667,6 +1675,5 @@ public class LaunchDaoImpl implements LaunchDao {
 			e.printStackTrace();
 			return null;
 		}
-	}
-	
+	}	
 }

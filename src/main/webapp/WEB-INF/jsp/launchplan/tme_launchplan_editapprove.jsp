@@ -195,7 +195,7 @@
 														class="proco-btn proco-btn-success table-head">Status</span></th>
 												</tr>
 											</thead>
-											<tbody>
+										    <!--<tbody>
 												<c:forEach items="${listOfLaunchData}" var="editlaunch">
 													<tr>
 														<td><input type="checkbox" name="editLaunchscr1"
@@ -206,7 +206,7 @@
 
 													</tr>
 												</c:forEach>
-											</tbody>
+											</tbody>-->
 										</table>
 
 										<div class="coebtnclass">

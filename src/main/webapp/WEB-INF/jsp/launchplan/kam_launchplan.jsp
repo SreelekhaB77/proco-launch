@@ -496,8 +496,8 @@
 										<!-- Sarin Sprint1 Changes Feb2021 -->
 										<!-- <span class="coe-text"><div class="userlist col-md-3"> -->
 										<div class="col-md-3">
-											<label for="sel1" class="userlist-space">MOC:</label>
-											 <select id="kamMocCol" class="form-control" style="width: 100px;">
+											<label for="sel1" class="userlist-space custom-label-align">MOC:</label>
+											 <select id="kamMocCol" class="form-control custom-select-align" style="width: 100px;">
 														<option value="All">All</option>
 															<c:forEach items="${kammoclist}" var="mocVal">
 																	<option value="${mocVal}"><c:out value="${mocVal}"></c:out></option>
@@ -538,6 +538,7 @@
 													</tr>
 												</c:forEach>
 											</tbody> -->
+							
 										</table>
 
 										<div class="btnclass">
@@ -1195,6 +1196,5 @@
 	<script src="assets/js/jquery.dataTables.min.js"></script>
 	<script src="assets/js/dataTables.fixedColumns.min.js"></script>
 	<script src="assets/js/dataTables.bootstrap.min.js"></script>
-
 </body>
 </html>

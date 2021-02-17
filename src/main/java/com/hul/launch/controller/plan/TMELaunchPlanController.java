@@ -9,10 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.google.gson.Gson;
 import com.hul.launch.constants.ResponseCodeConstants;
 import com.hul.launch.constants.ResponseConstants;
@@ -85,6 +82,7 @@ import com.hul.launch.web.util.UploadUtil;
 import com.hul.proco.controller.createpromo.CreatePromoService;
 import com.hul.proco.excelreader.exom.ExOM;
 
+
 /**
  * 
  * @author anshuman.shrivastava
@@ -122,22 +120,25 @@ public class TMELaunchPlanController {
 
 	@RequestMapping(value = "getAllLaunchData.htm", method = RequestMethod.GET)
 	public ModelAndView allLaunchData(HttpServletRequest request, Model model) {
+		//Q1 sprint kavitha 2021
+		String tmeMoc = "All";
 		List<LaunchDataResponse> listOfLaunch = null;
 		try {
 			//listOfLaunch = launchService.getAllLaunchData();
 			String userId = (String) request.getSession().getAttribute("UserID");
-			listOfLaunch = launchService.getAllLaunchData(userId);
+			//listOfLaunch = launchService.getAllLaunchData(userId);
+			listOfLaunch = launchService.getAllLaunchData(userId,tmeMoc);
+			//Q1 sprint kavitha 2021
+			List<String> tmemoclist=launchService.getAllMoc();
+			model.addAttribute("tmemoclist",tmemoclist);
 			
 			if (!listOfLaunch.isEmpty()) {
 				if (null != listOfLaunch.get(0).getError()) {
 					throw new Exception(listOfLaunch.get(0).getError());
 				}
 			}
-			//Q1 sprint kavitha 2021
-			List<String> tmemoclist=launchService.getAllMoc();
-			model.addAttribute("tmemoclist",tmemoclist);
-			model.addAttribute("listOfLaunchData", listOfLaunch);
 			
+			model.addAttribute("listOfLaunchData", listOfLaunch);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			ModelAndView modelAndView = new ModelAndView();
@@ -146,7 +147,33 @@ public class TMELaunchPlanController {
 		}
 		return new ModelAndView("launchplan/tme_launchplan_editapprove");
 	}
-
+	//Q1 sprint kavitha 2021
+	@RequestMapping(value = "getAllLaunchtmeData.htm", method = RequestMethod.GET, produces = "application/json", headers = "Accept=*/*")
+	public @ResponseBody String allLaunchtmeData(HttpServletRequest request, Model model,
+			@RequestParam("tmeMoc") String tmeMoc) {
+		List<LaunchDataResponse> listOfLaunch = new ArrayList<>();
+		try {
+			String userId = (String) request.getSession().getAttribute("UserID");
+			listOfLaunch = launchService.getAllLaunchData(userId, tmeMoc);
+			
+			if (null != listOfLaunch.get(0).getError()) {
+				throw new Exception(listOfLaunch.get(0).getError());
+			}
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
+			model.addAttribute("Error", e.toString());
+		}
+		
+		HashMap<String, Object> tableObj = new HashMap<String, Object>();
+		//tableObj.put("iTotalRecords", 10);
+		//tableObj.put("iTotalDisplayRecords", 10);
+		tableObj.put("aaData", listOfLaunch);
+		Gson sLaunch =  new Gson();
+		String launchList = sLaunch.toJson(tableObj);
+		return launchList;
+	}
+	
+	
 	@RequestMapping(value = "getEditLaunchDetails.htm", method = RequestMethod.GET)
 	public ModelAndView existingLaunchDetails(@RequestParam("launchId") String launchId, HttpServletRequest request,
 			Model model) {
@@ -1965,4 +1992,6 @@ public class TMELaunchPlanController {
 		headerDetail.add("DEPTH_PER_SHELF_PER_SKU5");
 		return headerDetail;
 	}
+	
+	
 }
