@@ -25,7 +25,7 @@ import com.hul.launch.response.LaunchKamQueriesAnsweredResponse;
 
 public interface LaunchDao {
 	//List<LaunchDataResponse> getAllLaunchData();
-	List<LaunchDataResponse> getAllLaunchData(String userid);
+	//List<LaunchDataResponse> getAllLaunchData(String userid);
 
 	LaunchDataResponse getSpecificLaunchData(String userID);
 
@@ -83,4 +83,8 @@ public interface LaunchDao {
 	String deleteAllNextPageData(String launchId, String currentPage, String userId);
 
 	String deleteAllKamData(String launchId);
+	
+	public List<String> getAllMoc();
+	//Q1 sprint feb 2021 kavitha
+	public List<LaunchDataResponse> getAllLaunchData(String userId, String launchMOC);
 }

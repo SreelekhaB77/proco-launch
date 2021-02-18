@@ -7,8 +7,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
@@ -753,6 +755,44 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 		}
 		return launchBuildUpTemp;
 	}
+	
+	//Sarin Changes - LaunchIssue
+	@Override
+	public List<LaunchBuildUpTemp> getFinalBuildUpDepoLevelList(String launchId) {
+		List<LaunchBuildUpTemp> launchBuildUpTempList = new ArrayList<LaunchBuildUpTemp>(); 
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			SessionImpl sessionImpl = (SessionImpl) session;
+			stmt = sessionImpl.connection().prepareStatement(
+					"SELECT SUM(REVISED_SELLIN_FOR_STORE_N) REVISED_SELLIN_FOR_STORE_N, SUM(REVISED_SELLIN_FOR_STORE_N1)"
+							+ " REVISED_SELLIN_FOR_STORE_N1,SUM(REVISED_SELLIN_FOR_STORE_N2) REVISED_SELLIN_FOR_STORE_N2, "
+							+ " count(*) TOTAL_STORES, CONCAT(DEPOT , ',' , SKU_NAME,',' ,FMCG_CSP_CODE ,',', MODIFIED_CHAIN, ',' , CLUSTER) AS DEPOKEY "
+							+ "FROM TBL_LAUNCH_BUILDUP_TEMP WHERE LAUNCH_ID = '" + launchId + "' GROUP BY CONCAT(DEPOT , ',' , SKU_NAME,',' ,FMCG_CSP_CODE ,',', MODIFIED_CHAIN, ',' , CLUSTER)");
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				LaunchBuildUpTemp launchBuildUpTemp = new LaunchBuildUpTemp();
+				launchBuildUpTemp.setREVISED_SELLIN_FOR_STORE_N(rs.getString("REVISED_SELLIN_FOR_STORE_N"));
+				launchBuildUpTemp.setREVISED_SELLIN_FOR_STORE_N1(rs.getString("REVISED_SELLIN_FOR_STORE_N1"));
+				launchBuildUpTemp.setREVISED_SELLIN_FOR_STORE_N2(rs.getString("REVISED_SELLIN_FOR_STORE_N2"));
+				launchBuildUpTemp.setSTORE_COUNT(rs.getString("TOTAL_STORES"));
+				launchBuildUpTemp.setUKEY(rs.getString("DEPOKEY"));
+				launchBuildUpTempList.add(launchBuildUpTemp);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			//launchBuildUpTemp.setError(e.toString());
+		} finally {
+			try {
+				stmt.close();
+				rs.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return launchBuildUpTempList;
+	}
 
 	@Override
 	public LaunchBuildUpTemp getFinalBuildUpDepoLevelKAM(String depoCombo, String launchId, String forWhichAcc) {
@@ -1032,6 +1072,35 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 		}
 		return launchBuildUpTemp;
 	}
+	
+	//Sarin Changes Launch Issue 
+	@Override
+	public Map<String, String> getCldGsvForDepoBasepack(String launchId) {
+		
+		Map<String, String> mapCldGsv = new HashMap<String, String>();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			SessionImpl sessionImpl = (SessionImpl) session;
+			stmt = sessionImpl.connection()
+					.prepareStatement("SELECT DISTINCT CONCAT(DEPOT , ',' , SKU_NAME) AS DEPOSKU, CONCAT(CLD_SIZE, '~', GSV) AS CLDGSV FROM TBL_LAUNCH_BUILDUP_TEMP WHERE LAUNCH_ID = '" + launchId + "' ");
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				mapCldGsv.put(rs.getString("DEPOSKU"), rs.getString("CLDGSV"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+				rs.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return mapCldGsv;
+	}
 
 	@Override
 	public LaunchBuildUpTemp getGsvForDepoBasepackKAM(String depoBasepack, String launchId, String forWhichKam) {
@@ -1070,6 +1139,7 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 		int returnSuccess = 0;
 		try {
 			//Garima - changes for concatenation
+			/*
 			Query query2 = sessionFactory.getCurrentSession()
 					.createNativeQuery("UPDATE TBL_LAUNCH_BUILDUP_TEMP SET SELLIN_VALUE_N='"
 							+ launchBuildUpTemp.getSELLIN_VALUE_N() + "',SELLIN_VALUE_N1='"
@@ -1079,6 +1149,14 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 							+ "' AND CONCAT(DEPOT , ',' , SKU_NAME , ',' ,  FMCG_CSP_CODE , ',' , MODIFIED_CHAIN , ',' ,CLUSTER) = '" + depoCombo + "'");
 			//				+ "' AND DEPOT || ',' || SKU_NAME || ',' ||  FMCG_CSP_CODE || ',' || MODIFIED_CHAIN || ',' "
 			//				+ " || CLUSTER = '" + depoCombo + "'");
+			*/
+			Query query2 = sessionFactory.getCurrentSession()
+					.createNativeQuery("UPDATE TBL_LAUNCH_TEMP_FINAL_CAL A INNER JOIN TBL_LAUNCH_BUILDUP_TEMP B ON A.LAUNCH_ID = B.LAUNCH_ID AND A.DEPOT = B.DEPOT AND A.BP_NAME = B.SKU_NAME AND A.FMCG_CSP_CODE = B.FMCG_CSP_CODE AND B.MODIFIED_CHAIN = A.MODIFIED_CHAIN AND B.CLUSTER = A.CLUSTER SET B.SELLIN_VALUE_N = A.FINAL_VALUE_N, B.SELLIN_VALUE_N1 = A.FINAL_VALUE_N1, B.SELLIN_VALUE_N2 = A.FINAL_VALUE_N2 "
+							+ ",UPDATED_BY='" + userId + "',UPDATED_DATE='"
+							+ new Timestamp(new Date().getTime()) + "'" + " WHERE A.LAUNCH_ID= '" + launchId + "' ");
+			//				+ "' AND DEPOT || ',' || SKU_NAME || ',' ||  FMCG_CSP_CODE || ',' || MODIFIED_CHAIN || ',' "
+			//				+ " || CLUSTER = '" + depoCombo + "'");
+			
 			returnSuccess = query2.executeUpdate();
 		} catch (Exception e) {
 			returnSuccess = 0;

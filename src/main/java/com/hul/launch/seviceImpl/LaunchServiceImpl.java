@@ -52,10 +52,10 @@ public class LaunchServiceImpl implements LaunchService {
 	 * launchDao.getAllLaunchData(); }
 	 */
 	
-	@Override
-	public List<LaunchDataResponse> getAllLaunchData(String userid) {
-		return launchDao.getAllLaunchData(userid);
-	}
+	/*
+	 * @Override public List<LaunchDataResponse> getAllLaunchData(String userid) {
+	 * return launchDao.getAllLaunchData(userid); }
+	 */
 
 	@Override
 	public LaunchDataResponse getSpecificLaunchData(String launchId) {
@@ -277,4 +277,17 @@ public class LaunchServiceImpl implements LaunchService {
 	public String deleteAllKamData(String launchId) {
 		return launchDao.deleteAllKamData(launchId);
 	}
+	//Q1 sprint feb 2021 kavitha
+	@Override
+	@Transactional
+	public List<String> getAllMoc() {
+		return launchDao.getAllMoc();
+	}
+	
+	//Q1 sprint feb 2021 kavitha
+	@Override
+	public List<LaunchDataResponse> getAllLaunchData(String userid, String launchMOC) {
+		return launchDao.getAllLaunchData(userid,launchMOC);
+	}
+
 }

@@ -17,7 +17,7 @@ import com.hul.launch.response.LaunchKamQueriesAnsweredResponse;
 
 public interface LaunchService {
 	//public List<LaunchDataResponse> getAllLaunchData();
-	public List<LaunchDataResponse> getAllLaunchData(String userId);
+	//public List<LaunchDataResponse> getAllLaunchData(String userId);
 
 	public LaunchDataResponse getSpecificLaunchData(String launchId);
 
@@ -71,4 +71,8 @@ public interface LaunchService {
 	public List<LaunchKamQueriesAnsweredResponse> getLaunchQueriesAnswered(String userId);
 
 	public String deleteAllKamData(String launchId);
+	//Q1 sprint feb 2021 kavitha
+	public List<String> getAllMoc();
+	
+	public List<LaunchDataResponse> getAllLaunchData(String userId, String launchMOC);
 }

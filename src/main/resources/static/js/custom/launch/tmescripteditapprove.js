@@ -51,6 +51,8 @@
 			   $('input[type="checkbox"]').not(this).prop('checked', false);
 			 
 			});
+			
+			loadTmeLauches('All');
 	
 		$("#editDet").dataTable().fnDestroy();
   				   // setTimeout(function(){
@@ -274,8 +276,15 @@
 	        });
 		    	
 	    });
-		
-		
+	//Q1 sprint feb 2021 kavitha	
+	$("#mocCol").on('change', function () {
+		$("#kamlaunchDetailsTab").click();
+		$("#editDet").dataTable().fnDestroy();
+		//kambaseoTable.draw();
+		var tmeselectedmoc = $(this).val(); //'All';
+		loadTmeLauches(tmeselectedmoc);	
+			     
+    });	
 		
 });
  
@@ -769,3 +778,53 @@ function nextQueryAns() {
          }
      });
 }
+
+//Q1 sprint feb 2021 kavitha starts
+function loadTmeLauches(tmeselectedmoc) {
+	tmebaseoTable = $('#editDet').DataTable( {
+		"scrollY":       "280px",
+			"destroy": true,  
+			"paging":  true,
+			"ordering": false,
+			"searching": false,
+			"lengthMenu" : [
+				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
+				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
+			"oLanguage": {
+				  "sSearch": '<i class="icon-search"></i>',
+				  "sEmptyTable": "No Pending Launch.",
+				  "oPaginate": {
+					  "sNext": "&rarr;",
+					  "sPrevious": "&larr;"
+				  },
+				  "sLengthMenu": "Records per page _MENU_ ",
+				  
+
+			  },
+			"sAjaxSource" : "getAllLaunchtmeData.htm",
+			  "fnServerParams" : function(aoData) {
+					aoData.push({ "name": "tmeMoc", "value": tmeselectedmoc });
+				},
+				//"aaData": data,
+				"aoColumns" : [
+						{
+						  mData: 'launchId',
+						  "mRender": function(data, type, full) {
+							return '<input type="checkbox" name="editLaunchscr1" class="editlaunchsel" value=' + data + '>';
+						  }
+						},
+						{mData : 'launchName'},
+						//{mData : 'launchMoc'},
+						{
+						  mData: 'launchMoc',
+						  //"mRender": function(data, type, full) {
+							//return full.launchMoc + '<input type = "hidden" class="mocDate"  value=' + full.launchDate + '>';
+						  //}
+						},
+						{mData : 'launchFinalStatus'},
+						 
+					],
+			});
+	tmebaseoTable.draw();
+}
+//Q1 sprint feb 2021 kavitha ends

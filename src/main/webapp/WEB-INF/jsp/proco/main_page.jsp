@@ -48,7 +48,7 @@
 				
 				<div class="col-md-2 col-sm-9 col-sm-offset-2 col-md-offset-3 loginL-right">
 					<c:if test="${roleId eq 'TME'}">
-						<a href="http://34.120.128.205/VisibilityAssetTracker/dashboard.htm">
+						<a href="http://34.120.182.42/VisibilityAssetTracker/dashboard.htm">
 							<div class="main-login-box">
 								<div class="mt-vat">Visibility Asset</div>
 								<div>Tracker</div>
@@ -56,7 +56,7 @@
 						</a>
 					</c:if>
 					<c:if test="${roleId eq 'COE'}">
-						<a href="http://34.120.128.205/VisibilityAssetTracker/coeDashboard.htm">
+						<a href="http://34.120.182.42/VisibilityAssetTracker/coeDashboard.htm">
 							<div class="main-login-box">
 								<div class="mt-vat">Visibility Asset</div>
 								<div>Tracker</div>
@@ -64,7 +64,7 @@
 						</a>
 					</c:if>
 					<c:if test="${roleId eq 'KAM'}">
-						<a href="http://34.120.128.205/VisibilityAssetTracker/kamDashboard.htm">
+						<a href="http://34.120.182.42/VisibilityAssetTracker/kamDashboard.htm">
 							<div class="main-login-box">
 								<div class="mt-vat">Visibility Asset</div>
 								<div>Tracker</div>
@@ -73,7 +73,7 @@
 					</c:if>
 					
 					<c:if test="${roleId eq 'NCMM'}">
-						<a href="http://34.120.128.205/VisibilityAssetTracker/finDashboard.htm">
+						<a href="http://34.120.182.42/VisibilityAssetTracker/finDashboard.htm">
 							<div class="main-login-box">
 								<div class="mt-vat">Visibility Asset</div>
 								<div>Tracker</div>
@@ -83,7 +83,7 @@
 				</div>
 				<div class="col-md-2 col-sm-9 col-sm-offset-2 col-md-offset-0">
 					<c:if test="${roleId eq 'COE'}">
-						<a href="http://34.120.128.205/VisibilityAssetTracker/promoStatusTracker.htm">
+						<a href="http://34.120.182.42/VisibilityAssetTracker/promoStatusTracker.htm">
 						<div class="proco-login-box">
 							<div class="mt-vat">MT PROCO Tool</div>
 						</div>
@@ -91,7 +91,7 @@
 					</c:if>
 					
 					<c:if test="${roleId eq 'TME'}">
-						<a href="http://34.120.128.205/VisibilityAssetTracker/procoHome.htm">
+						<a href="http://34.120.182.42/VisibilityAssetTracker/procoHome.htm">
 						<div class="proco-login-box">
 							<div class="mt-vat">MT PROCO Tool</div>
 						</div>
@@ -99,7 +99,7 @@
 					</c:if>
 					
 					<c:if test="${roleId eq 'KAM'}">
-						<a href="http://34.120.128.205/VisibilityAssetTracker/procoHome.htm">
+						<a href="http://34.120.182.42/VisibilityAssetTracker/procoHome.htm">
 						<div class="proco-login-box">
 							<div class="mt-vat">MT PROCO Tool</div>
 						</div>
@@ -107,7 +107,7 @@
 					</c:if>
 					
 					<c:if test="${roleId eq 'NCMM'}">
-						<a href="http://34.120.128.205/VisibilityAssetTracker/procoHome.htm">
+						<a href="http://34.120.182.42/VisibilityAssetTracker/procoHome.htm">
 						<div class="proco-login-box">
 							<div class="mt-vat">MT PROCO Tool</div>
 						</div>
@@ -119,7 +119,7 @@
 				
 				 <div class="col-md-2 col-sm-9 col-sm-offset-2 col-md-offset-0">
 					<c:if test="${roleId eq 'TME'}">
-						<a href="http://34.120.128.205/VisibilityAssetTracker/getLaunchPlanPage.htm">
+						<a href="http://34.120.182.42/VisibilityAssetTracker/getLaunchPlanPage.htm">
 							<div class="comp-logofor-launch">
 								<div class="mt-vat">Launch Tool</div>
 								
@@ -127,7 +127,7 @@
 						</a>
 					</c:if>
 					 <c:if test="${roleId eq 'COE'}">
-						<a href="http://34.120.128.205/VisibilityAssetTracker/getAllCompletedLaunchData.htm">
+						<a href="http://34.120.182.42/VisibilityAssetTracker/getAllCompletedLaunchData.htm">
 							<div class="comp-logofor-launch">
 								<div class="mt-vat">Launch Tool</div>
 								
@@ -135,7 +135,7 @@
 						</a>
 					</c:if> 
 					<c:if test="${roleId eq 'KAM'}">
-						<a href="http://34.120.128.205/VisibilityAssetTracker/getAllCompletedLaunchDataKam.htm">
+						<a href="http://34.120.182.42/VisibilityAssetTracker/getAllCompletedLaunchDataKam.htm">
 							<div class="comp-logofor-launch">
 								<div class="mt-vat">Launch Tool</div>
 								
@@ -143,7 +143,7 @@
 						</a>
 					</c:if> 
 					<c:if test="${roleId eq 'SC'}">
-						<a href="http://34.120.128.205/VisibilityAssetTracker/getAllCompletedLaunchDataSc.htm">
+						<a href="http://34.120.182.42/VisibilityAssetTracker/getAllCompletedLaunchDataSc.htm">
 							<div class="comp-logofor-launch">
 								<div class="mt-vat">Launch Tool</div>
 								
@@ -154,21 +154,21 @@
 				
 			<div class="col-md-2 col-sm-9 col-sm-offset-2 col-md-offset-0">
 				<c:if test="${roleId eq 'KAM'}">
-						<a href="http://34.120.128.205/VisibilityAssetTracker/cpsKamHome.htm">
+						<a href="http://34.120.182.42/VisibilityAssetTracker/cpsKamHome.htm">
 							<div class="main-cps-login-box">
 								<div class="mt-vat">CPS System</div>
 							</div>
 						</a>
 					</c:if>
 					<c:if test="${roleId eq 'NCMM'}">
-						<a href="http://34.120.128.205/VisibilityAssetTracker/cpsNcmmHome.htm">
+						<a href="http://34.120.182.42/VisibilityAssetTracker/cpsNcmmHome.htm">
 							<div class="main-cps-login-box">
 								<div class="mt-vat">CPS System</div>
 							</div>
 						</a>
 					</c:if>
 					<%-- <c:if test="${roleId eq 'MTFIN'}">
-						<a href="http://34.120.128.205/VisibilityAssetTracker/cpsMtFinHome.htm">
+						<a href="http://34.120.182.42/VisibilityAssetTracker/cpsMtFinHome.htm">
 							<div class="main-cps-login-box">
 								<div class="mt-vat">CPS System</div>
 							</div>

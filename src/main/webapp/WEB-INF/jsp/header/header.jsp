@@ -24,9 +24,9 @@
 								value="${username}"></c:out></span> <strong class="caret"></strong></a>
 					<div class="dropdown-menu user-info">
 						<ul>
-							<li><a href="http://34.120.128.205/VisibilityAssetTracker/tmeEditPassword.htm" data-toggle="modal" class="modelClick"
+							<li><a href="http://34.120.182.42/VisibilityAssetTracker/tmeEditPassword.htm" data-toggle="modal" class="modelClick"
 								data-target="#change_pswd">CHANGE PASSWORD</a></li>
-							<li><a href="http://34.120.128.205/VisibilityAssetTracker/logoutForm.htm" class="modelClick">LOGOUT</a></li>
+							<li><a href="http://34.120.182.42/VisibilityAssetTracker/logoutForm.htm" class="modelClick">LOGOUT</a></li>
 						</ul>
 					</div></li>
 			</ul>
@@ -49,9 +49,9 @@
 								value="${username}"></c:out></span> <strong class="caret"></strong></a>
 					<div class="dropdown-menu user-info">
 						<ul>
-							<li><a href="http://34.120.128.205/VisibilityAssetTracker/tmeEditPassword.htm" data-toggle="modal" class="modelClick"
+							<li><a href="http://34.120.182.42/VisibilityAssetTracker/tmeEditPassword.htm" data-toggle="modal" class="modelClick"
 								data-target="#change_pswd">CHANGE PASSWORD</a></li>
-							<li><a href="http://34.120.128.205/VisibilityAssetTracker/logoutForm.htm" class="modelClick">LOGOUT</a></li>
+							<li><a href="http://34.120.182.42/VisibilityAssetTracker/logoutForm.htm" class="modelClick">LOGOUT</a></li>
 						</ul>
 					</div></li>
 			</ul>
@@ -59,17 +59,17 @@
 	        	 <c:if test="${roleId eq 'KAM'}">
 	          
 	                 <div class="user-name pull-left">
-	                    <a href="http://34.120.128.205/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" aria-hidden="true"></i></a>
+	                    <a href="http://34.120.182.42/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" aria-hidden="true"></i></a>
 	                </div>
 	             </c:if> 
 		          <c:if test="${roleId eq 'NCMM'}">
 		           <div class="user-name pull-left">
-		                    <a href="http://34.120.128.205/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" aria-hidden="true"></i></a>
+		                    <a href="http://34.120.182.42/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" aria-hidden="true"></i></a>
 		                </div>
 		          </c:if>
 		          <c:if test="${roleId eq 'TME'}">
 		           <div class="user-name pull-left">
-		                    <a href="http://34.120.128.205/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" aria-hidden="true"></i></a>
+		                    <a href="http://34.120.182.42/VisibilityAssetTracker/goToHome.htm"><i class="fa fa-home" aria-hidden="true"></i></a>
 		                </div>
 		          </c:if>
           </div>       

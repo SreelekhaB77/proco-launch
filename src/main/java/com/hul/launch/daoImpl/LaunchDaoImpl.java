@@ -88,9 +88,11 @@ public class LaunchDaoImpl implements LaunchDao {
 	public void setSessionFactory(SessionFactory sf) {
 		this.sessionFactory = sf;
 	}
-
+//Q1 sprint 2021 feb kavitha
 	@Override
-	public List<LaunchDataResponse> getAllLaunchData(String userid) {
+	//public List<LaunchDataResponse> getAllLaunchData(String userid) 
+	public List<LaunchDataResponse> getAllLaunchData(String userId, String launchMOC)
+	{
 		List<LaunchDataResponse> liLaunchData = new ArrayList<>();
 		Session session = sessionFactory.getCurrentSession();
 		SessionImpl sessionImpl = (SessionImpl) session;
@@ -105,13 +107,18 @@ public class LaunchDaoImpl implements LaunchDao {
 							+ " LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc, TBL_LAUNCH_STAGE_STATUS tlss WHERE "
 							+ " tlc.LAUNCH_ID = tlss.LAUNCH_ID AND DATE(TRANSLATE('GHIJ-DE-AB', LAUNCH_DATE, 'ABCDEFGHIJ')) > NOW()");*/
 			
+			//Kavitha Changes - Q1 Sprint Feb2021
+			if (launchMOC.equalsIgnoreCase("All")) {
+				launchMOC = "";
+			}
+			
 			stmt = sessionImpl.connection().prepareStatement(
 					"SELECT tlc.LAUNCH_ID LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, "
 							+ " LAUNCH_BUSINESS_CASE, CATEGORY_SIZE, CLASSIFICATION, tlc.CREATED_BY CREATED_BY, "
 							+ " tlc.CREATED_DATE CREATED_DATE, tlss.LAUNCH_FINAL_STATUS LAUNCH_FINAL_STATUS, "
 							+ " LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc, TBL_LAUNCH_STAGE_STATUS tlss WHERE "
 							+ " tlc.LAUNCH_ID = tlss.LAUNCH_ID AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() "
-							+ " AND tlc.CREATED_BY = '" + userid + "'");
+							+ " AND tlc.CREATED_BY = '" + userId + "' AND LAUNCH_MOC LIKE '%" + launchMOC + "%'");
 
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -312,10 +319,21 @@ public class LaunchDaoImpl implements LaunchDao {
 							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' AND DATE(TRANSLATE('GHIJ-DE-AB', LAUNCH_DATE, 'ABCDEFGHIJ')) > NOW()");*/
 			
 			stmt = sessionImpl.connection().prepareStatement(
-					"SELECT LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE,"
+					/*"SELECT LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE,"
 							+ " CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,"
 							+ " CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE,LAUNCH_MOC,LAUNCH_SUBMISSION_DATE FROM TBL_LAUNCH_MASTER tlc WHERE"
-							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' ");
+							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' ");*/
+					
+					"SELECT tlc.LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE,"
+                    + " CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,"
+                    + " tlc.CREATED_BY, tlc.CREATED_DATE,tlc.UPDATED_BY, tlc.UPDATED_DATE,LAUNCH_MOC,LAUNCH_SUBMISSION_DATE,"
+                    + " GROUP_CONCAT(DISTINCT tlbt.ACCOUNT_NAME, '') AS ACCOUNT_NAME"  //Kavitha Changes Q1Print1 Feb2021
+                    + " FROM TBL_LAUNCH_MASTER tlc "
+                    + " LEFT OUTER JOIN TBL_LAUNCH_BUILDUP_TEMP tlbt ON tlbt.LAUNCH_ID = tlc.LAUNCH_ID "  //Kavitha Changes Q1Print1 Feb2021
+                    + " WHERE SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' "
+					+ " GROUP BY tlc.LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE, CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED, tlc.CREATED_BY, tlc.CREATED_DATE,tlc.UPDATED_BY, tlc.UPDATED_DATE,LAUNCH_MOC,LAUNCH_SUBMISSION_DATE ");
+
+
 							//+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()");
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -339,6 +357,7 @@ public class LaunchDaoImpl implements LaunchDao {
 				launchDataResponse.setUpdatedDate(rs.getDate(16));
 				launchDataResponse.setLaunchMoc(rs.getString(17));
 				launchDataResponse.setLaunchSubmissionDate(rs.getString(18));
+				launchDataResponse.setAccountName(rs.getString(19));
 				listOfCompletedLaunch.add(launchDataResponse);
 			}
 		} catch (Exception ex) {
@@ -1637,4 +1656,24 @@ public class LaunchDaoImpl implements LaunchDao {
 		}
 		return toReturn;
 	}
+	
+	 //Q1 sprint kavitha feb2021 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getAllMoc() {
+		try {
+			
+			Query query = sessionFactory.getCurrentSession().createNativeQuery(
+					"SELECT DISTINCT LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc WHERE  "
+					+ "date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() "
+					//+ "AND tlc.CREATED_BY = "
+					);
+				
+			List<String> list = query.list();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}	
 }

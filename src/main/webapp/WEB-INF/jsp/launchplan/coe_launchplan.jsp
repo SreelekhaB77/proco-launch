@@ -63,13 +63,13 @@
 					<div class="row">
 						<ul class="nav nav-pills">
 
-							<li role="presentation" class="active col-md-2 col-sm-8 col-xs-12 launch-icon-active">
-								<a href="http://34.120.128.205/VisibilityAssetTracker/getAllCompletedLaunchData.htm"> <!-- <div class="launch-icon"></div> -->
+							<li role="presentation" class="active col-md-3 col-sm-8 col-xs-12 launch-icon-active">
+								<a href="http://34.120.182.42/VisibilityAssetTracker/getAllCompletedLaunchData.htm"> <!-- <div class="launch-icon"></div> -->
 										<div class="tab-label-launch">Launch Plannning</div>
 								</a>
 							</li>
-							<li role="presentation" class="active col-md-2 col-sm-8 col-xs-12 launch-icon-inactive">
-								<a href="http://34.120.128.205/VisibilityAssetTracker/getAllCompletedLaunchData.htm"> <!-- <div class="launch-icon"></div> -->
+							<li role="presentation" class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
+								<a href="http://34.120.182.42/VisibilityAssetTracker/getAllCompletedLaunchData.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Performance</div>
 								</a>
 							</li>
@@ -150,11 +150,13 @@
 										<table class="table table-striped table-bordered" id="coebasepack_add" cellspacing="0" cellpadding="0" style="width: 100% ! important">
 											<thead class="thead-dark">
 												<tr>
-													<th><span class="proco-btn proco-btn-success table-head">Select</span></th>
-													<th><span class="proco-btn proco-btn-success table-head">Launch Name</span></th>
-													<th><span class="proco-btn proco-btn-success table-head">Launch MOC</span></th>
-													<th><span class="proco-btn proco-btn-success table-head">Submitted Date</span></th>
-													<th><span class="proco-btn proco-btn-success table-head">CMM</span></th>
+													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">Select</span></th>
+													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">Launch Name</span></th>
+													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">Launch MOC</span></th>
+													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">Submitted Date</span></th>
+													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">CMM</span></th>
+													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">Account Names</span></th>
+													
 												
 												</tr>
 											</thead>
@@ -166,6 +168,8 @@
 											         <td>${launch.launchMoc}</td>
 											         <td>${launch.createdDate}</td>
 											         <td>${launch.createdBy}</td>
+											         <td><textarea rows="3" cols="75">${launch.accountName}</textarea></td>
+											        
 											       </tr>
 											     </c:forEach>
 											</tbody>
@@ -174,6 +178,11 @@
 										<div class="coebtnclass">
 											<input type="button" onclick="CoeLaunch()" value="Launch Details" class="btn btn-secondary nxtclassification" id="coelnchDets" style="float: right;" />
 										</div>
+										
+										<div class="coebtnclass">
+											<input type="button"  value="Download" class="btn btn-secondary nxtclassification" id="coelnchDets" style="float: left;" />
+										</div>
+										
 										
 									</div>
 

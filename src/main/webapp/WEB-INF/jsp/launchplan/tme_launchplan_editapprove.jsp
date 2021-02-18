@@ -70,25 +70,25 @@
 
 							<li role="presentation"
 								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
-								<a href="http://34.120.128.205/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
+								<a href="http://34.120.182.42/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Launch Plannning</div>
 							</a>
 							</li>
 							<li role="presentation"
 								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-active">
-								<a href="http://34.120.128.205/VisibilityAssetTracker/getAllLaunchData.htm"> <!-- <div class="launch-icon"></div> -->
+								<a href="http://34.120.182.42/VisibilityAssetTracker/getAllLaunchData.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Edit & Approve</div>
 							</a>
 							</li>
 							<li role="presentation"
 								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
-								<a href="http://34.120.128.205/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
+								<a href="http://34.120.182.42/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Performance</div>
 							</a>
 							</li>
 							<li role="presentation"
 								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
-								<a href="http://34.120.128.205/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
+								<a href="http://34.120.182.42/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Timelines</div>
 							</a>
 							</li>
@@ -166,6 +166,17 @@
 							<div class="card-block">
 								<div class="child-table">
 									<div class="detail_table">
+									
+									<div class="col-md-3">
+                                            <label for="sel1" class="userlist-space custom-label-align"  >MOC:</label>
+                                             <select id="mocCol" class="form-control custom-select-align">
+                                                        <option value="All">All</option>
+                                                            <c:forEach items="${tmemoclist}" var="mocVal">
+                                                                    <option value="${mocVal}"><c:out value="${mocVal}"></c:out></option>
+                                                            </c:forEach>
+                                             </select></div>
+									
+									
 										<table
 											class="table table-striped table-bordered table-responsive"
 											id="editDet" cellspacing="0" cellpadding="0"
@@ -184,7 +195,7 @@
 														class="proco-btn proco-btn-success table-head">Status</span></th>
 												</tr>
 											</thead>
-											<tbody>
+										    <!--<tbody>
 												<c:forEach items="${listOfLaunchData}" var="editlaunch">
 													<tr>
 														<td><input type="checkbox" name="editLaunchscr1"
@@ -195,7 +206,7 @@
 
 													</tr>
 												</c:forEach>
-											</tbody>
+											</tbody>-->
 										</table>
 
 										<div class="coebtnclass">
