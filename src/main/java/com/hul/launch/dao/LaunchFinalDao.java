@@ -2,6 +2,7 @@ package com.hul.launch.dao;
 
 import java.util.ArrayList; 
 import java.util.List;
+import java.util.Map;
 
 import com.hul.launch.model.LaunchBuildUpTemp;
 import com.hul.launch.model.LaunchFinalCalVO;
@@ -101,4 +102,8 @@ public interface LaunchFinalDao {
 	public List<LaunchBuildUpTemp> getCldForDepoBasepackList(List<String> depoBasePackList, String launchId);
 	
 	public List<LaunchBuildUpTemp> getFinalBuildUpDepoLeveList(List<String> depoBasepackFmcgModifiedChainClusComboList, String launchId);
+	
+	//Sarin Changes - Launch Issue Feb2021 
+	public Map<String, String> getCldGsvForDepoBasepack(String launchId);
+	public List<LaunchBuildUpTemp> getFinalBuildUpDepoLevelList(String launchId);
 }

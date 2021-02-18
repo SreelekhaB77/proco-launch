@@ -1664,9 +1664,10 @@ public class LaunchDaoImpl implements LaunchDao {
 		try {
 			
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(
-					"SELECT DISTINCT LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc "
-					+ "WHERE SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED NOT IN ('1','2') "
-					+ "AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()");
+					"SELECT DISTINCT LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc WHERE  "
+					+ "date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() "
+					//+ "AND tlc.CREATED_BY = "
+					);
 				
 			List<String> list = query.list();
 			return list;
