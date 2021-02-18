@@ -37,8 +37,8 @@ public interface LaunchSellInDao {
 
 	public List<LaunchSellIn> getSellInForSellInNFinalEdit(int launchId, List<LaunchFinalPlanResponse> listOfBasepacks);
 
-	public List<LaunchStoreData> getListStoreData(LaunchSellIn launchSellIn, List<LaunchFinalPlanResponse> listOfFinal,
-			LaunchVisiPlanning launchVisiPlanning, String classification, List<String> liClusterName);
+	//public List<LaunchStoreData> getListStoreData(LaunchSellIn launchSellIn, List<LaunchFinalPlanResponse> listOfFinal, LaunchVisiPlanning launchVisiPlanning, String classification, List<String> liClusterName);
+	public List<LaunchStoreData> getListStoreData(List<LaunchSellIn> launchSellIn, List<LaunchFinalPlanResponse> listOfFinal, List<LaunchVisiPlanning> launchVisiPlanning, String classification, List<String> liClusterName, String launchId);
 
 	public String getClusterOnLaunchId(String launchId);
 
