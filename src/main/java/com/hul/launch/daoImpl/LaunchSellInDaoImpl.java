@@ -7,8 +7,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
@@ -815,7 +817,9 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 			return toReturn;
 		}
 	}
-
+	
+	//Sarin Changes - Commented & Added Below - Launch Issue Fix Feb2021
+	/*
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<LaunchStoreData> getListStoreData(LaunchSellIn launchSellIn, List<LaunchFinalPlanResponse> listOfFinal,
@@ -1080,7 +1084,350 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 		}
 		return liStoreData;
 	}
+	*/
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<LaunchStoreData> getListStoreData(List<LaunchSellIn> lstlaunchSellIn, List<LaunchFinalPlanResponse> listOfFinal,
+			List<LaunchVisiPlanning> lstlaunchVisiPlanning, String classification, List<String> liClusterName, String launchId) {
+		List<LaunchStoreData> liStoreData = null;
+		try {
+			String launchClassification = "";
+			if (classification.equals("Gold")) {
+				launchClassification = "'GOLD','SILVER','BRONZE'";
+			} else if (classification.equals("Silver")) {
+				launchClassification = "'BRONZE','SILVER'";
+			} else {
+				launchClassification = "'BRONZE'";
+			}
+			Query query;
+			/*
+			if (!liClusterName.contains("ALL INDIA")) {
+				//Garima - changes for concatenation
+				query = sessionFactory.getCurrentSession()
+						.createNativeQuery("SELECT HUL_OUTLET_CODE reporting_Codes,HUL_OUTLET_CODE hfs_Code,CUSTOMER_CODE,"
+								+ "CUSTOMER_CODE fmcg_Site_Code, ACCOUNT_NAME ACCOUNT_NAME_L1,DP_CHAIN ACCOUNT_NAME_L2, "
+								+ " UPPER(CURRENT_STORE_FORMAT) hul_Store_format,UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) CUSTOMER_STORE_FORMAT, CONCAT(ACCOUNT_NAME , CUSTOMER_STORE_FORMAT) "
+								+ "Ukey,BRANCH_CODE,DEPOT,FINAL_CLUSTER,'Units' unit_of_measurement FROM TBL_VAT_COMM_OUTLET_MASTER "
+								+ " WHERE ACCOUNT_NAME = '" + launchSellIn.getL2_CHAIN() + "' AND DP_CHAIN = '"
+								+ launchSellIn.getL1_CHAIN() + "' AND UPPER(CURRENT_STORE_FORMAT) = '"
+								+ launchSellIn.getSTORE_FORMAT()
+								+ "' AND FINAL_CLUSTER IN(:liClusterName) AND LAUNCH_FORMAT IN(" + launchClassification
+								+ ")");
+				//+ " UPPER(CURRENT_STORE_FORMAT) hul_Store_format,UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) CUSTOMER_STORE_FORMAT, ACCOUNT_NAME || CUSTOMER_STORE_FORMAT "
+				query.setParameterList("liClusterName", liClusterName);
+			} else {
+				//Garima - changes for concatenation
+				query = sessionFactory.getCurrentSession()
+						.createNativeQuery("SELECT HUL_OUTLET_CODE reporting_Codes,HUL_OUTLET_CODE hfs_Code,CUSTOMER_CODE,"
+								+ "CUSTOMER_CODE fmcg_Site_Code, ACCOUNT_NAME ACCOUNT_NAME_L1,DP_CHAIN ACCOUNT_NAME_L2, "
+								+ " UPPER(CURRENT_STORE_FORMAT) hul_Store_format,UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) CUSTOMER_STORE_FORMAT, CONCAT(ACCOUNT_NAME , CUSTOMER_STORE_FORMAT) "
+								+ "Ukey,BRANCH_CODE,DEPOT,FINAL_CLUSTER,'Units' unit_of_measurement FROM TBL_VAT_COMM_OUTLET_MASTER "
+								+ " WHERE ACCOUNT_NAME = '" + launchSellIn.getL2_CHAIN() + "' AND DP_CHAIN = '"
+								+ launchSellIn.getL1_CHAIN() + "' AND UPPER(CURRENT_STORE_FORMAT) = '"
+								+ launchSellIn.getSTORE_FORMAT() + "' AND LAUNCH_FORMAT IN(" + launchClassification
+								+ ")");
+				//+ " UPPER(CURRENT_STORE_FORMAT) hul_Store_format,UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) CUSTOMER_STORE_FORMAT, ACCOUNT_NAME || CUSTOMER_STORE_FORMAT "
+			}
+			*/
+			
+			if (!liClusterName.contains("ALL INDIA")) {
+				query = sessionFactory.getCurrentSession()
+						.createNativeQuery("SELECT HUL_OUTLET_CODE reporting_Codes,HUL_OUTLET_CODE hfs_Code,CUSTOMER_CODE,"
+								+ "CUSTOMER_CODE fmcg_Site_Code, ACCOUNT_NAME ACCOUNT_NAME_L1,DP_CHAIN ACCOUNT_NAME_L2, "
+								+ " UPPER(CURRENT_STORE_FORMAT) hul_Store_format,UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) CUSTOMER_STORE_FORMAT, CONCAT(ACCOUNT_NAME , CUSTOMER_STORE_FORMAT) "
+								+ "Ukey,BRANCH_CODE,DEPOT,FINAL_CLUSTER,'Units' unit_of_measurement FROM TBL_VAT_COMM_OUTLET_MASTER A "
+								+ " INNER JOIN TBL_LAUNCH_SELLIN S ON A.ACCOUNT_NAME = S.SELLIN_L2_CHAIN AND A.DP_CHAIN = S.SELLIN_L1_CHAIN "
+								+ " AND UPPER(A.CURRENT_STORE_FORMAT) = S.SELLIN_STORE_FORMAT "
+								+ " WHERE A.ACTIVE_STATUS = 'ACTIVE' AND LAUNCH_FORMAT IN (" + launchClassification + ") AND FINAL_CLUSTER IN(:liClusterName) AND S.SELLIN_LAUNCH_ID = " + launchId);
+				query.setParameterList("liClusterName", liClusterName);
+			} else {
+				query = sessionFactory.getCurrentSession()
+						.createNativeQuery("SELECT HUL_OUTLET_CODE reporting_Codes,HUL_OUTLET_CODE hfs_Code,CUSTOMER_CODE,"
+								+ "CUSTOMER_CODE fmcg_Site_Code, ACCOUNT_NAME ACCOUNT_NAME_L1,DP_CHAIN ACCOUNT_NAME_L2, "
+								+ " UPPER(CURRENT_STORE_FORMAT) hul_Store_format,UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) CUSTOMER_STORE_FORMAT, CONCAT(ACCOUNT_NAME , CUSTOMER_STORE_FORMAT) "
+								+ "Ukey,BRANCH_CODE,DEPOT,FINAL_CLUSTER,'Units' unit_of_measurement FROM TBL_VAT_COMM_OUTLET_MASTER A "
+								+ " INNER JOIN TBL_LAUNCH_SELLIN S ON A.ACCOUNT_NAME = S.SELLIN_L2_CHAIN AND A.DP_CHAIN = S.SELLIN_L1_CHAIN "
+								+ " AND UPPER(A.CURRENT_STORE_FORMAT) = S.SELLIN_STORE_FORMAT "
+								+ " WHERE A.ACTIVE_STATUS = 'ACTIVE' AND LAUNCH_FORMAT IN (" + launchClassification + ") AND S.SELLIN_LAUNCH_ID = " + launchId);
+			}
+			
+			Map<String, Integer> mapVisiAssetType = new HashMap<>();
+			Query queryVisi = sessionFactory.getCurrentSession()
+					.createNativeQuery("SELECT DISTINCT ASSET_TYPE, MAX(NO_OF_SHELVES) AS NO_OF_SHELVES FROM TBL_VAT_VISIBILITY_PLAN_MASTER WHERE NO_OF_SHELVES IS NOT NULL GROUP BY ASSET_TYPE ");
+			Iterator<Object> itrVisi = queryVisi.list().iterator();
+			while (itrVisi.hasNext()) {
+				Object[] obj = (Object[]) itrVisi.next();
+				mapVisiAssetType.put(obj[0].toString(), Integer.parseInt(obj[1].toString()));
+			}
+			
+			Iterator<Object> itr = query.list().iterator();
+			liStoreData = new ArrayList<>();
+			String basepackCode = "";
+			String basepackDesc = "";
+			String cld = "";
+			String mrp = "";
+			String gsv = "";
+			for (LaunchFinalPlanResponse launchFinalPlanResponse : listOfFinal) {
+				basepackCode = basepackCode + launchFinalPlanResponse.getBasepackCode() + ",";
+				basepackDesc = basepackDesc + launchFinalPlanResponse.getSkuName() + ",";
+				cld = cld + launchFinalPlanResponse.getCld() + ",";
+				mrp = mrp + launchFinalPlanResponse.getMrp() + ",";
+				gsv = gsv + launchFinalPlanResponse.getGsv() + ",";
+			}
 
+			String[] basepackCodeArr = basepackCode.split(",");
+			String[] basepackDescArr = basepackDesc.split(",");
+			String[] cldArr = cld.split(",");
+			String[] mrpArr = mrp.split(",");
+			String[] gsvArr = gsv.split(",");
+
+			while (itr.hasNext()) {
+				
+				LaunchSellIn launchSellIn = new LaunchSellIn();
+				LaunchVisiPlanning launchVisiPlanning = new LaunchVisiPlanning();
+				
+				Object[] obj = (Object[]) itr.next();
+				
+				for (int i = 0; i < lstlaunchSellIn.size(); i++) {
+					if ((obj[5].toString().equalsIgnoreCase(lstlaunchSellIn.get(i).getL1_CHAIN())) && 
+							(obj[4].toString().equalsIgnoreCase(lstlaunchSellIn.get(i).getL2_CHAIN())) &&
+							(obj[6].toString().equalsIgnoreCase(lstlaunchSellIn.get(i).getSTORE_FORMAT())) ) {
+						launchSellIn = lstlaunchSellIn.get(i);
+						break;
+					}
+				}
+				
+				if (lstlaunchVisiPlanning.size() == 0) {
+					launchVisiPlanning.setACCOUNT("");
+					launchVisiPlanning.setDEPTH_PER_SHELF_PER_SKU1("");
+					launchVisiPlanning.setFACING_PER_SHELF_PER_SKU1("");
+					launchVisiPlanning.setDEPTH_PER_SHELF_PER_SKU2("");
+					launchVisiPlanning.setFACING_PER_SHELF_PER_SKU2("");
+					launchVisiPlanning.setDEPTH_PER_SHELF_PER_SKU3("");
+					launchVisiPlanning.setFACING_PER_SHELF_PER_SKU3("");
+					launchVisiPlanning.setDEPTH_PER_SHELF_PER_SKU4("");
+					launchVisiPlanning.setFACING_PER_SHELF_PER_SKU4("");
+					launchVisiPlanning.setDEPTH_PER_SHELF_PER_SKU5("");
+					launchVisiPlanning.setFACING_PER_SHELF_PER_SKU5("");
+					launchVisiPlanning.setSTORES_PLANNED("0");
+					launchVisiPlanning.setSTORES_AVAILABLE("1");
+					launchVisiPlanning.setVISI_ASSET_1("");
+					launchVisiPlanning.setVISI_ASSET_2("");
+					launchVisiPlanning.setVISI_ASSET_3("");
+					launchVisiPlanning.setVISI_ASSET_4("");
+					launchVisiPlanning.setVISI_ASSET_5("");
+				} else {
+					for (int i = 0; i < lstlaunchVisiPlanning.size(); i++) {
+						if ( ((obj[5].toString() + ":" + obj[4].toString()).equalsIgnoreCase(lstlaunchVisiPlanning.get(i).getACCOUNT())) &&
+								(obj[6].toString().equalsIgnoreCase(lstlaunchVisiPlanning.get(i).getFORMAT())) ) {
+							launchVisiPlanning = lstlaunchVisiPlanning.get(i);
+							break;
+						}
+					}
+				}
+				
+				//System.out.println(launchSellIn.getSKU_SELLIN());
+				String[] sellInVal = launchSellIn.getSKU_SELLIN().split("~");
+				for (int i = 0; i < sellInVal.length; i++) {
+					LaunchStoreData launchStoreData = new LaunchStoreData();
+					launchStoreData.setReportingCode(obj[0].toString());
+					launchStoreData.setHfsCode(obj[1].toString());
+					launchStoreData.setFmcgCspCode(obj[2].toString());
+					launchStoreData.setFmcgSiteCode(obj[3].toString());
+					launchStoreData.setModifiedChain(obj[4].toString());
+					launchStoreData.setAccountFormatName(obj[4].toString());
+					launchStoreData.setAccountNameL1(obj[4].toString());
+					launchStoreData.setAccountNameL2(obj[5].toString());
+					launchStoreData.setHulStoreFormat(obj[6].toString());
+					launchStoreData.setCustomerStoreFormat(obj[7].toString());
+					launchStoreData.setuKey(obj[8].toString());
+					launchStoreData.setBranchCode(obj[9].toString());
+					launchStoreData.setDepot(obj[10].toString());
+					launchStoreData.setFinalCluster(obj[11].toString());
+					launchStoreData.setUnitOfMeasurement(obj[12].toString());
+					launchStoreData.setSkuFinalCount(sellInVal[i]);
+
+					double sellInForN = Double.parseDouble(sellInVal[i])
+							* Double.parseDouble(launchSellIn.getROTATIONS());
+					double sellInForN1 = Double.parseDouble(launchSellIn.getUPLIFT_N1())
+							* Double.parseDouble(sellInVal[i]) * Double.parseDouble(launchSellIn.getROTATIONS());
+					double sellInForN2 = Double.parseDouble(launchSellIn.getUPLIFT_N2())
+							* Double.parseDouble(sellInVal[i]) * Double.parseDouble(launchSellIn.getROTATIONS());
+
+					launchStoreData.setSellInN(Double.toString(sellInForN));
+					launchStoreData.setSellInN1(Double.toString(sellInForN1));
+					launchStoreData.setSellInN2(Double.toString(sellInForN2));
+
+					launchStoreData.setSkuFinalName(basepackDescArr[i]);
+					launchStoreData.setSkuFinalCode(basepackCodeArr[i]);
+					launchStoreData.setSkuFinalCld(cldArr[i]);
+					launchStoreData.setSkuFinalMrp(mrpArr[i]);
+					launchStoreData.setSkuFinalGsv(gsvArr[i]);
+					launchStoreData.setRotation(launchSellIn.getROTATIONS());
+					if ((launchVisiPlanning.getVISI_ASSET_1().equals("-1")
+							&& launchVisiPlanning.getVISI_ASSET_2().equals("-1")
+							&& launchVisiPlanning.getVISI_ASSET_3().equals("-1")
+							&& launchVisiPlanning.getVISI_ASSET_4().equals("-1")
+							&& launchVisiPlanning.getVISI_ASSET_5().equals("-1"))
+							|| (launchVisiPlanning.getVISI_ASSET_1().equals("")
+									&& launchVisiPlanning.getVISI_ASSET_2().equals("")
+									&& launchVisiPlanning.getVISI_ASSET_3().equals("")
+									&& launchVisiPlanning.getVISI_ASSET_4().equals("")
+									&& launchVisiPlanning.getVISI_ASSET_5().equals(""))) {
+						launchStoreData.setVisiCheck("0");
+					} else {
+						launchStoreData.setVisiCheck("1");
+					}
+
+					if (launchVisiPlanning.getVISI_ASSET_1().equals("-1")
+							|| launchVisiPlanning.getVISI_ASSET_1().equals("")) {
+						launchStoreData.setVisiElement1("");
+					} else {
+						launchStoreData.setVisiElement1(launchVisiPlanning.getVISI_ASSET_1());
+					}
+
+					if (launchVisiPlanning.getVISI_ASSET_2().equals("-1")
+							|| launchVisiPlanning.getVISI_ASSET_2().equals("")) {
+						launchStoreData.setVisiElement2("");
+					} else {
+						launchStoreData.setVisiElement2(launchVisiPlanning.getVISI_ASSET_2());
+					}
+
+					if (launchVisiPlanning.getVISI_ASSET_3().equals("-1")
+							|| launchVisiPlanning.getVISI_ASSET_3().equals("")) {
+						launchStoreData.setVisiElement3("");
+					} else {
+						launchStoreData.setVisiElement3(launchVisiPlanning.getVISI_ASSET_3());
+					}
+
+					if (launchVisiPlanning.getVISI_ASSET_4().equals("-1")
+							|| launchVisiPlanning.getVISI_ASSET_4().equals("")) {
+						launchStoreData.setVisiElement4("");
+					} else {
+						launchStoreData.setVisiElement4(launchVisiPlanning.getVISI_ASSET_4());
+					}
+
+					if (launchVisiPlanning.getVISI_ASSET_5().equals("-1")
+							|| launchVisiPlanning.getVISI_ASSET_5().equals("")) {
+						launchStoreData.setVisiElement5("");
+					} else {
+						launchStoreData.setVisiElement5(launchVisiPlanning.getVISI_ASSET_5());
+					}
+
+					launchStoreData.setUpliftN1(launchSellIn.getUPLIFT_N1());
+					launchStoreData.setUpliftN2(launchSellIn.getUPLIFT_N2());
+					int noOfShelveForV1 = 0;
+					if (!launchVisiPlanning.getVISI_ASSET_1().equals("-1")
+							&& !launchVisiPlanning.getVISI_ASSET_1().equals("")) {
+						//noOfShelveForV1 = launchVisiPlanDao.getShelvesByVisiName(launchVisiPlanning.getVISI_ASSET_1());
+						noOfShelveForV1 = mapVisiAssetType.get(launchVisiPlanning.getVISI_ASSET_1());
+					}
+
+					int noOfShelveForV2 = 0;
+					if (!launchVisiPlanning.getVISI_ASSET_2().equals("-1")
+							&& !launchVisiPlanning.getVISI_ASSET_2().equals("")) {
+						noOfShelveForV2 = launchVisiPlanDao.getShelvesByVisiName(launchVisiPlanning.getVISI_ASSET_2());
+					}
+					int noOfShelveForV3 = 0;
+					if (!launchVisiPlanning.getVISI_ASSET_3().equals("-1")
+							&& !launchVisiPlanning.getVISI_ASSET_3().equals("")) {
+						noOfShelveForV3 = launchVisiPlanDao.getShelvesByVisiName(launchVisiPlanning.getVISI_ASSET_3());
+					}
+					int noOfShelveForV4 = 0;
+					if (!launchVisiPlanning.getVISI_ASSET_4().equals("-1")
+							&& !launchVisiPlanning.getVISI_ASSET_4().equals("")) {
+						noOfShelveForV4 = launchVisiPlanDao.getShelvesByVisiName(launchVisiPlanning.getVISI_ASSET_4());
+					}
+					int noOfShelveForV5 = 0;
+					if (!launchVisiPlanning.getVISI_ASSET_5().equals("-1")
+							&& !launchVisiPlanning.getVISI_ASSET_5().equals("")) {
+						noOfShelveForV5 = launchVisiPlanDao.getShelvesByVisiName(launchVisiPlanning.getVISI_ASSET_5());
+					}
+
+					int depth1 = 0;
+					if (!launchVisiPlanning.getDEPTH_PER_SHELF_PER_SKU1().equals("")) {
+						depth1 = Integer.parseInt(launchVisiPlanning.getDEPTH_PER_SHELF_PER_SKU1());
+					}
+					int facing1 = 0;
+					if (!launchVisiPlanning.getFACING_PER_SHELF_PER_SKU1().equals("")) {
+						facing1 = Integer.parseInt(launchVisiPlanning.getFACING_PER_SHELF_PER_SKU1());
+					}
+					int depth2 = 0;
+					if (!launchVisiPlanning.getDEPTH_PER_SHELF_PER_SKU2().equals("")) {
+						depth2 = Integer.parseInt(launchVisiPlanning.getDEPTH_PER_SHELF_PER_SKU2());
+					}
+					int facing2 = 0;
+					if (!launchVisiPlanning.getFACING_PER_SHELF_PER_SKU2().equals("")) {
+						facing2 = Integer.parseInt(launchVisiPlanning.getFACING_PER_SHELF_PER_SKU2());
+					}
+					int depth3 = 0;
+					if (!launchVisiPlanning.getDEPTH_PER_SHELF_PER_SKU3().equals("")) {
+						depth3 = Integer.parseInt(launchVisiPlanning.getDEPTH_PER_SHELF_PER_SKU3());
+					}
+					int facing3 = 0;
+					if (!launchVisiPlanning.getFACING_PER_SHELF_PER_SKU3().equals("")) {
+						facing3 = Integer.parseInt(launchVisiPlanning.getFACING_PER_SHELF_PER_SKU3());
+					}
+					int depth4 = 0;
+					if (!launchVisiPlanning.getDEPTH_PER_SHELF_PER_SKU4().equals("")) {
+						depth4 = Integer.parseInt(launchVisiPlanning.getDEPTH_PER_SHELF_PER_SKU4());
+					}
+					int facing4 = 0;
+					if (!launchVisiPlanning.getFACING_PER_SHELF_PER_SKU4().equals("")) {
+						facing4 = Integer.parseInt(launchVisiPlanning.getFACING_PER_SHELF_PER_SKU4());
+					}
+					int depth5 = 0;
+					if (!launchVisiPlanning.getDEPTH_PER_SHELF_PER_SKU5().equals("")) {
+						depth5 = Integer.parseInt(launchVisiPlanning.getDEPTH_PER_SHELF_PER_SKU5());
+					}
+					int facing5 = 0;
+					if (!launchVisiPlanning.getFACING_PER_SHELF_PER_SKU5().equals("")) {
+						facing5 = Integer.parseInt(launchVisiPlanning.getFACING_PER_SHELF_PER_SKU5());
+					}
+					double finalVisiForN = (noOfShelveForV1 * depth1 * facing1) + (noOfShelveForV2 * depth2 * facing2)
+							+ (noOfShelveForV3 * depth3 * facing3) + (noOfShelveForV4 * depth4 * facing4)
+							+ (noOfShelveForV5 * depth5 * facing5);
+
+					if (classification.equals("Gold")) {
+						launchStoreData.setVisiSellInN(Double.toString(Integer.parseInt(launchStoreData.getVisiCheck())
+								* finalVisiForN * Double.parseDouble(launchVisiPlanning.getSTORES_PLANNED())
+								/ Double.parseDouble(launchVisiPlanning.getSTORES_AVAILABLE())));
+						launchStoreData.setVisiSellInN1(Double.toString(Integer.parseInt(launchStoreData.getVisiCheck())
+								* finalVisiForN * Double.parseDouble(launchVisiPlanning.getSTORES_PLANNED())
+								/ Double.parseDouble(launchVisiPlanning.getSTORES_AVAILABLE()) * 0.5));
+						launchStoreData.setVisiSellInN2(Double.toString(Integer.parseInt(launchStoreData.getVisiCheck())
+								* finalVisiForN * Double.parseDouble(launchVisiPlanning.getSTORES_PLANNED())
+								/ Double.parseDouble(launchVisiPlanning.getSTORES_AVAILABLE()) * 0.5));
+					} else {
+						launchStoreData.setVisiSellInN(Double.toString(0));
+						launchStoreData.setVisiSellInN1(Double.toString(Integer.parseInt(launchStoreData.getVisiCheck())
+								* finalVisiForN * Double.parseDouble(launchVisiPlanning.getSTORES_PLANNED())
+								/ Double.parseDouble(launchVisiPlanning.getSTORES_AVAILABLE())));
+						launchStoreData.setVisiSellInN2(Double.toString(Integer.parseInt(launchStoreData.getVisiCheck())
+								* finalVisiForN * Double.parseDouble(launchVisiPlanning.getSTORES_PLANNED())
+								/ Double.parseDouble(launchVisiPlanning.getSTORES_AVAILABLE()) * 0.5));
+					}
+
+					launchStoreData
+							.setRevisedSellInForStoreN(Double.toString(Double.parseDouble(launchStoreData.getSellInN())
+									+ (Double.parseDouble(launchStoreData.getVisiSellInN()))));
+					launchStoreData.setRevisedSellInForStoreN1(
+							Double.toString(Double.parseDouble(launchStoreData.getSellInN1())
+									+ (Double.parseDouble(launchStoreData.getVisiSellInN1()))));
+					launchStoreData.setRevisedSellInForStoreN2(
+							Double.toString(Double.parseDouble(launchStoreData.getSellInN2())
+									+ (Double.parseDouble(launchStoreData.getVisiSellInN2()))));
+
+					liStoreData.add(launchStoreData);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return liStoreData;
+	}
+	
 	@Override
 	public String getClusterOnLaunchId(String launchId) {
 		Session session = sessionFactory.getCurrentSession();
@@ -1134,7 +1481,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 								+ "CUSTOMER_CODE fmcg_Site_Code, ACCOUNT_NAME ACCOUNT_NAME_L1,DP_CHAIN ACCOUNT_NAME_L2, "
 								+ " UPPER(CURRENT_STORE_FORMAT) hul_Store_format,UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) CUSTOMER_STORE_FORMAT, CONCAT(ACCOUNT_NAME , CUSTOMER_STORE_FORMAT) "
 								+ "Ukey,BRANCH_CODE,DEPOT,FINAL_CLUSTER,'Units' unit_of_measurement FROM TBL_VAT_COMM_OUTLET_MASTER "
-								+ " WHERE ACCOUNT_NAME = '" + launchSellIn.getL2_CHAIN() + "' AND DP_CHAIN = '"
+								+ " WHERE ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME = '" + launchSellIn.getL2_CHAIN() + "' AND DP_CHAIN = '"
 								+ launchSellIn.getL1_CHAIN() + "' AND UPPER(CURRENT_STORE_FORMAT) = '"
 								+ launchSellIn.getSTORE_FORMAT()
 								+ "' AND FINAL_CLUSTER IN(:liClusterName) AND LAUNCH_FORMAT IN(" + launchClassification
@@ -1148,7 +1495,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 								+ "CUSTOMER_CODE fmcg_Site_Code, ACCOUNT_NAME ACCOUNT_NAME_L1,DP_CHAIN ACCOUNT_NAME_L2, "
 								+ " UPPER(CURRENT_STORE_FORMAT) hul_Store_format,UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) CUSTOMER_STORE_FORMAT, CONCAT(ACCOUNT_NAME , CUSTOMER_STORE_FORMAT) "
 								+ "Ukey,BRANCH_CODE,DEPOT,FINAL_CLUSTER,'Units' unit_of_measurement FROM TBL_VAT_COMM_OUTLET_MASTER "
-								+ " WHERE ACCOUNT_NAME = '" + launchSellIn.getL2_CHAIN() + "' AND DP_CHAIN = '"
+								+ " WHERE ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME = '" + launchSellIn.getL2_CHAIN() + "' AND DP_CHAIN = '"
 								+ launchSellIn.getL1_CHAIN() + "' AND UPPER(CURRENT_STORE_FORMAT) = '"
 								+ launchSellIn.getSTORE_FORMAT() + "' AND LAUNCH_FORMAT IN(" + launchClassification
 								+ ") AND UPPER(KAM_MAIL_ID) = '" + upperKam + "'");
