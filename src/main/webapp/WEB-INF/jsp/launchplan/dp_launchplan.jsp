@@ -65,12 +65,12 @@
 						<ul class="nav nav-pills">
 
 							<li role="presentation" class="active col-md-3 col-sm-8 col-xs-12 launch-icon-active">
-								<a href="http://34.120.182.42/VisibilityAssetTracker/getAllCompletedLaunchDataDp.htm"> <!-- <div class="launch-icon"></div> -->
+								<a href="http://34.120.128.205/VisibilityAssetTracker/getAllCompletedLaunchDataDp.htm"> <!-- <div class="launch-icon"></div> -->
 										<div class="tab-label-launch">Launch Plannning</div>
 								</a>
 							</li>
 							<li role="presentation" class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
-								<a href="http://34.120.182.42/VisibilityAssetTracker/getAllCompletedLaunchDataDp.htm"> <!-- <div class="launch-icon"></div> -->
+								<a href="http://34.120.128.205/VisibilityAssetTracker/getAllCompletedLaunchDataDp.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Performance</div>
 								</a>
 							</li>

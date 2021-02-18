@@ -95,10 +95,14 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 				launchVisiPlanning.setVISI_ASSET_5("");
 			}
 
-			listOfAllLaunchStoreData.add(launchSellInDao.getListStoreData(launchSellIn, listOfFinal, launchVisiPlanning,
-					launchDataResonse.getClassification(), liClusterName));
+			/*listOfAllLaunchStoreData.add(launchSellInDao.getListStoreData(launchSellIn, listOfFinal, launchVisiPlanning,
+					launchDataResonse.getClassification(), liClusterName));*/
 			whichVisi++;
 		}
+		
+		listOfAllLaunchStoreData.add(launchSellInDao.getListStoreData(listOfSellIn, listOfFinal, visiSkuCalModel, 
+				launchDataResonse.getClassification(), liClusterName, launchId));
+		
 		launchFinalDao.deleteAllBuildUp(launchId);
 		// Save Build temp data
 		launchFinalDao.saveLaunchBuildUpTemp(listOfAllLaunchStoreData, launchId, userId);
@@ -159,10 +163,26 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 		}
 
 		launchFinalDao.deleteAllTempCal(launchId);
+		
+		//Sarin Changes - Launch Issue
+		Map<String, String> mapDepoCldGsv = launchFinalDao.getCldGsvForDepoBasepack(launchId);
+		List<LaunchBuildUpTemp> lstLaunchBuildUpTemp = launchFinalDao.getFinalBuildUpDepoLevelList(launchId);
+		
+		int iCnt = 0;
 		for (String depoBasepackFmcgModifiedChainClusCombo : allDistinctFinalBuildsCombo) {
+			//System.out.println(iCnt);
 			LaunchBuildUpTemp launchBuildUpTemp = new LaunchBuildUpTemp();
-			LaunchBuildUpTemp listOfBuildUps = launchFinalDao
-					.getFinalBuildUpDepoLevel(depoBasepackFmcgModifiedChainClusCombo, launchId);
+			//LaunchBuildUpTemp listOfBuildUps = launchFinalDao.getFinalBuildUpDepoLevel(depoBasepackFmcgModifiedChainClusCombo, launchId);
+			LaunchBuildUpTemp listOfBuildUps = new LaunchBuildUpTemp();
+			for (LaunchBuildUpTemp launchBuildup: lstLaunchBuildUpTemp) {
+				if (launchBuildup.getUKEY().equalsIgnoreCase(depoBasepackFmcgModifiedChainClusCombo)) {
+					listOfBuildUps.setREVISED_SELLIN_FOR_STORE_N(launchBuildup.getREVISED_SELLIN_FOR_STORE_N());
+					listOfBuildUps.setREVISED_SELLIN_FOR_STORE_N1(launchBuildup.getREVISED_SELLIN_FOR_STORE_N1());
+					listOfBuildUps.setREVISED_SELLIN_FOR_STORE_N2(launchBuildup.getREVISED_SELLIN_FOR_STORE_N2());
+					listOfBuildUps.setSTORE_COUNT(launchBuildup.getSTORE_COUNT());
+					break;
+				}
+			}
 			String substr = "";
 			List<Integer> list = new ArrayList<>();
 			char character = ',';
@@ -172,7 +192,15 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 				}
 			}
 			substr = depoBasepackFmcgModifiedChainClusCombo.substring(0, list.get(1));
-			LaunchBuildUpTemp cldValue = launchFinalDao.getCldForDepoBasepack(substr, launchId);
+			//Sarin Changes
+			//LaunchBuildUpTemp cldValue = launchFinalDao.getCldForDepoBasepack(substr, launchId);
+			LaunchBuildUpTemp cldValue = new LaunchBuildUpTemp();
+			String cldGsv = mapDepoCldGsv.get(substr);
+			String[] arrCldGsv = cldGsv.split("~");
+			String Cld = arrCldGsv[0];
+			String Gsv = arrCldGsv[1];
+			cldValue.setCLD_SIZE(Cld);
+			
 			Map<String, String> calculationData = finalData.get(substr);
 			double cldWithFactorsN = (Double.parseDouble(listOfBuildUps.getREVISED_SELLIN_FOR_STORE_N())
 					/ Double.parseDouble(cldValue.getCLD_SIZE())) * Double.parseDouble(calculationData.get("factorN"));
@@ -191,7 +219,11 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 			double finalUnitsN1 = finalCldN1 * Double.parseDouble(cldValue.getCLD_SIZE());
 			double finalUnitsN2 = finalCldN2 * Double.parseDouble(cldValue.getCLD_SIZE());
 
-			LaunchBuildUpTemp gsvValue = launchFinalDao.getGsvForDepoBasepack(substr, launchId);
+			//Sarin Changes
+			//LaunchBuildUpTemp gsvValue = launchFinalDao.getGsvForDepoBasepack(substr, launchId);
+			LaunchBuildUpTemp gsvValue = new LaunchBuildUpTemp();
+			gsvValue.setGSV(Gsv);
+			
 			double finalValueN = finalUnitsN * Double.parseDouble(gsvValue.getGSV());
 			double finalValueN1 = finalUnitsN1 * Double.parseDouble(gsvValue.getGSV());
 			double finalValueN2 = finalUnitsN2 * Double.parseDouble(gsvValue.getGSV());
@@ -213,9 +245,14 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 			launchBuildUpTemp.setSELLIN_UNITS_N2(Double.toString(finalUnitsN2));
 			launchBuildUpTemp.setSTORE_COUNT(listOfBuildUps.getSTORE_COUNT());
 			launchBuildUpTemp.setCLUSTER(listOfBuildUps.getCLUSTER());
+			
 			launchFinalDao.saveFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp, userId);
-			launchFinalDao.updateFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp,
-					userId);
+			//launchFinalDao.updateFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp, userId);
+			
+			if (iCnt == allDistinctFinalBuildsCombo.size() - 1) {
+				launchFinalDao.updateFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp, userId);
+			} 
+			iCnt++;
 		}
 
 		List<LaunchFinalPlanResponse> listOfFinalFinal = new ArrayList<>();
@@ -288,10 +325,12 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 				launchVisiPlanning.setVISI_ASSET_5("");
 			}
 
-			listOfAllLaunchStoreData.add(launchSellInDao.getListStoreData(launchSellIn, listOfFinalForEdit,
-					launchVisiPlanning, launchDataResonse.getClassification(), liClusterName));
+			/*listOfAllLaunchStoreData.add(launchSellInDao.getListStoreData(launchSellIn, listOfFinalForEdit,
+					launchVisiPlanning, launchDataResonse.getClassification(), liClusterName)); */
 			whichVisi++;
 		}
+		listOfAllLaunchStoreData.add(launchSellInDao.getListStoreData(listOfSellIn, listOfFinal, visiSkuCalModel, 
+				launchDataResonse.getClassification(), liClusterName, launchId));
 		launchFinalDao.deleteAllBuildUp(launchId);
 		// Save Build temp data
 		launchFinalDao.saveLaunchBuildUpTemp(listOfAllLaunchStoreData, launchId, userId);

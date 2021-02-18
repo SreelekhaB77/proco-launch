@@ -55,19 +55,19 @@
 				<div class="row">
 					<ul class="nav nav-pills">
 
-						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 proco-craetion-active"><a href="http://34.120.182.42/VisibilityAssetTracker/promoCreation.htm">
+						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 proco-craetion-active"><a href="http://34.120.128.205/VisibilityAssetTracker/promoCreation.htm">
 								<div class="proco-create-icon"></div>
 								<div class="tab-label-proco-create-active">Promo Creation</div>
 						</a></li>
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 listing"><a
-							href="http://34.120.182.42/VisibilityAssetTracker/promoListing.htm">
+							href="http://34.120.128.205/VisibilityAssetTracker/promoListing.htm">
 								<div class="proco-listing-icon"></div>
 								<div class="tab-label-proco-create-inactive OpenSans-font">Promo Listing</div>
 						</a></li>
 
 						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="http://34.120.182.42/VisibilityAssetTracker/promoDeletion.htm">
+							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="http://34.120.128.205/VisibilityAssetTracker/promoDeletion.htm">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
@@ -98,7 +98,7 @@
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${errorMsg}"></c:out>
 				<c:if test="${FILE_STATUS=='ERROR_FILE'}">
-					<a href="http://34.120.182.42/VisibilityAssetTracker/downloadPromotionErrorFile.htm" id="downloadTempFileLink">Click
+					<a href="http://34.120.128.205/VisibilityAssetTracker/downloadPromotionErrorFile.htm" id="downloadTempFileLink">Click
 						here to Download Error File:</a>
 
 				</c:if>
@@ -117,11 +117,11 @@
 		<div class="proco-creation form-horizontal">
 
 			<!-- <div class="promo-back">
-				<a href="http://34.120.182.42/VisibilityAssetTracker/procoHome.htm"><span
+				<a href="http://34.120.128.205/VisibilityAssetTracker/procoHome.htm"><span
 					class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promotion
 				Creation
 			</div> -->
-			<form:form action="http://34.120.182.42/VisibilityAssetTracker/createPromotion.htm"
+			<form:form action="http://34.120.128.205/VisibilityAssetTracker/createPromotion.htm"
 				modelAttribute="CreatePromotionBean" enctype="multipart/form-data"
 				method="POST" id="createPromoForm">
 				
@@ -587,7 +587,7 @@
 				</div>
 			</form:form>
 
-			<form:form action="http://34.120.182.42/VisibilityAssetTracker/uploadPromoCreation.htm" id="promoCreateUpload"
+			<form:form action="http://34.120.128.205/VisibilityAssetTracker/uploadPromoCreation.htm" id="promoCreateUpload"
 				method="POST" modelAttribute="CreatePromotionBean"
 				enctype="multipart/form-data" >
 				<div class="promo-upload">PROMO UPLOAD</div>
@@ -619,12 +619,12 @@
 			</form:form>
 			<!-- <div class="sample-upload-file">
 				 <span><i class="glyphicon glyphicon-cloud-download"></i></span> <span>
-					<a href="http://34.120.182.42/VisibilityAssetTracker/downloadPromotionTemplateFile.htm" style="color: #ffffff"
+					<a href="http://34.120.128.205/VisibilityAssetTracker/downloadPromotionTemplateFile.htm" style="color: #ffffff"
 					id="downloadTemplate" class="modelClick"><b
 						class="SEGOEUIL-font">Click here to download the Template file</b></a>
 				</span>
 			</div> -->
-			<form:form action="http://34.120.182.42/VisibilityAssetTracker/downloadPromotionTemplateFile.htm" id="getPromoTemplate"
+			<form:form action="http://34.120.128.205/VisibilityAssetTracker/downloadPromotionTemplateFile.htm" id="getPromoTemplate"
 				method="GET" modelAttribute="CreatePromotionBean"
 				enctype="multipart/form-data">
 				<button class="sample-upload-file" style="color: #ffffff; width: 552px;">Click here to download the Template file</button>
@@ -707,7 +707,7 @@
 		$.ajax({
 		type : "POST",
 		contentType : "application/json; charset=utf-8",
-		url : "http://34.120.182.42/VisibilityAssetTracker/getMocMonthForProco.htm?startDate=" + $('#startdate').val()+"&endDate="+$('#enddate').val(),
+		url : "http://34.120.128.205/VisibilityAssetTracker/getMocMonthForProco.htm?startDate=" + $('#startdate').val()+"&endDate="+$('#enddate').val(),
 		success : function(data) {
 			if(data.length>0){
 			$('#moc').val(data);
