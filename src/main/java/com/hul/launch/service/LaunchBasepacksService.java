@@ -53,19 +53,25 @@ public interface LaunchBasepacksService {
 	public List<LaunchBasePackResponse> getLaunchBasePackDetails(String basepackCode);
 
 	public List<String> getLaunchStores(List<String> liClusterName, List<String> accountl1String,
-			List<String> accountl2String, String classification);
+			List<String> accountl2String, String classification
+			, boolean isCustomStoreFormat);  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 
 	public Object getCustomerStoreFormat(List<String> liClusterName, List<String> accountl1String,
-			List<String> accountl2String, String classification);
+			List<String> accountl2String, String classification
+			, boolean isCustomStoreFormat);  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 
 	public String getStoreCountOnCust(String custStoreFormat, List<String> accountl1String,
-			List<String> accountl2String, List<String> liClusterName, String classification);
+			List<String> accountl2String, List<String> liClusterName, String classification
+			, boolean isCustomStoreFormat);  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 
 	public String getStoreCountOnStore(String storeFormat, List<String> accountl1String, List<String> accountl2String,
-			List<String> liClusterName, String classification);
+			List<String> liClusterName, String classification
+			, boolean isCustomStoreFormat);  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 
-	public String getStoreCountByClass(List<String> liClusterName, List<String> accountl1String,
-			List<String> accountl2String, String classification);
+	//Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
+	//public String getStoreCountByClass(List<String> liClusterName, List<String> accountl1String,List<String> accountl2String, String classification);
+	public String getStoreCountByClass(List<String> liClusterName, List<String> accountl1String, 
+			List<String> accountl2String, String classification, boolean isCustomStoreFormat);
 
 	List<String> getBasepackCodeOnLaunchId(String launchId);
 

@@ -231,7 +231,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 								l1List.add(accountL1);
 								l2List.add(accountDataL2);
 								String countOfStores = launchBasePacksDao.getStoreCountOnStore(storeFormat, l1List,
-										l2List, liClusterName, launchDataResponse.getClassification());
+										l2List, liClusterName, launchDataResponse.getClassification(), false);  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 								if (!countOfStores.equals("0")) {
 									sellInResponse.setStoresPlanned(countOfStores);
 									sellInResponse.setL1Chain(accountL1);
@@ -349,7 +349,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 								l1List.add(accountL1);
 								l2List.add(accountDataL2);
 								String storeCount = launchBasePacksDao.getStoreCountOnStore(storeFormat, l1List, l2List,
-										liClusterName, launchDataResponse.getClassification());
+										liClusterName, launchDataResponse.getClassification(), false);  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 
 								if (!storeCount.equals("0")) {
 									sellInResponse.setL1Chain(accountL1);
@@ -1100,6 +1100,11 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 			} else {
 				launchClassification = "'BRONZE'";
 			}
+			//Sarin Changes - Q1Sprint Feb2021
+			if (getIncludeAllStoreFormat(launchId).equalsIgnoreCase("Yes")) {
+				launchClassification = "'GOLD','SILVER','BRONZE'";
+			}
+			
 			Query query;
 			/*
 			if (!liClusterName.contains("ALL INDIA")) {
@@ -1139,7 +1144,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 								+ "Ukey,BRANCH_CODE,DEPOT,FINAL_CLUSTER,'Units' unit_of_measurement FROM TBL_VAT_COMM_OUTLET_MASTER A "
 								+ " INNER JOIN TBL_LAUNCH_SELLIN S ON A.ACCOUNT_NAME = S.SELLIN_L2_CHAIN AND A.DP_CHAIN = S.SELLIN_L1_CHAIN "
 								+ " AND UPPER(A.CURRENT_STORE_FORMAT) = S.SELLIN_STORE_FORMAT "
-								+ " WHERE LAUNCH_FORMAT IN (" + launchClassification + ") AND FINAL_CLUSTER IN(:liClusterName) AND S.SELLIN_LAUNCH_ID = " + launchId);
+								+ " WHERE A.ACTIVE_STATUS = 'ACTIVE' AND LAUNCH_FORMAT IN (" + launchClassification + ") AND FINAL_CLUSTER IN(:liClusterName) AND S.SELLIN_LAUNCH_ID = " + launchId);
 				query.setParameterList("liClusterName", liClusterName);
 			} else {
 				query = sessionFactory.getCurrentSession()
@@ -1149,7 +1154,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 								+ "Ukey,BRANCH_CODE,DEPOT,FINAL_CLUSTER,'Units' unit_of_measurement FROM TBL_VAT_COMM_OUTLET_MASTER A "
 								+ " INNER JOIN TBL_LAUNCH_SELLIN S ON A.ACCOUNT_NAME = S.SELLIN_L2_CHAIN AND A.DP_CHAIN = S.SELLIN_L1_CHAIN "
 								+ " AND UPPER(A.CURRENT_STORE_FORMAT) = S.SELLIN_STORE_FORMAT "
-								+ " WHERE LAUNCH_FORMAT IN (" + launchClassification + ") AND S.SELLIN_LAUNCH_ID = " + launchId);
+								+ " WHERE A.ACTIVE_STATUS = 'ACTIVE' AND LAUNCH_FORMAT IN (" + launchClassification + ") AND S.SELLIN_LAUNCH_ID = " + launchId);
 			}
 			
 			Map<String, Integer> mapVisiAssetType = new HashMap<>();
@@ -1460,7 +1465,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 	@Override
 	public List<LaunchStoreData> getListStoreDataKAM(LaunchSellIn launchSellIn,
 			List<LaunchFinalPlanResponse> listOfFinal, LaunchVisiPlanning launchVisiPlanning, String classification,
-			List<String> liClusterName, String forWhichKam) {
+			List<String> liClusterName, String forWhichKam, String launchId) {
 
 		List<LaunchStoreData> liStoreData = null;
 		try {
@@ -1472,6 +1477,11 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 			} else {
 				launchClassification = "'BRONZE'";
 			}
+			//Sarin Changes - Q1Sprint Feb2021
+			if (getIncludeAllStoreFormat(launchId).equalsIgnoreCase("Yes")) {
+				launchClassification = "'GOLD','SILVER','BRONZE'";
+			}
+			
 			String upperKam = forWhichKam.concat("@unilever.com").toUpperCase();
 			Query query;
 			if (!liClusterName.contains("ALL INDIA")) {
@@ -1481,7 +1491,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 								+ "CUSTOMER_CODE fmcg_Site_Code, ACCOUNT_NAME ACCOUNT_NAME_L1,DP_CHAIN ACCOUNT_NAME_L2, "
 								+ " UPPER(CURRENT_STORE_FORMAT) hul_Store_format,UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) CUSTOMER_STORE_FORMAT, CONCAT(ACCOUNT_NAME , CUSTOMER_STORE_FORMAT) "
 								+ "Ukey,BRANCH_CODE,DEPOT,FINAL_CLUSTER,'Units' unit_of_measurement FROM TBL_VAT_COMM_OUTLET_MASTER "
-								+ " WHERE ACCOUNT_NAME = '" + launchSellIn.getL2_CHAIN() + "' AND DP_CHAIN = '"
+								+ " WHERE ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME = '" + launchSellIn.getL2_CHAIN() + "' AND DP_CHAIN = '"
 								+ launchSellIn.getL1_CHAIN() + "' AND UPPER(CURRENT_STORE_FORMAT) = '"
 								+ launchSellIn.getSTORE_FORMAT()
 								+ "' AND FINAL_CLUSTER IN(:liClusterName) AND LAUNCH_FORMAT IN(" + launchClassification
@@ -1495,7 +1505,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 								+ "CUSTOMER_CODE fmcg_Site_Code, ACCOUNT_NAME ACCOUNT_NAME_L1,DP_CHAIN ACCOUNT_NAME_L2, "
 								+ " UPPER(CURRENT_STORE_FORMAT) hul_Store_format,UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) CUSTOMER_STORE_FORMAT, CONCAT(ACCOUNT_NAME , CUSTOMER_STORE_FORMAT) "
 								+ "Ukey,BRANCH_CODE,DEPOT,FINAL_CLUSTER,'Units' unit_of_measurement FROM TBL_VAT_COMM_OUTLET_MASTER "
-								+ " WHERE ACCOUNT_NAME = '" + launchSellIn.getL2_CHAIN() + "' AND DP_CHAIN = '"
+								+ " WHERE ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME = '" + launchSellIn.getL2_CHAIN() + "' AND DP_CHAIN = '"
 								+ launchSellIn.getL1_CHAIN() + "' AND UPPER(CURRENT_STORE_FORMAT) = '"
 								+ launchSellIn.getSTORE_FORMAT() + "' AND LAUNCH_FORMAT IN(" + launchClassification
 								+ ") AND UPPER(KAM_MAIL_ID) = '" + upperKam + "'");
@@ -1723,6 +1733,22 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 		}
 		return liStoreData;
 
+	}
+	
+	//Sarin Changes - Added Q1Sprint Feb2021 for CustomStoreSelection to IncludeAllStoreFormats
+	@SuppressWarnings("rawtypes")
+	private String getIncludeAllStoreFormat(String launchId) {
+		String sCustomeStoreSel = "No";
+		Query queryCustomeStoreSel;
+		try {
+			queryCustomeStoreSel = sessionFactory.getCurrentSession()
+					.createNativeQuery("SELECT DISTINCT INCLUDE_ALL_STORE_FORMAT FROM TBL_LAUNCH_CLUSTERS WHERE CLUSTER_LAUNCH_ID = " + launchId);
+			List lstCustomeStoreSel = queryCustomeStoreSel.list();
+			sCustomeStoreSel =  lstCustomeStoreSel.get(0).toString();
+		} catch (Exception e) {
+			return e.toString();
+		}
+		return sCustomeStoreSel;
 	}
 
 }

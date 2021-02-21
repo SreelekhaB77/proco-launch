@@ -8,11 +8,9 @@
  	sndTable;
 $(document).ready(function() { 
 	$.ajaxSetup({ cache: false });
-	
 	$('#mockamChange').attr("disabled",true); 
 	$('#kamlnchDets').attr("disabled",true);
 	$('#rejectLaunch').attr("disabled",true);
-	
 	$('#kamerrorblockUpload').hide();
 	if( window.location.hash != "#step-1" && window.location.hash != '' ){
 		window.location = window.location.href.split('#')[0];
@@ -32,9 +30,6 @@ $(document).ready(function() {
 			  $('#KamlanchMocRejectBtn').attr("disabled",true); 	
 		  }
 	  });
-	
-	
-	
 // previous buttons
 	$('#kamprevbspack').click(function(){
 		 $("#kamlaunchDetailsTab").click();
@@ -116,7 +111,7 @@ $(document).ready(function() {
 									  mData: 'launchId',
 									  "mRender": function(data, type, full) {
 										  // value="${launch.launchId}">
-										return '<input type="checkbox" name="editLaunchscr1KAMLaunch" 															class="radioln kamLnchDetscr1" onchange = "onChangeChkKamLaunchDetails(this, this.value)" value=' + data + '>';
+										return '<input type="checkbox" name="editLaunchscr1KAMLaunch" class="radioln kamLnchDetscr1" onchange = "onChangeChkKamLaunchDetails(this, this.value)" value=' + data + '>';
 									  }
 									},
 									{mData : 'launchName'},
@@ -1572,7 +1567,7 @@ function loadKamLauches(kamselectedmoc) {
 						{
 						  mData: 'launchId',
 						  "mRender": function(data, type, full) {
-							return '<input type="checkbox" name="editLaunchscr1KAMLaunch" class="radioln kamLnchDetscr1" onchange = "onChangeChkKamLaunchDetails(this, this.value)" value=' + data + '>';
+							return '<input type="checkbox" id="kamcheckbox" name="editLaunchscr1KAMLaunch" class="radioln kamLnchDetscr1" onClick="kamselect()" onchange = "onChangeChkKamLaunchDetails(this, this.value)" value=' + data + '>';
 						  }
 						},
 						{mData : 'launchName'},
@@ -1590,3 +1585,12 @@ function loadKamLauches(kamselectedmoc) {
 	kambaseoTable.draw();
 }
 //Sarin Changes Q1Sprint Feb2021 - Ends
+
+function kamselect(){
+	$('input[type="checkbox"]').on('change', function() {
+		
+		   $('input[type="checkbox"]').not(this).prop('checked', false);
+		 
+		});
+}
+

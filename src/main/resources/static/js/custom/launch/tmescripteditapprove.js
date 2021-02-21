@@ -810,7 +810,7 @@ function loadTmeLauches(tmeselectedmoc) {
 						{
 						  mData: 'launchId',
 						  "mRender": function(data, type, full) {
-							return '<input type="checkbox" name="editLaunchscr1" class="editlaunchsel" value=' + data + '>';
+							return '<input type="checkbox" name="editLaunchscr1" class="editlaunchsel" onClick="tmeselect()" value=' + data + '>';
 						  }
 						},
 						{mData : 'launchName'},
@@ -827,4 +827,11 @@ function loadTmeLauches(tmeselectedmoc) {
 			});
 	tmebaseoTable.draw();
 }
-//Q1 sprint feb 2021 kavitha ends
+//Q1 sprint feb 2021 kavitha 
+function tmeselect(){
+	$('input[type="checkbox"]').on('change', function() {
+		
+		   $('input[type="checkbox"]').not(this).prop('checked', false);
+		 
+		});
+}

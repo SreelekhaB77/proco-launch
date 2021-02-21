@@ -514,7 +514,7 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 				}
 
 				listOfAllLaunchStoreData.add(launchSellInDao.getListStoreDataKAM(launchSellIn, listOfFinal,
-						launchVisiPlanning, launchDataResonse.getClassification(), liClusterName, forWhichKam));
+						launchVisiPlanning, launchDataResonse.getClassification(), liClusterName, forWhichKam, launchId));
 				whichVisi++;
 			}
 			launchFinalDao.deleteAllBuildUpKAM(launchId, forWhichKam);

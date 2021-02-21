@@ -54,8 +54,8 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 	private final static String TBL_LAUNCH_MASTER = "INSERT INTO MODTRD.TBL_LAUNCH_MASTER(LAUNCH_NAME,LAUNCH_DATE, LAUNCH_NATURE,LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE, CLASSIFICATION, CREATED_BY, CREATED_DATE, LAUNCH_MOC)"
 			+ " VALUES (?,?,?,?,?,?,?,?,?,?) ";
 
-	private final static String TBL_LAUNCH_CLUSTERS = "INSERT INTO TBL_LAUNCH_CLUSTERS(CLUSTER_LAUNCH_ID,CLUSTER_REGION, CLUSTER_ACCOUNT,CLUSTER_STORE_FORMAT, CLUSTER_CUST_STORE_FORMAT, TOTAL_STORES_TO_LAUNCH,LAUNCH_PLANNED, CREATED_BY,  CREATED_DATE)"
-			+ " VALUES (?,?,?,?,?,?,?,?,?) ";
+	private final static String TBL_LAUNCH_CLUSTERS = "INSERT INTO TBL_LAUNCH_CLUSTERS(CLUSTER_LAUNCH_ID,CLUSTER_REGION, CLUSTER_ACCOUNT,CLUSTER_STORE_FORMAT, CLUSTER_CUST_STORE_FORMAT, TOTAL_STORES_TO_LAUNCH,LAUNCH_PLANNED, CREATED_BY,  CREATED_DATE, INCLUDE_ALL_STORE_FORMAT)"  //Sarin Changes - Added new column INCLUDE_ALL_STORE_FORMAT Q1Sprint Feb2021 
+			+ " VALUES (?,?,?,?,?,?,?,?,?,?) ";
 
 	private final static String TBL_LAUNCH_BASEPACK = "INSERT INTO TBL_LAUNCH_BASEPACK "
 			+ "(LAUNCH_ID, BP_SALES_CAT, BP_PSA_CAT, BP_BRAND, BP_CODE, BP_DESCRIPTION, BP_MRP, BP_TUR, BP_GSV, BP_CLD_CONFIG, BP_GRAMMAGE, BP_CLASSIFICATION, BP_CREATED_BY, BP_CREATED_DATE) "
@@ -471,6 +471,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 				preparedStatement.setString(7, saveLaunchClustersRequest.getLaunchPlanned());
 				preparedStatement.setString(8, userId);
 				preparedStatement.setTimestamp(9, new Timestamp(new Date().getTime()));
+				preparedStatement.setString(10, saveLaunchClustersRequest.getIncludeAllStoreFormats());  //Sarin Changes - Added for CustomStoreSelection Q1Sprint Feb2021
 				preparedStatement.executeUpdate();
 				rs = preparedStatement.getGeneratedKeys();
 				if (rs != null && rs.next()) {
@@ -487,7 +488,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			}
 		} else {
 			Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
-					"UPDATE TBL_LAUNCH_CLUSTERS SET CLUSTER_REGION=?0,CLUSTER_ACCOUNT=?1,CLUSTER_STORE_FORMAT=?2,CLUSTER_CUST_STORE_FORMAT=?3,TOTAL_STORES_TO_LAUNCH=?4,UPDATED_BY=?5,UPDATED_DATE=?6 WHERE CLUSTER_LAUNCH_ID=?7 and LAUNCH_PLANNED = ?8");  //Sarin - Added Parameters position
+					"UPDATE TBL_LAUNCH_CLUSTERS SET CLUSTER_REGION=?0,CLUSTER_ACCOUNT=?1,CLUSTER_STORE_FORMAT=?2,CLUSTER_CUST_STORE_FORMAT=?3,TOTAL_STORES_TO_LAUNCH=?4,UPDATED_BY=?5,UPDATED_DATE=?6, INCLUDE_ALL_STORE_FORMAT=?9 WHERE CLUSTER_LAUNCH_ID=?7 and LAUNCH_PLANNED = ?8");  //Sarin - Added Parameters position //Sarin Changes - Added for CustomStoreSelection Q1Sprint Feb2021
 			query2.setParameter(0, saveLaunchClustersRequest.getClusterString());
 			query2.setParameter(1, saveLaunchClustersRequest.getAccountString());
 			query2.setParameter(2, saveLaunchClustersRequest.getStoreFormat());
@@ -497,6 +498,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			query2.setParameter(6, new Timestamp(new Date().getTime()));
 			query2.setParameter(7, saveLaunchClustersRequest.getLaunchId());
 			query2.setParameter(8, saveLaunchClustersRequest.getLaunchPlanned());
+			query2.setParameter(9, saveLaunchClustersRequest.getIncludeAllStoreFormats());  //Sarin Changes - Added for CustomStoreSelection Q1Sprint Feb2021
 			clusterId = query2.executeUpdate();
 		}
 		return clusterId;
@@ -764,7 +766,8 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String getStoreCountByClass(List<String> clusterList, List<String> accountl1String,
-			List<String> accountl2String, String classification) {
+			List<String> accountl2String, String classification
+			, boolean isCustomStoreFormat) {  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 		try {
 			String launchClassification = "";
 			if (classification.equals("Gold")) {
@@ -773,6 +776,10 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 				launchClassification = "'BRONZE','SILVER'";
 			} else {
 				launchClassification = "'BRONZE'";
+			}
+			//Sarin Changes - Q1Sprint Feb2021
+			if (isCustomStoreFormat) {
+				launchClassification = "'GOLD','SILVER','BRONZE'";
 			}
 			Query queryToGetCustomeChainL1 = null;
 			if (accountl1String.isEmpty() || accountl1String.contains("ALL CUSTOMERS")) {
@@ -817,7 +824,8 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> getLaunchStores(List<String> liCluster, List<String> accountl1String,
-			List<String> accountl2String, String classification) {
+			List<String> accountl2String, String classification
+			, boolean isCustomStoreFormat) {  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 		List<String> toReturn = null;
 		try {
 			String launchClassification = "";
@@ -828,6 +836,11 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			} else {
 				launchClassification = "'BRONZE'";
 			}
+			//Sarin Changes - Q1Sprint Feb2021
+			if (isCustomStoreFormat) {
+				launchClassification = "'GOLD','SILVER','BRONZE'";
+			}
+			
 			Query queryToGetCustomeChainL1 = null;
 			if (accountl1String.isEmpty() || accountl1String.contains("ALL CUSTOMERS")) {
 				if (liCluster.isEmpty() || liCluster.contains("ALL INDIA")) {
@@ -867,7 +880,8 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object getCustomerStoreFormat(List<String> liCluster, List<String> accountl1String,
-			List<String> accountl2String, String classification) {
+			List<String> accountl2String, String classification
+			, boolean isCustomStoreFormat) {  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 		List<String> liStrings = null;
 		try {
 			String launchClassification = "";
@@ -878,6 +892,11 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			} else {
 				launchClassification = "'BRONZE'";
 			}
+			//Sarin Changes - Q1Sprint Feb2021
+			if (isCustomStoreFormat) {
+				launchClassification = "'GOLD','SILVER','BRONZE'";
+			}
+			
 			Query queryToGetCustomeChainL1 = null;
 			if (accountl1String.isEmpty() || accountl1String.contains("ALL CUSTOMERS")) {
 				if (liCluster.isEmpty() || liCluster.contains("ALL INDIA")) {
@@ -956,7 +975,8 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String getStoreCountOnCust(String custStoreFormat, List<String> accountl1String,
-			List<String> accountl2String, List<String> liCluster, String classification) {
+			List<String> accountl2String, List<String> liCluster, String classification
+			, boolean isCustomStoreFormat) {  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 		try {
 			String launchClassification = "";
 			if (classification.equals("Gold")) {
@@ -966,6 +986,11 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			} else {
 				launchClassification = "'BRONZE'";
 			}
+			//Sarin Changes - Q1Sprint Feb2021
+			if (isCustomStoreFormat) {
+				launchClassification = "'GOLD','SILVER','BRONZE'";
+			}
+			
 			List<String> listOfCustStoreForm = Arrays.asList(custStoreFormat.split("~"));
 			Query queryToGetCustomeChainL1;
 			if (accountl1String.isEmpty() || accountl1String.contains("ALL CUSTOMERS")) {
@@ -1035,7 +1060,8 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String getStoreCountOnStore(String storeFormat, List<String> accountl1String, List<String> accountl2String,
-			List<String> liCluster, String classification) {
+			List<String> liCluster, String classification
+			, boolean isCustomStoreFormat) {  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 		try {
 			String launchClassification = "";
 			if (classification.equals("Gold")) {
@@ -1045,6 +1071,11 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			} else {
 				launchClassification = "'BRONZE'";
 			}
+			//Sarin Changes - Q1Sprint Feb2021
+			if (isCustomStoreFormat) {
+				launchClassification = "'GOLD','SILVER','BRONZE'";
+			}
+			
 			List<String> listOfStoreFormat = Arrays.asList(storeFormat.split(","));
 			Query queryToGetCustomeChainL1;
 			if (accountl1String.isEmpty() || accountl1String.contains("ALL CUSTOMERS")) {

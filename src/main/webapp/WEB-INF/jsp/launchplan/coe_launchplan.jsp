@@ -149,7 +149,7 @@
 									<div class="table-responsive detail_table">
 										<table class="table table-striped table-bordered" id="coebasepack_add" cellspacing="0" cellpadding="0" style="width: 100% ! important">
 											<thead class="thead-dark">
-												<tr>
+												<tr >
 													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">Select</span></th>
 													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">Launch Name</span></th>
 													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">Launch MOC</span></th>
@@ -178,12 +178,9 @@
 										<div class="coebtnclass">
 											<input type="button" onclick="CoeLaunch()" value="Launch Details" class="btn btn-secondary nxtclassification" id="coelnchDets" style="float: right;" />
 										</div>
-										
-										<div class="coebtnclass">
-											<input type="button"  value="Download" class="btn btn-secondary nxtclassification" id="coelnchDets" style="float: left;" />
+											<div class="coebtnclass">
+											<input type="button"  value="Download" onClick="javascript: coedownloadLaunchBuildTemplate();" class="btn btn-secondary nxtclassification" id="coelnchDets" style="float: left;" />
 										</div>
-										
-										
 									</div>
 
 								</div>
