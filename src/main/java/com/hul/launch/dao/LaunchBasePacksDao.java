@@ -61,16 +61,20 @@ public interface LaunchBasePacksDao {
 	public List<String> getBpClassification();
 
 	public List<String> getLaunchStores(List<String> liClusterName, List<String> accountl1String,
-			List<String> accountl2String, String classification);
+			List<String> accountl2String, String classification
+			, boolean isCustomStoreFormat);  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 
 	public Object getCustomerStoreFormat(List<String> liClusterName, List<String> accountl1String,
-			List<String> accountl2String, String classification);
+			List<String> accountl2String, String classification
+			, boolean isCustomStoreFormat);  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 
 	public String getStoreCountOnCust(String custStoreFormat, List<String> accountl1String,
-			List<String> accountl2String, List<String> liClusterName, String classification);
+			List<String> accountl2String, List<String> liClusterName, String classification
+			, boolean isCustomStoreFormat); //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 
 	public String getStoreCountOnStore(String storeFormat, List<String> accountl1String, List<String> accountl2String,
-			List<String> liClusterName, String classification);
+			List<String> liClusterName, String classification
+			, boolean isCustomStoreFormat);  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 
 	public int storeCount(String storeFormat, String accountL1, String accountDataL2, List<String> listOfCustStores,
 			List<String> liClusterName);
@@ -93,8 +97,10 @@ public interface LaunchBasePacksDao {
 
 	public int storeCountByLaunchClass(String classification);
 
+	//Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
+	//String getStoreCountByClass(List<String> clusterList, List<String> accountl1String, List<String> accountl2String, String classification);
 	String getStoreCountByClass(List<String> clusterList, List<String> accountl1String, List<String> accountl2String,
-			String classification);
+			String classification, boolean isCustomStoreFormat);
 
 	String getStoreCountOnCustSellIIn(String storeFormat, List<String> liCluster, String classification);
 
