@@ -13,6 +13,17 @@ public class SaveLaunchClustersRequest {
 	private String totalStoresToLaunch;
 	private String launchId;
 	private String launchPlanned;
+	//Sarin changes - Added Q1Sprint Feb2021 - Starts
+	private String includeAllStoreFormats = "No";
+
+	public String getIncludeAllStoreFormats() {
+		return includeAllStoreFormats;
+	}
+
+	public void setIncludeAllStoreFormats(String includeAllStoreFormats) {
+		this.includeAllStoreFormats = includeAllStoreFormats;
+	}
+	//Sarin changes - Added Q1Sprint Feb2021 - Ends
 
 	public String getLaunchPlanned() {
 		return launchPlanned;

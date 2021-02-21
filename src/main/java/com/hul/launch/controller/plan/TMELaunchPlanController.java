@@ -445,14 +445,18 @@ public class TMELaunchPlanController {
 				}
 			}
 			LaunchDataResponse launchDataResponse = launchService.getSpecificLaunchData(clusterRequest.getLaunchId());
+			//Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
+			//String storeCount = launchBasepacksService.getStoreCountByClass(liClusterName, accountl1String, accountl2String, launchDataResponse.getClassification());
 			String storeCount = launchBasepacksService.getStoreCountByClass(liClusterName, accountl1String,
-					accountl2String, launchDataResponse.getClassification());
+					accountl2String, launchDataResponse.getClassification(), clusterRequest.isIscustomstoreformatChecked());
 			mapOfString.put("storeCount", storeCount);
 			List<String> listOfStores = launchBasepacksService.getLaunchStores(liClusterName, accountl1String,
-					accountl2String, launchDataResponse.getClassification());
+					accountl2String, launchDataResponse.getClassification()
+					, clusterRequest.isIscustomstoreformatChecked());  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 			mapOfString.put("listOfStores", listOfStores);
 			mapOfString.put("listCustomerStore", launchBasepacksService.getCustomerStoreFormat(liClusterName,
-					accountl1String, accountl2String, launchDataResponse.getClassification()));
+					accountl1String, accountl2String, launchDataResponse.getClassification()
+					, clusterRequest.isIscustomstoreformatChecked()));  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			Map<String, String> map = new HashMap<>();
@@ -535,10 +539,10 @@ public class TMELaunchPlanController {
 				throw new Exception("Both parameters can not be null");
 			} else if (!account.getCustStoreFormat().equals("") && account.getStoreFormat().equals("")) {
 				storeCount = launchBasepacksService.getStoreCountOnCust(account.getCustStoreFormat(), accountl1String,
-						accountl2String, liClusterName, launchDataResponse.getClassification());
+						accountl2String, liClusterName, launchDataResponse.getClassification(), account.isIscustomstoreformatChecked());  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 			} else if (account.getCustStoreFormat().equals("") && !account.getStoreFormat().equals("")) {
 				storeCount = launchBasepacksService.getStoreCountOnStore(account.getStoreFormat(), accountl1String,
-						accountl2String, liClusterName, launchDataResponse.getClassification());
+						accountl2String, liClusterName, launchDataResponse.getClassification(), account.isIscustomstoreformatChecked());  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 			} else {
 				throw new Exception("Please Send single parameter");
 			}

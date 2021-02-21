@@ -11,7 +11,18 @@ public class StoreCountRequest {
 	private String accountList;
 	private String cluster;
 	private String launchId;
+	//Sarin changes - Added Q1Sprint Feb2021 - Starts
+	private boolean IscustomstoreformatChecked = false;
+	
+	public boolean isIscustomstoreformatChecked() {
+		return IscustomstoreformatChecked;
+	}
 
+	public void setIscustomstoreformatChecked(boolean iscustomstoreformatChecked) {
+		IscustomstoreformatChecked = iscustomstoreformatChecked;
+	}
+	//Sarin changes - Added Q1Sprint Feb2021 - Starts
+	
 	public String getLaunchId() {
 		return launchId;
 	}
