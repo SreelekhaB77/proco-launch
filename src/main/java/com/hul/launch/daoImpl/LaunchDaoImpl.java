@@ -1682,14 +1682,13 @@ public class LaunchDaoImpl implements LaunchDao {
 	 //Q1 sprint kavitha feb2021 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<String> getAllMoc() {
+	public List<String> getAllMoc(String userId) {
 		try {
 			
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(
 					"SELECT DISTINCT LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc WHERE  "
 					+ "date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() "
-					//+ "AND tlc.CREATED_BY = "
-					);
+					+ "AND tlc.CREATED_BY = '" + userId + "' ORDER BY concat(substr(LAUNCH_MOC, 3, 4), substr(LAUNCH_MOC, 1, 2))");
 				
 			List<String> list = query.list();
 			return list;
