@@ -523,6 +523,9 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			//System.out.println(usrAccont + ": " + lunchAccont);
 			if (lunchAccont.equalsIgnoreCase("ALL CUSTOMERS")) {
 				kamAccountSplit = usrAccont.split(",");
+				for (int i = 0; i < kamAccountSplit.length; i++) {
+					listOfAccounts.add(kamAccountSplit[i]);
+				}
 			} else {
 				usrAccountSplit = usrAccont.split(",");
 				kamAccountSplit = lunchAccont.split(",");
