@@ -84,7 +84,7 @@ public interface LaunchDao {
 
 	String deleteAllKamData(String launchId);
 	
-	public List<String> getAllMoc();
 	//Q1 sprint feb 2021 kavitha
+	public List<String> getAllMoc(String userId);
 	public List<LaunchDataResponse> getAllLaunchData(String userId, String launchMOC);
 }

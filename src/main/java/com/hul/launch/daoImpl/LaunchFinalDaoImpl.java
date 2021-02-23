@@ -653,10 +653,18 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 		try {
 			Session session = sessionFactory.getCurrentSession();
 			Query query = session.createNativeQuery(
+					//Sarin Changes - Commented Q1Sprint Feb2021 and Added below
+					/*
 					"SELECT DEPOT, BP_NAME, FMCG_CSP_CODE, MODIFIED_CHAIN, CLUSTER,FINAL_CLD_N,FINAL_CLD_N1,FINAL_CLD_N2,"
 							+ "FINAL_UNITS_N,FINAL_UNITS_N1,FINAL_UNITS_N2,FINAL_VALUE_N,FINAL_VALUE_N1,FINAL_VALUE_N2,"
 							+ "tlm.LAUNCH_NAME, tlm.LAUNCH_MOC, tlm.LAUNCH_ID FROM TBL_LAUNCH_TEMP_FINAL_CAL tltfc, TBL_LAUNCH_MASTER tlm WHERE tlm.LAUNCH_ID"
-							+ " IN (:launchId) AND tltfc.LAUNCH_ID = tlm.LAUNCH_ID");
+							+ " IN (:launchId) AND tltfc.LAUNCH_ID = tlm.LAUNCH_ID" */
+					"SELECT DEPOT, BP_NAME, FMCG_CSP_CODE, MODIFIED_CHAIN, CLUSTER,FINAL_CLD_N,FINAL_CLD_N1,FINAL_CLD_N2,"
+					+ " FINAL_UNITS_N,FINAL_UNITS_N1,FINAL_UNITS_N2,FINAL_VALUE_N,FINAL_VALUE_N1,FINAL_VALUE_N2,"
+					+ " tlm.LAUNCH_NAME, CASE WHEN TLK.LAUNCH_MOC_KAM IS NULL THEN tlm.LAUNCH_MOC ELSE TLK.LAUNCH_MOC_KAM END AS LAUNCH_MOC, tlm.LAUNCH_ID FROM TBL_LAUNCH_TEMP_FINAL_CAL tltfc"
+					+ " INNER JOIN TBL_LAUNCH_MASTER tlm ON tltfc.LAUNCH_ID = tlm.LAUNCH_ID"
+					+ " LEFT OUTER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS TLK ON TLK.LAUNCH_ID = tlm.LAUNCH_ID AND TLK.LAUNCH_KAM_ACCOUNT = tltfc.MODIFIED_CHAIN AND TLK.IS_ACTIVE = 1"
+					+ " WHERE tlm.LAUNCH_ID IN (:launchId)");
 			query.setParameterList("launchId", launchIdList);
 			Iterator<Object> itr = query.list().iterator();
 			int[] temp = { 1 };

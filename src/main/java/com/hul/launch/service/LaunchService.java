@@ -71,8 +71,9 @@ public interface LaunchService {
 	public List<LaunchKamQueriesAnsweredResponse> getLaunchQueriesAnswered(String userId);
 
 	public String deleteAllKamData(String launchId);
+	
 	//Q1 sprint feb 2021 kavitha
-	public List<String> getAllMoc();
+	public List<String> getAllMoc(String userId);
 	
 	public List<LaunchDataResponse> getAllLaunchData(String userId, String launchMOC);
 }

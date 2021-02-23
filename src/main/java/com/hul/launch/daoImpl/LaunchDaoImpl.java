@@ -323,23 +323,26 @@ public class LaunchDaoImpl implements LaunchDao {
 							+ " CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,"
 							+ " CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE,LAUNCH_MOC,LAUNCH_SUBMISSION_DATE FROM TBL_LAUNCH_MASTER tlc WHERE"
 							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' ");*/
+					//+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()");
 					
-					"SELECT tlc.LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE,"
+					//Kavitha Changes Q1Print1 Feb2021
+					"SELECT * FROM (SELECT tlc.LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE,"
                     + " CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,"
                     + " tlc.CREATED_BY, tlc.CREATED_DATE,tlc.UPDATED_BY, tlc.UPDATED_DATE,LAUNCH_MOC,LAUNCH_SUBMISSION_DATE,"
-                    + " tlbt.CLUSTER_ACCOUNT AS ACCOUNT_NAME "  //Kavitha Changes Q1Print1 Feb2021
+                    + " CASE WHEN GROUP_CONCAT(DISTINCT TFC.MODIFIED_CHAIN) IS NULL THEN tlbt.CLUSTER_ACCOUNT ELSE GROUP_CONCAT(DISTINCT TFC.MODIFIED_CHAIN) END AS ACCOUNT_NAME "  
                     + " FROM TBL_LAUNCH_MASTER tlc "
-                    + " LEFT OUTER JOIN TBL_LAUNCH_CLUSTERS tlbt ON tlbt.CLUSTER_LAUNCH_ID = tlc.LAUNCH_ID "  //Kavitha Changes Q1Print1 Feb2021
-                    + " WHERE SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' AND (tlc.KAM_ACCOUNT IS NULL OR tlc.KAM_ACCOUNT = '')"
-					+ "  UNION ALL SELECT tlc.LAUNCH_ID,LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, "
-					+ "LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE, CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,"
-					+ "ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED, tlc.CREATED_BY, tlc.CREATED_DATE,"
-					+ "tlc.UPDATED_BY, tlc.UPDATED_DATE,tlc.LAUNCH_MOC_KAM AS LAUNCH_MOC,LAUNCH_SUBMISSION_DATE,tlc.KAM_ACCOUNT AS ACCOUNT_NAME" 
-					+ " FROM TBL_LAUNCH_MASTER tlc " 
-					+ " WHERE SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' AND KAM_ACCOUNT IS NOT NULL AND KAM_ACCOUNT <>'' AND tlc.LAUNCH_MOC_KAM IS NOT NULL AND tlc.LAUNCH_MOC_KAM <> ''");
+                    + " LEFT OUTER JOIN TBL_LAUNCH_CLUSTERS tlbt ON tlbt.CLUSTER_LAUNCH_ID = tlc.LAUNCH_ID LEFT OUTER JOIN TBL_LAUNCH_TEMP_FINAL_CAL TFC ON TFC.LAUNCH_ID = tlc.LAUNCH_ID"
+                    + " LEFT OUTER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS TLK ON TLK.LAUNCH_ID = TFC.LAUNCH_ID AND TLK.LAUNCH_KAM_ACCOUNT = TFC.MODIFIED_CHAIN AND TLK.IS_ACTIVE = 1"
+                    + " WHERE (SAMPLE_SHARED IS NOT NULL AND SAMPLE_SHARED <> '') AND LAUNCH_REJECTED != '2' AND TLK.LAUNCH_ID IS NULL AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()"
+                    + " GROUP BY tlc.LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE, CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,tlc.CREATED_BY, tlc.CREATED_DATE,tlc.UPDATED_BY, tlc.UPDATED_DATE,LAUNCH_MOC,LAUNCH_SUBMISSION_DATE, tlbt.CLUSTER_ACCOUNT"
+					+ " UNION ALL SELECT TLM.LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE, CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,"
+					+ " ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED, TLM.CREATED_BY, TLM.CREATED_DATE, TLM.UPDATED_BY, TLM.UPDATED_DATE,"
+					+ " TLK.LAUNCH_MOC_KAM AS LAUNCH_MOC, LAUNCH_SUBMISSION_DATE, GROUP_CONCAT(DISTINCT TLK.LAUNCH_KAM_ACCOUNT) AS ACCOUNT_NAME"
+					+ " FROM TBL_LAUNCH_MASTER TLM INNER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS TLK ON TLK.LAUNCH_ID = TLM.LAUNCH_ID" 
+					+ " WHERE (TLM.SAMPLE_SHARED IS NOT NULL AND TLM.SAMPLE_SHARED <> '') AND TLM.LAUNCH_REJECTED != '2' AND TLK.IS_ACTIVE = 1 AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()" 
+					+ " GROUP BY TLM.LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE, CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED, TLM.CREATED_BY, TLM.CREATED_DATE, TLM.UPDATED_BY, TLM.UPDATED_DATE, TLK.LAUNCH_MOC_KAM, LAUNCH_SUBMISSION_DATE"
+					+ " ) A  ORDER BY LAUNCH_ID");
 
-
-							//+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()");
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				LaunchDataResponse launchDataResponse = new LaunchDataResponse();
@@ -362,7 +365,22 @@ public class LaunchDaoImpl implements LaunchDao {
 				launchDataResponse.setUpdatedDate(rs.getDate(16));
 				launchDataResponse.setLaunchMoc(rs.getString(17));
 				launchDataResponse.setLaunchSubmissionDate(rs.getString(18));
-				launchDataResponse.setAccountName(rs.getString(19));
+				String launchAccounts = "";
+				if (rs.getString(19).contains(":")) {
+					String launchAcc[] = rs.getString(19).split(",");
+					for (int i = 0; i < launchAcc.length; i++) {
+						String[] acc = launchAcc[i].split(":");
+						if (launchAccounts.equalsIgnoreCase("")) {
+							launchAccounts = acc[0];
+						} else {
+							launchAccounts = launchAccounts + "," + acc[0];
+						}
+					}
+				} else {
+					launchAccounts = rs.getString(19);
+				}
+				launchDataResponse.setAccountName(launchAccounts);
+				//launchDataResponse.setAccountName(rs.getString(19));
 				listOfCompletedLaunch.add(launchDataResponse);
 			}
 		} catch (Exception ex) {
@@ -1665,14 +1683,13 @@ public class LaunchDaoImpl implements LaunchDao {
 	 //Q1 sprint kavitha feb2021 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<String> getAllMoc() {
+	public List<String> getAllMoc(String userId) {
 		try {
 			
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(
 					"SELECT DISTINCT LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc WHERE  "
 					+ "date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() "
-					//+ "AND tlc.CREATED_BY = "
-					);
+					+ "AND tlc.CREATED_BY = '" + userId + "' ORDER BY concat(substr(LAUNCH_MOC, 3, 4), substr(LAUNCH_MOC, 1, 2))");
 				
 			List<String> list = query.list();
 			return list;
