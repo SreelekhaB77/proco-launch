@@ -427,18 +427,43 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			}
 
 			Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
-					"UPDATE TBL_LAUNCH_MASTER SET LAUNCH_MOC_KAM=?0, UPDATED_BY=?1,UPDATED_DATE=?2,KAM_ACCOUNT=?3 WHERE LAUNCH_ID=?4"); // Sarin
-																															// -
-																															// Added
-																															// Parameters
-																															// position
+					"UPDATE TBL_LAUNCH_MASTER SET LAUNCH_MOC_KAM=?0, UPDATED_BY=?1,UPDATED_DATE=?2 WHERE LAUNCH_ID=?3"); // Sarin - Added Parameters position
 			query2.setParameter(0, changeMocRequestKam.getMocToChange());
 			query2.setParameter(1, userId);
 			query2.setParameter(2, new Timestamp(new Date().getTime()));
-			query2.setParameter(3, changeMocRequestKam.getMocAccount());
-			query2.setParameter(4, changeMocRequestKam.getLaunchId());
-
+			//query2.setParameter(3, changeMocRequestKam.getMocAccount());  ,KAM_ACCOUNT=?3
+			query2.setParameter(3, changeMocRequestKam.getLaunchId());
 			query2.executeUpdate();
+			
+			//Sarin Changes - Q1Sprint Feb2021 - Starts
+			String kamAccounts[];
+			kamAccounts = changeMocRequestKam.getMocAccount().split(",");
+			if (kamAccounts != null && kamAccounts.length > 0) {
+				Query qryKamAcc = sessionFactory.getCurrentSession().createNativeQuery(
+						"UPDATE TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS SET IS_ACTIVE = 0 WHERE LAUNCH_ID=?0 AND LAUNCH_MOC_KAM=?1 ");
+				
+				qryKamAcc.setParameter(0, changeMocRequestKam.getLaunchId());
+				qryKamAcc.setParameter(1, changeMocRequestKam.getMocToChange());
+				qryKamAcc.executeUpdate();
+				
+				String insertStatementForKAMMOCAcc = "INSERT INTO TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS (LAUNCH_ID, LAUNCH_MOC_KAM, LAUNCH_KAM_ACCOUNT, IS_ACTIVE, UPDATED_BY, UPDATED_DATE) VALUES (?, ?, ?, ?, ?, ?)";
+				for (int i = 0; i < kamAccounts.length; i++) {
+					try (PreparedStatement psKamMocChange = sessionImpl.connection()
+							.prepareStatement(insertStatementForKAMMOCAcc, Statement.RETURN_GENERATED_KEYS)) {
+						psKamMocChange.setString(1, changeMocRequestKam.getLaunchId());
+						psKamMocChange.setString(2, changeMocRequestKam.getMocToChange());
+						psKamMocChange.setString(3, kamAccounts[i]);
+						psKamMocChange.setInt(4, 1);
+						psKamMocChange.setString(5, userId);
+						psKamMocChange.setTimestamp(6, new Timestamp(new Date().getTime()));
+						psKamMocChange.executeUpdate();
+					} catch (Exception e) {
+						logger.error("Exception: " + e);
+						return e.toString();
+					}
+				}
+			}
+			//Sarin Changes - Q1Sprint Feb2021 - Ends
 
 			responseText = "Saved Successfully";
 		} catch (Exception e) {
@@ -482,7 +507,8 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		List<String> listOfAccounts = new ArrayList<String>();
 		String usrAccont = "";
 		String lunchAccont = "";
-		String[] accountplit;
+		String[] usrAccountSplit = null;
+		String[] kamAccountSplit;
 		try {
 			Query  query3 = sessionFactory.getCurrentSession()
 						  .createNativeQuery("SELECT ud.ACCOUNT_NAME,clu.CLUSTER_ACCOUNT "
@@ -496,13 +522,24 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			}
 			//System.out.println(usrAccont + ": " + lunchAccont);
 			if (lunchAccont.equalsIgnoreCase("ALL CUSTOMERS")) {
-				accountplit = usrAccont.split(",");
+				kamAccountSplit = usrAccont.split(",");
 			} else {
-				accountplit = lunchAccont.split(",");
+				usrAccountSplit = usrAccont.split(",");
+				kamAccountSplit = lunchAccont.split(",");
 			}
 			
-			for (int i = 0; i < accountplit.length; i++) {
-				listOfAccounts.add(accountplit[i]);
+			for (int i = 0; i < kamAccountSplit.length; i++) {
+				//System.out.println(accountplit[i]);
+				//System.out.println(accountsplit[0] + " " + accountsplit[1]);
+				String[] accountsplit = kamAccountSplit[i].split(":");
+				
+				if ((usrAccountSplit != null) && (usrAccountSplit.length > 0)) {
+					for (int j = 0; j < usrAccountSplit.length; j++) {
+						if (usrAccountSplit[j].equalsIgnoreCase(accountsplit[0])) {
+							listOfAccounts.add(accountsplit[0]);
+						}
+					}
+				}
 			}
 		} catch (Exception ex) {
 			logger.debug("Exception: ", ex);
