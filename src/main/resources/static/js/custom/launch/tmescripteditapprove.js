@@ -75,7 +75,7 @@
   						                 //     "sPrevious": "&larr;"
   						                 // },
   						                 // "sLengthMenu": "Records per page _MENU_ ",
-  						                 // "sEmptyTable": "Loading launches.."
+  						                 // "sEmptyTable": "No Pending Launch."
   						
   						             // }
   				    	    	//    });
@@ -279,11 +279,15 @@
 	    });
 	//Q1 sprint feb 2021 kavitha	
 	$("#mocCol").on('change', function () {
-		$("#kamlaunchDetailsTab").click();
+		//$("#kamlaunchDetailsTab").click();
 		$("#editDet").dataTable().fnDestroy();
 		//kambaseoTable.draw();
 		var tmeselectedmoc = $(this).val(); //'All';
-		loadTmeLauches(tmeselectedmoc);	
+		loadTmeLauches(tmeselectedmoc);
+		$('#editDet').on('draw.dt', function() {
+			  var $empty = $('#editDet').find('.dataTables_empty');
+			  if ($empty) $empty.html('Loading Launches..')
+		});
 			     
     });	
 		
@@ -372,7 +376,7 @@
 					                      "sPrevious": "&larr;"
 					                  },
 					                  "sLengthMenu": "Records per page _MENU_ ",
-					                  "sEmptyTable": "Loading launches.."
+					                  "sEmptyTable": "No Pending Launch."
 					
 					              }
 			    	    	    });
@@ -670,7 +674,7 @@ function querAnsSave(){
 								[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
 					        "oLanguage": {
 				                  "sSearch": '<i class="icon-search"></i>',
-				                  "sEmptyTable": "Loading launches..",
+				                  "sEmptyTable": "No Pending Launch.",
 				                  "oPaginate": {
 				                      "sNext": "&rarr;",
 				                      "sPrevious": "&larr;"
@@ -768,7 +772,7 @@ function nextQueryAns() {
 				                      "sPrevious": "&larr;"
 				                  },
 				                  "sLengthMenu": "Records per page _MENU_ ",
-				                  "sEmptyTable": "Loading launches.."
+				                  "sEmptyTable": "No Pending Launch."
 				
 				              }
 		    	    	    });
@@ -793,7 +797,7 @@ function loadTmeLauches(tmeselectedmoc) {
 				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
 			"oLanguage": {
 				  "sSearch": '<i class="icon-search"></i>',
-				  "sEmptyTable": "Loading launches..",
+				  "sEmptyTable": "No Pending Launch.",
 				  "oPaginate": {
 					  "sNext": "&rarr;",
 					  "sPrevious": "&larr;"
