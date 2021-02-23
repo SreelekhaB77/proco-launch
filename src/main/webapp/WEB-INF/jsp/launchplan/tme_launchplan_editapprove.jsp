@@ -169,7 +169,7 @@
 									
 									<div class="col-md-3">
                                             <label for="sel1" class="userlist-space custom-label-align"  >MOC:</label>
-                                             <select id="mocCol" class="form-control custom-select-align">
+                                             <select id="mocCol" class="form-control custom-select-align input-sm">
                                                         <option value="All">All</option>
                                                             <c:forEach items="${tmemoclist}" var="mocVal">
                                                                     <option value="${mocVal}"><c:out value="${mocVal}"></c:out></option>

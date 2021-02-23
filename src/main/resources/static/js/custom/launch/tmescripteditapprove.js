@@ -53,31 +53,32 @@
 			});
 			
 			loadTmeLauches('All');
-	
-		$("#editDet").dataTable().fnDestroy();
+			
+	//Q1-sprint UI issues fixes
+		//$("#editDet").dataTable().fnDestroy();
   				   // setTimeout(function(){
-  						    var edtmeTable = $('#editDet').DataTable( {
+  						  //  var edtmeTable = $('#editDet').DataTable( {
   									
-  									"scrollY":       "280px",
+  							//		"scrollY":       "280px",
   									/*"scrollX":        "300px",
   							        "scrollCollapse": true,*/
-  							        "paging":         true,
-  							        "ordering": false,
-  							        "searching": false,
-  							    	"lengthMenu" : [
-  										[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
-  										[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
-  							        "oLanguage": {
-  						                  "sSearch": '<i class="icon-search"></i>',
-  						                  "oPaginate": {
-  						                      "sNext": "&rarr;",
-  						                      "sPrevious": "&larr;"
-  						                  },
-  						                  "sLengthMenu": "Records per page _MENU_ ",
-  						                  "sEmptyTable": "No Pending Launch."
+  							  //      "paging":         true,
+  							   //     "ordering": false,
+  							   //     "searching": false,
+  							    //	"lengthMenu" : [
+  								//		[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
+  									//	[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
+  							     //   "oLanguage": {
+  						             //     "sSearch": '<i class="icon-search"></i>',
+  						            //      "oPaginate": {
+  						              //        "sNext": "&rarr;",
+  						                 //     "sPrevious": "&larr;"
+  						                 // },
+  						                 // "sLengthMenu": "Records per page _MENU_ ",
+  						                 // "sEmptyTable": "Loading launches.."
   						
-  						              }
-  				    	    	    });
+  						             // }
+  				    	    	//    });
   						    
   						    
   		        //     }, 800 );
@@ -371,7 +372,7 @@
 					                      "sPrevious": "&larr;"
 					                  },
 					                  "sLengthMenu": "Records per page _MENU_ ",
-					                  "sEmptyTable": "No Pending Launch."
+					                  "sEmptyTable": "Loading launches.."
 					
 					              }
 			    	    	    });
@@ -669,7 +670,7 @@ function querAnsSave(){
 								[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
 					        "oLanguage": {
 				                  "sSearch": '<i class="icon-search"></i>',
-				                  "sEmptyTable": "No Pending Launch.",
+				                  "sEmptyTable": "Loading launches..",
 				                  "oPaginate": {
 				                      "sNext": "&rarr;",
 				                      "sPrevious": "&larr;"
@@ -767,7 +768,7 @@ function nextQueryAns() {
 				                      "sPrevious": "&larr;"
 				                  },
 				                  "sLengthMenu": "Records per page _MENU_ ",
-				                  "sEmptyTable": "No Pending Launch."
+				                  "sEmptyTable": "Loading launches.."
 				
 				              }
 		    	    	    });
@@ -792,7 +793,7 @@ function loadTmeLauches(tmeselectedmoc) {
 				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
 			"oLanguage": {
 				  "sSearch": '<i class="icon-search"></i>',
-				  "sEmptyTable": "No Pending Launch.",
+				  "sEmptyTable": "Loading launches..",
 				  "oPaginate": {
 					  "sNext": "&rarr;",
 					  "sPrevious": "&larr;"
@@ -835,3 +836,4 @@ function tmeselect(){
 		 
 		});
 }
+
