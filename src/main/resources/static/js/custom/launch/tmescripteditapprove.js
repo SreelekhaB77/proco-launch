@@ -53,31 +53,32 @@
 			});
 			
 			loadTmeLauches('All');
-	
-		$("#editDet").dataTable().fnDestroy();
+			
+	//Q1-sprint UI issues fixes
+		//$("#editDet").dataTable().fnDestroy();
   				   // setTimeout(function(){
-  						    var edtmeTable = $('#editDet').DataTable( {
+  						  //  var edtmeTable = $('#editDet').DataTable( {
   									
-  									"scrollY":       "280px",
+  							//		"scrollY":       "280px",
   									/*"scrollX":        "300px",
   							        "scrollCollapse": true,*/
-  							        "paging":         true,
-  							        "ordering": false,
-  							        "searching": false,
-  							    	"lengthMenu" : [
-  										[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
-  										[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
-  							        "oLanguage": {
-  						                  "sSearch": '<i class="icon-search"></i>',
-  						                  "oPaginate": {
-  						                      "sNext": "&rarr;",
-  						                      "sPrevious": "&larr;"
-  						                  },
-  						                  "sLengthMenu": "Records per page _MENU_ ",
-  						                  "sEmptyTable": "No Pending Launch."
+  							  //      "paging":         true,
+  							   //     "ordering": false,
+  							   //     "searching": false,
+  							    //	"lengthMenu" : [
+  								//		[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
+  									//	[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
+  							     //   "oLanguage": {
+  						             //     "sSearch": '<i class="icon-search"></i>',
+  						            //      "oPaginate": {
+  						              //        "sNext": "&rarr;",
+  						                 //     "sPrevious": "&larr;"
+  						                 // },
+  						                 // "sLengthMenu": "Records per page _MENU_ ",
+  						                 // "sEmptyTable": "No Pending Launch."
   						
-  						              }
-  				    	    	    });
+  						             // }
+  				    	    	//    });
   						    
   						    
   		        //     }, 800 );
@@ -278,11 +279,15 @@
 	    });
 	//Q1 sprint feb 2021 kavitha	
 	$("#mocCol").on('change', function () {
-		$("#kamlaunchDetailsTab").click();
+		//$("#kamlaunchDetailsTab").click();
 		$("#editDet").dataTable().fnDestroy();
 		//kambaseoTable.draw();
 		var tmeselectedmoc = $(this).val(); //'All';
-		loadTmeLauches(tmeselectedmoc);	
+		loadTmeLauches(tmeselectedmoc);
+		$('#editDet').on('draw.dt', function() {
+			  var $empty = $('#editDet').find('.dataTables_empty');
+			  if ($empty) $empty.html('Loading Launches..')
+		});
 			     
     });	
 		
@@ -835,3 +840,4 @@ function tmeselect(){
 		 
 		});
 }
+

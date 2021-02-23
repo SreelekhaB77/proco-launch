@@ -523,6 +523,9 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			//System.out.println(usrAccont + ": " + lunchAccont);
 			if (lunchAccont.equalsIgnoreCase("ALL CUSTOMERS")) {
 				kamAccountSplit = usrAccont.split(",");
+				for (int i = 0; i < kamAccountSplit.length; i++) {
+					listOfAccounts.add(kamAccountSplit[i]);
+				}
 			} else {
 				usrAccountSplit = usrAccont.split(",");
 				kamAccountSplit = lunchAccont.split(",");
@@ -556,9 +559,9 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			try {
 				
 				Query query = sessionFactory.getCurrentSession().createNativeQuery(
-						"SELECT DISTINCT LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc WHERE "
-						+ "SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED NOT IN ('1','2') "
-						+ "AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()");
+						"SELECT DISTINCT LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc WHERE SAMPLE_SHARED IS NOT NULL "
+						+ " AND LAUNCH_REJECTED NOT IN ('1','2') AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() "
+						+ " ORDER BY concat(substr(LAUNCH_MOC, 3, 4), substr(LAUNCH_MOC, 1, 2))");
 					
 				List<String> list = query.list();
 				return list;

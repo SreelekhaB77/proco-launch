@@ -417,11 +417,14 @@ $(document).ready(function() {
 	
 	$("#kamMocCol").on('change', function () {
 		$("#kamlaunchDetailsTab").click();
-		$("#kam_basepack_add").dataTable().fnDestroy();
+		$("#kambasepack_add").dataTable().fnDestroy();
 		//kambaseoTable.draw();
 		var kamselectedmoc = $(this).val(); //'All';
 		loadKamLauches(kamselectedmoc);	
-			     
+		$('#kambasepack_add').on('draw.dt', function() {
+			  var $empty = $('#kambasepack_add').find('.dataTables_empty');
+			  if ($empty) $empty.html('Loading Launches..')
+		});
     });
 	 
 });

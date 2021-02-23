@@ -497,7 +497,7 @@
 										<!-- <span class="coe-text"><div class="userlist col-md-3"> -->
 										<div class="col-md-3">
 											<label for="sel1" class="userlist-space custom-label-align">MOC:</label>
-											 <select id="kamMocCol" class="form-control custom-select-align" style="width: 100px;">
+											 <select id="kamMocCol" class="form-control custom-select-align input-sm" style="width: 100px;">
 														<option value="All">All</option>
 															<c:forEach items="${kammoclist}" var="mocVal">
 																	<option value="${mocVal}"><c:out value="${mocVal}"></c:out></option>
