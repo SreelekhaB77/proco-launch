@@ -100,7 +100,7 @@ public class KamLaunchPlanController {
 			listOfLaunch = launchServiceKam.getAllCompletedLaunchData(userId, kamMoc);
 			int  launchId =listOfLaunch.get(0).getLaunchId();
 			//Q1 sprint kavitha
-			List<String> kammoclist=launchServiceKam.getAllMoc();
+			List<String> kammoclist=launchServiceKam.getAllMoc(userId, kamMoc);
 			model.addAttribute("kammoclist",kammoclist);
 			
 			//for display records

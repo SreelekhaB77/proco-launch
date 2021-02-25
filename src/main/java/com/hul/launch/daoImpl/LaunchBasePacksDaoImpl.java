@@ -779,7 +779,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			}
 			//Sarin Changes - Q1Sprint Feb2021
 			if (isCustomStoreFormat) {
-				launchClassification = "'GOLD','SILVER','BRONZE'";
+				launchClassification = "'GOLD','SILVER','BRONZE','NA'";
 			}
 			Query queryToGetCustomeChainL1 = null;
 			if (accountl1String.isEmpty() || accountl1String.contains("ALL CUSTOMERS")) {
@@ -838,7 +838,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			}
 			//Sarin Changes - Q1Sprint Feb2021
 			if (isCustomStoreFormat) {
-				launchClassification = "'GOLD','SILVER','BRONZE'";
+				launchClassification = "'GOLD','SILVER','BRONZE','NA'";
 			}
 			
 			Query queryToGetCustomeChainL1 = null;
@@ -846,24 +846,24 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 				if (liCluster.isEmpty() || liCluster.contains("ALL INDIA")) {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
 							"SELECT DISTINCT UPPER(CURRENT_STORE_FORMAT) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACCOUNT_NAME != '' AND FINAL_CLUSTER != '' AND LAUNCH_FORMAT IN ("
-									+ launchClassification + ")");
+									+ launchClassification + ") ORDER BY UPPER(CURRENT_STORE_FORMAT)");
 				} else {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
 							"SELECT DISTINCT UPPER(CURRENT_STORE_FORMAT) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACCOUNT_NAME != '' AND FINAL_CLUSTER IN (:liCluster)  AND LAUNCH_FORMAT IN ("
-									+ launchClassification + ")");
+									+ launchClassification + ") ORDER BY UPPER(CURRENT_STORE_FORMAT)");
 					queryToGetCustomeChainL1.setParameterList("liCluster", liCluster);
 				}
 			} else {
 				if (liCluster.isEmpty() || liCluster.contains("ALL INDIA")) {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
 							"SELECT DISTINCT UPPER(CURRENT_STORE_FORMAT) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACCOUNT_NAME IN (:accountl1String) AND DP_CHAIN IN (:accountl2String) AND FINAL_CLUSTER != ''  AND LAUNCH_FORMAT IN ("
-									+ launchClassification + ")");
+									+ launchClassification + ") ORDER BY UPPER(CURRENT_STORE_FORMAT)");
 					queryToGetCustomeChainL1.setParameterList("accountl1String", accountl1String);
 					queryToGetCustomeChainL1.setParameterList("accountl2String", accountl2String);
 				} else {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
 							"SELECT DISTINCT UPPER(CURRENT_STORE_FORMAT) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACCOUNT_NAME IN (:accountl1String) AND DP_CHAIN IN (:accountl2String) AND FINAL_CLUSTER IN (:liCluster)  AND LAUNCH_FORMAT IN ("
-									+ launchClassification + ")");
+									+ launchClassification + ") ORDER BY UPPER(CURRENT_STORE_FORMAT)");
 					queryToGetCustomeChainL1.setParameterList("accountl1String", accountl1String);
 					queryToGetCustomeChainL1.setParameterList("accountl2String", accountl2String);
 					queryToGetCustomeChainL1.setParameterList("liCluster", liCluster);
@@ -894,7 +894,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			}
 			//Sarin Changes - Q1Sprint Feb2021
 			if (isCustomStoreFormat) {
-				launchClassification = "'GOLD','SILVER','BRONZE'";
+				launchClassification = "'GOLD','SILVER','BRONZE','NA'";
 			}
 			
 			Query queryToGetCustomeChainL1 = null;
@@ -902,24 +902,24 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 				if (liCluster.isEmpty() || liCluster.contains("ALL INDIA")) {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
 							"SELECT DISTINCT UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACCOUNT_NAME != '' AND FINAL_CLUSTER != '' AND LAUNCH_FORMAT IN ("
-									+ launchClassification + ")");
+									+ launchClassification + ") ORDER BY UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' '))");
 				} else {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
 							"SELECT DISTINCT UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACCOUNT_NAME != '' AND FINAL_CLUSTER IN (:liCluster) AND FINAL_CLUSTER != '' AND LAUNCH_FORMAT IN ("
-									+ launchClassification + ")");
+									+ launchClassification + ") ORDER BY UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' '))");
 					queryToGetCustomeChainL1.setParameterList("liCluster", liCluster);
 				}
 			} else {
 				if (liCluster.isEmpty() || liCluster.contains("ALL INDIA")) {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
 							"SELECT DISTINCT UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACCOUNT_NAME IN (:accountl1String) AND DP_CHAIN IN (:accountl2String) AND FINAL_CLUSTER != '' AND FINAL_CLUSTER != '' AND LAUNCH_FORMAT IN ("
-									+ launchClassification + ")");
+									+ launchClassification + ") ORDER BY UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' '))");
 					queryToGetCustomeChainL1.setParameterList("accountl1String", accountl1String);
 					queryToGetCustomeChainL1.setParameterList("accountl2String", accountl2String);
 				} else {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
 							"SELECT DISTINCT UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACCOUNT_NAME IN (:accountl1String) AND DP_CHAIN IN (:accountl2String) AND FINAL_CLUSTER IN (:liCluster) AND FINAL_CLUSTER != '' AND LAUNCH_FORMAT IN ("
-									+ launchClassification + ")");
+									+ launchClassification + ") ORDER BY UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' '))");
 					queryToGetCustomeChainL1.setParameterList("accountl1String", accountl1String);
 					queryToGetCustomeChainL1.setParameterList("accountl2String", accountl2String);
 					queryToGetCustomeChainL1.setParameterList("liCluster", liCluster);
@@ -935,7 +935,8 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String getStoreCountOnCustSellIIn(String storeFormat, List<String> liCluster, String classification) {
+	public String getStoreCountOnCustSellIIn(String storeFormat, List<String> liCluster, String classification
+			, boolean isCustomStoreFormat) {  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 		try {
 			String launchClassification = "";
 			if (classification.equals("Gold")) {
@@ -944,6 +945,10 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 				launchClassification = "'BRONZE','SILVER'";
 			} else {
 				launchClassification = "'BRONZE'";
+			}
+			//Sarin Changes - Q1Sprint Feb2021
+			if (isCustomStoreFormat) {
+				launchClassification = "'GOLD','SILVER','BRONZE','NA'";
 			}
 			List<String> listOfStoreFormat = Arrays.asList(storeFormat.split(","));
 			Query queryToGetCustomeChainL1;
@@ -988,7 +993,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			}
 			//Sarin Changes - Q1Sprint Feb2021
 			if (isCustomStoreFormat) {
-				launchClassification = "'GOLD','SILVER','BRONZE'";
+				launchClassification = "'GOLD','SILVER','BRONZE','NA'";
 			}
 			
 			List<String> listOfCustStoreForm = Arrays.asList(custStoreFormat.split("~"));
@@ -1073,7 +1078,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			}
 			//Sarin Changes - Q1Sprint Feb2021
 			if (isCustomStoreFormat) {
-				launchClassification = "'GOLD','SILVER','BRONZE'";
+				launchClassification = "'GOLD','SILVER','BRONZE','NA'";
 			}
 			
 			List<String> listOfStoreFormat = Arrays.asList(storeFormat.split(","));
