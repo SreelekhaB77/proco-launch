@@ -135,6 +135,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 		List<String> listOfBpDesc = new ArrayList<>();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
+		boolean iIncludeAllSores = false; //Sarin Changes - Q1Sprint Feb2021
 		LaunchDataResponse launchDataResponse = launchDao.getSpecificLaunchData(launchId);
 		try {
 			Query queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
@@ -155,7 +156,8 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 				List<String> allL1 = allCustL1.list();
 				accounts = allL1.toArray(new String[allL1.size()]);
 			}
-
+			
+			iIncludeAllSores = (obj[12].toString().equalsIgnoreCase("Yes")) ? true: false;  //Sarin Changes - Q1Sprint Feb2021 - Starts
 			String[] splittedString = obj[2].toString().split(",");
 			List<String> liClusterName = new ArrayList<>();
 			for (String string2 : splittedString) {
@@ -231,7 +233,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 								l1List.add(accountL1);
 								l2List.add(accountDataL2);
 								String countOfStores = launchBasePacksDao.getStoreCountOnStore(storeFormat, l1List,
-										l2List, liClusterName, launchDataResponse.getClassification(), false);  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
+										l2List, liClusterName, launchDataResponse.getClassification(), iIncludeAllSores);  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 								if (!countOfStores.equals("0")) {
 									sellInResponse.setStoresPlanned(countOfStores);
 									sellInResponse.setL1Chain(accountL1);
@@ -294,7 +296,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 								l1List.add(accountL1);
 								l2List.add(accountDataL2);
 								String countOfStores = launchBasePacksDao.getStoreCountOnCustSellIIn(storeFormat,
-										liClusterName, launchDataResponse.getClassification());
+										liClusterName, launchDataResponse.getClassification(), iIncludeAllSores);  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 								if (!countOfStores.equals("0")) {
 									sellInResponse.setStoresPlanned(countOfStores);
 									sellInResponse.setL1Chain(accountL1);
@@ -349,7 +351,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 								l1List.add(accountL1);
 								l2List.add(accountDataL2);
 								String storeCount = launchBasePacksDao.getStoreCountOnStore(storeFormat, l1List, l2List,
-										liClusterName, launchDataResponse.getClassification(), false);  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
+										liClusterName, launchDataResponse.getClassification(), iIncludeAllSores);  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 
 								if (!storeCount.equals("0")) {
 									sellInResponse.setL1Chain(accountL1);
@@ -1102,7 +1104,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 			}
 			//Sarin Changes - Q1Sprint Feb2021
 			if (getIncludeAllStoreFormat(launchId).equalsIgnoreCase("Yes")) {
-				launchClassification = "'GOLD','SILVER','BRONZE'";
+				launchClassification = "'GOLD','SILVER','BRONZE','NA'";
 			}
 			
 			Query query;
@@ -1479,7 +1481,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 			}
 			//Sarin Changes - Q1Sprint Feb2021
 			if (getIncludeAllStoreFormat(launchId).equalsIgnoreCase("Yes")) {
-				launchClassification = "'GOLD','SILVER','BRONZE'";
+				launchClassification = "'GOLD','SILVER','BRONZE','NA'";
 			}
 			
 			String upperKam = forWhichKam.concat("@unilever.com").toUpperCase();

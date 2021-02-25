@@ -65,7 +65,7 @@ public interface LaunchServiceKam {
 	
 	public List<String> getLaunchAccounts(String launchId, String userId);
 	
-	public List<String> getAllMoc();
+	public List<String> getAllMoc(String userId, String launchMOC);
 	
 
 }
