@@ -212,7 +212,8 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 							+ " CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,"
 							+ " CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE,LAUNCH_MOC,LAUNCH_SUBMISSION_DATE FROM TBL_LAUNCH_MASTER tlc WHERE"
 							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED NOT IN ('1','2') AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()"
-							+ " AND LAUNCH_MOC LIKE '%" + launchMOC + "%'");
+							//+ " AND LAUNCH_MOC LIKE '%" + launchMOC + "%'"
+							);
 			
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -263,7 +264,10 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 					}
 					launchDataResponse.setLaunchMoc(launchMoc);
 					launchDataResponse.setLaunchSubmissionDate(rs.getString("LAUNCH_SUBMISSION_DATE"));
-					listOfCompletedLaunch.add(launchDataResponse);
+					if (launchMOC.equalsIgnoreCase("") || launchDataResponse.getLaunchMoc().equalsIgnoreCase(launchMOC) ) {
+						listOfCompletedLaunch.add(launchDataResponse);
+					}
+					//listOfCompletedLaunch.add(launchDataResponse);
 				}
 			}
 		} catch (Exception ex) {
@@ -555,13 +559,18 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 	 //Q1 sprint kavitha feb2021 
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<String> getAllMoc() {
+		public List<String> getAllMoc(String userId, String launchMOC) {
 			try {
 				
 				Query query = sessionFactory.getCurrentSession().createNativeQuery(
+						"SELECT DISTINCT LAUNCH_MOC FROM (SELECT CASE WHEN TLK.LAUNCH_MOC IS NULL THEN tlc.LAUNCH_MOC ELSE TLK.LAUNCH_MOC END AS LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc "
+						+ "LEFT OUTER JOIN TBL_LAUNCH_MOC_KAM TLK ON TLK.LAUNCH_ID = tlc.LAUNCH_ID AND LAUNCH_ACCOUNT = '"+userId+"' "
+						+ "WHERE SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED NOT IN ('1','2') AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() )A "
+						+ "ORDER BY concat(substr(LAUNCH_MOC, 3, 4), substr(LAUNCH_MOC, 1, 2))");
+						/*
 						"SELECT DISTINCT LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc WHERE SAMPLE_SHARED IS NOT NULL "
 						+ " AND LAUNCH_REJECTED NOT IN ('1','2') AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() "
-						+ " ORDER BY concat(substr(LAUNCH_MOC, 3, 4), substr(LAUNCH_MOC, 1, 2))");
+						+ " ORDER BY concat(substr(LAUNCH_MOC, 3, 4), substr(LAUNCH_MOC, 1, 2))"); */
 					
 				List<String> list = query.list();
 				return list;
