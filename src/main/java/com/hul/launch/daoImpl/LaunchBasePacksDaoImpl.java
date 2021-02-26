@@ -288,7 +288,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 		ResultSet rs = null;
 		try {
 			stmt = sessionImpl.connection().prepareStatement(
-					"SELECT DISTINCT UPPER(CURRENT_STORE_FORMAT) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm");
+					"SELECT DISTINCT UPPER(CURRENT_STORE_FORMAT) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm ORDER BY UPPER(CURRENT_STORE_FORMAT)");
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				liStrings.add(rs.getString(1));
@@ -314,10 +314,10 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			Query queryToGetCustomeChainL1 = null;
 			if (listOfL1.contains("ALL CUSTOMERS")) {
 				queryToGetCustomeChainL1 = sessionFactory.getCurrentSession()
-						.createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm");
+						.createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE'");
 			} else {
 				queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-						"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACCOUNT_NAME IN (:l1Chain)");
+						"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME IN (:l1Chain)");
 				queryToGetCustomeChainL1.setParameterList("l1Chain", listOfL1);
 			}
 			//kiran - bigint to int changes
@@ -343,7 +343,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 				launchClassification = "'BRONZE'";
 			}
 			Query queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-					"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACCOUNT_NAME != '' AND LAUNCH_FORMAT IN("
+					"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME != '' AND LAUNCH_FORMAT IN("
 							+ launchClassification + ") ");
 			//kiran - bigint to int changes
 			//List<Integer> count = queryToGetCustomeChainL1.list();
@@ -361,7 +361,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 		List<String> liStrings = null;
 		try {
 			Query queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-					"SELECT DISTINCT UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) FROM TBL_VAT_COMM_OUTLET_MASTER WHERE ACCOUNT_NAME != ''");
+					"SELECT DISTINCT UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) FROM TBL_VAT_COMM_OUTLET_MASTER WHERE ACCOUNT_NAME != '' ORDER BY UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' '))");
 
 			liStrings = queryToGetCustomeChainL1.list();
 		} catch (Exception ex) {
@@ -378,10 +378,10 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			Query queryToGetCustomeChainL1 = null;
 			if (account.isEmpty() || account.contains("ALL CUSTOMERS")) {
 				queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-						"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACCOUNT_NAME != ''");
+						"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME != ''");
 			} else {
 				queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-						"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACCOUNT_NAME IN (:account)");
+						"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME IN (:account)");
 				queryToGetCustomeChainL1.setParameterList("account", account);
 			}
 			//kiran - bigint to int changes
@@ -731,10 +731,10 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			Query queryToGetCustomeChainL1 = null;
 			if (listOfL1.contains("ALL CUSTOMERS")) {
 				queryToGetCustomeChainL1 = sessionFactory.getCurrentSession()
-						.createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm");
+						.createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE'");
 			} else {
 				queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-						"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACCOUNT_NAME IN (:l1Chain) AND DP_CHAIN in (:l2Chain)");
+						"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME IN (:l1Chain) AND DP_CHAIN in (:l2Chain)");
 				queryToGetCustomeChainL1.setParameterList("l1Chain", listOfL1);
 				queryToGetCustomeChainL1.setParameterList("l2Chain", listOfL2);
 			}
@@ -785,24 +785,24 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			if (accountl1String.isEmpty() || accountl1String.contains("ALL CUSTOMERS")) {
 				if (clusterList.isEmpty() || clusterList.contains("ALL INDIA")) {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACCOUNT_NAME != '' AND FINAL_CLUSTER != '' AND LAUNCH_FORMAT IN ("
+							"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME != '' AND FINAL_CLUSTER != '' AND LAUNCH_FORMAT IN ("
 									+ launchClassification + ")");
 				} else {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACCOUNT_NAME != '' AND FINAL_CLUSTER IN (:clusterList) AND LAUNCH_FORMAT IN ("
+							"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME != '' AND FINAL_CLUSTER IN (:clusterList) AND LAUNCH_FORMAT IN ("
 									+ launchClassification + ")");
 					queryToGetCustomeChainL1.setParameterList("clusterList", clusterList);
 				}
 			} else {
 				if (clusterList.isEmpty() || clusterList.contains("ALL INDIA")) {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACCOUNT_NAME IN (:accountl1String) AND DP_CHAIN IN (:accountl2String) AND FINAL_CLUSTER != '' AND LAUNCH_FORMAT IN ("
+							"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME IN (:accountl1String) AND DP_CHAIN IN (:accountl2String) AND FINAL_CLUSTER != '' AND LAUNCH_FORMAT IN ("
 									+ launchClassification + ")");
 					queryToGetCustomeChainL1.setParameterList("accountl1String", accountl1String);
 					queryToGetCustomeChainL1.setParameterList("accountl2String", accountl2String);
 				} else {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACCOUNT_NAME IN (:accountl1String) AND DP_CHAIN IN (:accountl2String) AND FINAL_CLUSTER IN (:clusterList) AND LAUNCH_FORMAT IN ("
+							"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME IN (:accountl1String) AND DP_CHAIN IN (:accountl2String) AND FINAL_CLUSTER IN (:clusterList) AND LAUNCH_FORMAT IN ("
 									+ launchClassification + ")");
 					queryToGetCustomeChainL1.setParameterList("accountl1String", accountl1String);
 					queryToGetCustomeChainL1.setParameterList("accountl2String", accountl2String);
@@ -845,24 +845,24 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			if (accountl1String.isEmpty() || accountl1String.contains("ALL CUSTOMERS")) {
 				if (liCluster.isEmpty() || liCluster.contains("ALL INDIA")) {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							"SELECT DISTINCT UPPER(CURRENT_STORE_FORMAT) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACCOUNT_NAME != '' AND FINAL_CLUSTER != '' AND LAUNCH_FORMAT IN ("
+							"SELECT DISTINCT UPPER(CURRENT_STORE_FORMAT) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME != '' AND FINAL_CLUSTER != '' AND LAUNCH_FORMAT IN ("
 									+ launchClassification + ") ORDER BY UPPER(CURRENT_STORE_FORMAT)");
 				} else {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							"SELECT DISTINCT UPPER(CURRENT_STORE_FORMAT) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACCOUNT_NAME != '' AND FINAL_CLUSTER IN (:liCluster)  AND LAUNCH_FORMAT IN ("
+							"SELECT DISTINCT UPPER(CURRENT_STORE_FORMAT) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME != '' AND FINAL_CLUSTER IN (:liCluster)  AND LAUNCH_FORMAT IN ("
 									+ launchClassification + ") ORDER BY UPPER(CURRENT_STORE_FORMAT)");
 					queryToGetCustomeChainL1.setParameterList("liCluster", liCluster);
 				}
 			} else {
 				if (liCluster.isEmpty() || liCluster.contains("ALL INDIA")) {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							"SELECT DISTINCT UPPER(CURRENT_STORE_FORMAT) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACCOUNT_NAME IN (:accountl1String) AND DP_CHAIN IN (:accountl2String) AND FINAL_CLUSTER != ''  AND LAUNCH_FORMAT IN ("
+							"SELECT DISTINCT UPPER(CURRENT_STORE_FORMAT) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME IN (:accountl1String) AND DP_CHAIN IN (:accountl2String) AND FINAL_CLUSTER != ''  AND LAUNCH_FORMAT IN ("
 									+ launchClassification + ") ORDER BY UPPER(CURRENT_STORE_FORMAT)");
 					queryToGetCustomeChainL1.setParameterList("accountl1String", accountl1String);
 					queryToGetCustomeChainL1.setParameterList("accountl2String", accountl2String);
 				} else {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							"SELECT DISTINCT UPPER(CURRENT_STORE_FORMAT) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACCOUNT_NAME IN (:accountl1String) AND DP_CHAIN IN (:accountl2String) AND FINAL_CLUSTER IN (:liCluster)  AND LAUNCH_FORMAT IN ("
+							"SELECT DISTINCT UPPER(CURRENT_STORE_FORMAT) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME IN (:accountl1String) AND DP_CHAIN IN (:accountl2String) AND FINAL_CLUSTER IN (:liCluster)  AND LAUNCH_FORMAT IN ("
 									+ launchClassification + ") ORDER BY UPPER(CURRENT_STORE_FORMAT)");
 					queryToGetCustomeChainL1.setParameterList("accountl1String", accountl1String);
 					queryToGetCustomeChainL1.setParameterList("accountl2String", accountl2String);
@@ -901,24 +901,24 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			if (accountl1String.isEmpty() || accountl1String.contains("ALL CUSTOMERS")) {
 				if (liCluster.isEmpty() || liCluster.contains("ALL INDIA")) {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							"SELECT DISTINCT UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACCOUNT_NAME != '' AND FINAL_CLUSTER != '' AND LAUNCH_FORMAT IN ("
+							"SELECT DISTINCT UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME != '' AND FINAL_CLUSTER != '' AND LAUNCH_FORMAT IN ("
 									+ launchClassification + ") ORDER BY UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' '))");
 				} else {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							"SELECT DISTINCT UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACCOUNT_NAME != '' AND FINAL_CLUSTER IN (:liCluster) AND FINAL_CLUSTER != '' AND LAUNCH_FORMAT IN ("
+							"SELECT DISTINCT UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME != '' AND FINAL_CLUSTER IN (:liCluster) AND FINAL_CLUSTER != '' AND LAUNCH_FORMAT IN ("
 									+ launchClassification + ") ORDER BY UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' '))");
 					queryToGetCustomeChainL1.setParameterList("liCluster", liCluster);
 				}
 			} else {
 				if (liCluster.isEmpty() || liCluster.contains("ALL INDIA")) {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							"SELECT DISTINCT UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACCOUNT_NAME IN (:accountl1String) AND DP_CHAIN IN (:accountl2String) AND FINAL_CLUSTER != '' AND FINAL_CLUSTER != '' AND LAUNCH_FORMAT IN ("
+							"SELECT DISTINCT UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME IN (:accountl1String) AND DP_CHAIN IN (:accountl2String) AND FINAL_CLUSTER != '' AND FINAL_CLUSTER != '' AND LAUNCH_FORMAT IN ("
 									+ launchClassification + ") ORDER BY UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' '))");
 					queryToGetCustomeChainL1.setParameterList("accountl1String", accountl1String);
 					queryToGetCustomeChainL1.setParameterList("accountl2String", accountl2String);
 				} else {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							"SELECT DISTINCT UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACCOUNT_NAME IN (:accountl1String) AND DP_CHAIN IN (:accountl2String) AND FINAL_CLUSTER IN (:liCluster) AND FINAL_CLUSTER != '' AND LAUNCH_FORMAT IN ("
+							"SELECT DISTINCT UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm where ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME IN (:accountl1String) AND DP_CHAIN IN (:accountl2String) AND FINAL_CLUSTER IN (:liCluster) AND FINAL_CLUSTER != '' AND LAUNCH_FORMAT IN ("
 									+ launchClassification + ") ORDER BY UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' '))");
 					queryToGetCustomeChainL1.setParameterList("accountl1String", accountl1String);
 					queryToGetCustomeChainL1.setParameterList("accountl2String", accountl2String);
@@ -955,12 +955,12 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 
 			if (liCluster.isEmpty() || liCluster.contains("ALL INDIA")) {
 				queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-						"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE UPPER(CURRENT_STORE_FORMAT) IN "
+						"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND UPPER(CURRENT_STORE_FORMAT) IN "
 								+ "(:listOfStoreFormat) AND LAUNCH_FORMAT IN (" + launchClassification + ")");
 				queryToGetCustomeChainL1.setParameterList("listOfStoreFormat", listOfStoreFormat);
 			} else {
 				queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-						"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE FINAL_CLUSTER IN (:liCluster) AND "
+						"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND FINAL_CLUSTER IN (:liCluster) AND "
 								+ " UPPER(CURRENT_STORE_FORMAT) IN (:listOfStoreFormat) AND LAUNCH_FORMAT IN ("
 								+ launchClassification + ")");
 				queryToGetCustomeChainL1.setParameterList("liCluster", liCluster);
@@ -1001,13 +1001,13 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			if (accountl1String.isEmpty() || accountl1String.contains("ALL CUSTOMERS")) {
 				if (liCluster.isEmpty() || liCluster.contains("ALL INDIA")) {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACCOUNT_NAME != '' AND CURRENT_STORE_FORMAT IN "
+							"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME != '' AND CURRENT_STORE_FORMAT IN "
 									+ " (SELECT DISTINCT CURRENT_STORE_FORMAT FROM TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE CUSTOMER_STORE_FORMAT IN (:custStoreFormat))");
 									//+ " AND LAUNCH_FORMAT IN (" + launchClassification + ")");
 					queryToGetCustomeChainL1.setParameterList("custStoreFormat", listOfCustStoreForm);
 				} else {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE CURRENT_STORE_FORMAT IN ( "
+							"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND CURRENT_STORE_FORMAT IN ( "
 									+ " SELECT DISTINCT CURRENT_STORE_FORMAT FROM TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE FINAL_CLUSTER IN (:liCluster) "
 									+ " AND ACCOUNT_NAME != '' AND CUSTOMER_STORE_FORMAT IN (:custStoreFormat))  AND FINAL_CLUSTER IN (:liCluster)");
 							/*"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE CURRENT_STORE_FORMAT IN ( "
@@ -1025,7 +1025,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 									+ " ACCOUNT_NAME IN (:accountl1String) AND ACCOUNT_NAME != '' AND DP_CHAIN IN(:accountl2String) AND "
 									+ " CUSTOMER_STORE_FORMAT IN (:custStoreFormat)) AND LAUNCH_FORMAT IN ("
 									+ launchClassification + ")");*/
-							"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE CURRENT_STORE_FORMAT IN ( "
+							"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND CURRENT_STORE_FORMAT IN ( "
 							+ "SELECT DISTINCT CURRENT_STORE_FORMAT FROM TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE"
 							+ " ACCOUNT_NAME IN (:accountl1String) AND ACCOUNT_NAME != '' AND DP_CHAIN IN(:accountl2String) AND "
 							+ " CUSTOMER_STORE_FORMAT IN (:custStoreFormat))");
@@ -1039,7 +1039,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 									+ " AND ACCOUNT_NAME IN (:accountl1String) AND ACCOUNT_NAME != '' AND DP_CHAIN IN(:accountl2String) AND "
 									+ " CUSTOMER_STORE_FORMAT IN (:custStoreFormat)) AND LAUNCH_FORMAT IN ("
 									+ launchClassification + ") AND FINAL_CLUSTER IN (:liCluster)");*/
-							"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE CURRENT_STORE_FORMAT IN ( SELECT"
+							"SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND CURRENT_STORE_FORMAT IN ( SELECT"
 							+ " DISTINCT CURRENT_STORE_FORMAT FROM TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE FINAL_CLUSTER IN (:liCluster) "
 							+ " AND ACCOUNT_NAME IN (:accountl1String) AND ACCOUNT_NAME != '' AND DP_CHAIN IN(:accountl2String) AND "
 							+ " CUSTOMER_STORE_FORMAT IN (:custStoreFormat))  AND FINAL_CLUSTER IN (:liCluster)");
@@ -1086,12 +1086,12 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			if (accountl1String.isEmpty() || accountl1String.contains("ALL CUSTOMERS")) {
 				if (liCluster.isEmpty() || liCluster.contains("ALL INDIA")) {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							"SELECT COUNT(1) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE UPPER(CURRENT_STORE_FORMAT) IN "
+							"SELECT COUNT(1) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND UPPER(CURRENT_STORE_FORMAT) IN "
 									+ "(:listOfStoreFormat) AND LAUNCH_FORMAT IN (" + launchClassification + ")");
 					queryToGetCustomeChainL1.setParameterList("listOfStoreFormat", listOfStoreFormat);
 				} else {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							"SELECT COUNT(1) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE FINAL_CLUSTER IN (:liCluster) AND "
+							"SELECT COUNT(1) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND FINAL_CLUSTER IN (:liCluster) AND "
 									+ " UPPER(CURRENT_STORE_FORMAT) IN (:listOfStoreFormat) AND LAUNCH_FORMAT IN ("
 									+ launchClassification + ")");
 					queryToGetCustomeChainL1.setParameterList("liCluster", liCluster);
@@ -1101,7 +1101,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			} else {
 				if (liCluster.isEmpty() || liCluster.contains("ALL INDIA")) {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							"SELECT COUNT(1) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE UPPER(CURRENT_STORE_FORMAT) IN (:listOfStoreFormat)"
+							"SELECT COUNT(1) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND UPPER(CURRENT_STORE_FORMAT) IN (:listOfStoreFormat)"
 									+ "  AND ACCOUNT_NAME IN (:accountl1String) AND ACCOUNT_NAME != '' AND DP_CHAIN IN(:accountl2String) AND LAUNCH_FORMAT IN ("
 									+ launchClassification + ")");
 					queryToGetCustomeChainL1.setParameterList("listOfStoreFormat", listOfStoreFormat);
@@ -1109,7 +1109,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 					queryToGetCustomeChainL1.setParameterList("accountl2String", accountl2String);
 				} else {
 					queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-							"SELECT COUNT(1) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE FINAL_CLUSTER IN (:liCluster) AND "
+							"SELECT COUNT(1) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND FINAL_CLUSTER IN (:liCluster) AND "
 									+ " UPPER(CURRENT_STORE_FORMAT) IN (:listOfStoreFormat) AND ACCOUNT_NAME IN (:accountl1String) "
 									+ " AND ACCOUNT_NAME != '' AND DP_CHAIN IN(:accountl2String) AND LAUNCH_FORMAT IN ("
 									+ launchClassification + ")");
@@ -1139,7 +1139,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			Query queryToGetCustomeChainL1 = null;
 			if (liCluster.isEmpty() || liCluster.contains("ALL INDIA")) {
 				queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-						"SELECT COUNT(1) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE UPPER(CURRENT_STORE_FORMAT) = :storeFormat AND "
+						"SELECT COUNT(1) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND UPPER(CURRENT_STORE_FORMAT) = :storeFormat AND "
 								+ "ACCOUNT_NAME = :accountL1 and DP_CHAIN = :accountL2 AND UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' '))"
 								+ " IN (:listOfCustStores) and ACCOUNT_NAME != ''");
 				queryToGetCustomeChainL1.setParameter("storeFormat", storeFormat);
@@ -1148,7 +1148,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 				queryToGetCustomeChainL1.setParameterList("listOfCustStores", listOfCustStores);
 			} else {
 				queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-						"SELECT COUNT(1) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE UPPER(CURRENT_STORE_FORMAT) = :storeFormat AND "
+						"SELECT COUNT(1) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND UPPER(CURRENT_STORE_FORMAT) = :storeFormat AND "
 								+ "ACCOUNT_NAME = :accountL1 and DP_CHAIN = :accountL2 AND UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' '))"
 								+ " IN (:listOfCustStores) and ACCOUNT_NAME != '' AND FINAL_CLUSTER IN (:liCluster)");
 				queryToGetCustomeChainL1.setParameter("storeFormat", storeFormat);
@@ -1175,13 +1175,13 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			Query queryToGetCustomeChainL1 = null;
 			if (liCluster.isEmpty() || liCluster.contains("ALL INDIA")) {
 				queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-						"SELECT COUNT(1) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE UPPER(CURRENT_STORE_FORMAT) = :storeFormat AND ACCOUNT_NAME = :accountL1 and DP_CHAIN = :accountL2");
+						"SELECT COUNT(1) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND UPPER(CURRENT_STORE_FORMAT) = :storeFormat AND ACCOUNT_NAME = :accountL1 and DP_CHAIN = :accountL2");
 				queryToGetCustomeChainL1.setParameter("storeFormat", storeFormat);
 				queryToGetCustomeChainL1.setParameter("accountL1", accountL1);
 				queryToGetCustomeChainL1.setParameter("accountL2", accountL2);
 			} else {
 				queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-						"SELECT COUNT(1) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE UPPER(CURRENT_STORE_FORMAT) = :storeFormat AND ACCOUNT_NAME = :accountL1 and DP_CHAIN = :accountL2 AND FINAL_CLUSTER IN (:liCluster)");
+						"SELECT COUNT(1) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND UPPER(CURRENT_STORE_FORMAT) = :storeFormat AND ACCOUNT_NAME = :accountL1 and DP_CHAIN = :accountL2 AND FINAL_CLUSTER IN (:liCluster)");
 				queryToGetCustomeChainL1.setParameter("storeFormat", storeFormat);
 				queryToGetCustomeChainL1.setParameter("accountL1", accountL1);
 				queryToGetCustomeChainL1.setParameter("accountL2", accountL2);
@@ -1205,13 +1205,13 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			Query queryToGetCustomeChainL1 = null;
 			if (liCluster.isEmpty() || liCluster.contains("ALL INDIA")) {
 				queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-						"SELECT COUNT(1) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE UPPER(CUSTOMER_STORE_FORMAT) = :custStoreFormat AND ACCOUNT_NAME = :accountL1 and DP_CHAIN = :accountL2");
+						"SELECT COUNT(1) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND UPPER(CUSTOMER_STORE_FORMAT) = :custStoreFormat AND ACCOUNT_NAME = :accountL1 and DP_CHAIN = :accountL2");
 				queryToGetCustomeChainL1.setParameter("custStoreFormat", custStoreFormat);
 				queryToGetCustomeChainL1.setParameter("accountL1", accountL1);
 				queryToGetCustomeChainL1.setParameter("accountL2", accountL2);
 			} else {
 				queryToGetCustomeChainL1 = sessionFactory.getCurrentSession().createNativeQuery(
-						"SELECT COUNT(1) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE UPPER(CUSTOMER_STORE_FORMAT) = :custStoreFormat AND ACCOUNT_NAME = :accountL1 and DP_CHAIN = :accountL2 AND FINAL_CLUSTER IN (:liCluster)");
+						"SELECT COUNT(1) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND UPPER(CUSTOMER_STORE_FORMAT) = :custStoreFormat AND ACCOUNT_NAME = :accountL1 and DP_CHAIN = :accountL2 AND FINAL_CLUSTER IN (:liCluster)");
 				queryToGetCustomeChainL1.setParameter("custStoreFormat", custStoreFormat);
 				queryToGetCustomeChainL1.setParameter("accountL1", accountL1);
 				queryToGetCustomeChainL1.setParameter("accountL2", accountL2);
