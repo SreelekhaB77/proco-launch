@@ -36,6 +36,7 @@ import com.hul.launch.model.LaunchVisiPlanning;
 import com.hul.launch.model.SaveUploadededLaunchStore;
 import com.hul.launch.model.TblLaunchMaster;
 import com.hul.launch.request.ChangeMocRequestKam;
+import com.hul.launch.request.ClusterRequest;
 import com.hul.launch.request.GetKamLaunchDetailsRequest;
 import com.hul.launch.request.GetKamLaunchRejectRequest;
 import com.hul.launch.request.MissingDetailsKamInput;
@@ -92,9 +93,19 @@ public class KamLaunchPlanController {
 	@RequestMapping(value = "getAllCompletedLaunchDataKam.htm", method = RequestMethod.GET)
 	public ModelAndView getAllCompletedLaunchData(HttpServletRequest request, Model model) {
 		List<LaunchDataResponse> listOfLaunch = new ArrayList<>();
+		String kamMoc = "All";
 		try {
 			String userId = (String) request.getSession().getAttribute("UserID");
-			listOfLaunch = launchServiceKam.getAllCompletedLaunchData(userId);
+			//listOfLaunch = launchServiceKam.getAllCompletedLaunchData(userId);
+			listOfLaunch = launchServiceKam.getAllCompletedLaunchData(userId, kamMoc);
+			int  launchId =listOfLaunch.get(0).getLaunchId();
+			//Q1 sprint kavitha
+			List<String> kammoclist=launchServiceKam.getAllMoc(userId, kamMoc);
+			model.addAttribute("kammoclist",kammoclist);
+			
+			//for display records
+			
+			
 			if (null != listOfLaunch.get(0).getError()) {
 				throw new Exception(listOfLaunch.get(0).getError());
 			}
@@ -104,6 +115,32 @@ public class KamLaunchPlanController {
 			model.addAttribute("Error", e.toString());
 		}
 		return new ModelAndView("launchplan/kam_launchplan");
+	}
+	
+	//Sarin Changes - Q1Sprint feb2021
+	@RequestMapping(value = "getAllCompletedLaunchKamData.htm", method = RequestMethod.GET, produces = "application/json", headers = "Accept=*/*")
+	public @ResponseBody String getAllCompletedLaunchKamData(HttpServletRequest request, Model model,
+			@RequestParam("kamMoc") String kamMoc) {
+		List<LaunchDataResponse> listOfLaunch = new ArrayList<>();
+		try {
+			String userId = (String) request.getSession().getAttribute("UserID");
+			listOfLaunch = launchServiceKam.getAllCompletedLaunchData(userId, kamMoc);
+			
+			if (null != listOfLaunch.get(0).getError()) {
+				throw new Exception(listOfLaunch.get(0).getError());
+			}
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
+			model.addAttribute("Error", e.toString());
+		}
+		
+		HashMap<String, Object> tableObj = new HashMap<String, Object>();
+		//tableObj.put("iTotalRecords", 10);
+		//tableObj.put("iTotalDisplayRecords", 10);
+		tableObj.put("aaData", listOfLaunch);
+		Gson sLaunch =  new Gson();
+		String launchList = sLaunch.toJson(tableObj);
+		return launchList;
 	}
 
 	@RequestMapping(value = "getApprovalStatusKam.htm", method = RequestMethod.GET)
@@ -125,6 +162,7 @@ public class KamLaunchPlanController {
 		Gson gson = new Gson();
 		ListBasepackDataKamResponse listBasepackDataKamResponse = new ListBasepackDataKamResponse();
 		List<LaunchKamBasepackResponse> listOfLaunch = new ArrayList<>();
+		
 		try {
 			GetKamLaunchDetailsRequest getKamLaunchDetailsRequest = gson.fromJson(jsonBody,
 					GetKamLaunchDetailsRequest.class);
@@ -132,6 +170,7 @@ public class KamLaunchPlanController {
 			List<String> listOfLaunchData = Arrays.asList(launchId);
 			String userId = (String) request.getSession().getAttribute("UserID");
 			listOfLaunch = launchServiceKam.getKamBasepackData(listOfLaunchData, userId);
+			
 			listBasepackDataKamResponse.setListLaunchDataResponse(listOfLaunch);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
@@ -145,8 +184,14 @@ public class KamLaunchPlanController {
 	@RequestMapping(value = "getUpcomingLaunchMocByLaunchIdsKam.htm", method = RequestMethod.GET)
 	public String getUpcomingLaunchMocByLaunchIdsKam(@RequestParam("launchId") String launchId,
 			HttpServletRequest request, Model model) {
+		
 		Gson gson = new Gson();
 		GetLaunchMocForKamResponse getLaunchMocForKamResponse = new GetLaunchMocForKamResponse();
+		//kavitha
+		String userId = (String) request.getSession().getAttribute("UserID");
+		List<String> listKamAccounts = launchServiceKam.getLaunchAccounts(launchId,userId);
+		getLaunchMocForKamResponse.setLisOfAcc(listKamAccounts);
+		 
 		List<String> listOfLaunch = new ArrayList<>();
 		try {
 			if (launchId.equals("")) {
@@ -187,11 +232,16 @@ public class KamLaunchPlanController {
 	@RequestMapping(value = "requestChengeMocByLaunchIdKam.htm", method = RequestMethod.POST)
 	public String requestChengeMocByLaunchIdKam(@RequestBody String jsonBody, HttpServletRequest request, Model model) {
 		Gson gson = new Gson();
-		String successREsponse = "";
+		String successREsponse = " ";
+		
+		List<String> accounts=new ArrayList<>();
 		try {
 			String userId = (String) request.getSession().getAttribute("UserID");
 			ChangeMocRequestKam changeMocRequestKam = gson.fromJson(jsonBody, ChangeMocRequestKam.class);
 			successREsponse = launchServiceKam.requestChengeMocByLaunchIdKam(changeMocRequestKam, userId);
+			// kavitha saving  //only update
+			
+			
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return gson.toJson(new GlobleResponse(ResponseConstants.MSG_FAILURE_RESPONSE,

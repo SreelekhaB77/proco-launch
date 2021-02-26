@@ -1483,4 +1483,22 @@ table#kam_launch_store_table input {
 .alert-success{background:#6DB06D;color: #FFFFFF;font-weight: 500;}
 .modal-header .close{color:black !important;}
 .modal-header .close{color:black !important;}
+
+/*Q1sprint-UI moc filter*/
+.custom-label-align {
+	    float: left;
+    width: 16%;
+    padding-top: 6px;
+}
+.custom-select-align {
+	    float: left;
+    width: 25%!important;
+    height: 30px!important;
+    line-height: 30px;
+    padding: 5px 3px!important;
+}
+thead th{
+text-align: center!important;
+}
+
 /* MTP custom fonts ends here */ 

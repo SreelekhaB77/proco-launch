@@ -203,7 +203,7 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 				}
 				storeDetailsResponse.setCustomerData(custString);
 				String storeCount = getStoreCountByClass(liClusterCode, accountl1String, accountl2String,
-						tblLaunchMaster.getClassification());
+						tblLaunchMaster.getClassification(), false);  //Sarin Changes - Q1Sprint Feb2021 Added last parameter
 				storeDetailsResponse.setStoreCount(Integer.parseInt(storeCount));
 
 				storeDetailsResponse.setRegionCluster(tblLaunchMaster.getLaunchNature2());
@@ -251,7 +251,7 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 				}
 				storeDetailsResponse.setCustomerData(customerData[0]);
 				String storeCount = getStoreCountByClass(liClusterCode1, listOfL1, listOfL2,
-						tblLaunchMaster.getClassification());
+						tblLaunchMaster.getClassification(), false); //Sarin Changes - Q1Sprint Feb2021 Added last parameter
 				storeDetailsResponse.setStoreCount(Integer.parseInt(storeCount));
 			} else if (tblLaunchMaster.getLaunchNature().equals("Town Specific")) {
 				customerChainL2 = createPromoService.getL2WithClusterTown(tblLaunchMaster.getLaunchNature2());
@@ -294,7 +294,7 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 				}
 				storeDetailsResponse.setCustomerData(customerData[0]);
 				String storeCount = getStoreCountByClass(liClusterCode, listOfL1, listOfL2,
-						tblLaunchMaster.getClassification());
+						tblLaunchMaster.getClassification(), false);  //Sarin Changes - Q1Sprint Feb2021 Added last parameter
 				storeDetailsResponse.setStoreCount(Integer.parseInt(storeCount));
 			} else if (tblLaunchMaster.getLaunchNature().equals("Customer Specific")) {
 				customerChainL2 = createPromoService.getCustomerChainL2WithCluster(tblLaunchMaster.getLaunchNature2());
@@ -348,8 +348,9 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public String getStoreCountByClass(List<String> liClusterCode, List<String> accountl1String,
-			List<String> accountl2String, String classification) {
-		return launchBacePacksDao.getStoreCountByClass(liClusterCode, accountl1String, accountl2String, classification);
+			List<String> accountl2String, String classification
+			, boolean isCustomStoreFormat) { //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
+		return launchBacePacksDao.getStoreCountByClass(liClusterCode, accountl1String, accountl2String, classification, isCustomStoreFormat);
 	}
 
 	@Override
@@ -528,11 +529,11 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 				saveLaunchClustersRequest.setCustomerStoreFormat("");
 				if (storeFormatYes.trim().equals("")) {
 					saveLaunchClustersRequest.setTotalStoresToLaunch(launchBacePacksDao.getStoreCountByClass(
-							geographyYes, listOfL1Yes, listOfL2Yes, launchDataResponse.getClassification()));
+							geographyYes, listOfL1Yes, listOfL2Yes, launchDataResponse.getClassification(), false));  //Sarin Changes - Q1Sprint Feb2021 Added last parameter
 				} else {
 					saveLaunchClustersRequest
 							.setTotalStoresToLaunch(launchBacePacksDao.getStoreCountOnStore(storeFormatYes, listOfL1Yes,
-									listOfL2Yes, geographyYes, launchDataResponse.getClassification()));
+									listOfL2Yes, geographyYes, launchDataResponse.getClassification(), false));  //Sarin Changes - Q1Sprint Feb2021 Added last parameter
 				}
 				saveLaunchClustersRequest.setLaunchPlanned("Yes");
 				result = saveLaunchClustersAndAcc(saveLaunchClustersRequest, userID);
@@ -547,11 +548,11 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 				saveLaunchClustersRequest2.setCustomerStoreFormat("");
 				if (storeFormatNo.trim().equals("")) {
 					saveLaunchClustersRequest2.setTotalStoresToLaunch(launchBacePacksDao.getStoreCountByClass(
-							geographyNo, listOfL1No, listOfL2No, launchDataResponse.getClassification()));
+							geographyNo, listOfL1No, listOfL2No, launchDataResponse.getClassification(), false));  //Sarin Changes - Q1Sprint Feb2021 Added last parameter
 				} else {
 					saveLaunchClustersRequest2
 							.setTotalStoresToLaunch(launchBacePacksDao.getStoreCountOnStore(storeFormatNo, listOfL1No,
-									listOfL2No, geographyNo, launchDataResponse.getClassification()));
+									listOfL2No, geographyNo, launchDataResponse.getClassification(), false));  //Sarin Changes - Q1Sprint Feb2021 Added last parameter
 				}
 
 				saveLaunchClustersRequest2.setLaunchPlanned("No");
@@ -584,31 +585,35 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public List<String> getLaunchStores(List<String> liClusterName, List<String> accountl1String,
-			List<String> accountl2String, String classification) {
-		return launchBacePacksDao.getLaunchStores(liClusterName, accountl1String, accountl2String, classification);
+			List<String> accountl2String, String classification
+			, boolean isCustomStoreFormat) {  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
+		return launchBacePacksDao.getLaunchStores(liClusterName, accountl1String, accountl2String, classification, isCustomStoreFormat);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public Object getCustomerStoreFormat(List<String> liClusterName, List<String> accountl1String,
-			List<String> accountl2String, String classification) {
+			List<String> accountl2String, String classification
+			, boolean isCustomStoreFormat) {  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 		return launchBacePacksDao.getCustomerStoreFormat(liClusterName, accountl1String, accountl2String,
-				classification);
+				classification, isCustomStoreFormat);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public String getStoreCountOnCust(String custStoreFormat, List<String> accountl1String,
-			List<String> accountl2String, List<String> liClusterName, String classification) {
+			List<String> accountl2String, List<String> liClusterName, String classification
+			, boolean isCustomStoreFormat) {  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
 		return launchBacePacksDao.getStoreCountOnCust(custStoreFormat, accountl1String, accountl2String, liClusterName,
-				classification);
+				classification, isCustomStoreFormat);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public String getStoreCountOnStore(String storeFormat, List<String> accountl1String, List<String> accountl2String,
-			List<String> liClusterName,String classification) {
-		return launchBacePacksDao.getStoreCountOnStore(storeFormat, accountl1String, accountl2String, liClusterName, classification);
+			List<String> liClusterName,String classification
+			, boolean isCustomStoreFormat) {  //Sarin Changes - Q1Sprint Feb2021 - Include All StoreFormats based on Custom Store Selection
+		return launchBacePacksDao.getStoreCountOnStore(storeFormat, accountl1String, accountl2String, liClusterName, classification, isCustomStoreFormat);
 	}
 
 	@Override
@@ -769,11 +774,11 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 				saveLaunchClustersRequest.setCustomerStoreFormat(custStoreFormYes);
 				if (custStoreFormatYes.trim().equals("")) {
 					saveLaunchClustersRequest.setTotalStoresToLaunch(launchBacePacksDao.getStoreCountByClass(
-							geographyYes, listOfL1Yes, listOfL2Yes, launchDataResponse.getClassification()));
+							geographyYes, listOfL1Yes, listOfL2Yes, launchDataResponse.getClassification(), false));  //Sarin Changes - Q1Sprint Feb2021 Added last parameter
 				} else {
 					saveLaunchClustersRequest
 							.setTotalStoresToLaunch(launchBacePacksDao.getStoreCountOnCust(custStoreFormatYes,
-									listOfL1Yes, listOfL2Yes, geographyYes, launchDataResponse.getClassification()));
+									listOfL1Yes, listOfL2Yes, geographyYes, launchDataResponse.getClassification(), false));  //Sarin Changes - Q1Sprint Feb2021 Added last parameter
 				}
 				saveLaunchClustersRequest.setLaunchPlanned("Yes");
 				result = saveLaunchClustersAndAcc(saveLaunchClustersRequest, userID);
@@ -788,11 +793,11 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 				saveLaunchClustersRequest2.setCustomerStoreFormat(custStoreFormNo);
 				if (custStoreFormatNo.trim().equals("")) {
 					saveLaunchClustersRequest2.setTotalStoresToLaunch(launchBacePacksDao.getStoreCountByClass(
-							geographyNo, listOfL1No, listOfL2No, launchDataResponse.getClassification()));
+							geographyNo, listOfL1No, listOfL2No, launchDataResponse.getClassification(), false));  //Sarin Changes - Q1Sprint Feb2021 Added last parameter
 				} else {
 					saveLaunchClustersRequest2
 							.setTotalStoresToLaunch(launchBacePacksDao.getStoreCountOnCust(custStoreFormatNo,
-									listOfL1No, listOfL2No, geographyNo, launchDataResponse.getClassification()));
+									listOfL1No, listOfL2No, geographyNo, launchDataResponse.getClassification(), false));  //Sarin Changes - Q1Sprint Feb2021 Added last parameter
 				}
 
 				saveLaunchClustersRequest2.setLaunchPlanned("No");

@@ -264,7 +264,7 @@ $(document).ready(function() {
 			            ajaxLoader(spinnerWidth, spinnerHeight);
 			        },
 			       
-			        data: JSON.stringify({"cluster" : clusters.join(","), "account" : $( "#customerChainL1Thrscn" ).val(), "launchId" : $("#dynamicLaunchId").val() }),
+			        data: JSON.stringify({"cluster" : clusters.join(","), "account" : $( "#customerChainL1Thrscn" ).val(), "launchId" : $("#dynamicLaunchId").val(), "IscustomstoreformatChecked" : $('#custmsel').prop('checked') }),  //Sarin Changes - Added last parameter Q1Sprint Feb2021
 			        success: function (clsdata) {
 			        	 $('.loader').hide();
 			        	 // console.log(clsdata);
@@ -381,7 +381,7 @@ $(document).ready(function() {
 		            ajaxLoader(spinnerWidth, spinnerHeight);
 		        },
 		       
-		        data: JSON.stringify({"account" : $( "#customerChainL1Thrscn" ).val(), "cluster" : $( "#cluster" ).val(), "launchId" : $("#dynamicLaunchId").val()  }),
+		        data: JSON.stringify({"account" : $( "#customerChainL1Thrscn" ).val(), "cluster" : $( "#cluster" ).val(), "launchId" : $("#dynamicLaunchId").val(), "IscustomstoreformatChecked" : $('#custmsel').prop('checked')  }),  //Sarin Changes - Added last parameter Q1Sprint Feb2021
 		        success: function (acdata) {
 		        	 $('.loader').hide();
 		        	// console.log(acdata);
@@ -1247,8 +1247,8 @@ $(document).ready(function() {
 					// 3 screen checkbox onchange ajax call
 					
 					$( "#custmsel" ).on('change', function(){  
-						if ($(this).prop('checked')==false){ 
-						
+						//if ($(this).prop('checked')==false){ //Sarin Changes - Commented Q1Sprint Feb2021
+
 						var launchId = $("#dynamicLaunchId").val();
 						
 						$.ajax({
@@ -1260,7 +1260,7 @@ $(document).ready(function() {
 					            ajaxLoader(spinnerWidth, spinnerHeight);
 					        },
 					       
-					        data: JSON.stringify({"cluster" : $( "#cluster" ).val(), "account" : $( "#customerChainL1Thrscn" ).val() , "launchId" : $("#dynamicLaunchId").val() }),
+					        data: JSON.stringify({"cluster" : $( "#cluster" ).val(), "account" : $( "#customerChainL1Thrscn" ).val() , "launchId" : $("#dynamicLaunchId").val(), "IscustomstoreformatChecked" : $(this).prop('checked') }),  //Sarin Changes - Added last parameter Q1Sprint Feb2021
 					        success: function (clssdata) {
 					        	 $('.loader').hide();
 					        			          
@@ -1269,7 +1269,7 @@ $(document).ready(function() {
 					        	}
 					     });
 						//$( "#storecount" ).val( totalStoreCount );
-						}
+						//}
 					});
 					
 					// Launch Create MOC
@@ -1710,7 +1710,7 @@ function multiSelectionForCustChainStore() {
 		            beforeSend: function() {
 		                ajaxLoader(spinnerWidth, spinnerHeight);
 		            },
-		            data: JSON.stringify( { "custStoreFormat": "", "storeFormat": strData, "accountList":$( "#customerChainL1Thrscn" ).val(), "cluster" : $( "#cluster" ).val(), "launchId" : $("#dynamicLaunchId").val() } ),
+		            data: JSON.stringify( { "custStoreFormat": "", "storeFormat": strData, "accountList":$( "#customerChainL1Thrscn" ).val(), "cluster" : $( "#cluster" ).val(), "launchId" : $("#dynamicLaunchId").val(), "IscustomstoreformatChecked" : $('#custmsel').prop('checked') } ),  //Sarin Changes - Added last parameter Q1Sprint Feb2021
 		            success: function (strdata) {
 		            	 $('.loader').hide();
 		            	// console.log(strdata.storeCount);
@@ -1729,7 +1729,7 @@ function multiSelectionForCustChainStore() {
 			            ajaxLoader(spinnerWidth, spinnerHeight);
 			        },
 			       
-			        data: JSON.stringify({"cluster" : $( "#cluster" ).val(), "account" : $( "#customerChainL1Thrscn" ).val() , "launchId" : $("#dynamicLaunchId").val() }),
+			        data: JSON.stringify({"cluster" : $( "#cluster" ).val(), "account" : $( "#customerChainL1Thrscn" ).val() , "launchId" : $("#dynamicLaunchId").val(), "IscustomstoreformatChecked" : $('#custmsel').prop('checked') }),  //Sarin Changes - Added last parameter Q1Sprint Feb2021
 			        success: function (clssdata) {
 			        	 $('.loader').hide();
 			        			          
@@ -1783,7 +1783,7 @@ function multiSelectionForCustChainStore() {
 		            beforeSend: function() {
 		                ajaxLoader(spinnerWidth, spinnerHeight);
 		            },
-		            data: JSON.stringify( { "custStoreFormat": "", "storeFormat": strData, "accountList":$( "#customerChainL1Thrscn" ).val(), "cluster" : $( "#cluster" ).val(), "launchId" : $("#dynamicLaunchId").val() } ),
+		            data: JSON.stringify( { "custStoreFormat": "", "storeFormat": strData, "accountList":$( "#customerChainL1Thrscn" ).val(), "cluster" : $( "#cluster" ).val(), "launchId" : $("#dynamicLaunchId").val(), "IscustomstoreformatChecked" : $('#custmsel').prop('checked') } ),  //Sarin Changes - Added last parameter Q1Sprint Feb2021
 		            success: function (strdata) {
 		            	 $('.loader').hide();
 		            	// console.log(strdata.storeCount);
@@ -1822,7 +1822,7 @@ function multiSelectionForCustChainStore() {
 		            ajaxLoader(spinnerWidth, spinnerHeight);
 		        },
 		       
-		        data: JSON.stringify({"cluster" : $( "#cluster" ).val(), "account" : $( "#customerChainL1Thrscn" ).val() , "launchId" : $("#dynamicLaunchId").val() }),
+		        data: JSON.stringify({"cluster" : $( "#cluster" ).val(), "account" : $( "#customerChainL1Thrscn" ).val() , "launchId" : $("#dynamicLaunchId").val(), "IscustomstoreformatChecked" : $('#custmsel').prop('checked') }),  //Sarin Changes - Added last parameter Q1Sprint Feb2021
 		        success: function (clssdata) {
 		        	 $('.loader').hide();
 		        			          
@@ -1870,7 +1870,7 @@ function multiSelectionForCustStore() {
 		            url: "getStoreDataOnStore.htm",
 		            contentType: "application/json; charset=utf-8",
 		            dataType: "json",
-		            data: JSON.stringify( { "custStoreFormat": strData, "storeFormat": "", "accountList": $( "#customerChainL1Thrscn" ).val(), "cluster" : $( "#cluster" ).val(), "launchId" : $("#dynamicLaunchId").val()  } ),
+		            data: JSON.stringify( { "custStoreFormat": strData, "storeFormat": "", "accountList": $( "#customerChainL1Thrscn" ).val(), "cluster" : $( "#cluster" ).val(), "launchId" : $("#dynamicLaunchId").val(), "IscustomstoreformatChecked" : $('#custmsel').prop('checked')  } ),  //Sarin Changes - Added last parameter Q1Sprint Feb2021
 		            beforeSend: function() {
 		                ajaxLoader(spinnerWidth, spinnerHeight);
 		            },
@@ -1891,7 +1891,7 @@ function multiSelectionForCustStore() {
 			            ajaxLoader(spinnerWidth, spinnerHeight);
 			        },
 			       
-			        data: JSON.stringify({"cluster" :  $( "#cluster" ).val(), "account" : $( "#customerChainL1Thrscn" ).val() , "launchId" : $("#dynamicLaunchId").val() }),
+			        data: JSON.stringify({"cluster" :  $( "#cluster" ).val(), "account" : $( "#customerChainL1Thrscn" ).val() , "launchId" : $("#dynamicLaunchId").val(), "IscustomstoreformatChecked" : $('#custmsel').prop('checked') }),  //Sarin Changes - Added last parameter Q1Sprint Feb2021
 			        success: function (clssdata) {
 			        	 $('.loader').hide();
 			        			          
@@ -1931,7 +1931,7 @@ function multiSelectionForCustStore() {
 		            url: "getStoreDataOnStore.htm",
 		            contentType: "application/json; charset=utf-8",
 		            dataType: "json",
-		            data: JSON.stringify( { "custStoreFormat": strData, "storeFormat": "", "accountList": $( "#customerChainL1Thrscn" ).val(), "cluster" : $( "#cluster" ).val(), "launchId" : $("#dynamicLaunchId").val()  } ),
+		            data: JSON.stringify( { "custStoreFormat": strData, "storeFormat": "", "accountList": $( "#customerChainL1Thrscn" ).val(), "cluster" : $( "#cluster" ).val(), "launchId" : $("#dynamicLaunchId").val(), "IscustomstoreformatChecked" : $('#custmsel').prop('checked')  } ),  //Sarin Changes - Added last parameter Q1Sprint Feb2021
 		            beforeSend: function() {
 		                ajaxLoader(spinnerWidth, spinnerHeight);
 		            },
@@ -1974,7 +1974,7 @@ function multiSelectionForCustStore() {
 		            ajaxLoader(spinnerWidth, spinnerHeight);
 		        },
 		       
-		        data: JSON.stringify({"cluster" :  $( "#cluster" ).val(), "account" : $( "#customerChainL1Thrscn" ).val() , "launchId" : $("#dynamicLaunchId").val() }),
+		        data: JSON.stringify({"cluster" :  $( "#cluster" ).val(), "account" : $( "#customerChainL1Thrscn" ).val() , "launchId" : $("#dynamicLaunchId").val(), "IscustomstoreformatChecked" : $('#custmsel').prop('checked') }),  //Sarin Changes - Added last parameter Q1Sprint Feb2021
 		        success: function (clssdata) {
 		        	 $('.loader').hide();
 		        			          
@@ -2977,6 +2977,7 @@ function saveLunchstrs() {
 	var strfrmt='';
 	var cstmstrfrmt='';
 	var strcount = $('#storecount').val();
+	var customstoresel = $('#custmsel').prop('checked') ?  'Yes' : 'No';  //Sarin Changes - Added for Custome Store Selection - Q1Sprint Feb2021
 	
 	if(document.getElementById('custmsel').checked){
 		if(document.getElementById("radio1").checked) {
@@ -3052,6 +3053,7 @@ function saveLunchstrs() {
         	"customerStoreFormat" : cstmstrfrmt,
         	"totalStoresToLaunch" : strcount,
         	"launchPlanned" : "Yes",
+        	"includeAllStoreFormats" : customstoresel,  //Sarin Changes - Added for custom store selection Q1Sprint Feb2021
         	
 	}
 	
