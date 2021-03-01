@@ -100,11 +100,8 @@ public class KamLaunchPlanController {
 			listOfLaunch = launchServiceKam.getAllCompletedLaunchData(userId, kamMoc);
 			int  launchId =listOfLaunch.get(0).getLaunchId();
 			//Q1 sprint kavitha
-			List<String> kammoclist=launchServiceKam.getAllMoc(userId, kamMoc);
+			List<String> kammoclist=launchServiceKam.getAllMoc();
 			model.addAttribute("kammoclist",kammoclist);
-			
-			//for display records
-			
 			
 			if (null != listOfLaunch.get(0).getError()) {
 				throw new Exception(listOfLaunch.get(0).getError());
@@ -145,16 +142,70 @@ public class KamLaunchPlanController {
 
 	@RequestMapping(value = "getApprovalStatusKam.htm", method = RequestMethod.GET)
 	public ModelAndView getApprovalStatusKam(HttpServletRequest request, Model model) {
+		String approvalKamMoc = "All";
+		String approvalKamStauts = "All";
 		List<KamChangeReqRemarks> listOfKamChangeReq = new ArrayList<>();
 		try {
 			String userId = (String) request.getSession().getAttribute("UserID");
-			listOfKamChangeReq = launchServiceKam.getApprovalStatusKam(userId);
+			listOfKamChangeReq = launchServiceKam.getApprovalStatusKam(userId,approvalKamMoc,approvalKamStauts);
+			//Q2 sprint kavitha feb 2021
+			List<String> kamApprovalMoclist=launchServiceKam.getAllMocApprovalStatus(userId);
+			model.addAttribute("kamApprovalMoclist",kamApprovalMoclist);
+			
+			List<String> kamApprovalStatuslist=launchServiceKam.getKamApprovalStatus(userId);
+			model.addAttribute("kamApprovalStatuslist",kamApprovalStatuslist);
+			
 			model.addAttribute("kamApprovalList", listOfKamChangeReq);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			model.addAttribute("Error", e.toString());
 		}
 		return new ModelAndView("launchplan/kam_launchplan_approvalstatus");
+	}
+	//Q2 sprint feb 2021 kavitha
+	@RequestMapping(value = "getApprovalStatusMocKam.htm", method = RequestMethod.GET, produces = "application/json", headers = "Accept=*/*")
+	public @ResponseBody String getApprovalStatusMOCKam(HttpServletRequest request, Model model,
+			@RequestParam("approvalKamMoc") String approvalKamMoc) {
+		String approvalKamStauts = "All";
+		List<KamChangeReqRemarks> listOfKamChangeReq = new ArrayList<>();
+		try {
+			String userId = (String) request.getSession().getAttribute("UserID");
+			listOfKamChangeReq = launchServiceKam.getApprovalStatusKam(userId,approvalKamMoc,approvalKamStauts);
+		}
+			catch (Exception e) {
+				logger.error("Exception: ", e);
+				model.addAttribute("Error", e.toString());
+			}
+			
+			HashMap<String, Object> tableObj = new HashMap<String, Object>();
+			
+			tableObj.put("aaData", listOfKamChangeReq);
+			Gson sLaunch =  new Gson();
+			String launchList = sLaunch.toJson(tableObj);
+			return launchList;
+	}
+	
+	//Q2 sprint feb 2021 kavitha
+	@RequestMapping(value = "getApprovalStatusKamData.htm", method = RequestMethod.GET, produces = "application/json", headers = "Accept=*/*")
+	public @ResponseBody String getApprovalStatusKamData(HttpServletRequest request, Model model,
+			@RequestParam("approvalKamStauts") String approvalKamStauts) {
+		String approvalKamMoc = "All";
+		List<KamChangeReqRemarks> listOfKamChangeReq = new ArrayList<>();
+		try {
+			String userId = (String) request.getSession().getAttribute("UserID");
+			listOfKamChangeReq = launchServiceKam.getApprovalStatusKam(userId,approvalKamMoc,approvalKamStauts);
+		}
+			catch (Exception e) {
+				logger.error("Exception: ", e);
+				model.addAttribute("Error", e.toString());
+			}
+			
+			HashMap<String, Object> tableObj = new HashMap<String, Object>();
+			
+			tableObj.put("aaData", listOfKamChangeReq);
+			Gson sLaunch =  new Gson();
+			String launchList = sLaunch.toJson(tableObj);
+			return launchList;
 	}
 
 	@RequestMapping(value = "getAllBasePackByLaunchIdsKam.htm", method = RequestMethod.POST)
@@ -239,8 +290,6 @@ public class KamLaunchPlanController {
 			String userId = (String) request.getSession().getAttribute("UserID");
 			ChangeMocRequestKam changeMocRequestKam = gson.fromJson(jsonBody, ChangeMocRequestKam.class);
 			successREsponse = launchServiceKam.requestChengeMocByLaunchIdKam(changeMocRequestKam, userId);
-			// kavitha saving  //only update
-			
 			
 		} catch (Exception e) {
 			logger.error("Exception: ", e);

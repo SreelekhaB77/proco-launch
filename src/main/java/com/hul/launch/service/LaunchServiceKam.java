@@ -52,9 +52,12 @@ public interface LaunchServiceKam {
 	public String saveLaunchVisiListByLaunchIdKam(SaveVisiRequestVatKamList saveVisiRequestVatKamList, String userId);
 
 	public String missingDetailsKamInput(MissingDetailsKamInput missingDetailsKamInput, String userId);
-
-	public List<KamChangeReqRemarks> getApprovalStatusKam(String userId);
-
+	
+	//public List<KamChangeReqRemarks> getApprovalStatusKam(String userId);
+	
+	//Q2 sprint feb 2021 kavitha
+	public List<KamChangeReqRemarks> getApprovalStatusKam(String userId,String approvalLaunchMOC,String approvalKamStauts);
+	
 	public String updateLaunchSampleShared(SampleSharedReqKam sampleSharedReqKam, String userId);
 
 	public LaunchDataResponse getSpecificLaunchDataKam(String launchId, String userId);
@@ -65,7 +68,10 @@ public interface LaunchServiceKam {
 	
 	public List<String> getLaunchAccounts(String launchId, String userId);
 	
-	public List<String> getAllMoc(String userId, String launchMOC);
+	public List<String> getAllMoc();
 	
-
+	//Q2 sprint feb 2021
+	public List<String> getAllMocApprovalStatus(String userId);
+	
+	public List<String>  getKamApprovalStatus(String userId);
 }

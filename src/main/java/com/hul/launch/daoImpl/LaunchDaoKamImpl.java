@@ -212,8 +212,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 							+ " CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,"
 							+ " CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE,LAUNCH_MOC,LAUNCH_SUBMISSION_DATE FROM TBL_LAUNCH_MASTER tlc WHERE"
 							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED NOT IN ('1','2') AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()"
-							//+ " AND LAUNCH_MOC LIKE '%" + launchMOC + "%'"
-							);
+							+ " AND LAUNCH_MOC LIKE '%" + launchMOC + "%'");
 			
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -264,10 +263,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 					}
 					launchDataResponse.setLaunchMoc(launchMoc);
 					launchDataResponse.setLaunchSubmissionDate(rs.getString("LAUNCH_SUBMISSION_DATE"));
-					if (launchMOC.equalsIgnoreCase("") || launchDataResponse.getLaunchMoc().equalsIgnoreCase(launchMOC) ) {
-						listOfCompletedLaunch.add(launchDataResponse);
-					}
-					//listOfCompletedLaunch.add(launchDataResponse);
+					listOfCompletedLaunch.add(launchDataResponse);
 				}
 			}
 		} catch (Exception ex) {
@@ -527,9 +523,6 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			//System.out.println(usrAccont + ": " + lunchAccont);
 			if (lunchAccont.equalsIgnoreCase("ALL CUSTOMERS")) {
 				kamAccountSplit = usrAccont.split(",");
-				for (int i = 0; i < kamAccountSplit.length; i++) {
-					listOfAccounts.add(kamAccountSplit[i]);
-				}
 			} else {
 				usrAccountSplit = usrAccont.split(",");
 				kamAccountSplit = lunchAccont.split(",");
@@ -559,18 +552,13 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 	 //Q1 sprint kavitha feb2021 
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<String> getAllMoc(String userId, String launchMOC) {
+		public List<String> getAllMoc() {
 			try {
 				
 				Query query = sessionFactory.getCurrentSession().createNativeQuery(
-						"SELECT DISTINCT LAUNCH_MOC FROM (SELECT CASE WHEN TLK.LAUNCH_MOC IS NULL THEN tlc.LAUNCH_MOC ELSE TLK.LAUNCH_MOC END AS LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc "
-						+ "LEFT OUTER JOIN TBL_LAUNCH_MOC_KAM TLK ON TLK.LAUNCH_ID = tlc.LAUNCH_ID AND LAUNCH_ACCOUNT = '"+userId+"' "
-						+ "WHERE SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED NOT IN ('1','2') AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() )A "
-						+ "ORDER BY concat(substr(LAUNCH_MOC, 3, 4), substr(LAUNCH_MOC, 1, 2))");
-						/*
-						"SELECT DISTINCT LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc WHERE SAMPLE_SHARED IS NOT NULL "
-						+ " AND LAUNCH_REJECTED NOT IN ('1','2') AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() "
-						+ " ORDER BY concat(substr(LAUNCH_MOC, 3, 4), substr(LAUNCH_MOC, 1, 2))"); */
+						"SELECT DISTINCT LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc WHERE "
+						+ "SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED NOT IN ('1','2') "
+						+ "AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()");
 					
 				List<String> list = query.list();
 				return list;
@@ -1133,16 +1121,24 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<KamChangeReqRemarks> getApprovalStatusKam(String userId) {
+	//Q2 sprint feb 2021 kavitha
+	public List<KamChangeReqRemarks> getApprovalStatusKam(String userId,String approvalLaunchMOC,String approvalKamStauts){
+	//public List<KamChangeReqRemarks> getApprovalStatusKam(String userId) 
 		Session session = sessionFactory.getCurrentSession();
 		SessionImpl sessionImpl = (SessionImpl) session;
 		List<KamChangeReqRemarks> listOfKamChangeReqRemarks = new ArrayList<>();
+		if (approvalLaunchMOC.equalsIgnoreCase("All")) {
+			approvalLaunchMOC = "";
+		}
+		if (approvalKamStauts.equalsIgnoreCase("All")) {
+			approvalKamStauts = "";
+		}
 		try {
 			PreparedStatement stmt = sessionImpl.connection().prepareStatement(
 					"SELECT tlm.LAUNCH_NAME,tlm.LAUNCH_MOC,REQ_DATE,CHANGES_REQUIRED CHANGES_REQUESTED,KAM_REMARKS,tlr.UPDATED_BY "
 							+ " CMM, tlr.UPDATED_DATE RESPONSE_DATE,tlr.FINAL_STATUS APPROVAL_STATUS,TME_REMARKS CMM_REMARKS, tlr.CREATED_BY FROM"
 							+ " TBL_LAUNCH_REQUEST tlr,TBL_LAUNCH_MASTER tlm WHERE tlr.LAUNCH_ID = tlm.LAUNCH_ID AND tlr.CREATED_BY = '"
-							+ userId + "'");
+							+ userId + "' AND tlm.LAUNCH_MOC LIKE '%" + approvalLaunchMOC + "%' AND tlr.FINAL_STATUS  LIKE '%" + approvalKamStauts + "%'");
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				KamChangeReqRemarks kamChangeReqRemarks = new KamChangeReqRemarks();
@@ -1322,4 +1318,38 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		}
 		return listOfLaunchMstnClearanceResponseKam;
 	}
+	
+	//Q2 sprint kavitha feb2021 
+			@SuppressWarnings("unchecked")
+			@Override
+			public List<String> getAllMocApprovalStatus(String userId) {
+				try {
+					
+					Query query = sessionFactory.getCurrentSession().createNativeQuery(
+							"SELECT DISTINCT LAUNCH_MOC  FROM " + 
+							"TBL_LAUNCH_REQUEST tlr,TBL_LAUNCH_MASTER tlm WHERE tlr.LAUNCH_ID = tlm.LAUNCH_ID AND tlr.CREATED_BY = '"+ userId + "' ORDER BY LAUNCH_MOC ASC");
+					List<String> list = query.list();
+					return list;
+				} catch (Exception e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+			
+			//Q2 sprint kavitha feb2021 
+			@SuppressWarnings("unchecked")
+			@Override
+			public List<String> getKamApprovalStatus(String userId) {
+				try {
+					
+					Query query = sessionFactory.getCurrentSession().createNativeQuery(
+							"SELECT DISTINCT tlr.FINAL_STATUS APPROVAL_STATUS  FROM " + 
+							"TBL_LAUNCH_REQUEST tlr,TBL_LAUNCH_MASTER tlm WHERE tlr.LAUNCH_ID = tlm.LAUNCH_ID AND tlr.CREATED_BY = '"+ userId + "' ORDER BY tlr.FINAL_STATUS");
+					List<String> list = query.list();
+					return list;
+				} catch (Exception e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
 }
