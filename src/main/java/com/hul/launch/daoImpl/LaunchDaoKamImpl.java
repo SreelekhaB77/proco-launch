@@ -1133,16 +1133,24 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<KamChangeReqRemarks> getApprovalStatusKam(String userId) {
+	//Q2 sprint feb 2021 kavitha
+	public List<KamChangeReqRemarks> getApprovalStatusKam(String userId,String approvalLaunchMOC,String approvalKamStauts){
+	//public List<KamChangeReqRemarks> getApprovalStatusKam(String userId) 
 		Session session = sessionFactory.getCurrentSession();
 		SessionImpl sessionImpl = (SessionImpl) session;
 		List<KamChangeReqRemarks> listOfKamChangeReqRemarks = new ArrayList<>();
+		if (approvalLaunchMOC.equalsIgnoreCase("All")) {
+			approvalLaunchMOC = "";
+		}
+		if (approvalKamStauts.equalsIgnoreCase("All")) {
+			approvalKamStauts = "";
+		}
 		try {
 			PreparedStatement stmt = sessionImpl.connection().prepareStatement(
 					"SELECT tlm.LAUNCH_NAME,tlm.LAUNCH_MOC,REQ_DATE,CHANGES_REQUIRED CHANGES_REQUESTED,KAM_REMARKS,tlr.UPDATED_BY "
 							+ " CMM, tlr.UPDATED_DATE RESPONSE_DATE,tlr.FINAL_STATUS APPROVAL_STATUS,TME_REMARKS CMM_REMARKS, tlr.CREATED_BY FROM"
 							+ " TBL_LAUNCH_REQUEST tlr,TBL_LAUNCH_MASTER tlm WHERE tlr.LAUNCH_ID = tlm.LAUNCH_ID AND tlr.CREATED_BY = '"
-							+ userId + "'");
+							+ userId + "' AND tlm.LAUNCH_MOC LIKE '%" + approvalLaunchMOC + "%' AND tlr.FINAL_STATUS  LIKE '%" + approvalKamStauts + "%'");
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				KamChangeReqRemarks kamChangeReqRemarks = new KamChangeReqRemarks();
@@ -1322,4 +1330,38 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		}
 		return listOfLaunchMstnClearanceResponseKam;
 	}
+	
+	//Q2 sprint kavitha feb2021 
+			@SuppressWarnings("unchecked")
+			@Override
+			public List<String> getAllMocApprovalStatus(String userId) {
+				try {
+					
+					Query query = sessionFactory.getCurrentSession().createNativeQuery(
+							"SELECT DISTINCT LAUNCH_MOC  FROM " + 
+							"TBL_LAUNCH_REQUEST tlr,TBL_LAUNCH_MASTER tlm WHERE tlr.LAUNCH_ID = tlm.LAUNCH_ID AND tlr.CREATED_BY = '"+ userId + "' ORDER BY LAUNCH_MOC ASC");
+					List<String> list = query.list();
+					return list;
+				} catch (Exception e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+			
+			//Q2 sprint kavitha feb2021 
+			@SuppressWarnings("unchecked")
+			@Override
+			public List<String> getKamApprovalStatus(String userId) {
+				try {
+					
+					Query query = sessionFactory.getCurrentSession().createNativeQuery(
+							"SELECT DISTINCT tlr.FINAL_STATUS APPROVAL_STATUS  FROM " + 
+							"TBL_LAUNCH_REQUEST tlr,TBL_LAUNCH_MASTER tlm WHERE tlr.LAUNCH_ID = tlm.LAUNCH_ID AND tlr.CREATED_BY = '"+ userId + "' ORDER BY tlr.FINAL_STATUS");
+					List<String> list = query.list();
+					return list;
+				} catch (Exception e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
 }

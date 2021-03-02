@@ -2,6 +2,8 @@
  var spinnerHeight = "100";
  var isManualClick = false;
  var kambaseoTable;
+ var kameditapproveoTable;
+ var kamApproveStatusTable;
  var yesno;
  var vssTable,
  	 bldTable,
@@ -77,6 +79,8 @@ $(document).ready(function() {
 	});
 	
 	loadKamLauches('All');
+	loadApprovalKamLauches('All');
+	loadApprovalKamStatus('All');
 	//var kamselectedmoc = $('#kamMocCol').val(); //'All';
 	// $("#kambasepack_add").dataTable().fnDestroy();
 	  // setTimeout(function(){
@@ -421,10 +425,31 @@ $(document).ready(function() {
 		//kambaseoTable.draw();
 		var kamselectedmoc = $(this).val(); //'All';
 		loadKamLauches(kamselectedmoc);	
-		$('#kambasepack_add').on('draw.dt', function() {
-			  var $empty = $('#kambasepack_add').find('.dataTables_empty');
-			  if ($empty) $empty.html('Loading Launches..')
-		});
+    });
+	
+	$('#kambasepack_add').on('draw.dt', function() {
+		  var $empty = $('#kambasepack_add').find('.dataTables_empty');
+		  if ($empty) $empty.html('Loading Launches..')
+	});
+	
+	
+	//Q2 sprint feb 2021
+	$("#approvalKamMocCol").on('change', function () {
+		$("#kamlaunchDetailsTab").click();
+		$(".table.table-striped.table-bordered.custom-mind").dataTable().fnDestroy();
+		//kambaseoTable.draw();
+		var approvekamselectedmoc = $(this).val(); //'All';
+		loadApprovalKamLauches(approvekamselectedmoc);	
+			     
+    });
+	
+	//Q2 sprint feb 2021
+	$("#approvalKamStatusCol").on('change', function () {
+		$("#kamlaunchDetailsTab").click();
+		$(".table.table-striped.table-bordered.custom-mind").dataTable().fnDestroy();
+		//kambaseoTable.draw();
+		var approvekamselectedStatus = $(this).val(); //'All';
+		loadApprovalKamStatus(approvekamselectedStatus);	
     });
 	 
 });
@@ -1596,4 +1621,94 @@ function kamselect(){
 		 
 		});
 }
+//Q2 sprint feb 2021 
+function loadApprovalKamLauches(approvekamselectedmoc) {
+	 kameditapproveoTable = $('.table.table-striped.table-bordered.custom-mind').DataTable( {
+		"scrollY":       "280px",
+			"destroy": true,  
+			"paging":  true,
+			"ordering": false,
+			"searching": false,
+			"lengthMenu" : [
+				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
+				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
+			"oLanguage": {
+				  "sSearch": '<i class="icon-search"></i>',
+				  "sEmptyTable": "No Pending Launch.",
+				  "oPaginate": {
+					  "sNext": "&rarr;",
+					  "sPrevious": "&larr;"
+				  },
+				  "sLengthMenu": "Records per page _MENU_ ",
+			  },
+			"sAjaxSource" : "getApprovalStatusMocKam.htm",
+			  "fnServerParams" : function(aaData) {
+					aaData.push({ "name": "approvalKamMoc", "value": approvekamselectedmoc });
+				},
+				//"aaData": data,
+				"aoColumns" : [
+						
+						{mData : 'launchName'},
+						
+						{
+						  mData: 'launchMoc',
+						  "mRender": function(data, type, full) {
+							return full.launchMoc + '<input type = "hidden" class="mocDate"  value=' + full.launchDate + '>';
+						  }
+						},
+						{mData : 'account'},
+						{mData : 'reqDate'},
+						{mData : 'changeRequested'}, 
+						{mData : 'kamRemarks'},
+						{mData : 'cmm'},
+						{mData : 'responseDate'},
+						{mData : 'approvalStatus'},
+						{mData : 'cmmRemarks'},
+					],
+			});
+	kameditapproveoTable.draw();
+}
+
+//Q2 sprint feb 2021 
+function  loadApprovalKamStatus(approvekamselectedStatus) {
+	 kamApproveStatusTable = $('.table.table-striped.table-bordered.custom-mind').DataTable( {
+		"scrollY":       "280px",
+			"destroy": true,  
+			"paging":  true,
+			"ordering": false,
+			"searching": false,
+			"lengthMenu" : [
+				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
+				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
+			"oLanguage": {
+				  "sSearch": '<i class="icon-search"></i>',
+				  "sEmptyTable": "No Pending Launch.",
+				  "oPaginate": {
+					  "sNext": "&rarr;",
+					  "sPrevious": "&larr;"
+				  },
+				  "sLengthMenu": "Records per page _MENU_ ",
+			  },
+			"sAjaxSource" : "getApprovalStatusKamData.htm",
+			  "fnServerParams" : function(aaData) {
+					aaData.push({ "name": "approvalKamStauts", "value": approvekamselectedStatus });
+				},
+				//"aaData": data,
+				"aoColumns" : [
+						
+						{mData : 'launchName'},
+						{mData: 'launchMoc'},
+						{mData : 'account'},
+						{mData : 'reqDate'},
+						{mData : 'changeRequested'}, 
+						{mData : 'kamRemarks'},
+						{mData : 'cmm'},
+						{mData : 'responseDate'},
+						{mData : 'approvalStatus'},
+						{mData : 'cmmRemarks'},
+					],
+			});
+	kamApproveStatusTable.draw();
+}
+
 
