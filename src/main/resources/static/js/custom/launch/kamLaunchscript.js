@@ -421,13 +421,17 @@ $(document).ready(function() {
 	
 	$("#kamMocCol").on('change', function () {
 		$("#kamlaunchDetailsTab").click();
-		$("#kam_basepack_add").dataTable().fnDestroy();
+		$("#kambasepack_add").dataTable().fnDestroy();
 		//kambaseoTable.draw();
 		var kamselectedmoc = $(this).val(); //'All';
-		alert(kamselectedmoc);
 		loadKamLauches(kamselectedmoc);	
-			     
     });
+	
+	$('#kambasepack_add').on('draw.dt', function() {
+		  var $empty = $('#kambasepack_add').find('.dataTables_empty');
+		  if ($empty) $empty.html('Loading Launches..')
+	});
+	
 	
 	//Q2 sprint feb 2021
 	$("#approvalKamMocCol").on('change', function () {
@@ -446,7 +450,6 @@ $(document).ready(function() {
 		//kambaseoTable.draw();
 		var approvekamselectedStatus = $(this).val(); //'All';
 		loadApprovalKamStatus(approvekamselectedStatus);	
-			     
     });
 	 
 });
@@ -513,7 +516,6 @@ $(document).ready(function() {
 	          //  kambaseoTable.draw();
 	            $('#kamRemakRejErrorMsg').hide();
 	            $('#successblock').show().find('span').html(' Request for Launch MOC send Successfully !!!');
-	            
 	            $( "#kambasepack_add" ).load( "#kamlaunchDetailsTab.html #kambasepack_add" );
 	           /* setTimeout(function(){
 	            kambaseoTable.draw();
@@ -569,7 +571,6 @@ function rejectLaunch() {
             kambaseoTable.draw();
             }, 700); */ 
             $("#kambasepack_add").dataTable().fnDestroy();
-			
             $('#kamMocRejRemarks').val("");
             $('#mockamChange').prop("disabled", true);
          	$('#rejectLaunch').prop("disabled", true);

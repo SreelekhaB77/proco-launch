@@ -180,8 +180,8 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 	
 	@Override
 	@Transactional
-	public List<String> getAllMoc() {
-		return launchDaoKam.getAllMoc();
+	public List<String> getAllMoc(String userId, String launchMOC) {
+		return launchDaoKam.getAllMoc(userId, launchMOC);
 	}
 
 	//Q2 sprint feb 2021 Kavitha
