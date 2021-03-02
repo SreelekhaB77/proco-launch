@@ -150,7 +150,7 @@
 										<table class="table table-striped table-bordered" id="coebasepack_add" cellspacing="0" cellpadding="0" style="width: 100% ! important">
 											<thead class="thead-dark">
 												<tr >
-													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">Select</span></th>
+													<th style="width:80px !important"><span class="proco-btn proco-btn-success table-head"><Input type="checkbox" id="selectAll" class="main" style="float:left;" />Select</span></th>
 													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">Launch Name</span></th>
 													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">Launch MOC</span></th>
 													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">Submitted Date</span></th>
@@ -163,7 +163,7 @@
 											<tbody>
 												 <c:forEach items="${listOfLaunch}" var="launch">
 											       <tr>
-											       	<td><input type='checkbox' class='coechecklaunch' name='selectDel' value='${launch.launchId}'></td>
+											       	<td style="width:80px !important"><input type='checkbox' class='coechecklaunch' name='selectDel' value='${launch.launchId}'></td>
 											         <td>${launch.launchName}</td>
 											         <td>${launch.launchMoc}</td>
 											         <td>${launch.createdDate}</td>

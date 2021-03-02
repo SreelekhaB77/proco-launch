@@ -50,13 +50,14 @@ $(document).ready(function() {
 	 $("#coebasepack_add").dataTable().fnDestroy();
 	    setTimeout(function(){
 			    var oTable = $('#coebasepack_add').DataTable( {
-						
+			    
 						"scrollY":       "280px",
 				        "scrollX":        true,
 				        "scrollCollapse": true,
 				        "paging":         true,
 				        "ordering": false,
 				        "searching": false,
+				        "stateSave": true,
 				    	"lengthMenu" : [
 							[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
 							[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
@@ -71,8 +72,21 @@ $(document).ready(function() {
 			
 			              }
 	    	    	    });
+	    	    	    
+			    //Q2 sprint Select all code
 			    
-			    
+			     var allPages = oTable.cells( ).nodes( );
+
+    $('#selectAll').click(function () {
+        if ($(this).hasClass('allChecked')) {
+            $(allPages).find('input[type="checkbox"]').prop('checked', false);
+        } else {
+            $(allPages).find('input[type="checkbox"]').prop('checked', true);
+        }
+        $(this).toggleClass('allChecked');
+    });
+   
+
       }, 800 );
 /**
 	 * ************************************************************************steps
@@ -881,3 +895,4 @@ function ajaxLoader(w, h) {
         
     });
 }
+
