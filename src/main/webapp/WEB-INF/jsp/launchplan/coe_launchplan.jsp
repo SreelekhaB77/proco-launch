@@ -147,10 +147,18 @@
 							<div class="card-block">
 								<div class="child-table">
 									<div class="table-responsive detail_table">
+									<div class="col-md-3">
+                                            <label for="sel1" class="userlist-space custom-label-align"  >MOC:</label>
+                                             <select id="mocCol" class="form-control coe-select-align input-sm">
+                                                        <option value="All">All</option>
+                                                            <c:forEach items="${coemoclist}" var="mocVal">
+                                                                    <option value="${mocVal}"><c:out value="${mocVal}"></c:out></option>
+                                                            </c:forEach>
+                                             </select></div>
 										<table class="table table-striped table-bordered" id="coebasepack_add" cellspacing="0" cellpadding="0" style="width: 100% ! important">
 											<thead class="thead-dark">
 												<tr >
-													<th style="width:80px !important"><span class="proco-btn proco-btn-success table-head"><Input type="checkbox" id="selectAll" class="main" style="float:left;" />Select</span></th>
+													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">Select</span></th>
 													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">Launch Name</span></th>
 													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">Launch MOC</span></th>
 													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">Submitted Date</span></th>
@@ -160,10 +168,10 @@
 												
 												</tr>
 											</thead>
-											<tbody>
+										<!--	<tbody>
 												 <c:forEach items="${listOfLaunch}" var="launch">
 											       <tr>
-											       	<td style="width:80px !important"><input type='checkbox' class='coechecklaunch' name='selectDel' value='${launch.launchId}'></td>
+											       	<td><input type='checkbox' class='coechecklaunch' name='selectDel' value='${launch.launchId}'></td>
 											         <td>${launch.launchName}</td>
 											         <td>${launch.launchMoc}</td>
 											         <td>${launch.createdDate}</td>
@@ -172,7 +180,7 @@
 											        
 											       </tr>
 											     </c:forEach>
-											</tbody>
+											</tbody>-->
 										</table>
 										
 										<div class="coebtnclass">

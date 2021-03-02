@@ -1495,13 +1495,17 @@ table#kam_launch_store_table input {
 
 .approval-label-align {
 	    float: left;
-    width: 20%;
+    width: 30%;
     padding-top: 6px;
 }
 
 .approval-select-align {
 	    float: left;
-    width: 60%;
+    width: 120%;
+}
+.coe-select-align {
+	    float: left;
+    width: 30%;
 }
 
 /* MTP custom fonts ends here */ 

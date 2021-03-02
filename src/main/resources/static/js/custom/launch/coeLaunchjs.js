@@ -31,7 +31,7 @@ $(document).ready(function() {
 	    $('#coelaunchFinBuiUpTab').click();
 	});
 	
-	
+	loadCoeLauches('All');
 	if( window.location.hash != "#step-1" && window.location.hash != '' ){
 		window.location = window.location.href.split('#')[0];
 	}
@@ -50,14 +50,13 @@ $(document).ready(function() {
 	 $("#coebasepack_add").dataTable().fnDestroy();
 	    setTimeout(function(){
 			    var oTable = $('#coebasepack_add').DataTable( {
-			    
+						
 						"scrollY":       "280px",
 				        "scrollX":        true,
 				        "scrollCollapse": true,
 				        "paging":         true,
 				        "ordering": false,
 				        "searching": false,
-				        "stateSave": true,
 				    	"lengthMenu" : [
 							[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
 							[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
@@ -72,21 +71,8 @@ $(document).ready(function() {
 			
 			              }
 	    	    	    });
-	    	    	    
-			    //Q2 sprint Select all code
 			    
-			     var allPages = oTable.cells( ).nodes( );
-
-    $('#selectAll').click(function () {
-        if ($(this).hasClass('allChecked')) {
-            $(allPages).find('input[type="checkbox"]').prop('checked', false);
-        } else {
-            $(allPages).find('input[type="checkbox"]').prop('checked', true);
-        }
-        $(this).toggleClass('allChecked');
-    });
-   
-
+			    
       }, 800 );
 /**
 	 * ************************************************************************steps
@@ -212,7 +198,19 @@ $(document).ready(function() {
 	 $("#smartwizard").on("leaveStep", function(e, anchorObject, stepNumber, stepDirection) {
 		console.log(e) 
 	 })
-	
+	//Q2 sprint feb 2021 kavitha	
+	$("#mocCol").on('change', function () {
+		//$("#kamlaunchDetailsTab").click();
+		$("#coebasepack_add").dataTable().fnDestroy();
+		//kambaseoTable.draw();
+		var coeselectedmoc = $(this).val(); //'All';
+		loadCoeLauches(coeselectedmoc);
+		$('#coebasepack_add').on('draw.dt', function() {
+			  var $empty = $('#coebasepack_add').find('.dataTables_empty');
+			  if ($empty) $empty.html('Loading Launches..')
+		});
+			     
+    });	
 	
 });
 	function leaveAStepCallback(obj) {
@@ -896,3 +894,52 @@ function ajaxLoader(w, h) {
     });
 }
 
+//Q1 sprint feb 2021 kavitha starts
+function loadCoeLauches(coeselectedmoc) {
+	coeeoTable = $('#coebasepack_add').DataTable( {
+		"scrollY":       "280px",
+			"destroy": true,  
+			"paging":  true,
+			"ordering": false,
+			"searching": false,
+			"lengthMenu" : [
+				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
+				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
+			"oLanguage": {
+				  "sSearch": '<i class="icon-search"></i>',
+				  "sEmptyTable": "No Pending Launch.",
+				  "oPaginate": {
+					  "sNext": "&rarr;",
+					  "sPrevious": "&larr;"
+				  },
+				  "sLengthMenu": "Records per page _MENU_ ",
+				  
+
+			  },
+			"sAjaxSource" : "getAllCoeMOCData.htm",
+			  "fnServerParams" : function(aoData) {
+					aoData.push({ "name": "coeMoc", "value": coeselectedmoc });
+				},
+				//"aaData": data,
+				"aoColumns" : [
+						{
+						  mData: 'launchId',
+						  "mRender": function(data, type, full) {
+							return '<input type="checkbox" name="editLaunchscr1" class="editlaunchsel" onClick="tmeselect()" value=' + data + '>';
+						  }
+						},
+						{mData : 'launchName'},
+						//{mData : 'launchMoc'},
+						{
+						  mData: 'launchMoc',
+						  //"mRender": function(data, type, full) {
+							//return full.launchMoc + '<input type = "hidden" class="mocDate"  value=' + full.launchDate + '>';
+						  //}
+						},
+						{mData : 'createdDate'},
+						{mData : 'createdBy'},
+						{mData : 'accountName'},
+					],
+			});
+	coeeoTable.draw();
+}
