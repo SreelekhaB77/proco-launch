@@ -281,8 +281,8 @@ public class LaunchServiceImpl implements LaunchService {
 	//Q1 sprint feb 2021 kavitha
 	@Override
 	@Transactional
-	public List<String> getAllMoc() {
-		return launchDao.getAllMoc();
+	public List<String> getAllMoc(String userId) {
+		return launchDao.getAllMoc(userId);
 	}
 	
 	//Q2 sprint feb 2021 kavitha

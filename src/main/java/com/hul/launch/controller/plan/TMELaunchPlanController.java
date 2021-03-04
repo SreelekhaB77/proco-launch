@@ -130,7 +130,7 @@ public class TMELaunchPlanController {
 			//listOfLaunch = launchService.getAllLaunchData(userId);
 			listOfLaunch = launchService.getAllLaunchData(userId,tmeMoc,launchName);
 			//Q1 sprint kavitha 2021
-			List<String> tmemoclist=launchService.getAllMoc();
+			List<String> tmemoclist=launchService.getAllMoc(userId);
 			model.addAttribute("tmemoclist",tmemoclist);
 			
 			//Q2 sprint kavitha 2021
