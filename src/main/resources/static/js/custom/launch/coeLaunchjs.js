@@ -1,8 +1,9 @@
  var spinnerWidth = "100";
  var spinnerHeight = "100";
  var isManualClick = false;
-
-$(document).ready(function() { 
+ 
+$(document).ready(function() {
+ 
 	$.ajaxSetup({ cache: false });
 //prev button
 	$('#coeprevbspack').click(function(){
@@ -46,34 +47,41 @@ $(document).ready(function() {
 		return false;
 	} );
 	
+//Q1 commented code for pagination not working
 	
-	 $("#coebasepack_add").dataTable().fnDestroy();
-	    setTimeout(function(){
-			    var oTable = $('#coebasepack_add').DataTable( {
+	// $("#coebasepack_add").dataTable().fnDestroy();
+	 
+	  // setTimeout(function(){
+			//    var oTable = $('#coebasepack_add').DataTable( {
 						
-						"scrollY":       "280px",
-				        "scrollX":        true,
-				        "scrollCollapse": true,
-				        "paging":         true,
-				        "ordering": false,
-				        "searching": false,
-				    	"lengthMenu" : [
-							[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
-							[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
-				        "oLanguage": {
-			                  "sSearch": '<i class="icon-search"></i>',
-			                  "oPaginate": {
-			                      "sNext": "&rarr;",
-			                      "sPrevious": "&larr;"
-			                  },
-			                  "sLengthMenu": "Records per page _MENU_ ",
-			                  "sEmptyTable": "No Pending Launch."
+				//		"scrollY":       "280px",
+				 //       "scrollX":        true,
+				 //       "scrollCollapse": true,
+				   //     "paging":         true,
+				  //     "ordering": false,
+				    //    "searching": false,
+				     //    
+				    //	"lengthMenu" : [
+					//		[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
+						//	[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
+				      //  "oLanguage": {
+			          //        "sSearch": '<i class="icon-search"></i>',
+			           //       "oPaginate": {
+			            //          "sNext": "&rarr;",
+			            //          "sPrevious": "&larr;"
+			             //     },
+			             //     "sLengthMenu": "Records per page _MENU_ ",
+			             //     "sEmptyTable": "No Pending Launch."
 			
-			              }
-	    	    	    });
+			             // }
+	    	    	  //  });
 			    
-			    
-      }, 800 );
+			   
+    
+     // }, 800 );
+      
+    
+    
 /**
 	 * ************************************************************************steps
 	 * JS*****************************************************************
@@ -213,6 +221,7 @@ $(document).ready(function() {
     });	
 	
 });
+
 	function leaveAStepCallback(obj) {
 		var step_num = obj.attr('rel');
 		return validateSteps(step_num);
@@ -902,6 +911,7 @@ function loadCoeLauches(coeselectedmoc) {
 			"paging":  true,
 			"ordering": false,
 			"searching": false,
+			"stateSave": true,
 			"lengthMenu" : [
 				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
 				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
@@ -925,7 +935,7 @@ function loadCoeLauches(coeselectedmoc) {
 						{
 						  mData: 'launchId',
 						  "mRender": function(data, type, full) {
-							return '<input type="checkbox" name="editLaunchscr1" class="editlaunchsel" onClick="tmeselect()" value=' + data + '>';
+							return '<input type="checkbox" class="coechecklaunch" name="selectDel" value=' + data + '>';
 						  }
 						},
 						{mData : 'launchName'},
@@ -943,3 +953,14 @@ function loadCoeLauches(coeselectedmoc) {
 			});
 	coeeoTable.draw();
 }
+
+//Q1 Srint-2 Select all code
+
+$('body').on('click', '#selectAll', function () {
+      if ($(this).hasClass('allChecked')) {
+         $('input[type="checkbox"]', '#coebasepack_add').prop('checked', false);
+      } else {
+       $('input[type="checkbox"]', '#coebasepack_add').prop('checked', true);
+       }
+       $(this).toggleClass('allChecked');
+     });
