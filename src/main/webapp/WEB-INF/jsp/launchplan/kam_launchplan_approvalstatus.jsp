@@ -175,7 +175,7 @@
 					</div>
 					<div class="col-md-3">
 						<label for="sel1" class="userlist-space approval-label-align">Approval Status:</label>
-						<select id="approvalKamStatusCol" class="form-control approval-select-align" style="width: 100px;">
+						<select id="approvalKamStatusCol" class="form-control approval-select-align input-sm" style="width: 100px;">
 						<option value="All">All</option>
 						<c:forEach items="${kamApprovalStatuslist}" var="mocVal">
 						<option value="${mocVal}"><c:out value="${mocVal}"></c:out></option>
