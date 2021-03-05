@@ -9,6 +9,9 @@ var bscaddTable,
 	scTable;
 
 $(document).ready(function() {
+	
+	//Q2 Sprint feb 2021 kavitha
+	loadSCLauches('All');
 	$.ajaxSetup({ cache: false });
 	// prev button
 	$('#scprevbspack').click(function(){
@@ -273,6 +276,15 @@ $(document).ready(function() {
 					$('form').submit();
 				}
 			}
+			//Q2 sprint feb 2021 kavitha	
+			$("#mocCol").on('change', function () {
+				$("#kamlaunchDetailsTab").click();
+				$("#scbasepack_add").dataTable().fnDestroy();
+				//kambaseoTable.draw();
+				var scselectedmoc = $(this).val(); //'All';
+				loadSCLauches(scselectedmoc);	
+					     
+		    });	
 		});
 
 function enableScLaunchButtons(obj) {
@@ -634,4 +646,57 @@ function ajaxLoader(w, h) {
         "top": top,
         
     });
+}
+
+//Q2 sprint feb 2021 kavitha starts
+function loadSCLauches(scselectedmoc) {
+	scbaseoTable = $('#scbasepack_add').DataTable( {
+		"scrollY":       "280px",
+			"destroy": true,  
+			"paging":  true,
+			"ordering": false,
+			"searching": false,
+			"lengthMenu" : [
+				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
+				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
+			"oLanguage": {
+				  "sSearch": '<i class="icon-search"></i>',
+				  "sEmptyTable": "No Pending Launch.",
+				  "oPaginate": {
+					  "sNext": "&rarr;",
+					  "sPrevious": "&larr;"
+				  },
+				  "sLengthMenu": "Records per page _MENU_ ",
+				  
+
+			  },
+			"sAjaxSource" : "getAllCompletedLaunchScData.htm",
+			  "fnServerParams" : function(aaData) {
+					aaData.push({ "name": "sCMoc", "value": scselectedmoc });
+				},
+				//"aaData": data,
+				"aoColumns" : [
+						{
+						  mData: 'launchId',
+						  "mRender": function(data, type, full) {
+							return '<input type="checkbox" name="editLaunchscr1" class="editlaunchsel" onClick="scselect()" value=' + data + '>';
+						  }
+						},
+						{mData : 'launchName'},
+						{mData: 'launchMoc'},
+						{mData : 'createdDate'},
+						{mData : 'createdBy'},
+						 
+					],
+			});
+	scbaseoTable.draw();
+}
+
+//Q2 sprint feb 2021 kavitha 
+function scselect(){
+	$('input[type="checkbox"]').on('change', function() {
+		
+		   $('input[type="checkbox"]').not(this).prop('checked', false);
+		 
+		});
 }

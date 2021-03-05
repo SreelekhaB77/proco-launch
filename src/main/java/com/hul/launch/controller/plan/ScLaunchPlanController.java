@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -66,9 +67,16 @@ public class ScLaunchPlanController {
 
 	@RequestMapping(value = "getAllCompletedLaunchDataSc.htm", method = RequestMethod.GET)
 	public ModelAndView getAllCompletedLaunchData(HttpServletRequest request, Model model) {
+		//Q2 sprint kavitha
+		String scMoc = "All";
 		List<LaunchDataResponse> listOfLaunch = new ArrayList<>();
 		try {
 			listOfLaunch = launchServiceSc.getAllCompletedLaunchData();
+			//listOfLaunch = launchServiceSc.getAllCompletedLaunchData();
+			listOfLaunch = launchServiceSc.getAllCompletedLaunchData(scMoc);
+			List<String> scMoclist=launchServiceSc.getAllMoc();
+			model.addAttribute("scMoclist",scMoclist);
+			
 			if (null != listOfLaunch.get(0).getError()) {
 				throw new Exception(listOfLaunch.get(0).getError());
 			}
@@ -79,6 +87,30 @@ public class ScLaunchPlanController {
 		}
 		return new ModelAndView("launchplan/sc_launchplan");
 	}
+	
+	//Q2 Sprint 2021 feb kavitha
+		@RequestMapping(value = "getAllCompletedLaunchScData.htm", method = RequestMethod.GET, produces = "application/json", headers = "Accept=*/*")
+		public @ResponseBody String getAllCompletedLaunchScData(HttpServletRequest request, Model model,
+				@RequestParam("sCMoc") String sCMoc) {
+			List<LaunchDataResponse> listOfLaunch = new ArrayList<>();
+			try {
+				String userId = (String) request.getSession().getAttribute("UserID");
+				listOfLaunch = launchServiceSc.getAllCompletedLaunchData(sCMoc);
+				
+				if (null != listOfLaunch.get(0).getError()) {
+					throw new Exception(listOfLaunch.get(0).getError());
+				}
+			} catch (Exception e) {
+				logger.error("Exception: ", e);
+				model.addAttribute("Error", e.toString());
+			}
+			
+			HashMap<String, Object> tableObj = new HashMap<String, Object>();
+			tableObj.put("aaData", listOfLaunch);
+			Gson sLaunch =  new Gson();
+			String launchList = sLaunch.toJson(tableObj);
+			return launchList;
+		}
 
 	@RequestMapping(value = "getAllBasePackByLaunchIdsSc.htm", method = RequestMethod.POST)
 	public String getAllBasePackByLaunchIdsSc(@RequestBody String jsonBody, HttpServletRequest request, Model model) {

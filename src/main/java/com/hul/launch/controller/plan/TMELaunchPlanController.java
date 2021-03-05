@@ -189,6 +189,7 @@ public class TMELaunchPlanController {
 			try {
 				String userId = (String) request.getSession().getAttribute("UserID");
 				listOfLaunch = launchService.getAllLaunchData(userId, tmeMoc,launchName);
+				listOfLaunch = launchService.getAllLaunchData(userId, tmeMoc,tmeLaunchName);
 				
 				if (null != listOfLaunch.get(0).getError()) {
 					throw new Exception(listOfLaunch.get(0).getError());

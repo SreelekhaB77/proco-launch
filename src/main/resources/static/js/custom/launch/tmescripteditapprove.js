@@ -53,7 +53,7 @@
 			});
 			
 			loadTmeLauches('All');
-			
+			loadTmeLaunchName('All');
 	//Q1-sprint UI issues fixes
 		//$("#editDet").dataTable().fnDestroy();
   				   // setTimeout(function(){
@@ -290,6 +290,16 @@
 		});
 			     
     });	
+	
+	//Q2 sprint feb 2021 kavitha	
+	$("#launchName").on('change', function () {
+		$("#kamlaunchDetailsTab").click();
+		$("#editDet").dataTable().fnDestroy();
+		//kambaseoTable.draw();
+		var tmeselectedlaunchname = $(this).val(); //'All';
+		loadTmeLaunchName(tmeselectedlaunchname);	
+			     
+    });
 		
 });
  
@@ -839,5 +849,54 @@ function tmeselect(){
 		   $('input[type="checkbox"]').not(this).prop('checked', false);
 		 
 		});
+}
+
+//Q2 sprint feb 2021 kavitha starts
+function loadTmeLaunchName(tmeselectedlaunchname) {
+	tmeLaunchNameTable = $('#editDet').DataTable( {
+		"scrollY":       "280px",
+			"destroy": true,  
+			"paging":  true,
+			"ordering": false,
+			"searching": false,
+			"lengthMenu" : [
+				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
+				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
+			"oLanguage": {
+				  "sSearch": '<i class="icon-search"></i>',
+				  "sEmptyTable": "No Pending Launch.",
+				  "oPaginate": {
+					  "sNext": "&rarr;",
+					  "sPrevious": "&larr;"
+				  },
+				  "sLengthMenu": "Records per page _MENU_ ",
+				  
+
+			  },
+			"sAjaxSource" : "getAlltmeLaunchName.htm",
+			  "fnServerParams" : function(aaData) {
+					aaData.push({ "name": "tmeLaunchName", "value": tmeselectedlaunchname });
+				},
+				//"aaData": data,
+				"aoColumns" : [
+						{
+						  mData: 'launchId',
+						  "mRender": function(data, type, full) {
+							return '<input type="checkbox" name="editLaunchscr1" class="editlaunchsel" onClick="tmeselect()" value=' + data + '>';
+						  }
+						},
+						{mData : 'launchName'},
+						//{mData : 'launchMoc'},
+						{
+						  mData: 'launchMoc',
+						  //"mRender": function(data, type, full) {
+							//return full.launchMoc + '<input type = "hidden" class="mocDate"  value=' + full.launchDate + '>';
+						  //}
+						},
+						{mData : 'launchFinalStatus'},
+						 
+					],
+			});
+	tmeLaunchNameTable.draw();
 }
 
