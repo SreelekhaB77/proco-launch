@@ -184,11 +184,10 @@ public class TMELaunchPlanController {
 		public @ResponseBody String getAlltmeLaunchName(HttpServletRequest request, Model model,
 				@RequestParam("tmeLaunchName") String tmeLaunchName) {
 			List<LaunchDataResponse> listOfLaunch = new ArrayList<>();
-			String launchName="All";
+			
 			String tmeMoc="All";
 			try {
 				String userId = (String) request.getSession().getAttribute("UserID");
-				listOfLaunch = launchService.getAllLaunchData(userId, tmeMoc,launchName);
 				listOfLaunch = launchService.getAllLaunchData(userId, tmeMoc,tmeLaunchName);
 				
 				if (null != listOfLaunch.get(0).getError()) {

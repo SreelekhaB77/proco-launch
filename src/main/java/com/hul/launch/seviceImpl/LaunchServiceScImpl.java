@@ -23,8 +23,7 @@ public class LaunchServiceScImpl implements LaunchServiceSc {
 
 	//Q2 Sprint feb 2021 kavitha
 	@Override
-	public List<LaunchDataResponse> getAllCompletedLaunchData() {
-		return launchDaoSc.getAllCompletedScLaunchData();
+	
 	//public List<LaunchDataResponse> getAllCompletedLaunchData() {
 	public List<LaunchDataResponse> getAllCompletedLaunchData(String scMoc)
 	{

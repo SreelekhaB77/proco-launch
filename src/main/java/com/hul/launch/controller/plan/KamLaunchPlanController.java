@@ -166,8 +166,8 @@ public class KamLaunchPlanController {
 	//Q2 sprint feb 2021 kavitha
 	@RequestMapping(value = "getApprovalStatusMocKam.htm", method = RequestMethod.GET, produces = "application/json", headers = "Accept=*/*")
 	public @ResponseBody String getApprovalStatusMOCKam(HttpServletRequest request, Model model,
-			@RequestParam("approvalKamMoc") String approvalKamMoc) {
-		String approvalKamStauts = "All";
+			@RequestParam("approvalKamMoc") String approvalKamMoc,@RequestParam("approvalKamStauts") String approvalKamStauts) {
+		
 		List<KamChangeReqRemarks> listOfKamChangeReq = new ArrayList<>();
 		try {
 			String userId = (String) request.getSession().getAttribute("UserID");
@@ -186,29 +186,7 @@ public class KamLaunchPlanController {
 			return launchList;
 	}
 	
-	//Q2 sprint feb 2021 kavitha
-	@RequestMapping(value = "getApprovalStatusKamData.htm", method = RequestMethod.GET, produces = "application/json", headers = "Accept=*/*")
-	public @ResponseBody String getApprovalStatusKamData(HttpServletRequest request, Model model,
-			@RequestParam("approvalKamStauts") String approvalKamStauts) {
-		String approvalKamMoc = "All";
-		List<KamChangeReqRemarks> listOfKamChangeReq = new ArrayList<>();
-		try {
-			String userId = (String) request.getSession().getAttribute("UserID");
-			listOfKamChangeReq = launchServiceKam.getApprovalStatusKam(userId,approvalKamMoc,approvalKamStauts);
-		}
-			catch (Exception e) {
-				logger.error("Exception: ", e);
-				model.addAttribute("Error", e.toString());
-			}
-			
-			HashMap<String, Object> tableObj = new HashMap<String, Object>();
-			
-			tableObj.put("aaData", listOfKamChangeReq);
-			Gson sLaunch =  new Gson();
-			String launchList = sLaunch.toJson(tableObj);
-			return launchList;
-	}
-
+	
 	@RequestMapping(value = "getAllBasePackByLaunchIdsKam.htm", method = RequestMethod.POST)
 	public String getAllCompletedLaunchData(@RequestBody String jsonBody, HttpServletRequest request, Model model) {
 		Gson gson = new Gson();

@@ -71,7 +71,7 @@ public class ScLaunchPlanController {
 		String scMoc = "All";
 		List<LaunchDataResponse> listOfLaunch = new ArrayList<>();
 		try {
-			listOfLaunch = launchServiceSc.getAllCompletedLaunchData();
+			
 			//listOfLaunch = launchServiceSc.getAllCompletedLaunchData();
 			listOfLaunch = launchServiceSc.getAllCompletedLaunchData(scMoc);
 			List<String> scMoclist=launchServiceSc.getAllMoc();

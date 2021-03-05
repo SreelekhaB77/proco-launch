@@ -65,9 +65,8 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 	}
 
 	@Override
-	public List<LaunchDataResponse> getAllCompletedScLaunchData() {
-	//public List<LaunchDataResponse> getAllCompletedScLaunchData() {
 	//Q2 sprint feb 2021 kavitha
+	//public List<LaunchDataResponse> getAllCompletedScLaunchData() {
 	public List<LaunchDataResponse> getAllCompletedScLaunchData(String scMoc)
 	{
 		Session session = sessionFactory.getCurrentSession();
@@ -84,7 +83,7 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 					"SELECT LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE,"
 							+ " CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,"
 							+ " CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE,LAUNCH_MOC, LAUNCH_SUBMISSION_DATE FROM TBL_LAUNCH_MASTER tlc WHERE"
-							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2'");
+							
 							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' AND LAUNCH_MOC LIKE '%" + scMoc + "%'");
 			rs = stmt.executeQuery();
 			while (rs.next()) {

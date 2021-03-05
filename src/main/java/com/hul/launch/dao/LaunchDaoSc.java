@@ -15,7 +15,7 @@ import com.hul.launch.response.LaunchScMstnClearanceResponse;
  **/
 
 public interface LaunchDaoSc {
-	List<LaunchDataResponse> getAllCompletedScLaunchData();
+	
 	//List<LaunchDataResponse> getAllCompletedScLaunchData();
 	
 	//Q2 sprint feb 2021 kavitha

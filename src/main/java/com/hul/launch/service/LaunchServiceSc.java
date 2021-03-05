@@ -9,7 +9,7 @@ import com.hul.launch.response.LaunchScFinalBuildUpResponse;
 import com.hul.launch.response.LaunchScMstnClearanceResponse;
 
 public interface LaunchServiceSc {
-	public List<LaunchDataResponse> getAllCompletedLaunchData();
+	
 	//public List<LaunchDataResponse> getAllCompletedLaunchData();
 	
 	//Q2 sprint feb 2021 kavitha
