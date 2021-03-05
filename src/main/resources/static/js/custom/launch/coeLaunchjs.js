@@ -904,6 +904,7 @@ function ajaxLoader(w, h) {
 }
 
 //Q1 sprint feb 2021 kavitha starts
+var coeeoTable;
 function loadCoeLauches(coeselectedmoc) {
 	coeeoTable = $('#coebasepack_add').DataTable( {
 		"scrollY":       "280px",
@@ -948,7 +949,11 @@ function loadCoeLauches(coeselectedmoc) {
 						},
 						{mData : 'createdDate'},
 						{mData : 'createdBy'},
-						{mData : 'accountName'},
+						{mData : 'accountName',
+                            "mRender" : function(data, type, full) {
+                                return '<textarea style="overflow-y: scroll;" rows="3" cols="75" value=' + data + '>' + data + '</textarea>';
+                            }
+                        },
 					],
 			});
 	coeeoTable.draw();
