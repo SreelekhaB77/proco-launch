@@ -79,8 +79,8 @@ $(document).ready(function() {
 	});
 	
 	loadKamLauches('All');
-	loadApprovalKamLauches('All');
-	loadApprovalKamStatus('All');
+	loadApprovalKamLauches('All','All');
+	
 	//var kamselectedmoc = $('#kamMocCol').val(); //'All';
 	// $("#kambasepack_add").dataTable().fnDestroy();
 	  // setTimeout(function(){
@@ -438,8 +438,9 @@ $(document).ready(function() {
 		$("#kamlaunchDetailsTab").click();
 		$(".table.table-striped.table-bordered.custom-mind").dataTable().fnDestroy();
 		//kambaseoTable.draw();
+		var approvekamselectedStatus = $("#approvalKamStatusCol").val(); //'All';
 		var approvekamselectedmoc = $(this).val(); //'All';
-		loadApprovalKamLauches(approvekamselectedmoc);	
+		loadApprovalKamLauches(approvekamselectedmoc,approvekamselectedStatus);	
 			     
     });
 	
@@ -448,8 +449,9 @@ $(document).ready(function() {
 		$("#kamlaunchDetailsTab").click();
 		$(".table.table-striped.table-bordered.custom-mind").dataTable().fnDestroy();
 		//kambaseoTable.draw();
+		var approvekamselectedmoc = $('#approvalKamMocCol').val(); //'All';
 		var approvekamselectedStatus = $(this).val(); //'All';
-		loadApprovalKamStatus(approvekamselectedStatus);	
+		loadApprovalKamLauches(approvekamselectedmoc,approvekamselectedStatus);
     });
 	 
 });
@@ -1622,7 +1624,7 @@ function kamselect(){
 		});
 }
 //Q2 sprint feb 2021 
-function loadApprovalKamLauches(approvekamselectedmoc) {
+function loadApprovalKamLauches(approvekamselectedmoc,approvekamselectedStatus) {
 	 kameditapproveoTable = $('.table.table-striped.table-bordered.custom-mind').DataTable( {
 		"scrollY":       "280px",
 			"destroy": true,  
@@ -1644,6 +1646,7 @@ function loadApprovalKamLauches(approvekamselectedmoc) {
 			"sAjaxSource" : "getApprovalStatusMocKam.htm",
 			  "fnServerParams" : function(aaData) {
 					aaData.push({ "name": "approvalKamMoc", "value": approvekamselectedmoc });
+					aaData.push({ "name": "approvalKamStauts", "value": approvekamselectedStatus });
 				},
 				//"aaData": data,
 				"aoColumns" : [
@@ -1669,46 +1672,5 @@ function loadApprovalKamLauches(approvekamselectedmoc) {
 	kameditapproveoTable.draw();
 }
 
-//Q2 sprint feb 2021 
-function  loadApprovalKamStatus(approvekamselectedStatus) {
-	 kamApproveStatusTable = $('.table.table-striped.table-bordered.custom-mind').DataTable( {
-		"scrollY":       "280px",
-			"destroy": true,  
-			"paging":  true,
-			"ordering": false,
-			"searching": false,
-			"lengthMenu" : [
-				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
-				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
-			"oLanguage": {
-				  "sSearch": '<i class="icon-search"></i>',
-				  "sEmptyTable": "No Pending Launch.",
-				  "oPaginate": {
-					  "sNext": "&rarr;",
-					  "sPrevious": "&larr;"
-				  },
-				  "sLengthMenu": "Records per page _MENU_ ",
-			  },
-			"sAjaxSource" : "getApprovalStatusKamData.htm",
-			  "fnServerParams" : function(aaData) {
-					aaData.push({ "name": "approvalKamStauts", "value": approvekamselectedStatus });
-				},
-				//"aaData": data,
-				"aoColumns" : [
-						
-						{mData : 'launchName'},
-						{mData: 'launchMoc'},
-						{mData : 'account'},
-						{mData : 'reqDate'},
-						{mData : 'changeRequested'}, 
-						{mData : 'kamRemarks'},
-						{mData : 'cmm'},
-						{mData : 'responseDate'},
-						{mData : 'approvalStatus'},
-						{mData : 'cmmRemarks'},
-					],
-			});
-	kamApproveStatusTable.draw();
-}
 
 

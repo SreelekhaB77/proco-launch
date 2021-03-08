@@ -21,9 +21,14 @@ public class LaunchServiceScImpl implements LaunchServiceSc {
 	@Autowired
 	LaunchDaoSc launchDaoSc;
 
+	//Q2 Sprint feb 2021 kavitha
 	@Override
-	public List<LaunchDataResponse> getAllCompletedLaunchData() {
-		return launchDaoSc.getAllCompletedScLaunchData();
+	
+	//public List<LaunchDataResponse> getAllCompletedLaunchData() {
+	public List<LaunchDataResponse> getAllCompletedLaunchData(String scMoc)
+	{
+		//return launchDaoSc.getAllCompletedScLaunchData();
+		return launchDaoSc.getAllCompletedScLaunchData(scMoc);
 	}
 
 	@Override
@@ -49,5 +54,13 @@ public class LaunchServiceScImpl implements LaunchServiceSc {
 	@Override
 	public String uploadMstnClearanceByLaunchIdSc(List<Object> list, String userID, String string, boolean b, boolean c) {
 		return launchDaoSc.uploadMstnClearanceByLaunchIdSc(list, userID);
+	}
+	
+
+	//Q2 Sprint feb 2021 kavitha
+	@Override
+	@Transactional
+	public List<String> getAllMoc() {
+		return launchDaoSc.getAllMoc();
 	}
 }

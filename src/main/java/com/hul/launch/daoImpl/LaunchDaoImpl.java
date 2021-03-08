@@ -1713,10 +1713,13 @@ public class LaunchDaoImpl implements LaunchDao {
 		@Override
 		public List<String> getAllLaunchName(String userId,String tmeMoc) {
 			try {
+				if(tmeMoc.equalsIgnoreCase("All")) {
+					tmeMoc = "";
+				}
 				
 				Query query = sessionFactory.getCurrentSession().createNativeQuery(
-						" SELECT DISTINCT LAUNCH_NAME" + 
-						" FROM TBL_LAUNCH_MASTER tlc, TBL_LAUNCH_STAGE_STATUS tlss WHERE" + 
+						" SELECT DISTINCT LAUNCH_NAME " + 
+						" FROM TBL_LAUNCH_MASTER tlc, TBL_LAUNCH_STAGE_STATUS tlss WHERE " + 
 						"tlc.LAUNCH_ID = tlss.LAUNCH_ID AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()" + 
 						"AND tlc.CREATED_BY = '" +userId+ "' AND LAUNCH_MOC LIKE '%" +tmeMoc+ "%' ORDER BY LAUNCH_NAME"
 						);
@@ -1736,7 +1739,7 @@ public class LaunchDaoImpl implements LaunchDao {
 			try {
 				
 				Query query = sessionFactory.getCurrentSession().createNativeQuery(
-						"SELECT * FROM (SELECT DISTINCT LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc " + 
+						"SELECT DISTINCT LAUNCH_MOC FROM (SELECT DISTINCT LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc " + 
 						"LEFT OUTER JOIN TBL_LAUNCH_CLUSTERS tlbt ON tlbt.CLUSTER_LAUNCH_ID = tlc.LAUNCH_ID LEFT OUTER JOIN TBL_LAUNCH_TEMP_FINAL_CAL TFC ON TFC.LAUNCH_ID = tlc.LAUNCH_ID " + 
 						"LEFT OUTER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS TLK ON TLK.LAUNCH_ID = TFC.LAUNCH_ID AND TLK.LAUNCH_KAM_ACCOUNT = TFC.MODIFIED_CHAIN AND TLK.IS_ACTIVE = 1 " + 
 						"WHERE (SAMPLE_SHARED IS NOT NULL AND SAMPLE_SHARED <> '') AND LAUNCH_REJECTED != '2' AND TLK.LAUNCH_ID IS NULL AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() " + 
