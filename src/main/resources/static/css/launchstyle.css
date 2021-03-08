@@ -1491,7 +1491,7 @@ table#kam_launch_store_table input {
 }
 .custom-select-align {
 	 float: left;
-     width: 25%!important;
+     width: 31%!important;
     height: 30px!important;
     line-height: 30px!important;
     padding: 5px 1px!important;
@@ -1512,7 +1512,7 @@ width:82px!important;
 
 .approval-select-align {
 	    float: left;
-   width: 25%!important;
+   width: 31%!important;
     height: 30px!important;
     line-height: 30px;
     padding: 5px 1px!important;

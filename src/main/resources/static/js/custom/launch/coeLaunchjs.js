@@ -961,11 +961,13 @@ function loadCoeLauches(coeselectedmoc) {
 
 //Q1 Srint-2 Select all code
 
-$('body').on('click', '#selectAll', function () {
-      if ($(this).hasClass('allChecked')) {
-         $('input[type="checkbox"]', '#coebasepack_add').prop('checked', false);
-      } else {
-       $('input[type="checkbox"]', '#coebasepack_add').prop('checked', true);
-       }
-       $(this).toggleClass('allChecked');
-     });
+  $('#selectAll').change(function () {
+    var cells = coeeoTable.cells( ).nodes( );
+    
+        if ($(this).hasClass('allChecked')) {
+            $(cells).find('input[type="checkbox"]').prop('checked', false);
+        } else {
+            $(cells).find('input[type="checkbox"]').prop('checked', true);
+        }
+        $(this).toggleClass('allChecked');
+    });
