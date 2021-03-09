@@ -283,6 +283,12 @@ $(document).ready(function() {
 				//kambaseoTable.draw();
 				var scselectedmoc = $(this).val(); //'All';
 				loadSCLauches(scselectedmoc);	
+				
+				//Q2 sprint-2 loading launches msg
+				$('#scbasepack_add').on('draw.dt', function() {
+			  var $empty = $('#scbasepack_add').find('.dataTables_empty');
+			  if ($empty) $empty.html('Loading Launches..')
+		});
 					     
 		    });	
 		});
@@ -656,6 +662,21 @@ function loadSCLauches(scselectedmoc) {
 			"paging":  true,
 			"ordering": false,
 			"searching": false,
+			
+			//Q2 sprint-2 Column Widths
+	"autoWidth": false,
+    "fixedHeader": {
+        "header": false,
+        "footer": false
+    },
+    "columnDefs": [
+      { "width": "85px!important", "targets": 0 },
+      { "width": "300px!important", "targets": 1 },
+      { "width": "120px!important", "targets": 2 },
+      { "width": "170px!important", "targets": 3 },
+      { "width": "210px!important", "targets": 4 }
+      
+    ],
 			"lengthMenu" : [
 				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
 				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],

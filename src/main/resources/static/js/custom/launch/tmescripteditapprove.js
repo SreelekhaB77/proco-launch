@@ -284,6 +284,7 @@
 		//kambaseoTable.draw();
 		var tmeselectedmoc = $(this).val(); //'All';
 		loadTmeLauches(tmeselectedmoc);
+		
 		$('#editDet').on('draw.dt', function() {
 			  var $empty = $('#editDet').find('.dataTables_empty');
 			  if ($empty) $empty.html('Loading Launches..')

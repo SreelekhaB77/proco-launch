@@ -185,6 +185,7 @@ $(document).ready(function() {
 			return false;
 		}
 	});
+	
 	$( document ).on( 'mouseup', '#smartwizard ul.step-anchor a, #smartwizard ul.step-anchor li', function(e){
 		
 		isManualClick = true;
@@ -206,6 +207,7 @@ $(document).ready(function() {
 	 $("#smartwizard").on("leaveStep", function(e, anchorObject, stepNumber, stepDirection) {
 		console.log(e) 
 	 })
+	 
 	//Q2 sprint feb 2021 kavitha	
 	$("#mocCol").on('change', function () {
 		//$("#kamlaunchDetailsTab").click();
@@ -213,6 +215,8 @@ $(document).ready(function() {
 		//kambaseoTable.draw();
 		var coeselectedmoc = $(this).val(); //'All';
 		loadCoeLauches(coeselectedmoc);
+		
+		//Q2 sprint-2 Loading Launches
 		$('#coebasepack_add').on('draw.dt', function() {
 			  var $empty = $('#coebasepack_add').find('.dataTables_empty');
 			  if ($empty) $empty.html('Loading Launches..')
@@ -913,6 +917,21 @@ function loadCoeLauches(coeselectedmoc) {
 			"ordering": false,
 			"searching": false,
 			"stateSave": true,
+			
+			//Q2 sprint-2 Column Widths
+	"autoWidth": false,
+    "fixedHeader": {
+        "header": false,
+        "footer": false
+    },
+    "columnDefs": [
+      { "width": "90px!important", "targets": 0 },
+      { "width": "340px!important", "targets": 1 },
+      { "width": "160px!important", "targets": 2 },
+      { "width": "180px!important", "targets": 3 },
+      { "width": "240px!important", "targets": 4 },
+      { "width": "520px!important", "targets": 5 }
+    ],
 			"lengthMenu" : [
 				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
 				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],

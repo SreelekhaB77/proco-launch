@@ -430,6 +430,7 @@ $(document).ready(function() {
 	$('#kambasepack_add').on('draw.dt', function() {
 		  var $empty = $('#kambasepack_add').find('.dataTables_empty');
 		  if ($empty) $empty.html('Loading Launches..')
+		  
 	});
 	
 	
@@ -441,8 +442,16 @@ $(document).ready(function() {
 		var approvekamselectedStatus = $("#approvalKamStatusCol").val(); //'All';
 		var approvekamselectedmoc = $(this).val(); //'All';
 		loadApprovalKamLauches(approvekamselectedmoc,approvekamselectedStatus);	
+		
+		//Q2 sprint-2 Loading launches..
+		$('#approvekambasepack_add').on('draw.dt', function() {
+		  var $empty = $('#approvekambasepack_add').find('.dataTables_empty');
+		  if ($empty) $empty.html('Loading Launches..')
+	});
 			     
     });
+    
+    
 	
 	//Q2 sprint feb 2021
 	$("#approvalKamStatusCol").on('change', function () {
@@ -452,6 +461,8 @@ $(document).ready(function() {
 		var approvekamselectedmoc = $('#approvalKamMocCol').val(); //'All';
 		var approvekamselectedStatus = $(this).val(); //'All';
 		loadApprovalKamLauches(approvekamselectedmoc,approvekamselectedStatus);
+		
+		
     });
 	 
 });

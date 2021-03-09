@@ -142,11 +142,11 @@
 										<table class="table table-striped table-bordered" id="scbasepack_add" cellspacing="0" cellpadding="0" style="width: 100% ! important">
 											<thead class="thead-dark">
 												<tr>
-													<th><span class="proco-btn proco-btn-success table-head">Select</span></th>
-													<th><span class="proco-btn proco-btn-success table-head">Launch Name</span></th>
-													<th><span class="proco-btn proco-btn-success table-head">Launch MOC</span></th>
-													<th><span class="proco-btn proco-btn-success table-head">Submitted Date</span></th>
-													<th><span class="proco-btn proco-btn-success table-head">CMM</span></th>
+													<th style="width:85px!important"><span class="proco-btn proco-btn-success table-head">Select</span></th>
+													<th style="width:300px!important"><span class="proco-btn proco-btn-success table-head">Launch Name</span></th>
+													<th style="width:120px!important"><span class="proco-btn proco-btn-success table-head">Launch MOC</span></th>
+													<th style="width:170px!important"><span class="proco-btn proco-btn-success table-head">Submitted Date</span></th>
+													<th style="width:210px!important"><span class="proco-btn proco-btn-success table-head">CMM</span></th>
 												
 												</tr>
 											</thead>

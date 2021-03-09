@@ -158,12 +158,12 @@
 										<table class="table table-striped table-bordered" id="coebasepack_add" cellspacing="0" cellpadding="0" style="width: 100% ! important">
 											<thead class="thead-dark">
 												<tr>
-													<th class="th-align" style="width:80px !important"><span class="proco-btn proco-btn-success table-head"><Input type="checkbox" id="selectAll" class="main" style="float:left;" /> Select</span></th>
-													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">Launch Name</span></th>
-													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">Launch MOC</span></th>
-													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">Submitted Date</span></th>
-													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">CMM</span></th>
-													<th style="width:auto !important"><span class="proco-btn proco-btn-success table-head">Account Names</span></th>
+													<th class="th-align" style="width:90px!important"><span class="proco-btn proco-btn-success table-head"><Input type="checkbox" id="selectAll" class="main" style="float:left;" /> Select</span></th>
+													<th style="width:340px!important"><span class="proco-btn proco-btn-success table-head">Launch Name</span></th>
+													<th style="width:160px!important"><span class="proco-btn proco-btn-success table-head">Launch MOC</span></th>
+													<th style="width:180px!important"><span class="proco-btn proco-btn-success table-head">Submitted Date</span></th>
+													<th style="width:240px!important"><span class="proco-btn proco-btn-success table-head">CMM</span></th>
+													<th style="width:520px!important"><span class="proco-btn proco-btn-success table-head">Account Names</span></th>
 													
 												
 												</tr>
