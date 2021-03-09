@@ -910,28 +910,13 @@ function ajaxLoader(w, h) {
 //Q1 sprint feb 2021 kavitha starts
 var coeeoTable;
 function loadCoeLauches(coeselectedmoc) {
-	coeeoTable = $('#coebasepack_add').DataTable( {
+	coeeoTable = $('#coebasepack_add').removeAttr('style').DataTable( {
 		"scrollY":       "280px",
 			"destroy": true,  
 			"paging":  true,
 			"ordering": false,
 			"searching": false,
 			"stateSave": true,
-			
-			//Q2 sprint-2 Column Widths
-	"autoWidth": false,
-    "fixedHeader": {
-        "header": false,
-        "footer": false
-    },
-    "columnDefs": [
-      { "width": "90px!important", "targets": 0 },
-      { "width": "340px!important", "targets": 1 },
-      { "width": "160px!important", "targets": 2 },
-      { "width": "180px!important", "targets": 3 },
-      { "width": "240px!important", "targets": 4 },
-      { "width": "520px!important", "targets": 5 }
-    ],
 			"lengthMenu" : [
 				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
 				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
@@ -943,8 +928,7 @@ function loadCoeLauches(coeselectedmoc) {
 					  "sPrevious": "&larr;"
 				  },
 				  "sLengthMenu": "Records per page _MENU_ ",
-				  
-
+				 
 			  },
 			"sAjaxSource" : "getAllCoeMOCData.htm",
 			  "fnServerParams" : function(aoData) {
@@ -970,7 +954,7 @@ function loadCoeLauches(coeselectedmoc) {
 						{mData : 'createdBy'},
 						{mData : 'accountName',
                             "mRender" : function(data, type, full) {
-                                return '<textarea style="overflow-y: scroll;" rows="3" cols="75" value=' + data + '>' + data + '</textarea>';
+                                return '<textarea style="overflow-y: scroll;" rows="3" cols="58" value=' + data + '>' + data + '</textarea>';
                             }
                         },
 					],
