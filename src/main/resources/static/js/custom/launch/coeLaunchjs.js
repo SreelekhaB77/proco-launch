@@ -185,6 +185,7 @@ $(document).ready(function() {
 			return false;
 		}
 	});
+	
 	$( document ).on( 'mouseup', '#smartwizard ul.step-anchor a, #smartwizard ul.step-anchor li', function(e){
 		
 		isManualClick = true;
@@ -206,6 +207,7 @@ $(document).ready(function() {
 	 $("#smartwizard").on("leaveStep", function(e, anchorObject, stepNumber, stepDirection) {
 		console.log(e) 
 	 })
+	 
 	//Q2 sprint feb 2021 kavitha	
 	$("#mocCol").on('change', function () {
 		//$("#kamlaunchDetailsTab").click();
@@ -213,6 +215,8 @@ $(document).ready(function() {
 		//kambaseoTable.draw();
 		var coeselectedmoc = $(this).val(); //'All';
 		loadCoeLauches(coeselectedmoc);
+		
+		//Q2 sprint-2 Loading Launches
 		$('#coebasepack_add').on('draw.dt', function() {
 			  var $empty = $('#coebasepack_add').find('.dataTables_empty');
 			  if ($empty) $empty.html('Loading Launches..')
@@ -906,7 +910,7 @@ function ajaxLoader(w, h) {
 //Q1 sprint feb 2021 kavitha starts
 var coeeoTable;
 function loadCoeLauches(coeselectedmoc) {
-	coeeoTable = $('#coebasepack_add').DataTable( {
+	coeeoTable = $('#coebasepack_add').removeAttr('style').DataTable( {
 		"scrollY":       "280px",
 			"destroy": true,  
 			"paging":  true,
@@ -924,8 +928,7 @@ function loadCoeLauches(coeselectedmoc) {
 					  "sPrevious": "&larr;"
 				  },
 				  "sLengthMenu": "Records per page _MENU_ ",
-				  
-
+				 
 			  },
 			"sAjaxSource" : "getAllCoeMOCData.htm",
 			  "fnServerParams" : function(aoData) {
@@ -951,7 +954,7 @@ function loadCoeLauches(coeselectedmoc) {
 						{mData : 'createdBy'},
 						{mData : 'accountName',
                             "mRender" : function(data, type, full) {
-                                return '<textarea style="overflow-y: scroll;" rows="3" cols="75" value=' + data + '>' + data + '</textarea>';
+                                return '<textarea style="overflow-y: scroll;" rows="3" cols="58" value=' + data + '>' + data + '</textarea>';
                             }
                         },
 					],
@@ -961,11 +964,13 @@ function loadCoeLauches(coeselectedmoc) {
 
 //Q1 Srint-2 Select all code
 
-$('body').on('click', '#selectAll', function () {
-      if ($(this).hasClass('allChecked')) {
-         $('input[type="checkbox"]', '#coebasepack_add').prop('checked', false);
-      } else {
-       $('input[type="checkbox"]', '#coebasepack_add').prop('checked', true);
-       }
-       $(this).toggleClass('allChecked');
-     });
+  $('#selectAll').change(function () {
+    var cells = coeeoTable.cells( ).nodes( );
+    
+        if ($(this).hasClass('allChecked')) {
+            $(cells).find('input[type="checkbox"]').prop('checked', false);
+        } else {
+            $(cells).find('input[type="checkbox"]').prop('checked', true);
+        }
+        $(this).toggleClass('allChecked');
+    });

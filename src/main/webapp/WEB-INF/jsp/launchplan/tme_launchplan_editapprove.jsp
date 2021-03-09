@@ -177,7 +177,7 @@
                                              </select></div>
 									
 									<div class="col-md-3">
-                                            <label for="sel1" class="userlist-space tme-label-align"  >LaunchName:</label>
+                                            <label for="sel1" class="userlist-space tme-label-align">Launch name:</label>
                                              <select id="launchName" class="form-control tme-select-align">
                                                         <option value="All">All</option>
                                                             <c:forEach items="${tmeLaunchNamelist}" var="mocVal">

@@ -283,6 +283,12 @@ $(document).ready(function() {
 				//kambaseoTable.draw();
 				var scselectedmoc = $(this).val(); //'All';
 				loadSCLauches(scselectedmoc);	
+				
+				//Q2 sprint-2 loading launches msg
+				$('#scbasepack_add').on('draw.dt', function() {
+			  var $empty = $('#scbasepack_add').find('.dataTables_empty');
+			  if ($empty) $empty.html('Loading Launches..')
+		});
 					     
 		    });	
 		});

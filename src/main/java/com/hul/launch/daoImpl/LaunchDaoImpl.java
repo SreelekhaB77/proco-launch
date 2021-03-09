@@ -114,16 +114,24 @@ public class LaunchDaoImpl implements LaunchDao {
 			
 			//Kavitha Changes - Q2 Sprint Feb2021
 			if (launchName.equalsIgnoreCase("All")) {
-				launchName = "";
+				stmt = sessionImpl.connection().prepareStatement(
+						"SELECT tlc.LAUNCH_ID LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, "
+								+ " LAUNCH_BUSINESS_CASE, CATEGORY_SIZE, CLASSIFICATION, tlc.CREATED_BY CREATED_BY, "
+								+ " tlc.CREATED_DATE CREATED_DATE, tlss.LAUNCH_FINAL_STATUS LAUNCH_FINAL_STATUS, "
+								+ " LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc, TBL_LAUNCH_STAGE_STATUS tlss WHERE "
+								+ " tlc.LAUNCH_ID = tlss.LAUNCH_ID AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() "
+								+ " AND tlc.CREATED_BY = '" + userId + "' AND LAUNCH_MOC LIKE '%" + launchMOC + "%' ");
 			}
-			
-			stmt = sessionImpl.connection().prepareStatement(
-					"SELECT tlc.LAUNCH_ID LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, "
-							+ " LAUNCH_BUSINESS_CASE, CATEGORY_SIZE, CLASSIFICATION, tlc.CREATED_BY CREATED_BY, "
-							+ " tlc.CREATED_DATE CREATED_DATE, tlss.LAUNCH_FINAL_STATUS LAUNCH_FINAL_STATUS, "
-							+ " LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc, TBL_LAUNCH_STAGE_STATUS tlss WHERE "
-							+ " tlc.LAUNCH_ID = tlss.LAUNCH_ID AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() "
-							+ " AND tlc.CREATED_BY = '" + userId + "' AND LAUNCH_MOC LIKE '%" + launchMOC + "%' AND LAUNCH_NAME LIKE '%" + launchName + "%'");
+			else
+			{
+				stmt = sessionImpl.connection().prepareStatement(
+						"SELECT tlc.LAUNCH_ID LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, "
+								+ " LAUNCH_BUSINESS_CASE, CATEGORY_SIZE, CLASSIFICATION, tlc.CREATED_BY CREATED_BY, "
+								+ " tlc.CREATED_DATE CREATED_DATE, tlss.LAUNCH_FINAL_STATUS LAUNCH_FINAL_STATUS, "
+								+ " LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc, TBL_LAUNCH_STAGE_STATUS tlss WHERE "
+								+ " tlc.LAUNCH_ID = tlss.LAUNCH_ID AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() "
+								+ " AND tlc.CREATED_BY = '" + userId + "' AND LAUNCH_MOC LIKE '%" + launchMOC + "%' AND LAUNCH_NAME = '" + launchName + "'");
+			}
 
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -1756,6 +1764,25 @@ public class LaunchDaoImpl implements LaunchDao {
 			}
 		}
 		
+		
+		@SuppressWarnings("unchecked")
+		@Override
+		public List<String> getLaunchNameBasedOnMoc(String userId,String tmeMoc) {
+			String qryLaunchName = "SELECT LAUNCH_NAME FROM TBL_LAUNCH_MASTER tlc, TBL_LAUNCH_STAGE_STATUS tlss WHERE tlc.LAUNCH_ID = tlss.LAUNCH_ID AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()"
+								  + "AND tlc.CREATED_BY = '" +userId+ "'";
+			if (!tmeMoc.equalsIgnoreCase("All")) {
+				qryLaunchName = qryLaunchName + " AND LAUNCH_MOC = '" +tmeMoc+ "'";
+			}
+			try 
+			{
+				Query query = sessionFactory.getCurrentSession().createNativeQuery(qryLaunchName);
+				List<String> list = query.list();
+				return list;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
 		
 	
 }

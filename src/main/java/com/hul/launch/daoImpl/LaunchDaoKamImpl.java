@@ -1170,10 +1170,10 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 				kamChangeReqRemarks.setAccount(accounts);
 				kamChangeReqRemarks.setChangeRequested(rs.getString("CHANGES_REQUESTED"));
 				kamChangeReqRemarks.setKamRemarks(rs.getString("KAM_REMARKS"));
-				kamChangeReqRemarks.setCmm(rs.getString("CMM"));
-				kamChangeReqRemarks.setResponseDate(rs.getString("RESPONSE_DATE"));
+				kamChangeReqRemarks.setCmm(replaceNA(rs.getString("CMM")));
+				kamChangeReqRemarks.setResponseDate(replaceNA(rs.getString("RESPONSE_DATE")));
 				kamChangeReqRemarks.setApprovalStatus(rs.getString("APPROVAL_STATUS"));
-				kamChangeReqRemarks.setCmmRemarks(rs.getString("CMM_REMARKS"));
+				kamChangeReqRemarks.setCmmRemarks(replaceNA(rs.getString("CMM_REMARKS")));
 				listOfKamChangeReqRemarks.add(kamChangeReqRemarks);
 			}
 		} catch (Exception ex) {
@@ -1363,5 +1363,11 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 					e.printStackTrace();
 					return null;
 				}
+			}
+			
+			private String replaceNA(String str) {
+				if (str == null) 
+					return "";
+				return "NA".equals(str)?"":str;
 			}
 }

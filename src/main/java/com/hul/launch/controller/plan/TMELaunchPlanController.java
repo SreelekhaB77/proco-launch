@@ -152,59 +152,53 @@ public class TMELaunchPlanController {
 		}
 		return new ModelAndView("launchplan/tme_launchplan_editapprove");
 	}
+	
 	//Q1 sprint kavitha 2021
 	@RequestMapping(value = "getAllLaunchtmeData.htm", method = RequestMethod.GET, produces = "application/json", headers = "Accept=*/*")
-	public @ResponseBody String allLaunchtmeData(HttpServletRequest request, Model model,
-			@RequestParam("tmeMoc") String tmeMoc) {
+	public @ResponseBody String allLaunchtmeData(HttpServletRequest request,
+			Model model, @RequestParam("tmeMoc") String tmeMoc, @RequestParam("tmeLaunchName") String tmeLaunchName) {
 		List<LaunchDataResponse> listOfLaunch = new ArrayList<>();
-		String launchName="All";
-		try {
+		try
+		{
 			String userId = (String) request.getSession().getAttribute("UserID");
-			listOfLaunch = launchService.getAllLaunchData(userId, tmeMoc,launchName);
-			
-			if (null != listOfLaunch.get(0).getError()) {
+			listOfLaunch = launchService.getAllLaunchData(userId, tmeMoc, tmeLaunchName);
+
+			if (null != listOfLaunch.get(0).getError()) { 
 				throw new Exception(listOfLaunch.get(0).getError());
-			}
+			} 
+		} catch (Exception e) {
+			logger.error("Exception: ", e); 
+			model.addAttribute("Error", e.toString());
+		}
+
+		HashMap<String, Object> tableObj = new HashMap<String, Object>();
+
+		tableObj.put("aaData", listOfLaunch); 
+		Gson sLaunch = new Gson(); String
+		launchList = sLaunch.toJson(tableObj); 
+		return launchList; 
+	}
+	 
+	
+	//Q2 sprint kavitha 2021
+	@RequestMapping(value = "getAlltmeLaunchName.htm", method = RequestMethod.GET, produces = "application/json", headers = "Accept=*/*")
+	public @ResponseBody String getAlltmeLaunchName(HttpServletRequest request, Model model,
+			@RequestParam("tmeMoc") String tmeMoc) {
+		List<String> basedOnMocLaunchName = new ArrayList<>();
+		try {
+				String userId = (String) request.getSession().getAttribute("UserID");
+				basedOnMocLaunchName = launchService.getLaunchNameBasedOnMoc(userId, tmeMoc);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			model.addAttribute("Error", e.toString());
 		}
 		
 		HashMap<String, Object> tableObj = new HashMap<String, Object>();
-		//tableObj.put("iTotalRecords", 10);
-		//tableObj.put("iTotalDisplayRecords", 10);
-		tableObj.put("aaData", listOfLaunch);
+		tableObj.put("launchNameList", basedOnMocLaunchName);
 		Gson sLaunch =  new Gson();
 		String launchList = sLaunch.toJson(tableObj);
 		return launchList;
 	}
-	
-	//Q2 sprint kavitha 2021
-		@RequestMapping(value = "getAlltmeLaunchName.htm", method = RequestMethod.GET, produces = "application/json", headers = "Accept=*/*")
-		public @ResponseBody String getAlltmeLaunchName(HttpServletRequest request, Model model,
-				@RequestParam("tmeLaunchName") String tmeLaunchName) {
-			List<LaunchDataResponse> listOfLaunch = new ArrayList<>();
-			
-			String tmeMoc="All";
-			try {
-				String userId = (String) request.getSession().getAttribute("UserID");
-				listOfLaunch = launchService.getAllLaunchData(userId, tmeMoc,tmeLaunchName);
-				
-				if (null != listOfLaunch.get(0).getError()) {
-					throw new Exception(listOfLaunch.get(0).getError());
-				}
-			} catch (Exception e) {
-				logger.error("Exception: ", e);
-				model.addAttribute("Error", e.toString());
-			}
-			
-			HashMap<String, Object> tableObj = new HashMap<String, Object>();
-			tableObj.put("aaData", listOfLaunch);
-			Gson sLaunch =  new Gson();
-			String launchList = sLaunch.toJson(tableObj);
-			return launchList;
-		}
-	
 	
 	@RequestMapping(value = "getEditLaunchDetails.htm", method = RequestMethod.GET)
 	public ModelAndView existingLaunchDetails(@RequestParam("launchId") String launchId, HttpServletRequest request,

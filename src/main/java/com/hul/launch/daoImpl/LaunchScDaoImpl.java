@@ -421,9 +421,10 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 			try {
 				
 				Query query = sessionFactory.getCurrentSession().createNativeQuery(
-						"SELECT DISTINCT LAUNCH_MOC" + 
-						" FROM TBL_LAUNCH_MASTER tlc" + 
-						" WHERE SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' ORDER BY LAUNCH_MOC");
+						"SELECT DISTINCT LAUNCH_MOC " + 
+						" FROM TBL_LAUNCH_MASTER tlc " + 
+						"WHERE SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' ORDER BY concat(substr(LAUNCH_MOC, 3, 4), substr(LAUNCH_MOC, 1, 2))"
+						);
 					
 				List<String> list = query.list();
 				return list;

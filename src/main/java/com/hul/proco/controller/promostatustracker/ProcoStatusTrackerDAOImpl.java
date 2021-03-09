@@ -428,14 +428,13 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
 		String promoQuery = "";
 		try {
-			/*
-			 * int userRole = getUserRoleId(userId); if(userRole == 2) { //Garima - changes
-			 * for VARCHAR_FORMAT //promoQuery =
-			 * "SELECT A.PROMO_ID, A.ORIGINAL_ID,VARCHAR_FORMAT(A.START_DATE, 'DD/MM/YYYY') as start_date1,VARCHAR_FORMAT(A.END_DATE, 'DD/MM/YYYY'),A.MOC,A.CUSTOMER_CHAIN_L1 ,A.CUSTOMER_CHAIN_L2,A.P1_BASEPACK ,c.BASEPACK_DESC,replace(A.USER_ID,'','') as Created_By,replace(c.CATEGORY,'','') as SALES_CATEGORY,replace(c.BRAND,'','') as Sales_Brand,A.OFFER_DESC ,A.OFFER_TYPE ,A.OFFER_MODALITY ,A.GEOGRAPHY,A.QUANTITY ,A.UOM ,A.OFFER_VALUE , A.KITTING_VALUE ,replace(A.quantity,'','') as Sales_value,'' as estimated_spend,(CASE WHEN D.REMARK<>'' THEN CONCAT(CONCAT(CONCAT(E.STATUS,' ('),D.REMARK),')') ELSE E.STATUS END) ,A.REASON,A.REMARK ,VARCHAR_FORMAT(D.CHANGE_DATE,'DD/MM/YYYY'),A.INVESTMENT_TYPE, A.SOL_CODE, A.SOL_CODE_DESC,A.PROMOTION_MECHANICS,A.SOL_CODE_STATUS FROM TBL_PROCO_PROMOTION_MASTER AS A INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK = C.BASEPACK INNER JOIN TBL_PROCO_STATUS_TRACKER AS D ON A.PROMO_ID = D.PROMO_ID INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON E.STATUS_ID = D.STATUS_ID INNER JOIN TBL_PROCO_MODALITY_MASTER AS F ON A.OFFER_MODALITY=F.MODALITY WHERE (A.ACTIVE=1 OR A.ACTIVE=0) "
-			 * ; promoQuery =
-			 * "SELECT A.PROMO_ID, A.ORIGINAL_ID,DATE_FORMAT(A.START_DATE,'%d/%m/%Y') as start_date1,DATE_FORMAT(A.END_DATE,'%d/%m/%Y'),A.MOC,A.CUSTOMER_CHAIN_L1 ,A.CUSTOMER_CHAIN_L2,A.P1_BASEPACK ,C.BASEPACK_DESC,replace(A.USER_ID,'','') as Created_By,replace(C.CATEGORY,'','') as SALES_CATEGORY,replace(C.BRAND,'','') as Sales_Brand,A.OFFER_DESC ,A.OFFER_TYPE ,A.OFFER_MODALITY ,A.GEOGRAPHY,A.QUANTITY ,A.UOM ,A.OFFER_VALUE , A.KITTING_VALUE ,replace(A.quantity,'','') as Sales_value,'' as estimated_spend,(CASE WHEN D.REMARK<>'' THEN CONCAT(CONCAT(CONCAT(E.STATUS,' ('),D.REMARK),')') ELSE E.STATUS END) ,A.REASON,A.REMARK ,DATE_FORMAT(D.CHANGE_DATE,'%d/%m/%Y'),A.INVESTMENT_TYPE, A.SOL_CODE, A.SOL_CODE_DESC,A.PROMOTION_MECHANICS,A.SOL_CODE_STATUS FROM TBL_PROCO_PROMOTION_MASTER AS A INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK = C.BASEPACK INNER JOIN TBL_PROCO_STATUS_TRACKER AS D ON A.PROMO_ID = D.PROMO_ID INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON E.STATUS_ID = D.STATUS_ID INNER JOIN TBL_PROCO_MODALITY_MASTER AS F ON A.OFFER_MODALITY=F.MODALITY WHERE (A.ACTIVE=1 OR A.ACTIVE=0) "
-			 * ; } else {
-			 */
+			
+			  int userRole = getUserRoleId(userId); 
+			  if(userRole == 2) { 
+				  //Garima - changes //for VARCHAR_FORMAT //promoQuery = "SELECT A.PROMO_ID, A.ORIGINAL_ID,VARCHAR_FORMAT(A.START_DATE, 'DD/MM/YYYY') as start_date1,VARCHAR_FORMAT(A.END_DATE, 'DD/MM/YYYY'),A.MOC,A.CUSTOMER_CHAIN_L1 ,A.CUSTOMER_CHAIN_L2,A.P1_BASEPACK ,c.BASEPACK_DESC,replace(A.USER_ID,'','') as Created_By,replace(c.CATEGORY,'','') as SALES_CATEGORY,replace(c.BRAND,'','') as Sales_Brand,A.OFFER_DESC ,A.OFFER_TYPE ,A.OFFER_MODALITY ,A.GEOGRAPHY,A.QUANTITY ,A.UOM ,A.OFFER_VALUE , A.KITTING_VALUE ,replace(A.quantity,'','') as Sales_value,'' as estimated_spend,(CASE WHEN D.REMARK<>'' THEN CONCAT(CONCAT(CONCAT(E.STATUS,' ('),D.REMARK),')') ELSE E.STATUS END) ,A.REASON,A.REMARK ,VARCHAR_FORMAT(D.CHANGE_DATE,'DD/MM/YYYY'),A.INVESTMENT_TYPE, A.SOL_CODE, A.SOL_CODE_DESC,A.PROMOTION_MECHANICS,A.SOL_CODE_STATUS FROM TBL_PROCO_PROMOTION_MASTER AS A INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK = C.BASEPACK INNER JOIN TBL_PROCO_STATUS_TRACKER AS D ON A.PROMO_ID = D.PROMO_ID INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON E.STATUS_ID = D.STATUS_ID INNER JOIN TBL_PROCO_MODALITY_MASTER AS F ON A.OFFER_MODALITY=F.MODALITY WHERE (A.ACTIVE=1 OR A.ACTIVE=0) "; 
+				  promoQuery = "SELECT A.PROMO_ID, A.ORIGINAL_ID,DATE_FORMAT(A.START_DATE,'%d/%m/%Y') as start_date1,DATE_FORMAT(A.END_DATE,'%d/%m/%Y'),A.MOC,A.CUSTOMER_CHAIN_L1 ,A.CUSTOMER_CHAIN_L2,A.P1_BASEPACK ,C.BASEPACK_DESC,replace(A.USER_ID,'','') as Created_By,replace(C.CATEGORY,'','') as SALES_CATEGORY,replace(C.BRAND,'','') as Sales_Brand,A.OFFER_DESC ,A.OFFER_TYPE ,A.OFFER_MODALITY ,A.GEOGRAPHY,A.QUANTITY ,A.UOM ,A.OFFER_VALUE , A.KITTING_VALUE ,replace(A.quantity,'','') as Sales_value,'' as estimated_spend,(CASE WHEN D.REMARK<>'' THEN CONCAT(CONCAT(CONCAT(E.STATUS,' ('),D.REMARK),')') ELSE E.STATUS END) ,A.REASON,A.REMARK ,DATE_FORMAT(D.CHANGE_DATE,'%d/%m/%Y'),A.INVESTMENT_TYPE, A.SOL_CODE, A.SOL_CODE_DESC,A.PROMOTION_MECHANICS,A.SOL_CODE_STATUS FROM TBL_PROCO_PROMOTION_MASTER AS A INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK = C.BASEPACK INNER JOIN TBL_PROCO_STATUS_TRACKER AS D ON A.PROMO_ID = D.PROMO_ID INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON E.STATUS_ID = D.STATUS_ID INNER JOIN TBL_PROCO_MODALITY_MASTER AS F ON A.OFFER_MODALITY=F.MODALITY WHERE (A.ACTIVE=1 OR A.ACTIVE=0) ";
+			  } else {
+			 
 			// Garima - changes for VARCHAR_FORMAT
 			// promoQuery = "SELECT A.PROMO_ID, A.ORIGINAL_ID,VARCHAR_FORMAT(A.START_DATE,
 			// 'DD/MM/YYYY'),VARCHAR_FORMAT(A.END_DATE,
@@ -452,7 +451,7 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 			// TBL_PROCO_MODALITY_MASTER AS F ON A.OFFER_MODALITY=F.MODALITY WHERE
 			// (A.ACTIVE=1 OR A.ACTIVE=0) ";
 			promoQuery = "SELECT A.PROMO_ID, A.ORIGINAL_ID,DATE_FORMAT(A.START_DATE,'%d/%m/%Y'),DATE_FORMAT(A.END_DATE,'%d/%m/%Y'),A.MOC,A.CUSTOMER_CHAIN_L1 ,A.CUSTOMER_CHAIN_L2,A.P1_BASEPACK ,A.OFFER_DESC ,A.OFFER_TYPE ,A.OFFER_MODALITY ,A.GEOGRAPHY ,A.QUANTITY ,A.UOM ,A.OFFER_VALUE , A.KITTING_VALUE ,(CASE WHEN D.REMARK<>'' THEN CONCAT(CONCAT(CONCAT(E.STATUS,' ('),D.REMARK),')') ELSE E.STATUS END) ,A.REASON,A.REMARK ,DATE_FORMAT(D.CHANGE_DATE,'%d/%m/%Y'),A.INVESTMENT_TYPE, A.SOL_CODE, A.PROMOTION_MECHANICS, A.SOL_CODE_STATUS FROM TBL_PROCO_PROMOTION_MASTER AS A INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK = C.BASEPACK INNER JOIN TBL_PROCO_STATUS_TRACKER AS D ON A.PROMO_ID = D.PROMO_ID INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON E.STATUS_ID = D.STATUS_ID INNER JOIN TBL_PROCO_MODALITY_MASTER AS F ON A.OFFER_MODALITY=F.MODALITY WHERE (A.ACTIVE=1 OR A.ACTIVE=0) ";
-			// }
+			}
 
 			if (!cagetory.equalsIgnoreCase("All")) {
 				promoQuery += "AND C.CATEGORY = '" + cagetory + "' ";
@@ -560,42 +559,70 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 					dataObj.add(value.replaceAll("\\^", ","));
 				}
 
-				/*
-				 * if( userRole == 2 && !dataObj.get(16).trim().equals("")) { try { get Basepack
-				 * String BasePack = dataObj.get(7).trim(); get Quantity
-				 * if(isBigDecimal(dataObj.get(16))) { BigDecimal Quantity = new BigDecimal(
-				 * dataObj.get(16) ); Query MaxTurQuery = sessionFactory.getCurrentSession().
-				 * createNativeQuery("SELECT GSV FROM TBL_PROCO_MAX_TUR WHERE BASEPACK='"
-				 * +BasePack+"'"); BigDecimal GSV = (BigDecimal) MaxTurQuery.uniqueResult();
-				 * if(GSV != null) { Set Sales Value BigDecimal SalesVal =
-				 * GSV.multiply(Quantity); dataObj.set(20, SalesVal.setScale(2,
-				 * BigDecimal.ROUND_HALF_EVEN).toString()); BigDecimal EstimSpend = new
-				 * BigDecimal(BigInteger.ZERO, 2); if(!dataObj.get(18).trim().equals("")) {
-				 * String offerStr = dataObj.get(18).trim();
-				 * if(offerStr.toUpperCase().indexOf("ABS") != -1) { String offerVal =
-				 * offerStr.replace("ABS", ""); if(isBigDecimal(offerVal)) { BigDecimal amount =
-				 * new BigDecimal( offerVal ); EstimSpend = amount.multiply(Quantity); } } else
-				 * if(offerStr.toUpperCase().indexOf("%") != -1){ String offerVal =
-				 * offerStr.replace("%", ""); if(isBigDecimal(offerVal)) { BigDecimal Hundred =
-				 * new BigDecimal(100); BigDecimal amount = new BigDecimal( offerVal );
-				 * EstimSpend = amount.multiply( SalesVal ); EstimSpend =
-				 * EstimSpend.divide(Hundred); } } } else
-				 * if(!dataObj.get(19).trim().equals("")){ String kittingStr =
-				 * dataObj.get(19).trim(); if(kittingStr.toUpperCase().indexOf("ABS") != -1) {
-				 * String kittVal = kittingStr.replace("ABS", ""); if(isBigDecimal(kittVal)) {
-				 * BigDecimal amount = new BigDecimal( kittVal ); EstimSpend =
-				 * amount.multiply(Quantity); } } else if(kittingStr.toUpperCase().indexOf("%")
-				 * != -1) { String kittVal = kittingStr.replace("%", "");
-				 * if(isBigDecimal(kittVal)) { BigDecimal amount = new BigDecimal(kittVal);
-				 * BigDecimal Hundred = new BigDecimal(100); EstimSpend =
-				 * amount.multiply(SalesVal); EstimSpend = EstimSpend.divide(Hundred); } } }
-				 * if(EstimSpend.compareTo(BigDecimal.ZERO) != 0) { set Estimated Spend
-				 * dataObj.set(21, EstimSpend.setScale(2,
-				 * BigDecimal.ROUND_HALF_EVEN).toString()); } } } } catch (Exception ex) {
-				 * logger.debug("Exception :", ex); } }
-				 */
-
-				downloadDataList.add(dataObj);
+				
+				  if( userRole == 2 && !dataObj.get(16).trim().equals("")) {
+					  try {
+						  	//get Basepack
+						  	String BasePack = dataObj.get(7).trim(); 
+						  	//get Quantity
+						  	if(isBigDecimal(dataObj.get(16))) { 
+						  		BigDecimal Quantity = new BigDecimal(dataObj.get(16) ); 
+						  		Query MaxTurQuery = sessionFactory.getCurrentSession().
+						  				createNativeQuery("SELECT GSV FROM TBL_PROCO_MAX_TUR WHERE BASEPACK='" +BasePack+"'"); 
+						  		BigDecimal GSV = (BigDecimal) MaxTurQuery.uniqueResult();
+						  		if(GSV != null) { 
+						  			//Set Sales Value 
+						  			BigDecimal SalesVal = GSV.multiply(Quantity); 
+						  			dataObj.set(20, SalesVal.setScale(2, BigDecimal.ROUND_HALF_EVEN).toString()); 
+						  			BigDecimal EstimSpend = new BigDecimal(BigInteger.ZERO, 2); 
+						  			if(!dataObj.get(18).trim().equals("")) {
+						  					String offerStr = dataObj.get(18).trim();
+						  					if(offerStr.toUpperCase().indexOf("ABS") != -1) { 
+						  						String offerVal = offerStr.replace("ABS", ""); 
+						  						if(isBigDecimal(offerVal)) { 
+						  							BigDecimal amount = new BigDecimal( offerVal ); 
+						  							EstimSpend = amount.multiply(Quantity); 
+						  						} 
+						  					} else
+						  						if(offerStr.toUpperCase().indexOf("%") != -1){ 
+						  							String offerVal = offerStr.replace("%", ""); 
+						  							if(isBigDecimal(offerVal)) { 
+						  								BigDecimal Hundred = new BigDecimal(100); 
+						  								BigDecimal amount = new BigDecimal( offerVal );
+						  								EstimSpend = amount.multiply( SalesVal ); 
+						  								EstimSpend = EstimSpend.divide(Hundred); 
+						  							} 
+						  						} 
+						  					} else
+						  						if(!dataObj.get(19).trim().equals("")){ 
+						  							String kittingStr = dataObj.get(19).trim(); 
+						  							if(kittingStr.toUpperCase().indexOf("ABS") != -1) {
+						  								String kittVal = kittingStr.replace("ABS", ""); 
+						  								if(isBigDecimal(kittVal)) {
+						  									BigDecimal amount = new BigDecimal( kittVal ); 
+						  									EstimSpend = amount.multiply(Quantity); 
+						  								} 
+						  							} else if(kittingStr.toUpperCase().indexOf("%") != -1) { 
+						  								String kittVal = kittingStr.replace("%", "");
+						  								if(isBigDecimal(kittVal)) { 
+						  									BigDecimal amount = new BigDecimal(kittVal);
+						  									BigDecimal Hundred = new BigDecimal(100); 
+						  									EstimSpend = amount.multiply(SalesVal); 
+						  									EstimSpend = EstimSpend.divide(Hundred); 
+						  								} 
+						  							} 
+						  						}
+						  						if(EstimSpend.compareTo(BigDecimal.ZERO) != 0) { 
+						  							//set Estimated Spend
+						  							dataObj.set(21, EstimSpend.setScale(2,BigDecimal.ROUND_HALF_EVEN).toString()); 
+						  						} 
+						  					} 
+						  		} 
+						  } catch (Exception ex) {
+							  logger.debug("Exception :", ex); 
+						  } 
+				  }
+				  downloadDataList.add(dataObj);
 				
 				obj = null;
 			}
