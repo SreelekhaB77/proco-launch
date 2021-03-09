@@ -304,4 +304,12 @@ public class LaunchServiceImpl implements LaunchService {
 		public List<String> getAllCOEMoc() {
 			return launchDao.getAllCOEMoc();
 		}
+		//Q2 sprint feb 2021 kavitha
+				@Override
+				@Transactional
+				public List<String> getLaunchNameBasedOnMoc(String userId,String tmeMoc)
+				{
+					return launchDao.getLaunchNameBasedOnMoc(userId,tmeMoc);
+				}
+		
 }

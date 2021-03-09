@@ -52,8 +52,8 @@
 			 
 			});
 			
-			loadTmeLauches('All');
-			loadTmeLaunchName('All');
+			//loadTmeLauches('All');
+			loadTmeLaunchName('All','All');
 	//Q1-sprint UI issues fixes
 		//$("#editDet").dataTable().fnDestroy();
   				   // setTimeout(function(){
@@ -278,30 +278,38 @@
 		    	
 	    });
 	//Q1 sprint feb 2021 kavitha	
-	$("#mocCol").on('change', function () {
+	//$("#mocCol").on('change', function () {
 		//$("#kamlaunchDetailsTab").click();
-		$("#editDet").dataTable().fnDestroy();
+		//$("#editDet").dataTable().fnDestroy();
 		//kambaseoTable.draw();
-		var tmeselectedmoc = $(this).val(); //'All';
-		loadTmeLauches(tmeselectedmoc);
-		
-		$('#editDet').on('draw.dt', function() {
-			  var $empty = $('#editDet').find('.dataTables_empty');
-			  if ($empty) $empty.html('Loading Launches..')
-		});
+		//var tmeselectedmoc = $(this).val(); //'All';
+		//loadTmeLauches(tmeselectedmoc);
+		//$('#editDet').on('draw.dt', function() {
+			 // var $empty = $('#editDet').find('.dataTables_empty');
+			 // if ($empty) $empty.html('Loading Launches..')
+		//});
 			     
-    });	
+   // });	
 	
 	//Q2 sprint feb 2021 kavitha	
 	$("#launchName").on('change', function () {
 		$("#kamlaunchDetailsTab").click();
 		$("#editDet").dataTable().fnDestroy();
 		//kambaseoTable.draw();
+		var tmeselectedmoc = $("#mocCol").val(); //'All';
 		var tmeselectedlaunchname = $(this).val(); //'All';
-		loadTmeLaunchName(tmeselectedlaunchname);	
+		loadTmeLaunchName(tmeselectedmoc,tmeselectedlaunchname);	
 			     
     });
-		
+	
+	//Q2 sprint feb 2021 kavitha
+	$("#mocCol").on('change', function () {
+		$("#kamlaunchDetailsTab").click();
+		$("#editDet").dataTable().fnDestroy();
+		var tmeselectedmoc = $(this).val(); 
+      var tmeselectedlaunchname = $("#launchName").val(); 
+     loadTmeLaunchName(tmeselectedmoc,tmeselectedlaunchname);	
+ });	 
 });
  
  
@@ -852,8 +860,8 @@ function tmeselect(){
 		});
 }
 
-//Q2 sprint feb 2021 kavitha starts
-function loadTmeLaunchName(tmeselectedlaunchname) {
+//Q2 sprint Feb 2021 kavitha starts
+function loadTmeLaunchName(tmeselectedmoc,tmeselectedlaunchname) {
 	tmeLaunchNameTable = $('#editDet').DataTable( {
 		"scrollY":       "280px",
 			"destroy": true,  
@@ -876,6 +884,7 @@ function loadTmeLaunchName(tmeselectedlaunchname) {
 			  },
 			"sAjaxSource" : "getAlltmeLaunchName.htm",
 			  "fnServerParams" : function(aaData) {
+				  aaData.push({ "name": "tmeMoc", "value": tmeselectedmoc });
 					aaData.push({ "name": "tmeLaunchName", "value": tmeselectedlaunchname });
 				},
 				//"aaData": data,
