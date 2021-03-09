@@ -1767,21 +1767,21 @@ public class LaunchDaoImpl implements LaunchDao {
 		
 		@SuppressWarnings("unchecked")
 		@Override
-		public List<String> getLaunchNameBasedOnMoc(String userId,String tmeMoc)
-		{
-		try 
-		{
-		Query query = sessionFactory.getCurrentSession().createNativeQuery("SELECT LAUNCH_NAME  " + 
-				" FROM TBL_LAUNCH_MASTER tlc, TBL_LAUNCH_STAGE_STATUS tlss WHERE " + 
-				"tlc.LAUNCH_ID = tlss.LAUNCH_ID AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() \r\n" + 
-				"AND tlc.CREATED_BY = '" +userId+ "' AND LAUNCH_MOC = '" +tmeMoc+"' "
-				);
-			List<String> list = query.list();
-			return list;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		public List<String> getLaunchNameBasedOnMoc(String userId,String tmeMoc) {
+			String qryLaunchName = "SELECT LAUNCH_NAME FROM TBL_LAUNCH_MASTER tlc, TBL_LAUNCH_STAGE_STATUS tlss WHERE tlc.LAUNCH_ID = tlss.LAUNCH_ID AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()"
+								  + "AND tlc.CREATED_BY = '" +userId+ "'";
+			if (!tmeMoc.equalsIgnoreCase("All")) {
+				qryLaunchName = qryLaunchName + " AND LAUNCH_MOC = '" +tmeMoc+ "'";
+			}
+			try 
+			{
+				Query query = sessionFactory.getCurrentSession().createNativeQuery(qryLaunchName);
+				List<String> list = query.list();
+				return list;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
 		
 	

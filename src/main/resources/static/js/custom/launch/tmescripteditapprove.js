@@ -52,8 +52,8 @@
 			 
 			});
 			
-			//loadTmeLauches('All');
-			loadTmeLaunchName('All','All');
+			loadTmeLauches('All','All');
+			//loadTmeLaunchName('All','All');
 	//Q1-sprint UI issues fixes
 		//$("#editDet").dataTable().fnDestroy();
   				   // setTimeout(function(){
@@ -277,39 +277,62 @@
 	        });
 		    	
 	    });
+		
 	//Q1 sprint feb 2021 kavitha	
-	//$("#mocCol").on('change', function () {
-		//$("#kamlaunchDetailsTab").click();
-		//$("#editDet").dataTable().fnDestroy();
+	$("#mocCol").on('change', function () {
+		$("#kamlaunchDetailsTab").click();
+		$("#editDet").dataTable().fnDestroy();
 		//kambaseoTable.draw();
-		//var tmeselectedmoc = $(this).val(); //'All';
-		//loadTmeLauches(tmeselectedmoc);
-		//$('#editDet').on('draw.dt', function() {
-			 // var $empty = $('#editDet').find('.dataTables_empty');
-			 // if ($empty) $empty.html('Loading Launches..')
-		//});
+		var tmeselectedmoc = $(this).val(); //'All';
+		
+		//Q2 sprint feb 2021 kavitha - Starts
+		$.ajax({
+			type : "GET",
+			contentType : "application/json; charset=utf-8",
+			url : "getAlltmeLaunchName.htm?tmeMoc=" + tmeselectedmoc,
+			success : function(data) {
+				if(data.length > 0){
+					var obj = $.parseJSON(data);
+					var lstLaunchName = obj.launchNameList;
+					var lstLaunchNameArr = [];
+					lstLaunchNameArr = JSON.parse(JSON.stringify(lstLaunchName)); //$.parseJSON(lstLaunchName);
+					var myOption = $("#launchName");
+					myOption.empty();
+					myOption.append(new Option('All', 'All'));
+					$.each(lstLaunchName, function(key, val){
+						myOption.append(new Option(val, val));
+					});
+				}
+			}
+		});
+		
+		var tmeselectedlaunchname = $("#launchName").val();
+		//loadTmeLauches(tmeselectedmoc);                    
+		//loadTmeLauches(tmeselectedmoc,tmeselectedlaunchname);
+		loadTmeLauches(tmeselectedmoc, 'All');
+		//Q2 sprint feb 2021 kavitha - Ends
+		
+		$('#editDet').on('draw.dt', function() {
+			 var $empty = $('#editDet').find('.dataTables_empty');
+			 if ($empty) $empty.html('Loading Launches..')
+		});
 			     
-   // });	
+   });	
 	
 	//Q2 sprint feb 2021 kavitha	
 	$("#launchName").on('change', function () {
 		$("#kamlaunchDetailsTab").click();
 		$("#editDet").dataTable().fnDestroy();
-		//kambaseoTable.draw();
 		var tmeselectedmoc = $("#mocCol").val(); //'All';
 		var tmeselectedlaunchname = $(this).val(); //'All';
-		loadTmeLaunchName(tmeselectedmoc,tmeselectedlaunchname);	
-			     
+		loadTmeLauches(tmeselectedmoc, tmeselectedlaunchname);
+		//loadTmeLaunchName(tmeselectedmoc,tmeselectedlaunchname);
+		$('#editDet').on('draw.dt', function() {
+			 var $empty = $('#editDet').find('.dataTables_empty');
+			 if ($empty) $empty.html('Loading Launches..')
+		});
     });
-	
-	//Q2 sprint feb 2021 kavitha
-	$("#mocCol").on('change', function () {
-		$("#kamlaunchDetailsTab").click();
-		$("#editDet").dataTable().fnDestroy();
-		var tmeselectedmoc = $(this).val(); 
-      var tmeselectedlaunchname = $("#launchName").val(); 
-     loadTmeLaunchName(tmeselectedmoc,tmeselectedlaunchname);	
- });	 
+	 
 });
  
  
@@ -804,7 +827,7 @@ function nextQueryAns() {
 }
 
 //Q1 sprint feb 2021 kavitha starts
-function loadTmeLauches(tmeselectedmoc) {
+function loadTmeLauches(tmeselectedmoc, tmeselectedlaunchname) {
 	tmebaseoTable = $('#editDet').DataTable( {
 		"scrollY":       "280px",
 			"destroy": true,  
@@ -828,6 +851,7 @@ function loadTmeLauches(tmeselectedmoc) {
 			"sAjaxSource" : "getAllLaunchtmeData.htm",
 			  "fnServerParams" : function(aoData) {
 					aoData.push({ "name": "tmeMoc", "value": tmeselectedmoc });
+					aoData.push({ "name": "tmeLaunchName", "value": tmeselectedlaunchname });
 				},
 				//"aaData": data,
 				"aoColumns" : [
@@ -861,6 +885,7 @@ function tmeselect(){
 }
 
 //Q2 sprint Feb 2021 kavitha starts
+/*
 function loadTmeLaunchName(tmeselectedmoc,tmeselectedlaunchname) {
 	tmeLaunchNameTable = $('#editDet').DataTable( {
 		"scrollY":       "280px",
@@ -909,4 +934,4 @@ function loadTmeLaunchName(tmeselectedmoc,tmeselectedlaunchname) {
 			});
 	tmeLaunchNameTable.draw();
 }
-
+*/
