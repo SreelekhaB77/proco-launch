@@ -911,7 +911,7 @@ function ajaxLoader(w, h) {
 var coeeoTable;
 function loadCoeLauches(coeselectedmoc) {
 	coeeoTable = $('#coebasepack_add').removeAttr('style').DataTable( {
-		"scrollY":       "280px",
+		"scrollY": "280px",
 			"destroy": true,  
 			"paging":  true,
 			"ordering": false,
@@ -954,23 +954,32 @@ function loadCoeLauches(coeselectedmoc) {
 						{mData : 'createdBy'},
 						{mData : 'accountName',
                             "mRender" : function(data, type, full) {
-                                return '<textarea style="overflow-y: scroll;" rows="3" cols="58" value=' + data + '>' + data + '</textarea>';
+                                return '<textarea style="overflow-y: scroll;" rows="3" cols="60" value=' + data + '>' + data + '</textarea>';
                             }
                         },
 					],
 			});
 	coeeoTable.draw();
+	
 }
 
 //Q1 Srint-2 Select all code
 
-  $('#selectAll').change(function () {
-    var cells = coeeoTable.cells( ).nodes( );
-    
-        if ($(this).hasClass('allChecked')) {
-            $(cells).find('input[type="checkbox"]').prop('checked', false);
-        } else {
-            $(cells).find('input[type="checkbox"]').prop('checked', true);
-        }
-        $(this).toggleClass('allChecked');
-    });
+$('#coebasepack_add').on('draw.dt', function() {
+$('#selectAll').prop('checked', false);
+$('input[type="checkbox"]', '#coebasepack_add').prop('checked', false);
+
+});
+
+ $('#selectAll').click(function() {
+   if (this.checked) {
+       $(':checkbox').each(function() {
+           this.checked = true;                        
+       });
+   } else {
+      $(':checkbox').each(function() {
+           this.checked = false;                        
+       });
+   } 
+});
+

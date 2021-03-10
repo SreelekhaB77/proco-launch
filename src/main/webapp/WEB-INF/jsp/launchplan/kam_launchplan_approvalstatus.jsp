@@ -193,14 +193,14 @@
 										<th><span class="proco-btn proco-btn-success table-head">Launch
 												MOC</span></th>
 										<th><span class="proco-btn proco-btn-success table-head">Account</span></th>
-										<th><span class="proco-btn proco-btn-success table-head">Request
+										<th style="min-width:90px!important;"><span class="proco-btn proco-btn-success table-head">Request
 												Date</span></th>
 										<th><span class="proco-btn proco-btn-success table-head">Changes
 												Requested</span></th>
 										<th><span class="proco-btn proco-btn-success table-head">KAM
 												Remarks</span></th>
 										<th><span class="proco-btn proco-btn-success table-head">CMM</span></th>
-										<th><span class="proco-btn proco-btn-success table-head">Response
+										<th style="min-width:90px!important;"><span class="proco-btn proco-btn-success table-head">Response
 												Date</span></th>
 										<th><span class="proco-btn proco-btn-success table-head">Approval
 												Status</span></th>
