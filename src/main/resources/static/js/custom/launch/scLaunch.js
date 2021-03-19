@@ -292,14 +292,17 @@ $(document).ready(function() {
 					     
 		    });	
 		});
-
+//Q2 sprint feb 2021 kavitha 
 function enableScLaunchButtons(obj) {
+	$('input[type="checkbox"]').on('change', function() {
+		   $('input[type="checkbox"]').not(this).prop('checked', false);
+		});
 	var checked_field = $("[name=scchecklaunch]:checked");
 	if (checked_field.length != 0) {
 		document.getElementById("sclnchDets").removeAttribute("disabled");
 	} else {
 		document.getElementById("sclnchDets").setAttribute("disabled",
-				"disabled");
+		        "disabled");
 	}
 }
 
@@ -612,7 +615,6 @@ function scdownloadLaunchmstn() {
 	//var launchId = $("#dynamicLaunchId").val();
 	
 var checked_field = $("[name=scchecklaunch]:checked");
-	
 		var launchIds = [];
 		for (var i = 0; i < checked_field.length; i++) {
 			launchIds.push(checked_field[i].value);
@@ -685,7 +687,7 @@ function loadSCLauches(scselectedmoc) {
 						{
 						  mData: 'launchId',
 						  "mRender": function(data, type, full) {
-							return '<input type="checkbox" name="editLaunchscr1" class="editlaunchsel" onClick="scselect()" value=' + data + '>';
+							return '<input type="checkbox" name="scchecklaunch" class="editlaunchsel scchecklaunch" onChange="enableScLaunchButtons(this)" value=' + data + '>';
 						  }
 						},
 						{mData : 'launchName'},
@@ -698,11 +700,4 @@ function loadSCLauches(scselectedmoc) {
 	scbaseoTable.draw();
 }
 
-//Q2 sprint feb 2021 kavitha 
-function scselect(){
-	$('input[type="checkbox"]').on('change', function() {
-		
-		   $('input[type="checkbox"]').not(this).prop('checked', false);
-		 
-		});
-}
+
