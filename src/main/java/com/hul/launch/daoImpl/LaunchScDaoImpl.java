@@ -65,18 +65,26 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 	}
 
 	@Override
-	public List<LaunchDataResponse> getAllCompletedScLaunchData() {
+	//Q2 sprint feb 2021 kavitha
+	//public List<LaunchDataResponse> getAllCompletedScLaunchData() {
+	public List<LaunchDataResponse> getAllCompletedScLaunchData(String scMoc)
+	{
 		Session session = sessionFactory.getCurrentSession();
 		SessionImpl sessionImpl = (SessionImpl) session;
 		List<LaunchDataResponse> listOfCompletedLaunch = new ArrayList<>();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
+			//Kavitha Changes - Q2 Sprint Feb2021
+			if (scMoc.equalsIgnoreCase("All")) {
+				scMoc = "";
+			}
 			stmt = sessionImpl.connection().prepareStatement(
 					"SELECT LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE,"
 							+ " CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,"
 							+ " CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE,LAUNCH_MOC, LAUNCH_SUBMISSION_DATE FROM TBL_LAUNCH_MASTER tlc WHERE"
-							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2'");
+							
+							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' AND LAUNCH_MOC LIKE '%" + scMoc + "%'");
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				LaunchDataResponse launchDataResponse = new LaunchDataResponse();
@@ -406,4 +414,23 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 			return "ERROR";
 		}
 	}
+	//Q2 sprint kavitha feb2021 
+		@SuppressWarnings("unchecked")
+		@Override
+		public List<String> getAllMoc() {
+			try {
+				
+				Query query = sessionFactory.getCurrentSession().createNativeQuery(
+						"SELECT DISTINCT LAUNCH_MOC " + 
+						" FROM TBL_LAUNCH_MASTER tlc " + 
+						"WHERE SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' ORDER BY concat(substr(LAUNCH_MOC, 3, 4), substr(LAUNCH_MOC, 1, 2))"
+						);
+					
+				List<String> list = query.list();
+				return list;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
 }

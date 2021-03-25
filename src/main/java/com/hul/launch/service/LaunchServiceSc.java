@@ -9,7 +9,11 @@ import com.hul.launch.response.LaunchScFinalBuildUpResponse;
 import com.hul.launch.response.LaunchScMstnClearanceResponse;
 
 public interface LaunchServiceSc {
-	public List<LaunchDataResponse> getAllCompletedLaunchData();
+	
+	//public List<LaunchDataResponse> getAllCompletedLaunchData();
+	
+	//Q2 sprint feb 2021 kavitha
+	public List<LaunchDataResponse> getAllCompletedLaunchData(String scMoc);
 
 	public List<LaunchScBasepackResponse> getScBasepackData(List<String> listOfLaunchData);
 
@@ -20,4 +24,7 @@ public interface LaunchServiceSc {
 	public String saveMstnClearanceByLaunchIdsSc(RequestMstnClearanceList requestMstnClearanceList, String userId);
 
 	public String uploadMstnClearanceByLaunchIdSc(List<Object> list, String userID, String string, boolean b, boolean c);
+	
+	//Q2 sprint feb 2021 kavitha
+	public List<String> getAllMoc();
 }

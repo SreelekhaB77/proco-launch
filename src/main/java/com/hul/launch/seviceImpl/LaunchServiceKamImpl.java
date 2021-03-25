@@ -140,8 +140,12 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 	}
 
 	@Override
-	public List<KamChangeReqRemarks> getApprovalStatusKam(String userId) {
-		return launchDaoKam.getApprovalStatusKam(userId);
+	//Q2 sprint feb 2021 kavitha
+	public List<KamChangeReqRemarks> getApprovalStatusKam(String userId,String approvalLaunchMOC,String approvalKamStauts)
+	//public List<KamChangeReqRemarks> getApprovalStatusKam(String userId)
+	 {
+		//return launchDaoKam.getApprovalStatusKam(userId);
+		return launchDaoKam.getApprovalStatusKam(userId,approvalLaunchMOC,approvalKamStauts);
 	}
 
 	@Override
@@ -180,6 +184,16 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 		return launchDaoKam.getAllMoc(userId, launchMOC);
 	}
 
+	//Q2 sprint feb 2021 Kavitha
+	@Override
+	@Transactional
+	public List<String> getAllMocApprovalStatus(String userId) {
+		return launchDaoKam.getAllMocApprovalStatus(userId);
+	}
 	
-
+	@Override
+	@Transactional
+	public List<String> getKamApprovalStatus(String userId) {
+		return launchDaoKam.getKamApprovalStatus(userId);
+	}
 }

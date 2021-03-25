@@ -131,18 +131,26 @@
 							<div class="card-block">
 								<div class="child-table">
 									<div class="table-responsive detail_table">
-										<table class="table table-striped table-bordered" id="coebasepack_add" cellspacing="0" cellpadding="0" style="width: 100% ! important">
+									<div class="col-md-3">
+                                            <label for="sel1" class="userlist-space custom-label-align"  >MOC:</label>
+                                             <select id="mocCol" class="form-control custom-select-align">
+                                                        <option value="All">All</option>
+                                                            <c:forEach items="${scMoclist}" var="mocVal">
+                                                                    <option value="${mocVal}"><c:out value="${mocVal}"></c:out></option>
+                                                            </c:forEach>
+                                             </select></div>
+										<table class="table table-striped table-bordered" id="scbasepack_add" cellspacing="0" cellpadding="0" style="width: 100% ! important">
 											<thead class="thead-dark">
 												<tr>
-													<th><span class="proco-btn proco-btn-success table-head">Select</span></th>
-													<th><span class="proco-btn proco-btn-success table-head">Launch Name</span></th>
-													<th><span class="proco-btn proco-btn-success table-head">Launch MOC</span></th>
-													<th><span class="proco-btn proco-btn-success table-head">Submitted Date</span></th>
-													<th><span class="proco-btn proco-btn-success table-head">CMM</span></th>
+													<th style="min-width:85px!important"><span class="proco-btn proco-btn-success table-head">Select</span></th>
+													<th style="min-width:330px!important"><span class="proco-btn proco-btn-success table-head">Launch Name</span></th>
+													<th style="min-width:110px!important"><span class="proco-btn proco-btn-success table-head">Launch MOC</span></th>
+													<th style="min-width:160px!important"><span class="proco-btn proco-btn-success table-head">Submitted Date</span></th>
+													<th style="min-width:200px!important"><span class="proco-btn proco-btn-success table-head">CMM</span></th>
 												
 												</tr>
 											</thead>
-											<tbody>
+											<!--<tbody>
 												 <c:forEach items="${listOfLaunch}" var="launch">
 											       <tr>
 											       	<td><input type='checkbox' class='scchecklaunch' name='scchecklaunch' value='${launch.launchId}' onchange= 'enableScLaunchButtons(this)'></td>
@@ -152,7 +160,7 @@
 											         <td>${launch.createdBy}</td>
 											       </tr>
 											     </c:forEach>
-											</tbody>
+											</tbody>-->
 										</table>
 										
 										<div class="coebtnclass">

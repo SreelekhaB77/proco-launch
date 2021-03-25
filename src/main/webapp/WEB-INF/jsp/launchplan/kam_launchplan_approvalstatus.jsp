@@ -159,27 +159,48 @@
 			<div id="collapseOne" class="collapse" role="tabpanel"
 				aria-labelledby="headingOne" aria-expanded="false"
 				style="height: 0px; display: block;">
+				<div class="child-table">
+					
 				<div class="card-block">
-					<div class="child-table">
+	
 						<div class="table-responsive detail_table">
-							<table class="table table-striped table-bordered"
-								id="kambasepack_add" cellspacing="0" cellpadding="0"
+						<div class="col-md-3">
+						<label for="sel1" class="userlist-space custom-label-align">MOC:</label>
+						<select id="approvalKamMocCol" class="form-control custom-select-align input-sm" style="width: 100px;">
+						<option value="All">All</option>
+						<c:forEach items="${kamApprovalMoclist}" var="mocVal">
+						<option value="${mocVal}"><c:out value="${mocVal}"></c:out></option>
+						</c:forEach>
+						</select>
+					</div>
+					<div class="col-md-3">
+						<label for="sel1" class="userlist-space approval-label-align">Approval Status:</label>
+						<select id="approvalKamStatusCol" class="form-control approval-select-align input-sm" style="width: 100px;">
+						<option value="All">All</option>
+						<c:forEach items="${kamApprovalStatuslist}" var="mocVal">
+						<option value="${mocVal}"><c:out value="${mocVal}"></c:out></option>
+						</c:forEach>
+						</select>
+					</div>
+							<table class="table table-striped table-bordered custom-mind"
+								id="approvekambasepack_add" cellspacing="0" cellpadding="0"
 								style="width: 100% ! important">
 								<thead class="thead-dark">
 									<tr>
+									
 										<th><span class="proco-btn proco-btn-success table-head">Launch
 												Name</span></th>
 										<th><span class="proco-btn proco-btn-success table-head">Launch
 												MOC</span></th>
 										<th><span class="proco-btn proco-btn-success table-head">Account</span></th>
-										<th><span class="proco-btn proco-btn-success table-head">Request
+										<th style="min-width:115px!important;"><span class="proco-btn proco-btn-success table-head">Request
 												Date</span></th>
 										<th><span class="proco-btn proco-btn-success table-head">Changes
 												Requested</span></th>
 										<th><span class="proco-btn proco-btn-success table-head">KAM
 												Remarks</span></th>
 										<th><span class="proco-btn proco-btn-success table-head">CMM</span></th>
-										<th><span class="proco-btn proco-btn-success table-head">Response
+										<th style="min-width:115px!important;"><span class="proco-btn proco-btn-success table-head">Response
 												Date</span></th>
 										<th><span class="proco-btn proco-btn-success table-head">Approval
 												Status</span></th>
@@ -187,7 +208,7 @@
 												Remarks</span></th>
 									</tr>
 								</thead>
-								<tbody>
+								<!-- <tbody>
 									<c:forEach items="${kamApprovalList}" var="approvalList">
 										<tr>
 											<td>${approvalList.launchName}</td>
@@ -202,7 +223,7 @@
 											<td>${approvalList.cmmRemarks}</td>
 										</tr>
 									</c:forEach>
-								</tbody>
+								</tbody>-->
 							</table>
 						</div>
 

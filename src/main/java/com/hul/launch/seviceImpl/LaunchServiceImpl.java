@@ -81,10 +81,11 @@ public class LaunchServiceImpl implements LaunchService {
 	public Map<String, String> saveLaunchSubmit(SaveLaunchSubmitRequest saveLaunchSubmitRequest, String userId) {
 		return launchDao.saveLaunchSubmit(saveLaunchSubmitRequest, userId);
 	}
-
+//Q2 sprint  march 2021 kavitha
 	@Override
-	public List<LaunchDataResponse> getAllCompletedLaunchData() {
-		return launchDao.getAllCompletedLaunchData();
+	public List<LaunchDataResponse> getAllCompletedLaunchData(String coeMOC){
+	//public List<LaunchDataResponse> getAllCompletedLaunchData() {
+		return launchDao.getAllCompletedLaunchData(coeMOC);
 	}
 
 	@Override
@@ -284,10 +285,31 @@ public class LaunchServiceImpl implements LaunchService {
 		return launchDao.getAllMoc(userId);
 	}
 	
-	//Q1 sprint feb 2021 kavitha
+	//Q2 sprint feb 2021 kavitha
 	@Override
-	public List<LaunchDataResponse> getAllLaunchData(String userid, String launchMOC) {
-		return launchDao.getAllLaunchData(userid,launchMOC);
+	public List<LaunchDataResponse> getAllLaunchData(String userid, String launchMOC,String launchName) {
+		return launchDao.getAllLaunchData(userid,launchMOC,launchName);
 	}
-
+	
+	//Q2 sprint feb 2021 kavitha
+		@Override
+		@Transactional
+		public List<String> getAllLaunchName(String userId,String tmeMoc) {
+			return launchDao.getAllLaunchName(userId,tmeMoc);
+		}
+		
+		//Q2 sprint feb 2021 kavitha
+		@Override
+		@Transactional
+		public List<String> getAllCOEMoc() {
+			return launchDao.getAllCOEMoc();
+		}
+		//Q2 sprint feb 2021 kavitha
+				@Override
+				@Transactional
+				public List<String> getLaunchNameBasedOnMoc(String userId,String tmeMoc)
+				{
+					return launchDao.getLaunchNameBasedOnMoc(userId,tmeMoc);
+				}
+		
 }

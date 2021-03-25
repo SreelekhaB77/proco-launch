@@ -1484,21 +1484,53 @@ table#kam_launch_store_table input {
 .modal-header .close{color:black !important;}
 .modal-header .close{color:black !important;}
 
-/*Q1sprint-UI moc filter*/
 .custom-label-align {
-	    float: left;
+	float: left;
     width: 16%;
     padding-top: 6px;
 }
 .custom-select-align {
-	    float: left;
-    width: 25%!important;
+	 float: left;
+     width: 31%!important;
     height: 30px!important;
-    line-height: 30px;
-    padding: 5px 3px!important;
-}
-thead th{
-text-align: center!important;
+    line-height: 30px!important;
+    padding: 5px 1px!important;
 }
 
+thead th {
+text-align: center!important;
+}
+.th-align {
+width:82px!important;
+}
+
+.approval-label-align {
+	float: left;
+    width: 45%;
+    padding-top: 6px;
+}
+
+.approval-select-align {
+	    float: left;
+   width: 31%!important;
+    height: 30px!important;
+    line-height: 30px;
+    padding: 5px 1px!important;
+}
+.coe-select-align {
+	    float: left;
+    width: 30%;
+}
+.tme-label-align {
+    float: left;
+    width: 39%;
+    padding-top: 6px;
+}
+.tme-select-align {
+    float: left;
+    width: 50% !important;
+    height: 30px !important;
+    line-height: 30px;
+    padding: 5px 1px !important;
+}
 /* MTP custom fonts ends here */ 

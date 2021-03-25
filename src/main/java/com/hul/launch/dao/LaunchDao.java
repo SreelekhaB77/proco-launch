@@ -37,7 +37,10 @@ public interface LaunchDao {
 
 	Map<String, String> saveLaunchSubmit(SaveLaunchSubmitRequest saveLaunchSubmitRequest, String userId);
 
-	List<LaunchDataResponse> getAllCompletedLaunchData();
+	//List<LaunchDataResponse> getAllCompletedLaunchData();
+	
+	//Q2 sprint march 2021 kavitha
+	public List<LaunchDataResponse> getAllCompletedLaunchData(String coeMOC);
 
 	List<LaunchCoeBasePackResponse> getAllCompletedLaunchData(List<String> listOfLaunchData);
 
@@ -86,5 +89,16 @@ public interface LaunchDao {
 	
 	//Q1 sprint feb 2021 kavitha
 	public List<String> getAllMoc(String userId);
-	public List<LaunchDataResponse> getAllLaunchData(String userId, String launchMOC);
+	
+	//Q2 sprint feb 2021 kavitha
+	public List<LaunchDataResponse> getAllLaunchData(String userId, String launchMOC, String launchName);
+	
+	//Q2 sprint feb 2021 kavitha
+	public List<String> getAllLaunchName(String userId,String tmeMoc);
+	
+	//Q2 sprint feb 2021 kavitha
+	public List<String> getAllCOEMoc();
+	
+	//Q2 sprint feb 2021 kavitha
+		public List<String> getLaunchNameBasedOnMoc(String userId,String tmeMoc);
 }

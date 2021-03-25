@@ -79,8 +79,14 @@ public class CoeLaunchPlanController {
 	@RequestMapping(value = "getAllCompletedLaunchData.htm", method = RequestMethod.GET)
 	public ModelAndView getAllCompletedLaunchData(HttpServletRequest request, Model model) {
 		List<LaunchDataResponse> listOfLaunch = new ArrayList<>();
+		//Q2 sprint kavitha 2021
+				String coeMoc = "All";
 		try {
-			listOfLaunch = launchService.getAllCompletedLaunchData();
+			listOfLaunch = launchService.getAllCompletedLaunchData(coeMoc);
+			//Q2 sprint kavitha
+			List<String> coemoclist=launchService.getAllCOEMoc();
+			model.addAttribute("coemoclist",coemoclist);
+			
 			if (null != listOfLaunch.get(0).getError()) {
 				throw new Exception(listOfLaunch.get(0).getError());
 			}
@@ -91,6 +97,30 @@ public class CoeLaunchPlanController {
 		}
 		return new ModelAndView("launchplan/coe_launchplan");
 	}
+	
+	//Q2 sprint kavitha feb 2021
+		@RequestMapping(value = "getAllCoeMOCData.htm", method = RequestMethod.GET, produces = "application/json", headers = "Accept=*/*")
+		public @ResponseBody String getAllCoeMOCData(HttpServletRequest request, Model model,
+				@RequestParam("coeMoc") String coeMoc) {
+			List<LaunchDataResponse> listOfLaunch = new ArrayList<>();
+			try {
+				String userId = (String) request.getSession().getAttribute("UserID");
+				listOfLaunch = launchService.getAllCompletedLaunchData(coeMoc);
+				
+				if (null != listOfLaunch.get(0).getError()) {
+					throw new Exception(listOfLaunch.get(0).getError());
+				}
+			} catch (Exception e) {
+				logger.error("Exception: ", e);
+				model.addAttribute("Error", e.toString());
+			}
+			
+			HashMap<String, Object> tableObj = new HashMap<String, Object>();
+			tableObj.put("aaData", listOfLaunch);
+			Gson sLaunch =  new Gson();
+			String launchList = sLaunch.toJson(tableObj);
+			return launchList;
+		}
 
 	@RequestMapping(value = "getAllBasePackByLaunchIds.htm", method = RequestMethod.POST)
 	public String getAllCompletedLaunchData(@RequestBody String jsonBody, HttpServletRequest request, Model model) {
@@ -755,4 +785,5 @@ public class CoeLaunchPlanController {
 		headerDetail.add("Customer Code");
 		return headerDetail;
 	}
+
 }

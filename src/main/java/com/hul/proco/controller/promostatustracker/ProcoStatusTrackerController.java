@@ -374,7 +374,7 @@ public class ProcoStatusTrackerController {
 			} else {
 				promoId = promoIdValue;
 			}
-			ArrayList<String> headerList = procoStatusTrackerService.getHeaderListForPromoStatusTracker();
+			ArrayList<String> headerList = procoStatusTrackerService.getHeaderListForPromoStatusTracker(userId, false);
 			downloadedData = procoStatusTrackerService.getPromotionStatusTracker(headerList, cagetory, brand, basepack, custChainL1,
 					custChainL2, geography, offerType, modality, year, moc, userId, 1,promoId);
 			if (downloadedData != null) {

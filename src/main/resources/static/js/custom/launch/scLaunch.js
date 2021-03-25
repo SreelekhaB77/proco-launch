@@ -9,6 +9,9 @@ var bscaddTable,
 	scTable;
 
 $(document).ready(function() {
+	
+	//Q2 Sprint feb 2021 kavitha
+	loadSCLauches('All');
 	$.ajaxSetup({ cache: false });
 	// prev button
 	$('#scprevbspack').click(function(){
@@ -273,15 +276,33 @@ $(document).ready(function() {
 					$('form').submit();
 				}
 			}
+			//Q2 sprint feb 2021 kavitha	
+			$("#mocCol").on('change', function () {
+				$("#kamlaunchDetailsTab").click();
+				$("#scbasepack_add").dataTable().fnDestroy();
+				//kambaseoTable.draw();
+				var scselectedmoc = $(this).val(); //'All';
+				loadSCLauches(scselectedmoc);	
+				
+				//Q2 sprint-2 loading launches msg
+				$('#scbasepack_add').on('draw.dt', function() {
+			  var $empty = $('#scbasepack_add').find('.dataTables_empty');
+			  if ($empty) $empty.html('Loading Launches..')
 		});
-
+					     
+		    });	
+		});
+//Q2 sprint feb 2021 kavitha 
 function enableScLaunchButtons(obj) {
+	$('input[type="checkbox"]').on('change', function() {
+		   $('input[type="checkbox"]').not(this).prop('checked', false);
+		});
 	var checked_field = $("[name=scchecklaunch]:checked");
 	if (checked_field.length != 0) {
 		document.getElementById("sclnchDets").removeAttribute("disabled");
 	} else {
 		document.getElementById("sclnchDets").setAttribute("disabled",
-				"disabled");
+		        "disabled");
 	}
 }
 
@@ -594,7 +615,6 @@ function scdownloadLaunchmstn() {
 	//var launchId = $("#dynamicLaunchId").val();
 	
 var checked_field = $("[name=scchecklaunch]:checked");
-	
 		var launchIds = [];
 		for (var i = 0; i < checked_field.length; i++) {
 			launchIds.push(checked_field[i].value);
@@ -635,3 +655,49 @@ function ajaxLoader(w, h) {
         
     });
 }
+
+//Q2 sprint feb 2021 kavitha starts
+function loadSCLauches(scselectedmoc) {
+	scbaseoTable = $('#scbasepack_add').DataTable( {
+		"scrollY":       "280px",
+			"destroy": true,  
+			"paging":  true,
+			"ordering": false,
+			"searching": false,
+			"lengthMenu" : [
+				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
+				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
+			"oLanguage": {
+				  "sSearch": '<i class="icon-search"></i>',
+				  "sEmptyTable": "No Pending Launch.",
+				  "oPaginate": {
+					  "sNext": "&rarr;",
+					  "sPrevious": "&larr;"
+				  },
+				  "sLengthMenu": "Records per page _MENU_ ",
+				  
+
+			  },
+			"sAjaxSource" : "getAllCompletedLaunchScData.htm",
+			  "fnServerParams" : function(aaData) {
+					aaData.push({ "name": "sCMoc", "value": scselectedmoc });
+				},
+				//"aaData": data,
+				"aoColumns" : [
+						{
+						  mData: 'launchId',
+						  "mRender": function(data, type, full) {
+							return '<input type="checkbox" name="scchecklaunch" class="editlaunchsel scchecklaunch" onChange="enableScLaunchButtons(this)" value=' + data + '>';
+						  }
+						},
+						{mData : 'launchName'},
+						{mData: 'launchMoc'},
+						{mData : 'createdDate'},
+						{mData : 'createdBy'},
+						 
+					],
+			});
+	scbaseoTable.draw();
+}
+
+
