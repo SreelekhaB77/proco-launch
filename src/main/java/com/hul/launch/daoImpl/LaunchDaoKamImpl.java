@@ -1148,9 +1148,9 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		try {
 			PreparedStatement stmt = sessionImpl.connection().prepareStatement(
 					"SELECT tlm.LAUNCH_NAME,tlm.LAUNCH_MOC, DATE_FORMAT(REQ_DATE, '%b %d, %Y') AS REQ_DATE,CHANGES_REQUIRED CHANGES_REQUESTED,KAM_REMARKS,tlr.UPDATED_BY "
-							+ " CMM, DATE_FORMAT(tlr.UPDATED_DATE, '%b %d, %Y') AS RESPONSE_DATE,tlr.FINAL_STATUS APPROVAL_STATUS,TME_REMARKS CMM_REMARKS, tlr.CREATED_BY FROM"
+							+ " CMM, DATE_FORMAT(tlr.UPDATED_DATE, '%b %d, %Y') AS RESPONSE_DATE,tlr.FINAL_STATUS APPROVAL_STATUS,TME_REMARKS CMM_REMARKS, tlr.CREATED_BY,CASE WHEN tlr.UPDATED_DATE >= '2020-03-01' THEN 'NEW' ELSE 'OLD' END AS LAUNCH_READ_STATUS FROM"
 							+ " TBL_LAUNCH_REQUEST tlr,TBL_LAUNCH_MASTER tlm WHERE tlr.LAUNCH_ID = tlm.LAUNCH_ID AND tlr.CREATED_BY = '"
-							+ userId + "' AND tlm.LAUNCH_MOC LIKE '%" + approvalLaunchMOC + "%' AND tlr.FINAL_STATUS  LIKE '%" + approvalKamStauts + "%'");
+							+ userId + "' AND tlm.LAUNCH_MOC LIKE '%" + approvalLaunchMOC + "%' AND tlr.FINAL_STATUS  LIKE '%" + approvalKamStauts + "%' ORDER By tlr.UPDATED_DATE desc ");
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				KamChangeReqRemarks kamChangeReqRemarks = new KamChangeReqRemarks();
@@ -1174,8 +1174,10 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 				kamChangeReqRemarks.setResponseDate(replaceNA(rs.getString("RESPONSE_DATE")));
 				kamChangeReqRemarks.setApprovalStatus(rs.getString("APPROVAL_STATUS"));
 				kamChangeReqRemarks.setCmmRemarks(replaceNA(rs.getString("CMM_REMARKS")));
+				kamChangeReqRemarks.setLaunchReadStatus(rs.getString("LAUNCH_READ_STATUS"));
 				listOfKamChangeReqRemarks.add(kamChangeReqRemarks);
 			}
+			
 		} catch (Exception ex) {
 			logger.debug("Exception :", ex);
 			KamChangeReqRemarks kamChangeReqRemarks = new KamChangeReqRemarks();
