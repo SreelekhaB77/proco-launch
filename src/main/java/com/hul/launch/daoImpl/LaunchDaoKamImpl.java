@@ -1148,9 +1148,12 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		try {
 			PreparedStatement stmt = sessionImpl.connection().prepareStatement(
 					"SELECT tlm.LAUNCH_NAME,tlm.LAUNCH_MOC, DATE_FORMAT(REQ_DATE, '%b %d, %Y') AS REQ_DATE,CHANGES_REQUIRED CHANGES_REQUESTED,KAM_REMARKS,tlr.UPDATED_BY "
-							+ " CMM, DATE_FORMAT(tlr.UPDATED_DATE, '%b %d, %Y') AS RESPONSE_DATE,tlr.FINAL_STATUS APPROVAL_STATUS,TME_REMARKS CMM_REMARKS, tlr.CREATED_BY,CASE WHEN tlr.UPDATED_DATE >= '2020-03-01' THEN 'NEW' ELSE 'OLD' END AS LAUNCH_READ_STATUS FROM"
-							+ " TBL_LAUNCH_REQUEST tlr,TBL_LAUNCH_MASTER tlm WHERE tlr.LAUNCH_ID = tlm.LAUNCH_ID AND tlr.CREATED_BY = '"
-							+ userId + "' AND tlm.LAUNCH_MOC LIKE '%" + approvalLaunchMOC + "%' AND tlr.FINAL_STATUS  LIKE '%" + approvalKamStauts + "%' ORDER By tlr.UPDATED_DATE desc ");
+							+ " CMM, DATE_FORMAT(tlr.UPDATED_DATE, '%b %d, %Y') AS RESPONSE_DATE,tlr.FINAL_STATUS APPROVAL_STATUS,TME_REMARKS CMM_REMARKS, tlr.CREATED_BY,CASE WHEN tlr.UPDATED_DATE >= 'tmc.CONFIG_VALUE' THEN 'NEW' ELSE 'OLD' END AS LAUNCH_READ_STATUS FROM"
+							+ " TBL_LAUNCH_REQUEST tlr,TBL_LAUNCH_MASTER tlm ,TBL_VAT_MASTER_CONFIG tmc WHERE tlr.LAUNCH_ID = tlm.LAUNCH_ID AND tlr.CREATED_BY = '"
+							+ userId + "' AND tmc.ID = 3 AND tlm.LAUNCH_MOC LIKE '%" + approvalLaunchMOC + "%' AND tlr.FINAL_STATUS  LIKE '%" + approvalKamStauts + "%' ORDER By tlr.UPDATED_DATE desc ");
+			Query updateConfigValue = sessionFactory.getCurrentSession().createNativeQuery(
+					"UPDATE TBL_VAT_MASTER_CONFIG SET CONFIG_VALUE = current_timestamp() WHERE ID = 3 ");
+			updateConfigValue.executeUpdate();
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				KamChangeReqRemarks kamChangeReqRemarks = new KamChangeReqRemarks();
