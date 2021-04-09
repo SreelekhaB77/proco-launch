@@ -108,7 +108,7 @@ public class KamLaunchPlanController {
 			model.addAttribute("kammoclist",kammoclist);
 			//model.addAttribute("kamApprovalStatusNotification",listOfKamChangeReq.stream().map(n->n.getLaunchReadStatus()=="NEW").count());
 			
-			//Q1 Sprint3 Notification Changes - Kavitha Starts
+			//Q1 Sprint3 Notification Changes - Kavitha D Starts
 			listOfKamChangeReqRemarks = launchServiceKam.getApprovalStatusKam(userId,approvalKamMoc,approvalKamStauts, 0);
 			int count=0;
             for (KamChangeReqRemarks status : listOfKamChangeReqRemarks) {
@@ -117,7 +117,7 @@ public class KamLaunchPlanController {
                 } 
             }
             model.addAttribute("kamApprovalStatusNotification",count);
-            //Q1 Sprint3 Notification Changes - Kavitha Ends
+            //Q1 Sprint3 Notification Changes - Kavitha D Ends
 			//for display records
 			if (null != listOfLaunch.get(0).getError()) {
 				throw new Exception(listOfLaunch.get(0).getError());
