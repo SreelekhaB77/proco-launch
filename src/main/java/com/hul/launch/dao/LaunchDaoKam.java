@@ -58,7 +58,7 @@ public interface LaunchDaoKam {
 	
 	//List<KamChangeReqRemarks> getApprovalStatusKam(String userId);
 	//Q2 sprint feb 2021 kavitha
-	public List<KamChangeReqRemarks> getApprovalStatusKam(String userId,String approvalLaunchMOC,String approvalKamStauts);
+	public List<KamChangeReqRemarks> getApprovalStatusKam(String userId,String approvalLaunchMOC,String approvalKamStauts, int FromApproval);
 	
 	String updateLaunchSampleShared(SampleSharedReqKam sampleSharedReqKam, String userId);
 

@@ -41,9 +41,22 @@
 	window.addEventListener('popstate', function(event) {
 		history.pushState(null, null, '');
 	});
-	
+
 </script>
 </head>
+<!--Q1 sprint-3 user story 2 notification bharati code start-->
+<style>
+.red{
+  color:red!important;
+}
+.black{
+  color:black!important;;
+}
+.hide_column {
+    display : none;
+}
+</style>
+<!--Q1 sprint-3 user story 2 notification bharati code end-->
 
 <body class="OpenSans-font">
 	<div class="loader">
@@ -74,26 +87,26 @@
 					<div class="row">
 						<ul class="nav nav-pills">
 
-							<li role="presentation"
-								class="active col-md-2 col-sm-8 col-xs-12 launch-icon-inactive">
+							<li role="presentation" 
+								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
 								<a href="http://localhost:8083/VisibilityAssetTracker/getAllCompletedLaunchDataKam.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Launch Details</div>
 							</a>
 							</li>
-							<li role="presentation"
-								class="active col-md-2 col-sm-8 col-xs-12 launch-icon-active">
+							<li role="presentation" 
+								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-active">
 								<a href="http://localhost:8083/VisibilityAssetTracker/getApprovalStatusKam.htm"> <!-- <div class="launch-icon"></div> -->
-									<div class="tab-label-launch">Approval Status</div>
+									<div class="tab-label-launch">Approval Status <span id="NotificationBadge1" class="notification-number">${kamApprovalStatusNotification}</span></div>
 							</a>
 							</li>
 							<li role="presentation"
-								class="active col-md-2 col-sm-8 col-xs-12 launch-icon-inactive">
+								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
 								<a href="#"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Performance</div>
 							</a>
 							</li>
 							<li role="presentation"
-								class="active col-md-2 col-sm-8 col-xs-12 launch-icon-inactive">
+								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
 								<a href="#"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Timelines</div>
 							</a>
@@ -182,6 +195,8 @@
 						</c:forEach>
 						</select>
 					</div>
+					
+					
 							<table class="table table-striped table-bordered custom-mind"
 								id="approvekambasepack_add" cellspacing="0" cellpadding="0"
 								style="width: 100% ! important">
@@ -206,10 +221,13 @@
 												Status</span></th>
 										<th><span class="proco-btn proco-btn-success table-head">CMM
 												Remarks</span></th>
+										<th style="display:none"><span class="proco-btn proco-btn-success table-head">Status</span></th>
 									</tr>
 								</thead>
-								<!-- <tbody>
-									<c:forEach items="${kamApprovalList}" var="approvalList">
+								
+								 <!--<div style="display:none;">
+								<tbody>
+									<c:forEach items="${kamApprovalList}" var="approvalList" >
 										<tr>
 											<td>${approvalList.launchName}</td>
 											<td class="mocDate">${approvalList.launchMoc}</td>
@@ -221,9 +239,12 @@
 											<td>${approvalList.responseDate}</td>
 											<td>${approvalList.approvalStatus}</td>
 											<td>${approvalList.cmmRemarks}</td>
+											<td style="visibility:hidden" class="hidden">${approvalList.launchReadStatus}</td>
 										</tr>
 									</c:forEach>
-								</tbody>-->
+								</tbody>
+								</div> -->
+								
 							</table>
 						</div>
 
