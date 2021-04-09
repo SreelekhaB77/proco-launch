@@ -1,5 +1,6 @@
 package com.hul.launch.daoImpl;
 
+import java.math.BigInteger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -1148,9 +1149,9 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		try {
 			PreparedStatement stmt = sessionImpl.connection().prepareStatement(
 					"SELECT tlm.LAUNCH_NAME,tlm.LAUNCH_MOC, DATE_FORMAT(REQ_DATE, '%b %d, %Y') AS REQ_DATE,CHANGES_REQUIRED CHANGES_REQUESTED,KAM_REMARKS,tlr.UPDATED_BY "
-							+ " CMM, DATE_FORMAT(tlr.UPDATED_DATE, '%b %d, %Y') AS RESPONSE_DATE,tlr.FINAL_STATUS APPROVAL_STATUS,TME_REMARKS CMM_REMARKS, tlr.CREATED_BY,CASE WHEN tlr.UPDATED_DATE >= CAST(tmc.CONFIG_VALUE AS datetime) THEN 'NEW' ELSE 'OLD' END AS LAUNCH_READ_STATUS FROM"
-							+ " TBL_LAUNCH_REQUEST tlr,TBL_LAUNCH_MASTER tlm ,TBL_VAT_MASTER_CONFIG tmc WHERE tlr.LAUNCH_ID = tlm.LAUNCH_ID AND tlr.CREATED_BY = '"
-							+ userId + "' AND tmc.ID = 3 AND tlm.LAUNCH_MOC LIKE '%" + approvalLaunchMOC + "%' AND tlr.FINAL_STATUS  LIKE '%" + approvalKamStauts + "%' ORDER By tlr.UPDATED_DATE desc ");
+							+ " CMM, DATE_FORMAT(tlr.UPDATED_DATE, '%b %d, %Y') AS RESPONSE_DATE,tlr.FINAL_STATUS APPROVAL_STATUS,TME_REMARKS CMM_REMARKS, tlr.CREATED_BY,CASE WHEN tlr.UPDATED_DATE >= tmc.UPDATED_DATE THEN 'NEW' ELSE 'OLD' END AS LAUNCH_READ_STATUS FROM"
+							+ " TBL_LAUNCH_REQUEST tlr,TBL_LAUNCH_MASTER tlm ,TBL_VAT_USER_NOTIFICATIONS tmc WHERE tlr.LAUNCH_ID = tlm.LAUNCH_ID AND tlr.CREATED_BY = '"
+							+ userId + "' AND tmc.USER_ID = '"+ userId + "' AND tlm.LAUNCH_MOC LIKE '%" + approvalLaunchMOC + "%' AND tlr.FINAL_STATUS  LIKE '%" + approvalKamStauts + "%' ORDER By tlr.UPDATED_DATE desc ");
 			
 			//updateConfigValue.executeUpdate();
 			ResultSet rs = stmt.executeQuery();
@@ -1181,9 +1182,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			}
 		
 			if (FromApproval == 1) {
-				Query updateConfigValue = sessionFactory.getCurrentSession().createNativeQuery(
-						"UPDATE TBL_VAT_MASTER_CONFIG SET CONFIG_VALUE = current_timestamp() WHERE ID = 3 ");
-				updateConfigValue.executeUpdate();
+				updateUserNotifications(userId);
 			}
 			 
 		}
@@ -1381,4 +1380,42 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 					return "";
 				return "NA".equals(str)?"":str;
 			}
+			//Q1 Sprint3 Notification Changes - Kavitha D Starts
+			private boolean updateUserNotifications(String userId) {
+				boolean result = false;
+				Query query = null;
+				String userNotification = "UPDATE TBL_VAT_USER_NOTIFICATIONS SET UPDATED_DATE = NOW() WHERE USER_ID = :userId";
+				String insertUserNotification = "INSERT INTO TBL_VAT_USER_NOTIFICATIONS (USER_ID,UPDATED_DATE) VALUES (:userId,NOW())";
+				try {
+					if (ValidateUserNotification(userId) > 0) {
+						query = sessionFactory.getCurrentSession().createNativeQuery(userNotification);
+						query.setParameter("userId", userId);
+						query.executeUpdate();
+					} else {
+						query = sessionFactory.getCurrentSession().createNativeQuery(insertUserNotification);
+						query.setParameter("userId", userId);
+						query.executeUpdate();
+					}
+					result = true;
+				} catch (Exception e) {
+					logger.debug("Exception: ", e);
+				}
+				
+				return result;
+
+		}
+			private int ValidateUserNotification(String userId) {
+				Integer iValid = 0;
+				Query query = null;
+				String qryValidate = "SELECT COUNT(1) FROM TBL_VAT_USER_NOTIFICATIONS WHERE USER_ID = :userId";
+				try {
+					query = sessionFactory.getCurrentSession().createNativeQuery(qryValidate);
+					query.setParameter("userId", userId);
+					iValid = ((BigInteger)query.uniqueResult()).intValue();
+				} catch (Exception e) {
+					logger.debug("Exception: ", e);
+				}
+				return iValid;
+				//Q1 Sprint3 Notification Changes - Kavitha D ends
+}
 }
