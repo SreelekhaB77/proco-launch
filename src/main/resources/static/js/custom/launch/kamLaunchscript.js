@@ -108,6 +108,7 @@ $(document).ready(function() {
 						"sAjaxSource" : "http://localhost:8083/VisibilityAssetTracker/getAllCompletedLaunchKamData.htm",
 						  "fnServerParams" : function(aoData) {
 								aoData.push({ "name": "kamMoc", "value": kamselectedmoc });
+							
 							},
 							//"aaData": data,
 							"aoColumns" : [
@@ -130,8 +131,7 @@ $(document).ready(function() {
 	
 	// code for moc in change moc pop up
 	$(document).on( "click", "#mockamChange", function(){
-		
-	    $('#successblock').hide();
+	$('#successblock').hide();
 		
 		//$('#kamMocremarks').val('');
 		var checked_field = $( "[name=editLaunchscr1KAMLaunch]:checked" );
@@ -422,17 +422,16 @@ $(document).ready(function() {
 	$("#kamMocCol").on('change', function () {
 		$("#kamlaunchDetailsTab").click();
 		$("#kambasepack_add").dataTable().fnDestroy();
-		//kambaseoTable.draw();
+	//kambaseoTable.draw();
 		var kamselectedmoc = $(this).val(); //'All';
 		loadKamLauches(kamselectedmoc);	
+		//console.log($(this).val());
     });
-	
+  
 	$('#kambasepack_add').on('draw.dt', function() {
-		  var $empty = $('#kambasepack_add').find('.dataTables_empty');
-		  if ($empty) $empty.html('Loading Launches..')
-		  
+	    var $empty = $('#kambasepack_add').find('.dataTables_empty');
+		if ($empty) $empty.html('Loading Launches..')
 	});
-	
 	
 	//Q2 sprint feb 2021
 	$("#approvalKamMocCol").on('change', function () {
@@ -550,7 +549,6 @@ $(document).ready(function() {
 // reject launch
 	
 function rejectLaunch() {
-    
 	// var kamlnchId = getkamlaunchId();
 	
 	var kamMocremarks = $('#kamMocRejRemarks').val();
@@ -819,6 +817,7 @@ function disableReject(rowObj, lengthOfBpRecords) {
 	for (var i=0; i<inputElems.length; i++) {   
 		if (inputElems[i].type == "checkbox" && inputElems[i].checked == true) {
 			count++;
+			
 		}
 	}
 	
@@ -1601,7 +1600,9 @@ function loadKamLauches(kamselectedmoc) {
 			  },
 			"sAjaxSource" : "getAllCompletedLaunchKamData.htm",
 			  "fnServerParams" : function(aoData) {
+			  
 					aoData.push({ "name": "kamMoc", "value": kamselectedmoc });
+				
 				},
 				//"aaData": data,
 				"aoColumns" : [
@@ -1656,8 +1657,10 @@ function loadApprovalKamLauches(approvekamselectedmoc,approvekamselectedStatus) 
 			  },
 			"sAjaxSource" : "getApprovalStatusMocKam.htm",
 			  "fnServerParams" : function(aaData) {
+			        
 					aaData.push({ "name": "approvalKamMoc", "value": approvekamselectedmoc });
 					aaData.push({ "name": "approvalKamStauts", "value": approvekamselectedStatus });
+					
 				},
 				//"aaData": data,
 				"aoColumns" : [
@@ -1678,10 +1681,34 @@ function loadApprovalKamLauches(approvekamselectedmoc,approvekamselectedStatus) 
 						{mData : 'responseDate'},
 						{mData : 'approvalStatus'},
 						{mData : 'cmmRemarks'},
+						//Q1 sprint-3 user story 2 notification bharati code
+						{
+						mData : 'launchReadStatus',
+						className: 'hide_column',
+					    "mRender": function(data, type, full) {
+							return '<input type = "hidden" style="visibility:hidden" class="hidden" id="kamapproval1" runat="server" value='+ data +'>';
+							
+						  }
+						
+						},
 					],
 			});
 	kameditapproveoTable.draw();
 }
 
+//Q1 sprint-3 user story 2 notification bharati code
 
-
+$(document).ready(function() {
+$('#approvekambasepack_add').on('draw.dt', function() {
+	 $("#approvekambasepack_add tbody tr").each(function(){
+	 var col_val= $(this).find('#kamapproval1').val();
+     console.log(col_val);
+     if (col_val == "NEW"){
+      $(this).addClass('red');  
+    } else {
+      $(this).addClass('black');
+    }
+  });
+});
+setTimeout( "$('#NotificationBadge').hide();", 2500);
+})

@@ -13,6 +13,7 @@ public class KamChangeReqRemarks {
 	private String cmmRemarks;
 	private String error;
 	private String account;
+	private String launchReadStatus;
 
 	public String getAccount() {
 		return account;
@@ -108,6 +109,14 @@ public class KamChangeReqRemarks {
 
 	public void setCmmRemarks(String cmmRemarks) {
 		this.cmmRemarks = cmmRemarks;
+	}
+
+	public String getLaunchReadStatus() {
+		return launchReadStatus;
+	}
+
+	public void setLaunchReadStatus(String launchReadStatus) {
+		this.launchReadStatus = launchReadStatus;
 	}
 
 }

@@ -75,9 +75,10 @@
 							</a>
 							</li>
 							<li role="presentation"
-								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-active">
+								id=" note-group" class="active col-md-3 col-sm-8 col-xs-12 launch-icon-active">
 								<a href="http://34.120.128.205/VisibilityAssetTracker/getAllLaunchData.htm"> <!-- <div class="launch-icon"></div> -->
-									<div class="tab-label-launch">Edit & Approve</div>
+									<div class="tab-label-launch">Edit & Approve <span id="NotificationBadge" class="notification-number"></span>
+  </span></div>
 							</a>
 							</li>
 							<li role="presentation"
@@ -202,6 +203,7 @@
 														class="proco-btn proco-btn-success table-head">Status</span></th>
 												</tr>
 											</thead>
+											
 										    <!--<tbody>
 												<c:forEach items="${listOfLaunchData}" var="editlaunch">
 													<tr>
@@ -709,3 +711,4 @@
   </script>
 </body>
 </html>
+
