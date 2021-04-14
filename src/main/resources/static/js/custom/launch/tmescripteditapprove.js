@@ -945,11 +945,13 @@ function loadTmeLaunchName(tmeselectedmoc,tmeselectedlaunchname) {
 }
 */
 
-//Q1 sprint-3 userstory 1 Notification TME Bharati Code
+//Q1 sprint-3 userstory 1 TME Notification and color Bharati Code
 $(document).ready( function() {      
+$('#editDet').on('draw.dt', function() {
                 var itemCont = 0;      
-                var requestUri = "getLaunchKamInputs.htm";    
-    
+                var requestUri = "getLaunchKamInputs.htm";
+                    
+   
         $.ajax({      
         url: requestUri,      
         dataType: 'json',
@@ -959,21 +961,39 @@ $(document).ready( function() {
         headers: { "Accept": "text/plain" },    
         
         success: function(data, textStatus, jqXHR) {
-           //console.log(data);
+          
             var kamInput = data.launchKamInputsResponses;
             if(kamInput.length == 0){
             $("#NotificationBadge").hide();
             }else{
-            //sprint-3 notification count
+            
            $("#NotificationBadge").html(kamInput.length);
            }
+		   
+ 
+      $("#editDet tbody tr").each(function(){
+	 var launchName_val = $(this).find('td:eq(1)').html();
+	 var launchMoc_val = $(this).find('td:eq(2)').html();
+   
+   
+         if(kamInput.length > 0) {
+            	for (var i = 0; i < kamInput.length; i++) {     	
+           var launchMatchName 	= kamInput[i].launchName;
+           var launchMatchMoc = kamInput[i].launchMoc;
+     
+if(launchMatchName == launchName_val && launchMatchMoc == launchMoc_val) {
 
-        },     
+$(this).addClass('red'); 
+}
+}
+}
+});
+    },     
         error: function (data) {      
             console.log(data);      
         }      
     });      
 });
-
+});
 
 		 
