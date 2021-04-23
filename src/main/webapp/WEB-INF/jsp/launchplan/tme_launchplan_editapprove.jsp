@@ -39,6 +39,17 @@
 	});
 </script>
 </head>
+<!--Q1 sprint-3 user story 1 notification bharati code start-->
+<style>
+.red{
+  color:red!important;
+}
+.black{
+  color:black!important;;
+}
+
+</style>
+<!--Q1 sprint-3 user story 1 notification bharati code end-->
 
 <body class="OpenSans-font">
 	<div class="loader">
@@ -203,6 +214,8 @@
 														class="proco-btn proco-btn-success table-head">Status</span></th>
 												</tr>
 											</thead>
+											<input type="hidden" id="editlaunchname" value="${editlaunch.launchName}">
+											<input type="hidden" id="editlaunchmoc" value="${editlaunch.launchMoc}">
 											
 										    <!--<tbody>
 												<c:forEach items="${listOfLaunchData}" var="editlaunch">
