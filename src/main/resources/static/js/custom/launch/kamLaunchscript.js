@@ -1699,7 +1699,16 @@ function loadApprovalKamLauches(approvekamselectedmoc,approvekamselectedStatus) 
 //Q1 sprint-3 user story 2 notification bharati code
 
 $(document).ready(function() {
+
+//hide notification when count 0
+  var kamVal = $("#NotificationBadge1").html();
+  //console.log(kamVal);
+  if(kamVal==0){
+  $("#NotificationBadge1").hide();
+  }
+
 $('#approvekambasepack_add').on('draw.dt', function() {
+
 	 $("#approvekambasepack_add tbody tr").each(function(){
 	 var col_val= $(this).find('#kamapproval1').val();
      console.log(col_val);
@@ -1710,5 +1719,5 @@ $('#approvekambasepack_add').on('draw.dt', function() {
     }
   });
 });
-setTimeout( "$('#NotificationBadge').hide();", 2500);
+//setTimeout( "$('#NotificationBadge1').hide();", 2500);
 })
