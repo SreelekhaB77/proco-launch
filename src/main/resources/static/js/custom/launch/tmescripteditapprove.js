@@ -353,13 +353,13 @@
         },
         success: function( editKamINdata, textStatus, jQxhr ){
         	 $('.loader').hide();
+        	 
             console.log(editKamINdata);
             $("#launchEditKamInp").click();
             $('#rejectRequestTme').modal('hide');
            //eset $('#successblockapp').show().find('span').html(' Launch approved Successfully !!!');
-            
             var kamIn = editKamINdata.launchKamInputsResponses;
-            
+           
             var row = "";
             if(kamIn.length > 0) {
             	for (var i = 0; i < kamIn.length; i++) {
@@ -408,7 +408,8 @@
 								"paging": true,
 						        "ordering": false,
 						        "searching": false,
-						    	"lengthMenu" : [
+						        
+						        "lengthMenu" : [
 									[ 10, 25, 50, 100 ],
 									[  10, 25, 50, 100 ] ],
 						        "oLanguage": {
@@ -420,7 +421,8 @@
 					                  "sLengthMenu": "Records per page _MENU_ ",
 					                  "sEmptyTable": "No Pending Launch."
 					
-					              }
+					              },
+					          
 			    	    	    });
 					    
 					    //oTable.draw();
@@ -458,6 +460,7 @@
 		 * 'json', type: 'GET', contentType: 'application/json', processData:
 		 * false, beforeSend: function() { ajaxLoader(spinnerWidth,
 		 * spinnerHeight); }, success: function( editDetdata, textStatus, jQxhr ){
+		 
 		 * $('.loader').hide(); console.log(editDetdata); //
 		 * $('#successblockUpload').show().find('span').html(' Launch // Created
 		 * Successfully !!!'); // $("#launchEditKamInp").click();
@@ -850,9 +853,13 @@ function loadTmeLauches(tmeselectedmoc, tmeselectedlaunchname) {
 			  },
 			"sAjaxSource" : "getAllLaunchtmeData.htm",
 			  "fnServerParams" : function(aoData) {
+			       
 					aoData.push({ "name": "tmeMoc", "value": tmeselectedmoc });
 					aoData.push({ "name": "tmeLaunchName", "value": tmeselectedlaunchname });
+					 
 				},
+				 
+			
 				//"aaData": data,
 				"aoColumns" : [
 						{
@@ -893,6 +900,7 @@ function loadTmeLaunchName(tmeselectedmoc,tmeselectedlaunchname) {
 			"paging":  true,
 			"ordering": false,
 			"searching": false,
+			
 			"lengthMenu" : [
 				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
 				[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
@@ -909,6 +917,7 @@ function loadTmeLaunchName(tmeselectedmoc,tmeselectedlaunchname) {
 			  },
 			"sAjaxSource" : "getAlltmeLaunchName.htm",
 			  "fnServerParams" : function(aaData) {
+			      
 				  aaData.push({ "name": "tmeMoc", "value": tmeselectedmoc });
 					aaData.push({ "name": "tmeLaunchName", "value": tmeselectedlaunchname });
 				},
@@ -935,3 +944,56 @@ function loadTmeLaunchName(tmeselectedmoc,tmeselectedlaunchname) {
 	tmeLaunchNameTable.draw();
 }
 */
+
+//Q1 sprint-3 userstory 1 TME Notification and color Bharati Code
+$(document).ready( function() {      
+$('#editDet').on('draw.dt', function() {
+                var itemCont = 0;      
+                var requestUri = "getLaunchKamInputs.htm";
+                    
+   
+        $.ajax({      
+        url: requestUri,      
+        dataType: 'json',
+        type: 'GET',
+        contentType: 'application/json',
+        processData: false,      
+        headers: { "Accept": "text/plain" },    
+        
+        success: function(data, textStatus, jqXHR) {
+          
+            var kamInput = data.launchKamInputsResponses;
+            if(kamInput.length == 0){
+            $("#NotificationBadge").hide();
+            }else{
+            
+           $("#NotificationBadge").html(kamInput.length);
+           }
+		   
+ 
+      $("#editDet tbody tr").each(function(){
+	 var launchName_val = $(this).find('td:eq(1)').html();
+	 var launchMoc_val = $(this).find('td:eq(2)').html();
+   
+   
+         if(kamInput.length > 0) {
+            	for (var i = 0; i < kamInput.length; i++) {     	
+           var launchMatchName 	= kamInput[i].launchName;
+           var launchMatchMoc = kamInput[i].launchMoc;
+     
+if(launchMatchName == launchName_val && launchMatchMoc == launchMoc_val) {
+
+$(this).addClass('red'); 
+}
+}
+}
+});
+    },     
+        error: function (data) {      
+            console.log(data);      
+        }      
+    });      
+});
+});
+
+		 

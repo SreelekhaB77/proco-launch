@@ -141,11 +141,11 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 
 	@Override
 	//Q2 sprint feb 2021 kavitha
-	public List<KamChangeReqRemarks> getApprovalStatusKam(String userId,String approvalLaunchMOC,String approvalKamStauts)
+	public List<KamChangeReqRemarks> getApprovalStatusKam(String userId,String approvalLaunchMOC,String approvalKamStauts, int FromApproval)
 	//public List<KamChangeReqRemarks> getApprovalStatusKam(String userId)
 	 {
 		//return launchDaoKam.getApprovalStatusKam(userId);
-		return launchDaoKam.getApprovalStatusKam(userId,approvalLaunchMOC,approvalKamStauts);
+		return launchDaoKam.getApprovalStatusKam(userId,approvalLaunchMOC,approvalKamStauts, FromApproval);
 	}
 
 	@Override

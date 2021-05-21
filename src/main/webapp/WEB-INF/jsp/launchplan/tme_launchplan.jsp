@@ -82,7 +82,7 @@
 						<li role="presentation"
 							class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
 							<a href="https://vat.hulcd.com/VisibilityAssetTracker/getAllLaunchData.htm"> <!-- <div class="launch-icon"></div> -->
-								<div class="tab-label-launch">Edit & Approve</div>
+								<div class="tab-label-launch">Edit & Approve <span id="NotificationBadge" class="notification-number"></span></div>
 						</a>
 						</li>
 						<li role="presentation"
@@ -1888,6 +1888,37 @@ function newLaunch() {
 	launch_edit_initial_load = false;
 	$("#isEdit").val("false");
 }
+
+//Q1 sprint-3 userstory 1 Notification TME Bharati Code
+$(document).ready( function() {      
+                var itemCont = 0;      
+                var requestUri = "getLaunchKamInputs.htm";    
+    
+        $.ajax({      
+        url: requestUri,      
+        dataType: 'json',
+        type: 'GET',
+        contentType: 'application/json',
+        processData: false,      
+        headers: { "Accept": "text/plain" },    
+        
+        success: function(data, textStatus, jqXHR) {
+           //console.log(data);
+            var kamInput = data.launchKamInputsResponses;
+            if(kamInput.length == 0){
+            $("#NotificationBadge").hide();
+            }else{
+            //sprint-3 notification count
+           $("#NotificationBadge").html(kamInput.length);
+           }
+
+        },     
+        error: function (data) {      
+            console.log(data);      
+        }      
+    });      
+}); 
+//Q1 sprint-3 userstory 1 Notification TME Bharati Code end
 </script>
 </body>
 </html>

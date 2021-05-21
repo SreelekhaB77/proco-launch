@@ -94,20 +94,37 @@ public class KamLaunchPlanController {
 	public ModelAndView getAllCompletedLaunchData(HttpServletRequest request, Model model) {
 		List<LaunchDataResponse> listOfLaunch = new ArrayList<>();
 		String kamMoc = "All";
+		String approvalKamMoc = "All";
+		String approvalKamStauts = "All";
+		List<KamChangeReqRemarks> listOfKamChangeReqRemarks = new ArrayList<>();
 		try {
 			String userId = (String) request.getSession().getAttribute("UserID");
 			//listOfLaunch = launchServiceKam.getAllCompletedLaunchData(userId);
 			listOfLaunch = launchServiceKam.getAllCompletedLaunchData(userId, kamMoc);
+			
 			int  launchId =listOfLaunch.get(0).getLaunchId();
 			//Q1 sprint kavitha
 			List<String> kammoclist=launchServiceKam.getAllMoc(userId, kamMoc);
 			model.addAttribute("kammoclist",kammoclist);
+			//model.addAttribute("kamApprovalStatusNotification",listOfKamChangeReq.stream().map(n->n.getLaunchReadStatus()=="NEW").count());
 			
+			//Q1 Sprint3 Notification Changes - Kavitha D Starts
+			listOfKamChangeReqRemarks = launchServiceKam.getApprovalStatusKam(userId,approvalKamMoc,approvalKamStauts, 0);
+			int count=0;
+            for (KamChangeReqRemarks status : listOfKamChangeReqRemarks) {
+                if(status.getLaunchReadStatus().equalsIgnoreCase("NEW")) {
+                    count++;
+                } 
+            }
+            model.addAttribute("kamApprovalStatusNotification",count);
+            //Q1 Sprint3 Notification Changes - Kavitha D Ends
 			//for display records
 			if (null != listOfLaunch.get(0).getError()) {
 				throw new Exception(listOfLaunch.get(0).getError());
 			}
 			model.addAttribute("listOfLaunch", listOfLaunch);
+			//model.addAttribute("kamApprovalList", listOfKamChangeReq);
+			
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			model.addAttribute("Error", e.toString());
@@ -120,6 +137,7 @@ public class KamLaunchPlanController {
 	public @ResponseBody String getAllCompletedLaunchKamData(HttpServletRequest request, Model model,
 			@RequestParam("kamMoc") String kamMoc) {
 		List<LaunchDataResponse> listOfLaunch = new ArrayList<>();
+		
 		try {
 			String userId = (String) request.getSession().getAttribute("UserID");
 			listOfLaunch = launchServiceKam.getAllCompletedLaunchData(userId, kamMoc);
@@ -127,6 +145,8 @@ public class KamLaunchPlanController {
 			if (null != listOfLaunch.get(0).getError()) {
 				throw new Exception(listOfLaunch.get(0).getError());
 			}
+			
+			
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			model.addAttribute("Error", e.toString());
@@ -148,7 +168,7 @@ public class KamLaunchPlanController {
 		List<KamChangeReqRemarks> listOfKamChangeReq = new ArrayList<>();
 		try {
 			String userId = (String) request.getSession().getAttribute("UserID");
-			listOfKamChangeReq = launchServiceKam.getApprovalStatusKam(userId,approvalKamMoc,approvalKamStauts);
+			listOfKamChangeReq = launchServiceKam.getApprovalStatusKam(userId,approvalKamMoc,approvalKamStauts, 0);
 			//Q2 sprint kavitha feb 2021
 			List<String> kamApprovalMoclist=launchServiceKam.getAllMocApprovalStatus(userId);
 			model.addAttribute("kamApprovalMoclist",kamApprovalMoclist);
@@ -171,7 +191,7 @@ public class KamLaunchPlanController {
 		List<KamChangeReqRemarks> listOfKamChangeReq = new ArrayList<>();
 		try {
 			String userId = (String) request.getSession().getAttribute("UserID");
-			listOfKamChangeReq = launchServiceKam.getApprovalStatusKam(userId,approvalKamMoc,approvalKamStauts);
+			listOfKamChangeReq = launchServiceKam.getApprovalStatusKam(userId,approvalKamMoc,approvalKamStauts, 1);
 		}
 			catch (Exception e) {
 				logger.error("Exception: ", e);

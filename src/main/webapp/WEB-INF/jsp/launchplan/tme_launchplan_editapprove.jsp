@@ -39,6 +39,17 @@
 	});
 </script>
 </head>
+<!--Q1 sprint-3 user story 1 notification bharati code start-->
+<style>
+.red{
+  color:red!important;
+}
+.black{
+  color:black!important;;
+}
+
+</style>
+<!--Q1 sprint-3 user story 1 notification bharati code end-->
 
 <body class="OpenSans-font">
 	<div class="loader">
@@ -75,9 +86,10 @@
 							</a>
 							</li>
 							<li role="presentation"
-								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-active">
+								id=" note-group" class="active col-md-3 col-sm-8 col-xs-12 launch-icon-active">
 								<a href="https://vat.hulcd.com/VisibilityAssetTracker/getAllLaunchData.htm"> <!-- <div class="launch-icon"></div> -->
-									<div class="tab-label-launch">Edit & Approve</div>
+									<div class="tab-label-launch">Edit & Approve <span id="NotificationBadge" class="notification-number"></span>
+							  </div>
 							</a>
 							</li>
 							<li role="presentation"
@@ -202,6 +214,9 @@
 														class="proco-btn proco-btn-success table-head">Status</span></th>
 												</tr>
 											</thead>
+											<input type="hidden" id="editlaunchname" value="${editlaunch.launchName}">
+											<input type="hidden" id="editlaunchmoc" value="${editlaunch.launchMoc}">
+											
 										    <!--<tbody>
 												<c:forEach items="${listOfLaunchData}" var="editlaunch">
 													<tr>
@@ -709,3 +724,4 @@
   </script>
 </body>
 </html>
+

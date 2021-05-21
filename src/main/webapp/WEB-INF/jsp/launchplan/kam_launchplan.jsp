@@ -41,7 +41,7 @@
 	window.addEventListener('popstate', function(event) {
 		history.pushState(null, null, '');
 	});
-	
+
 </script>
 </head>
 
@@ -75,25 +75,26 @@
 						<ul class="nav nav-pills">
 
 							<li role="presentation"
-								class="active col-md-2 col-sm-8 col-xs-12 launch-icon-active">
+								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-active">
 								<a href="https://vat.hulcd.com/VisibilityAssetTracker/getAllCompletedLaunchDataKam.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Launch Details</div>
 							</a>
 							</li>
 							<li role="presentation"
-								class="active col-md-2 col-sm-8 col-xs-12 launch-icon-inactive">
+								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
 								<a href="https://vat.hulcd.com/VisibilityAssetTracker/getApprovalStatusKam.htm"> <!-- <div class="launch-icon"></div> -->
-									<div class="tab-label-launch">Approval Status</div>
+									<div class="tab-label-launch">Approval Status <span id="NotificationBadge1" class="notification-number"> ${kamApprovalStatusNotification} </span></div>
 							</a>
+								
 							</li>
 							<li role="presentation"
-								class="active col-md-2 col-sm-8 col-xs-12 launch-icon-inactive">
+								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
 								<a href="https://vat.hulcd.com/VisibilityAssetTracker/getAllCompletedLaunchDataKam.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Performance</div>
 							</a>
 							</li>
 							<li role="presentation"
-								class="active col-md-2 col-sm-8 col-xs-12 launch-icon-inactive">
+								class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
 								<a href="https://vat.hulcd.com/VisibilityAssetTracker/getAllCompletedLaunchDataKam.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Timelines</div>
 							</a>
@@ -503,6 +504,7 @@
 																	<option value="${mocVal}"><c:out value="${mocVal}"></c:out></option>
 															</c:forEach>
 											 </select></div>
+											 
 										<!-- </span> -->
 										 
 										<table class="table table-striped table-bordered"
@@ -526,6 +528,7 @@
 
 												</tr>
 											</thead>
+											<input type="hidden" value="${kamApprovalStatusNotification}" id="kamapproval" >
 											<!-- <tbody>
 												<c:forEach items="${listOfLaunch}" var="launch">
 													<tr>
@@ -1179,7 +1182,7 @@
 
 	</div>
 	<%@include file="../launchplan/footer.jsp"%>
-
+ 
 
 	<script type="text/javascript" src="assets/js/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
@@ -1196,5 +1199,7 @@
 	<script src="assets/js/jquery.dataTables.min.js"></script>
 	<script src="assets/js/dataTables.fixedColumns.min.js"></script>
 	<script src="assets/js/dataTables.bootstrap.min.js"></script>
+	
+	
 </body>
 </html>

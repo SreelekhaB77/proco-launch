@@ -1,5 +1,6 @@
 package com.hul.launch.daoImpl;
 
+import java.math.BigInteger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -1134,7 +1135,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 	@SuppressWarnings("unchecked")
 	@Override
 	//Q2 sprint feb 2021 kavitha
-	public List<KamChangeReqRemarks> getApprovalStatusKam(String userId,String approvalLaunchMOC,String approvalKamStauts){
+	public List<KamChangeReqRemarks> getApprovalStatusKam(String userId,String approvalLaunchMOC,String approvalKamStauts, int FromApproval){
 	//public List<KamChangeReqRemarks> getApprovalStatusKam(String userId) 
 		Session session = sessionFactory.getCurrentSession();
 		SessionImpl sessionImpl = (SessionImpl) session;
@@ -1148,9 +1149,11 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		try {
 			PreparedStatement stmt = sessionImpl.connection().prepareStatement(
 					"SELECT tlm.LAUNCH_NAME,tlm.LAUNCH_MOC, DATE_FORMAT(REQ_DATE, '%b %d, %Y') AS REQ_DATE,CHANGES_REQUIRED CHANGES_REQUESTED,KAM_REMARKS,tlr.UPDATED_BY "
-							+ " CMM, DATE_FORMAT(tlr.UPDATED_DATE, '%b %d, %Y') AS RESPONSE_DATE,tlr.FINAL_STATUS APPROVAL_STATUS,TME_REMARKS CMM_REMARKS, tlr.CREATED_BY FROM"
-							+ " TBL_LAUNCH_REQUEST tlr,TBL_LAUNCH_MASTER tlm WHERE tlr.LAUNCH_ID = tlm.LAUNCH_ID AND tlr.CREATED_BY = '"
-							+ userId + "' AND tlm.LAUNCH_MOC LIKE '%" + approvalLaunchMOC + "%' AND tlr.FINAL_STATUS  LIKE '%" + approvalKamStauts + "%'");
+							+ " CMM, DATE_FORMAT(tlr.UPDATED_DATE, '%b %d, %Y') AS RESPONSE_DATE,tlr.FINAL_STATUS APPROVAL_STATUS,TME_REMARKS CMM_REMARKS, tlr.CREATED_BY,CASE WHEN tlr.UPDATED_DATE >= tmc.UPDATED_DATE THEN 'NEW' ELSE 'OLD' END AS LAUNCH_READ_STATUS FROM"
+							+ " TBL_LAUNCH_REQUEST tlr,TBL_LAUNCH_MASTER tlm ,TBL_VAT_USER_NOTIFICATIONS tmc WHERE tlr.LAUNCH_ID = tlm.LAUNCH_ID AND tlr.CREATED_BY = '"
+							+ userId + "' AND tmc.USER_ID = '"+ userId + "' AND tlm.LAUNCH_MOC LIKE '%" + approvalLaunchMOC + "%' AND tlr.FINAL_STATUS  LIKE '%" + approvalKamStauts + "%' ORDER By tlr.UPDATED_DATE desc ");
+			
+			//updateConfigValue.executeUpdate();
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				KamChangeReqRemarks kamChangeReqRemarks = new KamChangeReqRemarks();
@@ -1174,9 +1177,16 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 				kamChangeReqRemarks.setResponseDate(replaceNA(rs.getString("RESPONSE_DATE")));
 				kamChangeReqRemarks.setApprovalStatus(rs.getString("APPROVAL_STATUS"));
 				kamChangeReqRemarks.setCmmRemarks(replaceNA(rs.getString("CMM_REMARKS")));
+				kamChangeReqRemarks.setLaunchReadStatus(rs.getString("LAUNCH_READ_STATUS"));
 				listOfKamChangeReqRemarks.add(kamChangeReqRemarks);
 			}
-		} catch (Exception ex) {
+		
+			if (FromApproval == 1) {
+				updateUserNotifications(userId);
+			}
+			 
+		}
+		catch (Exception ex) {
 			logger.debug("Exception :", ex);
 			KamChangeReqRemarks kamChangeReqRemarks = new KamChangeReqRemarks();
 			kamChangeReqRemarks.setError(ex.toString());
@@ -1370,4 +1380,42 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 					return "";
 				return "NA".equals(str)?"":str;
 			}
+			//Q1 Sprint3 Notification Changes - Kavitha D Starts
+			private boolean updateUserNotifications(String userId) {
+				boolean result = false;
+				Query query = null;
+				String userNotification = "UPDATE TBL_VAT_USER_NOTIFICATIONS SET UPDATED_DATE = NOW() WHERE USER_ID = :userId";
+				String insertUserNotification = "INSERT INTO TBL_VAT_USER_NOTIFICATIONS (USER_ID,UPDATED_DATE) VALUES (:userId,NOW())";
+				try {
+					if (ValidateUserNotification(userId) > 0) {
+						query = sessionFactory.getCurrentSession().createNativeQuery(userNotification);
+						query.setParameter("userId", userId);
+						query.executeUpdate();
+					} else {
+						query = sessionFactory.getCurrentSession().createNativeQuery(insertUserNotification);
+						query.setParameter("userId", userId);
+						query.executeUpdate();
+					}
+					result = true;
+				} catch (Exception e) {
+					logger.debug("Exception: ", e);
+				}
+				
+				return result;
+
+		}
+			private int ValidateUserNotification(String userId) {
+				Integer iValid = 0;
+				Query query = null;
+				String qryValidate = "SELECT COUNT(1) FROM TBL_VAT_USER_NOTIFICATIONS WHERE USER_ID = :userId";
+				try {
+					query = sessionFactory.getCurrentSession().createNativeQuery(qryValidate);
+					query.setParameter("userId", userId);
+					iValid = ((BigInteger)query.uniqueResult()).intValue();
+				} catch (Exception e) {
+					logger.debug("Exception: ", e);
+				}
+				return iValid;
+				//Q1 Sprint3 Notification Changes - Kavitha D ends
+}
 }
