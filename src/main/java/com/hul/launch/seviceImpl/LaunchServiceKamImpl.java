@@ -70,6 +70,47 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 		}
 		return listOfUpcomingMoc;
 	}
+	
+	// Added by Harsha for Q4 Sprint
+	@Override
+	public String getLaunchMocByLaunchIdsKam(String launchId) {
+	 String date= "";
+		try {
+			date = launchDaoKam.getUpcomingLaunchMocByLaunchIdsKam(launchId);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return date;
+	}
+	
+	
+	
+	//Added by Harsha for Q4 Sprint
+	public List<String> getmodifiedaccounts (String launchId) {
+		List<String> modifiedAccountsList = new ArrayList<>();
+		try {
+			modifiedAccountsList = launchDaoKam.getModifiedMocdetailsforRejection(launchId);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return modifiedAccountsList ;
+	}
+	
+	// Added By Harsha for inserting values in Q4 Sprint
+	
+	public boolean InsertvaluestoModifiedTable (String userId, List<String> Requireddetails) {
+		boolean result = true;
+		try {
+			launchDaoKam.insertintoTBL_LAUNCH_KAM_CHANGE_MOC_DETAILS(userId,Requireddetails);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return result = false;
+		}
+		return result;
+	}
+	
 
 	@Override
 	public String rejectLaunchByLaunchIdKam(GetKamLaunchRejectRequest getKamLaunchRejectRequest, String userId) {

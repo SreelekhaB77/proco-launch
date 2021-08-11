@@ -78,5 +78,15 @@ public interface LaunchDaoKam {
 	public List<String> getAllMocApprovalStatus(String userId);
 	
 	public List<String> getKamApprovalStatus(String userId);
+	
+
+	// Added by Harsha for Q4 Sprint
+	List<String> getModifiedMocdetailsforRejection(String launchId);
+	// Added by Harsha for Q4 Sprint
+	public Boolean insertintoTBL_LAUNCH_KAM_CHANGE_MOC_DETAILS(String launchId, List<String> requireddetails);
+	// Added by Harsha for Q4 Sprint
+	public String getMaxcountofTBL_LAUNCH_KAM_CHANGE_MOC_DETAILS();
+
+
 
 }
