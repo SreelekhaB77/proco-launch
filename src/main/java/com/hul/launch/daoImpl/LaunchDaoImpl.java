@@ -1125,12 +1125,12 @@ public class LaunchDaoImpl implements LaunchDao {
 										+ "' WHERE LAUNCH_ID='" + rs.getString("LAUNCH_ID") + "' AND LAUNCH_ACCOUNT = '"
 										+ userId + "'");
 						query2.executeUpdate();
-						Query query3 = sessionFactory.getCurrentSession()
+						//Commented By Sarin - Sprint4Aug21 - for Launch Account wise Rejection
+						/*Query query3 = sessionFactory.getCurrentSession()
 								.createNativeQuery("UPDATE TBL_LAUNCH_MASTER SET LAUNCH_REJECTED='2',UPDATED_BY='" + userId
 										+ "',UPDATED_DATE='" + new Timestamp(new Date().getTime())
 										+ "' WHERE LAUNCH_ID='" + rs.getString("LAUNCH_ID") + "'");
-						query3.executeUpdate();
-
+						query3.executeUpdate(); */
 						kamCalculationAfterLaunchReject(rs.getString("LAUNCH_ID"), userId, rs.getString("CREATED_BY"));
 					} else if (rs.getString("CHANGES_REQUIRED").equals("MOC CHANGED")) {
 						LaunchDataResponse launchDataResponse = getSpecificLaunchData(rs.getString("LAUNCH_ID"));

@@ -824,7 +824,8 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 			String kamAcc) {
 		List<LaunchFinalPlanResponse> listOfFinalFinal = new ArrayList<>();
 		try {
-			List<String> listOfKamAccounts = launchFinalDao.getKamAccount(kamAcc);
+			//List<String> listOfKamAccounts = launchFinalDao.getKamAccount(kamAcc);  //Commented By Sarin - Sprint4Aug21 - for Launch Account wise Rejection
+			List<String> listOfKamAccounts = launchFinalDao.getKamAccount(kamAcc, launchId);  //Added By Sarin - Sprint4Aug21 - for Launch Account wise Rejection
 			launchFinalDao.deleteAllBuildUpKAM(launchId, listOfKamAccounts);
 			List<String> allDistinctFinalBuildsCombo = launchFinalDao.getFinalBuildUpDepoLevelDistinct(launchId);
 			Set<String> setOfStrings = new HashSet<>();
