@@ -1279,7 +1279,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 							+ "WHERE IS_ACTIVE = 1 AND LAUNCH_ID = '"
 									+ rs.getString("LAUNCH_ID") + "'" 
 							+ "AND UPDATED_BY = '" + rs.getString("CREATED_BY") + "'" 
-							+  "AND REQ_ID = '" + rs.getString("REQ_ID") + "'");
+							+ "AND REQ_ID = '" + rs.getString("REQ_ID") + "'");
 				}//Harsha's Implementation ends.
 				
 				else {
@@ -1292,9 +1292,12 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			
 				
 				List<String> listOfAccounts = query2.list();
+				
 				String accounts = "";
 				if (!listOfAccounts.isEmpty()) {
 					accounts = listOfAccounts.toString();
+					accounts=accounts.replace("[", "");
+					accounts=accounts.replace("]", ""); // Harsha
 				}
 				ArrayList<String> dataObj = new ArrayList<>();
 				dataObj.add(rs.getString("REQ_ID"));
