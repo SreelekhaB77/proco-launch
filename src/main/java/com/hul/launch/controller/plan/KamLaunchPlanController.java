@@ -32,6 +32,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 import com.hul.launch.constants.ResponseCodeConstants;
 import com.hul.launch.constants.ResponseConstants;
+import com.hul.launch.daoImpl.LaunchDaoKamImpl;
 import com.hul.launch.model.LaunchVisiPlanning;
 import com.hul.launch.model.SaveUploadededLaunchStore;
 import com.hul.launch.model.TblLaunchMaster;
@@ -89,6 +90,7 @@ public class KamLaunchPlanController {
 
 	@Autowired
 	public LaunchFinalService launchFinalPlanService;
+	
 
 	@RequestMapping(value = "getAllCompletedLaunchDataKam.htm", method = RequestMethod.GET)
 	public ModelAndView getAllCompletedLaunchData(HttpServletRequest request, Model model) {
@@ -220,7 +222,7 @@ public class KamLaunchPlanController {
 			List<String> listOfLaunchData = Arrays.asList(launchId);
 			String userId = (String) request.getSession().getAttribute("UserID");
 			listOfLaunch = launchServiceKam.getKamBasepackData(listOfLaunchData, userId);
-			
+
 			listBasepackDataKamResponse.setListLaunchDataResponse(listOfLaunch);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
@@ -234,14 +236,14 @@ public class KamLaunchPlanController {
 	@RequestMapping(value = "getUpcomingLaunchMocByLaunchIdsKam.htm", method = RequestMethod.GET)
 	public String getUpcomingLaunchMocByLaunchIdsKam(@RequestParam("launchId") String launchId,
 			HttpServletRequest request, Model model) {
-		
+
 		Gson gson = new Gson();
 		GetLaunchMocForKamResponse getLaunchMocForKamResponse = new GetLaunchMocForKamResponse();
-		//kavitha
+		// kavitha
 		String userId = (String) request.getSession().getAttribute("UserID");
-		List<String> listKamAccounts = launchServiceKam.getLaunchAccounts(launchId,userId);
+		List<String> listKamAccounts = launchServiceKam.getLaunchAccounts(launchId, userId);
 		getLaunchMocForKamResponse.setLisOfAcc(listKamAccounts);
-		 
+
 		List<String> listOfLaunch = new ArrayList<>();
 		try {
 			if (launchId.equals("")) {
@@ -257,16 +259,56 @@ public class KamLaunchPlanController {
 		return gson.toJson(new GlobleResponse(ResponseConstants.MSG_SUCCESS_RESPONSE,
 				ResponseCodeConstants.STATUS_SUCCESS_GET_MOC_DATA, getLaunchMocForKamResponse));
 	}
+	
+	
 
+	// Modifications for Q4 Sprint added by Harsha.
+	@RequestMapping(value = "getRejectionAccountIdKam.htm", method = RequestMethod.GET)
+	public String getRejectionAccountIdKam(@RequestParam("launchId") String launchId, HttpServletRequest request,
+			Model model) {
+
+		Gson gson = new Gson();
+		GetLaunchMocForKamResponse getLaunchMocForKamResponse = new GetLaunchMocForKamResponse();
+		
+		String userId = (String) request.getSession().getAttribute("UserID");
+		List<String> listKamAccounts = launchServiceKam.getLaunchAccounts(launchId, userId);
+		
+		
+		for(String AccountNames : listKamAccounts) {
+			System.out.println(AccountNames);
+		}
+		getLaunchMocForKamResponse.setLisOfAcc(listKamAccounts);
+		List<String> listOfLaunch = new ArrayList<>();
+		try {
+			if (launchId.equals("")) {
+				throw new Exception("Launch Id can not be null");
+			}
+			listOfLaunch = launchServiceKam.getUpcomingLaunchMocByLaunchIdsKam(launchId);
+			getLaunchMocForKamResponse.setListOfMoc(listOfLaunch);
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
+			return gson.toJson(new GlobleResponse(ResponseConstants.MSG_FAILURE_RESPONSE,
+					ResponseCodeConstants.STATUS_FAILURE_GET_MOC_DATA, e.toString()));
+		}
+		return gson.toJson(new GlobleResponse(ResponseConstants.MSG_SUCCESS_RESPONSE,
+				ResponseCodeConstants.STATUS_SUCCESS_GET_MOC_DATA, getLaunchMocForKamResponse));
+	}
+	
+	// Modifications for Q4 Sprint added by Harsha
 	@RequestMapping(value = "rejectLaunchByLaunchIdKam.htm", method = RequestMethod.POST)
 	public String rejectLaunchByLaunchIdKam(@RequestBody String jsonBody, HttpServletRequest request, Model model) {
 		Gson gson = new Gson();
 		String successREsponse = "";
+		
 		try {
 			String userId = (String) request.getSession().getAttribute("UserID");
 			GetKamLaunchRejectRequest getKamLaunchRejectRequest = gson.fromJson(jsonBody,
 					GetKamLaunchRejectRequest.class);
+			String launchId = getKamLaunchRejectRequest.getLaunchId();
+			//Existing Implementation
 			successREsponse = launchServiceKam.rejectLaunchByLaunchIdKam(getKamLaunchRejectRequest, userId);
+			
+			
 			if (!successREsponse.equals("Rejected Successfully")) {
 				throw new Exception(successREsponse);
 			}
@@ -283,13 +325,13 @@ public class KamLaunchPlanController {
 	public String requestChengeMocByLaunchIdKam(@RequestBody String jsonBody, HttpServletRequest request, Model model) {
 		Gson gson = new Gson();
 		String successREsponse = " ";
-		
-		List<String> accounts=new ArrayList<>();
+
+		List<String> accounts = new ArrayList<>();
 		try {
 			String userId = (String) request.getSession().getAttribute("UserID");
 			ChangeMocRequestKam changeMocRequestKam = gson.fromJson(jsonBody, ChangeMocRequestKam.class);
 			successREsponse = launchServiceKam.requestChengeMocByLaunchIdKam(changeMocRequestKam, userId);
-			
+
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			return gson.toJson(new GlobleResponse(ResponseConstants.MSG_FAILURE_RESPONSE,
@@ -491,7 +533,8 @@ public class KamLaunchPlanController {
 	}
 
 	@RequestMapping(value = "downloadStoreListFile.htm", method = RequestMethod.GET)
-	//public ModelAndView downloadUpdatedBaseFile(@RequestParam("launchId") String launchId, HttpServletRequest request,
+	// public ModelAndView downloadUpdatedBaseFile(@RequestParam("launchId") String
+	// launchId, HttpServletRequest request,
 	public ModelAndView downloadUpdatedBaseFile(@RequestParam("launchId") String launchId, HttpServletRequest request,
 			Model model, HttpServletResponse response) {
 		InputStream is;
@@ -706,16 +749,18 @@ public class KamLaunchPlanController {
 	}
 
 	@RequestMapping(value = "{launchId}/downloadAnnexureListDataKam.htm", method = RequestMethod.GET)
-	//public @ResponseBody ModelAndView downloadAnnexureListDataKam(@PathVariable("launchId") String launchId, //Sarin
-	public @ResponseBody String downloadAnnexureListDataKam(@PathVariable("launchId") String launchId,
-			Model model, HttpServletRequest request, HttpServletResponse response) {
+	// public @ResponseBody ModelAndView
+	// downloadAnnexureListDataKam(@PathVariable("launchId") String launchId,
+	// //Sarin
+	public @ResponseBody String downloadAnnexureListDataKam(@PathVariable("launchId") String launchId, Model model,
+			HttpServletRequest request, HttpServletResponse response) {
 		Gson gson = new Gson();
-		
-			InputStream is;
-			String downloadLink = "";
-			String absoluteFilePath = FilePaths.LAUNCH_ANNEXURE_UPLOAD_FILE_PATH;
-			String appendString = File.separator;
-			absoluteFilePath = absoluteFilePath + appendString;
+
+		InputStream is;
+		String downloadLink = "";
+		String absoluteFilePath = FilePaths.LAUNCH_ANNEXURE_UPLOAD_FILE_PATH;
+		String appendString = File.separator;
+		absoluteFilePath = absoluteFilePath + appendString;
 		try {
 			List<String> listOfLaunchData = Arrays.asList(launchId);
 			List<TblLaunchMaster> listOfLaunchMaster = launchServiceCoe.getAllLaunchData(listOfLaunchData);
@@ -735,15 +780,14 @@ public class KamLaunchPlanController {
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			/*
-			ModelAndView modelAndView = new ModelAndView();
-			modelAndView.addObject("Error", e.toString());
-			return modelAndView;
-			*/
+			 * ModelAndView modelAndView = new ModelAndView();
+			 * modelAndView.addObject("Error", e.toString()); return modelAndView;
+			 */
 			Map<String, String> map = new HashMap<>();
 			map.put("Error", e.toString());
 			return gson.toJson(map);
 		}
-		//return new ModelAndView("productsPage");
+		// return new ModelAndView("productsPage");
 		Map<String, String> map = new HashMap<>();
 		map.put("FileToDownload", downloadLink);
 		return gson.toJson(map);
@@ -762,10 +806,10 @@ public class KamLaunchPlanController {
 			List<TblLaunchMaster> listOfLaunchMaster = launchServiceCoe.getAllLaunchData(listOfLaunchData);
 			if (!listOfLaunchMaster.isEmpty()) {
 				for (TblLaunchMaster tblLaunchMaster : listOfLaunchMaster) {
-					System.out.println("in tblLaunchMaster "+tblLaunchMaster.getMdgDecName());
+					System.out.println("in tblLaunchMaster " + tblLaunchMaster.getMdgDecName());
 					String downloadFileName = absoluteFilePath + tblLaunchMaster.getMdgDecName();
 					downloadLink = downloadFileName;
-					System.out.println("downloadlink "+downloadLink);
+					System.out.println("downloadlink " + downloadLink);
 					is = new FileInputStream(new File(downloadLink));
 					response.setContentType("application/force-download");
 					response.setHeader("Content-Disposition",

@@ -260,13 +260,17 @@
 								data-dismiss="modal">X</button>
 							<h4 class="modal-title">Reject Launch Details</h4>
 						</div>
-						<form action="#" id="rejRemarkForm" method="POST"
+						
+						<!--sprint4 US-3 UI changes By Bharati-->
+						
+                 <form action="#" id="rejRemarkForm" method="POST"
 							class="form-horizontal" style="padding: 10px 0;">
 
 							<div class="modal-body">
 								<div class="row">
 
 									<div class="col-md-12">
+									
 
 										<div id="msg-error" class="alert alert-danger fade in"
 											style="display: none;">
@@ -278,6 +282,40 @@
 										</div>
 
 										<div class="OpenSans-font">
+										<div class="form-group">
+												<label for="downloadaccount" class="col-sm-4 control-label">Account:</label>
+												<div class="col-sm-6 offset-col-md-2">
+													<span id="#kamAccErrorMsg"
+													style="display: none; color: red; margin-left: 17px;">Please
+													select Account.</span>
+													<!-- <input type="text" class="form-control" id="kamlaunchaccounts" path="kamlaunchaccounts" /> -->
+													
+													<select type="text" class="form-control"
+														id="reject-kamlaunch-acc" name="Account" multiple="multiple">
+														<!-- <option value="Select">Select</option> -->
+													
+													</select>
+
+												</div>
+
+											</div>
+										
+											
+											<!--<div class="form-group">
+												<label for="downloadmoc" class="col-sm-4 control-label">Moc:</label>
+												<div class="col-sm-6 offset-col-md-2">
+													<span id="kamRemakErrorMsgMoc"
+													style="display: none; color: red; margin-left: 17px;">Please
+													select MOC.</span>
+													<div class="col-sm-6 offset-col-md-2">
+													<input style="width: 270px!important; margin-left: -16px;" name='kamRemark' type='text'
+														class='form-control validfield' id="reject-kamlaunch-moc">
+												</div>
+													
+
+												</div>
+
+											</div>-->
 
 											<div class="form-group">
 												<label for="downloadmoc" class="col-sm-4 control-label">Enter
@@ -549,7 +587,7 @@
 												data-target="#kammocChange" disabled value="Change Launch MOC"/>
 											<input type="button" onclick="kamLaunch()" value="Launch Details" class="btn btn-secondary nxtclassification" id="kamlnchDets"
 												style="float: right;" disabled />
-											<input type="button" class="btn btn-secondary nxtclassification" id="rejectLaunch" data-toggle="modal"
+											<input type="button" class="btn btn-secondary nxtclassification rejectLaunch" id="rejectLaunch" data-toggle="modal"
 												data-target="#kammocReject" disabled value="Reject Launch"/>
 										</div>
 

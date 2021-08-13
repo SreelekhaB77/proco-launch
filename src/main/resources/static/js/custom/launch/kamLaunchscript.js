@@ -177,6 +177,7 @@ $(document).ready(function() {
 			success : function(data) {
 				//console.log(data);
 				var accounts=data.responseData.lisOfAcc;
+				
 				//accounts=data.responseData.lisOfAcc;
 				
 				var option = ""; //"<option value='select'>Select Account</option>";
@@ -550,21 +551,31 @@ $(document).ready(function() {
 	
 function rejectLaunch() {
 	// var kamlnchId = getkamlaunchId();
+	var kamAcc = ($('#reject-kamlaunch-acc').val()).toString();
+	//var kammoc = $('#reject-kamlaunch-moc').val();
 	
 	var kamMocremarks = $('#kamMocRejRemarks').val();
+	
 	var kamlnchId = parseInt($( ".kamLnchDetscr1:checked" ).val());
 	if(kamMocremarks == ''){
 		$('#kamRemakRejErrorMsg').show();
 		return false;
 	}
-	else{
+	//sprint-4 US-3 Bharati Reject popup UI changes
+	else if(kamAcc == ''){
+			$('#kamAccErrorMsg').show();
+			return false;
+		}else{
 		$('#kamRemakRejErrorMsg').hide();
+		$('#kamAccErrorMsg').hide();
+		//$('#kamRemakErrorMsgMoc').hide();
     $.ajax({
         url: 'rejectLaunchByLaunchIdKam.htm',
         dataType: 'json',
         type: 'post',
         contentType: 'application/json',
-        data: JSON.stringify( { "launchId": kamlnchId, "launchRejectRemark" : kamMocremarks } ),
+        data: JSON.stringify( { "launchId": kamlnchId, "launchRejectRemark" : kamMocremarks, "mocAccount": kamAcc } ),
+		
         processData: false,
         beforeSend: function() {
             ajaxLoader(spinnerWidth, spinnerHeight);
@@ -593,6 +604,7 @@ function rejectLaunch() {
         }
     });
 	}
+	
 }
 
 // reject screen 2
@@ -1577,6 +1589,7 @@ function loadKamAccounts() {
 	});
 }
 
+
 function loadKamLauches(kamselectedmoc) {
 	kambaseoTable = $('#kambasepack_add').DataTable( {
 		"scrollY":       "280px",
@@ -1721,3 +1734,133 @@ $('#approvekambasepack_add').on('draw.dt', function() {
 });
 //setTimeout( "$('#NotificationBadge1').hide();", 2500);
 })
+
+
+//sprint-4 US-3 reject accounts Bharati changes Aug2021
+
+// code for reject account in change moc pop up
+	$(document).on( "click", ".rejectLaunch", function(){
+	$('#successblock').hide();
+		
+		//$('#kamMocremarks').val('');
+		var checked_field = $( "[name=editLaunchscr1KAMLaunch]:checked" );
+		var launchDate = "";
+		//var launchMocDate = "";
+		if( checked_field.length != 0 ){
+			var date = checked_field.closest( "tr" ).find( ".mocDate" ).val();
+			var launch_date = date.split("/");
+			launchMocDate = launch_date[1] + "/" + launch_date[0] + "/" + launch_date[2];
+		}
+		
+		//var today = new Date(launchMocDate),
+        //yy = today.getFullYear(),
+       // m = today.getMonth(),
+       // dd = today.getDate(),
+      //  mm = dd < 21 ? ( m + 2 ) : ( m + 3 );
+	//	var option = "<option value=''>Select MOC</option>";
+     //   m = dd < 21 ? m : ( m + 1 );
+	  // for( var i = 2; i <= 3; i++ ){
+       //     var lastMonth = mm + i > 13 ? ( ( mm + i ) - 13 ) : m + i;
+        //    lastMonth = ( lastMonth + "" ).length == 1 ? "0" + lastMonth : lastMonth; 
+        //    var lastYear = mm + i > 13 ? yy + 1 : yy;
+       //  //   option += "<option value='"+lastMonth + "" + lastYear+"'>"+lastMonth + "" + lastYear+"</option>"
+       // }
+		//$("#reject-kamlaunch-moc").empty().append(option);
+		
+		loadselectedkamRejectAccounts();   
+		
+	});
+	
+function loadrejectKamAccounts() {
+	$('#reject-kamlaunch-acc').multiselect({
+		includeSelectAllOption : true,
+		numberDisplayed : 2,
+		
+		nonSelectedText : 'ALL CUSTOMERS',
+		selectAllText : 'ALL CUSTOMERS',
+		onChange : function(option, checked, select) {
+			 var custChainSelectedData = [];
+			 var selectedOptionsChange = $('#reject-kamlaunch-acc option:selected');
+			 var totalLen = $('#reject-kamlaunch-acc option').length;
+
+				if (selectedOptionsChange.length > 0 && selectedOptionsChange.length < totalLen){
+					selectAll = false;
+				}else if(selectedOptionsChange.length == totalLen){
+					selectAll = true;
+				}
+			 
+				for (var i = 0; i < selectedOptionsChange.length; i++) {
+					custChainSelectedData.push(selectedOptionsChange[i].value);
+
+				}
+				if(selectAll == true){
+					//custChainL1 = "ALL";
+				}else{
+					//custChainL1 = custChainSelectedData.toString();
+				}
+		 
+			//promoTable.draw();
+		},
+		onDropdownHide : function(event) {
+			
+			var selVals = [];
+			var selectedOptions = $('#reject-kamlaunch-acc option:selected');
+			if (selectedOptions.length > 0 && selectAll == false) {
+				for (var i = 0; i < selectedOptions.length; i++) {
+					selVals.push(selectedOptions[i].value);
+				}
+				
+			}
+			
+		},
+		
+		onSelectAll : function() {
+			
+			selectAll = true;
+		},
+		onDeselectAll : function() {
+		
+		}
+
+	});
+}
+
+//Bharati Changes Q1Sprint-4 Aug2021 - Starts
+	
+	function loadselectedkamRejectAccounts() {
+		var launchId=$('.kamLnchDetscr1:checked').val();
+		 $.ajax({
+			type : "GET",
+			dataType: 'json',
+			//contentType : "application/json; charset=utf-8",
+			cache : false,
+			url : "getRejectionAccountIdKam.htm?launchId="+launchId,
+			async : false,
+			success : function(data) {
+				//console.log(data);
+				var accounts=data.responseData.lisOfAcc;
+				//accounts=data.responseData.lisOfAcc;
+				console.log(accounts);
+				
+				var option = ""; //"<option value='select'>Select Account</option>";
+				for (var i = 0; i < accounts.length; i++) {
+				  option += "<option value='"+accounts[i] +"'>"+accounts[i]+"</option>"
+				}
+				console.log(option);
+				
+				$('#reject-kamlaunch-acc').empty();
+				$('#reject-kamlaunch-acc').multiselect("destroy");
+				$("#reject-kamlaunch-acc").empty().append(option); 
+				
+				loadrejectKamAccounts();
+				
+				
+				
+			},
+			error : function(error) {
+				console.log(error)
+			}
+		});
+	}
+
+

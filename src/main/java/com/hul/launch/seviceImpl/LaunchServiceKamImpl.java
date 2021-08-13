@@ -70,7 +70,7 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 		}
 		return listOfUpcomingMoc;
 	}
-
+	
 	@Override
 	public String rejectLaunchByLaunchIdKam(GetKamLaunchRejectRequest getKamLaunchRejectRequest, String userId) {
 		return launchDaoKam.rejectLaunchByLaunchIdKam(getKamLaunchRejectRequest, userId);
@@ -196,4 +196,5 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 	public List<String> getKamApprovalStatus(String userId) {
 		return launchDaoKam.getKamApprovalStatus(userId);
 	}
+
 }

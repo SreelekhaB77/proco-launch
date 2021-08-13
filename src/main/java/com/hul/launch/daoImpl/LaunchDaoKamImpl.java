@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -23,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.hul.launch.constants.ResponseCodeConstants;
+import com.hul.launch.controller.masters.StoreMasterBean;
 import com.hul.launch.dao.LaunchDaoKam;
 import com.hul.launch.dao.LoginDao;
 import com.hul.launch.exception.GlobleKamException;
@@ -44,6 +47,7 @@ import com.hul.launch.response.LaunchDataResponse;
 import com.hul.launch.response.LaunchFinalPlanResponse;
 import com.hul.launch.response.LaunchKamBasepackResponse;
 import com.hul.launch.response.LaunchMstnClearanceResponseKam;
+import com.hul.launch.service.LaunchServiceKam;
 import com.hul.proco.controller.createpromo.ClusterBean;
 
 @Repository
@@ -51,11 +55,13 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 
 	@Autowired
 	private SessionFactory sessionFactory;
+	
 
 	Logger logger = Logger.getLogger(LaunchBasePacksDaoImpl.class);
 
 	@Autowired
 	private LoginDao loginDao;
+	
 
 	private final static String TBL_LAUNCH_STORE = "INSERT INTO MODTRD.TBL_LAUNCH_STORE(L1_CHAIN,L2_CHAIN,STORE_FORMAT, CLUSTER, HUL_OL_CODE, KAM_REMARKS, CREATED_BY, CREATED_DATE,LAUNCH_ID)"
 			+ " VALUES (?,?,?,?,?,?,?,?,?) ";
@@ -176,8 +182,11 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 	}
 
 	@Override
-	//public List<LaunchDataResponse> getAllCompletedKamLaunchData(String account) {
-	public List<LaunchDataResponse> getAllCompletedKamLaunchData(String account, String launchMOC) {  //Sarin Changes - QiSprint Feb2021
+	// public List<LaunchDataResponse> getAllCompletedKamLaunchData(String account)
+	// {
+	public List<LaunchDataResponse> getAllCompletedKamLaunchData(String account, String launchMOC) { // Sarin Changes -
+																										// QiSprint
+																										// Feb2021
 		Session session = sessionFactory.getCurrentSession();
 		SessionImpl sessionImpl = (SessionImpl) session;
 		List<LaunchDataResponse> listOfCompletedLaunch = new ArrayList<>();
@@ -203,19 +212,19 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			 * );
 			 */
 
-			//Sarin Changes - QiSprint Feb2021
+			// Sarin Changes - QiSprint Feb2021
 			if (launchMOC.equalsIgnoreCase("All")) {
 				launchMOC = "";
 			}
-			
+
 			stmt = sessionImpl.connection().prepareStatement(
 					"SELECT LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE,"
 							+ " CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,"
 							+ " CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE,LAUNCH_MOC,LAUNCH_SUBMISSION_DATE FROM TBL_LAUNCH_MASTER tlc WHERE"
 							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED NOT IN ('1','2') AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()"
-							//+ " AND LAUNCH_MOC LIKE '%" + launchMOC + "%'"
-							);
-			
+			// + " AND LAUNCH_MOC LIKE '%" + launchMOC + "%'"
+			);
+
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				stmt2 = sessionImpl.connection()
@@ -265,10 +274,11 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 					}
 					launchDataResponse.setLaunchMoc(launchMoc);
 					launchDataResponse.setLaunchSubmissionDate(rs.getString("LAUNCH_SUBMISSION_DATE"));
-					if (launchMOC.equalsIgnoreCase("") || launchDataResponse.getLaunchMoc().equalsIgnoreCase(launchMOC) ) {
+					if (launchMOC.equalsIgnoreCase("")
+							|| launchDataResponse.getLaunchMoc().equalsIgnoreCase(launchMOC)) {
 						listOfCompletedLaunch.add(launchDataResponse);
 					}
-					//listOfCompletedLaunch.add(launchDataResponse);
+					// listOfCompletedLaunch.add(launchDataResponse);
 				}
 			}
 		} catch (Exception ex) {
@@ -317,6 +327,102 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			return ex.toString();
 		}
 	}
+	
+	// Implementation to get max number from modification table Added By Harsha
+	
+	public String getMaxcountofTBL_LAUNCH_KAM_CHANGE_MOC_DETAILS() {
+		Session session = sessionFactory.getCurrentSession();
+		SessionImpl sessionImpl = (SessionImpl) session;
+		String launchMoc = "";
+		try {
+			PreparedStatement stmt = sessionImpl.connection()
+					.prepareStatement("SELECT MAX(LAUNCH_KAM_ID) FROM TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS");
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				launchMoc = rs.getString(1);
+			}
+
+			return launchMoc;
+		} catch (Exception ex) {
+			logger.debug("Exception :", ex);
+			return ex.toString();
+		}
+	}
+	
+	/// Implementation to get details from modified table Added by Harsha for Sprint Q4
+	public List<String> getModifiedMocdetailsforRejection(String launchId) {
+		Session session = sessionFactory.getCurrentSession();
+		SessionImpl sessionImpl = (SessionImpl) session;
+		String launch_moc_kam = "";
+		String launch_kam_account = "";
+		String updated_by = "";
+		String whole="";
+		List<String> modifiedDetails = new ArrayList<>();  
+		try {
+			PreparedStatement stmt = sessionImpl.connection().prepareStatement(
+					"select TLM.LAUNCH_MOC, TLK.updated_date,TLK.launch_moc_kam,launch_kam_account,TLK.updated_by "
+							+ "  from TBL_LAUNCH_MASTER TLM LEFT OUTER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS TLK ON TLK.LAUNCH_ID= TLM.LAUNCH_ID "
+							+ "  and TLK.is_active= 1 " + "  where TLM.LAUNCH_ID = '" + launchId + "'");
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				launch_moc_kam = rs.getString("launch_moc_kam");
+				launch_kam_account = rs.getString("launch_kam_account");
+				updated_by = rs.getString("updated_by");
+				whole = launch_moc_kam + "-" + launch_kam_account + "-" + updated_by;
+				modifiedDetails.add(whole);
+			}
+		} catch (Exception ex) {
+			logger.debug("Exception :", ex);
+		}
+		return modifiedDetails;
+	}
+	
+	// Inserting values into table Added By Harsha
+	public Boolean insertintoLaunchKamChangeMocDetails(String userId,List<String> validDetails) {
+		boolean res = true;
+		try {
+			int counter = Integer.parseInt(getMaxcountofTBL_LAUNCH_KAM_CHANGE_MOC_DETAILS());
+			int incrementer = counter+1;
+			for(String read : validDetails) {
+				String[] stringarray = read.split("-");
+			
+			
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+			   LocalDateTime now = LocalDateTime.now();  
+			   int LAUNCH_ID = Integer.parseInt(stringarray[3]);
+			
+			Query query = sessionFactory.getCurrentSession().createNativeQuery("INSERT INTO TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS"
+					+ "(LAUNCH_KAM_ID,"
+					+ "LAUNCH_ID,"
+					+ "LAUNCH_MOC_KAM,"
+					+ "LAUNCH_KAM_ACCOUNT,"
+					+ "IS_ACTIVE,"
+					+ "UPDATED_BY,"
+					+ "UPDATED_DATE,REQ_ID)"
+					+ "VALUES(?0,?1,?2,?3,?4,?5,?6,?7)");
+			query.setParameter(0, incrementer++);
+			query.setParameter(1, LAUNCH_ID);
+			query.setParameter(2, stringarray[1]);
+			query.setParameter(3, stringarray[0]);
+			query.setParameter(4, 2);
+			query.setParameter(5, stringarray[2]);
+			query.setParameter(6, dtf.format(now));
+			query.setParameter(7, stringarray[4]);
+			query.executeUpdate(); 
+			}
+		} catch (Exception e) {
+			logger.debug("Exception:",e);
+			res=false;
+		}
+		return res;
+	}
+	
+	
+	
+	
+	
+	
+	
 
 	@Override
 	public String rejectLaunchByLaunchIdKam(GetKamLaunchRejectRequest getKamLaunchRejectRequest, String userId) {
@@ -378,7 +484,52 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 					logger.error("Exception: " + e);
 					return e.toString();
 				}
+				// Harsha's snippet Sprint Q4
+				String launchId = getKamLaunchRejectRequest.getLaunchId();
+				List<String> finalList = new ArrayList<>(); 
+				String RequestedAccounts = getKamLaunchRejectRequest.getMocAccount();
+				
+				
+				List<String> unmodifiedMOCDetails = new ArrayList<>();  
+				List<String> modifiedMOCDetails = new ArrayList<>();
+				
+				String Date = getUpcomingLaunchMocByLaunchIdsKam(launchId); //getting original date 
+				String[] dateString = Date.split("/");
+				Date = dateString[1]+dateString[2];
+				
+				List<String> listofModifiedMoc = getModifiedMocdetailsforRejection(launchId);
+				
+				String[] stringarray = RequestedAccounts.split(","); 
+				//Fetching details of modified Accounts
+				for(int i=0; i< stringarray.length; i++)  
+				{  
+					for(String comapremodifid : listofModifiedMoc) {
+						String[] ModifiedAcoounts = comapremodifid.split("-"); 
+						if((ModifiedAcoounts[1].equals(stringarray[i])) && userId.equalsIgnoreCase(ModifiedAcoounts[2])) {
+							
+							modifiedMOCDetails.add(ModifiedAcoounts[1]);
+						
+							finalList.add(stringarray[i]+"-"+ModifiedAcoounts[0]+"-"+ModifiedAcoounts[2]+"-"+launchId+"-"+reqId);
+						}		
+						
+					}
+					unmodifiedMOCDetails.add(stringarray[i]);
+				}  
+				
+				for (String A: modifiedMOCDetails) {
+					  if (unmodifiedMOCDetails.contains(A))
+						  unmodifiedMOCDetails.remove(A);
+					}
+				//Fetching details of non modified Accounts
+				for (String unmodifiedResult : unmodifiedMOCDetails) {
+						finalList.add(unmodifiedResult+"-"+Date+"-"+userId+"-"+launchId+"-"+reqId);
+				}
+				boolean response = insertintoLaunchKamChangeMocDetails (userId, finalList);
+				
+				
+				// Harsha's code ends here
 
+				
 			} catch (Exception e) {
 				logger.error("Exception: " + e);
 				return e.toString();
@@ -410,7 +561,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			preparedStatement.setTimestamp(6, new Timestamp(new Date().getTime()));
 			preparedStatement.setString(7, userId);
 			preparedStatement.setString(8, "PENDING");
-			
+
 			preparedStatement.executeUpdate();
 			rs = preparedStatement.getGeneratedKeys();
 			int reqId = 0;
@@ -424,7 +575,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 				preparedStatementInside.setTimestamp(3, new Timestamp(new Date().getTime()));
 				preparedStatementInside.setString(4, "REJECTED BY KAM");
 				preparedStatementInside.setString(5, changeMocRequestKam.getMocChangeRemark());
-				
+
 				preparedStatementInside.executeUpdate();
 			} catch (Exception e) {
 				logger.error("Exception: " + e);
@@ -432,26 +583,30 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			}
 
 			Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
-					"UPDATE TBL_LAUNCH_MASTER SET LAUNCH_MOC_KAM=?0, UPDATED_BY=?1,UPDATED_DATE=?2 WHERE LAUNCH_ID=?3"); // Sarin - Added Parameters position
+					"UPDATE TBL_LAUNCH_MASTER SET LAUNCH_MOC_KAM=?0, UPDATED_BY=?1,UPDATED_DATE=?2 WHERE LAUNCH_ID=?3"); // Sarin
+																															// -
+																															// Added
+																															// Parameters
+																															// position
 			query2.setParameter(0, changeMocRequestKam.getMocToChange());
 			query2.setParameter(1, userId);
 			query2.setParameter(2, new Timestamp(new Date().getTime()));
-			//query2.setParameter(3, changeMocRequestKam.getMocAccount());  ,KAM_ACCOUNT=?3
+			// query2.setParameter(3, changeMocRequestKam.getMocAccount()); ,KAM_ACCOUNT=?3
 			query2.setParameter(3, changeMocRequestKam.getLaunchId());
 			query2.executeUpdate();
-			
-			//Sarin Changes - Q1Sprint Feb2021 - Starts
+
+			// Sarin Changes - Q1Sprint Feb2021 - Starts
 			String kamAccounts[];
 			kamAccounts = changeMocRequestKam.getMocAccount().split(",");
 			if (kamAccounts != null && kamAccounts.length > 0) {
 				Query qryKamAcc = sessionFactory.getCurrentSession().createNativeQuery(
 						"UPDATE TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS SET IS_ACTIVE = 0 WHERE LAUNCH_ID=?0 AND LAUNCH_MOC_KAM=?1 ");
-				
+
 				qryKamAcc.setParameter(0, changeMocRequestKam.getLaunchId());
 				qryKamAcc.setParameter(1, changeMocRequestKam.getMocToChange());
 				qryKamAcc.executeUpdate();
-				
-				String insertStatementForKAMMOCAcc = "INSERT INTO TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS (LAUNCH_ID, LAUNCH_MOC_KAM, LAUNCH_KAM_ACCOUNT, IS_ACTIVE, UPDATED_BY, UPDATED_DATE) VALUES (?, ?, ?, ?, ?, ?)";
+
+				String insertStatementForKAMMOCAcc = "INSERT INTO TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS (LAUNCH_ID, LAUNCH_MOC_KAM, LAUNCH_KAM_ACCOUNT, IS_ACTIVE, UPDATED_BY, UPDATED_DATE, REQ_ID) VALUES (?, ?, ?, ?, ?, ?, ?)";
 				for (int i = 0; i < kamAccounts.length; i++) {
 					try (PreparedStatement psKamMocChange = sessionImpl.connection()
 							.prepareStatement(insertStatementForKAMMOCAcc, Statement.RETURN_GENERATED_KEYS)) {
@@ -461,6 +616,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 						psKamMocChange.setInt(4, 1);
 						psKamMocChange.setString(5, userId);
 						psKamMocChange.setTimestamp(6, new Timestamp(new Date().getTime()));
+						psKamMocChange.setInt(7, reqId); // As part of Q4 Sprint inserting REQ_ID: Harsha
 						psKamMocChange.executeUpdate();
 					} catch (Exception e) {
 						logger.error("Exception: " + e);
@@ -468,7 +624,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 					}
 				}
 			}
-			//Sarin Changes - Q1Sprint Feb2021 - Ends
+			// Sarin Changes - Q1Sprint Feb2021 - Ends
 
 			responseText = "Saved Successfully";
 		} catch (Exception e) {
@@ -505,27 +661,27 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 	 * 
 	 * }
 	 */
-		//kavitha working code
+	// kavitha working code
 
 	public List<String> getLaunchAccounts(String launchId, String userId) {
-	
+
 		List<String> listOfAccounts = new ArrayList<String>();
 		String usrAccont = "";
 		String lunchAccont = "";
 		String[] usrAccountSplit = null;
 		String[] kamAccountSplit;
 		try {
-			Query  query3 = sessionFactory.getCurrentSession()
-						  .createNativeQuery("SELECT ud.ACCOUNT_NAME,clu.CLUSTER_ACCOUNT "
-						  +" FROM TBL_VAT_USER_DETAILS ud,TBL_LAUNCH_CLUSTERS clu "
-						  +" WHERE ud.USERID='"+userId+"' AND clu.CLUSTER_LAUNCH_ID='" +launchId+ "'");
+			Query query3 = sessionFactory.getCurrentSession()
+					.createNativeQuery("SELECT ud.ACCOUNT_NAME,clu.CLUSTER_ACCOUNT "
+							+ " FROM TBL_VAT_USER_DETAILS ud,TBL_LAUNCH_CLUSTERS clu " + " WHERE ud.USERID='" + userId
+							+ "' AND clu.CLUSTER_LAUNCH_ID='" + launchId + "'");
 			Iterator itr = query3.list().iterator();
 			while (itr.hasNext()) {
 				Object[] obj = ((Object[]) itr.next());
 				usrAccont = obj[0].toString();
 				lunchAccont = obj[1].toString();
 			}
-			//System.out.println(usrAccont + ": " + lunchAccont);
+			// System.out.println(usrAccont + ": " + lunchAccont);
 			if (lunchAccont.equalsIgnoreCase("ALL CUSTOMERS")) {
 				kamAccountSplit = usrAccont.split(",");
 				for (int i = 0; i < kamAccountSplit.length; i++) {
@@ -535,12 +691,12 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 				usrAccountSplit = usrAccont.split(",");
 				kamAccountSplit = lunchAccont.split(",");
 			}
-			
+
 			for (int i = 0; i < kamAccountSplit.length; i++) {
-				//System.out.println(accountplit[i]);
-				//System.out.println(accountsplit[0] + " " + accountsplit[1]);
+				// System.out.println(accountplit[i]);
+				// System.out.println(accountsplit[0] + " " + accountsplit[1]);
 				String[] accountsplit = kamAccountSplit[i].split(":");
-				
+
 				if ((usrAccountSplit != null) && (usrAccountSplit.length > 0)) {
 					for (int j = 0; j < usrAccountSplit.length; j++) {
 						if (usrAccountSplit[j].equalsIgnoreCase(accountsplit[0])) {
@@ -552,36 +708,37 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		} catch (Exception ex) {
 			logger.debug("Exception: ", ex);
 		}
- 	  
-	  return listOfAccounts;
-	 
-	 }
-		 
-	 //Q1 sprint kavitha feb2021 
-		@SuppressWarnings("unchecked")
-		@Override
-		public List<String> getAllMoc(String userId, String launchMOC) {
-			try {
-				
-				Query query = sessionFactory.getCurrentSession().createNativeQuery(
-						"SELECT DISTINCT LAUNCH_MOC FROM (SELECT CASE WHEN TLK.LAUNCH_MOC IS NULL THEN tlc.LAUNCH_MOC ELSE TLK.LAUNCH_MOC END AS LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc "
-						+ "LEFT OUTER JOIN TBL_LAUNCH_MOC_KAM TLK ON TLK.LAUNCH_ID = tlc.LAUNCH_ID AND LAUNCH_ACCOUNT = '"+userId+"' "
-						+ "WHERE SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED NOT IN ('1','2') AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() )A "
-						+ "ORDER BY concat(substr(LAUNCH_MOC, 3, 4), substr(LAUNCH_MOC, 1, 2))");
-						/*
-						"SELECT DISTINCT LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc WHERE SAMPLE_SHARED IS NOT NULL "
-						+ " AND LAUNCH_REJECTED NOT IN ('1','2') AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() "
-						+ " ORDER BY concat(substr(LAUNCH_MOC, 3, 4), substr(LAUNCH_MOC, 1, 2))"); */
-					
-				List<String> list = query.list();
-				return list;
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
-			}
+
+		return listOfAccounts;
+
+	}
+
+	// Q1 sprint kavitha feb2021
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getAllMoc(String userId, String launchMOC) {
+		try {
+
+			Query query = sessionFactory.getCurrentSession().createNativeQuery(
+					"SELECT DISTINCT LAUNCH_MOC FROM (SELECT CASE WHEN TLK.LAUNCH_MOC IS NULL THEN tlc.LAUNCH_MOC ELSE TLK.LAUNCH_MOC END AS LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc "
+							+ "LEFT OUTER JOIN TBL_LAUNCH_MOC_KAM TLK ON TLK.LAUNCH_ID = tlc.LAUNCH_ID AND LAUNCH_ACCOUNT = '"
+							+ userId + "' "
+							+ "WHERE SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED NOT IN ('1','2') AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() )A "
+							+ "ORDER BY concat(substr(LAUNCH_MOC, 3, 4), substr(LAUNCH_MOC, 1, 2))");
+			/*
+			 * "SELECT DISTINCT LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc WHERE SAMPLE_SHARED IS NOT NULL "
+			 * +
+			 * " AND LAUNCH_REJECTED NOT IN ('1','2') AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() "
+			 * + " ORDER BY concat(substr(LAUNCH_MOC, 3, 4), substr(LAUNCH_MOC, 1, 2))");
+			 */
+
+			List<String> list = query.list();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
-	
-	
+	}
 
 	@Override
 	public String rejectBasepacksByBasepackIdsKam(RejectBasepackRequestKam rejectBasepackRequestKam, String userId) {
@@ -1134,9 +1291,10 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	//Q2 sprint feb 2021 kavitha
-	public List<KamChangeReqRemarks> getApprovalStatusKam(String userId,String approvalLaunchMOC,String approvalKamStauts, int FromApproval){
-	//public List<KamChangeReqRemarks> getApprovalStatusKam(String userId) 
+	// Q2 sprint feb 2021 kavitha
+	public List<KamChangeReqRemarks> getApprovalStatusKam(String userId, String approvalLaunchMOC,
+			String approvalKamStauts, int FromApproval) {
+		// public List<KamChangeReqRemarks> getApprovalStatusKam(String userId)
 		Session session = sessionFactory.getCurrentSession();
 		SessionImpl sessionImpl = (SessionImpl) session;
 		List<KamChangeReqRemarks> listOfKamChangeReqRemarks = new ArrayList<>();
@@ -1151,9 +1309,11 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 					"SELECT tlm.LAUNCH_NAME,tlm.LAUNCH_MOC, DATE_FORMAT(REQ_DATE, '%b %d, %Y') AS REQ_DATE,CHANGES_REQUIRED CHANGES_REQUESTED,KAM_REMARKS,tlr.UPDATED_BY "
 							+ " CMM, DATE_FORMAT(tlr.UPDATED_DATE, '%b %d, %Y') AS RESPONSE_DATE,tlr.FINAL_STATUS APPROVAL_STATUS,TME_REMARKS CMM_REMARKS, tlr.CREATED_BY,CASE WHEN tlr.UPDATED_DATE >= tmc.UPDATED_DATE THEN 'NEW' ELSE 'OLD' END AS LAUNCH_READ_STATUS FROM"
 							+ " TBL_LAUNCH_REQUEST tlr,TBL_LAUNCH_MASTER tlm ,TBL_VAT_USER_NOTIFICATIONS tmc WHERE tlr.LAUNCH_ID = tlm.LAUNCH_ID AND tlr.CREATED_BY = '"
-							+ userId + "' AND tmc.USER_ID = '"+ userId + "' AND tlm.LAUNCH_MOC LIKE '%" + approvalLaunchMOC + "%' AND tlr.FINAL_STATUS  LIKE '%" + approvalKamStauts + "%' ORDER By tlr.UPDATED_DATE desc ");
-			
-			//updateConfigValue.executeUpdate();
+							+ userId + "' AND tmc.USER_ID = '" + userId + "' AND tlm.LAUNCH_MOC LIKE '%"
+							+ approvalLaunchMOC + "%' AND tlr.FINAL_STATUS  LIKE '%" + approvalKamStauts
+							+ "%' ORDER By tlr.UPDATED_DATE desc ");
+
+			// updateConfigValue.executeUpdate();
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				KamChangeReqRemarks kamChangeReqRemarks = new KamChangeReqRemarks();
@@ -1180,13 +1340,12 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 				kamChangeReqRemarks.setLaunchReadStatus(rs.getString("LAUNCH_READ_STATUS"));
 				listOfKamChangeReqRemarks.add(kamChangeReqRemarks);
 			}
-		
+
 			if (FromApproval == 1) {
 				updateUserNotifications(userId);
 			}
-			 
-		}
-		catch (Exception ex) {
+
+		} catch (Exception ex) {
 			logger.debug("Exception :", ex);
 			KamChangeReqRemarks kamChangeReqRemarks = new KamChangeReqRemarks();
 			kamChangeReqRemarks.setError(ex.toString());
@@ -1340,82 +1499,85 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		}
 		return listOfLaunchMstnClearanceResponseKam;
 	}
-	
-	//Q2 sprint kavitha feb2021 
-			@SuppressWarnings("unchecked")
-			@Override
-			public List<String> getAllMocApprovalStatus(String userId) {
-				try {
-					
-					Query query = sessionFactory.getCurrentSession().createNativeQuery(
-							"SELECT DISTINCT LAUNCH_MOC  FROM " + 
-							"TBL_LAUNCH_REQUEST tlr,TBL_LAUNCH_MASTER tlm WHERE tlr.LAUNCH_ID = tlm.LAUNCH_ID AND tlr.CREATED_BY = '"+ userId + "' ORDER BY LAUNCH_MOC ASC");
-					List<String> list = query.list();
-					return list;
-				} catch (Exception e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-			
-			//Q2 sprint kavitha feb2021 
-			@SuppressWarnings("unchecked")
-			@Override
-			public List<String> getKamApprovalStatus(String userId) {
-				try {
-					
-					Query query = sessionFactory.getCurrentSession().createNativeQuery(
-							"SELECT DISTINCT tlr.FINAL_STATUS APPROVAL_STATUS  FROM " + 
-							"TBL_LAUNCH_REQUEST tlr,TBL_LAUNCH_MASTER tlm WHERE tlr.LAUNCH_ID = tlm.LAUNCH_ID AND tlr.CREATED_BY = '"+ userId + "' ORDER BY tlr.FINAL_STATUS");
-					List<String> list = query.list();
-					return list;
-				} catch (Exception e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-			
-			private String replaceNA(String str) {
-				if (str == null) 
-					return "";
-				return "NA".equals(str)?"":str;
-			}
-			//Q1 Sprint3 Notification Changes - Kavitha D Starts
-			private boolean updateUserNotifications(String userId) {
-				boolean result = false;
-				Query query = null;
-				String userNotification = "UPDATE TBL_VAT_USER_NOTIFICATIONS SET UPDATED_DATE = NOW() WHERE USER_ID = :userId";
-				String insertUserNotification = "INSERT INTO TBL_VAT_USER_NOTIFICATIONS (USER_ID,UPDATED_DATE) VALUES (:userId,NOW())";
-				try {
-					if (ValidateUserNotification(userId) > 0) {
-						query = sessionFactory.getCurrentSession().createNativeQuery(userNotification);
-						query.setParameter("userId", userId);
-						query.executeUpdate();
-					} else {
-						query = sessionFactory.getCurrentSession().createNativeQuery(insertUserNotification);
-						query.setParameter("userId", userId);
-						query.executeUpdate();
-					}
-					result = true;
-				} catch (Exception e) {
-					logger.debug("Exception: ", e);
-				}
-				
-				return result;
 
+	// Q2 sprint kavitha feb2021
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getAllMocApprovalStatus(String userId) {
+		try {
+
+			Query query = sessionFactory.getCurrentSession().createNativeQuery("SELECT DISTINCT LAUNCH_MOC  FROM "
+					+ "TBL_LAUNCH_REQUEST tlr,TBL_LAUNCH_MASTER tlm WHERE tlr.LAUNCH_ID = tlm.LAUNCH_ID AND tlr.CREATED_BY = '"
+					+ userId + "' ORDER BY LAUNCH_MOC ASC");
+			List<String> list = query.list();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
-			private int ValidateUserNotification(String userId) {
-				Integer iValid = 0;
-				Query query = null;
-				String qryValidate = "SELECT COUNT(1) FROM TBL_VAT_USER_NOTIFICATIONS WHERE USER_ID = :userId";
-				try {
-					query = sessionFactory.getCurrentSession().createNativeQuery(qryValidate);
-					query.setParameter("userId", userId);
-					iValid = ((BigInteger)query.uniqueResult()).intValue();
-				} catch (Exception e) {
-					logger.debug("Exception: ", e);
-				}
-				return iValid;
-				//Q1 Sprint3 Notification Changes - Kavitha D ends
-}
+	}
+
+	// Q2 sprint kavitha feb2021
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getKamApprovalStatus(String userId) {
+		try {
+
+			Query query = sessionFactory.getCurrentSession()
+					.createNativeQuery("SELECT DISTINCT tlr.FINAL_STATUS APPROVAL_STATUS  FROM "
+							+ "TBL_LAUNCH_REQUEST tlr,TBL_LAUNCH_MASTER tlm WHERE tlr.LAUNCH_ID = tlm.LAUNCH_ID AND tlr.CREATED_BY = '"
+							+ userId + "' ORDER BY tlr.FINAL_STATUS");
+			List<String> list = query.list();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	private String replaceNA(String str) {
+		if (str == null)
+			return "";
+		return "NA".equals(str) ? "" : str;
+	}
+
+	// Q1 Sprint3 Notification Changes - Kavitha D Starts
+	private boolean updateUserNotifications(String userId) {
+		boolean result = false;
+		Query query = null;
+		String userNotification = "UPDATE TBL_VAT_USER_NOTIFICATIONS SET UPDATED_DATE = NOW() WHERE USER_ID = :userId";
+		String insertUserNotification = "INSERT INTO TBL_VAT_USER_NOTIFICATIONS (USER_ID,UPDATED_DATE) VALUES (:userId,NOW())";
+		try {
+			if (ValidateUserNotification(userId) > 0) {
+				query = sessionFactory.getCurrentSession().createNativeQuery(userNotification);
+				query.setParameter("userId", userId);
+				query.executeUpdate();
+			} else {
+				query = sessionFactory.getCurrentSession().createNativeQuery(insertUserNotification);
+				query.setParameter("userId", userId);
+				query.executeUpdate();
+			}
+			result = true;
+		} catch (Exception e) {
+			logger.debug("Exception: ", e);
+		}
+
+		return result;
+
+	}
+
+	private int ValidateUserNotification(String userId) {
+		Integer iValid = 0;
+		Query query = null;
+		String qryValidate = "SELECT COUNT(1) FROM TBL_VAT_USER_NOTIFICATIONS WHERE USER_ID = :userId";
+		try {
+			query = sessionFactory.getCurrentSession().createNativeQuery(qryValidate);
+			query.setParameter("userId", userId);
+			iValid = ((BigInteger) query.uniqueResult()).intValue();
+		} catch (Exception e) {
+			logger.debug("Exception: ", e);
+		}
+		return iValid;
+		// Q1 Sprint3 Notification Changes - Kavitha D ends
+	}
 }
