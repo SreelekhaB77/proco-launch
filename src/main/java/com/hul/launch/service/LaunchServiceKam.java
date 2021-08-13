@@ -74,13 +74,4 @@ public interface LaunchServiceKam {
 	public List<String> getAllMocApprovalStatus(String userId);
 	
 	public List<String>  getKamApprovalStatus(String userId);
-
-	// Added by Harsha for Q4 Sprint
-	public List<String> getmodifiedaccounts(String launchId);
-
-	// Added by Harsha for Q4 Sprint
-	public String getLaunchMocByLaunchIdsKam(String launchId);
-
-	// Added by Harsha for Q4 Sprint
-	public boolean InsertvaluestoModifiedTable(String userId, List<String> finalList);
 }

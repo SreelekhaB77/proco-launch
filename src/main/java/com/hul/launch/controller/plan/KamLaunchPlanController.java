@@ -91,8 +91,6 @@ public class KamLaunchPlanController {
 	@Autowired
 	public LaunchFinalService launchFinalPlanService;
 	
-	@Autowired
-	public LaunchDaoKamImpl launchdaokam;
 
 	@RequestMapping(value = "getAllCompletedLaunchDataKam.htm", method = RequestMethod.GET)
 	public ModelAndView getAllCompletedLaunchData(HttpServletRequest request, Model model) {
@@ -307,54 +305,6 @@ public class KamLaunchPlanController {
 			GetKamLaunchRejectRequest getKamLaunchRejectRequest = gson.fromJson(jsonBody,
 					GetKamLaunchRejectRequest.class);
 			String launchId = getKamLaunchRejectRequest.getLaunchId();
-			
-			// Started adding code by Harsha for Q4 Sprint
-			List<String> finalList = new ArrayList<>(); 
-			String RequestedAccounts = getKamLaunchRejectRequest.getMocAccount();
-			
-			
-			List<String> unmodifiedMOCDetails = new ArrayList<>();  
-			List<String> modifiedMOCDetails = new ArrayList<>();
-			
-			String Date = launchServiceKam.getLaunchMocByLaunchIdsKam(launchId); //getting original date 
-			String[] dateString = Date.split("/");
-			Date = dateString[1]+dateString[2];
-			System.out.println(Date);
-			
-			List<String> listofModifiedMoc = launchServiceKam.getmodifiedaccounts(launchId);
-			
-			String[] stringarray = RequestedAccounts.split(","); 
-			//Fetching details of modified Accounts
-			for(int i=0; i< stringarray.length; i++)  
-			{  
-				for(String comapremodifid : listofModifiedMoc) {
-					String[] ModifiedAcoounts = comapremodifid.split("-"); 
-					if((ModifiedAcoounts[1].equals(stringarray[i])) && userId.equalsIgnoreCase(ModifiedAcoounts[2])) {
-						System.out.println(stringarray[i]+"-"+ModifiedAcoounts[0]+"-"+ModifiedAcoounts[2]);
-						modifiedMOCDetails.add(ModifiedAcoounts[1]);
-						finalList.add(stringarray[i]+"-"+ModifiedAcoounts[0]+"-"+ModifiedAcoounts[2]+"-"+launchId);
-					}		
-					
-				}
-				unmodifiedMOCDetails.add(stringarray[i]);
-			}  
-			
-			for (String A: modifiedMOCDetails) {
-				  if (unmodifiedMOCDetails.contains(A))
-					  unmodifiedMOCDetails.remove(A);
-				}
-			//Fetching details of non modified Accounts
-			for (String unmodifiedResult : unmodifiedMOCDetails) {
-					System.out.println(unmodifiedResult+"-"+Date+"-"+userId);
-					finalList.add(unmodifiedResult+"-"+Date+"-"+userId+"-"+launchId);
-			}
-			boolean response =launchServiceKam.InsertvaluestoModifiedTable (userId, finalList);
-			
-			if (!response) {
-				throw new Exception("Exception while inserting values");
-			}
-			// Q4 Harsha's code Ends here.
-			
 			//Existing Implementation
 			successREsponse = launchServiceKam.rejectLaunchByLaunchIdKam(getKamLaunchRejectRequest, userId);
 			

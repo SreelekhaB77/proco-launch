@@ -47,6 +47,7 @@ import com.hul.launch.response.LaunchDataResponse;
 import com.hul.launch.response.LaunchFinalPlanResponse;
 import com.hul.launch.response.LaunchKamBasepackResponse;
 import com.hul.launch.response.LaunchMstnClearanceResponseKam;
+import com.hul.launch.service.LaunchServiceKam;
 import com.hul.proco.controller.createpromo.ClusterBean;
 
 @Repository
@@ -54,11 +55,13 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 
 	@Autowired
 	private SessionFactory sessionFactory;
+	
 
 	Logger logger = Logger.getLogger(LaunchBasePacksDaoImpl.class);
 
 	@Autowired
 	private LoginDao loginDao;
+	
 
 	private final static String TBL_LAUNCH_STORE = "INSERT INTO MODTRD.TBL_LAUNCH_STORE(L1_CHAIN,L2_CHAIN,STORE_FORMAT, CLUSTER, HUL_OL_CODE, KAM_REMARKS, CREATED_BY, CREATED_DATE,LAUNCH_ID)"
 			+ " VALUES (?,?,?,?,?,?,?,?,?) ";
@@ -326,7 +329,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 	}
 	
 	// Implementation to get max number from modification table Added By Harsha
-	@Override
+	
 	public String getMaxcountofTBL_LAUNCH_KAM_CHANGE_MOC_DETAILS() {
 		Session session = sessionFactory.getCurrentSession();
 		SessionImpl sessionImpl = (SessionImpl) session;
@@ -375,25 +378,18 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 	}
 	
 	// Inserting values into table Added By Harsha
-	public Boolean insertintoTBL_LAUNCH_KAM_CHANGE_MOC_DETAILS(String userId,List<String> validDetails) {
+	public Boolean insertintoLaunchKamChangeMocDetails(String userId,List<String> validDetails) {
 		boolean res = true;
 		try {
 			int counter = Integer.parseInt(getMaxcountofTBL_LAUNCH_KAM_CHANGE_MOC_DETAILS());
 			int incrementer = counter+1;
 			for(String read : validDetails) {
-				System.out.println(read);
 				String[] stringarray = read.split("-");
 			
 			
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
 			   LocalDateTime now = LocalDateTime.now();  
 			   int LAUNCH_ID = Integer.parseInt(stringarray[3]);
-			   /*System.out.println(dtf.format(now));  
-			   System.out.println(incrementer++);
-			   System.out.println(stringarray[0]);
-			   System.out.println(stringarray[1]);
-			   System.out.println(stringarray[2]);
-			   System.out.println(stringarray[3]);*/
 			
 			Query query = sessionFactory.getCurrentSession().createNativeQuery("INSERT INTO TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS"
 					+ "(LAUNCH_KAM_ID,"
@@ -402,8 +398,8 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 					+ "LAUNCH_KAM_ACCOUNT,"
 					+ "IS_ACTIVE,"
 					+ "UPDATED_BY,"
-					+ "UPDATED_DATE)"
-					+ "VALUES(?0,?1,?2,?3,?4,?5,?6)");
+					+ "UPDATED_DATE,REQ_ID)"
+					+ "VALUES(?0,?1,?2,?3,?4,?5,?6,?7)");
 			query.setParameter(0, incrementer++);
 			query.setParameter(1, LAUNCH_ID);
 			query.setParameter(2, stringarray[1]);
@@ -411,6 +407,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			query.setParameter(4, 2);
 			query.setParameter(5, stringarray[2]);
 			query.setParameter(6, dtf.format(now));
+			query.setParameter(7, stringarray[4]);
 			query.executeUpdate(); 
 			}
 		} catch (Exception e) {
@@ -487,7 +484,52 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 					logger.error("Exception: " + e);
 					return e.toString();
 				}
+				// Harsha's snippet Sprint Q4
+				String launchId = getKamLaunchRejectRequest.getLaunchId();
+				List<String> finalList = new ArrayList<>(); 
+				String RequestedAccounts = getKamLaunchRejectRequest.getMocAccount();
+				
+				
+				List<String> unmodifiedMOCDetails = new ArrayList<>();  
+				List<String> modifiedMOCDetails = new ArrayList<>();
+				
+				String Date = getUpcomingLaunchMocByLaunchIdsKam(launchId); //getting original date 
+				String[] dateString = Date.split("/");
+				Date = dateString[1]+dateString[2];
+				
+				List<String> listofModifiedMoc = getModifiedMocdetailsforRejection(launchId);
+				
+				String[] stringarray = RequestedAccounts.split(","); 
+				//Fetching details of modified Accounts
+				for(int i=0; i< stringarray.length; i++)  
+				{  
+					for(String comapremodifid : listofModifiedMoc) {
+						String[] ModifiedAcoounts = comapremodifid.split("-"); 
+						if((ModifiedAcoounts[1].equals(stringarray[i])) && userId.equalsIgnoreCase(ModifiedAcoounts[2])) {
+							
+							modifiedMOCDetails.add(ModifiedAcoounts[1]);
+						
+							finalList.add(stringarray[i]+"-"+ModifiedAcoounts[0]+"-"+ModifiedAcoounts[2]+"-"+launchId+"-"+reqId);
+						}		
+						
+					}
+					unmodifiedMOCDetails.add(stringarray[i]);
+				}  
+				
+				for (String A: modifiedMOCDetails) {
+					  if (unmodifiedMOCDetails.contains(A))
+						  unmodifiedMOCDetails.remove(A);
+					}
+				//Fetching details of non modified Accounts
+				for (String unmodifiedResult : unmodifiedMOCDetails) {
+						finalList.add(unmodifiedResult+"-"+Date+"-"+userId+"-"+launchId+"-"+reqId);
+				}
+				boolean response = insertintoLaunchKamChangeMocDetails (userId, finalList);
+				
+				
+				// Harsha's code ends here
 
+				
 			} catch (Exception e) {
 				logger.error("Exception: " + e);
 				return e.toString();
@@ -564,7 +606,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 				qryKamAcc.setParameter(1, changeMocRequestKam.getMocToChange());
 				qryKamAcc.executeUpdate();
 
-				String insertStatementForKAMMOCAcc = "INSERT INTO TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS (LAUNCH_ID, LAUNCH_MOC_KAM, LAUNCH_KAM_ACCOUNT, IS_ACTIVE, UPDATED_BY, UPDATED_DATE) VALUES (?, ?, ?, ?, ?, ?)";
+				String insertStatementForKAMMOCAcc = "INSERT INTO TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS (LAUNCH_ID, LAUNCH_MOC_KAM, LAUNCH_KAM_ACCOUNT, IS_ACTIVE, UPDATED_BY, UPDATED_DATE, REQ_ID) VALUES (?, ?, ?, ?, ?, ?, ?)";
 				for (int i = 0; i < kamAccounts.length; i++) {
 					try (PreparedStatement psKamMocChange = sessionImpl.connection()
 							.prepareStatement(insertStatementForKAMMOCAcc, Statement.RETURN_GENERATED_KEYS)) {
@@ -574,6 +616,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 						psKamMocChange.setInt(4, 1);
 						psKamMocChange.setString(5, userId);
 						psKamMocChange.setTimestamp(6, new Timestamp(new Date().getTime()));
+						psKamMocChange.setInt(7, reqId); // As part of Q4 Sprint inserting REQ_ID: Harsha
 						psKamMocChange.executeUpdate();
 					} catch (Exception e) {
 						logger.error("Exception: " + e);

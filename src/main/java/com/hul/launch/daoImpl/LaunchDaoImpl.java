@@ -906,10 +906,36 @@ public class LaunchDaoImpl implements LaunchDao {
 				launchKamInputsResponse.setLaunchId(rs.getString("LAUNCH_ID"));
 				launchKamInputsResponse.setLaunchName(rs.getString("LAUNCH_NAME"));
 				launchKamInputsResponse.setLaunchMoc(rs.getString("LAUNCH_MOC"));
+				String createdby = rs.getString("CREATED_BY");
+				String RequestId= rs.getString("REQ_ID");
+				
 				String kamMailId = rs.getString("CREATED_BY").concat("@unilever.com").toUpperCase();
-				Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
+				//Query modified by Harsha for Q4 Sprint LAUNH REJECTED && MOC CHANGED
+				Query query2;
+				if(rs.getString("CHANGES_REQUIRED").equals("LAUNCH REJECTED")) {
+					query2 = sessionFactory.getCurrentSession().createNativeQuery(
+							"SELECT DISTINCT LAUNCH_KAM_ACCOUNT FROM MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS "
+							+ "WHERE IS_ACTIVE = 2 AND LAUNCH_ID = '" + rs.getString("LAUNCH_ID") + "'" 
+									+"AND UPDATED_BY = '" + createdby + "'" +
+									"AND REQ_ID = '" + RequestId + "'");
+				}
+				
+				else if(rs.getString("CHANGES_REQUIRED").equals("MOC CHANGED")) {
+					System.out.println(rs.getString("LAUNCH_ID") );
+					System.out.println(createdby);
+					System.out.println(RequestId);
+					query2 = sessionFactory.getCurrentSession().createNativeQuery(
+							"SELECT DISTINCT LAUNCH_KAM_ACCOUNT FROM MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS "
+							+ "WHERE IS_ACTIVE = 1 AND LAUNCH_ID = '" + rs.getString("LAUNCH_ID") + "'" 
+									+"AND UPDATED_BY = '" + createdby + "'" +
+									"AND REQ_ID = '" + RequestId + "'");
+				}//Harsha's Implementation ends here for MOC CHANGED .
+				else{
+				query2 = sessionFactory.getCurrentSession().createNativeQuery(
 						"SELECT DISTINCT ACCOUNT_NAME FROM MODTRD.TBL_VAT_COMM_OUTLET_MASTER WHERE UPPER(KAM_MAIL_ID) = '"
 								+ kamMailId + "'");
+				}
+				
 				String listOfAccounts = String.join(",", query2.list());
 				launchKamInputsResponse.setAccount(listOfAccounts);
 				launchKamInputsResponse.setName(rs.getString("CREATED_BY"));
