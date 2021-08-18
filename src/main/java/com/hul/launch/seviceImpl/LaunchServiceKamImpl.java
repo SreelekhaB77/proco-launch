@@ -119,6 +119,8 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 	@Override
 	public ArrayList<String> getHeaderListForBaseFile() {
 		ArrayList<String> headerList = new ArrayList<String>();
+		headerList.add("LAUNCH_NAME");
+		headerList.add("LAUNCH_MOC");
 		headerList.add("L1_CHAIN");
 		headerList.add("L2_CHAIN");
 		headerList.add("STORE_FORMAT");
