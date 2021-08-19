@@ -254,8 +254,11 @@ table#kam_basepack_add td input {
 table#list_track_table input {
     width: 100%;
 }
+
+/*bharati added for sprint-4 US-5 storelist tab*/
+
 .launchupload-parent.kam_upload_screenfour {
-    margin-top: 34% !important;
+    margin-top: 42% !important;
 }
     .user-name{
    /* margin-top: 0px;
