@@ -509,7 +509,7 @@ public class KamLaunchPlanController {
 		}
 		return gson.toJson(successResponse);
 	}
-
+	
 	@RequestMapping(value = "getLaunchStoreListByLaunchKam.htm", method = RequestMethod.GET)
 	public String GetLaunchStoreListByLaunchIdKam(@RequestParam("launchId") String launchId, HttpServletRequest request,
 			Model model) {
@@ -523,7 +523,7 @@ public class KamLaunchPlanController {
 			String userId = (String) request.getSession().getAttribute("UserID");
 			getLaunchStoreResponseKam = launchServiceKam.getLaunchStoresBuildUpByLaunchIdKam(launchId, userId);
 			getLaunchStoreResponseKamList.setListSaveLaunchStoreList(getLaunchStoreResponseKam);
-		} catch (Exception e) {
+		} catch (Exception e) { 
 			logger.error("Exception: ", e);
 			return gson.toJson(new GlobleResponse(ResponseConstants.MSG_FAILURE_RESPONSE,
 					ResponseCodeConstants.STATUS_FAILURE_LAUNCH_STORE_KAM, e.toString()));
@@ -617,7 +617,7 @@ public class KamLaunchPlanController {
 				} else {
 					if (UploadUtil.movefile(file, fileName)) {
 						Map<String, List<Object>> map = ExOM.mapFromExcel(new File(fileName))
-								.to(SaveUploadededLaunchStore.class).map(6, false, null);
+								.to(SaveUploadededLaunchStore.class).map(8, false, null);
 						if (map.isEmpty()) {
 							throw new Exception("File does not contain data");
 						}
@@ -680,7 +680,8 @@ public class KamLaunchPlanController {
 		return gson.toJson(new GlobleResponse(ResponseConstants.MSG_SUCCESS_RESPONSE,
 				ResponseCodeConstants.STATUS_SUCCESS_VISI_LIST_KAM, getListLaunchVisiPlanningResponse));
 	}
-
+	
+	
 	@RequestMapping(value = "saveLaunchVisiListByLaunchIdKam.htm", method = RequestMethod.POST)
 	public String saveLaunchVisiListByLaunchIdKam(@RequestBody String jsonBody, HttpServletRequest request,
 			Model model) {

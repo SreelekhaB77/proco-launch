@@ -931,7 +931,8 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			return ex.toString();
 		}
 	}
-
+	
+	
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -940,6 +941,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		SessionImpl sessionImpl = (SessionImpl) session;
 		List<SaveLaunchStoreList> listOfGetLaunchStoreData = new ArrayList<>();
 		String kamMailId = userId.concat("@unilever.com").toUpperCase();
+		
 		try {
 			PreparedStatement stmt = sessionImpl.connection().prepareStatement(
 					"select DISTINCT tlm.LAUNCH_NAME LAUNCH_NAME,tlm.LAUNCH_MOC LAUNCH_MOC,abc.ACCOUNT_NAME ACCOUNT_NAME, ACCOUNT_NAME_L2, HUL_STORE_FORMAT, CLUSTER, REPORTING_CODE, tvcom.KAM_MAIL_ID "
@@ -958,9 +960,10 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 				}
 
 				
+				SaveLaunchStoreList saveLaunchStoreList = new SaveLaunchStoreList();
 				
 				if (!storeIds.contains(rs.getString("REPORTING_CODE").toString())) {
-					SaveLaunchStoreList saveLaunchStoreList = new SaveLaunchStoreList();
+					
 					saveLaunchStoreList.setL1_Chain(rs.getString("ACCOUNT_NAME"));
 					// Harsha's logic to pick modified date and Launch_Name
 					saveLaunchStoreList.setLaunchName(rs.getString("LAUNCH_NAME"));
@@ -976,10 +979,32 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 					saveLaunchStoreList.setStoreFormat(rs.getString("HUL_STORE_FORMAT"));
 					saveLaunchStoreList.setCluster(rs.getString("CLUSTER"));
 					saveLaunchStoreList.setHUL_OL_Code(rs.getString("REPORTING_CODE"));
+					saveLaunchStoreList.setKam_Remarks("Accepted");
+					listOfGetLaunchStoreData.add(saveLaunchStoreList);
+				}
+				
+				else  {
+					saveLaunchStoreList.setL1_Chain(rs.getString("ACCOUNT_NAME"));
+					// Harsha's logic to pick modified date and Launch_Name
+					saveLaunchStoreList.setLaunchName(rs.getString("LAUNCH_NAME"));
+					String modifiedDate= getIfMOCisModified(rs.getString("ACCOUNT_NAME"),userId, launchId);
+					if( modifiedDate!= null && !modifiedDate.isEmpty()) {
+						saveLaunchStoreList.setMocDate(modifiedDate);
+					}
+					else {
+						saveLaunchStoreList.setMocDate(rs.getString("LAUNCH_MOC"));
+					}
+					//Harsha's Logic ends here
+					saveLaunchStoreList.setL2_Chain(rs.getString("ACCOUNT_NAME_L2"));
+					saveLaunchStoreList.setStoreFormat(rs.getString("HUL_STORE_FORMAT"));
+					saveLaunchStoreList.setCluster(rs.getString("CLUSTER"));
+					saveLaunchStoreList.setHUL_OL_Code(rs.getString("REPORTING_CODE"));
+					saveLaunchStoreList.setKam_Remarks("Rejected");
 					listOfGetLaunchStoreData.add(saveLaunchStoreList);
 				}
 			}
 			
+		
 		} catch (Exception ex) {
 			logger.debug("Exception :", ex);
 		}
