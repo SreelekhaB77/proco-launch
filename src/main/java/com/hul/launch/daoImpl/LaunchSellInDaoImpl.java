@@ -239,6 +239,30 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 									sellInResponse.setL1Chain(accountL1);
 									sellInResponse.setL2Chain(accountDataL2);
 									sellInResponse.setStoreFormat(storeFormat);
+									
+									//Added By Sarin - sprint4Aug2021 - Starts
+									Object[] objSkuSellIn = getSkuSellInDetails(launchId, accountL1, accountDataL2, storeFormat);
+									if (objSkuSellIn != null) {
+										sellInResponse.setSKU1_SELLIN(objSkuSellIn[0].toString());
+										sellInResponse.setSKU2_SELLIN(objSkuSellIn[1].toString());
+										sellInResponse.setSKU3_SELLIN(objSkuSellIn[2].toString());
+										sellInResponse.setSKU4_SELLIN(objSkuSellIn[3].toString());
+										sellInResponse.setSKU5_SELLIN(objSkuSellIn[4].toString());
+										sellInResponse.setSKU6_SELLIN(objSkuSellIn[5].toString());
+										sellInResponse.setSKU7_SELLIN(objSkuSellIn[6].toString());
+										sellInResponse.setSKU8_SELLIN(objSkuSellIn[7].toString());
+										sellInResponse.setSKU9_SELLIN(objSkuSellIn[8].toString());
+										sellInResponse.setSKU10_SELLIN(objSkuSellIn[9].toString());
+										sellInResponse.setSKU11_SELLIN(objSkuSellIn[10].toString());
+										sellInResponse.setSKU12_SELLIN(objSkuSellIn[11].toString());
+										sellInResponse.setSKU13_SELLIN(objSkuSellIn[12].toString());
+										sellInResponse.setSKU14_SELLIN(objSkuSellIn[13].toString());
+										sellInResponse.setROTATIONS(objSkuSellIn[14].toString());
+										sellInResponse.setUPLIFT_N1(objSkuSellIn[15].toString());
+										sellInResponse.setUPLIFT_N2(objSkuSellIn[16].toString());
+									}
+									//Added By Sarin - sprint4Aug2021 - Ends
+									
 									liLaunchCluster.add(sellInResponse);
 								}
 							}
@@ -358,6 +382,30 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 									sellInResponse.setL2Chain(accountDataL2);
 									sellInResponse.setStoreFormat(storeFormat);
 									sellInResponse.setStoresPlanned(storeCount);
+									
+									//Added By Sarin - sprint4Aug2021 - Starts
+									Object[] objSkuSellIn = getSkuSellInDetails(launchId, accountL1, accountDataL2, storeFormat);
+									if (objSkuSellIn != null) {
+										sellInResponse.setSKU1_SELLIN(objSkuSellIn[0].toString());
+										sellInResponse.setSKU2_SELLIN(objSkuSellIn[1].toString());
+										sellInResponse.setSKU3_SELLIN(objSkuSellIn[2].toString());
+										sellInResponse.setSKU4_SELLIN(objSkuSellIn[3].toString());
+										sellInResponse.setSKU5_SELLIN(objSkuSellIn[4].toString());
+										sellInResponse.setSKU6_SELLIN(objSkuSellIn[5].toString());
+										sellInResponse.setSKU7_SELLIN(objSkuSellIn[6].toString());
+										sellInResponse.setSKU8_SELLIN(objSkuSellIn[7].toString());
+										sellInResponse.setSKU9_SELLIN(objSkuSellIn[8].toString());
+										sellInResponse.setSKU10_SELLIN(objSkuSellIn[9].toString());
+										sellInResponse.setSKU11_SELLIN(objSkuSellIn[10].toString());
+										sellInResponse.setSKU12_SELLIN(objSkuSellIn[11].toString());
+										sellInResponse.setSKU13_SELLIN(objSkuSellIn[12].toString());
+										sellInResponse.setSKU14_SELLIN(objSkuSellIn[13].toString());
+										sellInResponse.setROTATIONS(objSkuSellIn[14].toString());
+										sellInResponse.setUPLIFT_N1(objSkuSellIn[15].toString());
+										sellInResponse.setUPLIFT_N2(objSkuSellIn[16].toString());
+									}
+									//Added By Sarin - sprint4Aug2021 - Ends
+									
 									liLaunchCluster.add(sellInResponse);
 								}
 							}
@@ -1751,6 +1799,25 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 			return e.toString();
 		}
 		return sCustomeStoreSel;
+	}
+	
+	//Sarin Changes - Added Sprint4 Aug2021
+	@SuppressWarnings("rawtypes")
+	private Object[] getSkuSellInDetails(String launchId, String l1Chain, String l2Chain, String storeFormat) {
+		Query qrySkuSellIn;
+		Object[] obj = null;
+		try {
+			qrySkuSellIn = sessionFactory.getCurrentSession()
+					.createNativeQuery("SELECT IFNULL(SELLIN_SKU1, ''), IFNULL(SELLIN_SKU2, ''), IFNULL(SELLIN_SKU3, ''), IFNULL(SELLIN_SKU4, ''), IFNULL(SELLIN_SKU5, ''), IFNULL(SELLIN_SKU6, ''), IFNULL(SELLIN_SKU7, ''), IFNULL(SELLIN_SKU8, ''), IFNULL(SELLIN_SKU9, ''), IFNULL(SELLIN_SKU10, ''), IFNULL(SELLIN_SKU11, ''), IFNULL(SELLIN_SKU12, ''), IFNULL(SELLIN_SKU13, ''), IFNULL(SELLIN_SKU14, ''), IFNULL(SELLIN_ROTATIONS, ''), IFNULL(SELLIN_UPLIFT_N1, ''), IFNULL(SELLIN_UPLIFT_N2, '') FROM TBL_LAUNCH_SELLIN WHERE SELLIN_LAUNCH_ID = :launchId AND SELLIN_L1_CHAIN = :l1chain AND SELLIN_L2_CHAIN = :l2chain AND SELLIN_STORE_FORMAT = :strformat ");
+			qrySkuSellIn.setParameter("launchId", launchId);
+			qrySkuSellIn.setParameter("l1chain", l2Chain);
+			qrySkuSellIn.setParameter("l2chain", l1Chain);
+			qrySkuSellIn.setParameter("strformat", storeFormat);
+			obj = (Object[]) qrySkuSellIn.list().get(0);
+		} catch (Exception e) {
+			//return e.toString();
+		}
+		return obj;
 	}
 
 }

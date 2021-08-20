@@ -741,7 +741,7 @@ public class TMELaunchPlanController {
 			if (result > 0) {
 				successResponseSaveClusters.setClusterId(Integer.toString(result));
 				launchService.updateLaunchStatus("LAUNCH_STORES", userId, saveLaunchClustersRequest.getLaunchId());
-				launchService.deleteAllNextPageData(saveLaunchClustersRequest.getLaunchId(), "Launch_clusters", userId);
+				//launchService.deleteAllNextPageData(saveLaunchClustersRequest.getLaunchId(), "Launch_clusters", userId); //Commented By Sarin - sprint4Aug2021
 			}
 		} catch (Exception e) {
 			result = 0;
@@ -766,7 +766,7 @@ public class TMELaunchPlanController {
 			if (result == 1) {
 				successResponse.setResponseMessage("Saved Successfully");
 				launchService.updateLaunchStatus("LAUNCH_BASEPACKS", userId, tblLaunchbasePacks.getLaunchId());
-				launchService.deleteAllNextPageData(tblLaunchbasePacks.getLaunchId(), "Launch_basepacks", userId);
+				//launchService.deleteAllNextPageData(tblLaunchbasePacks.getLaunchId(), "Launch_basepacks", userId); //Commented By Sarin - sprint4Aug2021
 			} else {
 				successResponse.setResponseMessage("Didn't Save Successfully");
 				throw new Exception("Something went wrong,Didn't Save Successfully");
