@@ -104,6 +104,8 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 	public List<SaveLaunchStoreList> getLaunchStoresBuildUpByLaunchIdKam(String launchId, String userId) {
 		return launchDaoKam.getLaunchStoresBuildUpByLaunchIdKam(launchId, userId);
 	}
+	
+	
 
 	@Override
 	public String saveLaunchStores(SaveLaunchStore saveFinalLaunchListRequest, String userId, String launchId) {
@@ -119,12 +121,14 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 	@Override
 	public ArrayList<String> getHeaderListForBaseFile() {
 		ArrayList<String> headerList = new ArrayList<String>();
+		headerList.add("LAUNCH_NAME");
+		headerList.add("LAUNCH_MOC");
 		headerList.add("L1_CHAIN");
 		headerList.add("L2_CHAIN");
 		headerList.add("STORE_FORMAT");
 		headerList.add("CLUSTER");
 		headerList.add("HUL_OL_CODE");
-		headerList.add("KAM_REMARKS");
+		headerList.add("KAM_REMARKS(Accepted/Rejected)");
 		return headerList;
 	}
 

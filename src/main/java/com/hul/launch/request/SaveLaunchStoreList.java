@@ -3,10 +3,30 @@ package com.hul.launch.request;
 public class SaveLaunchStoreList {
 	private String L1_Chain;
 	private String L2_Chain;
+	private String mocDate;//Harsha
+	private String launchName;//Harsha
 	private String StoreFormat;
 	private String Cluster;
 	private String HUL_OL_Code;
 	private String Kam_Remarks;
+	
+//Harsha Added
+	public String getMocDate() {
+		return mocDate;
+	}
+
+	public void setMocDate(String mocDate) {
+		this.mocDate = mocDate;
+	}
+
+	public String getLaunchName() {
+		return launchName;
+	}
+
+	public void setLaunchName(String launchName) {
+		this.launchName = launchName;
+	}
+	// Harsha's code end here
 
 	public String getLaunchId() {
 		return launchId;

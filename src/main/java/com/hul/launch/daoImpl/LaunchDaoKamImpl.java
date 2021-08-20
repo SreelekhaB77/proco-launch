@@ -909,6 +909,30 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		}
 		return listOfGetLaunchBuildUpData;
 	}
+	
+	// Harsha added method to check modified moc dates As part of Q4 Sprint
+	public String getIfMOCisModified(String Account,String userId, String launchId) {
+		Session session = sessionFactory.getCurrentSession();
+		SessionImpl sessionImpl = (SessionImpl) session;
+		String launchMoc = "";
+		try {
+			PreparedStatement stmt = sessionImpl.connection()
+					.prepareStatement("SELECT LAUNCH_MOC_KAM FROM TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS"
+							+ " WHERE IS_ACTIVE = 1 AND  LAUNCH_KAM_ACCOUNT= '" 
+							+ Account + "'"  
+					+ " AND LAUNCH_ID = '" + launchId + "'" + " AND UPDATED_BY='" + userId +"'");		
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				launchMoc = rs.getString(1);
+			}
+			return launchMoc;
+		} catch (Exception ex) {
+			logger.debug("Exception :", ex);
+			return ex.toString();
+		}
+	}
+	
+	
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -917,11 +941,12 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		SessionImpl sessionImpl = (SessionImpl) session;
 		List<SaveLaunchStoreList> listOfGetLaunchStoreData = new ArrayList<>();
 		String kamMailId = userId.concat("@unilever.com").toUpperCase();
+		
 		try {
 			PreparedStatement stmt = sessionImpl.connection().prepareStatement(
-					"select DISTINCT abc.ACCOUNT_NAME ACCOUNT_NAME,ACCOUNT_NAME_L2,HUL_STORE_FORMAT,CLUSTER,REPORTING_CODE,"
-							+ "tvcom.KAM_MAIL_ID from MODTRD.TBL_LAUNCH_BUILDUP_TEMP abc,TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE "
-							+ "tvcom.HUL_OUTLET_CODE = abc.HFS_CODE AND LAUNCH_ID = '" + launchId
+					"select DISTINCT tlm.LAUNCH_NAME LAUNCH_NAME,tlm.LAUNCH_MOC LAUNCH_MOC,abc.ACCOUNT_NAME ACCOUNT_NAME, ACCOUNT_NAME_L2, HUL_STORE_FORMAT, CLUSTER, REPORTING_CODE, tvcom.KAM_MAIL_ID "
+							+ "from MODTRD.TBL_LAUNCH_BUILDUP_TEMP abc,TBL_VAT_COMM_OUTLET_MASTER tvcom ,TBL_LAUNCH_MASTER tlm WHERE "
+							+ "tvcom.HUL_OUTLET_CODE = abc.HFS_CODE AND tlm.launch_id = abc.LAUNCH_ID AND abc.LAUNCH_ID = '" + launchId
 							+ "' AND UPPER(tvcom.KAM_MAIL_ID) = '" + kamMailId + "'");
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -934,16 +959,52 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 					storeIds = Arrays.asList(listOfStore.get(0).toString().split(","));
 				}
 
+				
+				SaveLaunchStoreList saveLaunchStoreList = new SaveLaunchStoreList();
+				
 				if (!storeIds.contains(rs.getString("REPORTING_CODE").toString())) {
-					SaveLaunchStoreList saveLaunchStoreList = new SaveLaunchStoreList();
+					
 					saveLaunchStoreList.setL1_Chain(rs.getString("ACCOUNT_NAME"));
+					// Harsha's logic to pick modified date and Launch_Name
+					saveLaunchStoreList.setLaunchName(rs.getString("LAUNCH_NAME"));
+					String modifiedDate= getIfMOCisModified(rs.getString("ACCOUNT_NAME"),userId, launchId);
+					if( modifiedDate!= null && !modifiedDate.isEmpty()) {
+						saveLaunchStoreList.setMocDate(modifiedDate);
+					}
+					else {
+						saveLaunchStoreList.setMocDate(rs.getString("LAUNCH_MOC"));
+					}
+					//Harsha's Logic ends here
 					saveLaunchStoreList.setL2_Chain(rs.getString("ACCOUNT_NAME_L2"));
 					saveLaunchStoreList.setStoreFormat(rs.getString("HUL_STORE_FORMAT"));
 					saveLaunchStoreList.setCluster(rs.getString("CLUSTER"));
 					saveLaunchStoreList.setHUL_OL_Code(rs.getString("REPORTING_CODE"));
+					saveLaunchStoreList.setKam_Remarks("Accepted");
+					listOfGetLaunchStoreData.add(saveLaunchStoreList);
+				}
+				
+				else  {
+					saveLaunchStoreList.setL1_Chain(rs.getString("ACCOUNT_NAME"));
+					// Harsha's logic to pick modified date and Launch_Name
+					saveLaunchStoreList.setLaunchName(rs.getString("LAUNCH_NAME"));
+					String modifiedDate= getIfMOCisModified(rs.getString("ACCOUNT_NAME"),userId, launchId);
+					if( modifiedDate!= null && !modifiedDate.isEmpty()) {
+						saveLaunchStoreList.setMocDate(modifiedDate);
+					}
+					else {
+						saveLaunchStoreList.setMocDate(rs.getString("LAUNCH_MOC"));
+					}
+					//Harsha's Logic ends here
+					saveLaunchStoreList.setL2_Chain(rs.getString("ACCOUNT_NAME_L2"));
+					saveLaunchStoreList.setStoreFormat(rs.getString("HUL_STORE_FORMAT"));
+					saveLaunchStoreList.setCluster(rs.getString("CLUSTER"));
+					saveLaunchStoreList.setHUL_OL_Code(rs.getString("REPORTING_CODE"));
+					saveLaunchStoreList.setKam_Remarks("Rejected");
 					listOfGetLaunchStoreData.add(saveLaunchStoreList);
 				}
 			}
+			
+		
 		} catch (Exception ex) {
 			logger.debug("Exception :", ex);
 		}
@@ -999,18 +1060,20 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		}
 
 		return "Saved Successfully";
-	}
-
+	}	
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ArrayList<String>> getUpdatedBaseFile(ArrayList<String> headerList, String launchId, String userId) {
 		List<ArrayList<String>> downloadDataList = new ArrayList<>();
+		
+		
 		try {
 			String kamMailId = userId.concat("@unilever.com").toUpperCase();
-			Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
-					"select DISTINCT ACCOUNT_NAME_L2,abc.ACCOUNT_NAME ACCOUNT_NAME,HUL_STORE_FORMAT,CLUSTER,REPORTING_CODE"
-							+ " from MODTRD.TBL_LAUNCH_BUILDUP_TEMP abc,TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE "
-							+ "tvcom.HUL_OUTLET_CODE = abc.HFS_CODE AND LAUNCH_ID = '" + launchId
+			Query query2 = sessionFactory.getCurrentSession().createNativeQuery( //Removing creator from select statement
+					"select DISTINCT tlm.LAUNCH_NAME LAUNCH_NAME,tlm.LAUNCH_MOC LAUNCH_MOC,abc.ACCOUNT_NAME ACCOUNT_NAME, ACCOUNT_NAME_L2, HUL_STORE_FORMAT, CLUSTER, REPORTING_CODE "
+							+ "from MODTRD.TBL_LAUNCH_BUILDUP_TEMP abc,TBL_VAT_COMM_OUTLET_MASTER tvcom ,TBL_LAUNCH_MASTER tlm WHERE "
+							+ "tvcom.HUL_OUTLET_CODE = abc.HFS_CODE AND tlm.launch_id = abc.LAUNCH_ID AND abc.LAUNCH_ID = '" + launchId
 							+ "' AND UPPER(tvcom.KAM_MAIL_ID) = '" + kamMailId + "'");
 
 			Iterator<Object> itr = query2.list().iterator();
@@ -1030,7 +1093,6 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			if (!listOfStore.isEmpty()) {
 				storeIds = Arrays.asList(listOfStore.get(0).toString().split(","));
 			}
-
 			while (itr.hasNext()) {
 				Object[] obj = (Object[]) itr.next();
 				if (!storeIds.contains(obj[4].toString())) {
@@ -1040,6 +1102,21 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 						value = (ob == null) ? "" : ob.toString();
 						dataObj.add(value.replaceAll("\\^", ","));
 					}
+					// Harsha'S logic Starts Here for Sprint Q4
+					int count =0;
+					for(String answer : dataObj) {
+						if(count == 2) {
+							if(getIfMOCisModified( answer, userId,  launchId)!=null && !getIfMOCisModified( answer, userId,  launchId).isEmpty()) {
+								String replaceDate = getIfMOCisModified( answer, userId,  launchId);
+								dataObj.set(1, replaceDate);
+							}
+							else {
+								String replaceDate = dataObj.set(1, dataObj.get(1));
+							}
+						}
+						count++;
+					}
+					// Harsha's Logic Ends here
 					obj = null;
 					downloadDataList.add(dataObj);
 				}

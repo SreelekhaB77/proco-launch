@@ -348,8 +348,10 @@ $(document).ready(function() {
 	 	if (fileName == '') {
 	 		$('#kamuploadErrorMsg').show().html("Please select a file to upload");
 	 		return false;
-	 	} else {
+	 	} else{
+			
 	 		$('#kamuploadErrorMsg').hide();
+
 	 		var FileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
 	 		if (FileExt != "xlsx") {
 	 			if (FileExt != "xls") {
@@ -361,6 +363,8 @@ $(document).ready(function() {
 	 			}
 
 	 		}
+			
+
 	 	}
 	 	
 	     // Get form
@@ -394,20 +398,44 @@ $(document).ready(function() {
 	 			// upldata;
 	         	var errmsg = upllnchstrdata.responseData;
 	         	console.log(upllnchstrdata.responseData);
+		
 	         	 $('.loader').hide();
+			//sprint-4 US-5 confirmation msg bharati added
+			
+			var fileNamesuccess = fileName;
+			
+			if(fileNamesuccess.includes("Store.Download") && fileName != ''){
+				
+			$('#storelist-successblock').show().find('span').html('Uploaded Successfully !!!');
+			}else{
+				$('#storelist-successblock').hide();
+			}
+			//sprint-4 US-5 confirmation msg bharati ended
+			
 	             if("SUCCESS_FILE" ==  upllnchstrdata) {
+					 	
 	             	 $("#kamlaunchVisiTab").click();
 	             	 $('#kamuploadErrorMsg').hide();
 	             	 $('#kamerrorblockUpload').hide();
+					 
+					
+					//sprint-4 US-5 redirect on same page changes done by bharati
+					 
+					saveBuildUp();
+					window.location.href = "getAllCompletedLaunchDataKam.htm#step-4";
+					
 	             	kamgetVissiData();
+
 	             	// getlaunchStores();
 	             }
 	             else {
 	             	$('#kamerrorblockUpload').show();
 	             	//$('#kamuploadErrorMsg span').text(errmsg);
 	             }
-	            
+				 
 	             $("#btnSubmitBasePack").prop("disabled", false);
+				 
+				 
 	         },
 	         error: function (jqXHR, textStatus, errorThrown) {
 	         	// $('#errorblockUpload').find('span').text(jqXHR.responseText);
@@ -417,8 +445,10 @@ $(document).ready(function() {
 	                   
 	         }
 	     });
-	     	
+			
 	 });
+	 
+
 	
 	$("#kamMocCol").on('change', function () {
 		$("#kamlaunchDetailsTab").click();
@@ -937,6 +967,7 @@ function kamSaveBasepacks() {
 	
 }
 
+
 // screen 4
 
 function saveBuildUp() {
@@ -955,19 +986,32 @@ function saveBuildUp() {
         beforeSend: function() {
             ajaxLoader(spinnerWidth, spinnerHeight);
         },
+		
+		
         success: function( lanchStrDet, textStatus, jQxhr ){
         	 $('.loader').hide();
            
             $('#kamlaunchSellInTab').click();
             var strLstscreen = lanchStrDet.responseData.listSaveLaunchStoreList;
+			
+			
             // screen 2 table chan
 			var row = "";
+			
 			for (var i = 0; i < strLstscreen.length; i++) {
-				row += "<tr><td><input name='kamlnchstrl1' type='text' class='form-control kamlnchstrl1' readonly value= '"
-				 		+ strLstscreen[i].L2_Chain
+				
+				//sprint-4 US-6.1 changes added by Bharati 
+				row += "<tr><td><input name='kamlaunchname' type='text' class='form-control kamlaunchname' readonly value= '"
+				 		+ strLstscreen[i].launchName
+				 		+"'></td>" 
+						+"<td><input name='kamlaunchmoc' type='text' class='form-control kamlaunchmoc' readonly value= '"
+				 		+ strLstscreen[i].mocDate
+				 		+"'></td>" 
+						+"<td><input name='kamlnchstrl1' type='text' class='form-control kamlnchstrl1' readonly value= '"
+				 		+ strLstscreen[i].L1_Chain
 				 		+"'></td>" 
 						+"<td class='xsdrop'><input name='kamlnchstrl2' type='text' class='form-control kamlnchstrl2' readonly value= '"
-						+ strLstscreen[i].L1_Chain
+						+ strLstscreen[i].L2_Chain
 						+"'></td>" 
 						+ "<td class='xsdrop'><input name='kamlnchstrstrfmt' type='text' class='form-control kamlnchstrstrfmt' readonly value= '"
 						+ strLstscreen[i].StoreFormat
@@ -979,8 +1023,10 @@ function saveBuildUp() {
 				 		+ strLstscreen[i].HUL_OL_Code
 				 		+"'></td>"
 						+ "<td><input name='kamlnchstrdesc' type='text' class='form-control validfield kamlnchstrdesc' placeholder='Description' maxlength='255' value= '"
-				 		/* + strLstscreen[i].launchSellInCld */
+				 		 + strLstscreen[i].Kam_Remarks
 				 		+"'></td></tr>";
+						
+			
 			}
 			
 			 $("#kam_launch_store_table").dataTable().fnDestroy();
@@ -989,7 +1035,8 @@ function saveBuildUp() {
 					    var oTable = $('#kam_launch_store_table').DataTable( {
 								
 								"scrollY":       "280px",
-						      //  "scrollX":        true,
+								//added bharati for sprint-4 US-6.1 
+						       "scrollX":        true,
 						        "scrollCollapse": true,
 						        "paging":         true,
 						        "ordering": false,
@@ -1042,6 +1089,10 @@ function kamsaveStoreData() {
 	var launchStrArr = [];
 	var kamlnchId = parseInt($( ".kamLnchDetscr1:checked" ).val());
 	var rowCount = $('#kam_launch_store_table tbody').find('tr');
+	//sprint-4 US-6.1 changes added by Bharati 
+	var lname = $('.kamlaunchname').val();
+	var lmoc = $('.kamlaunchmoc').val();
+	 
 	var l1 = $('.kamlnchstrl1').val();
 	var l2 = $('.kamlnchstrl2').val();
 	var strfrmt = $('.kamlnchstrstrfmt').val();
@@ -1049,9 +1100,12 @@ function kamsaveStoreData() {
 	var hulol = $('.kamlnchstrhulol').val();
 	var dsc = $('.kamlnchstrdesc').val();
 	
+	
 	for (var i = 0; i < rowCount.length; i++) {
 				
 			launchStrArr[i] =  {
+				"launchName" : lname,
+	            "mocDate" : lmoc,
 				"L1_Chain" : l1,
 	            "L2_Chain" : l2,
 	            "StoreFormat" : strfrmt,
@@ -1060,6 +1114,7 @@ function kamsaveStoreData() {
 	            "Kam_Remarks" : dsc,
 	            "launchId": kamlnchId
 	        }
+			
 	}
     $.ajax({
         url: 'saveLaunchStores.htm',
@@ -1840,13 +1895,13 @@ function loadrejectKamAccounts() {
 				//console.log(data);
 				var accounts=data.responseData.lisOfAcc;
 				//accounts=data.responseData.lisOfAcc;
-				console.log(accounts);
+				//console.log(accounts);
 				
 				var option = ""; //"<option value='select'>Select Account</option>";
 				for (var i = 0; i < accounts.length; i++) {
 				  option += "<option value='"+accounts[i] +"'>"+accounts[i]+"</option>"
 				}
-				console.log(option);
+				//console.log(option);
 				
 				$('#reject-kamlaunch-acc').empty();
 				$('#reject-kamlaunch-acc').multiselect("destroy");

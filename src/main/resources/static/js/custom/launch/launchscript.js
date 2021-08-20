@@ -3120,23 +3120,24 @@ function getSellInData() {
 						sellInData[i].storeFormat+"'></td>" 
 						+ "<td><input name='childRatio1' type='text' class='form-control storesplan' id='strpln"+i+"' readonly value= '" +
 						sellInData[i].storesPlanned+"'></td>"
-						+ "<td ><input name='childRatio1' data-field='base_1' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);'></td>"
-						+ "<td ><input name='childRatio1' data-field='base_2' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);'></td>"
-						+ "<td><input name='childRatio1' data-field='base_3' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);'></td>"
-						+ "<td ><input name='childRatio1' data-field='base_4' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);'></td>"
-						+ "<td ><input name='childRatio1' data-field='base_5' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);'></td>"
-						+ "<td><input name='childRatio1' data-field='base_6' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);'></td>"
-						+ "<td><input name='childRatio1' data-field='base_7' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);'></td>" 
-						+ "<td><input name='childRatio1' data-field='base_8' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);'></td>"
-						+ "<td><input name='childRatio1' data-field='base_9' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);'></td>"
-						+ "<td><input name='childRatio1' data-field='base_10' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);'></td>"
-						+ "<td><input name='childRatio1' data-field='base_11' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);'></td>"
-						+ "<td><input name='childRatio1' data-field='base_12'  type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);'></td>"
-						+ "<td><input name='childRatio1' data-field='base_13' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);'></td>"
-						+ "<td><input name='childRatio1' data-field='base_14' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);'></td>"
-						+ "<td><input name='childRatio1' data-field='rotations' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);'></td>"
-						+ "<td><input name='childRatio1' data-field='upliftone' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);'></td>"
-					    + "<td><input name='childRatio1' data-field='uplifttwo' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);'></td></tr>";
+						//+ "<td ><input name='childRatio1' data-field='base_1' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);'></td>" //Commented & Added below By Sarin - Sprint4 Aug2021
+						+ "<td ><input name='childRatio1' data-field='base_1' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);' value='" + sellInData[i].SKU1_SELLIN + "'></td>"
+						+ "<td ><input name='childRatio1' data-field='base_2' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);' value='" + sellInData[i].SKU2_SELLIN + "'></td>"
+						+ "<td><input name='childRatio1' data-field='base_3' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);' value='" + sellInData[i].SKU3_SELLIN + "'></td>"
+						+ "<td ><input name='childRatio1' data-field='base_4' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);' value='" + sellInData[i].SKU4_SELLIN + "'></td>"
+						+ "<td ><input name='childRatio1' data-field='base_5' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);' value='" + sellInData[i].SKU5_SELLIN + "'></td>"
+						+ "<td><input name='childRatio1' data-field='base_6' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);' value='" + sellInData[i].SKU6_SELLIN + "'></td>"
+						+ "<td><input name='childRatio1' data-field='base_7' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);' value='" + sellInData[i].SKU7_SELLIN + "'></td>" 
+						+ "<td><input name='childRatio1' data-field='base_8' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);' value='" + sellInData[i].SKU8_SELLIN + "'></td>"
+						+ "<td><input name='childRatio1' data-field='base_9' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);' value='" + sellInData[i].SKU9_SELLIN + "'></td>"
+						+ "<td><input name='childRatio1' data-field='base_10' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);' value='" + sellInData[i].SKU10_SELLIN + "'></td>"
+						+ "<td><input name='childRatio1' data-field='base_11' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);' value='" + sellInData[i].SKU11_SELLIN + "'></td>"
+						+ "<td><input name='childRatio1' data-field='base_12'  type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);' value='" + sellInData[i].SKU12_SELLIN + "'></td>"
+						+ "<td><input name='childRatio1' data-field='base_13' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);' value='" + sellInData[i].SKU13_SELLIN + "'></td>"
+						+ "<td><input name='childRatio1' data-field='base_14' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);' value='" + sellInData[i].SKU14_SELLIN + "'></td>"
+						+ "<td><input name='childRatio1' data-field='rotations' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);' value='" + sellInData[i].ROTATIONS + "'></td>"
+						+ "<td><input name='childRatio1' data-field='upliftone' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);' value='" + sellInData[i].UPLIFT_N1 + "'></td>"
+					    + "<td><input name='childRatio1' data-field='uplifttwo' type='text' class='form-control validfield' onkeypress='return validateFloatKeyPress(this,event);' value='" + sellInData[i].UPLIFT_N2 + "'></td></tr>";
 			}
 			
 			
@@ -3159,7 +3160,8 @@ function getSellInData() {
 				 	scrollY:       "300px",
 			        scrollX:        true,
 			        "scrollCollapse": true,
-			        "paging":         true,
+			        //"paging":         true,  //Commented & Added below By Sarin - Sprint4 Aug2021
+			        "paging":         false, //Added By Sarin - Sprint4 Aug2021
 			        "ordering": false,
 			        searching: false,
 			    	"lengthMenu" : [

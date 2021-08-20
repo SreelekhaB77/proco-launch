@@ -1494,7 +1494,8 @@ function ajaxLoader(w, h) {
 			 	scrollY:       "300px",
 		        scrollX:        true,
 		        "scrollCollapse": true,
-		        "paging":         true,
+		        //"paging":         true,  //Commented & Added below By Sarin - Sprint4 Aug2021
+		        "paging":         false,  //Added By Sarin - Sprint4 Aug2021
 		        "autoWidth": false,
 		        "ordering": false,
 		        searching: false,
