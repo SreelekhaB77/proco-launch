@@ -128,7 +128,7 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 		headerList.add("STORE_FORMAT");
 		headerList.add("CLUSTER");
 		headerList.add("HUL_OL_CODE");
-		headerList.add("KAM_REMARKS(Accepted/Rejected)");
+		headerList.add("KAM_REMARKS");
 		return headerList;
 	}
 
