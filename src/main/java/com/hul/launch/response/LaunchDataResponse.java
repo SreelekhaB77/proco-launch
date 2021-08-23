@@ -24,6 +24,8 @@ public class LaunchDataResponse {
 	private String launchMocKam;
 	private String launchSubmissionDate;
 	private String accountName;
+	private String originalLaunchMoc;
+	
 
 	public String getLaunchSubmissionDate() {
 		return launchSubmissionDate;
@@ -202,6 +204,42 @@ public class LaunchDataResponse {
 	public void setAccountName(String accountName) {
 		this.accountName = accountName;
 	}
+	
+
+	public String getOriginalLaunchMoc() {
+		return originalLaunchMoc;
+	}
+
+	public void setOriginalLaunchMoc(String originalLaunchMoc) {
+		this.originalLaunchMoc = originalLaunchMoc;
+	}
+
+	@Override
+	public String toString() {
+		return "LaunchDataResponse [launchId=" + launchId + ", launchName=" + launchName + ", launchDate=" + launchDate
+				+ ", launchMoc=" + launchMoc + ", launchNature=" + launchNature + ", launchNature2=" + launchNature2
+				+ ", launchBusinessCase=" + launchBusinessCase + ", categorySize=" + categorySize + ", classification="
+				+ classification + ", annexureDocName=" + annexureDocName + ", artWorkPackShotsDocName="
+				+ artWorkPackShotsDocName + ", mdgDeckDocName=" + mdgDeckDocName + ", sampleShared=" + sampleShared
+				+ ", createdBy=" + createdBy + ", createdDate=" + createdDate + ", updatedBy=" + updatedBy
+				+ ", updatedDate=" + updatedDate + ", launchFinalStatus=" + launchFinalStatus + ", launchMocKam="
+				+ launchMocKam + ", launchSubmissionDate=" + launchSubmissionDate + ", accountName=" + accountName
+				+ ", originalLaunchMoc=" + originalLaunchMoc + ", error=" + error + ", getLaunchSubmissionDate()="
+				+ getLaunchSubmissionDate() + ", getLaunchMocKam()=" + getLaunchMocKam() + ", getLaunchFinalStatus()="
+				+ getLaunchFinalStatus() + ", getLaunchDate()=" + getLaunchDate() + ", getLaunchMoc()=" + getLaunchMoc()
+				+ ", getAnnexureDocName()=" + getAnnexureDocName() + ", getArtWorkPackShotsDocName()="
+				+ getArtWorkPackShotsDocName() + ", getMdgDeckDocName()=" + getMdgDeckDocName() + ", getSampleShared()="
+				+ getSampleShared() + ", getError()=" + getError() + ", getLaunchId()=" + getLaunchId()
+				+ ", getLaunchName()=" + getLaunchName() + ", getLaunchNature()=" + getLaunchNature()
+				+ ", getLaunchNature2()=" + getLaunchNature2() + ", getLaunchBusinessCase()=" + getLaunchBusinessCase()
+				+ ", getCategorySize()=" + getCategorySize() + ", getClassification()=" + getClassification()
+				+ ", getCreatedBy()=" + getCreatedBy() + ", getCreatedDate()=" + getCreatedDate() + ", getUpdatedBy()="
+				+ getUpdatedBy() + ", getUpdatedDate()=" + getUpdatedDate() + ", getAccountName()=" + getAccountName()
+				+ ", getOriginalLaunchMoc()=" + getOriginalLaunchMoc() + ", getClass()=" + getClass() + ", hashCode()="
+				+ hashCode() + ", toString()=" + super.toString() + "]";
+	}
+
+	
 	
 	
 }
