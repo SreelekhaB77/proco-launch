@@ -715,7 +715,7 @@ public class TMELaunchPlanController {
 				if (Integer.parseInt(result) > 0) {
 					successResponseSaveLaunchDetails.setLaunchId(result);
 					launchService.saveLaunchStatus(result, userId);
-					launchService.deleteAllNextPageData(result, "Launch_details", userId);
+					//launchService.deleteAllNextPageData(result, "Launch_details", userId);  //Commented By Sarin - sprint4Aug2021
 				}
 			}
 		} catch (Exception e) {

@@ -25,6 +25,7 @@ public class LaunchDataResponse {
 	private String launchSubmissionDate;
 	private String accountName;
 	private String originalLaunchMoc;
+	private String changedMoc;
 	
 
 	public String getLaunchSubmissionDate() {
@@ -214,6 +215,14 @@ public class LaunchDataResponse {
 		this.originalLaunchMoc = originalLaunchMoc;
 	}
 
+	public String getChangedMoc() {
+		return changedMoc;
+	}
+
+	public void setChangedMoc(String changedMoc) {
+		this.changedMoc = changedMoc;
+	}
+
 	@Override
 	public String toString() {
 		return "LaunchDataResponse [launchId=" + launchId + ", launchName=" + launchName + ", launchDate=" + launchDate
@@ -224,20 +233,24 @@ public class LaunchDataResponse {
 				+ ", createdBy=" + createdBy + ", createdDate=" + createdDate + ", updatedBy=" + updatedBy
 				+ ", updatedDate=" + updatedDate + ", launchFinalStatus=" + launchFinalStatus + ", launchMocKam="
 				+ launchMocKam + ", launchSubmissionDate=" + launchSubmissionDate + ", accountName=" + accountName
-				+ ", originalLaunchMoc=" + originalLaunchMoc + ", error=" + error + ", getLaunchSubmissionDate()="
-				+ getLaunchSubmissionDate() + ", getLaunchMocKam()=" + getLaunchMocKam() + ", getLaunchFinalStatus()="
-				+ getLaunchFinalStatus() + ", getLaunchDate()=" + getLaunchDate() + ", getLaunchMoc()=" + getLaunchMoc()
-				+ ", getAnnexureDocName()=" + getAnnexureDocName() + ", getArtWorkPackShotsDocName()="
-				+ getArtWorkPackShotsDocName() + ", getMdgDeckDocName()=" + getMdgDeckDocName() + ", getSampleShared()="
-				+ getSampleShared() + ", getError()=" + getError() + ", getLaunchId()=" + getLaunchId()
-				+ ", getLaunchName()=" + getLaunchName() + ", getLaunchNature()=" + getLaunchNature()
-				+ ", getLaunchNature2()=" + getLaunchNature2() + ", getLaunchBusinessCase()=" + getLaunchBusinessCase()
-				+ ", getCategorySize()=" + getCategorySize() + ", getClassification()=" + getClassification()
-				+ ", getCreatedBy()=" + getCreatedBy() + ", getCreatedDate()=" + getCreatedDate() + ", getUpdatedBy()="
-				+ getUpdatedBy() + ", getUpdatedDate()=" + getUpdatedDate() + ", getAccountName()=" + getAccountName()
-				+ ", getOriginalLaunchMoc()=" + getOriginalLaunchMoc() + ", getClass()=" + getClass() + ", hashCode()="
-				+ hashCode() + ", toString()=" + super.toString() + "]";
+				+ ", originalLaunchMoc=" + originalLaunchMoc + ", changedMoc=" + changedMoc + ", error=" + error
+				+ ", getLaunchSubmissionDate()=" + getLaunchSubmissionDate() + ", getLaunchMocKam()="
+				+ getLaunchMocKam() + ", getLaunchFinalStatus()=" + getLaunchFinalStatus() + ", getLaunchDate()="
+				+ getLaunchDate() + ", getLaunchMoc()=" + getLaunchMoc() + ", getAnnexureDocName()="
+				+ getAnnexureDocName() + ", getArtWorkPackShotsDocName()=" + getArtWorkPackShotsDocName()
+				+ ", getMdgDeckDocName()=" + getMdgDeckDocName() + ", getSampleShared()=" + getSampleShared()
+				+ ", getError()=" + getError() + ", getLaunchId()=" + getLaunchId() + ", getLaunchName()="
+				+ getLaunchName() + ", getLaunchNature()=" + getLaunchNature() + ", getLaunchNature2()="
+				+ getLaunchNature2() + ", getLaunchBusinessCase()=" + getLaunchBusinessCase() + ", getCategorySize()="
+				+ getCategorySize() + ", getClassification()=" + getClassification() + ", getCreatedBy()="
+				+ getCreatedBy() + ", getCreatedDate()=" + getCreatedDate() + ", getUpdatedBy()=" + getUpdatedBy()
+				+ ", getUpdatedDate()=" + getUpdatedDate() + ", getAccountName()=" + getAccountName()
+				+ ", getOriginalLaunchMoc()=" + getOriginalLaunchMoc() + ", getChangedMoc()=" + getChangedMoc()
+				+ ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString()
+				+ "]";
 	}
+
+	
 
 	
 	
