@@ -74,4 +74,7 @@ public interface LaunchServiceKam {
 	public List<String> getAllMocApprovalStatus(String userId);
 	
 	public List<String>  getKamApprovalStatus(String userId);
+
+	// Added by Harsha for Q4 Sprint
+	public List<String> getLaunchAccountsforRejection(String launchId, String userId);
 }

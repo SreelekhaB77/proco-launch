@@ -940,9 +940,6 @@ public class LaunchDaoImpl implements LaunchDao {
 				}
 				
 				else if(rs.getString("CHANGES_REQUIRED").equals("MOC CHANGED")) {
-					System.out.println(rs.getString("LAUNCH_ID") );
-					System.out.println(createdby);
-					System.out.println(RequestId);
 					query2 = sessionFactory.getCurrentSession().createNativeQuery(
 							"SELECT DISTINCT LAUNCH_KAM_ACCOUNT FROM MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS "
 							+ "WHERE IS_ACTIVE = 1 AND LAUNCH_ID = '" + rs.getString("LAUNCH_ID") + "'" 

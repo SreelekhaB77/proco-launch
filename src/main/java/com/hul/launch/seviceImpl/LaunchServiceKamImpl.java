@@ -201,4 +201,14 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 		return launchDaoKam.getKamApprovalStatus(userId);
 	}
 
+	// Removing Rejected acoounts added by Harsha 
+	@Override
+	public List<String> getLaunchAccountsforRejection(String launchId, String userId) {
+		return launchDaoKam.getLaunchAccountsforRejection( launchId,  userId);
+	}
+
+	
+	
+
+
 }

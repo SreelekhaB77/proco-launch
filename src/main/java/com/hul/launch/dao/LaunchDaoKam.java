@@ -78,6 +78,10 @@ public interface LaunchDaoKam {
 	public List<String> getAllMocApprovalStatus(String userId);
 	
 	public List<String> getKamApprovalStatus(String userId);
+
+	// Added By Harsha for Q4 Sprint
+	public List<String> getLaunchAccountsforRejection(String launchId, String userId);
+
 	
 
 
