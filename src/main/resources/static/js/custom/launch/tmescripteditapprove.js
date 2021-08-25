@@ -876,6 +876,8 @@ function loadTmeLauches(tmeselectedmoc, tmeselectedlaunchname) {
 							//return full.launchMoc + '<input type = "hidden" class="mocDate"  value=' + full.launchDate + '>';
 						  //}
 						},
+						//sprint-4 US 2.1 Tme Original MOC col Aug-2021 By Bharati
+						{mData : 'changedMoc', sWidth: '26%'},
 						{mData : 'launchFinalStatus'},
 						 
 					],
