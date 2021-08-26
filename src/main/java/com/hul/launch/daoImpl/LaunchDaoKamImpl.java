@@ -314,6 +314,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		SessionImpl sessionImpl = (SessionImpl) session;
 		String launchMoc = "";
 		try {
+		
 			PreparedStatement stmt = sessionImpl.connection()
 					.prepareStatement("SELECT LAUNCH_DATE FROM TBL_LAUNCH_MASTER WHERE LAUNCH_ID = '" + launchId + "'");
 			ResultSet rs = stmt.executeQuery();
@@ -712,6 +713,32 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		return listOfAccounts;
 
 	}
+	//Q4 Sprint --- For reject MOC option
+	// Harsha's Implementation for removing already rejected store list after TME approval 
+	
+	public List<String> getLaunchAccountsforRejection(String launchId, String userId) { 
+		 try {
+			 
+			 List<String> allAccounts = getLaunchAccounts(launchId,userId);
+				Query query = sessionFactory.getCurrentSession().createNativeQuery(
+						"select LAUNCH_KAM_ACCOUNT from TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS tlk , TBL_LAUNCH_REQUEST tlr " + 
+						" where tlk.launch_id = tlr.LAUNCH_ID and tlk.req_id = tlr.req_id "
+								+ "and IS_ACTIVE=2 and tlr.FINAL_STATUS='APPROVED' and tlr.CHANGES_REQUIRED = 'LAUNCH REJECTED' and tlr.launch_id = '"
+								+ launchId + "'");
+
+				List<String> list = query.list();
+				if(!list.isEmpty() && list != null) {
+					allAccounts.removeAll(list);
+				}
+				return allAccounts;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+	}
+	
+	
+	
 
 	// Q1 sprint kavitha feb2021
 	@SuppressWarnings("unchecked")

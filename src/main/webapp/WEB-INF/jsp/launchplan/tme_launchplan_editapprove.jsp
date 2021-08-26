@@ -201,6 +201,7 @@
 											id="editDet" cellspacing="0" cellpadding="0"
 											style="width: 100% ! important">
 											<thead class="thead-dark">
+											<!--sprint-4 US 2.1 Tme Original MOC col Aug-2021 By Bharati-->
 												<tr>
 													<th><span
 														class="proco-btn proco-btn-success table-head">Select</span></th>
@@ -210,6 +211,8 @@
 													<th><span
 														class="proco-btn proco-btn-success table-head">Launch
 															MOC</span></th>
+															<th><span
+														class="proco-btn proco-btn-success table-head">Changed MOC</span></th>
 													<th><span
 														class="proco-btn proco-btn-success table-head">Status</span></th>
 												</tr>

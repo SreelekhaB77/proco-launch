@@ -241,7 +241,13 @@ public class KamLaunchPlanController {
 		GetLaunchMocForKamResponse getLaunchMocForKamResponse = new GetLaunchMocForKamResponse();
 		// kavitha
 		String userId = (String) request.getSession().getAttribute("UserID");
-		List<String> listKamAccounts = launchServiceKam.getLaunchAccounts(launchId, userId);
+		// Existing flow
+		//List<String> listKamAccounts = launchServiceKam.getLaunchAccounts(launchId, userId);
+		
+		//Modified by Harsha to get account names which are not rejected by TME
+		List<String> listKamAccounts = launchServiceKam.getLaunchAccountsforRejection(launchId, userId);
+				
+		
 		getLaunchMocForKamResponse.setLisOfAcc(listKamAccounts);
 
 		List<String> listOfLaunch = new ArrayList<>();
@@ -271,13 +277,13 @@ public class KamLaunchPlanController {
 		GetLaunchMocForKamResponse getLaunchMocForKamResponse = new GetLaunchMocForKamResponse();
 		
 		String userId = (String) request.getSession().getAttribute("UserID");
-		List<String> listKamAccounts = launchServiceKam.getLaunchAccounts(launchId, userId);
+		//Existing implementation
+		// List<String> listKamAccounts = launchServiceKam.getLaunchAccounts(launchId, userId);
 		
+		//Added by Harsha to get account names which are not approved for rejection by TME
+		List<String> listKamaccounts = launchServiceKam.getLaunchAccountsforRejection(launchId, userId);
 		
-		for(String AccountNames : listKamAccounts) {
-			System.out.println(AccountNames);
-		}
-		getLaunchMocForKamResponse.setLisOfAcc(listKamAccounts);
+		getLaunchMocForKamResponse.setLisOfAcc(listKamaccounts);
 		List<String> listOfLaunch = new ArrayList<>();
 		try {
 			if (launchId.equals("")) {

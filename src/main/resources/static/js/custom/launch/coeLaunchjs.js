@@ -912,6 +912,7 @@ var coeeoTable;
 function loadCoeLauches(coeselectedmoc) {
 	coeeoTable = $('#coebasepack_add').removeAttr('style').DataTable( {
 		"scrollY": "280px",
+		"scrollX": true,
 			"destroy": true,  
 			"paging":  true,
 			"ordering": false,
@@ -933,7 +934,9 @@ function loadCoeLauches(coeselectedmoc) {
 			"sAjaxSource" : "getAllCoeMOCData.htm",
 			  "fnServerParams" : function(aoData) {
 					aoData.push({ "name": "coeMoc", "value": coeselectedmoc });
+					
 				},
+				
 				//"aaData": data,
 				"aoColumns" : [
 						{
@@ -950,6 +953,8 @@ function loadCoeLauches(coeselectedmoc) {
 							//return full.launchMoc + '<input type = "hidden" class="mocDate"  value=' + full.launchDate + '>';
 						  //}
 						},
+						//sprint-4 US-2.2 original MOC Changes Bharati
+					    {mData : 'originalLaunchMoc'},
 						{mData : 'createdDate'},
 						{mData : 'createdBy'},
 						{mData : 'accountName',
