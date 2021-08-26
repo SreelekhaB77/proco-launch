@@ -1688,6 +1688,8 @@ function loadKamLauches(kamselectedmoc) {
 							return full.launchMoc + '<input type = "hidden" class="mocDate"  value=' + full.launchDate + '>';
 						  }
 						},
+						//Sprint 4 US-2.3 Frontend Changes By bharati 26-AUG
+						{mData : 'changedMoc', sWidth: '26%'},
 						{mData : 'createdDate'},
 						{mData : 'createdBy'}, 
 					],
