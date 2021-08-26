@@ -236,11 +236,11 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 
 			rs = stmt.executeQuery();
 			while (rs.next()) {
-				stmt2 = sessionImpl.connection()
-						.prepareStatement("SELECT * FROM TBL_LAUNCH_STATUS_KAM WHERE LAUNCH_ACCOUNT = '" + account
-								+ "' AND LAUNCH_ID = '" + rs.getInt("LAUNCH_ID") + "'");
-				rs3 = stmt2.executeQuery();
-				if (!rs3.next()) {
+				//stmt2 = sessionImpl.connection()
+					//	.prepareStatement("SELECT * FROM TBL_LAUNCH_STATUS_KAM WHERE LAUNCH_ACCOUNT = '" + account
+						//		+ "' AND LAUNCH_ID = '" + rs.getInt("LAUNCH_ID") + "'");
+			//	rs3 = stmt2.executeQuery();
+				//if (!rs3.next()) {
 					LaunchDataResponse launchDataResponse = new LaunchDataResponse();
 					launchDataResponse.setLaunchId(rs.getInt("LAUNCH_ID"));
 					launchDataResponse.setLaunchName(rs.getString("LAUNCH_NAME"));
@@ -289,7 +289,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 						listOfCompletedLaunch.add(launchDataResponse);
 					}
 					// listOfCompletedLaunch.add(launchDataResponse);
-				}
+				//}
 			}
 		} catch (Exception ex) {
 			logger.debug("Exception :", ex);
