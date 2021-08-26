@@ -3745,6 +3745,7 @@ function getvisiPlan() {
 
 function getfinalPlan() {
 	var launchId = $("#dynamicLaunchId").val();
+	$("#finalTable").dataTable().fnDestroy();  //Added By Sarin - sprint4Aug2021
 	$.ajax({
 	    url: 'getLaunchFinalPlan.htm?launchId='+launchId,
 	    dataType: 'json',
@@ -3804,7 +3805,7 @@ function getfinalPlan() {
 				}
 				
 				$('#finalTable tbody').empty().append(finalrow);
-				 $("#finalTable").dataTable().fnDestroy();
+				 //$("#finalTable").dataTable().fnDestroy();  //Commented By Sarin - sprint4Aug2021
 				    setTimeout(function(){
 						     fnloTable = $('#finalTable').DataTable( {
 									
