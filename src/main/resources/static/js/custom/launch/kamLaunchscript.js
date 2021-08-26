@@ -178,6 +178,15 @@ $(document).ready(function() {
 				//console.log(data);
 				var accounts=data.responseData.lisOfAcc;
 				
+				//Sprint4Changes - Starts
+				var upcomingmoc=data.responseData.listOfMoc;
+				var upmocoption = "<option value=''>Select MOC</option>";
+				for (var i = 0; i < upcomingmoc.length; i++) {
+					upmocoption += "<option value='"+upcomingmoc[i] +"'>"+upcomingmoc[i]+"</option>"
+				}
+				$("#paid-kamlaunch-moc").empty().append(upmocoption);
+				//Sprint4Changes - Ends
+				
 				//accounts=data.responseData.lisOfAcc;
 				
 				var option = ""; //"<option value='select'>Select Account</option>";
