@@ -252,8 +252,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 					launchDataResponse.setAnnexureDocName(rs.getString("ANNEXURE_DOCUMENT_NAME"));
 					launchDataResponse.setArtWorkPackShotsDocName(rs.getString("ARTWORK_PACKSHOTS_DOC_NAME"));
 					launchDataResponse.setMdgDeckDocName(rs.getString("MDG_DECK_DOCUMENT_NAME"));
-					launchDataResponse.setChangedMoc(rs.getString("CHANGED_MOC"));
-
+					
 					String sampleShared = null;
 					stmtSS = sessionImpl.connection().prepareStatement(
 							"SELECT LAUNCH_SAMPLE_SHARED FROM TBL_LAUNCH_SAMPLE_SHARED_KAM WHERE LAUNCH_ID = '"
@@ -271,7 +270,8 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 					launchDataResponse.setCreatedDate(rs.getDate("CREATED_DATE"));
 					launchDataResponse.setUpdatedBy(rs.getString("UPDATED_BY"));
 					launchDataResponse.setUpdatedDate(rs.getDate("UPDATED_DATE"));
-					String launchMoc = null;
+					//Kavitha D changes-SPrint4 Aug2021
+					/*String launchMoc = null;
 					stmt1 = sessionImpl.connection()
 							.prepareStatement("SELECT LAUNCH_MOC FROM TBL_LAUNCH_MOC_KAM WHERE LAUNCH_ID = '"
 									+ rs.getInt("LAUNCH_ID") + "' AND LAUNCH_ACCOUNT = '" + account + "'");
@@ -280,8 +280,10 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 						launchMoc = rs1.getString("LAUNCH_MOC");
 					} else {
 						launchMoc = rs.getString("LAUNCH_MOC");
-					}
-					launchDataResponse.setLaunchMoc(launchMoc);
+					}*/
+					
+					launchDataResponse.setLaunchMoc(rs.getString("LAUNCH_MOC"));
+					launchDataResponse.setChangedMoc(rs.getString("CHANGED_MOC"));
 					launchDataResponse.setLaunchSubmissionDate(rs.getString("LAUNCH_SUBMISSION_DATE"));
 					if (launchMOC.equalsIgnoreCase("")
 							|| launchDataResponse.getLaunchMoc().equalsIgnoreCase(launchMOC)) {
@@ -299,11 +301,11 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		} finally {
 			try {
 				stmt.close();
-				stmt1.close();
+			//	stmt1.close();
 			//	stmt2.close();
 				stmtSS.close();
 				rs.close();
-				rs1.close();
+			//	rs1.close();
 			//	rs3.close();
 				rsSS.close();
 			} catch (Exception e) {
