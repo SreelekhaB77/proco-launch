@@ -221,9 +221,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 					/*"SELECT LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE,"
 							+ " CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,"
 							+ " CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE,LAUNCH_MOC,LAUNCH_SUBMISSION_DATE FROM TBL_LAUNCH_MASTER tlc WHERE"
-							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED NOT IN ('1','2') AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()" 
-					*/
-					
+							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED NOT IN ('1','2') AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()" */
 					"SELECT LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE,"
 					+ " CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,"
 					+ " CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE,LAUNCH_MOC,LAUNCH_SUBMISSION_DATE,"
@@ -236,11 +234,11 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 
 			rs = stmt.executeQuery();
 			while (rs.next()) {
-				//stmt2 = sessionImpl.connection()
-					//	.prepareStatement("SELECT * FROM TBL_LAUNCH_STATUS_KAM WHERE LAUNCH_ACCOUNT = '" + account
-						//		+ "' AND LAUNCH_ID = '" + rs.getInt("LAUNCH_ID") + "'");
-			//	rs3 = stmt2.executeQuery();
-				//if (!rs3.next()) {
+				stmt2 = sessionImpl.connection()
+						.prepareStatement("SELECT * FROM TBL_LAUNCH_STATUS_KAM WHERE LAUNCH_ACCOUNT = '" + account
+								+ "' AND LAUNCH_ID = '" + rs.getInt("LAUNCH_ID") + "'");
+				rs3 = stmt2.executeQuery();
+				if (!rs3.next()) {
 					LaunchDataResponse launchDataResponse = new LaunchDataResponse();
 					launchDataResponse.setLaunchId(rs.getInt("LAUNCH_ID"));
 					launchDataResponse.setLaunchName(rs.getString("LAUNCH_NAME"));
@@ -253,7 +251,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 					launchDataResponse.setAnnexureDocName(rs.getString("ANNEXURE_DOCUMENT_NAME"));
 					launchDataResponse.setArtWorkPackShotsDocName(rs.getString("ARTWORK_PACKSHOTS_DOC_NAME"));
 					launchDataResponse.setMdgDeckDocName(rs.getString("MDG_DECK_DOCUMENT_NAME"));
-					launchDataResponse.setChangedMoc(rs.getString("ORIGINAL_MOC"));
+					launchDataResponse.setChangedMoc(rs.getString("CHANGED_MOC"));
 
 					String sampleShared = null;
 					stmtSS = sessionImpl.connection().prepareStatement(
@@ -289,7 +287,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 						listOfCompletedLaunch.add(launchDataResponse);
 					}
 					// listOfCompletedLaunch.add(launchDataResponse);
-				//}
+				}
 			}
 		} catch (Exception ex) {
 			logger.debug("Exception :", ex);
