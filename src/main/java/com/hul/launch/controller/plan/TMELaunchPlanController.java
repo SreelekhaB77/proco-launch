@@ -851,7 +851,7 @@ public class TMELaunchPlanController {
 			if (result.equals("Saved Successfully")) {
 				successResponse.setResponseMessage(result);
 				launchService.updateLaunchStatus("LAUNCH_VISI_PLANNING", userId, launchId);
-				launchService.deleteAllNextPageData(launchId, "Launch_visiplan", userId);
+				//launchService.deleteAllNextPageData(launchId, "Launch_visiplan", userId);  //Commented By Sarin - sprint4Aug2021
 			} else {
 				successResponse.setResponseMessage(result);
 				throw new Exception("Something went wrong,Didn't Save Successfully");
@@ -877,7 +877,7 @@ public class TMELaunchPlanController {
 			String userId = (String) request.getSession().getAttribute("UserID");
 			result = launchFinalPlanService.saveLaunchFinalBuildUp(saveFinalLaunchListRequest, userId);
 			if (result.equals("Saved Successfully")) {
-				launchService.deleteAllNextPageData(saveFinalLaunchListRequest.getLaunchId(), "Launch_buildUp", userId);
+				//launchService.deleteAllNextPageData(saveFinalLaunchListRequest.getLaunchId(), "Launch_buildUp", userId);  //Commented By Sarin - sprint4Aug2021
 				successResponse.setResponseMessage(result);
 				launchService.updateLaunchStatus("LAUNCH_FINAL_BUILDUP", userId,
 						saveFinalLaunchListRequest.getLaunchId());
