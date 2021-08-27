@@ -192,11 +192,11 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		List<LaunchDataResponse> listOfCompletedLaunch = new ArrayList<>();
 		PreparedStatement stmt = null;
 		PreparedStatement stmt1 = null;
-		PreparedStatement stmt2 = null;
+		// PreparedStatement stmt2 = null; // Commeneted by Harsha for getting remaining accounts rejection lists
 		PreparedStatement stmtSS = null;
 		ResultSet rs = null;
 		ResultSet rs1 = null;
-		ResultSet rs3 = null;
+		// ResultSet rs3 = null; // Commeneted by Harsha for getting remaining accounts rejection lists
 		ResultSet rsSS = null;
 		try {
 			// kiran - translate changes
@@ -234,11 +234,12 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 
 			rs = stmt.executeQuery();
 			while (rs.next()) {
-				stmt2 = sessionImpl.connection()
-						.prepareStatement("SELECT * FROM TBL_LAUNCH_STATUS_KAM WHERE LAUNCH_ACCOUNT = '" + account
-								+ "' AND LAUNCH_ID = '" + rs.getInt("LAUNCH_ID") + "'");
-				rs3 = stmt2.executeQuery();
-				if (!rs3.next()) {
+				// Commeneted by Harsha for getting remaining accounts rejection lists
+				// stmt2 = sessionImpl.connection()
+					//	.prepareStatement("SELECT * FROM TBL_LAUNCH_STATUS_KAM WHERE LAUNCH_ACCOUNT = '" + account
+						//		+ "' AND LAUNCH_ID = '" + rs.getInt("LAUNCH_ID") + "'");
+				// rs3 = stmt2.executeQuery();
+				//if (!rs3.next()) {
 					LaunchDataResponse launchDataResponse = new LaunchDataResponse();
 					launchDataResponse.setLaunchId(rs.getInt("LAUNCH_ID"));
 					launchDataResponse.setLaunchName(rs.getString("LAUNCH_NAME"));
@@ -287,7 +288,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 						listOfCompletedLaunch.add(launchDataResponse);
 					}
 					// listOfCompletedLaunch.add(launchDataResponse);
-				}
+				//} // Commeneted by Harsha for getting remaining accounts rejection lists
 			}
 		} catch (Exception ex) {
 			logger.debug("Exception :", ex);
@@ -299,11 +300,11 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			try {
 				stmt.close();
 				stmt1.close();
-				stmt2.close();
+			//	stmt2.close();
 				stmtSS.close();
 				rs.close();
 				rs1.close();
-				rs3.close();
+			//	rs3.close();
 				rsSS.close();
 			} catch (Exception e) {
 				logger.debug("Exception :", e);
