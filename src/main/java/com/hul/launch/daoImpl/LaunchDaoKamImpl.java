@@ -595,11 +595,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			}
 
 			Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
-					"UPDATE TBL_LAUNCH_MASTER SET LAUNCH_MOC_KAM=?0, UPDATED_BY=?1,UPDATED_DATE=?2 WHERE LAUNCH_ID=?3"); // Sarin
-																															// -
-																															// Added
-																															// Parameters
-																															// position
+					"UPDATE TBL_LAUNCH_MASTER SET LAUNCH_MOC_KAM=?0, UPDATED_BY=?1,UPDATED_DATE=?2 WHERE LAUNCH_ID=?3"); // Sarin - Added Parameters position
 			query2.setParameter(0, changeMocRequestKam.getMocToChange());
 			query2.setParameter(1, userId);
 			query2.setParameter(2, new Timestamp(new Date().getTime()));
@@ -611,17 +607,30 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			String kamAccounts[];
 			kamAccounts = changeMocRequestKam.getMocAccount().split(",");
 			if (kamAccounts != null && kamAccounts.length > 0) {
+				/* //Commented by Sarin - Sprint4Aug2021 changes
 				Query qryKamAcc = sessionFactory.getCurrentSession().createNativeQuery(
 						"UPDATE TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS SET IS_ACTIVE = 0 WHERE LAUNCH_ID=?0 AND LAUNCH_MOC_KAM=?1 ");
 
 				qryKamAcc.setParameter(0, changeMocRequestKam.getLaunchId());
 				qryKamAcc.setParameter(1, changeMocRequestKam.getMocToChange());
+				qryKamAcc.setParameter(2, userId);
 				qryKamAcc.executeUpdate();
+				*/
 
+				PreparedStatement kamMOCUpdate = null;
 				String insertStatementForKAMMOCAcc = "INSERT INTO TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS (LAUNCH_ID, LAUNCH_MOC_KAM, LAUNCH_KAM_ACCOUNT, IS_ACTIVE, UPDATED_BY, UPDATED_DATE, REQ_ID) VALUES (?, ?, ?, ?, ?, ?, ?)";
 				for (int i = 0; i < kamAccounts.length; i++) {
 					try (PreparedStatement psKamMocChange = sessionImpl.connection()
 							.prepareStatement(insertStatementForKAMMOCAcc, Statement.RETURN_GENERATED_KEYS)) {
+						
+						//Sprint4Aug2021 changes - starts
+						kamMOCUpdate = sessionImpl.connection()
+								.prepareStatement("UPDATE TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS SET IS_ACTIVE = 0 WHERE LAUNCH_ID=? AND LAUNCH_KAM_ACCOUNT=? AND IS_ACTIVE = 1");
+						kamMOCUpdate.setString(1, changeMocRequestKam.getLaunchId());
+						kamMOCUpdate.setString(2, kamAccounts[i]);
+						kamMOCUpdate.executeUpdate();
+						//Sprint4Aug2021 changes - ends
+						
 						psKamMocChange.setString(1, changeMocRequestKam.getLaunchId());
 						psKamMocChange.setString(2, changeMocRequestKam.getMocToChange());
 						psKamMocChange.setString(3, kamAccounts[i]);
