@@ -1013,6 +1013,24 @@ public class LaunchDaoImpl implements LaunchDao {
 										+ rs.getString("LAUNCH_ID") + "' AND LAUNCH_ACCOUNT ='"
 										+ rs.getString("CREATED_BY") + "'");
 						query2.executeUpdate();
+						// Harsha's Implementation for Reject by TME Sprint Q4
+						Query query10 = sessionFactory.getCurrentSession()
+								.createNativeQuery("SELECT DISTINCT LAUNCH_KAM_ACCOUNT FROM MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS "
+								+ " WHERE LAUNCH_ID = '" + rs.getString("LAUNCH_ID") + "' AND REQ_ID ='"
+										+ rs.getString("REQ_ID") +
+								"'" );
+						
+						List<String> nameOfAccounts =  query10.list();
+						if(nameOfAccounts!=null && !nameOfAccounts.isEmpty()) {
+							
+						Query query3 = sessionFactory.getCurrentSession()
+								.createNativeQuery("DELETE from TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS where LAUNCH_ID='"
+										+ rs.getString("LAUNCH_ID") + "' AND REQ_ID ='"
+										+ rs.getString("REQ_ID") + "'");
+						query3.executeUpdate();
+						}
+						// Harsha's code ends here End of if loop 
+
 					} else if (rs.getString("CHANGES_REQUIRED").equals("BASEPACK REJECTED")) {
 						try {
 							String[] bpIds = rs.getString("REJECT_IDS").split(",");
@@ -1159,6 +1177,24 @@ public class LaunchDaoImpl implements LaunchDao {
 										+ "' WHERE LAUNCH_ID='" + rs.getString("LAUNCH_ID") + "' AND LAUNCH_ACCOUNT = '"
 										+ userId + "'");
 						query2.executeUpdate();
+						
+						//Harsha's Modification for getting updated list on Dash board Working Sprint Q:-4
+						
+						Query query10 = sessionFactory.getCurrentSession().createNativeQuery("SELECT DISTINCT LAUNCH_KAM_ACCOUNT FROM MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS "
+								+ " WHERE LAUNCH_ID = '" + rs.getString("LAUNCH_ID") + "' AND REQ_ID = '" + rs.getString("REQ_ID") + "'" );
+						List<String> nameOfAccounts =  query10.list();
+						if(nameOfAccounts!=null && !nameOfAccounts.isEmpty()) {
+							for(String nameAccounts : nameOfAccounts) {
+								Query query3 = sessionFactory.getCurrentSession()
+										.createNativeQuery("UPDATE MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS SET IS_ACTIVE='0' '"
+												+ "' WHERE IS_ACTIVE = '1' AND LAUNCH_ID='" + rs.getString("LAUNCH_ID") + "' AND LAUNCH_KAM_ACCOUNT = '"
+												+ nameAccounts + "'");
+								query3.executeUpdate();
+							}
+							
+						}
+						//Harsha's logic ends here 
+						
 						//Commented By Sarin - Sprint4Aug21 - for Launch Account wise Rejection
 						/*Query query3 = sessionFactory.getCurrentSession()
 								.createNativeQuery("UPDATE TBL_LAUNCH_MASTER SET LAUNCH_REJECTED='2',UPDATED_BY='" + userId
