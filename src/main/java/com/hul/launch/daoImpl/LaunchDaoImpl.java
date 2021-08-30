@@ -1002,7 +1002,7 @@ public class LaunchDaoImpl implements LaunchDao {
 
 			for (int i = 0; i < reqIds.length; i++) {
 				preparedStatement = sessionImpl.connection().prepareStatement(
-						"SELECT LAUNCH_ID,CHANGES_REQUIRED,REJECT_IDS,CREATED_BY FROM TBL_LAUNCH_REQUEST WHERE REQ_ID = '"
+						"SELECT REQ_ID,LAUNCH_ID,CHANGES_REQUIRED,REJECT_IDS,CREATED_BY FROM TBL_LAUNCH_REQUEST WHERE REQ_ID = '"
 								+ reqIds[i] + "'");
 				rs = preparedStatement.executeQuery();
 
@@ -1165,8 +1165,8 @@ public class LaunchDaoImpl implements LaunchDao {
 			SessionImpl sessionImpl = (SessionImpl) session;
 			String[] reqIds = acceptByTme.getReqIds().split(",");
 			for (int i = 0; i < reqIds.length; i++) {
-				preparedStatement = sessionImpl.connection().prepareStatement(
-						"SELECT LAUNCH_ID,CHANGES_REQUIRED,REJECT_IDS,CREATED_BY FROM TBL_LAUNCH_REQUEST WHERE REQ_ID = '"
+				preparedStatement = sessionImpl.connection().prepareStatement( //Harsha added REQ_ID
+						"SELECT REQ_ID,LAUNCH_ID,CHANGES_REQUIRED,REJECT_IDS,CREATED_BY FROM TBL_LAUNCH_REQUEST WHERE REQ_ID = '"
 								+ reqIds[i] + "'");
 				rs = preparedStatement.executeQuery();
 				while (rs.next()) {
