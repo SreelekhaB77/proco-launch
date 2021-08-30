@@ -252,8 +252,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 					launchDataResponse.setAnnexureDocName(rs.getString("ANNEXURE_DOCUMENT_NAME"));
 					launchDataResponse.setArtWorkPackShotsDocName(rs.getString("ARTWORK_PACKSHOTS_DOC_NAME"));
 					launchDataResponse.setMdgDeckDocName(rs.getString("MDG_DECK_DOCUMENT_NAME"));
-					launchDataResponse.setChangedMoc(rs.getString("CHANGED_MOC"));
-
+					
 					String sampleShared = null;
 					stmtSS = sessionImpl.connection().prepareStatement(
 							"SELECT LAUNCH_SAMPLE_SHARED FROM TBL_LAUNCH_SAMPLE_SHARED_KAM WHERE LAUNCH_ID = '"
@@ -271,7 +270,8 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 					launchDataResponse.setCreatedDate(rs.getDate("CREATED_DATE"));
 					launchDataResponse.setUpdatedBy(rs.getString("UPDATED_BY"));
 					launchDataResponse.setUpdatedDate(rs.getDate("UPDATED_DATE"));
-					String launchMoc = null;
+					//Kavitha D changes-SPrint4 Aug2021
+					/*String launchMoc = null;
 					stmt1 = sessionImpl.connection()
 							.prepareStatement("SELECT LAUNCH_MOC FROM TBL_LAUNCH_MOC_KAM WHERE LAUNCH_ID = '"
 									+ rs.getInt("LAUNCH_ID") + "' AND LAUNCH_ACCOUNT = '" + account + "'");
@@ -280,8 +280,10 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 						launchMoc = rs1.getString("LAUNCH_MOC");
 					} else {
 						launchMoc = rs.getString("LAUNCH_MOC");
-					}
-					launchDataResponse.setLaunchMoc(launchMoc);
+					}*/
+					
+					launchDataResponse.setLaunchMoc(rs.getString("LAUNCH_MOC"));
+					launchDataResponse.setChangedMoc(rs.getString("CHANGED_MOC"));
 					launchDataResponse.setLaunchSubmissionDate(rs.getString("LAUNCH_SUBMISSION_DATE"));
 					if (launchMOC.equalsIgnoreCase("")
 							|| launchDataResponse.getLaunchMoc().equalsIgnoreCase(launchMOC)) {
@@ -299,11 +301,11 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		} finally {
 			try {
 				stmt.close();
-				stmt1.close();
+			//	stmt1.close();
 			//	stmt2.close();
 				stmtSS.close();
 				rs.close();
-				rs1.close();
+			//	rs1.close();
 			//	rs3.close();
 				rsSS.close();
 			} catch (Exception e) {
@@ -593,11 +595,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			}
 
 			Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
-					"UPDATE TBL_LAUNCH_MASTER SET LAUNCH_MOC_KAM=?0, UPDATED_BY=?1,UPDATED_DATE=?2 WHERE LAUNCH_ID=?3"); // Sarin
-																															// -
-																															// Added
-																															// Parameters
-																															// position
+					"UPDATE TBL_LAUNCH_MASTER SET LAUNCH_MOC_KAM=?0, UPDATED_BY=?1,UPDATED_DATE=?2 WHERE LAUNCH_ID=?3"); // Sarin - Added Parameters position
 			query2.setParameter(0, changeMocRequestKam.getMocToChange());
 			query2.setParameter(1, userId);
 			query2.setParameter(2, new Timestamp(new Date().getTime()));
@@ -609,17 +607,30 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			String kamAccounts[];
 			kamAccounts = changeMocRequestKam.getMocAccount().split(",");
 			if (kamAccounts != null && kamAccounts.length > 0) {
+				/* //Commented by Sarin - Sprint4Aug2021 changes
 				Query qryKamAcc = sessionFactory.getCurrentSession().createNativeQuery(
 						"UPDATE TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS SET IS_ACTIVE = 0 WHERE LAUNCH_ID=?0 AND LAUNCH_MOC_KAM=?1 ");
 
 				qryKamAcc.setParameter(0, changeMocRequestKam.getLaunchId());
 				qryKamAcc.setParameter(1, changeMocRequestKam.getMocToChange());
+				qryKamAcc.setParameter(2, userId);
 				qryKamAcc.executeUpdate();
+				*/
 
+				PreparedStatement kamMOCUpdate = null;
 				String insertStatementForKAMMOCAcc = "INSERT INTO TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS (LAUNCH_ID, LAUNCH_MOC_KAM, LAUNCH_KAM_ACCOUNT, IS_ACTIVE, UPDATED_BY, UPDATED_DATE, REQ_ID) VALUES (?, ?, ?, ?, ?, ?, ?)";
 				for (int i = 0; i < kamAccounts.length; i++) {
 					try (PreparedStatement psKamMocChange = sessionImpl.connection()
 							.prepareStatement(insertStatementForKAMMOCAcc, Statement.RETURN_GENERATED_KEYS)) {
+						
+						//Sprint4Aug2021 changes - starts
+						kamMOCUpdate = sessionImpl.connection()
+								.prepareStatement("UPDATE TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS SET IS_ACTIVE = 0 WHERE LAUNCH_ID=? AND LAUNCH_KAM_ACCOUNT=? AND IS_ACTIVE = 1");
+						kamMOCUpdate.setString(1, changeMocRequestKam.getLaunchId());
+						kamMOCUpdate.setString(2, kamAccounts[i]);
+						kamMOCUpdate.executeUpdate();
+						//Sprint4Aug2021 changes - ends
+						
 						psKamMocChange.setString(1, changeMocRequestKam.getLaunchId());
 						psKamMocChange.setString(2, changeMocRequestKam.getMocToChange());
 						psKamMocChange.setString(3, kamAccounts[i]);
