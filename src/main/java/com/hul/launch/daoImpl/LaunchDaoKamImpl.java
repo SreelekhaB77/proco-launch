@@ -340,26 +340,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		}
 	}
 	
-	// Implementation to get max number from modification table Added By Harsha
 	
-	public String getMaxcountofTBL_LAUNCH_KAM_CHANGE_MOC_DETAILS() {
-		Session session = sessionFactory.getCurrentSession();
-		SessionImpl sessionImpl = (SessionImpl) session;
-		String launchMoc = "";
-		try {
-			PreparedStatement stmt = sessionImpl.connection()
-					.prepareStatement("SELECT MAX(LAUNCH_KAM_ID) FROM TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS");
-			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				launchMoc = rs.getString(1);
-			}
-
-			return launchMoc;
-		} catch (Exception ex) {
-			logger.debug("Exception :", ex);
-			return ex.toString();
-		}
-	}
 	
 	/// Implementation to get details from modified table Added by Harsha for Sprint Q4
 	public List<String> getModifiedMocdetailsforRejection(String launchId) {
@@ -393,8 +374,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 	public Boolean insertintoLaunchKamChangeMocDetails(String userId,List<String> validDetails) {
 		boolean res = true;
 		try {
-			int counter = Integer.parseInt(getMaxcountofTBL_LAUNCH_KAM_CHANGE_MOC_DETAILS());
-			int incrementer = counter+1;
+			
 			for(String read : validDetails) {
 				String[] stringarray = read.split("-");
 			
@@ -404,15 +384,13 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			   int LAUNCH_ID = Integer.parseInt(stringarray[3]);
 			
 			Query query = sessionFactory.getCurrentSession().createNativeQuery("INSERT INTO TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS"
-					+ "(LAUNCH_KAM_ID,"
-					+ "LAUNCH_ID,"
+					+ "(LAUNCH_ID,"
 					+ "LAUNCH_MOC_KAM,"
 					+ "LAUNCH_KAM_ACCOUNT,"
 					+ "IS_ACTIVE,"
 					+ "UPDATED_BY,"
 					+ "UPDATED_DATE,REQ_ID)"
-					+ "VALUES(?0,?1,?2,?3,?4,?5,?6,?7)");
-			query.setParameter(0, incrementer++);
+					+ "VALUES(?1,?2,?3,?4,?5,?6,?7)");
 			query.setParameter(1, LAUNCH_ID);
 			query.setParameter(2, stringarray[1]);
 			query.setParameter(3, stringarray[0]);
