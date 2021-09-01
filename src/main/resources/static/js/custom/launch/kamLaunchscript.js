@@ -161,6 +161,7 @@ $(document).ready(function() {
 		loadselectedkamAccounts();  //Sarin Changes Q1Sprint Feb2021
 		//loadKamAccounts();  
 		
+		
 	});
 	
 	//Sarin Changes Q1Sprint Feb2021 - Starts
@@ -568,24 +569,30 @@ $(document).ready(function() {
 	          //  kambaseoTable.draw();
 	            $('#kamRemakRejErrorMsg').hide();
 	            $('#successblock').show().find('span').html(' Request for Launch MOC send Successfully !!!');
-	            $( "#kambasepack_add" ).load( "#kamlaunchDetailsTab.html #kambasepack_add" );
+	          // $( "#kambasepack_add" ).load( "#kamlaunchDetailsTab.html #kambasepack_add" );  //commented this line by bharati for kam Load table data issue on 1 sep 21
 	           /* setTimeout(function(){
 	            kambaseoTable.draw();
 	            }, 700); */ 
-	            $("#kambasepack_add").dataTable().fnDestroy();
+	           $("#kambasepack_add").dataTable().fnDestroy();
+	          
 	            $('#kamMocremarks').val("");
 	            $('#mockamChange').prop("disabled", true);
 	         	$('#rejectLaunch').prop("disabled", true);
-	         	$('#kamlnchDets').prop("disabled", true); 
+	         	$('#kamlnchDets').prop("disabled", true);
+	            loadKamLauches('ALL');     // added this for kam table load issues by 1 sep 21 bharati
 	        },
+	         
 	        error: function( jqXhr, textStatus, errorThrown ){
 	            console.log( errorThrown );
 	        }
 	    });
+	    
+	   
 		}
+		
 	}
 	
-	
+
 // reject launch
 	
 function rejectLaunch() {
@@ -625,9 +632,8 @@ function rejectLaunch() {
             $('#paidRejCancelBtn').click();
             //kambaseoTable.draw();
             $('#successblock').show().find('span').html(' Launch Rejected Successfully !!!');
-           // $( "#kambasepack_add" ).load( "#kamlaunchDetailsTab.html #kambasepack_add" );
-           
-            $( "#kambasepack_add" ).load( "#kamlaunchDetailsTab.html #kambasepack_add" );
+            
+           // $( "#kambasepack_add" ).load( "#kamlaunchDetailsTab.html #kambasepack_add" ); //commented this line by bharati for kam Load table data issue on 1 sep 21
            /* setTimeout(function(){
             kambaseoTable.draw();
             }, 700); */ 
@@ -636,7 +642,7 @@ function rejectLaunch() {
             $('#mockamChange').prop("disabled", true);
          	$('#rejectLaunch').prop("disabled", true);
          	$('#kamlnchDets').prop("disabled", true);
-         	
+         	loadKamLauches('ALL');     // added this for kam table load issues by 1 sep 21 bharati
         },
         error: function( jqXhr, textStatus, errorThrown ){
             console.log( errorThrown );

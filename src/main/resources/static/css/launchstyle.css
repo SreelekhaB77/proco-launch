@@ -367,7 +367,7 @@ display:none;
 }  
 #successblock{
 	position: relative;
-    bottom: 25px;
+    bottom: 15px;  /*bharati change this style 25 to 15Px for sucessblock not display properly*/
     height: 50px;
 }
 .btn.focus, .btn:focus, .btn:hover {
