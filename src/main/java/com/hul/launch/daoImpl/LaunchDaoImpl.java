@@ -960,7 +960,8 @@ public class LaunchDaoImpl implements LaunchDao {
 				else if(rs.getString("CHANGES_REQUIRED").equals("MOC CHANGED")) {
 					query2 = sessionFactory.getCurrentSession().createNativeQuery(
 							"SELECT DISTINCT LAUNCH_KAM_ACCOUNT FROM MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS "
-							+ "WHERE IS_ACTIVE = 1 AND LAUNCH_ID = '" + rs.getString("LAUNCH_ID") + "'" 
+							//+ "WHERE IS_ACTIVE = 1 AND LAUNCH_ID = '" + rs.getString("LAUNCH_ID") + "'" 
+							+ "WHERE LAUNCH_ID = '" + rs.getString("LAUNCH_ID") + "'"
 									+"AND UPDATED_BY = '" + createdby + "'" +
 									"AND REQ_ID = '" + RequestId + "'");
 				}//Harsha's Implementation ends here for MOC CHANGED .
@@ -1248,6 +1249,26 @@ public class LaunchDaoImpl implements LaunchDao {
 								return e.toString();
 							}
 						}
+						
+						
+						//Sprint4Aug2021 changes - starts
+						Query queryKamMoc = sessionFactory.getCurrentSession().createNativeQuery("SELECT DISTINCT LAUNCH_KAM_ACCOUNT FROM MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS "
+								+ " WHERE LAUNCH_ID = '" + rs.getString("LAUNCH_ID") + "' AND REQ_ID = '" + rs.getString("REQ_ID") + "'" );
+						List<String> kamApprovedAccounts =  queryKamMoc.list();
+						if(kamApprovedAccounts!=null && !kamApprovedAccounts.isEmpty()) {
+							for(String kamAccounts : kamApprovedAccounts) {
+								Query query3 = sessionFactory.getCurrentSession()
+										.createNativeQuery("UPDATE MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS SET IS_ACTIVE='0' '"
+												+ "' WHERE IS_ACTIVE = '1' AND LAUNCH_ID='" + rs.getString("LAUNCH_ID") + "' AND LAUNCH_KAM_ACCOUNT = '"
+												+ kamAccounts + "'");
+								query3.executeUpdate();
+							}
+						}
+						Query queryUpdateKamMocToActive = sessionFactory.getCurrentSession()
+								.createNativeQuery("UPDATE MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS SET IS_ACTIVE = 1 WHERE LAUNCH_ID='" + rs.getString("LAUNCH_ID") + "' AND REQ_ID = '" + rs.getString("REQ_ID") + "'");
+						queryUpdateKamMocToActive.executeUpdate();
+						//Sprint4Aug2021 changes - ends
+						
 					} else if (rs.getString("CHANGES_REQUIRED").equals("BASEPACK REJECTED")) {
 						basepackCalForKAM(userId, rs, session);
 					} else if (rs.getString("CHANGES_REQUIRED").equals("STORE REJECTED")) {
