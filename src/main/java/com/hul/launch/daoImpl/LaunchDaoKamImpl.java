@@ -602,17 +602,18 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 							.prepareStatement(insertStatementForKAMMOCAcc, Statement.RETURN_GENERATED_KEYS)) {
 						
 						//Sprint4Aug2021 changes - starts
-						kamMOCUpdate = sessionImpl.connection()
+						/* kamMOCUpdate = sessionImpl.connection()
 								.prepareStatement("UPDATE TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS SET IS_ACTIVE = 0 WHERE LAUNCH_ID=? AND LAUNCH_KAM_ACCOUNT=? AND IS_ACTIVE = 1");
 						kamMOCUpdate.setString(1, changeMocRequestKam.getLaunchId());
 						kamMOCUpdate.setString(2, kamAccounts[i]);
-						kamMOCUpdate.executeUpdate();
+						kamMOCUpdate.executeUpdate(); */
 						//Sprint4Aug2021 changes - ends
 						
 						psKamMocChange.setString(1, changeMocRequestKam.getLaunchId());
 						psKamMocChange.setString(2, changeMocRequestKam.getMocToChange());
 						psKamMocChange.setString(3, kamAccounts[i]);
-						psKamMocChange.setInt(4, 1);
+						//psKamMocChange.setInt(4, 1);  //Sprint4Aug2021 changes
+						psKamMocChange.setInt(4, 0);    //Sprint4Aug2021 changes
 						psKamMocChange.setString(5, userId);
 						psKamMocChange.setTimestamp(6, new Timestamp(new Date().getTime()));
 						psKamMocChange.setInt(7, reqId); // As part of Q4 Sprint inserting REQ_ID: Harsha
