@@ -1031,7 +1031,29 @@ public class LaunchDaoImpl implements LaunchDao {
 						}
 						// Harsha's code ends here End of if loop 
 
-					} else if (rs.getString("CHANGES_REQUIRED").equals("BASEPACK REJECTED")) {
+					} 
+					// Harsha's Code for rejecting Chnage in MOC start here Q4 Sprint
+					
+					else if (rs.getString("CHANGES_REQUIRED").equals("MOC CHANGED")) {
+						
+						Query query1 = sessionFactory.getCurrentSession().createNativeQuery("SELECT DISTINCT LAUNCH_KAM_ACCOUNT FROM MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS "
+								+ " WHERE LAUNCH_ID = '" + rs.getString("LAUNCH_ID") + "' AND REQ_ID = '" + rs.getString("REQ_ID") + "'" );
+						List<String> nameOfAccounts =  query1.list();
+						if(nameOfAccounts!=null && !nameOfAccounts.isEmpty()) {
+							for(String nameAccounts : nameOfAccounts) {
+								Query query2 = sessionFactory.getCurrentSession()
+										.createNativeQuery("UPDATE MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS SET IS_ACTIVE='0' '"
+												+ "' WHERE IS_ACTIVE = '1' AND LAUNCH_ID='" + rs.getString("LAUNCH_ID") + "' AND LAUNCH_KAM_ACCOUNT = '"
+												+ nameAccounts + "'");
+								query2.executeUpdate();
+							}
+							
+						}
+						
+					}
+					// Harsha's Code for rejecting Chnage in MOC end's here
+					
+					else if (rs.getString("CHANGES_REQUIRED").equals("BASEPACK REJECTED")) {
 						try {
 							String[] bpIds = rs.getString("REJECT_IDS").split(",");
 
