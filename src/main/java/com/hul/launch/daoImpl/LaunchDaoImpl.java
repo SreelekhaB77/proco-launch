@@ -1040,16 +1040,12 @@ public class LaunchDaoImpl implements LaunchDao {
 								+ " WHERE LAUNCH_ID = '" + rs.getString("LAUNCH_ID") + "' AND REQ_ID = '" + rs.getString("REQ_ID") + "'" );
 						List<String> nameOfAccounts =  query1.list();
 						if(nameOfAccounts!=null && !nameOfAccounts.isEmpty()) {
-							for(String nameAccounts : nameOfAccounts) {
 								Query query2 = sessionFactory.getCurrentSession()
 										.createNativeQuery("UPDATE MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS SET IS_ACTIVE='0' '"
-												+ "' WHERE IS_ACTIVE = '1' AND LAUNCH_ID='" + rs.getString("LAUNCH_ID") + "' AND LAUNCH_KAM_ACCOUNT = '"
-												+ nameAccounts + "'");
+												+ "' WHERE IS_ACTIVE = '1' AND LAUNCH_ID='" + rs.getString("LAUNCH_ID") + "' AND REQ_ID = '"
+												+ rs.getString("REQ_ID") + "'");
 								query2.executeUpdate();
-							}
-							
-						}
-						
+					}
 					}
 					// Harsha's Code for rejecting Chnage in MOC end's here
 					
