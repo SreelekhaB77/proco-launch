@@ -901,7 +901,9 @@ public class LaunchDaoImpl implements LaunchDao {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		LaunchClusterData launchClusterData = new LaunchClusterData();
+		List<String> lstRejectedAccounts = null;
 		try {
+			lstRejectedAccounts = getKamRejectedLaunchAccounts(launchId);  //Sprint4Aug2021 changes - starts
 			Session session = sessionFactory.getCurrentSession();
 			SessionImpl sessionImpl = (SessionImpl) session;
 			stmt = sessionImpl.connection().prepareStatement(
@@ -910,7 +912,21 @@ public class LaunchDaoImpl implements LaunchDao {
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				launchClusterData.setCluster(rs.getString("CLUSTER_REGION"));
-				launchClusterData.setAccount_string(rs.getString("CLUSTER_ACCOUNT"));
+				//Sprint4Aug2021 changes - starts
+				String launchClusterAccount = "";
+				if ((lstRejectedAccounts != null) && (!lstRejectedAccounts.isEmpty())) {
+					launchClusterAccount = rs.getString("CLUSTER_ACCOUNT");
+					for (String rejectAccts: lstRejectedAccounts) {
+						launchClusterAccount = launchClusterAccount.replaceAll(rejectAccts, "");
+					}
+					launchClusterAccount = launchClusterAccount.replaceAll(",,", ",");
+					if (launchClusterAccount.endsWith(",")) {
+						launchClusterAccount = launchClusterAccount.substring(0, launchClusterAccount.length() - 1);
+					}
+					launchClusterData.setAccount_string(launchClusterAccount);
+				} else
+				//Sprint4Aug2021 changes - Ends
+					launchClusterData.setAccount_string(rs.getString("CLUSTER_ACCOUNT"));
 				launchClusterData.setStore_Format(rs.getString("CLUSTER_STORE_FORMAT"));
 				launchClusterData.setCustomer_Store_Format(rs.getString("CLUSTER_CUST_STORE_FORMAT"));
 				launchClusterData.setTotalStoresToLaunch(rs.getString("TOTAL_STORES_TO_LAUNCH"));
@@ -920,6 +936,18 @@ public class LaunchDaoImpl implements LaunchDao {
 			launchClusterData.setError(e.toString());
 		}
 		return launchClusterData;
+	}
+	
+	//Sprint4Aug2021 changes
+	public List<String> getKamRejectedLaunchAccounts(String launchId) {
+		List<String> lstKamRejectedAccounts = new ArrayList<String>();
+		try {
+			Query qryKamRejectAccts = sessionFactory.getCurrentSession().createNativeQuery("SELECT DISTINCT CONCAT(OM.ACCOUNT_NAME , ':' , OM.DP_CHAIN) AS ACCOUNTCHAIN FROM TBL_VAT_COMM_OUTLET_MASTER OM INNER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS KM ON KM.LAUNCH_KAM_ACCOUNT = OM.ACCOUNT_NAME WHERE KM.IS_ACTIVE = 2 AND KM.LAUNCH_ID = '" + launchId + "' ");
+			lstKamRejectedAccounts =  qryKamRejectAccts.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return lstKamRejectedAccounts;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -1212,6 +1240,13 @@ public class LaunchDaoImpl implements LaunchDao {
 							}
 							
 						}
+						
+						//Sprint4Aug2021 changes
+						Query qryDeleteSellIn = sessionFactory.getCurrentSession()
+								.createNativeQuery("DELETE LS from TBL_LAUNCH_SELLIN LS INNER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS MD ON MD.LAUNCH_ID = LS.SELLIN_LAUNCH_ID AND MD.LAUNCH_KAM_ACCOUNT = LS.SELLIN_L2_CHAIN WHERE MD.IS_ACTIVE = 2 "
+												 + " AND LS.SELLIN_LAUNCH_ID = " + rs.getString("LAUNCH_ID") + " AND REQ_ID = " + rs.getString("REQ_ID"));
+						qryDeleteSellIn.executeUpdate();
+						
 						//Harsha's logic ends here 
 						
 						//Commented By Sarin - Sprint4Aug21 - for Launch Account wise Rejection
