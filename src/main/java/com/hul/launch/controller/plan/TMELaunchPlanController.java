@@ -715,7 +715,7 @@ public class TMELaunchPlanController {
 				if (Integer.parseInt(result) > 0) {
 					successResponseSaveLaunchDetails.setLaunchId(result);
 					launchService.saveLaunchStatus(result, userId);
-					launchService.deleteAllNextPageData(result, "Launch_details", userId);
+					//launchService.deleteAllNextPageData(result, "Launch_details", userId);  //Commented By Sarin - sprint4Aug2021
 				}
 			}
 		} catch (Exception e) {
@@ -741,7 +741,7 @@ public class TMELaunchPlanController {
 			if (result > 0) {
 				successResponseSaveClusters.setClusterId(Integer.toString(result));
 				launchService.updateLaunchStatus("LAUNCH_STORES", userId, saveLaunchClustersRequest.getLaunchId());
-				launchService.deleteAllNextPageData(saveLaunchClustersRequest.getLaunchId(), "Launch_clusters", userId);
+				//launchService.deleteAllNextPageData(saveLaunchClustersRequest.getLaunchId(), "Launch_clusters", userId); //Commented By Sarin - sprint4Aug2021
 			}
 		} catch (Exception e) {
 			result = 0;
@@ -766,7 +766,7 @@ public class TMELaunchPlanController {
 			if (result == 1) {
 				successResponse.setResponseMessage("Saved Successfully");
 				launchService.updateLaunchStatus("LAUNCH_BASEPACKS", userId, tblLaunchbasePacks.getLaunchId());
-				launchService.deleteAllNextPageData(tblLaunchbasePacks.getLaunchId(), "Launch_basepacks", userId);
+				//launchService.deleteAllNextPageData(tblLaunchbasePacks.getLaunchId(), "Launch_basepacks", userId); //Commented By Sarin - sprint4Aug2021
 			} else {
 				successResponse.setResponseMessage("Didn't Save Successfully");
 				throw new Exception("Something went wrong,Didn't Save Successfully");
@@ -795,7 +795,7 @@ public class TMELaunchPlanController {
 			if (result.equals("Saved Successfully")) {
 				successResponse.setResponseMessage(result);
 				launchService.updateLaunchStatus("LAUNCH_SELL_IN", userId, saveLaunchSellInRequest.getLaunchId());
-				launchService.deleteAllNextPageData(saveLaunchSellInRequest.getLaunchId(), "Launch_sellIn", userId);
+				//launchService.deleteAllNextPageData(saveLaunchSellInRequest.getLaunchId(), "Launch_sellIn", userId);  //Commented By Sarin - sprint4Aug2021
 			} else {
 				successResponse.setResponseMessage(result);
 				throw new Exception("Something went wrong,Didn't Save Successfully");
@@ -824,8 +824,7 @@ public class TMELaunchPlanController {
 				successResponse.setResponseMessage(result);
 				launchService.updateLaunchStatus("LAUNCH_VISI_PLANNING", userId,
 						Integer.toString(saveLaunchVisiPlanRequest.getLaunchId()));
-				launchService.deleteAllNextPageData(Integer.toString(saveLaunchVisiPlanRequest.getLaunchId()),
-						"Launch_visiplan", userId);
+				//launchService.deleteAllNextPageData(Integer.toString(saveLaunchVisiPlanRequest.getLaunchId()),"Launch_visiplan", userId);  //Commented By Sarin - sprint4Aug2021
 			} else {
 				successResponse.setResponseMessage(result);
 				throw new Exception("Something went wrong,Didn't Save Successfully");
@@ -851,7 +850,7 @@ public class TMELaunchPlanController {
 			if (result.equals("Saved Successfully")) {
 				successResponse.setResponseMessage(result);
 				launchService.updateLaunchStatus("LAUNCH_VISI_PLANNING", userId, launchId);
-				launchService.deleteAllNextPageData(launchId, "Launch_visiplan", userId);
+				//launchService.deleteAllNextPageData(launchId, "Launch_visiplan", userId);  //Commented By Sarin - sprint4Aug2021
 			} else {
 				successResponse.setResponseMessage(result);
 				throw new Exception("Something went wrong,Didn't Save Successfully");
@@ -877,7 +876,7 @@ public class TMELaunchPlanController {
 			String userId = (String) request.getSession().getAttribute("UserID");
 			result = launchFinalPlanService.saveLaunchFinalBuildUp(saveFinalLaunchListRequest, userId);
 			if (result.equals("Saved Successfully")) {
-				launchService.deleteAllNextPageData(saveFinalLaunchListRequest.getLaunchId(), "Launch_buildUp", userId);
+				//launchService.deleteAllNextPageData(saveFinalLaunchListRequest.getLaunchId(), "Launch_buildUp", userId);  //Commented By Sarin - sprint4Aug2021
 				successResponse.setResponseMessage(result);
 				launchService.updateLaunchStatus("LAUNCH_FINAL_BUILDUP", userId,
 						saveFinalLaunchListRequest.getLaunchId());

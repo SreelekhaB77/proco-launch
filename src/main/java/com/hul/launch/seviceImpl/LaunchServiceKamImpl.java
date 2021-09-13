@@ -70,7 +70,7 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 		}
 		return listOfUpcomingMoc;
 	}
-
+	
 	@Override
 	public String rejectLaunchByLaunchIdKam(GetKamLaunchRejectRequest getKamLaunchRejectRequest, String userId) {
 		return launchDaoKam.rejectLaunchByLaunchIdKam(getKamLaunchRejectRequest, userId);
@@ -104,6 +104,8 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 	public List<SaveLaunchStoreList> getLaunchStoresBuildUpByLaunchIdKam(String launchId, String userId) {
 		return launchDaoKam.getLaunchStoresBuildUpByLaunchIdKam(launchId, userId);
 	}
+	
+	
 
 	@Override
 	public String saveLaunchStores(SaveLaunchStore saveFinalLaunchListRequest, String userId, String launchId) {
@@ -119,6 +121,8 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 	@Override
 	public ArrayList<String> getHeaderListForBaseFile() {
 		ArrayList<String> headerList = new ArrayList<String>();
+		headerList.add("LAUNCH_NAME");
+		headerList.add("LAUNCH_MOC");
 		headerList.add("L1_CHAIN");
 		headerList.add("L2_CHAIN");
 		headerList.add("STORE_FORMAT");
@@ -196,4 +200,15 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 	public List<String> getKamApprovalStatus(String userId) {
 		return launchDaoKam.getKamApprovalStatus(userId);
 	}
+
+	// Removing Rejected acoounts added by Harsha 
+	@Override
+	public List<String> getLaunchAccountsforRejection(String launchId, String userId) {
+		return launchDaoKam.getLaunchAccountsforRejection( launchId,  userId);
+	}
+
+	
+	
+
+
 }

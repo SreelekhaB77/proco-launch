@@ -1250,24 +1250,54 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 		SessionImpl sessionImpl = (SessionImpl) session;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
+		
 		try {
 			downloadDataList.add(headerDetail);
 			stmt = sessionImpl.connection().prepareStatement(
 					"SELECT REQ_ID,tlm.LAUNCH_ID,tlm.LAUNCH_NAME LAUNCH_NAME,tlm.LAUNCH_MOC LAUNCH_MOC,"
 							+ "CHANGES_REQUIRED,KAM_REMARKS,REQ_DATE,tlr.CREATED_BY,tlr.CREATED_DATE FROM "
 							+ " TBL_LAUNCH_REQUEST tlr, TBL_LAUNCH_MASTER tlm WHERE tlm.LAUNCH_ID = tlr.LAUNCH_ID AND "
-							+ " FINAL_STATUS = 'PENDING' AND tlm.CREATED_BY ='" + userId + "'");
+							+ " FINAL_STATUS = 'PENDING'  AND  tlm.CREATED_BY ='" + userId + "'");
 			rs = stmt.executeQuery();
 			while (rs.next()) {
-				Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
+				
+				
+				Query query2;
+				// Modified code by Harsha for Q4 Sprint
+				if(rs.getString("CHANGES_REQUIRED").equals("LAUNCH REJECTED")) {
+				query2 = sessionFactory.getCurrentSession().createNativeQuery(
+						"SELECT DISTINCT LAUNCH_KAM_ACCOUNT FROM MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS "
+						+ "WHERE IS_ACTIVE = 2 AND LAUNCH_ID = '"
+								+ rs.getString("LAUNCH_ID") + "'" 
+						+ "AND UPDATED_BY = '" + rs.getString("CREATED_BY") + "'" 
+						+ "AND REQ_ID = '" + rs.getString("REQ_ID") + "'");
+				}
+				
+				else if(rs.getString("CHANGES_REQUIRED").equals("MOC CHANGED")) {
+					query2 = sessionFactory.getCurrentSession().createNativeQuery(
+							"SELECT DISTINCT LAUNCH_KAM_ACCOUNT FROM MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS "
+							+ "WHERE IS_ACTIVE = 1 AND LAUNCH_ID = '"
+									+ rs.getString("LAUNCH_ID") + "'" 
+							+ "AND UPDATED_BY = '" + rs.getString("CREATED_BY") + "'" 
+							+ "AND REQ_ID = '" + rs.getString("REQ_ID") + "'");
+				}//Harsha's Implementation ends.
+				
+				else {
+				query2 = sessionFactory.getCurrentSession().createNativeQuery(
 						"SELECT DISTINCT tvcom.ACCOUNT_NAME FROM TBL_LAUNCH_REQUEST tlr, TBL_VAT_USER_DETAILS tvud, "
 								+ " TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE UPPER(tvud.USERID) = UPPER(tlr.CREATED_BY) AND"
 								+ " UPPER(tvcom.KAE_MAIL_ID) = UPPER(tvud.EMAILID) AND UPPER(tlr.CREATED_BY) = '"
 								+ rs.getString("CREATED_BY") + "'");
+				}
+			
+				
 				List<String> listOfAccounts = query2.list();
+				
 				String accounts = "";
 				if (!listOfAccounts.isEmpty()) {
 					accounts = listOfAccounts.toString();
+					accounts=accounts.replace("[", "");
+					accounts=accounts.replace("]", ""); // Harsha
 				}
 				ArrayList<String> dataObj = new ArrayList<>();
 				dataObj.add(rs.getString("REQ_ID"));

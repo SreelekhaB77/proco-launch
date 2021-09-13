@@ -105,4 +105,5 @@ public interface LaunchBasePacksDao {
 	String getStoreCountOnCustSellIIn(String storeFormat, List<String> liCluster, String classification, boolean isCustomStoreFormat);  //Sarin Changes - Q1Sprint Feb2021 - Added parameter isCustomStoreFormat 
 
 	public List<String> getBasepackCodeOnBpId(List<String> bpIds, String launchId);
-}
+
+	}

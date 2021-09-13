@@ -115,22 +115,39 @@ public class LaunchDaoImpl implements LaunchDao {
 			//Kavitha Changes - Q2 Sprint Feb2021
 			if (launchName.equalsIgnoreCase("All")) {
 				stmt = sessionImpl.connection().prepareStatement(
-						"SELECT tlc.LAUNCH_ID LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, "
+						/*"SELECT tlc.LAUNCH_ID LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, "
 								+ " LAUNCH_BUSINESS_CASE, CATEGORY_SIZE, CLASSIFICATION, tlc.CREATED_BY CREATED_BY, "
 								+ " tlc.CREATED_DATE CREATED_DATE, tlss.LAUNCH_FINAL_STATUS LAUNCH_FINAL_STATUS, "
 								+ " LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc, TBL_LAUNCH_STAGE_STATUS tlss WHERE "
 								+ " tlc.LAUNCH_ID = tlss.LAUNCH_ID AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() "
-								+ " AND tlc.CREATED_BY = '" + userId + "' AND LAUNCH_MOC LIKE '%" + launchMOC + "%' ");
+								+ " AND tlc.CREATED_BY = '" + userId + "' AND LAUNCH_MOC LIKE '%" + launchMOC + "%' ");*/
+						
+						"SELECT tlc.LAUNCH_ID AS LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2,"
+						+ " LAUNCH_BUSINESS_CASE, CATEGORY_SIZE, CLASSIFICATION, tlc.CREATED_BY CREATED_BY,tlc.CREATED_DATE CREATED_DATE, tlss.LAUNCH_FINAL_STATUS LAUNCH_FINAL_STATUS, LAUNCH_MOC ,"
+						+ " IFNULL((SELECT GROUP_CONCAT(LAUNCH_KAM_ACCOUNT separator '; ') AS CHANGED_MOC FROM (SELECT CONCAT(LAUNCH_MOC_KAM, ' - ', GROUP_CONCAT(LAUNCH_KAM_ACCOUNT)) AS LAUNCH_KAM_ACCOUNT "
+						+ " FROM TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS KL WHERE KL.LAUNCH_ID = tlc.LAUNCH_ID AND IS_ACTIVE = 1 GROUP BY LAUNCH_MOC_KAM) A), '') CHANGED_MOC"
+						+ " FROM TBL_LAUNCH_MASTER tlc, TBL_LAUNCH_STAGE_STATUS tlss"
+						+ " WHERE tlc.LAUNCH_ID = tlss.LAUNCH_ID AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() "
+						+ " AND tlc.CREATED_BY = '" + userId + "' AND LAUNCH_MOC LIKE '%" + launchMOC + "%' ");
 			}
 			else
 			{
 				stmt = sessionImpl.connection().prepareStatement(
-						"SELECT tlc.LAUNCH_ID LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, "
+						/*"SELECT tlc.LAUNCH_ID LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, "
 								+ " LAUNCH_BUSINESS_CASE, CATEGORY_SIZE, CLASSIFICATION, tlc.CREATED_BY CREATED_BY, "
 								+ " tlc.CREATED_DATE CREATED_DATE, tlss.LAUNCH_FINAL_STATUS LAUNCH_FINAL_STATUS, "
 								+ " LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc, TBL_LAUNCH_STAGE_STATUS tlss WHERE "
 								+ " tlc.LAUNCH_ID = tlss.LAUNCH_ID AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() "
-								+ " AND tlc.CREATED_BY = '" + userId + "' AND LAUNCH_MOC LIKE '%" + launchMOC + "%' AND LAUNCH_NAME = '" + launchName + "'");
+								+ " AND tlc.CREATED_BY = '" + userId + "' AND LAUNCH_MOC LIKE '%" + launchMOC + "%' AND LAUNCH_NAME = '" + launchName + "'");*/
+				
+						"SELECT tlc.LAUNCH_ID AS LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2,"
+						+ " LAUNCH_BUSINESS_CASE, CATEGORY_SIZE, CLASSIFICATION, tlc.CREATED_BY CREATED_BY,tlc.CREATED_DATE CREATED_DATE, tlss.LAUNCH_FINAL_STATUS LAUNCH_FINAL_STATUS, LAUNCH_MOC ,"
+						+ " IFNULL((SELECT GROUP_CONCAT(LAUNCH_KAM_ACCOUNT separator '; ') AS CHANGED_MOC FROM (SELECT CONCAT(LAUNCH_MOC_KAM, ' - ', GROUP_CONCAT(LAUNCH_KAM_ACCOUNT)) AS LAUNCH_KAM_ACCOUNT"
+						+ " FROM TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS KL WHERE KL.LAUNCH_ID = tlc.LAUNCH_ID AND IS_ACTIVE = 1 GROUP BY LAUNCH_MOC_KAM) A), '') CHANGED_MOC"
+						+ " FROM TBL_LAUNCH_MASTER tlc, TBL_LAUNCH_STAGE_STATUS tlss"
+						+ " WHERE tlc.LAUNCH_ID = tlss.LAUNCH_ID AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() "
+						+ " AND tlc.CREATED_BY = '" + userId + "' AND LAUNCH_MOC LIKE '%" + launchMOC + "%' AND LAUNCH_NAME = '" + launchName + "'");
+			
 			}
 
 			rs = stmt.executeQuery();
@@ -148,6 +165,7 @@ public class LaunchDaoImpl implements LaunchDao {
 				launchDataResponse.setCreatedDate(rs.getDate("CREATED_DATE"));
 				launchDataResponse.setLaunchFinalStatus(rs.getString("LAUNCH_FINAL_STATUS"));
 				launchDataResponse.setLaunchMoc(rs.getString("LAUNCH_MOC"));
+				 launchDataResponse.setChangedMoc(rs.getString("CHANGED_MOC"));
 				liLaunchData.add(launchDataResponse);
 			}
 		} catch (Exception ex) {
@@ -343,7 +361,8 @@ public class LaunchDaoImpl implements LaunchDao {
 					//+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()");
 					
 					//Kavitha Changes Q1Print1 Feb2021
-					"SELECT * FROM (SELECT tlc.LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE,"
+					//Kavitha D Sprint4 changes
+					/*"SELECT * FROM (SELECT tlc.LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE,"
                     + " CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,"
                     + " tlc.CREATED_BY, tlc.CREATED_DATE,tlc.UPDATED_BY, tlc.UPDATED_DATE,LAUNCH_MOC,LAUNCH_SUBMISSION_DATE,"
                     + " CASE WHEN GROUP_CONCAT(DISTINCT TFC.MODIFIED_CHAIN) IS NULL THEN tlbt.CLUSTER_ACCOUNT ELSE GROUP_CONCAT(DISTINCT TFC.MODIFIED_CHAIN) END AS ACCOUNT_NAME "  
@@ -355,6 +374,22 @@ public class LaunchDaoImpl implements LaunchDao {
 					+ " UNION ALL SELECT TLM.LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE, CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,"
 					+ " ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED, TLM.CREATED_BY, TLM.CREATED_DATE, TLM.UPDATED_BY, TLM.UPDATED_DATE,"
 					+ " TLK.LAUNCH_MOC_KAM AS LAUNCH_MOC, LAUNCH_SUBMISSION_DATE, GROUP_CONCAT(DISTINCT TLK.LAUNCH_KAM_ACCOUNT) AS ACCOUNT_NAME"
+					+ " FROM TBL_LAUNCH_MASTER TLM INNER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS TLK ON TLK.LAUNCH_ID = TLM.LAUNCH_ID" 
+					+ " WHERE (TLM.SAMPLE_SHARED IS NOT NULL AND TLM.SAMPLE_SHARED <> '') AND TLM.LAUNCH_REJECTED != '2' AND TLK.IS_ACTIVE = 1 AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()" 
+					+ " GROUP BY TLM.LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE, CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED, TLM.CREATED_BY, TLM.CREATED_DATE, TLM.UPDATED_BY, TLM.UPDATED_DATE, TLK.LAUNCH_MOC_KAM, LAUNCH_SUBMISSION_DATE"
+					+ " ) A WHERE LAUNCH_MOC LIKE '%" + coeMOC + "%'  ORDER BY LAUNCH_ID");*/
+					"SELECT * FROM (SELECT tlc.LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE,"
+                    + " CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,"
+                    + " tlc.CREATED_BY, tlc.CREATED_DATE,tlc.UPDATED_BY, tlc.UPDATED_DATE,LAUNCH_MOC,LAUNCH_SUBMISSION_DATE,"
+                    + " CASE WHEN GROUP_CONCAT(DISTINCT TFC.MODIFIED_CHAIN) IS NULL THEN tlbt.CLUSTER_ACCOUNT ELSE GROUP_CONCAT(DISTINCT TFC.MODIFIED_CHAIN) END AS ACCOUNT_NAME,LAUNCH_MOC AS ORIGINAL_LAUNCH_MOC "  
+                    + " FROM TBL_LAUNCH_MASTER tlc "
+                    + " LEFT OUTER JOIN TBL_LAUNCH_CLUSTERS tlbt ON tlbt.CLUSTER_LAUNCH_ID = tlc.LAUNCH_ID LEFT OUTER JOIN TBL_LAUNCH_TEMP_FINAL_CAL TFC ON TFC.LAUNCH_ID = tlc.LAUNCH_ID"
+                    + " LEFT OUTER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS TLK ON TLK.LAUNCH_ID = TFC.LAUNCH_ID AND TLK.LAUNCH_KAM_ACCOUNT = TFC.MODIFIED_CHAIN AND TLK.IS_ACTIVE = 1"
+                    + " WHERE (SAMPLE_SHARED IS NOT NULL AND SAMPLE_SHARED <> '') AND LAUNCH_REJECTED != '2' AND TLK.LAUNCH_ID IS NULL AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()"
+                    + " GROUP BY tlc.LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE, CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,tlc.CREATED_BY, tlc.CREATED_DATE,tlc.UPDATED_BY, tlc.UPDATED_DATE,LAUNCH_MOC,LAUNCH_SUBMISSION_DATE, tlbt.CLUSTER_ACCOUNT"
+					+ " UNION ALL SELECT TLM.LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE, CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,"
+					+ " ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED, TLM.CREATED_BY, TLM.CREATED_DATE, TLM.UPDATED_BY, TLM.UPDATED_DATE,"
+					+ " TLK.LAUNCH_MOC_KAM AS LAUNCH_MOC, LAUNCH_SUBMISSION_DATE, GROUP_CONCAT(DISTINCT TLK.LAUNCH_KAM_ACCOUNT) AS ACCOUNT_NAME,LAUNCH_MOC AS ORIGINAL_LAUNCH_MOC"
 					+ " FROM TBL_LAUNCH_MASTER TLM INNER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS TLK ON TLK.LAUNCH_ID = TLM.LAUNCH_ID" 
 					+ " WHERE (TLM.SAMPLE_SHARED IS NOT NULL AND TLM.SAMPLE_SHARED <> '') AND TLM.LAUNCH_REJECTED != '2' AND TLK.IS_ACTIVE = 1 AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW()" 
 					+ " GROUP BY TLM.LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE, CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED, TLM.CREATED_BY, TLM.CREATED_DATE, TLM.UPDATED_BY, TLM.UPDATED_DATE, TLK.LAUNCH_MOC_KAM, LAUNCH_SUBMISSION_DATE"
@@ -398,6 +433,8 @@ public class LaunchDaoImpl implements LaunchDao {
 				}
 				launchDataResponse.setAccountName(launchAccounts);
 				//launchDataResponse.setAccountName(rs.getString(19));
+				launchDataResponse.setOriginalLaunchMoc(rs.getString(20));
+				
 				listOfCompletedLaunch.add(launchDataResponse);
 			}
 		} catch (Exception ex) {
@@ -864,7 +901,9 @@ public class LaunchDaoImpl implements LaunchDao {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		LaunchClusterData launchClusterData = new LaunchClusterData();
+		List<String> lstRejectedAccounts = null;
 		try {
+			lstRejectedAccounts = getKamRejectedLaunchAccounts(launchId);  //Sprint4Aug2021 changes - starts
 			Session session = sessionFactory.getCurrentSession();
 			SessionImpl sessionImpl = (SessionImpl) session;
 			stmt = sessionImpl.connection().prepareStatement(
@@ -873,7 +912,21 @@ public class LaunchDaoImpl implements LaunchDao {
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				launchClusterData.setCluster(rs.getString("CLUSTER_REGION"));
-				launchClusterData.setAccount_string(rs.getString("CLUSTER_ACCOUNT"));
+				//Sprint4Aug2021 changes - starts
+				String launchClusterAccount = "";
+				if ((lstRejectedAccounts != null) && (!lstRejectedAccounts.isEmpty())) {
+					launchClusterAccount = rs.getString("CLUSTER_ACCOUNT");
+					for (String rejectAccts: lstRejectedAccounts) {
+						launchClusterAccount = launchClusterAccount.replaceAll(rejectAccts, "");
+					}
+					launchClusterAccount = launchClusterAccount.replaceAll(",,", ",");
+					if (launchClusterAccount.endsWith(",")) {
+						launchClusterAccount = launchClusterAccount.substring(0, launchClusterAccount.length() - 1);
+					}
+					launchClusterData.setAccount_string(launchClusterAccount);
+				} else
+				//Sprint4Aug2021 changes - Ends
+					launchClusterData.setAccount_string(rs.getString("CLUSTER_ACCOUNT"));
 				launchClusterData.setStore_Format(rs.getString("CLUSTER_STORE_FORMAT"));
 				launchClusterData.setCustomer_Store_Format(rs.getString("CLUSTER_CUST_STORE_FORMAT"));
 				launchClusterData.setTotalStoresToLaunch(rs.getString("TOTAL_STORES_TO_LAUNCH"));
@@ -883,6 +936,18 @@ public class LaunchDaoImpl implements LaunchDao {
 			launchClusterData.setError(e.toString());
 		}
 		return launchClusterData;
+	}
+	
+	//Sprint4Aug2021 changes
+	public List<String> getKamRejectedLaunchAccounts(String launchId) {
+		List<String> lstKamRejectedAccounts = new ArrayList<String>();
+		try {
+			Query qryKamRejectAccts = sessionFactory.getCurrentSession().createNativeQuery("SELECT DISTINCT CONCAT(OM.ACCOUNT_NAME , ':' , OM.DP_CHAIN) AS ACCOUNTCHAIN FROM TBL_VAT_COMM_OUTLET_MASTER OM INNER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS KM ON KM.LAUNCH_KAM_ACCOUNT = OM.ACCOUNT_NAME WHERE KM.IS_ACTIVE = 2 AND KM.LAUNCH_ID = '" + launchId + "' ");
+			lstKamRejectedAccounts =  qryKamRejectAccts.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return lstKamRejectedAccounts;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -906,10 +971,34 @@ public class LaunchDaoImpl implements LaunchDao {
 				launchKamInputsResponse.setLaunchId(rs.getString("LAUNCH_ID"));
 				launchKamInputsResponse.setLaunchName(rs.getString("LAUNCH_NAME"));
 				launchKamInputsResponse.setLaunchMoc(rs.getString("LAUNCH_MOC"));
+				String createdby = rs.getString("CREATED_BY");
+				String RequestId= rs.getString("REQ_ID");
+				
 				String kamMailId = rs.getString("CREATED_BY").concat("@unilever.com").toUpperCase();
-				Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
+				//Query modified by Harsha for Q4 Sprint LAUNH REJECTED && MOC CHANGED
+				Query query2;
+				if(rs.getString("CHANGES_REQUIRED").equals("LAUNCH REJECTED")) {
+					query2 = sessionFactory.getCurrentSession().createNativeQuery(
+							"SELECT DISTINCT LAUNCH_KAM_ACCOUNT FROM MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS "
+							+ "WHERE IS_ACTIVE = 2 AND LAUNCH_ID = '" + rs.getString("LAUNCH_ID") + "'" 
+									+"AND UPDATED_BY = '" + createdby + "'" +
+									"AND REQ_ID = '" + RequestId + "'");
+				}
+				
+				else if(rs.getString("CHANGES_REQUIRED").equals("MOC CHANGED")) {
+					query2 = sessionFactory.getCurrentSession().createNativeQuery(
+							"SELECT DISTINCT LAUNCH_KAM_ACCOUNT FROM MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS "
+							//+ "WHERE IS_ACTIVE = 1 AND LAUNCH_ID = '" + rs.getString("LAUNCH_ID") + "'" 
+							+ "WHERE LAUNCH_ID = '" + rs.getString("LAUNCH_ID") + "'"
+									+"AND UPDATED_BY = '" + createdby + "'" +
+									"AND REQ_ID = '" + RequestId + "'");
+				}//Harsha's Implementation ends here for MOC CHANGED .
+				else{
+				query2 = sessionFactory.getCurrentSession().createNativeQuery(
 						"SELECT DISTINCT ACCOUNT_NAME FROM MODTRD.TBL_VAT_COMM_OUTLET_MASTER WHERE UPPER(KAM_MAIL_ID) = '"
 								+ kamMailId + "'");
+				}
+				
 				String listOfAccounts = String.join(",", query2.list());
 				launchKamInputsResponse.setAccount(listOfAccounts);
 				launchKamInputsResponse.setName(rs.getString("CREATED_BY"));
@@ -942,7 +1031,7 @@ public class LaunchDaoImpl implements LaunchDao {
 
 			for (int i = 0; i < reqIds.length; i++) {
 				preparedStatement = sessionImpl.connection().prepareStatement(
-						"SELECT LAUNCH_ID,CHANGES_REQUIRED,REJECT_IDS,CREATED_BY FROM TBL_LAUNCH_REQUEST WHERE REQ_ID = '"
+						"SELECT REQ_ID,LAUNCH_ID,CHANGES_REQUIRED,REJECT_IDS,CREATED_BY FROM TBL_LAUNCH_REQUEST WHERE REQ_ID = '"
 								+ reqIds[i] + "'");
 				rs = preparedStatement.executeQuery();
 
@@ -953,7 +1042,43 @@ public class LaunchDaoImpl implements LaunchDao {
 										+ rs.getString("LAUNCH_ID") + "' AND LAUNCH_ACCOUNT ='"
 										+ rs.getString("CREATED_BY") + "'");
 						query2.executeUpdate();
-					} else if (rs.getString("CHANGES_REQUIRED").equals("BASEPACK REJECTED")) {
+						// Harsha's Implementation for Reject by TME Sprint Q4
+						Query query10 = sessionFactory.getCurrentSession()
+								.createNativeQuery("SELECT DISTINCT LAUNCH_KAM_ACCOUNT FROM MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS "
+								+ " WHERE LAUNCH_ID = '" + rs.getString("LAUNCH_ID") + "' AND REQ_ID ='"
+										+ rs.getString("REQ_ID") +
+								"'" );
+						
+						List<String> nameOfAccounts =  query10.list();
+						if(nameOfAccounts!=null && !nameOfAccounts.isEmpty()) {
+							
+						Query query3 = sessionFactory.getCurrentSession()
+								.createNativeQuery("DELETE from TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS where LAUNCH_ID='"
+										+ rs.getString("LAUNCH_ID") + "' AND REQ_ID ='"
+										+ rs.getString("REQ_ID") + "'");
+						query3.executeUpdate();
+						}
+						// Harsha's code ends here End of if loop 
+
+					} 
+					// Harsha's Code for rejecting Chnage in MOC start here Q4 Sprint
+					
+					else if (rs.getString("CHANGES_REQUIRED").equals("MOC CHANGED")) {
+						
+						Query query1 = sessionFactory.getCurrentSession().createNativeQuery("SELECT DISTINCT LAUNCH_KAM_ACCOUNT FROM MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS "
+								+ " WHERE LAUNCH_ID = '" + rs.getString("LAUNCH_ID") + "' AND REQ_ID = '" + rs.getString("REQ_ID") + "'" );
+						List<String> nameOfAccounts =  query1.list();
+						if(nameOfAccounts!=null && !nameOfAccounts.isEmpty()) {
+								Query query2 = sessionFactory.getCurrentSession()
+										.createNativeQuery("UPDATE MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS SET IS_ACTIVE='0' '"
+												+ "' WHERE IS_ACTIVE = '1' AND LAUNCH_ID='" + rs.getString("LAUNCH_ID") + "' AND REQ_ID = '"
+												+ rs.getString("REQ_ID") + "'");
+								query2.executeUpdate();
+					}
+					}
+					// Harsha's Code for rejecting Chnage in MOC end's here
+					
+					else if (rs.getString("CHANGES_REQUIRED").equals("BASEPACK REJECTED")) {
 						try {
 							String[] bpIds = rs.getString("REJECT_IDS").split(",");
 
@@ -1087,8 +1212,8 @@ public class LaunchDaoImpl implements LaunchDao {
 			SessionImpl sessionImpl = (SessionImpl) session;
 			String[] reqIds = acceptByTme.getReqIds().split(",");
 			for (int i = 0; i < reqIds.length; i++) {
-				preparedStatement = sessionImpl.connection().prepareStatement(
-						"SELECT LAUNCH_ID,CHANGES_REQUIRED,REJECT_IDS,CREATED_BY FROM TBL_LAUNCH_REQUEST WHERE REQ_ID = '"
+				preparedStatement = sessionImpl.connection().prepareStatement( //Harsha added REQ_ID
+						"SELECT REQ_ID,LAUNCH_ID,CHANGES_REQUIRED,REJECT_IDS,CREATED_BY FROM TBL_LAUNCH_REQUEST WHERE REQ_ID = '"
 								+ reqIds[i] + "'");
 				rs = preparedStatement.executeQuery();
 				while (rs.next()) {
@@ -1099,12 +1224,37 @@ public class LaunchDaoImpl implements LaunchDao {
 										+ "' WHERE LAUNCH_ID='" + rs.getString("LAUNCH_ID") + "' AND LAUNCH_ACCOUNT = '"
 										+ userId + "'");
 						query2.executeUpdate();
-						Query query3 = sessionFactory.getCurrentSession()
+						
+						//Harsha's Modification for getting updated list on Dash board Working Sprint Q:-4
+						
+						Query query10 = sessionFactory.getCurrentSession().createNativeQuery("SELECT DISTINCT LAUNCH_KAM_ACCOUNT FROM MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS "
+								+ " WHERE LAUNCH_ID = '" + rs.getString("LAUNCH_ID") + "' AND REQ_ID = '" + rs.getString("REQ_ID") + "'" );
+						List<String> nameOfAccounts =  query10.list();
+						if(nameOfAccounts!=null && !nameOfAccounts.isEmpty()) {
+							for(String nameAccounts : nameOfAccounts) {
+								Query query3 = sessionFactory.getCurrentSession()
+										.createNativeQuery("UPDATE MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS SET IS_ACTIVE='0' '"
+												+ "' WHERE IS_ACTIVE = '1' AND LAUNCH_ID='" + rs.getString("LAUNCH_ID") + "' AND LAUNCH_KAM_ACCOUNT = '"
+												+ nameAccounts + "'");
+								query3.executeUpdate();
+							}
+							
+						}
+						
+						//Sprint4Aug2021 changes
+						Query qryDeleteSellIn = sessionFactory.getCurrentSession()
+								.createNativeQuery("DELETE LS from TBL_LAUNCH_SELLIN LS INNER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS MD ON MD.LAUNCH_ID = LS.SELLIN_LAUNCH_ID AND MD.LAUNCH_KAM_ACCOUNT = LS.SELLIN_L2_CHAIN WHERE MD.IS_ACTIVE = 2 "
+												 + " AND LS.SELLIN_LAUNCH_ID = " + rs.getString("LAUNCH_ID") + " AND REQ_ID = " + rs.getString("REQ_ID"));
+						qryDeleteSellIn.executeUpdate();
+						
+						//Harsha's logic ends here 
+						
+						//Commented By Sarin - Sprint4Aug21 - for Launch Account wise Rejection
+						/*Query query3 = sessionFactory.getCurrentSession()
 								.createNativeQuery("UPDATE TBL_LAUNCH_MASTER SET LAUNCH_REJECTED='2',UPDATED_BY='" + userId
 										+ "',UPDATED_DATE='" + new Timestamp(new Date().getTime())
 										+ "' WHERE LAUNCH_ID='" + rs.getString("LAUNCH_ID") + "'");
-						query3.executeUpdate();
-
+						query3.executeUpdate(); */
 						kamCalculationAfterLaunchReject(rs.getString("LAUNCH_ID"), userId, rs.getString("CREATED_BY"));
 					} else if (rs.getString("CHANGES_REQUIRED").equals("MOC CHANGED")) {
 						LaunchDataResponse launchDataResponse = getSpecificLaunchData(rs.getString("LAUNCH_ID"));
@@ -1134,6 +1284,26 @@ public class LaunchDaoImpl implements LaunchDao {
 								return e.toString();
 							}
 						}
+						
+						
+						//Sprint4Aug2021 changes - starts
+						Query queryKamMoc = sessionFactory.getCurrentSession().createNativeQuery("SELECT DISTINCT LAUNCH_KAM_ACCOUNT FROM MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS "
+								+ " WHERE LAUNCH_ID = '" + rs.getString("LAUNCH_ID") + "' AND REQ_ID = '" + rs.getString("REQ_ID") + "'" );
+						List<String> kamApprovedAccounts =  queryKamMoc.list();
+						if(kamApprovedAccounts!=null && !kamApprovedAccounts.isEmpty()) {
+							for(String kamAccounts : kamApprovedAccounts) {
+								Query query3 = sessionFactory.getCurrentSession()
+										.createNativeQuery("UPDATE MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS SET IS_ACTIVE='0' '"
+												+ "' WHERE IS_ACTIVE = '1' AND LAUNCH_ID='" + rs.getString("LAUNCH_ID") + "' AND LAUNCH_KAM_ACCOUNT = '"
+												+ kamAccounts + "'");
+								query3.executeUpdate();
+							}
+						}
+						Query queryUpdateKamMocToActive = sessionFactory.getCurrentSession()
+								.createNativeQuery("UPDATE MODTRD.TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS SET IS_ACTIVE = 1 WHERE LAUNCH_ID='" + rs.getString("LAUNCH_ID") + "' AND REQ_ID = '" + rs.getString("REQ_ID") + "'");
+						queryUpdateKamMocToActive.executeUpdate();
+						//Sprint4Aug2021 changes - ends
+						
 					} else if (rs.getString("CHANGES_REQUIRED").equals("BASEPACK REJECTED")) {
 						basepackCalForKAM(userId, rs, session);
 					} else if (rs.getString("CHANGES_REQUIRED").equals("STORE REJECTED")) {
@@ -1231,7 +1401,8 @@ public class LaunchDaoImpl implements LaunchDao {
 				saveFinalLaunchRequest.setLaunchSellInValue(launchFinalPlanResponse.getLaunchSellInValue());
 				saveFinalLaunchRequest.setLaunchSellInValueN1(launchFinalPlanResponse.getLaunchN1SellInVal());
 				saveFinalLaunchRequest.setLaunchSellInValueN2(launchFinalPlanResponse.getLaunchN2SellInVal());
-				saveFinalLaunchRequest.setLaunchStoreCount(Integer.parseInt(launchFinalPlanResponse.getStoreCount()));
+				//saveFinalLaunchRequest.setLaunchStoreCount(Integer.parseInt(launchFinalPlanResponse.getStoreCount()));  //Commented & Added Below By Sarin - sprint4Aug2021
+				saveFinalLaunchRequest.setLaunchStoreCount((int)Double.parseDouble(launchFinalPlanResponse.getStoreCount()));  //Added By Sarin - sprint4Aug2021
 				listOfSaveFinalLaunchRequest.add(saveFinalLaunchRequest);
 			}
 			saveFinalLaunchListRequest.setLaunchId(launchId);
@@ -1268,7 +1439,8 @@ public class LaunchDaoImpl implements LaunchDao {
 				saveFinalLaunchRequest.setLaunchSellInValue(launchFinalPlanResponse.getLaunchSellInValue());
 				saveFinalLaunchRequest.setLaunchSellInValueN1(launchFinalPlanResponse.getLaunchN1SellInVal());
 				saveFinalLaunchRequest.setLaunchSellInValueN2(launchFinalPlanResponse.getLaunchN2SellInVal());
-				saveFinalLaunchRequest.setLaunchStoreCount(Integer.parseInt(launchFinalPlanResponse.getStoreCount()));
+				//saveFinalLaunchRequest.setLaunchStoreCount(Integer.parseInt(launchFinalPlanResponse.getStoreCount()));
+				saveFinalLaunchRequest.setLaunchStoreCount((int)Double.parseDouble(launchFinalPlanResponse.getStoreCount()));
 				listOfSaveFinalLaunchRequest.add(saveFinalLaunchRequest);
 			}
 			saveFinalLaunchListRequest.setLaunchId(rs.getString("LAUNCH_ID"));

@@ -161,6 +161,7 @@ $(document).ready(function() {
 		loadselectedkamAccounts();  //Sarin Changes Q1Sprint Feb2021
 		//loadKamAccounts();  
 		
+		
 	});
 	
 	//Sarin Changes Q1Sprint Feb2021 - Starts
@@ -177,6 +178,16 @@ $(document).ready(function() {
 			success : function(data) {
 				//console.log(data);
 				var accounts=data.responseData.lisOfAcc;
+				
+				//Sprint4Changes - Starts
+				var upcomingmoc=data.responseData.listOfMoc;
+				var upmocoption = "<option value=''>Select MOC</option>";
+				for (var i = 0; i < upcomingmoc.length; i++) {
+					upmocoption += "<option value='"+upcomingmoc[i] +"'>"+upcomingmoc[i]+"</option>"
+				}
+				$("#paid-kamlaunch-moc").empty().append(upmocoption);
+				//Sprint4Changes - Ends
+				
 				//accounts=data.responseData.lisOfAcc;
 				
 				var option = ""; //"<option value='select'>Select Account</option>";
@@ -347,8 +358,10 @@ $(document).ready(function() {
 	 	if (fileName == '') {
 	 		$('#kamuploadErrorMsg').show().html("Please select a file to upload");
 	 		return false;
-	 	} else {
+	 	} else{
+			
 	 		$('#kamuploadErrorMsg').hide();
+
 	 		var FileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
 	 		if (FileExt != "xlsx") {
 	 			if (FileExt != "xls") {
@@ -360,6 +373,8 @@ $(document).ready(function() {
 	 			}
 
 	 		}
+			
+
 	 	}
 	 	
 	     // Get form
@@ -393,20 +408,44 @@ $(document).ready(function() {
 	 			// upldata;
 	         	var errmsg = upllnchstrdata.responseData;
 	         	console.log(upllnchstrdata.responseData);
+		
 	         	 $('.loader').hide();
+			//sprint-4 US-5 confirmation msg bharati added
+			
+			var fileNamesuccess = fileName;
+			
+			if(fileNamesuccess.includes("Store.Download") && fileName != ''){
+				
+			$('#storelist-successblock').show().find('span').html('Uploaded Successfully !!!');
+			}else{
+				$('#storelist-successblock').hide();
+			}
+			//sprint-4 US-5 confirmation msg bharati ended
+			
 	             if("SUCCESS_FILE" ==  upllnchstrdata) {
+					 	
 	             	 $("#kamlaunchVisiTab").click();
 	             	 $('#kamuploadErrorMsg').hide();
 	             	 $('#kamerrorblockUpload').hide();
+					 
+					
+					//sprint-4 US-5 redirect on same page changes done by bharati
+					 
+					saveBuildUp();
+					window.location.href = "getAllCompletedLaunchDataKam.htm#step-4";
+					
 	             	kamgetVissiData();
+
 	             	// getlaunchStores();
 	             }
 	             else {
 	             	$('#kamerrorblockUpload').show();
 	             	//$('#kamuploadErrorMsg span').text(errmsg);
 	             }
-	            
+				 
 	             $("#btnSubmitBasePack").prop("disabled", false);
+				 
+				 
 	         },
 	         error: function (jqXHR, textStatus, errorThrown) {
 	         	// $('#errorblockUpload').find('span').text(jqXHR.responseText);
@@ -416,8 +455,10 @@ $(document).ready(function() {
 	                   
 	         }
 	     });
-	     	
+			
 	 });
+	 
+
 	
 	$("#kamMocCol").on('change', function () {
 		$("#kamlaunchDetailsTab").click();
@@ -528,43 +569,59 @@ $(document).ready(function() {
 	          //  kambaseoTable.draw();
 	            $('#kamRemakRejErrorMsg').hide();
 	            $('#successblock').show().find('span').html(' Request for Launch MOC send Successfully !!!');
-	            $( "#kambasepack_add" ).load( "#kamlaunchDetailsTab.html #kambasepack_add" );
+	          // $( "#kambasepack_add" ).load( "#kamlaunchDetailsTab.html #kambasepack_add" );  //commented this line by bharati for kam Load table data issue on 1 sep 21
 	           /* setTimeout(function(){
 	            kambaseoTable.draw();
 	            }, 700); */ 
-	            $("#kambasepack_add").dataTable().fnDestroy();
+	           $("#kambasepack_add").dataTable().fnDestroy();
+	          
 	            $('#kamMocremarks').val("");
 	            $('#mockamChange').prop("disabled", true);
 	         	$('#rejectLaunch').prop("disabled", true);
-	         	$('#kamlnchDets').prop("disabled", true); 
+	         	$('#kamlnchDets').prop("disabled", true);
+	            loadKamLauches('ALL');     // added this for kam table load issues by 1 sep 21 bharati
 	        },
+	         
 	        error: function( jqXhr, textStatus, errorThrown ){
 	            console.log( errorThrown );
 	        }
 	    });
+	    
+	   
 		}
+		
 	}
 	
-	
+
 // reject launch
 	
 function rejectLaunch() {
 	// var kamlnchId = getkamlaunchId();
+	var kamAcc = ($('#reject-kamlaunch-acc').val()).toString();
+	//var kammoc = $('#reject-kamlaunch-moc').val();
 	
 	var kamMocremarks = $('#kamMocRejRemarks').val();
+	
 	var kamlnchId = parseInt($( ".kamLnchDetscr1:checked" ).val());
 	if(kamMocremarks == ''){
 		$('#kamRemakRejErrorMsg').show();
 		return false;
 	}
-	else{
+	//sprint-4 US-3 Bharati Reject popup UI changes
+	else if(kamAcc == ''){
+			$('#kamAccErrorMsg').show();
+			return false;
+		}else{
 		$('#kamRemakRejErrorMsg').hide();
+		$('#kamAccErrorMsg').hide();
+		//$('#kamRemakErrorMsgMoc').hide();
     $.ajax({
         url: 'rejectLaunchByLaunchIdKam.htm',
         dataType: 'json',
         type: 'post',
         contentType: 'application/json',
-        data: JSON.stringify( { "launchId": kamlnchId, "launchRejectRemark" : kamMocremarks } ),
+        data: JSON.stringify( { "launchId": kamlnchId, "launchRejectRemark" : kamMocremarks, "mocAccount": kamAcc } ),
+		
         processData: false,
         beforeSend: function() {
             ajaxLoader(spinnerWidth, spinnerHeight);
@@ -575,9 +632,8 @@ function rejectLaunch() {
             $('#paidRejCancelBtn').click();
             //kambaseoTable.draw();
             $('#successblock').show().find('span').html(' Launch Rejected Successfully !!!');
-           // $( "#kambasepack_add" ).load( "#kamlaunchDetailsTab.html #kambasepack_add" );
-           
-            $( "#kambasepack_add" ).load( "#kamlaunchDetailsTab.html #kambasepack_add" );
+            
+           // $( "#kambasepack_add" ).load( "#kamlaunchDetailsTab.html #kambasepack_add" ); //commented this line by bharati for kam Load table data issue on 1 sep 21
            /* setTimeout(function(){
             kambaseoTable.draw();
             }, 700); */ 
@@ -586,13 +642,14 @@ function rejectLaunch() {
             $('#mockamChange').prop("disabled", true);
          	$('#rejectLaunch').prop("disabled", true);
          	$('#kamlnchDets').prop("disabled", true);
-         	
+         	loadKamLauches('ALL');     // added this for kam table load issues by 1 sep 21 bharati
         },
         error: function( jqXhr, textStatus, errorThrown ){
             console.log( errorThrown );
         }
     });
 	}
+	
 }
 
 // reject screen 2
@@ -925,6 +982,7 @@ function kamSaveBasepacks() {
 	
 }
 
+
 // screen 4
 
 function saveBuildUp() {
@@ -943,19 +1001,32 @@ function saveBuildUp() {
         beforeSend: function() {
             ajaxLoader(spinnerWidth, spinnerHeight);
         },
+		
+		
         success: function( lanchStrDet, textStatus, jQxhr ){
         	 $('.loader').hide();
            
             $('#kamlaunchSellInTab').click();
             var strLstscreen = lanchStrDet.responseData.listSaveLaunchStoreList;
+			
+			
             // screen 2 table chan
 			var row = "";
+			
 			for (var i = 0; i < strLstscreen.length; i++) {
-				row += "<tr><td><input name='kamlnchstrl1' type='text' class='form-control kamlnchstrl1' readonly value= '"
-				 		+ strLstscreen[i].L2_Chain
+				
+				//sprint-4 US-6.1 changes added by Bharati 
+				row += "<tr><td><input name='kamlaunchname' type='text' class='form-control kamlaunchname' readonly value= '"
+				 		+ strLstscreen[i].launchName
+				 		+"'></td>" 
+						+"<td><input name='kamlaunchmoc' type='text' class='form-control kamlaunchmoc' readonly value= '"
+				 		+ strLstscreen[i].mocDate
+				 		+"'></td>" 
+						+"<td><input name='kamlnchstrl1' type='text' class='form-control kamlnchstrl1' readonly value= '"
+				 		+ strLstscreen[i].L1_Chain
 				 		+"'></td>" 
 						+"<td class='xsdrop'><input name='kamlnchstrl2' type='text' class='form-control kamlnchstrl2' readonly value= '"
-						+ strLstscreen[i].L1_Chain
+						+ strLstscreen[i].L2_Chain
 						+"'></td>" 
 						+ "<td class='xsdrop'><input name='kamlnchstrstrfmt' type='text' class='form-control kamlnchstrstrfmt' readonly value= '"
 						+ strLstscreen[i].StoreFormat
@@ -967,8 +1038,10 @@ function saveBuildUp() {
 				 		+ strLstscreen[i].HUL_OL_Code
 				 		+"'></td>"
 						+ "<td><input name='kamlnchstrdesc' type='text' class='form-control validfield kamlnchstrdesc' placeholder='Description' maxlength='255' value= '"
-				 		/* + strLstscreen[i].launchSellInCld */
+				 		 + strLstscreen[i].Kam_Remarks
 				 		+"'></td></tr>";
+						
+			
 			}
 			
 			 $("#kam_launch_store_table").dataTable().fnDestroy();
@@ -977,7 +1050,8 @@ function saveBuildUp() {
 					    var oTable = $('#kam_launch_store_table').DataTable( {
 								
 								"scrollY":       "280px",
-						      //  "scrollX":        true,
+								//added bharati for sprint-4 US-6.1 
+						       "scrollX":        true,
 						        "scrollCollapse": true,
 						        "paging":         true,
 						        "ordering": false,
@@ -1030,6 +1104,10 @@ function kamsaveStoreData() {
 	var launchStrArr = [];
 	var kamlnchId = parseInt($( ".kamLnchDetscr1:checked" ).val());
 	var rowCount = $('#kam_launch_store_table tbody').find('tr');
+	//sprint-4 US-6.1 changes added by Bharati 
+	var lname = $('.kamlaunchname').val();
+	var lmoc = $('.kamlaunchmoc').val();
+	 
 	var l1 = $('.kamlnchstrl1').val();
 	var l2 = $('.kamlnchstrl2').val();
 	var strfrmt = $('.kamlnchstrstrfmt').val();
@@ -1037,9 +1115,12 @@ function kamsaveStoreData() {
 	var hulol = $('.kamlnchstrhulol').val();
 	var dsc = $('.kamlnchstrdesc').val();
 	
+	
 	for (var i = 0; i < rowCount.length; i++) {
 				
 			launchStrArr[i] =  {
+				"launchName" : lname,
+	            "mocDate" : lmoc,
 				"L1_Chain" : l1,
 	            "L2_Chain" : l2,
 	            "StoreFormat" : strfrmt,
@@ -1048,6 +1129,7 @@ function kamsaveStoreData() {
 	            "Kam_Remarks" : dsc,
 	            "launchId": kamlnchId
 	        }
+			
 	}
     $.ajax({
         url: 'saveLaunchStores.htm',
@@ -1577,6 +1659,7 @@ function loadKamAccounts() {
 	});
 }
 
+
 function loadKamLauches(kamselectedmoc) {
 	kambaseoTable = $('#kambasepack_add').DataTable( {
 		"scrollY":       "280px",
@@ -1620,6 +1703,8 @@ function loadKamLauches(kamselectedmoc) {
 							return full.launchMoc + '<input type = "hidden" class="mocDate"  value=' + full.launchDate + '>';
 						  }
 						},
+						//Sprint 4 US-2.3 Frontend Changes By bharati 26-AUG
+						{mData : 'changedMoc', sWidth: '26%'},
 						{mData : 'createdDate'},
 						{mData : 'createdBy'}, 
 					],
@@ -1721,3 +1806,133 @@ $('#approvekambasepack_add').on('draw.dt', function() {
 });
 //setTimeout( "$('#NotificationBadge1').hide();", 2500);
 })
+
+
+//sprint-4 US-3 reject accounts Bharati changes Aug2021
+
+// code for reject account in change moc pop up
+	$(document).on( "click", ".rejectLaunch", function(){
+	$('#successblock').hide();
+		
+		//$('#kamMocremarks').val('');
+		var checked_field = $( "[name=editLaunchscr1KAMLaunch]:checked" );
+		var launchDate = "";
+		//var launchMocDate = "";
+		if( checked_field.length != 0 ){
+			var date = checked_field.closest( "tr" ).find( ".mocDate" ).val();
+			var launch_date = date.split("/");
+			launchMocDate = launch_date[1] + "/" + launch_date[0] + "/" + launch_date[2];
+		}
+		
+		//var today = new Date(launchMocDate),
+        //yy = today.getFullYear(),
+       // m = today.getMonth(),
+       // dd = today.getDate(),
+      //  mm = dd < 21 ? ( m + 2 ) : ( m + 3 );
+	//	var option = "<option value=''>Select MOC</option>";
+     //   m = dd < 21 ? m : ( m + 1 );
+	  // for( var i = 2; i <= 3; i++ ){
+       //     var lastMonth = mm + i > 13 ? ( ( mm + i ) - 13 ) : m + i;
+        //    lastMonth = ( lastMonth + "" ).length == 1 ? "0" + lastMonth : lastMonth; 
+        //    var lastYear = mm + i > 13 ? yy + 1 : yy;
+       //  //   option += "<option value='"+lastMonth + "" + lastYear+"'>"+lastMonth + "" + lastYear+"</option>"
+       // }
+		//$("#reject-kamlaunch-moc").empty().append(option);
+		
+		loadselectedkamRejectAccounts();   
+		
+	});
+	
+function loadrejectKamAccounts() {
+	$('#reject-kamlaunch-acc').multiselect({
+		includeSelectAllOption : true,
+		numberDisplayed : 2,
+		
+		nonSelectedText : 'ALL CUSTOMERS',
+		selectAllText : 'ALL CUSTOMERS',
+		onChange : function(option, checked, select) {
+			 var custChainSelectedData = [];
+			 var selectedOptionsChange = $('#reject-kamlaunch-acc option:selected');
+			 var totalLen = $('#reject-kamlaunch-acc option').length;
+
+				if (selectedOptionsChange.length > 0 && selectedOptionsChange.length < totalLen){
+					selectAll = false;
+				}else if(selectedOptionsChange.length == totalLen){
+					selectAll = true;
+				}
+			 
+				for (var i = 0; i < selectedOptionsChange.length; i++) {
+					custChainSelectedData.push(selectedOptionsChange[i].value);
+
+				}
+				if(selectAll == true){
+					//custChainL1 = "ALL";
+				}else{
+					//custChainL1 = custChainSelectedData.toString();
+				}
+		 
+			//promoTable.draw();
+		},
+		onDropdownHide : function(event) {
+			
+			var selVals = [];
+			var selectedOptions = $('#reject-kamlaunch-acc option:selected');
+			if (selectedOptions.length > 0 && selectAll == false) {
+				for (var i = 0; i < selectedOptions.length; i++) {
+					selVals.push(selectedOptions[i].value);
+				}
+				
+			}
+			
+		},
+		
+		onSelectAll : function() {
+			
+			selectAll = true;
+		},
+		onDeselectAll : function() {
+		
+		}
+
+	});
+}
+
+//Bharati Changes Q1Sprint-4 Aug2021 - Starts
+	
+	function loadselectedkamRejectAccounts() {
+		var launchId=$('.kamLnchDetscr1:checked').val();
+		 $.ajax({
+			type : "GET",
+			dataType: 'json',
+			//contentType : "application/json; charset=utf-8",
+			cache : false,
+			url : "getRejectionAccountIdKam.htm?launchId="+launchId,
+			async : false,
+			success : function(data) {
+				//console.log(data);
+				var accounts=data.responseData.lisOfAcc;
+				//accounts=data.responseData.lisOfAcc;
+				//console.log(accounts);
+				
+				var option = ""; //"<option value='select'>Select Account</option>";
+				for (var i = 0; i < accounts.length; i++) {
+				  option += "<option value='"+accounts[i] +"'>"+accounts[i]+"</option>"
+				}
+				//console.log(option);
+				
+				$('#reject-kamlaunch-acc').empty();
+				$('#reject-kamlaunch-acc').multiselect("destroy");
+				$("#reject-kamlaunch-acc").empty().append(option); 
+				
+				loadrejectKamAccounts();
+				
+				
+				
+			},
+			error : function(error) {
+				console.log(error)
+			}
+		});
+	}
+
+

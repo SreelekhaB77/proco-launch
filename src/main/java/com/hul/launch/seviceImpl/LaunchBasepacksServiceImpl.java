@@ -19,6 +19,7 @@ import com.hul.launch.dao.LaunchBasePacksDao;
 import com.hul.launch.dao.LaunchDao;
 import com.hul.launch.exception.ParameterNotFoundException;
 import com.hul.launch.model.LaunchBaseplan;
+import com.hul.launch.model.LaunchClusterData;
 import com.hul.launch.model.LaunchClusterDataCustStoreForm;
 import com.hul.launch.model.LaunchClusterDataStoreForm;
 import com.hul.launch.model.TblLaunchBasebacks;
@@ -172,6 +173,17 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 			Map<String, List<String>> customerChainL2 = null;
 			List<ProcoCustResponse> customerChainL3 = new ArrayList<>();
 			List<List<String>> liC2 = new ArrayList<>();
+			
+			//Added By Sarin - sprint4Aug2021 - Starts
+			LaunchClusterData launchClusterData = launchDao.getClusterDataByLaunchId(launchId);
+			if ((launchClusterData.getCluster() != null) && (!(launchClusterData.getCluster().isEmpty()))) {
+				storeDetailsResponse.setStoreCount(Integer.parseInt(launchClusterData.getTotalStoresToLaunch()));
+				storeDetailsResponse.setRegionCluster(launchClusterData.getCluster());
+				storeDetailsResponse.setCustomerData(launchClusterData.getAccount_string());
+				//return storeDetailsResponse;
+			} else {
+			//Added By Sarin - sprint4Aug2021 - Ends
+			
 			if (tblLaunchMaster.getLaunchNature().equals("General")) {
 				storeDetailsResponse
 						.setStoreCount(launchBacePacksDao.storeCountByLaunchClass(tblLaunchMaster.getClassification()));
@@ -333,6 +345,7 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 						.setStoreCount(launchBacePacksDao.storeCountByLaunchClass(tblLaunchMaster.getClassification()));
 				storeDetailsResponse.setRegionCluster("ALL INDIA");
 				storeDetailsResponse.setCustomerData("ALL CUSTOMERS");
+			}
 			}
 			List<String> launchStores = launchBacePacksDao.getLaunchStores();
 			storeDetailsResponse.setLaunchFormat(launchStores);
@@ -620,6 +633,7 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public List<ArrayList<String>> getKamInputDumpForLaunch(ArrayList<String> headerDetail, String userId) {
 		return launchBacePacksDao.getKamInputDumpForLaunch(headerDetail, userId);
+		
 	}
 
 	@Override

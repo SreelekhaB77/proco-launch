@@ -131,7 +131,7 @@
 		</c:if>
 
 		<div class="alert alert-danger marginT15" id="kamerrorblockUpload">
-			<button type="button" class="close" data-hide="alert">&times;</button>
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			<%-- <c:out value="${errorMsgUpload}"></c:out> --%>
 			<span> File does not contains any data.</span>
 		</div>
@@ -260,13 +260,17 @@
 								data-dismiss="modal">X</button>
 							<h4 class="modal-title">Reject Launch Details</h4>
 						</div>
-						<form action="#" id="rejRemarkForm" method="POST"
+						
+						<!--sprint4 US-3 UI changes By Bharati-->
+						
+                 <form action="#" id="rejRemarkForm" method="POST"
 							class="form-horizontal" style="padding: 10px 0;">
 
 							<div class="modal-body">
 								<div class="row">
 
 									<div class="col-md-12">
+									
 
 										<div id="msg-error" class="alert alert-danger fade in"
 											style="display: none;">
@@ -278,6 +282,40 @@
 										</div>
 
 										<div class="OpenSans-font">
+										<div class="form-group">
+												<label for="downloadaccount" class="col-sm-4 control-label">Account:</label>
+												<div class="col-sm-6 offset-col-md-2">
+													<span id="#kamAccErrorMsg"
+													style="display: none; color: red; margin-left: 17px;">Please
+													select Account.</span>
+													<!-- <input type="text" class="form-control" id="kamlaunchaccounts" path="kamlaunchaccounts" /> -->
+													
+													<select type="text" class="form-control"
+														id="reject-kamlaunch-acc" name="Account" multiple="multiple">
+														<!-- <option value="Select">Select</option> -->
+													
+													</select>
+
+												</div>
+
+											</div>
+										
+											
+											<!--<div class="form-group">
+												<label for="downloadmoc" class="col-sm-4 control-label">Moc:</label>
+												<div class="col-sm-6 offset-col-md-2">
+													<span id="kamRemakErrorMsgMoc"
+													style="display: none; color: red; margin-left: 17px;">Please
+													select MOC.</span>
+													<div class="col-sm-6 offset-col-md-2">
+													<input style="width: 270px!important; margin-left: -16px;" name='kamRemark' type='text'
+														class='form-control validfield' id="reject-kamlaunch-moc">
+												</div>
+													
+
+												</div>
+
+											</div>-->
 
 											<div class="form-group">
 												<label for="downloadmoc" class="col-sm-4 control-label">Enter
@@ -511,6 +549,7 @@
 											id="kambasepack_add" cellspacing="0" cellpadding="0"
 											style="width: 100% ! important">
 											<thead class="thead-dark">
+												<!--Sprint 4 US-2.3 Frontend Changes By bharati 26-AUG-->
 												<tr>
 													<th><span
 														class="proco-btn proco-btn-success table-head">Select</span></th>
@@ -520,6 +559,9 @@
 													<th><span
 														class="proco-btn proco-btn-success table-head">Launch
 															MOC</span></th>
+															<th><span
+														class="proco-btn proco-btn-success table-head">Changed MOC</span></th>
+															
 													<th><span
 														class="proco-btn proco-btn-success table-head">Submitted
 															Date</span></th>
@@ -549,7 +591,7 @@
 												data-target="#kammocChange" disabled value="Change Launch MOC"/>
 											<input type="button" onclick="kamLaunch()" value="Launch Details" class="btn btn-secondary nxtclassification" id="kamlnchDets"
 												style="float: right;" disabled />
-											<input type="button" class="btn btn-secondary nxtclassification" id="rejectLaunch" data-toggle="modal"
+											<input type="button" class="btn btn-secondary nxtclassification rejectLaunch" id="rejectLaunch" data-toggle="modal"
 												data-target="#kammocReject" disabled value="Reject Launch"/>
 										</div>
 
@@ -724,6 +766,21 @@
 					</div>
 					<div class="card thirdCard tab_content" data-blockid="4"
 						id="step-4">
+						
+						<!--sprint-4 US-5 changes bharati added-->
+						<div class="alert alert-success alert-dismissible" id="storelist-successblock" style="display:none;">
+		                 <button type="button" class="close" data-dismiss="alert">&times;</button>
+		                 <strong>Store List </strong><span></span>
+		               </div>
+		          <c:if test="${success_file_upload!=null}">
+			    <div class="alert alert-success sucess-msg" id="storelist-successblock"
+				style="display: block">
+				<button id="refresh" type="button" class="close" data-hide="alert">&times;</button>
+				<c:out value="${success_file_upload}"></c:out>
+			    </div>
+		      </c:if>
+			   <!--sprint-4 US-5 changes bharati ended-->
+			   
 						<div class="card-header" role="tab" id="headingOne">
 							<div class="">
 								<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false"
@@ -731,6 +788,9 @@
 								</a>
 							</div>
 						</div>
+						
+			 
+			  
 						<div id="collapseOne" class="collapse" role="tabpanel"
 							aria-labelledby="headingOne" aria-expanded="false"
 							style="height: 0px; display: block;">
@@ -740,12 +800,16 @@
 										<table class="table table-striped table-bordered dataTable table-responsive" id="kam_launch_store_table">
 											<thead class="thead-dark">
 												<tr>
+												<!--sprint-4 US-6.1 changes added by Bharati--> 
+												    <th class="kamstrscr2tr"><span class="proco-btn proco-btn-success table-head">Launch Name</span></th>
+													<th class="kamstrscr2tr"><span class="proco-btn proco-btn-success table-head">Launch MOC</span></th>
 													<th class="kamstrscr2tr"><span class="proco-btn proco-btn-success table-head">L1 Chain</span></th>
 													<th class="kamstrscr2tr"><span class="proco-btn proco-btn-success table-head">L2 Chain</span></th>
 													<th class="kamstrscr2tr"><span class="proco-btn proco-btn-success table-head">Store Format</span></th>
 													<th class="kamstrscr2tr"><span class="proco-btn proco-btn-success table-head">Cluster</span></th>
 													<th class="kamstrscr2tr"><span class="proco-btn proco-btn-success table-head">HUL OL Code</span></th>
-													<th class="kamstrscr2tr"><span class="proco-btn proco-btn-success table-head">Kam Remarks</span></th>
+													<!--sprint-4 US-6.1 changes added by Bharati--> 
+													<th class="kamstrscr2tr"><span class="proco-btn proco-btn-success table-head">KAM Remarks (Accepted/Rejected)</span></th>
 												</tr>
 											</thead>
 											<tbody>
@@ -766,7 +830,8 @@
 
 							</div>
 						</div>
-
+                      
+                         
 					<form id="kamlaunchStoreUpload" class="form-horizontal" action="#" enctype="multipart/form-data" name="kamlaunchStoreUpload">
 						<div class="launchupload-parent kam_upload_screenfour">
 							<div class="col-md-12 col-sm-12 ddd">

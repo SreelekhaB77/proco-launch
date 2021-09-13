@@ -11,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
  **/
 public class SaveUploadededLaunchStore {
 	private MultipartFile file;
+	private String Launch_Name; // Added by Harsha
+	private String Launch_Moc; // Added by Harsha
 	private String L1_Chain;
 	private String L2_Chain;
 	private String StoreFormat;
@@ -21,6 +23,19 @@ public class SaveUploadededLaunchStore {
 	private String updatedBy;
 	private Date updatedDate;
 	private String Kam_Remarks;
+	
+	public String getLaunch_Name() {
+		return Launch_Name;
+	}
+	public void setLaunch_Name(String launch_Name) {
+		Launch_Name = launch_Name;
+	}
+	public String getLaunch_Moc() {
+		return Launch_Moc;
+	}
+	public void setLaunch_Moc(String launch_Moc) {
+		Launch_Moc = launch_Moc;
+	}
 	
 	public MultipartFile getFile() {
 		return file;
