@@ -1,3 +1,4 @@
+
 $(document)
 		.ready(
 				function() {
@@ -113,18 +114,23 @@ $(document)
 						});
 					
 					/*PromoListing table pagination promoTable = */
-					promoTable = $('.promo-list-table').DataTable({
-
-				              /* added for second tab start */
+					var promoTable = $('.promo-list-table').DataTable({
+				    
+					     /* added for second tab start */
 						 "bProcessing": true,
 			             "bServerSide": true,
 			             "lengthChange": false,
 			             "searching": false,
 			             "ordering": false,
-			             "iDisplayLength": 10,
+			             //sprint-5	select all changes for disaggration tab by bharati
+			             "iDisplayLength": 100000 ,
 					     "iDisplayStart": 0,
-				              "sAjaxSource": "disaggregationPagination.htm",
+					      "scrollY":       "280px",
+					       "scrollX": true,
+                          
+					    "sAjaxSource": "disaggregationPagination.htm",
 				               "fnServerParams": function(aoData) {
+								
 				                aoData.push(
 				    	                {"name": "category", "value": category}, 
 				    	                {"name": "brand", "value": brand},
@@ -138,7 +144,7 @@ $(document)
 				    	                );
 				              }, 
 				              "fnDrawCallback": function(oSettings){
-				            	  getCount =oSettings.fnRecordsTotal();
+				            	var getCount =oSettings.fnRecordsTotal();
 				            	  $('#totalCount').text(getCount);
 				            	  $('table.promo-list-table input[type="checkbox"]').change(function() {
 				            		  
@@ -169,6 +175,9 @@ $(document)
 									   }
 				            	  });
 				              },
+							  
+						
+							   
 				              "aoColumns": [{
 				                  "mData": "promo_id",
 				                  "mRender": function(data, type, full) {
@@ -211,11 +220,11 @@ $(document)
 				                  },{
 				                    "mData": "status",
 				                  }
-				                ]
+				                ],
 				                /* added for second tab end */
-
+							
 				        });
-					
+									
 					//checkbox mocrr-checkbox
 					
 					$(document.dc.mocs).change(function() {
@@ -361,3 +370,15 @@ function extractLast(term){
 function split(val){
 	return val.split(/,\s*/);
 }
+
+//sprint5 select all changes added by bharati sep-21
+$('#disTable').on('draw.dt', function() {
+$('#select_all_promo').prop('checked', false);
+$('input[type="checkbox"]', '#disTable').prop('checked', false);
+
+});
+$("#select_all_promo").click(function () {
+      $('#disTable tbody input[type="checkbox"]').prop('checked', this.checked);
+ });
+ 
+
