@@ -462,11 +462,12 @@
 
 				<table
 					class="table table-striped table-bordered promo-list-table" id="disTable"
-					cellspacing="0" style="width: 100%;overflow-x: scroll;display: block;">
+					cellspacing="0" style="width: 1975px!important;overflow-x: hidden;display: block;">
 					<thead>
 						<tr>
 							<th>
-								<!-- <input type="checkbox" class="promo_id_all" name="checkAll" id="all_promo" value=""> -->
+							<!--sprint 5 select all changes for disaggration tab by bharati-->
+								<input type="checkbox" id="select_all_promo" class="promo_id_all" name="checkAll" value="" /> 
 							</th>
 							<th>UNIQUE ID</th>
 							<th>MOC</th>
@@ -565,19 +566,16 @@
 	<script type="text/javascript" src="assets/js/jquery-1.11.3.min.js"></script>
 
 	<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="assets/js/jquery-ui.js"></script>
-	<script type="text/javascript"
-		src="assets/js/jquery.dataTables.min.js"></script>
-	<script src="assets/js/dataTables.bootstrap.min.js"></script>
 	<script type="text/javascript" src="assets/js/comboTreePlugin.js"></script>
+	<script type="text/javascript" src="assets/js/bootstrapValidator.js"></script>
+	<script type="text/javascript" src="assets/js/jquery-ui.js"></script>
+	<script type="text/javascript" src="assets/js/bootstrap-multiselect.js"></script>
+	<script type="text/javascript" src="assets/js/custom/proco/promoDisaggregation.js"></script>
+	<script type="text/javascript" src="assets/js/custom/proco/addDepot.js"></script>
+	<script type="text/javascript" src="assets/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="assets/js/dataTables.bootstrap.min.js"></script>
 
-	<script type="text/javascript"
-		src="assets/js/bootstrap-multiselect.js"></script>
-	<script type="text/javascript"
-		src="assets/js/custom/proco/promoDisaggregation.js"></script>
-<script type="text/javascript" src="assets/js/bootstrapValidator.js"></script>
-<script type="text/javascript"
-	src="assets/js/custom/proco/addDepot.js"></script>
+
 	<script type="text/javascript">
 	
 		var moc = '${mocJson}';
@@ -629,5 +627,6 @@
 			});
 		});
 	</script>
+	
 </body>
 </html>
