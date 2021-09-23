@@ -181,7 +181,10 @@ public class CoeLaunchPlanController {
 					GetCoeLaunchDetailsRequest.class);
 			String launchId[] = getCoeLaunchDetailsRequest.getLaunchIds().split(",");
 			List<String> listOfLaunchData = Arrays.asList(launchId);
-			listOfLaunch = launchService.getAllCompletedListingTracker(listOfLaunchData);
+			// Already Existing below line
+			//listOfLaunch = launchService.getAllCompletedListingTracker(listOfLaunchData);
+			// Need to rename this method with Harsha logic
+			listOfLaunch = launchService.getAllCompletedListingTrackerForCoe(listOfLaunchData);
 			if (null != listOfLaunch.get(0).getError()) {
 				throw new Exception(listOfLaunch.get(0).getError());
 			}
@@ -412,10 +415,10 @@ public class CoeLaunchPlanController {
 		return gson.toJson(map);
 	}
 
-	@RequestMapping(value = "{launchIds}/downloadLaunchBuildUpCoeTemplate.htm", method = RequestMethod.GET)
+	@RequestMapping(value = "{launchIds}/{launchMoc}/downloadLaunchBuildUpCoeTemplate.htm", method = RequestMethod.GET)
 	//public @ResponseBody ModelAndView downloadLaunchBuildUpCoeTemplate(@PathVariable("launchIds") String launchIds,
 	public @ResponseBody String downloadLaunchBuildUpCoeTemplate(@PathVariable("launchIds") String launchIds,  //Sarin Prod Changes
-			Model model, HttpServletRequest request, HttpServletResponse response) {
+			@PathVariable("launchMoc") String launchMocs,Model model, HttpServletRequest request, HttpServletResponse response) {
 		Gson gson = new Gson();
 		
 			InputStream is;
@@ -429,8 +432,13 @@ public class CoeLaunchPlanController {
 			ArrayList<String> headerDetail = getLaunchBuildUpHeadersCoe();
 			downloadedData.add(headerDetail);
 			String userId = (String) request.getSession().getAttribute("UserID");
+			// Need to comment below part and add new method for it
+			//List<ArrayList<String>> listDownload = launchFinalPlanService.getFinalBuildUpDumpNew(userId, launchId);
+			// Harsha Code changes starts here
 			String[] launchId = launchIds.split(",");
-			List<ArrayList<String>> listDownload = launchFinalPlanService.getFinalBuildUpDumpNew(userId, launchId);
+			String[] launchMoc = launchMocs.split(",");
+			List<ArrayList<String>> listDownload = launchFinalPlanService.getFinalBuildUpDumpNewForCoe(userId, launchId, launchMoc);
+			
 			if (listDownload != null) {
 				UploadUtil.writeXLSFile(downloadFileName, listDownload, null, ".xls");
 				downloadLink = downloadFileName + ".xls";

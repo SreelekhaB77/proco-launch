@@ -35,4 +35,7 @@ public interface LaunchFinalService {
 	List<ArrayList<String>> getMstnClearanceDataDump(String userId, List<String> listOfLaunchData);
 
 	List<ArrayList<String>> getMstnClearanceDataDumpCoe(String userId, List<String> listOfLaunchData);
+
+	//Added by Harsha for Q5 Sprint
+	List<ArrayList<String>> getFinalBuildUpDumpNewForCoe(String userId, String[] launchId, String[] launchMoc);
 }

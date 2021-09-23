@@ -673,6 +673,11 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 	public List<ArrayList<String>> getFinalBuildUpDumpNew(String userId, String[] launchId) {
 		return launchFinalDao.getFinalBuildUpDumptNew(userId, launchId);
 	}
+	// Added by Harsha for Q5
+	@Override
+	public List<ArrayList<String>> getFinalBuildUpDumpNewForCoe(String userId, String[] launchId, String[] launchMoc) {
+		return launchFinalDao.getFinalBuildUpDumptNewForCoe(userId, launchId,launchMoc);
+	}
 
 	@Override
 	public List<ArrayList<String>> getFinalBuildUpDumpNewKam(String userId, String launchId) {

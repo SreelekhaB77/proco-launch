@@ -102,6 +102,13 @@ public class LaunchServiceImpl implements LaunchService {
 	public List<LaunchCoeClusterResponse> getAllCompletedListingTracker(List<String> listOfLaunchData) {
 		return launchDao.getAllCompletedListingTracker(listOfLaunchData);
 	}
+	
+	//Harsha's method getAllCompletedListingTrackerForCoe
+	@Override
+	public List<LaunchCoeClusterResponse> getAllCompletedListingTrackerForCoe(List<String> listOfLaunchData) {
+		return launchDao.getAllCompletedListingTrackerForCoe(listOfLaunchData);
+	}
+	
 
 	@Override
 	public List<CoeDocDownloadResponse> getCoeDocDownloadUrl(List<String> listOfLaunchData) {

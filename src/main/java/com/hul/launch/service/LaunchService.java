@@ -88,4 +88,7 @@ public interface LaunchService {
 	
 	//Q2 sprint feb 2021 kavitha
 	public List<String> getLaunchNameBasedOnMoc(String userId,String tmeMoc);
+
+	//Added by Harsha for Q5 Sprint
+	List<LaunchCoeClusterResponse> getAllCompletedListingTrackerForCoe(List<String> listOfLaunchData);
 }

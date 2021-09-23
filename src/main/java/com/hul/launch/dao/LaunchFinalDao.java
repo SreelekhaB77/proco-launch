@@ -107,4 +107,7 @@ public interface LaunchFinalDao {
 	//Sarin Changes - Launch Issue Feb2021 
 	public Map<String, String> getCldGsvForDepoBasepack(String launchId);
 	public List<LaunchBuildUpTemp> getFinalBuildUpDepoLevelList(String launchId);
+
+	// Added by Harsha Q5
+	List<ArrayList<String>> getFinalBuildUpDumptNewForCoe(String userId, String[] launchId, String[] launchMoc);
 }
