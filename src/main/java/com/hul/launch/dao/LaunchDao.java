@@ -101,6 +101,5 @@ public interface LaunchDao {
 	
 	//Q2 sprint feb 2021 kavitha
 		public List<String> getLaunchNameBasedOnMoc(String userId,String tmeMoc);
-		// Q5 Sprint added by Harsha
-		public List<LaunchCoeClusterResponse> getAllCompletedListingTrackerForCoe(List<String> listOfLaunchData);
+		
 }

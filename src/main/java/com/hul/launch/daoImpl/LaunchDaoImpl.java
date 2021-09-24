@@ -535,10 +535,11 @@ public class LaunchDaoImpl implements LaunchDao {
 		return listOfCompletedLaunch;
 	}
 	
-	// Harsha's Logic for Q5
+	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<LaunchCoeClusterResponse> getAllCompletedListingTrackerForCoe(List<String> listOfLaunchData) {
+	public List<LaunchCoeClusterResponse> getAllCompletedListingTracker(List<String> listOfLaunchData) {
 		List<LaunchCoeClusterResponse> listOfCompletedLaunch = new ArrayList<>();
 		try {
 			Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
@@ -561,40 +562,6 @@ public class LaunchDaoImpl implements LaunchDao {
 				else {
 					launchCoeClusterResponse.setLaunchMoc(obj1[1].toString());
 				}
-				launchCoeClusterResponse.setSkuName(obj1[2].toString());
-				launchCoeClusterResponse.setBasepackCode(obj1[3].toString());
-				launchCoeClusterResponse.setAccount(obj1[4].toString());
-				launchCoeClusterResponse.setCluster(obj1[5].toString());
-				listOfCompletedLaunch.add(launchCoeClusterResponse);
-			}
-
-		} catch (Exception ex) {
-			logger.debug("Exception :", ex);
-			LaunchCoeClusterResponse launchCoeClusterResponse = new LaunchCoeClusterResponse();
-			launchCoeClusterResponse.setError(ex.toString());
-			listOfCompletedLaunch.add(launchCoeClusterResponse);
-			return listOfCompletedLaunch;
-		}
-		return listOfCompletedLaunch;
-	}
-
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<LaunchCoeClusterResponse> getAllCompletedListingTracker(List<String> listOfLaunchData) {
-		List<LaunchCoeClusterResponse> listOfCompletedLaunch = new ArrayList<>();
-		try {
-			Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
-					"SELECT DISTINCT tlm.LAUNCH_NAME, tlm.LAUNCH_MOC, tlbt.SKU_NAME,	tlbt.BASEPACK_CODE,	tlbt.ACCOUNT_NAME, "
-							+ "tlbt.CLUSTER FROM TBL_LAUNCH_BUILDUP_TEMP tlbt, TBL_LAUNCH_MASTER tlm WHERE "
-							+ "tlbt.LAUNCH_ID = tlm.LAUNCH_ID AND tlbt.LAUNCH_ID IN (:listOfLaunchData)");
-			query2.setParameterList("listOfLaunchData", listOfLaunchData);
-			Iterator<Object> iterator = query2.list().iterator();
-			while (iterator.hasNext()) {
-				Object[] obj1 = (Object[]) iterator.next();
-				LaunchCoeClusterResponse launchCoeClusterResponse = new LaunchCoeClusterResponse();
-				launchCoeClusterResponse.setLaunchName(obj1[0].toString());
-				launchCoeClusterResponse.setLaunchMoc(obj1[1].toString());
 				launchCoeClusterResponse.setSkuName(obj1[2].toString());
 				launchCoeClusterResponse.setBasepackCode(obj1[3].toString());
 				launchCoeClusterResponse.setAccount(obj1[4].toString());

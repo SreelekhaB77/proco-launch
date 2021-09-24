@@ -283,7 +283,8 @@ public class ScLaunchPlanController {
 		String downloadFileName = absoluteFilePath + fileName;
 		String userId = (String) request.getSession().getAttribute("UserID");
 		String[] launchIds = launchId.split(",");
-		List<ArrayList<String>> listDownload = launchFinalPlanService.getFinalBuildUpDumpNew(userId, launchIds);
+		String[] launchMoc =null;
+		List<ArrayList<String>> listDownload = launchFinalPlanService.getFinalBuildUpDumpNew(userId, launchIds,launchMoc);
 		try {
 			if (listDownload != null) {
 				UploadUtil.writeXLSFile(downloadFileName, listDownload, null, ".xls");

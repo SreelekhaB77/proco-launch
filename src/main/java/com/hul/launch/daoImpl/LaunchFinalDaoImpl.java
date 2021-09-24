@@ -646,106 +646,42 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 		return liReturn;
 	}
 	
-	// Added by Harsha for buildupexcel
+	
+
 	@SuppressWarnings("unchecked")
-	public List<LaunchBuildUpTempCal> getFinalBuildUpTempDataNewForCOE(String[] launchId,String[] launchMoc) {
+	public List<LaunchBuildUpTempCal> getFinalBuildUpTempDataNew(String[] launchId, String[] launchMoc) {
 		List<LaunchBuildUpTempCal> liReturn = new ArrayList<>();
 		List<String> launchIdList = Arrays.asList(launchId);
-		List<String> launchMocList = Arrays.asList(launchMoc);
-		try {
-			Session session = sessionFactory.getCurrentSession();
-			Query query = session.createNativeQuery(
-					//Sarin Changes - Commented Q1Sprint Feb2021 and Added below
-					/*
-					"SELECT DEPOT, BP_NAME, FMCG_CSP_CODE, MODIFIED_CHAIN, CLUSTER,FINAL_CLD_N,FINAL_CLD_N1,FINAL_CLD_N2,"
-							+ "FINAL_UNITS_N,FINAL_UNITS_N1,FINAL_UNITS_N2,FINAL_VALUE_N,FINAL_VALUE_N1,FINAL_VALUE_N2,"
-							+ "tlm.LAUNCH_NAME, tlm.LAUNCH_MOC, tlm.LAUNCH_ID FROM TBL_LAUNCH_TEMP_FINAL_CAL tltfc, TBL_LAUNCH_MASTER tlm WHERE tlm.LAUNCH_ID"
-							+ " IN (:launchId) AND tltfc.LAUNCH_ID = tlm.LAUNCH_ID" */
-					" select * from ( SELECT DEPOT, BP_NAME, FMCG_CSP_CODE, MODIFIED_CHAIN, CLUSTER,FINAL_CLD_N,FINAL_CLD_N1,FINAL_CLD_N2,"
-					+ " FINAL_UNITS_N,FINAL_UNITS_N1,FINAL_UNITS_N2,FINAL_VALUE_N,FINAL_VALUE_N1,FINAL_VALUE_N2,"
-					+ " tlm.LAUNCH_NAME, CASE WHEN TLK.LAUNCH_MOC_KAM IS NULL THEN tlm.LAUNCH_MOC ELSE TLK.LAUNCH_MOC_KAM END AS LAUNCH_MOC, tlm.LAUNCH_ID FROM TBL_LAUNCH_TEMP_FINAL_CAL tltfc"
-					+ " INNER JOIN TBL_LAUNCH_MASTER tlm ON tltfc.LAUNCH_ID = tlm.LAUNCH_ID"
-					+ " LEFT OUTER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS TLK ON TLK.LAUNCH_ID = tlm.LAUNCH_ID AND TLK.LAUNCH_KAM_ACCOUNT = tltfc.MODIFIED_CHAIN AND TLK.IS_ACTIVE = 1"
-					+ " WHERE tlm.LAUNCH_ID IN (:launchId) ) L where LAUNCH_MOC in (:launchMoc) ");
-			query.setParameterList("launchId", launchIdList);
-			query.setParameterList("launchMoc", launchMocList);
-			Iterator<Object> itr = query.list().iterator();
-			int[] temp = { 1 };
-			while (itr.hasNext()) {
-				Object[] obj = (Object[]) itr.next();
-				LaunchBuildUpTempCal launchBuildUpTempCal = new LaunchBuildUpTempCal();
-				launchBuildUpTempCal.setDEPOT((String) obj[0]);
-				launchBuildUpTempCal.setSKU_NAME((String) obj[1]);
-				launchBuildUpTempCal.setFMCG_CSP_CODE((String) obj[2]);
-				launchBuildUpTempCal.setMODIFIED_CHAIN((String) obj[3]);
-				launchBuildUpTempCal.setCLUSTER((String) obj[4]);
-				launchBuildUpTempCal.setSELLIN_VALUE_CLD_N((String) obj[5]);
-				launchBuildUpTempCal.setSELLIN_VALUE_CLD_N1((String) obj[6]);
-				launchBuildUpTempCal.setSELLIN_VALUE_CLD_N2((String) obj[7]);
-				launchBuildUpTempCal.setSELLIN_UNITS_N((String) obj[8]);
-				launchBuildUpTempCal.setSELLIN_UNITS_N1((String) obj[9]);
-				launchBuildUpTempCal.setSELLIN_UNITS_N2((String) obj[10]);
-				launchBuildUpTempCal.setSELLIN_VALUE_N((String) obj[11]);
-				launchBuildUpTempCal.setSELLIN_VALUE_N1((String) obj[12]);
-				launchBuildUpTempCal.setSELLIN_VALUE_N2((String) obj[13]);
-				launchBuildUpTempCal.setLAUNCH_NAME((String) obj[14]);
-
-				Query query1 = session.createNativeQuery(
-						"SELECT DISTINCT LOWER(KAM_MAIL_ID) FROM TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE ACCOUNT_NAME = :accountName");
-				query1.setParameter("accountName", (String) obj[3]);
-				List<String> kamId = query1.list();
-				String launch_Moc = null;
-				if (kamId.isEmpty()) {
-					launch_Moc = (String) obj[15];
-				} else {
-					String accountName = kamId.get(0).split("@")[0];
-					Query query2 = session.createNativeQuery(
-							"SELECT LAUNCH_MOC FROM MODTRD.TBL_LAUNCH_MOC_KAM WHERE UPPER(LAUNCH_ACCOUNT) = :accountName AND LAUNCH_ID = :launchId");
-					query2.setParameter("accountName", accountName.toUpperCase());
-					query2.setParameter("launchId", Integer.toString((Integer) obj[16]));
-					List<String> rejectedMoc = query2.list();
-					if (rejectedMoc.isEmpty()) {
-						launch_Moc = (String) obj[15];
-					} else {
-						launch_Moc = query2.list().get(0).toString();
-					}
-				}
-
-				launchBuildUpTempCal.setLAUNCH_MOC(launch_Moc);
-				launchBuildUpTempCal.setLAUNCH_ID(Integer.toString((Integer) obj[16]));
-				liReturn.add(launchBuildUpTempCal);
-				temp[0]++;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			LaunchBuildUpTempCal launchBuildUpTemp = new LaunchBuildUpTempCal();
-			launchBuildUpTemp.setError(e.toString());
-			liReturn.add(launchBuildUpTemp);
+		List<String> launchMocList;
+		if(launchMoc!=null) {
+			launchMocList = Arrays.asList(launchMoc);
 		}
-		return liReturn;
-	}
-
-
-	@SuppressWarnings("unchecked")
-	public List<LaunchBuildUpTempCal> getFinalBuildUpTempDataNew(String[] launchId) {
-		List<LaunchBuildUpTempCal> liReturn = new ArrayList<>();
-		List<String> launchIdList = Arrays.asList(launchId);
+		else {
+			launchMocList =null;
+		}
+		
+		String sBuildupQry = "";
 		try {
 			Session session = sessionFactory.getCurrentSession();
-			Query query = session.createNativeQuery(
-					//Sarin Changes - Commented Q1Sprint Feb2021 and Added below
-					/*
-					"SELECT DEPOT, BP_NAME, FMCG_CSP_CODE, MODIFIED_CHAIN, CLUSTER,FINAL_CLD_N,FINAL_CLD_N1,FINAL_CLD_N2,"
-							+ "FINAL_UNITS_N,FINAL_UNITS_N1,FINAL_UNITS_N2,FINAL_VALUE_N,FINAL_VALUE_N1,FINAL_VALUE_N2,"
-							+ "tlm.LAUNCH_NAME, tlm.LAUNCH_MOC, tlm.LAUNCH_ID FROM TBL_LAUNCH_TEMP_FINAL_CAL tltfc, TBL_LAUNCH_MASTER tlm WHERE tlm.LAUNCH_ID"
-							+ " IN (:launchId) AND tltfc.LAUNCH_ID = tlm.LAUNCH_ID" */
-					"SELECT DEPOT, BP_NAME, FMCG_CSP_CODE, MODIFIED_CHAIN, CLUSTER,FINAL_CLD_N,FINAL_CLD_N1,FINAL_CLD_N2,"
+			
+			Query query = null;
+			sBuildupQry = " select * from ( SELECT DEPOT, BP_NAME, FMCG_CSP_CODE, MODIFIED_CHAIN, CLUSTER,FINAL_CLD_N,FINAL_CLD_N1,FINAL_CLD_N2,"
 					+ " FINAL_UNITS_N,FINAL_UNITS_N1,FINAL_UNITS_N2,FINAL_VALUE_N,FINAL_VALUE_N1,FINAL_VALUE_N2,"
 					+ " tlm.LAUNCH_NAME, CASE WHEN TLK.LAUNCH_MOC_KAM IS NULL THEN tlm.LAUNCH_MOC ELSE TLK.LAUNCH_MOC_KAM END AS LAUNCH_MOC, tlm.LAUNCH_ID FROM TBL_LAUNCH_TEMP_FINAL_CAL tltfc"
 					+ " INNER JOIN TBL_LAUNCH_MASTER tlm ON tltfc.LAUNCH_ID = tlm.LAUNCH_ID"
 					+ " LEFT OUTER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS TLK ON TLK.LAUNCH_ID = tlm.LAUNCH_ID AND TLK.LAUNCH_KAM_ACCOUNT = tltfc.MODIFIED_CHAIN AND TLK.IS_ACTIVE = 1"
-					+ " WHERE tlm.LAUNCH_ID IN (:launchId)");
+					+ " WHERE tlm.LAUNCH_ID IN (:launchId) ) L ";
+			if(launchMoc!=null) {
+				sBuildupQry = sBuildupQry + " where LAUNCH_MOC IN (:launchMoc)";
+				query = session.createNativeQuery(sBuildupQry);
+				query.setParameterList("launchId", launchIdList);
+				query.setParameterList("launchMoc", launchMocList);
+			}
+			else {
+			query = session.createNativeQuery(sBuildupQry);
 			query.setParameterList("launchId", launchIdList);
+			}
+			
 			Iterator<Object> itr = query.list().iterator();
 			int[] temp = { 1 };
 			while (itr.hasNext()) {
@@ -771,9 +707,9 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 						"SELECT DISTINCT LOWER(KAM_MAIL_ID) FROM TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE ACCOUNT_NAME = :accountName");
 				query1.setParameter("accountName", (String) obj[3]);
 				List<String> kamId = query1.list();
-				String launchMoc = null;
+				String launchMoc1 = null;
 				if (kamId.isEmpty()) {
-					launchMoc = (String) obj[15];
+					launchMoc1 = (String) obj[15];
 				} else {
 					String accountName = kamId.get(0).split("@")[0];
 					Query query2 = session.createNativeQuery(
@@ -782,13 +718,13 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 					query2.setParameter("launchId", Integer.toString((Integer) obj[16]));
 					List<String> rejectedMoc = query2.list();
 					if (rejectedMoc.isEmpty()) {
-						launchMoc = (String) obj[15];
+						launchMoc1 = (String) obj[15];
 					} else {
-						launchMoc = query2.list().get(0).toString();
+						launchMoc1 = query2.list().get(0).toString();
 					}
 				}
 
-				launchBuildUpTempCal.setLAUNCH_MOC(launchMoc);
+				launchBuildUpTempCal.setLAUNCH_MOC(launchMoc1);
 				launchBuildUpTempCal.setLAUNCH_ID(Integer.toString((Integer) obj[16]));
 				liReturn.add(launchBuildUpTempCal);
 				temp[0]++;
@@ -1431,7 +1367,8 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 	@Override
 	public List<ArrayList<String>> getFinalBuildUpDump(String userId, String[] launchId) {
 		List<ArrayList<String>> downloadedData = new ArrayList<>();
-		List<LaunchBuildUpTempCal> listOfLaunchBuildUpTempCal = getFinalBuildUpTempDataNew(launchId);
+		String[] launchMoc = null;
+		List<LaunchBuildUpTempCal> listOfLaunchBuildUpTempCal = getFinalBuildUpTempDataNew(launchId,launchMoc);
 		ArrayList<String> headerDetail = new ArrayList<>();
 		headerDetail.add("LAUNCH NAME");
 		headerDetail.add("DEPOT");
@@ -1687,58 +1624,12 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 		}
 	}
 	
-	// Added by Harsha for Q5 Sprint
-	public List<ArrayList<String>> getFinalBuildUpDumptNewForCoe(String userId, String[] launchId, String[] launchMoc) {
-		List<ArrayList<String>> downloadedData = new ArrayList<>();
-		List<LaunchBuildUpTempCal> listOfFinalBuildups = getFinalBuildUpTempDataNewForCOE(launchId,launchMoc);
-		ArrayList<String> headerDetail = new ArrayList<>();
-		headerDetail.add("LAUNCH_ID");
-		headerDetail.add("LAUNCH_NAME");
-		headerDetail.add("LAUNCH_MOC");
-		headerDetail.add("DEPOT");
-		headerDetail.add("SKU_NAME");
-		headerDetail.add("FMCG_CSP_CODE");
-		headerDetail.add("MODIFIED_CHAIN");
-		headerDetail.add("CLUSTER");
-		headerDetail.add("FINAL_CLD_N");
-		headerDetail.add("FINAL_CLD_N+1");
-		headerDetail.add("FINAL_CLD_N+2");
-		headerDetail.add("FINAL_UNITS_N");
-		headerDetail.add("FINAL_UNITS_N+1");
-		headerDetail.add("FINAL_UNITS_N+2");
-		headerDetail.add("SELL_IN_VALUE_N");
-		headerDetail.add("SELL_IN_VALUE_N+1");
-		headerDetail.add("SELL_IN_VALUE_N+2");
-		downloadedData.add(headerDetail);
-		for (LaunchBuildUpTempCal launchBuildUpTemp : listOfFinalBuildups) {
-			ArrayList<String> dataObj = new ArrayList<>();
-			dataObj.add(launchBuildUpTemp.getLAUNCH_ID());
-			dataObj.add(launchBuildUpTemp.getLAUNCH_NAME());
-			dataObj.add(launchBuildUpTemp.getLAUNCH_MOC());
-			dataObj.add(launchBuildUpTemp.getDEPOT());
-			dataObj.add(launchBuildUpTemp.getSKU_NAME());
-			dataObj.add(launchBuildUpTemp.getFMCG_CSP_CODE());
-			dataObj.add(launchBuildUpTemp.getMODIFIED_CHAIN());
-			dataObj.add(launchBuildUpTemp.getCLUSTER());
-			dataObj.add(launchBuildUpTemp.getSELLIN_VALUE_CLD_N());
-			dataObj.add(launchBuildUpTemp.getSELLIN_VALUE_CLD_N1());
-			dataObj.add(launchBuildUpTemp.getSELLIN_VALUE_CLD_N2());
-			dataObj.add(launchBuildUpTemp.getSELLIN_UNITS_N());
-			dataObj.add(launchBuildUpTemp.getSELLIN_UNITS_N1());
-			dataObj.add(launchBuildUpTemp.getSELLIN_UNITS_N2());
-			dataObj.add(launchBuildUpTemp.getSELLIN_VALUE_N());
-			dataObj.add(launchBuildUpTemp.getSELLIN_VALUE_N1());
-			dataObj.add(launchBuildUpTemp.getSELLIN_VALUE_N2());
-			downloadedData.add(dataObj);
-		}
-		return downloadedData;
-	}
-
+	
 
 	@Override
-	public List<ArrayList<String>> getFinalBuildUpDumptNew(String userId, String[] launchId) {
+	public List<ArrayList<String>> getFinalBuildUpDumptNew(String userId, String[] launchId,String[] launchMoc) {
 		List<ArrayList<String>> downloadedData = new ArrayList<>();
-		List<LaunchBuildUpTempCal> listOfFinalBuildups = getFinalBuildUpTempDataNew(launchId);
+		List<LaunchBuildUpTempCal> listOfFinalBuildups = getFinalBuildUpTempDataNew(launchId,launchMoc);
 		ArrayList<String> headerDetail = new ArrayList<>();
 		headerDetail.add("LAUNCH_ID");
 		headerDetail.add("LAUNCH_NAME");
