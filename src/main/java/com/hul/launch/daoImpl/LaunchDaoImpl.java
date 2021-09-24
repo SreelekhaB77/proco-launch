@@ -822,9 +822,6 @@ public class LaunchDaoImpl implements LaunchDao {
 						dataObj.add(value.replaceAll("\\^", ","));
 					}
 					// Harsha'S logic Starts Here for Sprint Q5
-					int count =0;
-					for(String answer : dataObj) {
-						if(count == 3) {
 							String modifiedMOC = getModifiedMoc(launchId,  dataObj.get(5));
 							if(modifiedMOC!=null && !modifiedMOC.isEmpty()) {
 								String replaceDate = modifiedMOC;
@@ -833,9 +830,7 @@ public class LaunchDaoImpl implements LaunchDao {
 							else {
 								dataObj.set(3, dataObj.get(3));
 							}
-						}
-						count++;
-					}
+
 					obj = null;
 					downloadDataList.add(dataObj);
 				}	
