@@ -1,6 +1,8 @@
 package com.hul.proco.controller.promocr;
 
 import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -419,5 +421,29 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 			return null;
 		}
 		return list;
+	}
+	// Harsha's changes for tracking Portal usage Q5
+	@SuppressWarnings("unchecked")
+	// Inserting values into table Added By Harsha
+	public String insertToportalUsage(String userId, String roleID, String module) {
+		String res = "";
+		try {
+
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+			LocalDateTime now = LocalDateTime.now();
+			Query query = sessionFactory.getCurrentSession()
+					.createNativeQuery("INSERT INTO TBL_VAT_AUDIT_TRAIL_DETAILS" + "(USER_ID," + "ROLE_ID,"
+							+ "LOGGED_IN_TIME," + "MODULE)" + "VALUES(?1,?2,?3,?4)");
+			query.setParameter(1, userId);
+			query.setParameter(2, roleID);
+			query.setParameter(3, dtf.format(now));
+			query.setParameter(4, module);
+			query.executeUpdate();
+
+		} catch (Exception e) {
+			logger.debug("Exception:", e);
+			res = "500";
+		}
+		return res;
 	}
 }

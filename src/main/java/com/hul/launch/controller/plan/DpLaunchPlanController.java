@@ -39,6 +39,7 @@ import com.hul.launch.service.LaunchServiceDp;
 import com.hul.launch.web.util.CommonUtils;
 import com.hul.launch.web.util.FilePaths;
 import com.hul.launch.web.util.UploadUtil;
+import com.hul.proco.controller.promocr.PromoCrService;
 
 /**
  * 
@@ -55,11 +56,19 @@ public class DpLaunchPlanController {
 	
 	@Autowired
 	public LaunchFinalService launchFinalPlanService;
+	
+	@Autowired
+	private PromoCrService promoCrService;
 
 	@RequestMapping(value = "getAllCompletedLaunchDataDp.htm", method = RequestMethod.GET)
 	public ModelAndView getAllCompletedLaunchData(HttpServletRequest request, Model model) {
 		List<LaunchDataResponse> listOfLaunch = new ArrayList<>();
 		try {
+			//Harsha's implementation for logintool
+			String id=(String)request.getSession().getAttribute("UserID");
+			String role=(String)request.getSession().getAttribute("roleId");
+			promoCrService.insertToportalUsage(id, role, "LAUNCH");
+			//Harsha's Logic End's here 
 			listOfLaunch = launchServiceDp.getAllCompletedLaunchData();
 			if (null != listOfLaunch.get(0).getError()) {
 				throw new Exception(listOfLaunch.get(0).getError());

@@ -80,6 +80,7 @@ import com.hul.launch.web.util.CommonUtils;
 import com.hul.launch.web.util.FilePaths;
 import com.hul.launch.web.util.UploadUtil;
 import com.hul.proco.controller.createpromo.CreatePromoService;
+import com.hul.proco.controller.promocr.PromoCrService;
 import com.hul.proco.excelreader.exom.ExOM;
 
 
@@ -117,6 +118,9 @@ public class TMELaunchPlanController {
 	
 	@Autowired
 	public LaunchServiceCoe launchServiceCoe;
+	
+	@Autowired
+	private PromoCrService promoCrService;
 
 	@RequestMapping(value = "getAllLaunchData.htm", method = RequestMethod.GET)
 	public ModelAndView allLaunchData(HttpServletRequest request, Model model) {
@@ -236,6 +240,13 @@ public class TMELaunchPlanController {
 	@RequestMapping(value = "getLaunchPlanPage.htm", method = RequestMethod.GET)
 	public ModelAndView mainPageForm(HttpServletRequest request, Model model) {
 		try {
+			
+			//Harsha's implementation for logintool
+			String id=(String)request.getSession().getAttribute("UserID");
+			String role=(String)request.getSession().getAttribute("roleId");
+			promoCrService.insertToportalUsage(id, role, "LAUNCH");
+			//Harsha's Logic End's here 
+			
 			List<String> moc = visibilityPlanService.getAllMoc();
 			List<String> customerChainL1 = createPromoService.getCustomerChainL1ForLaunch();
 			List<String> storeFormat = launchBasepacksService.getStoreFormat();

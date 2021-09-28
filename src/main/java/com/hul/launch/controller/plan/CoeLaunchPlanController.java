@@ -52,6 +52,7 @@ import com.hul.launch.service.LaunchServiceCoe;
 import com.hul.launch.web.util.CommonUtils;
 import com.hul.launch.web.util.FilePaths;
 import com.hul.launch.web.util.UploadUtil;
+import com.hul.proco.controller.promocr.PromoCrService;
 
 /**
  * 
@@ -75,6 +76,9 @@ public class CoeLaunchPlanController {
 
 	@Autowired
 	public LaunchFinalService launchFinalPlanService;
+	
+		@Autowired
+		private PromoCrService promoCrService;
 
 	@RequestMapping(value = "getAllCompletedLaunchData.htm", method = RequestMethod.GET)
 	public ModelAndView getAllCompletedLaunchData(HttpServletRequest request, Model model) {
@@ -82,6 +86,13 @@ public class CoeLaunchPlanController {
 		//Q2 sprint kavitha 2021
 				String coeMoc = "All";
 		try {
+			
+			//Harsha's implementation for logintool
+			String id=(String)request.getSession().getAttribute("UserID");
+			String role=(String)request.getSession().getAttribute("roleId");
+			promoCrService.insertToportalUsage(id, role, "LAUNCH");
+			//Harsha's Logic End's here 
+			
 			listOfLaunch = launchService.getAllCompletedLaunchData(coeMoc);
 			//Q2 sprint kavitha
 			List<String> coemoclist=launchService.getAllCOEMoc();
