@@ -52,6 +52,7 @@ import com.hul.launch.service.LaunchServiceCoe;
 import com.hul.launch.web.util.CommonUtils;
 import com.hul.launch.web.util.FilePaths;
 import com.hul.launch.web.util.UploadUtil;
+import com.hul.proco.controller.promocr.PromoCrService;
 
 /**
  * 
@@ -75,6 +76,9 @@ public class CoeLaunchPlanController {
 
 	@Autowired
 	public LaunchFinalService launchFinalPlanService;
+	
+		@Autowired
+		private PromoCrService promoCrService;
 
 	@RequestMapping(value = "getAllCompletedLaunchData.htm", method = RequestMethod.GET)
 	public ModelAndView getAllCompletedLaunchData(HttpServletRequest request, Model model) {
@@ -82,6 +86,13 @@ public class CoeLaunchPlanController {
 		//Q2 sprint kavitha 2021
 				String coeMoc = "All";
 		try {
+			
+			//Harsha's implementation for logintool
+			String id=(String)request.getSession().getAttribute("UserID");
+			String role=(String)request.getSession().getAttribute("roleId");
+			promoCrService.insertToportalUsage(id, role, "LAUNCH");
+			//Harsha's Logic End's here 
+			
 			listOfLaunch = launchService.getAllCompletedLaunchData(coeMoc);
 			//Q2 sprint kavitha
 			List<String> coemoclist=launchService.getAllCOEMoc();
@@ -181,7 +192,9 @@ public class CoeLaunchPlanController {
 					GetCoeLaunchDetailsRequest.class);
 			String launchId[] = getCoeLaunchDetailsRequest.getLaunchIds().split(",");
 			List<String> listOfLaunchData = Arrays.asList(launchId);
+			// Already Existing below line
 			listOfLaunch = launchService.getAllCompletedListingTracker(listOfLaunchData);
+			
 			if (null != listOfLaunch.get(0).getError()) {
 				throw new Exception(listOfLaunch.get(0).getError());
 			}
@@ -412,10 +425,10 @@ public class CoeLaunchPlanController {
 		return gson.toJson(map);
 	}
 
-	@RequestMapping(value = "{launchIds}/downloadLaunchBuildUpCoeTemplate.htm", method = RequestMethod.GET)
+	@RequestMapping(value = "{launchIds}/{launchMoc}/downloadLaunchBuildUpCoeTemplate.htm", method = RequestMethod.GET)
 	//public @ResponseBody ModelAndView downloadLaunchBuildUpCoeTemplate(@PathVariable("launchIds") String launchIds,
 	public @ResponseBody String downloadLaunchBuildUpCoeTemplate(@PathVariable("launchIds") String launchIds,  //Sarin Prod Changes
-			Model model, HttpServletRequest request, HttpServletResponse response) {
+			@PathVariable("launchMoc") String launchMocs,Model model, HttpServletRequest request, HttpServletResponse response) {
 		Gson gson = new Gson();
 		
 			InputStream is;
@@ -429,8 +442,12 @@ public class CoeLaunchPlanController {
 			ArrayList<String> headerDetail = getLaunchBuildUpHeadersCoe();
 			downloadedData.add(headerDetail);
 			String userId = (String) request.getSession().getAttribute("UserID");
+			// Need to comment below part and add new method for it
 			String[] launchId = launchIds.split(",");
-			List<ArrayList<String>> listDownload = launchFinalPlanService.getFinalBuildUpDumpNew(userId, launchId);
+			String[] launchMoc = launchMocs.split(",");
+			List<ArrayList<String>> listDownload = launchFinalPlanService.getFinalBuildUpDumpNew(userId, launchId,launchMoc);
+			// Harsha Code changes starts here
+			
 			if (listDownload != null) {
 				UploadUtil.writeXLSFile(downloadFileName, listDownload, null, ".xls");
 				downloadLink = downloadFileName + ".xls";

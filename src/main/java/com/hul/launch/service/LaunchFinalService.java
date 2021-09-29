@@ -12,8 +12,9 @@ public interface LaunchFinalService {
 	String saveLaunchFinalBuildUp(SaveFinalLaunchListRequest saveFinalLaunchListRequest, String userId);
 
 	List<ArrayList<String>> getFinalBuildUpDumpNew(String userId, String launchId);
-
-	List<ArrayList<String>> getFinalBuildUpDumpNew(String userId, String[] launchId);
+	
+//Added below the code
+	List<ArrayList<String>> getFinalBuildUpDumpNew(String userId, String[] launchId, String[] launchMoc);
 
 	List<LaunchFinalPlanResponse> getLaunchFinalResposeEdit(String launchId, String userId);
 
@@ -35,4 +36,6 @@ public interface LaunchFinalService {
 	List<ArrayList<String>> getMstnClearanceDataDump(String userId, List<String> listOfLaunchData);
 
 	List<ArrayList<String>> getMstnClearanceDataDumpCoe(String userId, List<String> listOfLaunchData);
+
+	
 }

@@ -534,6 +534,8 @@ public class LaunchDaoImpl implements LaunchDao {
 		}
 		return listOfCompletedLaunch;
 	}
+	
+	
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -542,15 +544,24 @@ public class LaunchDaoImpl implements LaunchDao {
 		try {
 			Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
 					"SELECT DISTINCT tlm.LAUNCH_NAME, tlm.LAUNCH_MOC, tlbt.SKU_NAME,	tlbt.BASEPACK_CODE,	tlbt.ACCOUNT_NAME, "
-							+ "tlbt.CLUSTER FROM TBL_LAUNCH_BUILDUP_TEMP tlbt, TBL_LAUNCH_MASTER tlm WHERE "
+							+ "tlbt.CLUSTER, tlm.LAUNCH_ID FROM TBL_LAUNCH_BUILDUP_TEMP tlbt, TBL_LAUNCH_MASTER tlm WHERE "
 							+ "tlbt.LAUNCH_ID = tlm.LAUNCH_ID AND tlbt.LAUNCH_ID IN (:listOfLaunchData)");
 			query2.setParameterList("listOfLaunchData", listOfLaunchData);
+			
 			Iterator<Object> iterator = query2.list().iterator();
 			while (iterator.hasNext()) {
+			
 				Object[] obj1 = (Object[]) iterator.next();
 				LaunchCoeClusterResponse launchCoeClusterResponse = new LaunchCoeClusterResponse();
 				launchCoeClusterResponse.setLaunchName(obj1[0].toString());
-				launchCoeClusterResponse.setLaunchMoc(obj1[1].toString());
+				String mocDate = getModifiedMoc( obj1[6].toString(),  obj1[4].toString());
+				if(mocDate!=null && !mocDate.isEmpty()) {
+					launchCoeClusterResponse.setLaunchMoc(mocDate);
+					
+				}
+				else {
+					launchCoeClusterResponse.setLaunchMoc(obj1[1].toString());
+				}
 				launchCoeClusterResponse.setSkuName(obj1[2].toString());
 				launchCoeClusterResponse.setBasepackCode(obj1[3].toString());
 				launchCoeClusterResponse.setAccount(obj1[4].toString());
@@ -676,14 +687,38 @@ public class LaunchDaoImpl implements LaunchDao {
 		}
 		return downloadedData;
 	}
-
+	
+	// Harsha's Method to fetch MOC Date
+	 public String getModifiedMoc(String launchId, String Account) {
+			Session session = sessionFactory.getCurrentSession();
+			SessionImpl sessionImpl = (SessionImpl) session;
+			String launchMoc = "";
+			try {
+				PreparedStatement stmt = sessionImpl.connection()
+						.prepareStatement("SELECT LAUNCH_MOC_KAM FROM TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS"
+								+ " WHERE IS_ACTIVE = 1 AND  LAUNCH_KAM_ACCOUNT= '" 
+								+ Account + "'"  
+						+ " AND LAUNCH_ID = '" + launchId + "'");		
+				ResultSet rs = stmt.executeQuery();
+				while (rs.next()) {
+					launchMoc = rs.getString(1);
+				}
+				return launchMoc;
+			} catch (Exception ex) {
+				logger.debug("Exception :", ex);
+				return ex.toString();
+			}
+		}
+	
+	
+// Working on Q5 Story
 	@SuppressWarnings("unchecked")
 	private List<LaunchCoeClusterResponse> getListingTrackerDump(List<String> listOfLaunchData) {
 		List<LaunchCoeClusterResponse> liReturn = new ArrayList<>();
 		try {
 			Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
 					"SELECT distinct tlm.LAUNCH_NAME, tlm.LAUNCH_MOC, tlbt.SKU_NAME,tlbt.BASEPACK_CODE,	tlbt.ACCOUNT_NAME, "
-							+ "tlbt.CLUSTER FROM TBL_LAUNCH_BUILDUP_TEMP tlbt, TBL_LAUNCH_MASTER tlm WHERE "
+							+ "tlbt.CLUSTER, tlm.LAUNCH_ID FROM TBL_LAUNCH_BUILDUP_TEMP tlbt, TBL_LAUNCH_MASTER tlm WHERE "
 							+ "tlbt.LAUNCH_ID = tlm.LAUNCH_ID AND tlbt.LAUNCH_ID IN (:listOfLaunchData)");
 			query2.setParameterList("listOfLaunchData", listOfLaunchData);
 			Iterator<Object> iterator = query2.list().iterator();
@@ -692,7 +727,16 @@ public class LaunchDaoImpl implements LaunchDao {
 				Object[] obj1 = (Object[]) iterator.next();
 				LaunchCoeClusterResponse launchCoeClusterResponse = new LaunchCoeClusterResponse();
 				launchCoeClusterResponse.setLaunchName(obj1[0].toString());
-				launchCoeClusterResponse.setLaunchMoc(obj1[1].toString());
+				//Harsh's Modification for fetching Changed MOC for a launch
+				String getmodifiedMoc = getModifiedMoc(obj1[6].toString(),obj1[4].toString()) ;
+				if( getmodifiedMoc != null && !getmodifiedMoc.isEmpty()) {
+					launchCoeClusterResponse.setLaunchMoc(getmodifiedMoc);
+				}
+				
+				else {
+					launchCoeClusterResponse.setLaunchMoc(obj1[1].toString());
+				}	
+				// Code ends here
 				launchCoeClusterResponse.setBasepackCode(obj1[3].toString());
 				launchCoeClusterResponse.setSkuName(obj1[2].toString());
 				launchCoeClusterResponse.setCluster(obj1[4].toString());
@@ -736,13 +780,18 @@ public class LaunchDaoImpl implements LaunchDao {
 			return downloadDataList;
 		}
 	}
+	
 
+
+	// Existing implementation- work 2
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<ArrayList<String>> getLaunchStoreListDump(ArrayList<String> headerDetail, String userId,
 			List<String> listOfLaunchData) {
 		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
 		try {
+			
+			
 			/*  Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
                     "select DISTINCT LAUNCH_name,tlb.BP_CODE,tlb.BP_DESCRIPTION,launch_moc,abc.ACCOUNT_NAME ACCOUNT_NAME,ACCOUNT_NAME_L2,abc.depot,HUL_STORE_FORMAT,CLUSTER,REPORTING_CODE,(CASE WHEN tvcom.FMCG_CSP_CODE IS NOT NULL" +
                     "THEN tvcom.FMCG_CSP_CODE ELSE COLOUR_CSP_CODE END) AS DEPO_CODE" +
@@ -750,28 +799,44 @@ public class LaunchDaoImpl implements LaunchDao {
                     "tvcom.HUL_OUTLET_CODE = abc.HFS_CODE AND abc.LAUNCH_ID = asd.launch_id and  LAUNCH_REJECTED !='2' and asd.LAUNCH_ID = tlb.LAUNCH_ID" +
                     "AND (tlb.BP_STATUS != 'REJECTED BY TME' OR tlb.BP_STATUS IS NULL) and tlb.LAUNCH_ID IN (:listOfLaunchData)");
 			 */
-			Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
-					"select DISTINCT LAUNCH_name,tlb.BP_CODE,tlb.BP_DESCRIPTION,launch_moc,ACCOUNT_NAME_L2,abc.ACCOUNT_NAME ACCOUNT_NAME,abc.depot,HUL_STORE_FORMAT,CLUSTER,REPORTING_CODE,(CASE WHEN tvcom.FMCG_CSP_CODE IS NOT NULL"
-							+" THEN tvcom.FMCG_CSP_CODE ELSE COLOUR_CSP_CODE END) AS DEPO_CODE"
-							+" from MODTRD.TBL_LAUNCH_BUILDUP_TEMP abc,TBL_VAT_COMM_OUTLET_MASTER tvcom,MODTRD.TBL_LAUNCH_MASTER asd,TBL_LAUNCH_BASEPACK tlb WHERE "
-							+" tvcom.HUL_OUTLET_CODE = abc.HFS_CODE AND abc.LAUNCH_ID = asd.launch_id and  LAUNCH_REJECTED !='2' and asd.LAUNCH_ID = tlb.LAUNCH_ID"
-							+" AND (tlb.BP_STATUS != 'REJECTED BY TME' OR tlb.BP_STATUS IS NULL) and tlb.LAUNCH_ID IN (:listOfLaunchData)");
-
-			query2.setParameterList("listOfLaunchData", listOfLaunchData);
-			Iterator<Object> itr = query2.list().iterator();
 			downloadDataList.add(headerDetail);
-			while (itr.hasNext()) {
-				Object[] obj = (Object[]) itr.next();
-				ArrayList<String> dataObj = new ArrayList<String>();
-				for (Object ob : obj) {
-					String value = "";
-					value = (ob == null) ? "" : ob.toString();
-					dataObj.add(value.replaceAll("\\^", ","));
-				}
-				obj = null;
-				downloadDataList.add(dataObj);
+			for(String launchId : listOfLaunchData) {
+				
+				Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
+						"select DISTINCT LAUNCH_name,tlb.BP_CODE,tlb.BP_DESCRIPTION,launch_moc,ACCOUNT_NAME_L2,abc.ACCOUNT_NAME ACCOUNT_NAME,abc.depot,HUL_STORE_FORMAT,CLUSTER,REPORTING_CODE,(CASE WHEN tvcom.FMCG_CSP_CODE IS NOT NULL"
+								+" THEN tvcom.FMCG_CSP_CODE ELSE COLOUR_CSP_CODE END) AS DEPO_CODE"
+								+" from MODTRD.TBL_LAUNCH_BUILDUP_TEMP abc,TBL_VAT_COMM_OUTLET_MASTER tvcom,MODTRD.TBL_LAUNCH_MASTER asd,TBL_LAUNCH_BASEPACK tlb WHERE "
+								+" tvcom.HUL_OUTLET_CODE = abc.HFS_CODE AND abc.LAUNCH_ID = asd.launch_id and  LAUNCH_REJECTED !='2' and asd.LAUNCH_ID = tlb.LAUNCH_ID"
+								+" AND (tlb.BP_STATUS != 'REJECTED BY TME' OR tlb.BP_STATUS IS NULL) and tlb.LAUNCH_ID IN (:listOfLaunchData)");
+
+				query2.setParameter("listOfLaunchData", launchId);
+				
+				Iterator<Object> itr = query2.list().iterator();
+				
+				while (itr.hasNext()) {
+					Object[] obj = (Object[]) itr.next();
+					ArrayList<String> dataObj = new ArrayList<String>();
+					for (Object ob : obj) {
+						String value = "";
+						value = (ob == null) ? "" : ob.toString();
+						dataObj.add(value.replaceAll("\\^", ","));
+					}
+					// Harsha'S logic Starts Here for Sprint Q5
+							String modifiedMOC = getModifiedMoc(launchId,  dataObj.get(5));
+							if(modifiedMOC!=null && !modifiedMOC.isEmpty()) {
+								String replaceDate = modifiedMOC;
+								dataObj.set(3, replaceDate);
+							}
+							else {
+								dataObj.set(3, dataObj.get(3));
+							}
+
+					obj = null;
+					downloadDataList.add(dataObj);
+				}	
 			}
 			return downloadDataList;
+
 		} catch (Exception ex) {
 			logger.debug("Exception :", ex);
 			ArrayList<String> arrList = new ArrayList<>();

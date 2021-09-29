@@ -39,6 +39,11 @@ public class ProcoHomeController {
 
 	@RequestMapping(value = "procoHome.htm", method = RequestMethod.GET)
 	public ModelAndView getProcoHomePage(HttpServletRequest request, Model model) {
+		//Harsha's implementation for logintool
+		String id=(String)request.getSession().getAttribute("UserID");
+		String role=(String)request.getSession().getAttribute("roleId");
+		promoCrService.insertToportalUsage(id, role, "PROCO");
+		//Harsha's Logic End's here 
 		String roleId = (String) request.getSession().getAttribute("roleId");
 		model.addAttribute("roleId", roleId);
 		return new ModelAndView("proco/proco_home");
@@ -49,6 +54,9 @@ public class ProcoHomeController {
 	public ModelAndView getProcoPromoListingPage(HttpServletRequest request, Model model) {
 		String roleId = (String) request.getSession().getAttribute("roleId");
 		String userId = (String) request.getSession().getAttribute("UserID");
+		//Harsha's implementation for logintool
+		promoCrService.insertToportalUsage(userId, roleId, "PROCO");
+		//Harsha's Logic End's here 
 		model.addAttribute("roleId", roleId);
 		if(roleId.equalsIgnoreCase("KAM")){
 			List<String> customerChainL1 = createPromoService.getCustomerChainL1(userId);
@@ -91,6 +99,9 @@ public class ProcoHomeController {
 	public ModelAndView getPromoVolumeUploadPage(HttpServletRequest request, Model model) {
 		String roleId = (String) request.getSession().getAttribute("roleId");
 		String userId = (String) request.getSession().getAttribute("UserID");
+		//Harsha's implementation for logintool
+				promoCrService.insertToportalUsage(userId, roleId, "PROCO");
+		//Harsha's Logic End's here 
 		model.addAttribute("roleId", roleId);
 		List<String> customerChainL1 = createPromoService.getCustomerChainL1();
 		List<String> offerTypes = createPromoService.getOfferTypes();
@@ -144,6 +155,9 @@ public class ProcoHomeController {
 	public ModelAndView getPromoDisaggregationPage(HttpServletRequest request, Model model) {
 		String roleId = (String) request.getSession().getAttribute("roleId");
 		String userId = (String) request.getSession().getAttribute("UserID");
+		//Harsha's implementation for logintool
+		promoCrService.insertToportalUsage(userId, roleId, "PROCO");
+		//Harsha's Logic End's here 
 		List<String> customerChainL1 = createPromoService.getCustomerChainL1();
 		List<String> offerTypes = createPromoService.getOfferTypes();
 		Map<Integer, String> modality = createPromoService.getModality();
@@ -201,6 +215,9 @@ public class ProcoHomeController {
 	public ModelAndView getProcoPromoDeletionPage(HttpServletRequest request, Model model) {
 		String roleId = (String) request.getSession().getAttribute("roleId");
 		String userId = (String) request.getSession().getAttribute("UserID");
+		//Harsha's implementation for logintool
+		promoCrService.insertToportalUsage(userId, roleId, "PROCO");
+		//Harsha's Logic End's here 
 		model.addAttribute("roleId", roleId);
 		if(roleId.equalsIgnoreCase("KAM")){
 			List<String> customerChainL1 = createPromoService.getCustomerChainL1(userId);

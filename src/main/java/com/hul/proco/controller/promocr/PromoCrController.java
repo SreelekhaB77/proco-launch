@@ -32,6 +32,10 @@ public class PromoCrController {
 	@RequestMapping(value = "promoCr.htm", method = RequestMethod.GET)
 	public ModelAndView getProcoPromoListingPage(HttpServletRequest request, Model model) {
 		String roleId = (String) request.getSession().getAttribute("roleId");
+		//Harsha's implementation for logintool
+				String id=(String)request.getSession().getAttribute("UserID");
+				promoCrService.insertToportalUsage(id, roleId, "PROCO");
+		//Harsha's Logic End's here 
 		model.addAttribute("roleId", roleId);
 		List<String> customerChainL1 = createPromoService.getCustomerChainL1();
 		List<String> offerTypes = createPromoService.getOfferTypes();

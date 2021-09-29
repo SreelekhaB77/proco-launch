@@ -67,6 +67,7 @@ import com.hul.launch.web.util.CommonPropUtils;
 import com.hul.launch.web.util.CommonUtils;
 import com.hul.launch.web.util.FilePaths;
 import com.hul.launch.web.util.UploadUtil;
+import com.hul.proco.controller.promocr.PromoCrService;
 import com.hul.proco.excelreader.exom.ExOM;
 
 /**
@@ -91,6 +92,9 @@ public class KamLaunchPlanController {
 	@Autowired
 	public LaunchFinalService launchFinalPlanService;
 	
+	@Autowired
+	private PromoCrService promoCrService;
+	
 
 	@RequestMapping(value = "getAllCompletedLaunchDataKam.htm", method = RequestMethod.GET)
 	public ModelAndView getAllCompletedLaunchData(HttpServletRequest request, Model model) {
@@ -101,6 +105,11 @@ public class KamLaunchPlanController {
 		List<KamChangeReqRemarks> listOfKamChangeReqRemarks = new ArrayList<>();
 		try {
 			String userId = (String) request.getSession().getAttribute("UserID");
+			//Harsha's implementation for logintool
+			String role=(String)request.getSession().getAttribute("roleId");
+			promoCrService.insertToportalUsage(userId, role, "LAUNCH");
+			//Harsha's Logic End's here 
+			
 			//listOfLaunch = launchServiceKam.getAllCompletedLaunchData(userId);
 			listOfLaunch = launchServiceKam.getAllCompletedLaunchData(userId, kamMoc);
 			
@@ -440,6 +449,9 @@ public class KamLaunchPlanController {
 		String userId = (String) request.getSession().getAttribute("UserID");
 		try {
 			List<ArrayList<String>> listDownload = launchFinalPlanService.getFinalBuildUpDumpNewKam(userId, launchId);
+		
+			
+			
 			if (listDownload != null) {
 				UploadUtil.writeXLSFile(downloadFileName, listDownload, null, ".xls");
 				downloadLink = downloadFileName + ".xls";

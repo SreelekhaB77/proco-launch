@@ -22,4 +22,6 @@ public interface PromoCrDAO {
 	public List<String> getAllBasepacks();
 
 	public List<List<String>> getAllProductMaster();
+	//Harsha's Implementation 
+	public String insertToportalUsage(String userId, String roleID, String module);
 }

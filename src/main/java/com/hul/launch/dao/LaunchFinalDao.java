@@ -46,7 +46,7 @@ public interface LaunchFinalDao {
 
 	List<ArrayList<String>> getFinalBuildUpDumptNew(String userId, String launchId);
 
-	List<ArrayList<String>> getFinalBuildUpDumptNew(String userId, String[] launchId);
+	List<ArrayList<String>> getFinalBuildUpDumptNew(String userId, String[] launchId,String[] launchMoc);
 
 	List<ArrayList<String>> getFinalBuildUpDump(String userId, String[] launchId);
 
@@ -107,4 +107,6 @@ public interface LaunchFinalDao {
 	//Sarin Changes - Launch Issue Feb2021 
 	public Map<String, String> getCldGsvForDepoBasepack(String launchId);
 	public List<LaunchBuildUpTemp> getFinalBuildUpDepoLevelList(String launchId);
+
+	
 }
