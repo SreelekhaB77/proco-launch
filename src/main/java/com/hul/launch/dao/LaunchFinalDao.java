@@ -84,7 +84,7 @@ public interface LaunchFinalDao {
 	List<ArrayList<String>> getFinalBuildUpDumpNewKam(String userId, String launchId);
 
 	List<String> getKamAccount(String userId);
-	List<String> getKamAccount(String userId, String LaunchId);  //Added By Sarin - Sprint4Aug21 - for Launch Account wise Rejection
+	List<String> getKamAccount(String userId, String LaunchId, String launchRequestId);  //Added By Sarin - Sprint4Aug21 - for Launch Account wise Rejection
 
 	void deleteAllBuildUpKAM(String launchId, List<String> listOfKamAccounts);
 

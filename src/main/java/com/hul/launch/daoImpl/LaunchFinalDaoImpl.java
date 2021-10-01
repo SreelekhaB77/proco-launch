@@ -1817,11 +1817,11 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	//Added By Sarin - Sprint4Aug21 - for Launch Account wise Rejection
-	public List<String> getKamAccount(String userId, String LaunchId) {  
+	public List<String> getKamAccount(String userId, String LaunchId, String launchRequestId) {  
 		List<String> listOfAccounts = null;
 		try {
 			Query query3 = sessionFactory.getCurrentSession().createNativeQuery(
-					"SELECT DISTINCT LAUNCH_KAM_ACCOUNT AS ACCOUNT_NAME FROM TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS WHERE IS_ACTIVE = 2 AND LAUNCH_ID = " + LaunchId + " AND UPDATED_BY = '" + userId + "'");
+					"SELECT DISTINCT LAUNCH_KAM_ACCOUNT AS ACCOUNT_NAME FROM TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS WHERE IS_ACTIVE = 2 AND LAUNCH_ID = " + LaunchId + " AND REQ_ID = " + launchRequestId + " AND UPDATED_BY = '" + userId + "'");
 			listOfAccounts = query3.list();
 		} catch (Exception e) {
 			e.printStackTrace();

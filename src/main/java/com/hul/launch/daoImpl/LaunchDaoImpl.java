@@ -1320,7 +1320,8 @@ public class LaunchDaoImpl implements LaunchDao {
 										+ "',UPDATED_DATE='" + new Timestamp(new Date().getTime())
 										+ "' WHERE LAUNCH_ID='" + rs.getString("LAUNCH_ID") + "'");
 						query3.executeUpdate(); */
-						kamCalculationAfterLaunchReject(rs.getString("LAUNCH_ID"), userId, rs.getString("CREATED_BY"));
+						//kamCalculationAfterLaunchReject(rs.getString("LAUNCH_ID"), userId, rs.getString("CREATED_BY"));  //Commented By Sarin & Added Below - sprint5Sep2021
+						kamCalculationAfterLaunchReject(rs.getString("LAUNCH_ID"), userId, rs.getString("CREATED_BY"), rs.getString("REQ_ID"));    //Added By Sarin - sprint5Sep2021
 					} else if (rs.getString("CHANGES_REQUIRED").equals("MOC CHANGED")) {
 						LaunchDataResponse launchDataResponse = getSpecificLaunchData(rs.getString("LAUNCH_ID"));
 						preparedStatement1 = sessionImpl.connection().prepareStatement(
@@ -1446,10 +1447,12 @@ public class LaunchDaoImpl implements LaunchDao {
 		return "Approved Successfully";
 	}
 
-	private String kamCalculationAfterLaunchReject(String launchId, String userId, String kamAcc) {
+	//private String kamCalculationAfterLaunchReject(String launchId, String userId, String kamAcc) {  //Commented By Sarin & Added Below - sprint5Sep2021
+	private String kamCalculationAfterLaunchReject(String launchId, String userId, String kamAcc, String launchRequestId) {    //Added By Sarin - sprint5Sep2021
 		try {
 			List<LaunchFinalPlanResponse> listOfFinalResponse = launchFinalService
-					.getLaunchFinalResposeEditKamAfterLaunchRej(launchId, userId, kamAcc);
+					.getLaunchFinalResposeEditKamAfterLaunchRej(launchId, userId, kamAcc
+							, launchRequestId);  //Added By Sarin - sprint5Sep2021 - new parameter launchRequestId
 
 			SaveFinalLaunchListRequest saveFinalLaunchListRequest = new SaveFinalLaunchListRequest();
 			List<SaveFinalLaunchRequest> listOfSaveFinalLaunchRequest = new ArrayList<>();
