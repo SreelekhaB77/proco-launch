@@ -674,6 +674,12 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 		return launchFinalDao.getFinalBuildUpDumptNew(userId, launchId,launchMoc);
 	}
 	
+	// Added by Harsha to get diaggregated by DP
+	@Override
+	public List<ArrayList<String>> getDisaggregatedByDp(String[] promoId) {
+		return launchFinalDao.getDisaggregatedByDp(promoId);
+	}
+	
 
 	@Override
 	public List<ArrayList<String>> getFinalBuildUpDumpNewKam(String userId, String launchId) {

@@ -108,5 +108,7 @@ public interface LaunchFinalDao {
 	public Map<String, String> getCldGsvForDepoBasepack(String launchId);
 	public List<LaunchBuildUpTemp> getFinalBuildUpDepoLevelList(String launchId);
 
+	List<ArrayList<String>> getDisaggregatedByDp(String[] promoId);
+
 	
 }

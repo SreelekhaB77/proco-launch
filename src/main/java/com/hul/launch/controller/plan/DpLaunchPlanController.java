@@ -138,7 +138,10 @@ public class DpLaunchPlanController {
 		String userId = (String) request.getSession().getAttribute("UserID");
 		String[] launchIds = launchId.split(",");
 		String[] launchMoc =null;
+		
+		
 		List<ArrayList<String>> listDownload = launchFinalPlanService.getFinalBuildUpDumpNew(userId, launchIds,launchMoc);
+		
 		try {
 			if (listDownload != null) {
 				UploadUtil.writeXLSFile(downloadFileName, listDownload, null, ".xls");
@@ -160,5 +163,43 @@ public class DpLaunchPlanController {
 		map.put("FileToDownload", fileName);
 		return gson.toJson(map);
 	}
+	// Added by harsha for excel download
+	@RequestMapping(value = "{promoId}/downloadDisaggregatedByDP.htm", method = RequestMethod.GET)
+	public @ResponseBody String downloadDisaggregatedByDP(@PathVariable("promoId") String promoId, Model model,
+			HttpServletRequest request, HttpServletResponse response) {
+		String absoluteFilePath = "";
+		InputStream is;
+		String downloadLink = "";
+		Gson gson = new Gson();
+		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
+		String fileName = UploadUtil.getFileName("DisaggregatedBYDP.Template.file", "",
+				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
+		String downloadFileName = absoluteFilePath + fileName;
+		String userId = (String) request.getSession().getAttribute("UserID");
+		String[] promoIds = promoId.split(",");
+		
+		List<ArrayList<String>> listDownload = launchFinalPlanService.getDisaggregatedByDp(promoIds);
+		try {
+			if (listDownload != null) {
+				UploadUtil.writeXLSFile(downloadFileName, listDownload, null, ".xls");
+				downloadLink = downloadFileName + ".xls";
+				is = new FileInputStream(new File(downloadLink));
+				response.setContentType("application/force-download");
+				response.setHeader("Content-Disposition", "attachment; filename=DisaggregatedBYDPTemplate"
+						+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+				IOUtils.copy(is, response.getOutputStream());
+				response.flushBuffer();
+			}
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
+			Map<String, String> map = new HashMap<>();
+			map.put("Error", e.toString());
+			return gson.toJson(map);
+		}
+		Map<String, String> map = new HashMap<>();
+		map.put("FileToDownload", fileName);
+		return gson.toJson(map);
+	}
+
 
 }

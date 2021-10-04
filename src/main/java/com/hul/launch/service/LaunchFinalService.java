@@ -37,5 +37,7 @@ public interface LaunchFinalService {
 
 	List<ArrayList<String>> getMstnClearanceDataDumpCoe(String userId, List<String> listOfLaunchData);
 
+	List<ArrayList<String>> getDisaggregatedByDp(String[] promoId);
+
 	
 }
