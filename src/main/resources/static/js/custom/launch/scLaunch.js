@@ -692,6 +692,7 @@ function loadSCLauches(scselectedmoc) {
 						},
 						{mData : 'launchName'},
 						{mData: 'launchMoc'},
+						{mData: 'changedMoc'},  //Added By Sarin - sprint5Sep2021
 						{mData : 'createdDate'},
 						{mData : 'createdBy'},
 						 

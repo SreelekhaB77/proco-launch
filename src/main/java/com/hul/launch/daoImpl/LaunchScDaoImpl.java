@@ -82,8 +82,10 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 			stmt = sessionImpl.connection().prepareStatement(
 					"SELECT LAUNCH_ID, LAUNCH_NAME, LAUNCH_DATE, LAUNCH_NATURE, LAUNCH_NATURE_2, LAUNCH_BUSINESS_CASE, CATEGORY_SIZE,"
 							+ " CLASSIFICATION,ANNEXURE_DOCUMENT_NAME,ARTWORK_PACKSHOTS_DOC_NAME,MDG_DECK_DOCUMENT_NAME,SAMPLE_SHARED,"
-							+ " CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE,LAUNCH_MOC, LAUNCH_SUBMISSION_DATE FROM TBL_LAUNCH_MASTER tlc WHERE"
-							
+							+ " CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE,LAUNCH_MOC, LAUNCH_SUBMISSION_DATE "
+							+ " , IFNULL((SELECT GROUP_CONCAT(LAUNCH_KAM_ACCOUNT separator '; ') AS CHANGED_MOC FROM (SELECT CONCAT(LAUNCH_MOC_KAM, ' - ', GROUP_CONCAT(LAUNCH_KAM_ACCOUNT)) AS LAUNCH_KAM_ACCOUNT " //Added By Sarin - sprint5Sep2021
+							+ " 		FROM TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS KL WHERE KL.LAUNCH_ID = tlc.LAUNCH_ID AND IS_ACTIVE = 1 GROUP BY LAUNCH_MOC_KAM) A), '') CHANGED_MOC "                                //Added By Sarin - sprint5Sep2021
+							+ "FROM TBL_LAUNCH_MASTER tlc WHERE"
 							+ " SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED != '2' AND LAUNCH_MOC LIKE '%" + scMoc + "%'");
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -107,6 +109,7 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 				launchDataResponse.setUpdatedDate(rs.getDate(16));
 				launchDataResponse.setLaunchMoc(rs.getString(17));
 				launchDataResponse.setLaunchSubmissionDate(rs.getString(18));
+				launchDataResponse.setChangedMoc(rs.getString(19));  //Added By Sarin - sprint5Sep2021
 				listOfCompletedLaunch.add(launchDataResponse);
 			}
 		} catch (Exception ex) {
@@ -213,10 +216,16 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 			List<Object> ifSavedAlready = query2.list();
 			if (ifSavedAlready.isEmpty()) {
 				Query query1 = sessionFactory.getCurrentSession().createNativeQuery(
-						"SELECT tlm.LAUNCH_NAME,tlm.LAUNCH_MOC,tltfc.BP_NAME,DEPOT,CLUSTER,tltfc.FINAL_CLD_N,tltfc.FINAL_CLD_N1, "
+						//Commented By Sarin & Added Below - sprint5Sep2021
+						/*"SELECT tlm.LAUNCH_NAME,tlm.LAUNCH_MOC,tltfc.BP_NAME,DEPOT,CLUSTER,tltfc.FINAL_CLD_N,tltfc.FINAL_CLD_N1, "
 								+ "tltfc.FINAL_CLD_N2,tlm.LAUNCH_ID, tltfc.MODIFIED_CHAIN FROM TBL_LAUNCH_TEMP_FINAL_CAL tltfc, "
-								+ "TBL_LAUNCH_MASTER tlm WHERE tlm.LAUNCH_ID = tltfc.LAUNCH_ID AND SAMPLE_SHARED IS NOT NULL AND "
-								+ "tltfc.LAUNCH_ID IN (:listOfLaunchData)");
+								+ "TBL_LAUNCH_MASTER tlm WHERE tlm.LAUNCH_ID = tltfc.LAUNCH_ID AND SAMPLE_SHARED IS NOT NULL AND " */
+						//Added By Sarin - sprint5Sep2021
+						"SELECT tlm.LAUNCH_NAME, CASE WHEN TLK.LAUNCH_MOC_KAM IS NULL THEN tlm.LAUNCH_MOC ELSE TLK.LAUNCH_MOC_KAM END AS LAUNCH_MOC, "
+						+ " tltfc.BP_NAME,DEPOT,CLUSTER,tltfc.FINAL_CLD_N,tltfc.FINAL_CLD_N1, tltfc.FINAL_CLD_N2,tlm.LAUNCH_ID, tltfc.MODIFIED_CHAIN "
+						+ " FROM TBL_LAUNCH_TEMP_FINAL_CAL tltfc INNER JOIN TBL_LAUNCH_MASTER tlm ON tlm.LAUNCH_ID = tltfc.LAUNCH_ID "
+						+ " LEFT OUTER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS TLK ON TLK.LAUNCH_ID = tlm.LAUNCH_ID AND TLK.LAUNCH_KAM_ACCOUNT = tltfc.MODIFIED_CHAIN AND TLK.IS_ACTIVE = 1 "
+						+ " WHERE SAMPLE_SHARED IS NOT NULL AND tltfc.LAUNCH_ID IN (:listOfLaunchData)");
 				query1.setParameterList("listOfLaunchData", listOfLaunchData);
 				Iterator<Object> iterator = query1.list().iterator();
 				while (iterator.hasNext()) {
@@ -272,10 +281,16 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 		List<LaunchScMstnClearanceResponse> listOfCompletedLaunch = new ArrayList<>();
 		try {
 			Query query1 = sessionFactory.getCurrentSession().createNativeQuery(
-					"SELECT tlm.LAUNCH_NAME,tlm.LAUNCH_MOC,tltfc.BP_NAME,DEPOT,CLUSTER,tltfc.FINAL_CLD_N,tltfc.FINAL_CLD_N1,"
+					//Commented By Sarin & Added Below - sprint5Sep2021
+					/*"SELECT tlm.LAUNCH_NAME,tlm.LAUNCH_MOC,tltfc.BP_NAME,DEPOT,CLUSTER,tltfc.FINAL_CLD_N,tltfc.FINAL_CLD_N1,"
 							+ "tltfc.FINAL_CLD_N2,tlm.LAUNCH_ID, tltfc.MODIFIED_CHAIN FROM TBL_LAUNCH_TEMP_FINAL_CAL tltfc, "
-							+ "TBL_LAUNCH_MASTER tlm WHERE tlm.LAUNCH_ID = tltfc.LAUNCH_ID AND SAMPLE_SHARED IS NOT NULL AND "
-							+ "tltfc.LAUNCH_ID IN (:listOfLaunchData)");
+							+ "TBL_LAUNCH_MASTER tlm WHERE tlm.LAUNCH_ID = tltfc.LAUNCH_ID AND SAMPLE_SHARED IS NOT NULL AND " */
+					//Added By Sarin - sprint5Sep2021
+					"SELECT tlm.LAUNCH_NAME, CASE WHEN TLK.LAUNCH_MOC_KAM IS NULL THEN tlm.LAUNCH_MOC ELSE TLK.LAUNCH_MOC_KAM END AS LAUNCH_MOC,"
+					+ " tltfc.BP_NAME,DEPOT,CLUSTER,tltfc.FINAL_CLD_N,tltfc.FINAL_CLD_N1, tltfc.FINAL_CLD_N2,tlm.LAUNCH_ID, tltfc.MODIFIED_CHAIN "
+					+ " FROM TBL_LAUNCH_TEMP_FINAL_CAL tltfc INNER JOIN TBL_LAUNCH_MASTER tlm ON tlm.LAUNCH_ID = tltfc.LAUNCH_ID "
+					+ " LEFT OUTER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS TLK ON TLK.LAUNCH_ID = tlm.LAUNCH_ID AND TLK.LAUNCH_KAM_ACCOUNT = tltfc.MODIFIED_CHAIN AND TLK.IS_ACTIVE = 1 "
+					+ " WHERE SAMPLE_SHARED IS NOT NULL AND tltfc.LAUNCH_ID IN (:listOfLaunchData)");
 			query1.setParameterList("listOfLaunchData", listOfLaunchData);
 			Iterator<Object> iterator = query1.list().iterator();
 			while (iterator.hasNext()) {
