@@ -15,8 +15,8 @@ $(document)
 					var selectAll = false;
 
 					$('.comboTreeDropDownContainer ul li span.comboTreeParentPlus').html("+");
-					
-					$('#cust_chainL1')
+				
+				  $('#cust_chainL1')
 							.multiselect({
 								
 										includeSelectAllOption : true,
@@ -173,6 +173,29 @@ $(document)
 									   }else{
 										   document.getElementById("disaggregateBtn").disabled = true;
 									   }
+									   
+									   //enable dp download and submit to kam sprint-5 US-13,14 btns disable
+									  if(disAggregationCount>0){
+									  $("#disTable tr:gt(0)").each(function(){
+                                       var th = $(this);
+                                       if($(th).find("input[name='promoId']").is(":checked")){
+                                       var valueOfStatus = $(this).find('td:last-child').text();
+                                        console.log(valueOfStatus);
+                                         if(valueOfStatus=="DISAGGREGATION DONE BY DP"){
+									   document.getElementById("dpDownload").disabled = false;
+									   document.getElementById("SubmitKamBtn").disabled = false;
+									 }else if(valueOfStatus=="DISAGGREGATION DONE BY DP and SUBMITTED TO KAM"){
+									  document.getElementById("dpDownload").disabled = false;
+									   document.getElementById("SubmitKamBtn").disabled = true;
+									 }else{
+									   document.getElementById("dpDownload").disabled = true;
+									   document.getElementById("SubmitKamBtn").disabled = true;
+									 }
+									  }
+ });
+ 
+									  }
+									  
 				            	  });
 				              },
 							  
@@ -181,10 +204,11 @@ $(document)
 				              "aoColumns": [{
 				                  "mData": "promo_id",
 				                  "mRender": function(data, type, full) {
-				                    return '<input type="checkbox" class="visiData" name="promoId" id="promo_id" value="'+data+","+full.basepack+'">';
+				                    return '<input type="checkbox" class="visiData promo_id_all" name="promoId" id="promo_id" value="'+data+","+full.basepack+'">';
 				                  } 
 				                  },{
-				                    "mData": "promo_id"
+				                    "mData": "promo_id",
+				                    "class": "Unique_id"
 				                  }, {
 				                    "mData": "moc"
 				                  }, {
@@ -196,8 +220,8 @@ $(document)
 				                  }, {
 				                    "mData": "brand"
 				                  }, {
-				                    "mData": "basepack"
-				                  }, {
+				                    "mData": "basepack",
+				                 }, {
 				                    "mData": "basepackDesc"
 				                  }, {
 				                    "mData": "offer_type"
@@ -250,8 +274,10 @@ $(document)
 							   
 							   if(okay && disAggregationCount>0){
 								   document.getElementById("disaggregateBtn").disabled = false;
+								   
 							   }else{
 								   document.getElementById("disaggregateBtn").disabled = true;
+								   
 							   }
 	            	  });
 					
@@ -268,8 +294,18 @@ $(document)
 							return val.substring(0,5);
 						});
 						//console.log(newBasepacks);
+					//added bharati for sprint-5 US-13 multiselect basepack
+					for( var i = 0; i <= newBasepacks.length; i++ ){
+       
+                    $("#promo_basepack").append('<option value="' + newBasepacks[i] + '">' + newBasepacks[i]  + '</option>');
+  
+                    }
+                      multiSelectionForbasepack();
+  
+ 
+  //end multiselect code
 						//newBasepacks = categoryNewList;
-						$('#promo_basepack').autocomplete({
+					/*	$('#promo_basepack').autocomplete({
 									minLength : 0,
 									source : function(request, response) {
 										response($.ui.autocomplete.filter(newBasepacks,
@@ -284,13 +320,15 @@ $(document)
 							promoTable.draw();
 						}
 					});
+					
+					
 						
 						$('#promo_basepack').on('keyup',function(){
 							if($(this).val() == ""){
 								basepack = "All";
 								promoTable.draw();
 							}
-						});
+						});*/
 						
 						$('span.comboTreeItemTitle').on('click',function(){
 							//console.log($(this).parent('div[class="comboTreeInputWrapper"]').find('input').attr('id'));
@@ -302,8 +340,12 @@ $(document)
 								promoTable.draw();
 							}
 							});
-						
+							
+							
+							
+							
 				});
+				
 
 function getCustChainValues(selVal) {
 	$.ajax({
@@ -381,4 +423,66 @@ $("#select_all_promo").click(function () {
       $('#disTable tbody input[type="checkbox"]').prop('checked', this.checked);
  });
  
+ 
+
+ 
+//Bharati added code for basepack multiselection in sprint-5 US-13
+function multiSelectionForbasepack() {
+	$('#promo_basepack').multiselect({
+		includeSelectAllOption : true,
+		numberDisplayed : 3,
+	nonSelectedText : 'SELECT BASEPACK',
+		selectAllText : 'SELECT ALL BASEPACK',
+		onChange : function(option, checked, select) {
+			
+			var selVals = [];
+			var selectedOptions = $('#promo_basepack option:selected');
+			if (selectedOptions.length > 0) {
+				for (var i = 0; i < selectedOptions.length; i++) {
+					selVals.push(selectedOptions[i].value);
+				}
+
+				var strData = selVals.toString();
+
+			}
+
+		},
+		onSelectAll : function() {
+       },
+		onDeselectAll : function() {
+        
+		}
+
+	});
+}
+
+//Bharati added code for sprint-5 US-14 download disaggreated by dp
+
+function DisagreegatedExcelDownload() {
+	
+	var DisagreegatedID =  getdisagreegatedUQId().toString(); 
+	
+	window.location.href = "/VisibilityAssetTracker/"+DisagreegatedID+"/downloadDisaggregatedByDP.htm"
+	
+}
+function getdisagreegatedUQId(){
+
+	 DiagreegatedUniqueId = []; 
+	$("#disTable tr:gt(0)").each(function(){
+        var th = $(this);
+        
+        if($(th).find("input[name='promoId']").is(":checked")){
+            
+           //var UniqueId_Val = $(th).find("td:eq(1)").text();
+          var UniqueId_Val = $(this).find('td.Unique_id').text();
+          
+            DiagreegatedUniqueId.push(UniqueId_Val);
+            
+        }
+    });
+	//console.log(DiagreegatedUniqueId);
+	return DiagreegatedUniqueId;    
+
+}
+
 

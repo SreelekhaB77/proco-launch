@@ -112,7 +112,7 @@
 	<!-- Main jumbotron for a primary marketing message or call to action -->
 	<div class="container-fluid container-bg middle-section">
 		<c:if test="${success!=null}">
-			<div class="alert succ-alert-success sucess-msg" id="successblock"
+			<div class="alert alert-success sucess-msg" id="successblock"
 				style="display: block;margin-top:35px;">
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${success}"></c:out>
@@ -129,7 +129,11 @@
 				</c:if>
 			</div>
 		</c:if>
-
+	<!--Sprint-5 US-14 successblock msg--> 	
+<div class="alert alert-success alert-dismissible" id="storelist-successblock" style="display:none;">
+		                 <button type="button" class="close" data-dismiss="alert">&times;</button>
+		                 <strong> Promos </strong><span></span>
+		                 </div>
 
 		<form action="http://34.120.128.205/VisibilityAssetTracker/disaggregatePromos.htm" method="POST" name="dc">
 			<div class="proco-creation form-horizontal">
@@ -182,13 +186,17 @@
 									<label for="unique-id" class="control-label col-md-4">BASEPACK
 										CODE</label>
 									<div class="col-md-8">
-										<input type="text" class="form-control" value=""
-											id="promo_basepack" placeholder="ALL PRODUCTS">
+										<!--<input type="text" class="form-control" value=""
+											multiple="multiple" id="promo_basepack" placeholder="ALL PRODUCTS">-->
+											<select class="form-control" id="promo_basepack"
+											multiple="multiple">
+											
+										</select>
 									</div>
 
 								</div>
 							</div>
-							<!--     <div class="col-md-3">
+							<!--  <div class="col-md-3">
                              <div class="form-group">
                <label for="unique-id" class="control-label col-md-4">BASEPACK DESC</label>
                <div class="col-md-8">
@@ -452,6 +460,11 @@
 								<button class="btn btn-primary" id="disaggregateBtn"
 									disabled="disabled">DISAGGREGATE</button>
 									<input class="btn btn-primary" id="addDepot"  data-toggle="modal" data-target="#add-depot" type="button" value="ADD DEPOT" onClick="javascript: getBranch();">
+							<input class="btn btn-primary" style="margin-top: 8px;margin-right: 130px;" id="SubmitKamBtn"
+									disabled="disabled" type="button" value="SUBMIT TO KAM">
+									<input class="btn btn-primary" style="margin-top: -33px;" id="dpDownload"
+									disabled="disabled"  type="button" value="DP DOWNLOAD" onClick="javascript:DisagreegatedExcelDownload();">
+									
 							</div>
 						</div>
 					</div>
@@ -459,6 +472,7 @@
 					<div class="clearfix"></div>
 
 				</div>
+				
 
 				<table
 					class="table table-striped table-bordered promo-list-table" id="disTable"
@@ -486,10 +500,11 @@
 							<th>GEOGRAPHY</th>
 							<th>PLANNED QTY</th>
 							<th>NATIONAL %</th>
-							<th>STATUS</th>
+							<th style="width:108px!important">STATUS</th>
 						</tr>
 					</thead>
 				</table>
+							
 			</div>
 		</form>
 		<!-- <div class="dis-aggre" style="margin-top:15px;"><textarea class="form-control" rows="4" placeholder="DISAGGREGATION:"></textarea></div> -->
@@ -547,6 +562,7 @@
 					</form>
 			</div>
 		</div>
+		
 		<div class="modal-footer">
 			<button type="button" class="btn btn-default chnage-close pull-left"
 				data-dismiss="modal" >CLOSE</button>

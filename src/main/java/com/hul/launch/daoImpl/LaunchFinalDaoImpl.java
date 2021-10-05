@@ -24,6 +24,7 @@ import com.hul.launch.dao.LaunchDaoCoe;
 import com.hul.launch.dao.LaunchDaoSc;
 import com.hul.launch.dao.LaunchFinalDao;
 import com.hul.launch.dao.LaunchSellInDao;
+import com.hul.launch.model.Disaggregate;
 import com.hul.launch.model.LaunchBuildUpTemp;
 import com.hul.launch.model.LaunchBuildUpTempCal;
 import com.hul.launch.model.LaunchFinalCalVO;
@@ -502,6 +503,49 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 		}
 		return downloadedData;
 	}
+	
+	
+	// Added By Harsha for getting disaggregated BY DP
+	@Override
+	public List<ArrayList<String>> getDisaggregatedByDp(String[] promoId) {
+		List<ArrayList<String>> downloadedData = new ArrayList<>();
+		List<Disaggregate> listOfFinalBuildups = getDisaggregatedFinalBuildUpTempDataNew(promoId);
+		ArrayList<String> headerDetail = new ArrayList<>();
+		headerDetail.add("PROMO_ID");
+		headerDetail.add("Geography");
+		headerDetail.add("BasePack");
+		headerDetail.add("Customer");
+		headerDetail.add("DP Per Split");
+		headerDetail.add("DP Qty Split");
+		headerDetail.add("Depot");
+		headerDetail.add("Branch");
+		headerDetail.add("Cluster");
+		headerDetail.add("Depot Per");
+		headerDetail.add("Depot Qty");
+		headerDetail.add("KAM Split");
+		headerDetail.add("Sales Category");
+		downloadedData.add(headerDetail);
+		for (Disaggregate launchBuildUpTemp : listOfFinalBuildups) {
+			ArrayList<String> dataObj = new ArrayList<>();
+			dataObj.add(launchBuildUpTemp.getPromo_Id());
+			dataObj.add(launchBuildUpTemp.getGeography());
+			dataObj.add(launchBuildUpTemp.getBasePack());
+			dataObj.add(launchBuildUpTemp.getCustomer());
+			dataObj.add(launchBuildUpTemp.getDp_Per_Split());
+			dataObj.add(launchBuildUpTemp.getdP_Qty_Split());
+			dataObj.add(launchBuildUpTemp.getDepot());
+			dataObj.add(launchBuildUpTemp.getBranch());
+			dataObj.add(launchBuildUpTemp.getCluster());
+			dataObj.add(launchBuildUpTemp.getDepot_Per());
+			dataObj.add(launchBuildUpTemp.getDepot_Qty());
+			dataObj.add(launchBuildUpTemp.getKam_Split());
+			dataObj.add(launchBuildUpTemp.getSales_category());
+			downloadedData.add(dataObj);
+		}
+		
+		return downloadedData;
+	}
+
 
 	@SuppressWarnings("unchecked")
 	public List<LaunchBuildUpTemp> getFinalBuildUpTempData(String launchId) {
@@ -737,6 +781,63 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 		}
 		return liReturn;
 	}
+	
+	
+	// Added By harsha for getting disaggregated by dp 
+	
+	@SuppressWarnings("unchecked")
+	public List<Disaggregate> getDisaggregatedFinalBuildUpTempDataNew(String[] promoId) {
+		List<Disaggregate> liReturn = new ArrayList<>();
+		List<String> promoIdList = Arrays.asList(promoId);
+		
+		String sBuildupQry = "";
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			
+			Query query = null;
+			for(int i=0; i<promoId.length;i++) {
+				
+			sBuildupQry = " SELECT DISTINCT A.PROMO_ID,B.GEOGRAPHY,A.BASEPACK,B.CUSTOMER_CHAIN_L1,A.DEPOT,C.BRANCH,C.CLUSTER, " + 
+					" CAST(A.PERCENTAGE AS DECIMAL(5,2)), A.QUANTITY, CASE WHEN A.KAM_SPLIT_STATUS = 0 THEN A.QUANTITY ELSE A.KAM_SPLIT END AS KAM_SPLIT , D.CATEGORY " + 
+					" from TBL_PROCO_PROMOTION_DISAGGREGATION_DEPOT_LEVEL AS A INNER JOIN TBL_PROCO_PROMOTION_MASTER AS B ON A.PROMO_ID = B.PROMO_ID AND " + 
+					" A.BASEPACK = B.P1_BASEPACK INNER JOIN TBL_PROCO_CUSTOMER_MASTER AS C ON A.DEPOT = C.DEPOT AND B.CUSTOMER_CHAIN_L1 = C.CUSTOMER_CHAIN_L1 AND " + 
+					" C.BRANCH=A.BRANCH AND C.CLUSTER=A.CLUSTER INNER JOIN TBL_PROCO_PRODUCT_MASTER AS D ON A.BASEPACK = D.BASEPACK" + 
+					" WHERE B.ACTIVE = 1 AND B.STATUS = 4 AND A.PROMO_ID IN (:launchId) ";
+				query = session.createNativeQuery(sBuildupQry);
+				query.setParameter("launchId",promoId[i]);
+				//query.setParameterList("launchId", promoIdList);
+			Iterator<Object> itr = query.list().iterator();
+			int[] temp = { 1 };
+			while (itr.hasNext()) {
+				Object[] obj = (Object[]) itr.next();
+				Disaggregate disaggregate = new Disaggregate();
+				disaggregate.setPromo_Id((String) obj[0]);
+				disaggregate.setGeography((String) obj[1]);
+				disaggregate.setBasePack((String) obj[2]);
+				disaggregate.setCustomer((String) obj[3]);
+				disaggregate.setDepot((String) obj[4]);
+				disaggregate.setBranch((String) obj[5]);
+				disaggregate.setCluster((String) obj[6]);
+				String obc= obj[7].toString();
+				disaggregate.setDepot_Per(obc);
+				disaggregate.setDepot_Qty((String) obj[8]);
+				disaggregate.setKam_Split((String) obj[9]);
+				disaggregate.setSales_category((String) obj[10]);
+
+				liReturn.add(disaggregate);
+				temp[0]++;
+			}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			Disaggregate disaggregate = new Disaggregate();
+			liReturn.add(disaggregate);
+		}
+		return liReturn;
+	}
+
+	
+	
 
 	@Override
 	public LaunchBuildUpTemp getFinalBuildUpDepoLevel(String depoCombo, String launchId) {
@@ -1817,11 +1918,11 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	//Added By Sarin - Sprint4Aug21 - for Launch Account wise Rejection
-	public List<String> getKamAccount(String userId, String LaunchId) {  
+	public List<String> getKamAccount(String userId, String LaunchId, String launchRequestId) {  
 		List<String> listOfAccounts = null;
 		try {
 			Query query3 = sessionFactory.getCurrentSession().createNativeQuery(
-					"SELECT DISTINCT LAUNCH_KAM_ACCOUNT AS ACCOUNT_NAME FROM TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS WHERE IS_ACTIVE = 2 AND LAUNCH_ID = " + LaunchId + " AND UPDATED_BY = '" + userId + "'");
+					"SELECT DISTINCT LAUNCH_KAM_ACCOUNT AS ACCOUNT_NAME FROM TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS WHERE IS_ACTIVE = 2 AND LAUNCH_ID = " + LaunchId + " AND REQ_ID = " + launchRequestId + " AND UPDATED_BY = '" + userId + "'");
 			listOfAccounts = query3.list();
 		} catch (Exception e) {
 			e.printStackTrace();

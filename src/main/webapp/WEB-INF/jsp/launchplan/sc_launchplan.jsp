@@ -145,6 +145,7 @@
 													<th style="min-width:85px!important"><span class="proco-btn proco-btn-success table-head">Select</span></th>
 													<th style="min-width:330px!important"><span class="proco-btn proco-btn-success table-head">Launch Name</span></th>
 													<th style="min-width:110px!important"><span class="proco-btn proco-btn-success table-head">Launch MOC</span></th>
+													<th style="min-width:110px!important"><span class="proco-btn proco-btn-success table-head">Changed MOC</span></th>
 													<th style="min-width:160px!important"><span class="proco-btn proco-btn-success table-head">Submitted Date</span></th>
 													<th style="min-width:200px!important"><span class="proco-btn proco-btn-success table-head">CMM</span></th>
 												

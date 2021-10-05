@@ -23,7 +23,8 @@ public interface LaunchFinalService {
 	List<ArrayList<String>> getFinalBuildUpDumpNewKam(String userId, String launchId);
 
 	List<LaunchFinalPlanResponse> getLaunchFinalResposeEditKamAfterLaunchRej(String launchId, String userId,
-			String kamAcc);
+			String kamAcc
+			, String launchRequestId);  //Added By Sarin - sprint5Sep2021 - new parameter launchRequestId
 
 	List<LaunchFinalPlanResponse> getLaunchFinalResposeEditKamAfterRejBp(String launchId, String userId, String kamAcc);
 
@@ -36,6 +37,8 @@ public interface LaunchFinalService {
 	List<ArrayList<String>> getMstnClearanceDataDump(String userId, List<String> listOfLaunchData);
 
 	List<ArrayList<String>> getMstnClearanceDataDumpCoe(String userId, List<String> listOfLaunchData);
+
+	List<ArrayList<String>> getDisaggregatedByDp(String[] promoId);
 
 	
 }

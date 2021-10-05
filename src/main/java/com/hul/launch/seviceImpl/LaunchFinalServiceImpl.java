@@ -674,6 +674,12 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 		return launchFinalDao.getFinalBuildUpDumptNew(userId, launchId,launchMoc);
 	}
 	
+	// Added by Harsha to get diaggregated by DP
+	@Override
+	public List<ArrayList<String>> getDisaggregatedByDp(String[] promoId) {
+		return launchFinalDao.getDisaggregatedByDp(promoId);
+	}
+	
 
 	@Override
 	public List<ArrayList<String>> getFinalBuildUpDumpNewKam(String userId, String launchId) {
@@ -822,11 +828,13 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 
 	@Override
 	public List<LaunchFinalPlanResponse> getLaunchFinalResposeEditKamAfterLaunchRej(String launchId, String userId,
-			String kamAcc) {
+			String kamAcc
+			, String launchRequestId)  //Added By Sarin - sprint5Sep2021 - new parameter launchRequestId
+	{
 		List<LaunchFinalPlanResponse> listOfFinalFinal = new ArrayList<>();
 		try {
 			//List<String> listOfKamAccounts = launchFinalDao.getKamAccount(kamAcc);  //Commented By Sarin - Sprint4Aug21 - for Launch Account wise Rejection
-			List<String> listOfKamAccounts = launchFinalDao.getKamAccount(kamAcc, launchId);  //Added By Sarin - Sprint4Aug21 - for Launch Account wise Rejection
+			List<String> listOfKamAccounts = launchFinalDao.getKamAccount(kamAcc, launchId, launchRequestId);  //Added By Sarin - Sprint4Aug21 - for Launch Account wise Rejection
 			launchFinalDao.deleteAllBuildUpKAM(launchId, listOfKamAccounts);
 			List<String> allDistinctFinalBuildsCombo = launchFinalDao.getFinalBuildUpDepoLevelDistinct(launchId);
 			Set<String> setOfStrings = new HashSet<>();
