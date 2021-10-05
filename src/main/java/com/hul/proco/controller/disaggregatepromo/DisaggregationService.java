@@ -20,5 +20,8 @@ public interface DisaggregationService  {
 	public List<String> getClusterForAddDepot(String branch);
 	
 	public String saveDepotForAddDepot(String promoId,String branch,String cluster,String depot,int quantity,String userId);
+
+	// New implementation for SUBMIT TO KAM added by harsha
+	public String disagregatedpromoskamsubmission();
 	
 }

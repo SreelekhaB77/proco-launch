@@ -486,3 +486,27 @@ function getdisagreegatedUQId(){
 }
 
 
+//bharati added code for submit to kam US-13 in sprint-5
+function promosSubmitToKam() {
+		
+		 $.ajax({
+		 	url : "disagregatedPromoskamsubmission.htm",
+			 dataType: 'json',
+             type: 'post',
+             contentType: 'application/json',
+             processData: false,
+        
+             success: function(res, textStatus, jQxhr ){
+         
+               alert("Submitted To KAM Successfully !!!");
+               window.location.reload();
+          
+           },
+			  error: function(error, textStatus, jQxhr ){
+               alert("Error while doing KAM submission");
+          }
+		  });
+		
+	  }
+
+

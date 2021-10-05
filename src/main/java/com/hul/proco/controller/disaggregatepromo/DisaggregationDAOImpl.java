@@ -54,7 +54,7 @@ public class DisaggregationDAOImpl implements DisaggregationDAO {
 					+ "INNER JOIN TBL_PROCO_TME_MAPPING AS F ON B.CATEGORY=F.CATEGORY AND B.PRICE_LIST=F.PRICE_LIST "
 					+ "WHERE (A.QUANTITY IS NOT NULL AND A.QUANTITY<>'') AND A.ACTIVE = 1 AND F.USER_ID='" + userId
 					+ "' ";
-			rowCount += " AND A.STATUS IN(3,4,13,14,23,24,33,34,12,22,32) ";
+			rowCount += " AND A.STATUS IN(3,4,13,14,23,24,33,34,12,22,32,37) ";
 
 			if (!cagetory.equalsIgnoreCase("All")) {
 				rowCount += "AND B.CATEGORY = '" + cagetory + "' ";
@@ -152,7 +152,7 @@ public class DisaggregationDAOImpl implements DisaggregationDAO {
 					+ "INNER JOIN TBL_PROCO_TME_MAPPING AS F ON B.CATEGORY=F.CATEGORY AND B.PRICE_LIST=F.PRICE_LIST "
 					+ "WHERE (A.QUANTITY IS NOT NULL AND A.QUANTITY<>'') AND A.ACTIVE = 1 AND F.USER_ID='" + userId
 					+ "' ";
-			promoQuery += " AND A.STATUS IN(3,4,13,14,23,24,33,34,12,22,32) ";
+			promoQuery += " AND A.STATUS IN(3,4,13,14,23,24,33,34,12,22,32,37) ";
 
 			if (!cagetory.equalsIgnoreCase("All")) {
 				promoQuery += "AND B.CATEGORY = '" + cagetory + "' ";
@@ -1265,4 +1265,31 @@ public class DisaggregationDAOImpl implements DisaggregationDAO {
 		}
 		return res;
 	}
+	
+	// Added by Harsha for Disaggregation by DP
+	
+	public String updateKamsubmitStatus() {
+		String res = "";
+		try {
+			Query query1 = sessionFactory.getCurrentSession().createNativeQuery(
+					" Update TBL_PROCO_PROMOTION_MASTER A INNER JOIN TBL_PROCO_PROMOTION_DISAGGREGATION_DEPOT_LEVEL B " + 
+					" ON A.PROMO_ID = B.PROMO_ID AND A.P1_BASEPACK = B.BASEPACK set A.STATUS = 37 WHERE B.SUBMIT_KAM_STATUS IS NULL;");  //Added by harsha
+			int executeUpdate1 = query1.executeUpdate();
+			Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
+					" update TBL_PROCO_PROMOTION_DISAGGREGATION_DEPOT_LEVEL set SUBMIT_KAM_STATUS = 1 where SUBMIT_KAM_STATUS IS NULL; " );  //Added by harsha
+			int executeUpdate2 = query2.executeUpdate();
+			if (executeUpdate1 > 0 && executeUpdate2>0) {
+				res = "";
+			} else {
+				res = "ERROR";
+			}
+		} catch (Exception e) {
+			logger.debug("Exception:", e);
+			return "ERROR";
+		}
+		return res;
+	}
+	
+	
+	
 }
