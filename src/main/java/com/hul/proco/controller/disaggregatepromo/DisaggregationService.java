@@ -23,5 +23,7 @@ public interface DisaggregationService  {
 
 	// New implementation for SUBMIT TO KAM added by harsha
 	public String disagregatedpromoskamsubmission();
+
+	public int countofDisaggregation();
 	
 }

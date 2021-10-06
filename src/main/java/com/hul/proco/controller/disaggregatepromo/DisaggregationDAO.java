@@ -20,6 +20,8 @@ public interface DisaggregationDAO {
 	public List<String> getClusterForAddDepot(String branch);
 	
 	public String saveDepotForAddDepot(String promoId,String branch,String cluster,String depot,int quantity,String userId);
+	// Added By harsha for Q5 Sprint
 	public String updateKamsubmitStatus();
+	public int getcountofDisaggregation() ;// Added By harsha for Q5 Sprint
 
 }

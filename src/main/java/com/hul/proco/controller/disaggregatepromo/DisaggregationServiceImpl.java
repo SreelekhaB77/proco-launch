@@ -31,11 +31,18 @@ public class DisaggregationServiceImpl implements DisaggregationService {
 	public String disaggregatePromos(String promoId[],String[] mocs,String userId) {
 		return disaggregationDAO.disaggregatePromos(promoId,mocs,userId);
 	}
-	//Moddified by harsha for submit to kam
+	//Added by harsha for submit to kam
 	@Override
 	public String disagregatedpromoskamsubmission() {
 		return disaggregationDAO.updateKamsubmitStatus();
 	}
+	//Added by harsha for submit to kam
+	@Override
+	public int countofDisaggregation() {
+		return disaggregationDAO.getcountofDisaggregation();
+	}
+	
+	
 	
 	
 	@Override

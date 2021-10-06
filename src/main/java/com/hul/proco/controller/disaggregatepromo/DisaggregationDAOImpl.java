@@ -1,6 +1,8 @@
 package com.hul.proco.controller.disaggregatepromo;
 
 import java.math.BigInteger;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +16,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 import org.hibernate.query.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.internal.SessionImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -1289,6 +1293,31 @@ public class DisaggregationDAOImpl implements DisaggregationDAO {
 		}
 		return res;
 	}
+	
+	// Added by harsha to get count of disaggregation
+	
+	public int getcountofDisaggregation() {
+		Session session = sessionFactory.getCurrentSession();
+		SessionImpl sessionImpl = (SessionImpl) session;
+		String launchMoc = "";
+		int value = 0 ;
+		try {
+			PreparedStatement stmt = sessionImpl.connection()
+					.prepareStatement("select count(1) from TBL_PROCO_PROMOTION_DISAGGREGATION_DEPOT_LEVEL where SUBMIT_KAM_STATUS is null");		
+			ResultSet rs = stmt.executeQuery();
+			
+				while (rs.next()) {
+					String details = rs.getString(1);
+					if(details!=null && !details.isEmpty()) {
+						return Integer.valueOf(details);
+					}
+				}
+		} catch (Exception ex) {
+			logger.debug("Exception :", ex);	
+		}
+		return 0;
+	}
+	
 	
 	
 	

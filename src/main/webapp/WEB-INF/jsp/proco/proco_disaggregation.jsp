@@ -589,6 +589,15 @@
 
 
 	<script type="text/javascript">
+	//bharati changes for submit to kam btn enable in sprint-5
+	var KamsubmitEnable = '${countofdisaggregation}';
+	//console.log(KamsubmitEnable);
+	if(KamsubmitEnable > 0){
+	  document.getElementById("SubmitKamBtn").disabled = false;
+	  }else{
+	  document.getElementById("SubmitKamBtn").disabled = true;
+	  }
+	  //end bharati changes
 	
 		var moc = '${mocJson}';
 		var basepacks = '${basepacks}';

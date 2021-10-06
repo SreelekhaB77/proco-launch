@@ -129,12 +129,15 @@ public class DissagregationController {
 			setModelAttributes(model,userId);
 			return new ModelAndView("proco/proco_disaggregation");
 		}
+		int countofdisaggregation = disaggregationService.countofDisaggregation();
+		
 		String res = disaggregationService.disaggregatePromos(promoId, mocs,userId);
 		if (res.equals("")) {
 			model.addAttribute("success", promoId.length + " promos disaggregated successfully.");
 		} else {
 			model.addAttribute("errorMsg", res);
 		}
+		model.addAttribute("countofdisaggregation",countofdisaggregation);
 		model.addAttribute("roleId", roleId);
 		setModelAttributes(model,userId);
 		return new ModelAndView("proco/proco_disaggregation");

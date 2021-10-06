@@ -180,16 +180,16 @@ $(document)
                                        var th = $(this);
                                        if($(th).find("input[name='promoId']").is(":checked")){
                                        var valueOfStatus = $(this).find('td:last-child').text();
-                                        console.log(valueOfStatus);
+                                       // console.log(valueOfStatus);
                                          if(valueOfStatus=="DISAGGREGATION DONE BY DP"){
 									   document.getElementById("dpDownload").disabled = false;
-									   document.getElementById("SubmitKamBtn").disabled = false;
+									 
 									 }else if(valueOfStatus=="DISAGGREGATION DONE BY DP and SUBMITTED TO KAM"){
 									  document.getElementById("dpDownload").disabled = false;
-									   document.getElementById("SubmitKamBtn").disabled = true;
+									  
 									 }else{
 									   document.getElementById("dpDownload").disabled = true;
-									   document.getElementById("SubmitKamBtn").disabled = true;
+									   
 									 }
 									  }
  });
@@ -340,10 +340,6 @@ $(document)
 								promoTable.draw();
 							}
 							});
-							
-							
-							
-							
 				});
 				
 
