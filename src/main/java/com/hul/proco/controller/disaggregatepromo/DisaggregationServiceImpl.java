@@ -26,11 +26,25 @@ public class DisaggregationServiceImpl implements DisaggregationService {
 		return disaggregationDAO.getDisaggregationTableList(pageDisplayStart, pageDisplayLength, cagetory, brand, basepack, custChainL1, custChainL2, offerType, modality, year, moc, userId);
 	}
 
+	
 	@Override
 	public String disaggregatePromos(String promoId[],String[] mocs,String userId) {
 		return disaggregationDAO.disaggregatePromos(promoId,mocs,userId);
 	}
-
+	//Added by harsha for submit to kam
+	@Override
+	public String disagregatedpromoskamsubmission() {
+		return disaggregationDAO.updateKamsubmitStatus();
+	}
+	//Added by harsha for submit to kam
+	@Override
+	public int countofDisaggregation() {
+		return disaggregationDAO.getcountofDisaggregation();
+	}
+	
+	
+	
+	
 	@Override
 	public List<String> getDepotForAddDepot(String promoId,String branch,String cluster) {
 		return disaggregationDAO.getDepotForAddDepot(promoId,branch,cluster);

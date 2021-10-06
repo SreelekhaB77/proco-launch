@@ -129,16 +129,38 @@ public class DissagregationController {
 			setModelAttributes(model,userId);
 			return new ModelAndView("proco/proco_disaggregation");
 		}
+		int countofdisaggregation = disaggregationService.countofDisaggregation();
+		
 		String res = disaggregationService.disaggregatePromos(promoId, mocs,userId);
 		if (res.equals("")) {
 			model.addAttribute("success", promoId.length + " promos disaggregated successfully.");
 		} else {
 			model.addAttribute("errorMsg", res);
 		}
+		model.addAttribute("countofdisaggregation",countofdisaggregation);
 		model.addAttribute("roleId", roleId);
 		setModelAttributes(model,userId);
 		return new ModelAndView("proco/proco_disaggregation");
 	}
+	
+	// New implementation for SUBMIT TO KAM added by harsha
+	@RequestMapping(value = "disagregatedPromoskamsubmission.htm", method = RequestMethod.POST)
+	public @ResponseBody String disagregatedPromoskamsubmission(HttpServletRequest request, Model model) {
+		String roleId = (String) request.getSession().getAttribute("roleId");
+		String userId = (String) request.getSession().getAttribute("UserID");
+		
+		Gson gson=new Gson();
+		
+		String res = disaggregationService.disagregatedpromoskamsubmission();
+
+		if (res.equals("")) {
+			res = "Success";
+		} else {
+			res = "Error";
+		}
+		return gson.toJson(res);
+	}
+	
 
 	@SuppressWarnings("unchecked")
 	private void setModelAttributes(Model model,String userId) {

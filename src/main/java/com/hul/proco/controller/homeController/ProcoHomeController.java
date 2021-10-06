@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.hul.proco.controller.createpromo.CreatePromoService;
 import com.hul.proco.controller.createpromo.CreatePromotionBean;
+import com.hul.proco.controller.disaggregatepromo.DisaggregationService;
 import com.hul.proco.controller.listingPromo.PromoListingService;
 import com.hul.proco.controller.promocr.PromoCrService;
 
@@ -30,6 +31,9 @@ public class ProcoHomeController {
 	
 	@Autowired
 	private PromoCrService promoCrService;
+	
+	@Autowired
+	public DisaggregationService disaggregationService;
 	
 
 	/*@Autowired
@@ -157,7 +161,8 @@ public class ProcoHomeController {
 		String userId = (String) request.getSession().getAttribute("UserID");
 		//Harsha's implementation for logintool
 		promoCrService.insertToportalUsage(userId, roleId, "PROCO");
-		//Harsha's Logic End's here 
+		//Harsha's Logic End's here
+		int countofdisaggregation = disaggregationService.countofDisaggregation();
 		List<String> customerChainL1 = createPromoService.getCustomerChainL1();
 		List<String> offerTypes = createPromoService.getOfferTypes();
 		Map<Integer, String> modality = createPromoService.getModality();
@@ -178,6 +183,9 @@ public class ProcoHomeController {
 		model.addAttribute("categories", category);
 		model.addAttribute("brands", brand);
 		model.addAttribute("basepacks", basepacks);
+		//Added by Harsha for count
+		model.addAttribute("countofdisaggregation", countofdisaggregation);
+		
 		return new ModelAndView("proco/proco_disaggregation");
 	}
 

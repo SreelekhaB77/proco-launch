@@ -129,11 +129,7 @@
 				</c:if>
 			</div>
 		</c:if>
-	<!--Sprint-5 US-14 successblock msg--> 	
-<div class="alert alert-success alert-dismissible" id="storelist-successblock" style="display:none;">
-		                 <button type="button" class="close" data-dismiss="alert">&times;</button>
-		                 <strong> Promos </strong><span></span>
-		                 </div>
+
 
 		<form action="http://34.120.128.205/VisibilityAssetTracker/disaggregatePromos.htm" method="POST" name="dc">
 			<div class="proco-creation form-horizontal">
@@ -461,7 +457,7 @@
 									disabled="disabled">DISAGGREGATE</button>
 									<input class="btn btn-primary" id="addDepot"  data-toggle="modal" data-target="#add-depot" type="button" value="ADD DEPOT" onClick="javascript: getBranch();">
 							<input class="btn btn-primary" style="margin-top: 8px;margin-right: 130px;" id="SubmitKamBtn"
-									disabled="disabled" type="button" value="SUBMIT TO KAM">
+									disabled="disabled" type="button" value="SUBMIT TO KAM"  onClick="javascript:promosSubmitToKam();">
 									<input class="btn btn-primary" style="margin-top: -33px;" id="dpDownload"
 									disabled="disabled"  type="button" value="DP DOWNLOAD" onClick="javascript:DisagreegatedExcelDownload();">
 									
@@ -593,6 +589,15 @@
 
 
 	<script type="text/javascript">
+	//bharati changes for submit to kam btn enable in sprint-5
+	var KamsubmitEnable = '${countofdisaggregation}';
+	//console.log(KamsubmitEnable);
+	if(KamsubmitEnable > 0){
+	  document.getElementById("SubmitKamBtn").disabled = false;
+	  }else{
+	  document.getElementById("SubmitKamBtn").disabled = true;
+	  }
+	  //end bharati changes
 	
 		var moc = '${mocJson}';
 		var basepacks = '${basepacks}';
