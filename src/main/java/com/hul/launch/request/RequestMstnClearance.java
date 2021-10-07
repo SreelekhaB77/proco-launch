@@ -13,6 +13,7 @@ public class RequestMstnClearance {
 	private String finalCldForN2;
 	private String currentEstimates;
 	private String clearanceDate;
+	private String Remarks; // Added By Harsha
 
 	public String getAccount() {
 		return account;
@@ -118,5 +119,13 @@ public class RequestMstnClearance {
 
 	public void setCurrentEstimates(String currentEstimates) {
 		this.currentEstimates = currentEstimates;
+	}
+	
+	public String getRemarks() {
+		return Remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		Remarks = remarks;
 	}
 }
