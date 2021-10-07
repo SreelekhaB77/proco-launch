@@ -191,8 +191,8 @@ $(document)
                                        var th = $(this);
                                        if($(th).find("input[name='promoId']").is(":checked")){
                                        var valueOfStatus = $(this).find('td:last-child').text();
-                                       
-                                         if(valueOfStatus=="DISAGGREGATION DONE BY DP"){
+                                      
+                                         if((valueOfStatus=="DISAGGREGATION DONE BY DP") || (valueOfStatus=="CR 1 - DISAGGREGATION DONE BY DP") || (valueOfStatus=="CR 2 - DISAGGREGATION DONE BY DP") || (valueOfStatus=="ADHOC PROMO - DISAGGREGATION DONE BY DP")){
 									   document.getElementById("dpDownload").disabled = false;
 									 
 									 }else if(valueOfStatus=="DIS-AGGREGATION DONE BY DP AND SUBMITTED TO KAM"){
