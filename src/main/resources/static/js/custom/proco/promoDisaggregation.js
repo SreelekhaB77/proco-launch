@@ -167,9 +167,20 @@ $(document)
 										   $('#addDepot').removeAttr( "disabled", 'disabled' );
 									   }else{  
 										   $('#addDepot').attr( "disabled",  'disabled' );}
-									   
+									   //sprint-5 bharati added changes for enable disable disaggregate btn for submitted to kam status 
 									   if(okay && disAggregationCount>0){
-										   document.getElementById("disaggregateBtn").disabled = false;
+									   $("#disTable tr:gt(0)").each(function(){
+                                       var th = $(this);
+                                       if($(th).find("input[name='promoId']").is(":checked")){
+                                       var valueOfStatus = $(this).find('td:last-child').text();
+                                     
+										 if(valueOfStatus=="DIS-AGGREGATION DONE BY DP AND SUBMITTED TO KAM") {
+									    document.getElementById("disaggregateBtn").disabled = true;
+									 }else{
+									  document.getElementById("disaggregateBtn").disabled = false;
+									  }
+									   }
+											});
 									   }else{
 										   document.getElementById("disaggregateBtn").disabled = true;
 									   }
@@ -180,14 +191,15 @@ $(document)
                                        var th = $(this);
                                        if($(th).find("input[name='promoId']").is(":checked")){
                                        var valueOfStatus = $(this).find('td:last-child').text();
-                                       // console.log(valueOfStatus);
+                                       
                                          if(valueOfStatus=="DISAGGREGATION DONE BY DP"){
 									   document.getElementById("dpDownload").disabled = false;
 									 
-									 }else if(valueOfStatus=="DISAGGREGATION DONE BY DP and SUBMITTED TO KAM"){
+									 }else if(valueOfStatus=="DIS-AGGREGATION DONE BY DP AND SUBMITTED TO KAM"){
 									  document.getElementById("dpDownload").disabled = false;
-									  
-									 }else{
+									  document.getElementById("disaggregateBtn").disabled = true;
+									
+									}else{
 									   document.getElementById("dpDownload").disabled = true;
 									   
 									 }
@@ -273,7 +285,20 @@ $(document)
 								   $('#addDepot').attr( "disabled",  'disabled' );}
 							   
 							   if(okay && disAggregationCount>0){
-								   document.getElementById("disaggregateBtn").disabled = false;
+								 //  document.getElementById("disaggregateBtn").disabled = false;
+								 //sprint-5 bharati added changes for enable disable disaggregate btn for submitted to kam status 
+								 $("#disTable tr:gt(0)").each(function(){
+                                       var th = $(this);
+                                       if($(th).find("input[name='promoId']").is(":checked")){
+                                       var valueOfStatus = $(this).find('td:last-child').text();
+                                      
+										 if((valueOfStatus=="DIS-AGGREGATION DONE BY DP AND SUBMITTED TO KAM") && (okay)) {
+									    document.getElementById("disaggregateBtn").disabled = true;
+									 }else{
+									 document.getElementById("disaggregateBtn").disabled = false;
+									 }
+									   }
+											});
 								   
 							   }else{
 								   document.getElementById("disaggregateBtn").disabled = true;
@@ -476,7 +501,7 @@ function getdisagreegatedUQId(){
             
         }
     });
-	//console.log(DiagreegatedUniqueId);
+	
 	return DiagreegatedUniqueId;    
 
 }
