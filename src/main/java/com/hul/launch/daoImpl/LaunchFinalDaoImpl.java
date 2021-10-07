@@ -2091,12 +2091,13 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 		headerDetail.add("ACCOUNT");
 		headerDetail.add("DEPOT");
 		headerDetail.add("ACCOUNT");
-		headerDetail.add("MSTN_CLEARED");
 		headerDetail.add("FINAL_CLD_N");
 		headerDetail.add("FINAL_CLD_N1");
 		headerDetail.add("FINAL_CLD_N2");
+		headerDetail.add("MSTN_CLEARED");
 		headerDetail.add("CURRENT_ESTIMATES");
 		headerDetail.add("CLEARANCE_DATE");
+		headerDetail.add("REMARKS");
 		downloadedData.add(headerDetail);
 		for (LaunchMstnClearanceResponseCoe launchScMstnClearanceResponse : listOfFinalBuildups) {
 			ArrayList<String> dataObj = new ArrayList<>();
@@ -2108,12 +2109,13 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 			dataObj.add(launchScMstnClearanceResponse.getAccount());
 			dataObj.add(launchScMstnClearanceResponse.getDepot());
 			dataObj.add(launchScMstnClearanceResponse.getAccount());
-			dataObj.add(launchScMstnClearanceResponse.getMstnCleared());
 			dataObj.add(launchScMstnClearanceResponse.getFinalCldN());
 			dataObj.add(launchScMstnClearanceResponse.getFinalCldN1());
 			dataObj.add(launchScMstnClearanceResponse.getFinalCldN2());
+			dataObj.add(launchScMstnClearanceResponse.getMstnCleared());
 			dataObj.add(launchScMstnClearanceResponse.getCurrentEstimates());
 			dataObj.add(launchScMstnClearanceResponse.getClearanceDate());
+			dataObj.add(launchScMstnClearanceResponse.getRemarks());
 			downloadedData.add(dataObj);
 		}
 		return downloadedData;

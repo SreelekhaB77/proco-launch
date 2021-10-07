@@ -109,10 +109,15 @@ public class LaunchDaoCoeImpl implements LaunchDaoCoe {
 		List<LaunchMstnClearanceResponseCoe> listOfCompletedLaunch = new ArrayList<>();
 		try {
 			Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
-					"SELECT tlm.LAUNCH_NAME,BASEPACK_CODE,BASEPACK_DESCRIPTION,tlm.LAUNCH_MOC,tlmc.CLUSTER, "
+					/*"SELECT tlm.LAUNCH_NAME,BASEPACK_CODE,BASEPACK_DESCRIPTION,tlm.LAUNCH_MOC,tlmc.CLUSTER, "
 							+ "tlmc.DEPOT,tlmc.MSTN_CLEARED,tlmc.FINAL_CLD_FOR_N,tlmc.FINAL_CLD_FOR_N1,tlmc.FINAL_CLD_FOR_N2, "
 							+ "tlmc.CURRENT_ESTIMATES,tlmc.CLEARANCE_DATE,tlmc.ACCOUNT  FROM TBL_LAUNCH_MSTN_CLEARANCE tlmc, TBL_LAUNCH_MASTER "
-							+ "tlm WHERE tlmc.LAUNCH_ID = tlm.LAUNCH_ID AND tlmc.LAUNCH_ID IN (:listOfLaunchData)");
+							+ "tlm WHERE tlmc.LAUNCH_ID = tlm.LAUNCH_ID AND tlmc.LAUNCH_ID IN (:listOfLaunchData)");*/
+			//Kavitha D changes for MSTN CLEARANCE REMARKS-SPRINT 5
+					"SELECT tlm.LAUNCH_NAME,BASEPACK_CODE,BASEPACK_DESCRIPTION,tlm.LAUNCH_MOC,tlmc.CLUSTER, "
+					+ " tlmc.DEPOT,tlmc.FINAL_CLD_FOR_N,tlmc.FINAL_CLD_FOR_N1,tlmc.FINAL_CLD_FOR_N2,tlmc.ACCOUNT, tlmc.MSTN_CLEARED,"
+					+ " tlmc.CURRENT_ESTIMATES,tlmc.CLEARANCE_DATE,IFNULL(tlmc.REMARKS,'') AS REMARKS FROM TBL_LAUNCH_MSTN_CLEARANCE tlmc, TBL_LAUNCH_MASTER tlm "
+					+ " WHERE tlmc.LAUNCH_ID = tlm.LAUNCH_ID AND tlmc.LAUNCH_ID IN (:listOfLaunchData)");
 			query2.setParameterList("listOfLaunchData", listOfLaunchData);
 			Iterator<Object> iterator = query2.list().iterator();
 			while (iterator.hasNext()) {
@@ -124,13 +129,14 @@ public class LaunchDaoCoeImpl implements LaunchDaoCoe {
 				launchMstnClearanceResponseCoe.setLaunchMoc(obj[3].toString());
 				launchMstnClearanceResponseCoe.setCluster(obj[4].toString());
 				launchMstnClearanceResponseCoe.setDepot(obj[5].toString());
-				launchMstnClearanceResponseCoe.setMstnCleared(obj[6].toString());
-				launchMstnClearanceResponseCoe.setFinalCldN(obj[7].toString());
-				launchMstnClearanceResponseCoe.setFinalCldN1(obj[8].toString());
-				launchMstnClearanceResponseCoe.setFinalCldN2(obj[9].toString());
-				launchMstnClearanceResponseCoe.setCurrentEstimates(obj[10].toString());
-				launchMstnClearanceResponseCoe.setClearanceDate(obj[11].toString());
-				launchMstnClearanceResponseCoe.setAccount(obj[12].toString());
+				launchMstnClearanceResponseCoe.setFinalCldN(obj[6].toString());
+				launchMstnClearanceResponseCoe.setFinalCldN1(obj[7].toString());
+				launchMstnClearanceResponseCoe.setFinalCldN2(obj[8].toString());
+				launchMstnClearanceResponseCoe.setAccount(obj[9].toString());
+				launchMstnClearanceResponseCoe.setMstnCleared(obj[10].toString());
+				launchMstnClearanceResponseCoe.setCurrentEstimates(obj[11].toString());
+				launchMstnClearanceResponseCoe.setClearanceDate(obj[12].toString());
+				launchMstnClearanceResponseCoe.setRemarks(obj[13].toString());
 				listOfCompletedLaunch.add(launchMstnClearanceResponseCoe);
 			}
 			return listOfCompletedLaunch;
