@@ -802,7 +802,7 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 					" from TBL_PROCO_PROMOTION_DISAGGREGATION_DEPOT_LEVEL AS A INNER JOIN TBL_PROCO_PROMOTION_MASTER AS B ON A.PROMO_ID = B.PROMO_ID AND " + 
 					" A.BASEPACK = B.P1_BASEPACK INNER JOIN TBL_PROCO_CUSTOMER_MASTER AS C ON A.DEPOT = C.DEPOT AND B.CUSTOMER_CHAIN_L1 = C.CUSTOMER_CHAIN_L1 AND " + 
 					" C.BRANCH=A.BRANCH AND C.CLUSTER=A.CLUSTER INNER JOIN TBL_PROCO_PRODUCT_MASTER AS D ON A.BASEPACK = D.BASEPACK" + 
-					" WHERE B.ACTIVE = 1 AND B.STATUS = 4 AND A.PROMO_ID IN (:launchId) ";
+					" WHERE B.ACTIVE = 1 AND B.STATUS IN (4,14,24,34,37) AND A.PROMO_ID IN (:launchId) ";
 				query = session.createNativeQuery(sBuildupQry);
 				query.setParameter("launchId",promoId[i]);
 				//query.setParameterList("launchId", promoIdList);
