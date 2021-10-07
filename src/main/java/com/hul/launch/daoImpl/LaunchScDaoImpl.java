@@ -44,10 +44,11 @@ import com.hul.launch.web.util.CommonUtils;
 @Repository
 public class LaunchScDaoImpl implements LaunchDaoSc {
 
+	// Chagnes done By Harsha added remarks to below insert Statement
 	private final static String TBL_LAUNCH_MSTN_CLEARANCE = "INSERT INTO MODTRD.TBL_LAUNCH_MSTN_CLEARANCE (LAUNCH_ID, LAUNCH_MOC, "
 			+ " BASEPACK_CODE, BASEPACK_DESCRIPTION, DEPOT, CLUSTER, MSTN_CLEARED, FINAL_CLD_FOR_N, FINAL_CLD_FOR_N1, "
-			+ " FINAL_CLD_FOR_N2,ACCOUNT, CURRENT_ESTIMATES, CLEARANCE_DATE, CREATED_DATE, CREATED_BY) "
-			+ " VALUES(?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			+ " FINAL_CLD_FOR_N2,ACCOUNT, CURRENT_ESTIMATES, CLEARANCE_DATE, CREATED_DATE, CREATED_BY,REMARKS) "
+			+ " VALUES(?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -374,6 +375,7 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 					preparedStatement.setString(13, saveLaunchStoreData.getClearanceDate());
 					preparedStatement.setTimestamp(14, new Timestamp(new Date().getTime()));
 					preparedStatement.setString(15, userId);
+					preparedStatement.setString(16,saveLaunchStoreData.getRemarks());
 					preparedStatement.addBatch();
 				}
 				preparedStatement.executeBatch();
@@ -388,6 +390,32 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 
 		return "Saved Successfully";
 	}
+	// Added By Harsha for input validation 
+	public String getEstimates(String mSTNCleareance, String finalCldn, String currentEstimates) {
+		double finalCldvalue = Double.parseDouble(finalCldn);
+		double currentEstimate;
+		if(currentEstimates == null || currentEstimates.isEmpty()) {
+			currentEstimate = 0;
+		}
+		else {
+			currentEstimate = Double.parseDouble(currentEstimates);
+		}
+		
+		if((!mSTNCleareance.isEmpty() && mSTNCleareance.contains("Y")) &&
+				(currentEstimate > 0.000 && (currentEstimate*100)/finalCldvalue > 80.0)) {
+			return "MSTN Cleared";
+		}
+		else if((!mSTNCleareance.isEmpty() && mSTNCleareance.contains("Y")) && 
+				(currentEstimate > 0.000 && (currentEstimate*100)/finalCldvalue < 80.0)) {
+			return "Estimate Insufficient";
+		}
+		else if (mSTNCleareance.contains("N")) {
+			return "MSTN Not Cleared";
+		}
+		
+		return "Not a valid input from SC user";
+		
+		}
 
 	@Override
 	public String uploadMstnClearanceByLaunchIdSc(List<Object> listOfMstnClearance, String userID) {
@@ -407,13 +435,15 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 			requestMstnClearance.setBasepackDescription(obj.getBASEPACK_DESCRIPTION());
 			requestMstnClearance.setDepot(obj.getDEPOT());
 			requestMstnClearance.setCluster(obj.getCLUSTER());
-			requestMstnClearance.setMstnCleared(obj.getMSTN_CLEARED());
 			requestMstnClearance.setFinalCldForN(obj.getFINAL_CLD_N());
 			requestMstnClearance.setFinalCldForN1(obj.getFINAL_CLD_N1());
 			requestMstnClearance.setFinalCldForN2(obj.getFINAL_CLD_N2());
 			requestMstnClearance.setCurrentEstimates(obj.getCURRENT_ESTIMATES());
 			requestMstnClearance.setClearanceDate(obj.getCLEARANCE_DATE());
 			requestMstnClearance.setAccount(obj.getACCOUNT());
+			requestMstnClearance.setMstnCleared(obj.getMSTN_CLEARED());
+			// Added by Harsha for remarks
+			requestMstnClearance.setRemarks(getEstimates(obj.getMSTN_CLEARED(), obj.getFINAL_CLD_N(),obj.getCURRENT_ESTIMATES()));
 			listOfRequestMstnClearance.add(requestMstnClearance);
 		}
 

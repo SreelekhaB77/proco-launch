@@ -17,6 +17,7 @@ public class LaunchMstnClearanceResponseCoe {
 	private String clearanceDate;
 	private String launchMoc;
 	private String account;
+	private String remarks;
 
 	public String getAccount() {
 		return account;
@@ -145,4 +146,24 @@ public class LaunchMstnClearanceResponseCoe {
 	public void setClearanceDate(String clearanceDate) {
 		this.clearanceDate = clearanceDate;
 	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	@Override
+	public String toString() {
+		return "LaunchMstnClearanceResponseCoe [launchName=" + launchName + ", channel=" + channel + ", bpCode="
+				+ bpCode + ", bpDescription=" + bpDescription + ", moc=" + moc + ", cluster=" + cluster + ", depot="
+				+ depot + ", mstnCleared=" + mstnCleared + ", finalCldN=" + finalCldN + ", finalCldN1=" + finalCldN1
+				+ ", finalCldN2=" + finalCldN2 + ", currentEstimates=" + currentEstimates + ", error=" + error
+				+ ", clearanceDate=" + clearanceDate + ", launchMoc=" + launchMoc + ", account=" + account
+				+ ", remarks=" + remarks + "]";
+	}
+	
+	
 }
