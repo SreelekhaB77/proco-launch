@@ -87,7 +87,7 @@ $(document)
 										}
 
 									});
-					
+			
 					$('#category').change(function(){
 						category = $(this).val();
 						promoTable.draw();
@@ -319,17 +319,64 @@ $(document)
 							return val.substring(0,5);
 						});
 						//console.log(newBasepacks);
-					//added bharati for sprint-5 US-13 multiselect basepack
+						
+					//Bharati added code for basepack multiselection in sprint-5 US-13
 					for( var i = 0; i <= newBasepacks.length; i++ ){
        
                     $("#promo_basepack").append('<option value="' + newBasepacks[i] + '">' + newBasepacks[i]  + '</option>');
   
                     }
-                      multiSelectionForbasepack();
+   
+	//multiselect dropdown				
+	$('#promo_basepack').multiselect({
+		includeSelectAllOption : true,
+		numberDisplayed : 3,
+	    nonSelectedText : 'SELECT BASEPACK',
+		selectAllText : 'SELECT ALL BASEPACK',
+		
+		  onChange : function(option, checked, select) {
+											 var BasepackSelectedList = [];
+							                    var selectedOptions = $('#promo_basepack option:selected');
+							                    
+							                    var totalLen = $('#promo_basepack option').length;
+
+							                    if (selectedOptions.length > 0 && selectedOptions.length < totalLen){
+													selectAll = false;
+												}else if(selectedOptions.length == totalLen){
+													selectAll = true;
+												}
+							                    
+							                    for (var i = 0; i < selectedOptions.length; i++) {
+							                    	BasepackSelectedList.push(selectedOptions[i].value);
+
+							                    }
+
+							                    if(selectAll == true){
+							                    	basepack = "ALL";
+							                    }else{
+							                    	basepack = BasepackSelectedList.toString();
+							                    }
+							                
+											promoTable.draw();
+										},
+		                                  onSelectAll : function() {
+		                                  basepack = "ALL";
+		                                  promoTable.draw();
+		                                  selectAll = true;
+                                         },
+		                                 onDeselectAll : function() {
+                                         basepack = "ALL";
+		                                 promoTable.draw();
+		                               }
+
+	});
+					
+					
+					//end multiselection bacepack
   
- 
-  //end multiselect code
-						//newBasepacks = categoryNewList;
+  
+						//newBasepacks = categoryNewList; 
+						//basepack single select code
 					/*	$('#promo_basepack').autocomplete({
 									minLength : 0,
 									source : function(request, response) {
@@ -444,39 +491,6 @@ $("#select_all_promo").click(function () {
       $('#disTable tbody input[type="checkbox"]').prop('checked', this.checked);
  });
  
- 
-
- 
-//Bharati added code for basepack multiselection in sprint-5 US-13
-function multiSelectionForbasepack() {
-	$('#promo_basepack').multiselect({
-		includeSelectAllOption : true,
-		numberDisplayed : 3,
-	nonSelectedText : 'SELECT BASEPACK',
-		selectAllText : 'SELECT ALL BASEPACK',
-		onChange : function(option, checked, select) {
-			
-			var selVals = [];
-			var selectedOptions = $('#promo_basepack option:selected');
-			if (selectedOptions.length > 0) {
-				for (var i = 0; i < selectedOptions.length; i++) {
-					selVals.push(selectedOptions[i].value);
-				}
-
-				var strData = selVals.toString();
-
-			}
-
-		},
-		onSelectAll : function() {
-       },
-		onDeselectAll : function() {
-        
-		}
-
-	});
-}
-
 //Bharati added code for sprint-5 US-14 download disaggreated by dp
 
 function DisagreegatedExcelDownload() {
