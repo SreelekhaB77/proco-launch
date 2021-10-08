@@ -496,7 +496,7 @@
 							<th>GEOGRAPHY</th>
 							<th>PLANNED QTY</th>
 							<th>NATIONAL %</th>
-							<th style="width:108px!important">STATUS</th>
+							<th>STATUS</th>
 						</tr>
 					</thead>
 				</table>
