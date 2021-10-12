@@ -197,7 +197,9 @@ public class VolumeUploadController {
 				} else {
 					if (UploadUtil.movefile(file, fileName)) {
 						Map<String, List<Object>> map = ExOM.mapFromExcel(new File(fileName)).to(VolumeUploadBean.class)
-								.map(40, false, null);
+								//Kavitha D chnages for SPRINT 5
+								.map(42, false, null);
+								//.map(40, false, null);
 								//.map(39, false, null);
 						if (map.isEmpty()) {
 							model.addAttribute("FILE_STATUS", "ERROR");
