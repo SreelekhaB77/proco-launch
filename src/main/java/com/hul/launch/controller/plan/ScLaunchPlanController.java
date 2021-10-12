@@ -229,7 +229,7 @@ public class ScLaunchPlanController {
 				} else {
 					if (UploadUtil.movefile(file, fileName)) {
 						Map<String, List<Object>> map = ExOM.mapFromExcel(new File(fileName))
-								.to(LaunchMstnClearance.class).map(14, false, null);
+								.to(LaunchMstnClearance.class).map(15, false, null); // Modified by Harsha for Q5 sprint from 14 to 15
 						if (map.isEmpty()) {
 							throw new Exception("File does not contain data");
 						}

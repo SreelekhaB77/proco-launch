@@ -2055,6 +2055,7 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 		headerDetail.add("MSTN_CLEARED");// position replacement of below in excel added by Harsha
 		headerDetail.add("CURRENT_ESTIMATES");
 		headerDetail.add("CLEARANCE_DATE");
+		headerDetail.add("REMARKS");// Added By harsha to read remarks to excel
 		downloadedData.add(headerDetail);
 		for (LaunchScMstnClearanceResponse launchScMstnClearanceResponse : listOfFinalBuildups) {
 			ArrayList<String> dataObj = new ArrayList<>();
@@ -2069,9 +2070,10 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 			dataObj.add(launchScMstnClearanceResponse.getFinalCldN1());
 			dataObj.add(launchScMstnClearanceResponse.getFinalCldN2());
 			dataObj.add(launchScMstnClearanceResponse.getAccount());
-			dataObj.add(""); // position replacement of below in excel added by Harsha
-			dataObj.add("");
-			dataObj.add("");
+			dataObj.add(launchScMstnClearanceResponse.getMstnCleared()); // position replacement of below in excel added by Harsha
+			dataObj.add(launchScMstnClearanceResponse.getCurrentEstimates());
+			dataObj.add(launchScMstnClearanceResponse.getClearanceDate());
+			dataObj.add(launchScMstnClearanceResponse.getRemarks());
 			downloadedData.add(dataObj);
 		}
 		return downloadedData;

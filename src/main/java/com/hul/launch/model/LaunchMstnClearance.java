@@ -17,6 +17,15 @@ public class LaunchMstnClearance {
 	private String FINAL_CLD_N2;
 	private String CURRENT_ESTIMATES;
 	private String CLEARANCE_DATE;
+	private String REMARKS; // Added by harsha as a part of Q5 fix
+
+	public String getREMARKS() {
+		return REMARKS;
+	}
+
+	public void setREMARKS(String rEMARKS) {
+		REMARKS = rEMARKS;
+	}
 
 	public String getACCOUNT() {
 		return ACCOUNT;

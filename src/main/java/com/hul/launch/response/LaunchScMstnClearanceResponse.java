@@ -16,9 +16,18 @@ public class LaunchScMstnClearanceResponse {
 	private String finalCldN1;
 	private String finalCldN2;
 	private String account;
+	private String remarks; // Added by harsha for Q5
 
 	public String getAccount() {
 		return account;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
 	}
 
 	public void setAccount(String account) {

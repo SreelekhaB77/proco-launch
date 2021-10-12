@@ -281,35 +281,69 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 	public List<LaunchScMstnClearanceResponse> getScMstnClearanceDataDump(List<String> listOfLaunchData) {
 		List<LaunchScMstnClearanceResponse> listOfCompletedLaunch = new ArrayList<>();
 		try {
-			Query query1 = sessionFactory.getCurrentSession().createNativeQuery(
-					//Commented By Sarin & Added Below - sprint5Sep2021
-					/*"SELECT tlm.LAUNCH_NAME,tlm.LAUNCH_MOC,tltfc.BP_NAME,DEPOT,CLUSTER,tltfc.FINAL_CLD_N,tltfc.FINAL_CLD_N1,"
-							+ "tltfc.FINAL_CLD_N2,tlm.LAUNCH_ID, tltfc.MODIFIED_CHAIN FROM TBL_LAUNCH_TEMP_FINAL_CAL tltfc, "
-							+ "TBL_LAUNCH_MASTER tlm WHERE tlm.LAUNCH_ID = tltfc.LAUNCH_ID AND SAMPLE_SHARED IS NOT NULL AND " */
-					//Added By Sarin - sprint5Sep2021
-					"SELECT tlm.LAUNCH_NAME, CASE WHEN TLK.LAUNCH_MOC_KAM IS NULL THEN tlm.LAUNCH_MOC ELSE TLK.LAUNCH_MOC_KAM END AS LAUNCH_MOC,"
-					+ " tltfc.BP_NAME,DEPOT,CLUSTER,tltfc.FINAL_CLD_N,tltfc.FINAL_CLD_N1, tltfc.FINAL_CLD_N2,tlm.LAUNCH_ID, tltfc.MODIFIED_CHAIN "
-					+ " FROM TBL_LAUNCH_TEMP_FINAL_CAL tltfc INNER JOIN TBL_LAUNCH_MASTER tlm ON tlm.LAUNCH_ID = tltfc.LAUNCH_ID "
-					+ " LEFT OUTER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS TLK ON TLK.LAUNCH_ID = tlm.LAUNCH_ID AND TLK.LAUNCH_KAM_ACCOUNT = tltfc.MODIFIED_CHAIN AND TLK.IS_ACTIVE = 1 "
-					+ " WHERE SAMPLE_SHARED IS NOT NULL AND tltfc.LAUNCH_ID IN (:listOfLaunchData)");
-			query1.setParameterList("listOfLaunchData", listOfLaunchData);
-			Iterator<Object> iterator = query1.list().iterator();
-			while (iterator.hasNext()) {
-				Object[] obj = (Object[]) iterator.next();
-				LaunchScMstnClearanceResponse launchScMstnClearanceResponse = new LaunchScMstnClearanceResponse();
-				launchScMstnClearanceResponse.setLaunchName(obj[0].toString());
-				launchScMstnClearanceResponse.setLaunchMoc(obj[1].toString());
-				launchScMstnClearanceResponse.setBasepackCode(obj[2].toString().split(":")[0].trim());
-				launchScMstnClearanceResponse.setBasepackDesc(obj[2].toString().split(":")[1].trim());
-				launchScMstnClearanceResponse.setDepot(obj[3].toString());
-				launchScMstnClearanceResponse.setCluster(obj[4].toString());
-				launchScMstnClearanceResponse.setFinalCldN(obj[5].toString());
-				launchScMstnClearanceResponse.setFinalCldN1(obj[6].toString());
-				launchScMstnClearanceResponse.setFinalCldN2(obj[7].toString());
-				launchScMstnClearanceResponse.setLaunchId(obj[8].toString());
-				launchScMstnClearanceResponse.setAccount(obj[9].toString());
-				listOfCompletedLaunch.add(launchScMstnClearanceResponse);
+			Query query2 = sessionFactory.getCurrentSession() // Added By Harsha for picking values after upload
+					.createNativeQuery("select A.LAUNCH_ID, B.LAUNCH_NAME, " + 
+							" A.LAUNCH_MOC,A.BASEPACK_CODE,A.BASEPACK_DESCRIPTION,A.DEPOT,A.CLUSTER,A.FINAL_CLD_FOR_N, " + 
+							" A.FINAL_CLD_FOR_N1,A.FINAL_CLD_FOR_N2,A.ACCOUNT,A.MSTN_CLEARED,A.CURRENT_ESTIMATES, " + 
+							" A.CLEARANCE_DATE,A.REMARKS from TBL_LAUNCH_MSTN_CLEARANCE A INNER JOIN " + 
+							" TBL_LAUNCH_MASTER B on A.LAUNCH_ID = B.LAUNCH_ID where A.LAUNCH_ID IN (:listOfLaunchData)");
+			query2.setParameterList("listOfLaunchData", listOfLaunchData);
+			List<Object> ifSavedAlready = query2.list();
+			if (ifSavedAlready.isEmpty()) {
+				Query query1 = sessionFactory.getCurrentSession().createNativeQuery(
+						//Commented By Sarin & Added Below - sprint5Sep2021
+						/*"SELECT tlm.LAUNCH_NAME,tlm.LAUNCH_MOC,tltfc.BP_NAME,DEPOT,CLUSTER,tltfc.FINAL_CLD_N,tltfc.FINAL_CLD_N1, "
+								+ "tltfc.FINAL_CLD_N2,tlm.LAUNCH_ID, tltfc.MODIFIED_CHAIN FROM TBL_LAUNCH_TEMP_FINAL_CAL tltfc, "
+								+ "TBL_LAUNCH_MASTER tlm WHERE tlm.LAUNCH_ID = tltfc.LAUNCH_ID AND SAMPLE_SHARED IS NOT NULL AND " */
+						//Added By Sarin - sprint5Sep2021
+						"SELECT tlm.LAUNCH_NAME, CASE WHEN TLK.LAUNCH_MOC_KAM IS NULL THEN tlm.LAUNCH_MOC ELSE TLK.LAUNCH_MOC_KAM END AS LAUNCH_MOC, "
+						+ " tltfc.BP_NAME,DEPOT,CLUSTER,tltfc.FINAL_CLD_N,tltfc.FINAL_CLD_N1, tltfc.FINAL_CLD_N2,tlm.LAUNCH_ID, tltfc.MODIFIED_CHAIN "
+						+ " FROM TBL_LAUNCH_TEMP_FINAL_CAL tltfc INNER JOIN TBL_LAUNCH_MASTER tlm ON tlm.LAUNCH_ID = tltfc.LAUNCH_ID "
+						+ " LEFT OUTER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS TLK ON TLK.LAUNCH_ID = tlm.LAUNCH_ID AND TLK.LAUNCH_KAM_ACCOUNT = tltfc.MODIFIED_CHAIN AND TLK.IS_ACTIVE = 1 "
+						+ " WHERE SAMPLE_SHARED IS NOT NULL AND tltfc.LAUNCH_ID IN (:listOfLaunchData)");
+				query1.setParameterList("listOfLaunchData", listOfLaunchData);
+				Iterator<Object> iterator = query1.list().iterator();
+				while (iterator.hasNext()) {
+					Object[] obj = (Object[]) iterator.next();
+					LaunchScMstnClearanceResponse launchScMstnClearanceResponse = new LaunchScMstnClearanceResponse();
+					launchScMstnClearanceResponse.setLaunchName(obj[0].toString());
+					launchScMstnClearanceResponse.setLaunchMoc(obj[1].toString());
+					launchScMstnClearanceResponse.setBasepackCode(obj[2].toString().split(":")[0].trim());
+					launchScMstnClearanceResponse.setBasepackDesc(obj[2].toString().split(":")[1].trim());
+					launchScMstnClearanceResponse.setDepot(obj[3].toString());
+					launchScMstnClearanceResponse.setCluster(obj[4].toString());
+					launchScMstnClearanceResponse.setFinalCldN(obj[5].toString());
+					launchScMstnClearanceResponse.setFinalCldN1(obj[6].toString());
+					launchScMstnClearanceResponse.setFinalCldN2(obj[7].toString());
+					launchScMstnClearanceResponse.setLaunchId(obj[8].toString());
+					launchScMstnClearanceResponse.setAccount(obj[9].toString());
+					listOfCompletedLaunch.add(launchScMstnClearanceResponse);
+				}
+			} else { // Else part was added by Harsha to print uploaded values to excel
+				Iterator<Object> iterator = ifSavedAlready.iterator();
+				while (iterator.hasNext()) {
+					Object[] obj = (Object[]) iterator.next();
+					LaunchDataResponse specificLaunchData = launchDao.getSpecificLaunchData(obj[1].toString());
+					LaunchScMstnClearanceResponse launchScMstnClearanceResponse = new LaunchScMstnClearanceResponse();
+					launchScMstnClearanceResponse.setLaunchName(obj[1].toString());
+					launchScMstnClearanceResponse.setLaunchMoc(obj[2].toString());
+					launchScMstnClearanceResponse.setBasepackCode(obj[3].toString());
+					launchScMstnClearanceResponse.setBasepackDesc(obj[4].toString());
+					launchScMstnClearanceResponse.setDepot(obj[5].toString());
+					launchScMstnClearanceResponse.setCluster(obj[6].toString());
+					launchScMstnClearanceResponse.setMstnCleared(obj[11].toString());
+					launchScMstnClearanceResponse.setFinalCldN(obj[7].toString());
+					launchScMstnClearanceResponse.setFinalCldN1(obj[8].toString());
+					launchScMstnClearanceResponse.setFinalCldN2(obj[9].toString());
+					launchScMstnClearanceResponse.setCurrentEstimates(obj[12].toString());
+					launchScMstnClearanceResponse.setClearanceDate(obj[13].toString());
+					launchScMstnClearanceResponse.setLaunchId(obj[0].toString());
+					launchScMstnClearanceResponse.setAccount(obj[10].toString());
+					launchScMstnClearanceResponse.setRemarks(obj[14].toString());
+					listOfCompletedLaunch.add(launchScMstnClearanceResponse);
+				}
 			}
+
 			return listOfCompletedLaunch;
 		} catch (Exception ex) {
 			logger.debug("Exception :", ex);
@@ -394,6 +428,7 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 	public String getEstimates(String mSTNCleareance, String finalCldn, String currentEstimates) {
 		double finalCldvalue = Double.parseDouble(finalCldn);
 		double currentEstimate;
+		mSTNCleareance = mSTNCleareance.toLowerCase();
 		if(currentEstimates == null || currentEstimates.isEmpty()) {
 			currentEstimate = 0;
 		}
@@ -401,15 +436,15 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 			currentEstimate = Double.parseDouble(currentEstimates);
 		}
 		
-		if((!mSTNCleareance.isEmpty() && mSTNCleareance.contains("Y")) &&
-				(currentEstimate > 0.000 && (currentEstimate*100)/finalCldvalue > 80.0)) {
+		if((!mSTNCleareance.isEmpty() && (mSTNCleareance.equals("y") || mSTNCleareance.equals("yes"))) &&
+				(currentEstimate > 0.000 && (currentEstimate*100)/finalCldvalue >= 80.0)) {
 			return "MSTN Cleared";
 		}
-		else if((!mSTNCleareance.isEmpty() && mSTNCleareance.contains("Y")) && 
+		else if((!mSTNCleareance.isEmpty() && (mSTNCleareance.equals("y") || mSTNCleareance.equals("yes"))) && 
 				(currentEstimate > 0.000 && (currentEstimate*100)/finalCldvalue < 80.0)) {
 			return "Estimate Insufficient";
 		}
-		else if (mSTNCleareance.contains("N")) {
+		else if (mSTNCleareance.contains("n") || mSTNCleareance.equals("no")) {
 			return "MSTN Not Cleared";
 		}
 		
@@ -441,8 +476,8 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 			requestMstnClearance.setCurrentEstimates(obj.getCURRENT_ESTIMATES());
 			requestMstnClearance.setClearanceDate(obj.getCLEARANCE_DATE());
 			requestMstnClearance.setAccount(obj.getACCOUNT());
-			requestMstnClearance.setMstnCleared(obj.getMSTN_CLEARED());
-			// Added by Harsha for remarks
+			requestMstnClearance.setMstnCleared(obj.getMSTN_CLEARED().toUpperCase());
+			requestMstnClearance.setRemarks(obj.getREMARKS());
 			requestMstnClearance.setRemarks(getEstimates(obj.getMSTN_CLEARED(), obj.getFINAL_CLD_N(),obj.getCURRENT_ESTIMATES()));
 			listOfRequestMstnClearance.add(requestMstnClearance);
 		}
