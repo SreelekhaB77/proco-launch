@@ -1545,7 +1545,8 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 								+ launchSellIn.getL1_CHAIN() + "' AND UPPER(CURRENT_STORE_FORMAT) = '"
 								+ launchSellIn.getSTORE_FORMAT()
 								+ "' AND FINAL_CLUSTER IN(:liClusterName) AND LAUNCH_FORMAT IN(" + launchClassification
-								+ ") AND UPPER(KAM_MAIL_ID) = '" + upperKam + "'");
+								//+ ") AND UPPER(KAM_MAIL_ID) = '" + upperKam + "'");     //Commented & Added below By Sarin 13Oct2021
+								+ ") AND UPPER(KAM_MAIL_ID) LIKE '%" + upperKam + "%'");  //Added By Sarin 13Oct2021
 				//+ " UPPER(CURRENT_STORE_FORMAT) hul_Store_format,UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) CUSTOMER_STORE_FORMAT, ACCOUNT_NAME || CUSTOMER_STORE_FORMAT "
 				query.setParameterList("liClusterName", liClusterName);
 			} else {
@@ -1558,7 +1559,8 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 								+ " WHERE ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME = '" + launchSellIn.getL2_CHAIN() + "' AND DP_CHAIN = '"
 								+ launchSellIn.getL1_CHAIN() + "' AND UPPER(CURRENT_STORE_FORMAT) = '"
 								+ launchSellIn.getSTORE_FORMAT() + "' AND LAUNCH_FORMAT IN(" + launchClassification
-								+ ") AND UPPER(KAM_MAIL_ID) = '" + upperKam + "'");
+								//+ ") AND UPPER(KAM_MAIL_ID) = '" + upperKam + "'");     //Commented & Added below By Sarin 13Oct2021
+								+ ") AND UPPER(KAM_MAIL_ID) LIKE '%" + upperKam + "%'");  //Added By Sarin 13Oct2021
 				//+ " UPPER(CURRENT_STORE_FORMAT) hul_Store_format,UPPER(REPLACE(CUSTOMER_STORE_FORMAT, '  ', ' ')) CUSTOMER_STORE_FORMAT, ACCOUNT_NAME || CUSTOMER_STORE_FORMAT "
 			}
 
