@@ -1007,7 +1007,7 @@ public class LaunchDaoImpl implements LaunchDao {
 	public List<String> getKamRejectedLaunchAccounts(String launchId) {
 		List<String> lstKamRejectedAccounts = new ArrayList<String>();
 		try {
-			Query qryKamRejectAccts = sessionFactory.getCurrentSession().createNativeQuery("SELECT DISTINCT CONCAT(OM.ACCOUNT_NAME , ':' , OM.DP_CHAIN) AS ACCOUNTCHAIN FROM TBL_VAT_COMM_OUTLET_MASTER OM INNER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS KM ON KM.LAUNCH_KAM_ACCOUNT = OM.ACCOUNT_NAME INNER JOIN TBL_LAUNCH_REQUEST RE ON RE.LAUNCH_ID = KM.LAUNCH_ID AND RE.FINAL_STATUS = 'APPROVED' WHERE KM.IS_ACTIVE = 2 AND KM.LAUNCH_ID = '" + launchId + "' ");
+			Query qryKamRejectAccts = sessionFactory.getCurrentSession().createNativeQuery("SELECT DISTINCT CONCAT(OM.ACCOUNT_NAME , ':' , OM.DP_CHAIN) AS ACCOUNTCHAIN FROM TBL_VAT_COMM_OUTLET_MASTER OM INNER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS KM ON KM.LAUNCH_KAM_ACCOUNT = OM.ACCOUNT_NAME INNER JOIN TBL_LAUNCH_REQUEST RE ON RE.LAUNCH_ID = KM.LAUNCH_ID AND RE.REQ_ID = KM.REQ_ID AND RE.FINAL_STATUS = 'APPROVED' WHERE KM.IS_ACTIVE = 2 AND KM.LAUNCH_ID = '" + launchId + "' ");
 			lstKamRejectedAccounts =  qryKamRejectAccts.list();
 		} catch (Exception e) {
 			e.printStackTrace();
