@@ -141,6 +141,7 @@ public class DisaggregationDAOImpl implements DisaggregationDAO {
 		List<DisaggregationBean> promoList = new ArrayList<>();
 		List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
 		List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
+		List<String> lstbasepack = new ArrayList<String>(Arrays.asList(basepack.split(",")));  //Added By Sarin sprint5-sep2021		
 		String promoQuery = "";
 		try {
 			//kiran - changes from ROWNUMBER() to ROW_NUMBER()
@@ -164,9 +165,30 @@ public class DisaggregationDAOImpl implements DisaggregationDAO {
 			if (!brand.equalsIgnoreCase("All")) {
 				promoQuery += "AND B.BRAND = '" + brand + "' ";
 			}
-			if (!basepack.equalsIgnoreCase("All")) {
+			
+			//Commented By Sarin sprint5-sep2021
+			/* if (!basepack.equalsIgnoreCase("All")) {
 				promoQuery += "AND A.P1_BASEPACK = '" + basepack + "' ";
+			} */
+			
+			//Added By Sarin sprint5-sep2021 - starts
+			if (!basepack.equalsIgnoreCase("All")) {
+				if (lstbasepack.size() == 1) {
+					promoQuery += "AND (A.P1_BASEPACK = '" + lstbasepack.get(0) + "' )";
+				} else if (lstbasepack.size() > 1) {
+					for (int i = 0; i < lstbasepack.size(); i++) {
+						if (i == 0) {
+							promoQuery += "AND (A.P1_BASEPACK = '" + lstbasepack.get(i) + "' ";
+						} else if (i < lstbasepack.size() - 1) {
+							promoQuery += "OR A.P1_BASEPACK = '" + lstbasepack.get(i) + "' ";
+						} else {
+							promoQuery += "OR A.P1_BASEPACK = '" + lstbasepack.get(i) + "') ";
+						}
+					}
+				}
 			}
+			//Added By Sarin sprint5-sep2021 - ends
+			
 			if (!custChainL1.equalsIgnoreCase("All")) {
 				if (custL1.size() == 1) {
 					promoQuery += "AND (A.CUSTOMER_CHAIN_L1 = '" + custL1.get(0) + "' )";
