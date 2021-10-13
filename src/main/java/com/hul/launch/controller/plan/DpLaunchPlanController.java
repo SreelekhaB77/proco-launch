@@ -39,6 +39,7 @@ import com.hul.launch.service.LaunchServiceDp;
 import com.hul.launch.web.util.CommonUtils;
 import com.hul.launch.web.util.FilePaths;
 import com.hul.launch.web.util.UploadUtil;
+import com.hul.proco.controller.promocr.PromoCrService;
 
 /**
  * 
@@ -55,11 +56,19 @@ public class DpLaunchPlanController {
 	
 	@Autowired
 	public LaunchFinalService launchFinalPlanService;
+	
+	@Autowired
+	private PromoCrService promoCrService;
 
 	@RequestMapping(value = "getAllCompletedLaunchDataDp.htm", method = RequestMethod.GET)
 	public ModelAndView getAllCompletedLaunchData(HttpServletRequest request, Model model) {
 		List<LaunchDataResponse> listOfLaunch = new ArrayList<>();
 		try {
+			//Harsha's implementation for logintool
+			String id=(String)request.getSession().getAttribute("UserID");
+			String role=(String)request.getSession().getAttribute("roleId");
+			promoCrService.insertToportalUsage(id, role, "LAUNCH");
+			//Harsha's Logic End's here 
 			listOfLaunch = launchServiceDp.getAllCompletedLaunchData();
 			if (null != listOfLaunch.get(0).getError()) {
 				throw new Exception(listOfLaunch.get(0).getError());
@@ -128,7 +137,11 @@ public class DpLaunchPlanController {
 		String downloadFileName = absoluteFilePath + fileName;
 		String userId = (String) request.getSession().getAttribute("UserID");
 		String[] launchIds = launchId.split(",");
-		List<ArrayList<String>> listDownload = launchFinalPlanService.getFinalBuildUpDumpNew(userId, launchIds);
+		String[] launchMoc =null;
+		
+		
+		List<ArrayList<String>> listDownload = launchFinalPlanService.getFinalBuildUpDumpNew(userId, launchIds,launchMoc);
+		
 		try {
 			if (listDownload != null) {
 				UploadUtil.writeXLSFile(downloadFileName, listDownload, null, ".xls");
@@ -150,5 +163,43 @@ public class DpLaunchPlanController {
 		map.put("FileToDownload", fileName);
 		return gson.toJson(map);
 	}
+	// Added by harsha for excel download
+	@RequestMapping(value = "{promoId}/downloadDisaggregatedByDP.htm", method = RequestMethod.GET)
+	public @ResponseBody String downloadDisaggregatedByDP(@PathVariable("promoId") String promoId, Model model,
+			HttpServletRequest request, HttpServletResponse response) {
+		String absoluteFilePath = "";
+		InputStream is;
+		String downloadLink = "";
+		Gson gson = new Gson();
+		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
+		String fileName = UploadUtil.getFileName("DisaggregatedBYDP.Template.file", "",
+				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
+		String downloadFileName = absoluteFilePath + fileName;
+		String userId = (String) request.getSession().getAttribute("UserID");
+		String[] promoIds = promoId.split(",");
+		
+		List<ArrayList<String>> listDownload = launchFinalPlanService.getDisaggregatedByDp(promoIds);
+		try {
+			if (listDownload != null) {
+				UploadUtil.writeXLSFile(downloadFileName, listDownload, null, ".xls");
+				downloadLink = downloadFileName + ".xls";
+				is = new FileInputStream(new File(downloadLink));
+				response.setContentType("application/force-download");
+				response.setHeader("Content-Disposition", "attachment; filename=DisaggregatedBYDPTemplate"
+						+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+				IOUtils.copy(is, response.getOutputStream());
+				response.flushBuffer();
+			}
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
+			Map<String, String> map = new HashMap<>();
+			map.put("Error", e.toString());
+			return gson.toJson(map);
+		}
+		Map<String, String> map = new HashMap<>();
+		map.put("FileToDownload", fileName);
+		return gson.toJson(map);
+	}
+
 
 }

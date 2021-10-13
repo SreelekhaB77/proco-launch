@@ -66,6 +66,9 @@ public class VolumeUploadServiceImpl implements VolumeUploadService {
 		headerList.add("Geography");
 		headerList.add("UOM");
 		headerList.add("Quantity");
+		//Kavitha D Sprint5 changes-added new columns
+		headerList.add("Actual_Geography");
+		headerList.add("Status");
 		return headerList;
 	}
 

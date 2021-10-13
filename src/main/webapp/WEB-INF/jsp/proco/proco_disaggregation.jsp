@@ -112,7 +112,7 @@
 	<!-- Main jumbotron for a primary marketing message or call to action -->
 	<div class="container-fluid container-bg middle-section">
 		<c:if test="${success!=null}">
-			<div class="alert succ-alert-success sucess-msg" id="successblock"
+			<div class="alert alert-success sucess-msg" id="successblock"
 				style="display: block;margin-top:35px;">
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${success}"></c:out>
@@ -182,13 +182,17 @@
 									<label for="unique-id" class="control-label col-md-4">BASEPACK
 										CODE</label>
 									<div class="col-md-8">
-										<input type="text" class="form-control" value=""
-											id="promo_basepack" placeholder="ALL PRODUCTS">
+										<!--<input type="text" class="form-control" value=""
+											multiple="multiple" id="promo_basepack" placeholder="ALL PRODUCTS">-->
+											<select class="form-control" id="promo_basepack"
+											multiple="multiple">
+											
+										</select>
 									</div>
 
 								</div>
 							</div>
-							<!--     <div class="col-md-3">
+							<!--  <div class="col-md-3">
                              <div class="form-group">
                <label for="unique-id" class="control-label col-md-4">BASEPACK DESC</label>
                <div class="col-md-8">
@@ -452,6 +456,11 @@
 								<button class="btn btn-primary" id="disaggregateBtn"
 									disabled="disabled">DISAGGREGATE</button>
 									<input class="btn btn-primary" id="addDepot"  data-toggle="modal" data-target="#add-depot" type="button" value="ADD DEPOT" onClick="javascript: getBranch();">
+							<input class="btn btn-primary" style="margin-top: 8px;margin-right: 130px;" id="SubmitKamBtn"
+									disabled="disabled" type="button" value="SUBMIT TO KAM"  onClick="javascript:promosSubmitToKam();">
+									<input class="btn btn-primary" style="margin-top: -33px;" id="dpDownload"
+									disabled="disabled"  type="button" value="DP DOWNLOAD" onClick="javascript:DisagreegatedExcelDownload();">
+									
 							</div>
 						</div>
 					</div>
@@ -459,14 +468,16 @@
 					<div class="clearfix"></div>
 
 				</div>
+				
 
 				<table
 					class="table table-striped table-bordered promo-list-table" id="disTable"
-					cellspacing="0" style="width: 100%;overflow-x: scroll;display: block;">
+					cellspacing="0" style="width: 1975px!important;overflow-x: hidden;display: block;">
 					<thead>
 						<tr>
 							<th>
-								<!-- <input type="checkbox" class="promo_id_all" name="checkAll" id="all_promo" value=""> -->
+							<!--sprint 5 select all changes for disaggration tab by bharati-->
+								<input type="checkbox" id="select_all_promo" class="promo_id_all" name="checkAll" value="" /> 
 							</th>
 							<th>UNIQUE ID</th>
 							<th>MOC</th>
@@ -489,6 +500,7 @@
 						</tr>
 					</thead>
 				</table>
+							
 			</div>
 		</form>
 		<!-- <div class="dis-aggre" style="margin-top:15px;"><textarea class="form-control" rows="4" placeholder="DISAGGREGATION:"></textarea></div> -->
@@ -546,6 +558,7 @@
 					</form>
 			</div>
 		</div>
+		
 		<div class="modal-footer">
 			<button type="button" class="btn btn-default chnage-close pull-left"
 				data-dismiss="modal" >CLOSE</button>
@@ -565,20 +578,26 @@
 	<script type="text/javascript" src="assets/js/jquery-1.11.3.min.js"></script>
 
 	<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="assets/js/jquery-ui.js"></script>
-	<script type="text/javascript"
-		src="assets/js/jquery.dataTables.min.js"></script>
-	<script src="assets/js/dataTables.bootstrap.min.js"></script>
 	<script type="text/javascript" src="assets/js/comboTreePlugin.js"></script>
+	<script type="text/javascript" src="assets/js/bootstrapValidator.js"></script>
+	<script type="text/javascript" src="assets/js/jquery-ui.js"></script>
+	<script type="text/javascript" src="assets/js/bootstrap-multiselect.js"></script>
+	<script type="text/javascript" src="assets/js/custom/proco/promoDisaggregation.js"></script>
+	<script type="text/javascript" src="assets/js/custom/proco/addDepot.js"></script>
+	<script type="text/javascript" src="assets/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="assets/js/dataTables.bootstrap.min.js"></script>
 
-	<script type="text/javascript"
-		src="assets/js/bootstrap-multiselect.js"></script>
-	<script type="text/javascript"
-		src="assets/js/custom/proco/promoDisaggregation.js"></script>
-<script type="text/javascript" src="assets/js/bootstrapValidator.js"></script>
-<script type="text/javascript"
-	src="assets/js/custom/proco/addDepot.js"></script>
+
 	<script type="text/javascript">
+	//bharati changes for submit to kam btn enable in sprint-5
+	var KamsubmitEnable = '${countofdisaggregation}';
+	//console.log(KamsubmitEnable);
+	if(KamsubmitEnable > 0){
+	  document.getElementById("SubmitKamBtn").disabled = false;
+	  }else{
+	  document.getElementById("SubmitKamBtn").disabled = true;
+	  }
+	  //end bharati changes
 	
 		var moc = '${mocJson}';
 		var basepacks = '${basepacks}';
@@ -629,5 +648,6 @@
 			});
 		});
 	</script>
+	
 </body>
 </html>

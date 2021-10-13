@@ -24,6 +24,7 @@ import com.hul.launch.dao.LaunchDaoCoe;
 import com.hul.launch.dao.LaunchDaoSc;
 import com.hul.launch.dao.LaunchFinalDao;
 import com.hul.launch.dao.LaunchSellInDao;
+import com.hul.launch.model.Disaggregate;
 import com.hul.launch.model.LaunchBuildUpTemp;
 import com.hul.launch.model.LaunchBuildUpTempCal;
 import com.hul.launch.model.LaunchFinalCalVO;
@@ -502,6 +503,49 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 		}
 		return downloadedData;
 	}
+	
+	
+	// Added By Harsha for getting disaggregated BY DP
+	@Override
+	public List<ArrayList<String>> getDisaggregatedByDp(String[] promoId) {
+		List<ArrayList<String>> downloadedData = new ArrayList<>();
+		List<Disaggregate> listOfFinalBuildups = getDisaggregatedFinalBuildUpTempDataNew(promoId);
+		ArrayList<String> headerDetail = new ArrayList<>();
+		headerDetail.add("PROMO_ID");
+		headerDetail.add("Geography");
+		headerDetail.add("BasePack");
+		headerDetail.add("Customer");
+		headerDetail.add("DP Per Split");
+		headerDetail.add("DP Qty Split");
+		headerDetail.add("Depot");
+		headerDetail.add("Branch");
+		headerDetail.add("Cluster");
+		headerDetail.add("Depot Per");
+		headerDetail.add("Depot Qty");
+		headerDetail.add("KAM Split");
+		headerDetail.add("Sales Category");
+		downloadedData.add(headerDetail);
+		for (Disaggregate launchBuildUpTemp : listOfFinalBuildups) {
+			ArrayList<String> dataObj = new ArrayList<>();
+			dataObj.add(launchBuildUpTemp.getPromo_Id());
+			dataObj.add(launchBuildUpTemp.getGeography());
+			dataObj.add(launchBuildUpTemp.getBasePack());
+			dataObj.add(launchBuildUpTemp.getCustomer());
+			dataObj.add(launchBuildUpTemp.getDp_Per_Split());
+			dataObj.add(launchBuildUpTemp.getdP_Qty_Split());
+			dataObj.add(launchBuildUpTemp.getDepot());
+			dataObj.add(launchBuildUpTemp.getBranch());
+			dataObj.add(launchBuildUpTemp.getCluster());
+			dataObj.add(launchBuildUpTemp.getDepot_Per());
+			dataObj.add(launchBuildUpTemp.getDepot_Qty());
+			dataObj.add(launchBuildUpTemp.getKam_Split());
+			dataObj.add(launchBuildUpTemp.getSales_category());
+			downloadedData.add(dataObj);
+		}
+		
+		return downloadedData;
+	}
+
 
 	@SuppressWarnings("unchecked")
 	public List<LaunchBuildUpTemp> getFinalBuildUpTempData(String launchId) {
@@ -645,27 +689,43 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 		}
 		return liReturn;
 	}
+	
+	
 
 	@SuppressWarnings("unchecked")
-	public List<LaunchBuildUpTempCal> getFinalBuildUpTempDataNew(String[] launchId) {
+	public List<LaunchBuildUpTempCal> getFinalBuildUpTempDataNew(String[] launchId, String[] launchMoc) {
 		List<LaunchBuildUpTempCal> liReturn = new ArrayList<>();
 		List<String> launchIdList = Arrays.asList(launchId);
+		List<String> launchMocList;
+		if(launchMoc!=null) {
+			launchMocList = Arrays.asList(launchMoc);
+		}
+		else {
+			launchMocList =null;
+		}
+		
+		String sBuildupQry = "";
 		try {
 			Session session = sessionFactory.getCurrentSession();
-			Query query = session.createNativeQuery(
-					//Sarin Changes - Commented Q1Sprint Feb2021 and Added below
-					/*
-					"SELECT DEPOT, BP_NAME, FMCG_CSP_CODE, MODIFIED_CHAIN, CLUSTER,FINAL_CLD_N,FINAL_CLD_N1,FINAL_CLD_N2,"
-							+ "FINAL_UNITS_N,FINAL_UNITS_N1,FINAL_UNITS_N2,FINAL_VALUE_N,FINAL_VALUE_N1,FINAL_VALUE_N2,"
-							+ "tlm.LAUNCH_NAME, tlm.LAUNCH_MOC, tlm.LAUNCH_ID FROM TBL_LAUNCH_TEMP_FINAL_CAL tltfc, TBL_LAUNCH_MASTER tlm WHERE tlm.LAUNCH_ID"
-							+ " IN (:launchId) AND tltfc.LAUNCH_ID = tlm.LAUNCH_ID" */
-					"SELECT DEPOT, BP_NAME, FMCG_CSP_CODE, MODIFIED_CHAIN, CLUSTER,FINAL_CLD_N,FINAL_CLD_N1,FINAL_CLD_N2,"
+			
+			Query query = null;
+			sBuildupQry = " select * from ( SELECT DEPOT, BP_NAME, FMCG_CSP_CODE, MODIFIED_CHAIN, CLUSTER,FINAL_CLD_N,FINAL_CLD_N1,FINAL_CLD_N2,"
 					+ " FINAL_UNITS_N,FINAL_UNITS_N1,FINAL_UNITS_N2,FINAL_VALUE_N,FINAL_VALUE_N1,FINAL_VALUE_N2,"
 					+ " tlm.LAUNCH_NAME, CASE WHEN TLK.LAUNCH_MOC_KAM IS NULL THEN tlm.LAUNCH_MOC ELSE TLK.LAUNCH_MOC_KAM END AS LAUNCH_MOC, tlm.LAUNCH_ID FROM TBL_LAUNCH_TEMP_FINAL_CAL tltfc"
 					+ " INNER JOIN TBL_LAUNCH_MASTER tlm ON tltfc.LAUNCH_ID = tlm.LAUNCH_ID"
 					+ " LEFT OUTER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS TLK ON TLK.LAUNCH_ID = tlm.LAUNCH_ID AND TLK.LAUNCH_KAM_ACCOUNT = tltfc.MODIFIED_CHAIN AND TLK.IS_ACTIVE = 1"
-					+ " WHERE tlm.LAUNCH_ID IN (:launchId)");
+					+ " WHERE tlm.LAUNCH_ID IN (:launchId) ) L ";
+			if(launchMoc!=null) {
+				sBuildupQry = sBuildupQry + " where LAUNCH_MOC IN (:launchMoc)";
+				query = session.createNativeQuery(sBuildupQry);
+				query.setParameterList("launchId", launchIdList);
+				query.setParameterList("launchMoc", launchMocList);
+			}
+			else {
+			query = session.createNativeQuery(sBuildupQry);
 			query.setParameterList("launchId", launchIdList);
+			}
+			
 			Iterator<Object> itr = query.list().iterator();
 			int[] temp = { 1 };
 			while (itr.hasNext()) {
@@ -691,9 +751,9 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 						"SELECT DISTINCT LOWER(KAM_MAIL_ID) FROM TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE ACCOUNT_NAME = :accountName");
 				query1.setParameter("accountName", (String) obj[3]);
 				List<String> kamId = query1.list();
-				String launchMoc = null;
+				String launchMoc1 = null;
 				if (kamId.isEmpty()) {
-					launchMoc = (String) obj[15];
+					launchMoc1 = (String) obj[15];
 				} else {
 					String accountName = kamId.get(0).split("@")[0];
 					Query query2 = session.createNativeQuery(
@@ -702,13 +762,13 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 					query2.setParameter("launchId", Integer.toString((Integer) obj[16]));
 					List<String> rejectedMoc = query2.list();
 					if (rejectedMoc.isEmpty()) {
-						launchMoc = (String) obj[15];
+						launchMoc1 = (String) obj[15];
 					} else {
-						launchMoc = query2.list().get(0).toString();
+						launchMoc1 = query2.list().get(0).toString();
 					}
 				}
 
-				launchBuildUpTempCal.setLAUNCH_MOC(launchMoc);
+				launchBuildUpTempCal.setLAUNCH_MOC(launchMoc1);
 				launchBuildUpTempCal.setLAUNCH_ID(Integer.toString((Integer) obj[16]));
 				liReturn.add(launchBuildUpTempCal);
 				temp[0]++;
@@ -721,6 +781,63 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 		}
 		return liReturn;
 	}
+	
+	
+	// Added By harsha for getting disaggregated by dp 
+	
+	@SuppressWarnings("unchecked")
+	public List<Disaggregate> getDisaggregatedFinalBuildUpTempDataNew(String[] promoId) {
+		List<Disaggregate> liReturn = new ArrayList<>();
+		List<String> promoIdList = Arrays.asList(promoId);
+		
+		String sBuildupQry = "";
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			
+			Query query = null;
+			for(int i=0; i<promoId.length;i++) {
+				
+			sBuildupQry = " SELECT DISTINCT A.PROMO_ID,B.GEOGRAPHY,A.BASEPACK,B.CUSTOMER_CHAIN_L1,A.DEPOT,C.BRANCH,C.CLUSTER, " + 
+					" CAST(A.PERCENTAGE AS DECIMAL(5,2)), A.QUANTITY, CASE WHEN A.KAM_SPLIT_STATUS = 0 THEN A.QUANTITY ELSE A.KAM_SPLIT END AS KAM_SPLIT , D.CATEGORY " + 
+					" from TBL_PROCO_PROMOTION_DISAGGREGATION_DEPOT_LEVEL AS A INNER JOIN TBL_PROCO_PROMOTION_MASTER AS B ON A.PROMO_ID = B.PROMO_ID AND " + 
+					" A.BASEPACK = B.P1_BASEPACK INNER JOIN TBL_PROCO_CUSTOMER_MASTER AS C ON A.DEPOT = C.DEPOT AND B.CUSTOMER_CHAIN_L1 = C.CUSTOMER_CHAIN_L1 AND " + 
+					" C.BRANCH=A.BRANCH AND C.CLUSTER=A.CLUSTER INNER JOIN TBL_PROCO_PRODUCT_MASTER AS D ON A.BASEPACK = D.BASEPACK" + 
+					" WHERE B.ACTIVE = 1 AND B.STATUS IN (4,14,24,34,37) AND A.PROMO_ID IN (:launchId) ";
+				query = session.createNativeQuery(sBuildupQry);
+				query.setParameter("launchId",promoId[i]);
+				//query.setParameterList("launchId", promoIdList);
+			Iterator<Object> itr = query.list().iterator();
+			int[] temp = { 1 };
+			while (itr.hasNext()) {
+				Object[] obj = (Object[]) itr.next();
+				Disaggregate disaggregate = new Disaggregate();
+				disaggregate.setPromo_Id((String) obj[0]);
+				disaggregate.setGeography((String) obj[1]);
+				disaggregate.setBasePack((String) obj[2]);
+				disaggregate.setCustomer((String) obj[3]);
+				disaggregate.setDepot((String) obj[4]);
+				disaggregate.setBranch((String) obj[5]);
+				disaggregate.setCluster((String) obj[6]);
+				String obc= obj[7].toString();
+				disaggregate.setDepot_Per(obc);
+				disaggregate.setDepot_Qty((String) obj[8]);
+				disaggregate.setKam_Split((String) obj[9]);
+				disaggregate.setSales_category((String) obj[10]);
+
+				liReturn.add(disaggregate);
+				temp[0]++;
+			}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			Disaggregate disaggregate = new Disaggregate();
+			liReturn.add(disaggregate);
+		}
+		return liReturn;
+	}
+
+	
+	
 
 	@Override
 	public LaunchBuildUpTemp getFinalBuildUpDepoLevel(String depoCombo, String launchId) {
@@ -1351,7 +1468,8 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 	@Override
 	public List<ArrayList<String>> getFinalBuildUpDump(String userId, String[] launchId) {
 		List<ArrayList<String>> downloadedData = new ArrayList<>();
-		List<LaunchBuildUpTempCal> listOfLaunchBuildUpTempCal = getFinalBuildUpTempDataNew(launchId);
+		String[] launchMoc = null;
+		List<LaunchBuildUpTempCal> listOfLaunchBuildUpTempCal = getFinalBuildUpTempDataNew(launchId,launchMoc);
 		ArrayList<String> headerDetail = new ArrayList<>();
 		headerDetail.add("LAUNCH NAME");
 		headerDetail.add("DEPOT");
@@ -1606,11 +1724,13 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 			}
 		}
 	}
+	
+	
 
 	@Override
-	public List<ArrayList<String>> getFinalBuildUpDumptNew(String userId, String[] launchId) {
+	public List<ArrayList<String>> getFinalBuildUpDumptNew(String userId, String[] launchId,String[] launchMoc) {
 		List<ArrayList<String>> downloadedData = new ArrayList<>();
-		List<LaunchBuildUpTempCal> listOfFinalBuildups = getFinalBuildUpTempDataNew(launchId);
+		List<LaunchBuildUpTempCal> listOfFinalBuildups = getFinalBuildUpTempDataNew(launchId,launchMoc);
 		ArrayList<String> headerDetail = new ArrayList<>();
 		headerDetail.add("LAUNCH_ID");
 		headerDetail.add("LAUNCH_NAME");
@@ -1798,11 +1918,11 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	//Added By Sarin - Sprint4Aug21 - for Launch Account wise Rejection
-	public List<String> getKamAccount(String userId, String LaunchId) {  
+	public List<String> getKamAccount(String userId, String LaunchId, String launchRequestId) {  
 		List<String> listOfAccounts = null;
 		try {
 			Query query3 = sessionFactory.getCurrentSession().createNativeQuery(
-					"SELECT DISTINCT LAUNCH_KAM_ACCOUNT AS ACCOUNT_NAME FROM TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS WHERE IS_ACTIVE = 2 AND LAUNCH_ID = " + LaunchId + " AND UPDATED_BY = '" + userId + "'");
+					"SELECT DISTINCT LAUNCH_KAM_ACCOUNT AS ACCOUNT_NAME FROM TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS WHERE IS_ACTIVE = 2 AND LAUNCH_ID = " + LaunchId + " AND REQ_ID = " + launchRequestId + " AND UPDATED_BY = '" + userId + "'");
 			listOfAccounts = query3.list();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1928,13 +2048,14 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 		headerDetail.add("BASEPACK_DESCRIPTION");
 		headerDetail.add("DEPOT");
 		headerDetail.add("CLUSTER");
-		headerDetail.add("MSTN_CLEARED");
 		headerDetail.add("FINAL_CLD_N");
 		headerDetail.add("FINAL_CLD_N1");
 		headerDetail.add("FINAL_CLD_N2");
 		headerDetail.add("ACCOUNT");
+		headerDetail.add("MSTN_CLEARED");// position replacement of below in excel added by Harsha
 		headerDetail.add("CURRENT_ESTIMATES");
 		headerDetail.add("CLEARANCE_DATE");
+		headerDetail.add("REMARKS");// Added By harsha to read remarks to excel
 		downloadedData.add(headerDetail);
 		for (LaunchScMstnClearanceResponse launchScMstnClearanceResponse : listOfFinalBuildups) {
 			ArrayList<String> dataObj = new ArrayList<>();
@@ -1945,13 +2066,14 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 			dataObj.add(launchScMstnClearanceResponse.getBasepackDesc());
 			dataObj.add(launchScMstnClearanceResponse.getDepot());
 			dataObj.add(launchScMstnClearanceResponse.getCluster());
-			dataObj.add("");
 			dataObj.add(launchScMstnClearanceResponse.getFinalCldN());
 			dataObj.add(launchScMstnClearanceResponse.getFinalCldN1());
 			dataObj.add(launchScMstnClearanceResponse.getFinalCldN2());
 			dataObj.add(launchScMstnClearanceResponse.getAccount());
-			dataObj.add("");
-			dataObj.add("");
+			dataObj.add(launchScMstnClearanceResponse.getMstnCleared()); // position replacement of below in excel added by Harsha
+			dataObj.add(launchScMstnClearanceResponse.getCurrentEstimates());
+			dataObj.add(launchScMstnClearanceResponse.getClearanceDate());
+			dataObj.add(launchScMstnClearanceResponse.getRemarks());
 			downloadedData.add(dataObj);
 		}
 		return downloadedData;
@@ -1971,12 +2093,13 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 		headerDetail.add("ACCOUNT");
 		headerDetail.add("DEPOT");
 		headerDetail.add("ACCOUNT");
-		headerDetail.add("MSTN_CLEARED");
 		headerDetail.add("FINAL_CLD_N");
 		headerDetail.add("FINAL_CLD_N1");
 		headerDetail.add("FINAL_CLD_N2");
+		headerDetail.add("MSTN_CLEARED");
 		headerDetail.add("CURRENT_ESTIMATES");
 		headerDetail.add("CLEARANCE_DATE");
+		headerDetail.add("REMARKS");
 		downloadedData.add(headerDetail);
 		for (LaunchMstnClearanceResponseCoe launchScMstnClearanceResponse : listOfFinalBuildups) {
 			ArrayList<String> dataObj = new ArrayList<>();
@@ -1988,12 +2111,13 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 			dataObj.add(launchScMstnClearanceResponse.getAccount());
 			dataObj.add(launchScMstnClearanceResponse.getDepot());
 			dataObj.add(launchScMstnClearanceResponse.getAccount());
-			dataObj.add(launchScMstnClearanceResponse.getMstnCleared());
 			dataObj.add(launchScMstnClearanceResponse.getFinalCldN());
 			dataObj.add(launchScMstnClearanceResponse.getFinalCldN1());
 			dataObj.add(launchScMstnClearanceResponse.getFinalCldN2());
+			dataObj.add(launchScMstnClearanceResponse.getMstnCleared());
 			dataObj.add(launchScMstnClearanceResponse.getCurrentEstimates());
 			dataObj.add(launchScMstnClearanceResponse.getClearanceDate());
+			dataObj.add(launchScMstnClearanceResponse.getRemarks());
 			downloadedData.add(dataObj);
 		}
 		return downloadedData;

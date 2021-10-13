@@ -59,5 +59,11 @@ public class PromoCrServiceImpl implements PromoCrService {
 		return promoCrDAO.getAllProductMaster();
 	}
 	
+	//Harsha's changes 
+	public String insertToportalUsage(String userId, String roleID, String module) {
+		return promoCrDAO.insertToportalUsage( userId,  roleID,  module);
+	}
+	
+	
 	
 }

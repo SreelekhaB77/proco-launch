@@ -248,13 +248,36 @@ function CoeLaunch(){
 
 //get 1 screen ID
 function getlaunchId(){
-	var idList = $( ".coechecklaunch:checked" ),
-	ids = [];
-	for( var i =0 ; i < idList.length; i++ ){
+	var idList = $( ".coechecklaunch:checked" );
+	 ids = [];
+	 for( var i =0 ; i < idList.length; i++ ){
 		ids.push( $( idList[i] ).val() );
+		
 	}
+	getLauncheckedMoc();
+	//console.log(ids);
 	return ids;
+	
+	
 }
+//sprint-5 added bharati for download Launch buildup templet issue sep-21
+function getLauncheckedMoc(){
+
+	 launchMoc = []; 
+	$("#coebasepack_add tr:gt(0)").each(function(){
+        var th = $(this);
+        
+        if($(th).find("input[name='selectDel']").is(":checked")){
+           var launchMoc_val = $(th).find("td:eq(2)").text();
+            launchMoc.push(launchMoc_val);
+            
+        }
+    });
+	//console.log(launchMoc);
+	return launchMoc;    
+
+}
+//End bharati changes
 
 //Get Second screen data
 
@@ -482,8 +505,9 @@ function coeSaveBasepacks(){
 //download screen 3 
 function coedownloadLaunchBuildTemplate() {
 	var launchIdsArr =  getlaunchId().toString();
+	var LaunchMocArr =  getLauncheckedMoc().toString();   //sprint-5 chnages added by bharati for coe download Launch Build Template issue sep-21
 	
-	window.location.href = "/VisibilityAssetTracker/"+launchIdsArr+"/downloadLaunchBuildUpCoeTemplate.htm"
+	window.location.href = "/VisibilityAssetTracker/"+launchIdsArr+"/"+LaunchMocArr+"/downloadLaunchBuildUpCoeTemplate.htm"
 	
 }
 
@@ -931,6 +955,9 @@ function loadCoeLauches(coeselectedmoc) {
 				  "sLengthMenu": "Records per page _MENU_ ",
 				 
 			  },
+			  "columnDefs": [
+    { className: "launchMocId", "targets": [ 2 ] }
+  ],
 			"sAjaxSource" : "getAllCoeMOCData.htm",
 			  "fnServerParams" : function(aoData) {
 					aoData.push({ "name": "coeMoc", "value": coeselectedmoc });
@@ -943,12 +970,13 @@ function loadCoeLauches(coeselectedmoc) {
 						  mData: 'launchId',
 						  "mRender": function(data, type, full) {
 							return '<input type="checkbox" class="coechecklaunch" name="selectDel" value=' + data + '>';
+							
 						  }
 						},
 						{mData : 'launchName'},
 						//{mData : 'launchMoc'},
 						{
-						  mData: 'launchMoc',
+						  mData: 'launchMoc', 
 						  //"mRender": function(data, type, full) {
 							//return full.launchMoc + '<input type = "hidden" class="mocDate"  value=' + full.launchDate + '>';
 						  //}

@@ -175,6 +175,9 @@ public class VolumeUploadBean {
 	private String childBasepackDesc6 = "";
 	@Column(name = "C6 Child Pack Ratio")
 	private String childRatio6 = "";
+	
+	@Column(name = "Actual Geography")
+	private String actualGeography = "";
 
 	public String getRatio1() {
 		return ratio1;
@@ -760,12 +763,21 @@ public class VolumeUploadBean {
 		this.childRatio6 = childRatio6;
 	}
 
+	
+	public String getActualGeography() {
+		return actualGeography;
+	}
+
+	public void setActualGeography(String actualGeography) {
+		this.actualGeography = actualGeography;
+	}
+
 	@Override
 	public String toString() {
 		return "CreatePromotionBean [offerValue=" + offerValue + ", offerType=" + offerType + ", year=" + year
 				+ ", moc=" + moc + ", modality=" + modality + ", geography=" + geography + ", kittingValue="
 				+ kittingValue + ", customerChainL1=" + customerChainL1 + ", customerChainL2=" + customerChainL2
-				+ ", uom=" + uom + "]";
+				+ ", uom=" + uom + ",actualGeography=" + actualGeography + "]";
 	}
 
 }

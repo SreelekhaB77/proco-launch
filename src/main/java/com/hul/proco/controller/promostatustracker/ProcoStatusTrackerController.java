@@ -58,6 +58,11 @@ public class ProcoStatusTrackerController {
 	@RequestMapping(value = "promoStatusTracker.htm", method = RequestMethod.GET)
 	public ModelAndView getpromoStatusTrackerPage(HttpServletRequest request, Model model) {
 		long startTime = System.currentTimeMillis();
+		//Harsha's implementation for logintool
+		String id=(String)request.getSession().getAttribute("UserID");
+		String role=(String)request.getSession().getAttribute("roleId");
+		promoCrService.insertToportalUsage(id, role, "PROCO");
+		//Harsha's Logic End's here 
 		String roleId = (String) request.getSession().getAttribute("roleId");
 		model.addAttribute("roleId", roleId);
 		//Sarin Changes Performance - Commented and added below

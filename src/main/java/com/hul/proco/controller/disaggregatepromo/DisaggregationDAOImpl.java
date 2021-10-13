@@ -1,6 +1,8 @@
 package com.hul.proco.controller.disaggregatepromo;
 
 import java.math.BigInteger;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +16,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 import org.hibernate.query.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.internal.SessionImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -54,7 +58,7 @@ public class DisaggregationDAOImpl implements DisaggregationDAO {
 					+ "INNER JOIN TBL_PROCO_TME_MAPPING AS F ON B.CATEGORY=F.CATEGORY AND B.PRICE_LIST=F.PRICE_LIST "
 					+ "WHERE (A.QUANTITY IS NOT NULL AND A.QUANTITY<>'') AND A.ACTIVE = 1 AND F.USER_ID='" + userId
 					+ "' ";
-			rowCount += " AND A.STATUS IN(3,4,13,14,23,24,33,34,12,22,32) ";
+			rowCount += " AND A.STATUS IN(3,4,13,14,23,24,33,34,12,22,32,37) ";
 
 			if (!cagetory.equalsIgnoreCase("All")) {
 				rowCount += "AND B.CATEGORY = '" + cagetory + "' ";
@@ -137,6 +141,7 @@ public class DisaggregationDAOImpl implements DisaggregationDAO {
 		List<DisaggregationBean> promoList = new ArrayList<>();
 		List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
 		List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
+		List<String> lstbasepack = new ArrayList<String>(Arrays.asList(basepack.split(",")));  //Added By Sarin sprint5-sep2021		
 		String promoQuery = "";
 		try {
 			//kiran - changes from ROWNUMBER() to ROW_NUMBER()
@@ -152,7 +157,7 @@ public class DisaggregationDAOImpl implements DisaggregationDAO {
 					+ "INNER JOIN TBL_PROCO_TME_MAPPING AS F ON B.CATEGORY=F.CATEGORY AND B.PRICE_LIST=F.PRICE_LIST "
 					+ "WHERE (A.QUANTITY IS NOT NULL AND A.QUANTITY<>'') AND A.ACTIVE = 1 AND F.USER_ID='" + userId
 					+ "' ";
-			promoQuery += " AND A.STATUS IN(3,4,13,14,23,24,33,34,12,22,32) ";
+			promoQuery += " AND A.STATUS IN(3,4,13,14,23,24,33,34,12,22,32,37) ";
 
 			if (!cagetory.equalsIgnoreCase("All")) {
 				promoQuery += "AND B.CATEGORY = '" + cagetory + "' ";
@@ -160,9 +165,30 @@ public class DisaggregationDAOImpl implements DisaggregationDAO {
 			if (!brand.equalsIgnoreCase("All")) {
 				promoQuery += "AND B.BRAND = '" + brand + "' ";
 			}
-			if (!basepack.equalsIgnoreCase("All")) {
+			
+			//Commented By Sarin sprint5-sep2021
+			/* if (!basepack.equalsIgnoreCase("All")) {
 				promoQuery += "AND A.P1_BASEPACK = '" + basepack + "' ";
+			} */
+			
+			//Added By Sarin sprint5-sep2021 - starts
+			if (!basepack.equalsIgnoreCase("All")) {
+				if (lstbasepack.size() == 1) {
+					promoQuery += "AND (A.P1_BASEPACK = '" + lstbasepack.get(0) + "' )";
+				} else if (lstbasepack.size() > 1) {
+					for (int i = 0; i < lstbasepack.size(); i++) {
+						if (i == 0) {
+							promoQuery += "AND (A.P1_BASEPACK = '" + lstbasepack.get(i) + "' ";
+						} else if (i < lstbasepack.size() - 1) {
+							promoQuery += "OR A.P1_BASEPACK = '" + lstbasepack.get(i) + "' ";
+						} else {
+							promoQuery += "OR A.P1_BASEPACK = '" + lstbasepack.get(i) + "') ";
+						}
+					}
+				}
 			}
+			//Added By Sarin sprint5-sep2021 - ends
+			
 			if (!custChainL1.equalsIgnoreCase("All")) {
 				if (custL1.size() == 1) {
 					promoQuery += "AND (A.CUSTOMER_CHAIN_L1 = '" + custL1.get(0) + "' )";
@@ -1265,4 +1291,56 @@ public class DisaggregationDAOImpl implements DisaggregationDAO {
 		}
 		return res;
 	}
+	
+	// Added by Harsha for Disaggregation by DP
+	
+	public String updateKamsubmitStatus() {
+		String res = "";
+		try {
+			Query query1 = sessionFactory.getCurrentSession().createNativeQuery(
+					" Update TBL_PROCO_PROMOTION_MASTER A INNER JOIN TBL_PROCO_PROMOTION_DISAGGREGATION_DEPOT_LEVEL B " + 
+					" ON A.PROMO_ID = B.PROMO_ID AND A.P1_BASEPACK = B.BASEPACK set A.STATUS = 37 WHERE B.SUBMIT_KAM_STATUS IS NULL;");  //Added by harsha
+			int executeUpdate1 = query1.executeUpdate();
+			Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
+					" update TBL_PROCO_PROMOTION_DISAGGREGATION_DEPOT_LEVEL set SUBMIT_KAM_STATUS = 1 where SUBMIT_KAM_STATUS IS NULL; " );  //Added by harsha
+			int executeUpdate2 = query2.executeUpdate();
+			if (executeUpdate1 > 0 && executeUpdate2>0) {
+				res = "";
+			} else {
+				res = "ERROR";
+			}
+		} catch (Exception e) {
+			logger.debug("Exception:", e);
+			return "ERROR";
+		}
+		return res;
+	}
+	
+	// Added by harsha to get count of disaggregation
+	
+	public int getcountofDisaggregation() {
+		Session session = sessionFactory.getCurrentSession();
+		SessionImpl sessionImpl = (SessionImpl) session;
+		String launchMoc = "";
+		int value = 0 ;
+		try {
+			PreparedStatement stmt = sessionImpl.connection()
+					.prepareStatement("select count(1) from TBL_PROCO_PROMOTION_DISAGGREGATION_DEPOT_LEVEL where SUBMIT_KAM_STATUS is null");		
+			ResultSet rs = stmt.executeQuery();
+			
+				while (rs.next()) {
+					String details = rs.getString(1);
+					if(details!=null && !details.isEmpty()) {
+						return Integer.valueOf(details);
+					}
+				}
+		} catch (Exception ex) {
+			logger.debug("Exception :", ex);	
+		}
+		return 0;
+	}
+	
+	
+	
+	
 }

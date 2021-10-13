@@ -22,4 +22,6 @@ public interface PromoCrService {
 	public List<String> getAllBasepacks();
 	
 	public List<List<String>> getAllProductMaster();  //Sarin Changes Performance
+	// Harsha's Changes
+	public String insertToportalUsage(String userId, String roleID, String module);
 }

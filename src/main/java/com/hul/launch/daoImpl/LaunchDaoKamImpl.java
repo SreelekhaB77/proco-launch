@@ -973,7 +973,8 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 					"select DISTINCT tlm.LAUNCH_NAME LAUNCH_NAME,tlm.LAUNCH_MOC LAUNCH_MOC,abc.ACCOUNT_NAME ACCOUNT_NAME, ACCOUNT_NAME_L2, HUL_STORE_FORMAT, CLUSTER, REPORTING_CODE, tvcom.KAM_MAIL_ID "
 							+ "from MODTRD.TBL_LAUNCH_BUILDUP_TEMP abc,TBL_VAT_COMM_OUTLET_MASTER tvcom ,TBL_LAUNCH_MASTER tlm WHERE "
 							+ "tvcom.HUL_OUTLET_CODE = abc.HFS_CODE AND tlm.launch_id = abc.LAUNCH_ID AND abc.LAUNCH_ID = '" + launchId
-							+ "' AND UPPER(tvcom.KAM_MAIL_ID) = '" + kamMailId + "'");
+							//+ "' AND UPPER(tvcom.KAM_MAIL_ID) = '" + kamMailId + "'");  //Commented & Added below By Sarin 13Oct2021
+							+ "' AND UPPER(tvcom.KAM_MAIL_ID) LIKE '%" + kamMailId + "%'");  //Added By Sarin 13Oct2021
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				Query query3 = sessionFactory.getCurrentSession()
@@ -1100,7 +1101,8 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 					"select DISTINCT tlm.LAUNCH_NAME LAUNCH_NAME,tlm.LAUNCH_MOC LAUNCH_MOC,abc.ACCOUNT_NAME ACCOUNT_NAME, ACCOUNT_NAME_L2, HUL_STORE_FORMAT, CLUSTER, REPORTING_CODE "
 							+ "from MODTRD.TBL_LAUNCH_BUILDUP_TEMP abc,TBL_VAT_COMM_OUTLET_MASTER tvcom ,TBL_LAUNCH_MASTER tlm WHERE "
 							+ "tvcom.HUL_OUTLET_CODE = abc.HFS_CODE AND tlm.launch_id = abc.LAUNCH_ID AND abc.LAUNCH_ID = '" + launchId
-							+ "' AND UPPER(tvcom.KAM_MAIL_ID) = '" + kamMailId + "'");
+							//+ "' AND UPPER(tvcom.KAM_MAIL_ID) = '" + kamMailId + "'");     //Commented & Added below By Sarin 13Oct2021
+							+ "' AND UPPER(tvcom.KAM_MAIL_ID) LIKE '%" + kamMailId + "%'");  //Added By Sarin 13Oct2021
 
 			Iterator<Object> itr = query2.list().iterator();
 			ArrayList<String> s = new ArrayList<>();

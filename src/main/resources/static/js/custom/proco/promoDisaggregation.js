@@ -1,3 +1,4 @@
+
 $(document)
 		.ready(
 				function() {
@@ -14,8 +15,8 @@ $(document)
 					var selectAll = false;
 
 					$('.comboTreeDropDownContainer ul li span.comboTreeParentPlus').html("+");
-					
-					$('#cust_chainL1')
+				
+				  $('#cust_chainL1')
 							.multiselect({
 								
 										includeSelectAllOption : true,
@@ -86,7 +87,7 @@ $(document)
 										}
 
 									});
-					
+			
 					$('#category').change(function(){
 						category = $(this).val();
 						promoTable.draw();
@@ -113,18 +114,23 @@ $(document)
 						});
 					
 					/*PromoListing table pagination promoTable = */
-					promoTable = $('.promo-list-table').DataTable({
-
-				              /* added for second tab start */
+					var promoTable = $('.promo-list-table').DataTable({
+				    
+					     /* added for second tab start */
 						 "bProcessing": true,
 			             "bServerSide": true,
 			             "lengthChange": false,
 			             "searching": false,
 			             "ordering": false,
-			             "iDisplayLength": 10,
+			             //sprint-5	select all changes for disaggration tab by bharati
+			             "iDisplayLength": 100000 ,
 					     "iDisplayStart": 0,
-				              "sAjaxSource": "disaggregationPagination.htm",
+					      "scrollY":       "280px",
+					       "scrollX": true,
+                          
+					    "sAjaxSource": "disaggregationPagination.htm",
 				               "fnServerParams": function(aoData) {
+								
 				                aoData.push(
 				    	                {"name": "category", "value": category}, 
 				    	                {"name": "brand", "value": brand},
@@ -138,7 +144,7 @@ $(document)
 				    	                );
 				              }, 
 				              "fnDrawCallback": function(oSettings){
-				            	  getCount =oSettings.fnRecordsTotal();
+				            	var getCount =oSettings.fnRecordsTotal();
 				            	  $('#totalCount').text(getCount);
 				            	  $('table.promo-list-table input[type="checkbox"]').change(function() {
 				            		  
@@ -161,21 +167,60 @@ $(document)
 										   $('#addDepot').removeAttr( "disabled", 'disabled' );
 									   }else{  
 										   $('#addDepot').attr( "disabled",  'disabled' );}
-									   
+									   //sprint-5 bharati added changes for enable disable disaggregate btn for submitted to kam status 
 									   if(okay && disAggregationCount>0){
-										   document.getElementById("disaggregateBtn").disabled = false;
+									   $("#disTable tr:gt(0)").each(function(){
+                                       var th = $(this);
+                                       if($(th).find("input[name='promoId']").is(":checked")){
+                                       var valueOfStatus = $(this).find('td:last-child').text();
+                                     
+										 if(valueOfStatus=="DIS-AGGREGATION DONE BY DP AND SUBMITTED TO KAM") {
+									    document.getElementById("disaggregateBtn").disabled = true;
+									 }else{
+									  document.getElementById("disaggregateBtn").disabled = false;
+									  }
+									   }
+											});
 									   }else{
 										   document.getElementById("disaggregateBtn").disabled = true;
 									   }
+									   
+									   //enable dp download and submit to kam sprint-5 US-13,14 btns disable
+									  if(disAggregationCount>0){
+									  $("#disTable tr:gt(0)").each(function(){
+                                       var th = $(this);
+                                       if($(th).find("input[name='promoId']").is(":checked")){
+                                       var valueOfStatus = $(this).find('td:last-child').text();
+                                      
+                                         if((valueOfStatus=="DISAGGREGATION DONE BY DP") || (valueOfStatus=="CR 1 - DISAGGREGATION DONE BY DP") || (valueOfStatus=="CR 2 - DISAGGREGATION DONE BY DP") || (valueOfStatus=="ADHOC PROMO - DISAGGREGATION DONE BY DP")){
+									   document.getElementById("dpDownload").disabled = false;
+									 
+									 }else if(valueOfStatus=="DIS-AGGREGATION DONE BY DP AND SUBMITTED TO KAM"){
+									  document.getElementById("dpDownload").disabled = false;
+									  document.getElementById("disaggregateBtn").disabled = true;
+									
+									}else{
+									   document.getElementById("dpDownload").disabled = true;
+									   
+									 }
+									  }
+ });
+ 
+									  }
+									  
 				            	  });
 				              },
+							  
+						
+							   
 				              "aoColumns": [{
 				                  "mData": "promo_id",
 				                  "mRender": function(data, type, full) {
-				                    return '<input type="checkbox" class="visiData" name="promoId" id="promo_id" value="'+data+","+full.basepack+'">';
+				                    return '<input type="checkbox" class="visiData promo_id_all" name="promoId" id="promo_id" value="'+data+","+full.basepack+'">';
 				                  } 
 				                  },{
-				                    "mData": "promo_id"
+				                    "mData": "promo_id",
+				                    "class": "Unique_id"
 				                  }, {
 				                    "mData": "moc"
 				                  }, {
@@ -187,8 +232,8 @@ $(document)
 				                  }, {
 				                    "mData": "brand"
 				                  }, {
-				                    "mData": "basepack"
-				                  }, {
+				                    "mData": "basepack",
+				                 }, {
 				                    "mData": "basepackDesc"
 				                  }, {
 				                    "mData": "offer_type"
@@ -211,11 +256,11 @@ $(document)
 				                  },{
 				                    "mData": "status",
 				                  }
-				                ]
+				                ],
 				                /* added for second tab end */
-
+							
 				        });
-					
+									
 					//checkbox mocrr-checkbox
 					
 					$(document.dc.mocs).change(function() {
@@ -240,9 +285,24 @@ $(document)
 								   $('#addDepot').attr( "disabled",  'disabled' );}
 							   
 							   if(okay && disAggregationCount>0){
-								   document.getElementById("disaggregateBtn").disabled = false;
+								 //  document.getElementById("disaggregateBtn").disabled = false;
+								 //sprint-5 bharati added changes for enable disable disaggregate btn for submitted to kam status 
+								 $("#disTable tr:gt(0)").each(function(){
+                                       var th = $(this);
+                                       if($(th).find("input[name='promoId']").is(":checked")){
+                                       var valueOfStatus = $(this).find('td:last-child').text();
+                                      
+										 if((valueOfStatus=="DIS-AGGREGATION DONE BY DP AND SUBMITTED TO KAM") && (okay)) {
+									    document.getElementById("disaggregateBtn").disabled = true;
+									 }else{
+									 document.getElementById("disaggregateBtn").disabled = false;
+									 }
+									   }
+											});
+								   
 							   }else{
 								   document.getElementById("disaggregateBtn").disabled = true;
+								   
 							   }
 	            	  });
 					
@@ -259,8 +319,65 @@ $(document)
 							return val.substring(0,5);
 						});
 						//console.log(newBasepacks);
-						//newBasepacks = categoryNewList;
-						$('#promo_basepack').autocomplete({
+						
+					//Bharati added code for basepack multiselection in sprint-5 US-13
+					for( var i = 0; i <= newBasepacks.length; i++ ){
+       
+                    $("#promo_basepack").append('<option value="' + newBasepacks[i] + '">' + newBasepacks[i]  + '</option>');
+  
+                    }
+   
+	//multiselect dropdown				
+	$('#promo_basepack').multiselect({
+		includeSelectAllOption : true,
+		numberDisplayed : 3,
+	    nonSelectedText : 'SELECT BASEPACK',
+		selectAllText : 'SELECT ALL BASEPACK',
+		
+		  onChange : function(option, checked, select) {
+											 var BasepackSelectedList = [];
+							                    var selectedOptions = $('#promo_basepack option:selected');
+							                    
+							                    var totalLen = $('#promo_basepack option').length;
+
+							                    if (selectedOptions.length > 0 && selectedOptions.length < totalLen){
+													selectAll = false;
+												}else if(selectedOptions.length == totalLen){
+													selectAll = true;
+												}
+							                    
+							                    for (var i = 0; i < selectedOptions.length; i++) {
+							                    	BasepackSelectedList.push(selectedOptions[i].value);
+
+							                    }
+
+							                    if(selectAll == true){
+							                    	basepack = "ALL";
+							                    }else{
+							                    	basepack = BasepackSelectedList.toString();
+							                    }
+							                
+											promoTable.draw();
+										},
+		                                  onSelectAll : function() {
+		                                  basepack = "ALL";
+		                                  promoTable.draw();
+		                                  selectAll = true;
+                                         },
+		                                 onDeselectAll : function() {
+                                         basepack = "ALL";
+		                                 promoTable.draw();
+		                               }
+
+	});
+					
+					
+					//end multiselection bacepack
+  
+  
+						//newBasepacks = categoryNewList; 
+						//basepack single select code
+					/*	$('#promo_basepack').autocomplete({
 									minLength : 0,
 									source : function(request, response) {
 										response($.ui.autocomplete.filter(newBasepacks,
@@ -275,13 +392,15 @@ $(document)
 							promoTable.draw();
 						}
 					});
+					
+					
 						
 						$('#promo_basepack').on('keyup',function(){
 							if($(this).val() == ""){
 								basepack = "All";
 								promoTable.draw();
 							}
-						});
+						});*/
 						
 						$('span.comboTreeItemTitle').on('click',function(){
 							//console.log($(this).parent('div[class="comboTreeInputWrapper"]').find('input').attr('id'));
@@ -293,8 +412,8 @@ $(document)
 								promoTable.draw();
 							}
 							});
-						
 				});
+				
 
 function getCustChainValues(selVal) {
 	$.ajax({
@@ -361,3 +480,68 @@ function extractLast(term){
 function split(val){
 	return val.split(/,\s*/);
 }
+
+//sprint5 select all changes added by bharati sep-21
+$('#disTable').on('draw.dt', function() {
+$('#select_all_promo').prop('checked', false);
+$('input[type="checkbox"]', '#disTable').prop('checked', false);
+
+});
+$("#select_all_promo").click(function () {
+      $('#disTable tbody input[type="checkbox"]').prop('checked', this.checked);
+ });
+ 
+//Bharati added code for sprint-5 US-14 download disaggreated by dp
+
+function DisagreegatedExcelDownload() {
+	
+	var DisagreegatedID =  getdisagreegatedUQId().toString(); 
+	
+	window.location.href = "/VisibilityAssetTracker/"+DisagreegatedID+"/downloadDisaggregatedByDP.htm"
+	
+}
+function getdisagreegatedUQId(){
+
+	 DiagreegatedUniqueId = []; 
+	$("#disTable tr:gt(0)").each(function(){
+        var th = $(this);
+        
+        if($(th).find("input[name='promoId']").is(":checked")){
+            
+           //var UniqueId_Val = $(th).find("td:eq(1)").text();
+          var UniqueId_Val = $(this).find('td.Unique_id').text();
+          
+            DiagreegatedUniqueId.push(UniqueId_Val);
+            
+        }
+    });
+	
+	return DiagreegatedUniqueId;    
+
+}
+
+
+//bharati added code for submit to kam US-13 in sprint-5
+function promosSubmitToKam() {
+		
+		 $.ajax({
+		 	url : "disagregatedPromoskamsubmission.htm",
+			 dataType: 'json',
+             type: 'post',
+             contentType: 'application/json',
+             processData: false,
+        
+             success: function(res, textStatus, jQxhr ){
+         
+               alert("Submitted To KAM Successfully !!!");
+               window.location.reload();
+          
+           },
+			  error: function(error, textStatus, jQxhr ){
+               alert("Error while doing KAM submission");
+          }
+		  });
+		
+	  }
+
+
