@@ -2048,9 +2048,9 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 	}
 
 	@Override
-	public List<ArrayList<String>> getMstnClearanceDataDump(String userId, List<String> listOfLaunchData) {
+	public List<ArrayList<String>> getMstnClearanceDataDump(String userId, List<String> listOfLaunchData, String moc) { // Added MOC as additional parameter
 		List<ArrayList<String>> downloadedData = new ArrayList<>();
-		List<LaunchScMstnClearanceResponse> listOfFinalBuildups = launchDaoSc.getScMstnClearanceDataDump(listOfLaunchData);
+		List<LaunchScMstnClearanceResponse> listOfFinalBuildups = launchDaoSc.getScMstnClearanceDataDump(listOfLaunchData, moc); // Added MOC as additional parameter
 		ArrayList<String> headerDetail = new ArrayList<>();
 		headerDetail.add("LAUNCH_ID");
 		headerDetail.add("LAUNCH_NAME");

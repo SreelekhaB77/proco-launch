@@ -31,8 +31,16 @@ public interface LaunchDaoSc {
 
 	String uploadMstnClearanceByLaunchIdSc(List<Object> list, String userID);
 
-	List<LaunchScMstnClearanceResponse> getScMstnClearanceDataDump(List<String> listOfLaunchData);
+	List<LaunchScMstnClearanceResponse> getScMstnClearanceDataDump(List<String> listOfLaunchData, String moc); // Added MOC for excel download
 	
 	//Q2 sprint feb 2021 kavitha
 	public List<String> getAllMoc();
+
+	// Added by Harsha as part of Q6
+	public List<String> getMocDates(List<String> listOfLaunchData);
+	// Added by Harsha as part of Q6
+	public List<LaunchScMstnClearanceResponse> getScMstnClearanceDataFilter(List<String> listOfLaunchData, List<String> listOfMOCData);
+	
+	public String saveMstnClearanceByLaunchIdsScandLaunchMOC(RequestMstnClearanceList requestMstnClearanceList, String userId) ;
+
 }
