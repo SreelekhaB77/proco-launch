@@ -176,7 +176,9 @@ public class ScLaunchPlanController {
 					GetScLaunchDetailsRequest.class);
 			String launchId[] = getScLaunchDetailsRequest.getLaunchIds().split(",");
 			List<String> listOfLaunchData = Arrays.asList(launchId);
-			listOfLaunch = launchServiceSc.getScMstnClearanceData(listOfLaunchData);
+			List<String> GetdistinctMOC = launchServiceSc.getScMstnClearanceDataChange(listOfLaunchData);//Added by Harsha in Q6 to get details in MOC dropdown
+			listOfLaunch = launchServiceSc.getScMstnClearanceData(listOfLaunchData);// Loads data with ALL condition
+			listMstnClearanceScResponse.setGetMoc(GetdistinctMOC);
 			listMstnClearanceScResponse.setLaunchScMstnClearanceResponseList(listOfLaunch);
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
@@ -187,7 +189,7 @@ public class ScLaunchPlanController {
 				ResponseCodeConstants.STATUS_SUCCESS_MSTN_CLEARED_SC, listMstnClearanceScResponse));
 	}
 
-	@RequestMapping(value = "saveMstnClearanceByLaunchIdsSc.htm", method = RequestMethod.POST)
+	@RequestMapping(value = "saveMstnClearanceByLaunchIdsSc.htm", method = RequestMethod.POST) 
 	public @ResponseBody String saveMstnClearanceByLaunchIdsSc(@RequestBody String jsonBody, HttpServletRequest request,
 			HttpServletResponse httpServletResponse) {
 		String result = null;
@@ -317,9 +319,11 @@ public class ScLaunchPlanController {
 		return gson.toJson(map);
 	}
 
-	@RequestMapping(value = "{launchIds}/downloadMstnClearanceTemplateSc.htm", method = RequestMethod.GET)
-	public @ResponseBody String downloadMstnClTemplate(@PathVariable("launchIds") String launchId, Model model,
+	@RequestMapping(value = "{launchIds}/{requiredMoc}/downloadMstnClearanceTemplateSc.htm", method = RequestMethod.GET) // Added MOC parameter for downloading excel based on MOC and launchId
+	public @ResponseBody String downloadMstnClTemplate(@PathVariable("launchIds") String launchId,
+			@PathVariable("requiredMoc") String requiredMoc, Model model,
 			HttpServletRequest request, HttpServletResponse response) {
+		String moc = requiredMoc;
 		String absoluteFilePath = "";
 		InputStream is;
 		String downloadLink = "";
@@ -332,7 +336,7 @@ public class ScLaunchPlanController {
 		String launchIds[] = launchId.split(",");
 		List<String> listOfLaunchData = Arrays.asList(launchIds);
 		List<ArrayList<String>> listDownload = launchFinalPlanService.getMstnClearanceDataDump(userId,
-				listOfLaunchData);
+				listOfLaunchData, moc);
 		try {
 			if (listDownload != null) {
 				UploadUtil.writeXLSFile(downloadFileName, listDownload, null, ".xls");
@@ -354,5 +358,44 @@ public class ScLaunchPlanController {
 		map.put("FileToDownload", fileName);
 		return gson.toJson(map);
 	}
+	
+	// Added By Harsha for selecting desired MOC in drop down implementation 
+	
+	@RequestMapping(value = "getSelectedMstnClearanceByLaunchIdsSc.htm", method = RequestMethod.POST)
+	public String getSelectedMstnClearanceByLaunchIdsSc(@RequestBody String jsonBody, HttpServletRequest request,
+			Model model) {
+		Gson gson = new Gson();
+		ListMstnClearanceScResponse listMstnClearanceScResponse = new ListMstnClearanceScResponse();
+		List<LaunchScMstnClearanceResponse> listOfLaunch = new ArrayList<>();
+		try {
+			List<String> launchId = new ArrayList<String>();
+			List<String> moc = new ArrayList<String>();
+			String jsonInString = String.valueOf(jsonBody) ;
+			jsonInString=jsonInString.replace("\"", "");
+			jsonInString = jsonInString.replaceAll("[{}]", " ").trim();
+			
+			String[] stringarray = jsonInString.split(","); 
+			for(int i=0; i< stringarray.length; i++)  
+			{
+			String res = stringarray[i];
+			res=res.trim();
+			if(res.contains("launchId:")){
+			   launchId.add(res.substring(9));
+			} 
+			else if(res.contains("mocSelect:")){
+			   moc.add(res.substring(10));
+			} 
+			}
+			listOfLaunch = launchServiceSc.getScMstnClearanceDataByfilter(launchId, moc);// will fetch selected MOC data 
+			listMstnClearanceScResponse.setLaunchScMstnClearanceResponseList(listOfLaunch);
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
+			return gson.toJson(new GlobleResponse(ResponseConstants.MSG_FAILURE_RESPONSE,
+					ResponseCodeConstants.STATUS_FAILURE_MSTN_CLEARED_SC, e.toString()));
+		}
+		return gson.toJson(new GlobleResponse(ResponseConstants.MSG_SUCCESS_RESPONSE,
+				ResponseCodeConstants.STATUS_SUCCESS_MSTN_CLEARED_SC, listMstnClearanceScResponse));
+	}
+
 
 }

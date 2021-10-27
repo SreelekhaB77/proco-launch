@@ -525,6 +525,19 @@ function getmstnData() {
 			    				    	   	
 		            var mstnlen = mstnData.responseData.launchScMstnClearanceResponseList.length;
 		            var mstn = mstnData.responseData.launchScMstnClearanceResponseList;
+		       //bharati added code changes for mstn moc mapping in sprint-6 oct-21
+		         
+		           var moclength =  mstnData.responseData.getMoc.length;
+		           var html = '';
+		            var mocValue= [] ;
+		            $('#mocdistCol').empty().append('<option selected="selected" value="All">All</option>');
+		            mocValue = mstnData.responseData.getMoc;
+		           for(var i=0; i<moclength; i++){
+		              html += '<option value="' + mocValue[i] + '">' + mocValue[i] + '</option>';
+                   }
+                  $('#mocdistCol').append(html);
+                  //bharati moc dropdown chnages end here
+                  
 					var sellrow = "";
 					for (var i = 0; i < mstnlen; i++) {
 						sellrow += "<tr><td><input name='childRatio1' type='text' class='form-control l1chain' readonly value= '"
@@ -556,7 +569,7 @@ function getmstnData() {
 								+ "<td class='mstnInp'><input name='childRatio1' type='text' class='form-control mstnInp' value= '" +
 								(typeof mstn[i].clearanceDate != "undefined" ? mstn[i].clearanceDate : "" )+"'></td></tr>";
 					}
-					
+					$("#mstnClearance").dataTable().fnDestroy();   //bharati added this line for moc filter issue in sprint-6
 					$('#mstnClearance tbody').empty().append(sellrow);
 					 $('#mstnClearance .mstnInp').each(function(){
 						 var mstIp =  $(this).find('input').val();
@@ -573,7 +586,7 @@ function getmstnData() {
 					// $.fn.dataTable.ext.errMode = 'none';
 			         $("#mstnClearance").dataTable().fnDestroy();
 			         setTimeout(function(){
-			        	 mstnoTable = $('#mstnClearance').DataTable( {
+			        	mstnoTable = $('#mstnClearance').DataTable( {
 			        		 		"scrollX": true,
 						    		"scrollY": "280px",
 						    		"destroy": true,  
@@ -621,8 +634,12 @@ var checked_field = $("[name=scchecklaunch]:checked");
 		}
 		var set1 = new Set(launchIds);
 		var commaSepLaunchIds = Array.from(set1).toString();
+		//mtsn download for selected moc in mstn clearnce in sprint-6 bharati changes  
 		
-	window.location.assign(commaSepLaunchIds+"/downloadMstnClearanceTemplateSc.htm");
+		var mocSelectdownload = $('#mocdistCol').val(); 
+	
+		
+	window.location.assign(commaSepLaunchIds+"/"+mocSelectdownload+"/downloadMstnClearanceTemplateSc.htm");
 }
 
 //upload for mstn
@@ -701,4 +718,90 @@ function loadSCLauches(scselectedmoc) {
 	scbaseoTable.draw();
 }
 
+//moc selected data function for mstn by Bharati added for sprint-6 oct-21
+$("#mocdistCol").on('change', function () {
+	var sclnchId = $( ".scchecklaunch:checked" ).val();
+	 var mocSelect = $('#mocdistCol').val();
+	
+	 $.ajax({
+	        url: 'getSelectedMstnClearanceByLaunchIdsSc.htm',
+	        dataType: 'json',
+	        type: 'post',
+	        contentType: 'application/json',
+	        data: JSON.stringify( { "launchId": sclnchId, "mocSelect": mocSelect } ),
+	        processData: false,
+	       
+	        success: function( data, textStatus, jQxhr ){
+	        var mstnlenmoc = data.responseData.launchScMstnClearanceResponseList.length;
+		    var mstn = data.responseData.launchScMstnClearanceResponseList;
+		      
+					var sellrow = "";
+					for (var i = 0; i < mstnlenmoc; i++) {
+						sellrow += "<tr><td><input name='childRatio1' type='text' class='form-control l1chain' readonly value= '"
+							 	+ mstn[i].launchName
+							 	+"'></td>"
+								+"<td><input name='childRatio1' type='text' class='form-control l2chain' readonly value= '" +
+								mstn[i].launchMoc +"'></td>" 
+								+"<td><input name='childRatio1' type='text' class='form-control' readonly value= '" +
+								mstn[i].basepackCode+"'></td>" 
+								+ "<td><input name='childRatio1' type='text' class='form-control' readonly value= '" +
+								mstn[i].basepackDesc+"'></td>"
+								+ "<td><input name='childRatio1' type='text' class='form-control' readonly value= '" +
+								mstn[i].depot+"'></td>"
+								+ "<td><input name='childRatio1' type='text' class='form-control' readonly value= '" +
+								mstn[i].cluster+"'></td>"
+								+ "<td><input name='childRatio1' type='text' class='form-control' readonly value= '" +
+								mstn[i].account+"'></td>"
+								+ "<td><input name='childRatio1' type='text' class='form-control' readonly value= '" +
+								mstn[i].finalCldN+"'></td>"
+								+ "<td><input name='childRatio1' type='text' class='form-control' readonly value= '" +
+								mstn[i].finalCldN1+"'></td>"
+								+ "<td><input name='childRatio1' type='text' class='form-control' readonly value= '" +
+								mstn[i].finalCldN2+"'></td>"
+								+ "<td class='mstnInp'><input name='childRatio1' type='text' class='form-control' value= '" +
+								(typeof mstn[i].mstnCleared != "undefined" ? mstn[i].mstnCleared : "" ) +"'></td>"
+								
+								+ "<td class='mstnInp'><input name='childRatio1' type='text' class='form-control' value= '" +
+								(typeof mstn[i].currentEstimates != "undefined" ? mstn[i].currentEstimates : "" )+"'></td>"
+								+ "<td class='mstnInp'><input name='childRatio1' type='text' class='form-control mstnInp' value= '" +
+								(typeof mstn[i].clearanceDate != "undefined" ? mstn[i].clearanceDate : "" )+"'></td></tr>";
+					}
+					
+				$("#mstnClearance").dataTable().fnDestroy();
+					$('#mstnClearance tbody').empty();
+					
+					$('#mstnClearance tbody').append(sellrow);
+					 
+			       
+			        	mstnoTable = $('#mstnClearance').DataTable( {
+			        		 		"scrollX": true,
+						    		"scrollY": "280px",
+						    		"destroy": true,  
+							        "paging":  true,
+							        "ordering": false,
+							        "searching": false,
+							    	"lengthMenu" : [
+										[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ],
+										[ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ] ],
+							        "oLanguage": {
+						                  "sSearch": '<i class="icon-search"></i>',
+						                  "sEmptyTable": "No Pending Launch.",
+						                  "oPaginate": {
+						                      "sNext": "&rarr;",
+						                      "sPrevious": "&larr;"
+						                  },
+						                  "sLengthMenu": "Records per page _MENU_ ",
+						                  
+						
+						              }
+				    	    	    });
+						    
+			    	
 
+	        	 
+	        },
+	        error: function( jqXhr, textStatus, errorThrown ){
+	            console.log( errorThrown );
+	        }
+	    });
+});

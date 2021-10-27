@@ -787,10 +787,13 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 	
 	@SuppressWarnings("unchecked")
 	public List<Disaggregate> getDisaggregatedFinalBuildUpTempDataNew(String[] promoId) {
+		double dpPerSplit = 0;
+		double dpQtySplit = 0;
 		List<Disaggregate> liReturn = new ArrayList<>();
 		List<String> promoIdList = Arrays.asList(promoId);
 		
 		String sBuildupQry = "";
+		int count=0 ;
 		try {
 			Session session = sessionFactory.getCurrentSession();
 			
@@ -807,9 +810,14 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 				query.setParameter("launchId",promoId[i]);
 				//query.setParameterList("launchId", promoIdList);
 			Iterator<Object> itr = query.list().iterator();
+			int size =query.list().size();
+			
 			int[] temp = { 1 };
 			while (itr.hasNext()) {
 				Object[] obj = (Object[]) itr.next();
+				count++;
+				dpPerSplit += Double.parseDouble(obj[7].toString());
+				dpQtySplit += Double.parseDouble(obj[8].toString());
 				Disaggregate disaggregate = new Disaggregate();
 				disaggregate.setPromo_Id((String) obj[0]);
 				disaggregate.setGeography((String) obj[1]);
@@ -823,7 +831,10 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 				disaggregate.setDepot_Qty((String) obj[8]);
 				disaggregate.setKam_Split((String) obj[9]);
 				disaggregate.setSales_category((String) obj[10]);
-
+				if(count == size) { // Added By Harsha in Q6 for making entry at last
+					disaggregate.setDp_Per_Split(String.valueOf(Math.round(dpPerSplit))+"%");
+					disaggregate.setdP_Qty_Split(String.valueOf(Math.round(dpQtySplit)));
+				}
 				liReturn.add(disaggregate);
 				temp[0]++;
 			}
@@ -2037,9 +2048,9 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 	}
 
 	@Override
-	public List<ArrayList<String>> getMstnClearanceDataDump(String userId, List<String> listOfLaunchData) {
+	public List<ArrayList<String>> getMstnClearanceDataDump(String userId, List<String> listOfLaunchData, String moc) { // Added MOC as additional parameter
 		List<ArrayList<String>> downloadedData = new ArrayList<>();
-		List<LaunchScMstnClearanceResponse> listOfFinalBuildups = launchDaoSc.getScMstnClearanceDataDump(listOfLaunchData);
+		List<LaunchScMstnClearanceResponse> listOfFinalBuildups = launchDaoSc.getScMstnClearanceDataDump(listOfLaunchData, moc); // Added MOC as additional parameter
 		ArrayList<String> headerDetail = new ArrayList<>();
 		headerDetail.add("LAUNCH_ID");
 		headerDetail.add("LAUNCH_NAME");

@@ -34,7 +34,7 @@ public interface LaunchFinalService {
 	List<LaunchFinalPlanResponse> getLaunchFinalResposeAfterStoreReject(String launchId, String userId, String kamAcc,
 			String storeId);
 
-	List<ArrayList<String>> getMstnClearanceDataDump(String userId, List<String> listOfLaunchData);
+	List<ArrayList<String>> getMstnClearanceDataDump(String userId, List<String> listOfLaunchData, String moc);
 
 	List<ArrayList<String>> getMstnClearanceDataDumpCoe(String userId, List<String> listOfLaunchData);
 

@@ -92,7 +92,7 @@ public interface LaunchFinalDao {
 
 	void deleteAllBuildUpKAMStore(String launchId, List<String> listOfKamAccounts, List<String> storeIds);
 
-	List<ArrayList<String>> getMstnClearanceDataDump(String userId, List<String> listOfLaunchData);
+	List<ArrayList<String>> getMstnClearanceDataDump(String userId, List<String> listOfLaunchData, String moc); // Added moc parameter as Q6 
 
 	List<ArrayList<String>> getMstnClearanceDataDumpCoe(String userId, List<String> listOfLaunchData);
 	

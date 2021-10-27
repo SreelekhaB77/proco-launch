@@ -1266,9 +1266,9 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 
 	}
 
-	@Override
-	public List<ArrayList<String>> getMstnClearanceDataDump(String userId, List<String> listOfLaunchData) {
-		return launchFinalDao.getMstnClearanceDataDump(userId, listOfLaunchData);
+	@Override//Added MOC parameter By Harsha for fetching mstn details
+	public List<ArrayList<String>> getMstnClearanceDataDump(String userId, List<String> listOfLaunchData, String moc) {
+		return launchFinalDao.getMstnClearanceDataDump(userId, listOfLaunchData, moc);
 	}
 
 	@Override
