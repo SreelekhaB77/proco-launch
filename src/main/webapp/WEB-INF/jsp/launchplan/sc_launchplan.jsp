@@ -299,6 +299,16 @@
 						<div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false" style="height: 584px !important; display: block;">
 							<div class="card-block">
 								<div class="child-table">
+								<!--bharati added code changes for mstn moc mapping in sprint-6 oct-21-->
+								<div class="col-md-3">
+                                            <label for="sel1" class="userlist-space custom-label-align"  >MOC:</label>
+                                             <select id="mocdistCol" class="form-control custom-select-align">
+                                                        <option value="All">All</option>
+                                                            <!--<c:forEach items="${scMoclist}" var="mocVal">
+                                                                    <option value="${mocVal}"><c:out value="${mocVal}"></c:out></option>
+                                                            </c:forEach>-->
+                                             </select></div>
+											 <!--end bharati changes-->
 									<div>
 									<table id="mstnClearance" class="table table-striped table-bordered nowrap order-column row-border smt-dashboardTable table-responsive" style="width:100%">
 											<thead class="thead-dark">
