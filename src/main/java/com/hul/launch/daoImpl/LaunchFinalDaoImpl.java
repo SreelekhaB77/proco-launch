@@ -793,13 +793,13 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 		List<String> promoIdList = Arrays.asList(promoId);
 		
 		String sBuildupQry = "";
-		int count=0 ;
 		try {
 			Session session = sessionFactory.getCurrentSession();
 			
 			Query query = null;
 			for(int i=0; i<promoId.length;i++) {
 				
+			int count=0 ;
 			sBuildupQry = " SELECT DISTINCT A.PROMO_ID,B.GEOGRAPHY,A.BASEPACK,B.CUSTOMER_CHAIN_L1,A.DEPOT,C.BRANCH,C.CLUSTER, " + 
 					" CAST(A.PERCENTAGE AS DECIMAL(5,2)), A.QUANTITY, CASE WHEN A.KAM_SPLIT_STATUS = 0 THEN A.QUANTITY ELSE A.KAM_SPLIT END AS KAM_SPLIT , D.CATEGORY " + 
 					" from TBL_PROCO_PROMOTION_DISAGGREGATION_DEPOT_LEVEL AS A INNER JOIN TBL_PROCO_PROMOTION_MASTER AS B ON A.PROMO_ID = B.PROMO_ID AND " + 
