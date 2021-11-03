@@ -17,6 +17,7 @@ var fnloTable,
 $(document).ready(function() {
 	$.ajaxSetup({ cache: false });
 	$('#errorblockUpload').hide();
+	$('#sellinerrorblockUpload').hide();
 	 $("[data-hide]").on("click", function() {
          $(this).closest("." + $(this).attr("data-hide")).hide();
      });
@@ -1107,6 +1108,7 @@ $(document).ready(function() {
 				    });
 					
 					// 4th screen upload
+					//bharati done changes in below function for sprint-6 US-5
 					$("#launchsellinFileUploadBtn").click(function (event) {
 						event.preventDefault();
 						var launchId = $("#dynamicLaunchId").val();
@@ -1158,21 +1160,32 @@ $(document).ready(function() {
 					                if("SUCCESS_FILE" == sellIndatanew.Success) {
 					                	 $("#launchVisiTab").click();
 					                	 $('#errorblockUpload').hide();
-					                	 getvisiPlan();
+										 $('#sellinerrorblockUpload').hide(); 
+										 $('#successblock').show().find('span').html(' File Uploaded Successfully !!!');  //added
+		                                  //getvisiPlan();  //bharati commented this line
+		                                  getSellInData();
+		                                  window.location.href = pageURL;
 					                }
-					                else if(sellIndata.includes('Error')){
-					                	$('#errorblockUpload').show();
-					                	
-					                }
+					                else if(sellIndata.includes('Tried uploading Wrong Data')){
+					                    $('#sellinerrorblockUpload').show(); 
+									}else if(sellIndata.includes('Error')){
+									   $('#errorblockUpload').show();
+									}
+					                
 					                $("#launchsellinFileUploadBtn").prop("disabled", false);
 					            },
 					            error: function (e) {
-					                $("#uploadSellInErrorMsg").text(e.responseText);
+									 $("#uploadSellInErrorMsg").text(e.responseText);
+									
 					               // console.log("ERROR : ", e);
 					                $("#launchsellinFileUploadBtn").prop("disabled", true);
 					                      
 					            }
+					           
 					        });
+					        //bharati added for find current page -url
+					         var pageURL = $(location).attr("href");
+                                       
 				    	}
 					    	
 				    });
@@ -1297,7 +1310,7 @@ $(document).ready(function() {
 			});
 			
 function getDateFromMoc(currentMoc) {
-	console.log(currentMoc);
+	//console.log(currentMoc);
 	$("#startdate").val("20/"+currentMoc.substring(0,2)+"/"+currentMoc.substring(2));
 }
 
@@ -3285,7 +3298,7 @@ function getSellInData() {
 
 // save for 4th screen
 function saveSellinData() {
-	
+	 $('#successblock').hide();      //added bharati for hide success msg on visiplan tab
 	var launchSellinArr = [];
 	var launchId = $("#dynamicLaunchId").val();
 	var rowCount = $('#sellinTable tbody').find('tr');
@@ -4116,4 +4129,28 @@ function customSelectionStore(){
 		$( '#cust-chain-cst-store' ).next().find( 'button.multiselect ' ).attr( "disabled", true );
 	}
 	
+}
+
+//bharati done changes for sprint-6 US-5 download error file
+
+function downloadLaunchSellInErrorTemplate() {
+	var launchId = $("#dynamicLaunchId").val();
+	
+	$.ajax({
+	    url: 'downloadErrorSellInTemplate.htm',
+	    type: 'post',
+	    contentType: 'application/json',
+	    dataType : 'JSON',
+	    beforeSend: function() {
+            ajaxLoader(spinnerWidth, spinnerHeight);
+        },
+	    data : JSON.stringify( { "launchId": launchId } ),
+	    success: function( data, textStatus, jQxhr ){
+	    	 $('.loader').hide();
+	    	window.location.assign(data.FileToDownload+"/downloadFileTemplate.htm");
+	    },
+	    error: function( jqXhr, textStatus, errorThrown ){
+	       // console.log( errorThrown );
+	    }
+	});
 }
