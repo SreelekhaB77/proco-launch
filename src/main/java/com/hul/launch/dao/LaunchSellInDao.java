@@ -46,4 +46,12 @@ public interface LaunchSellInDao {
 			List<LaunchFinalPlanResponse> listOfFinal, LaunchVisiPlanning launchVisiPlanning, String classification,
 			List<String> liClusterName, String forWhichKam
 			, String launchId); //Sarin Changes - Added Q1Sprint Feb2021
+
+	public String validateSellInByUploadImpl(List<Object> saveLaunchSellIn, String userID, String string, boolean b, boolean c,
+			String launchId);
+
+	// Added by Harsha 
+	public int getCountofErrorMessage(String launchID);
+	// Added by Harsha for download module
+	public List<ArrayList<String>> getErrorSellInDump(String userId, DownloadSellInRequestList downloadLaunchSellInRequest);
 }

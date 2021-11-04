@@ -1,5 +1,6 @@
 package com.hul.launch.daoImpl;
 
+import java.math.BigInteger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -12,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import org.hibernate.query.Query;
@@ -28,6 +30,8 @@ import com.hul.launch.model.LaunchSellIn;
 import com.hul.launch.model.LaunchStoreData;
 import com.hul.launch.model.LaunchVisiPlanning;
 import com.hul.launch.request.DownloadSellInRequestList;
+import com.hul.launch.request.SaveErroredLaunchSellInList;
+import com.hul.launch.request.SaveErroredLaunchSellInRequest;
 import com.hul.launch.request.SaveLaunchSellInRequest;
 import com.hul.launch.request.SaveLaunchSellInRequestList;
 import com.hul.launch.response.LaunchDataResponse;
@@ -55,6 +59,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 
 	@Autowired
 	private LaunchVisiPlanDao launchVisiPlanDao;
+	
 
 	@Autowired
 	LaunchDao launchDao;
@@ -64,6 +69,12 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 			+ "SELLIN_SKU7,SELLIN_SKU8,SELLIN_SKU9,SELLIN_SKU10,SELLIN_SKU11,SELLIN_SKU12,SELLIN_SKU13,SELLIN_SKU14,SELLIN_ROTATIONS,"
 			+ "SELLIN_UPLIFT_N1,SELLIN_UPLIFT_N2,CREATED_BY,CREATED_DATE) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
+	private final static String TBL_LAUNCH_SELLIN_TEMP = "INSERT INTO TBL_LAUNCH_TEMP_SELLIN (SELLIN_LAUNCH_ID,SELLIN_L1_CHAIN,SELLIN_L2_CHAIN,"
+			+ "SELLIN_STORE_FORMAT,SELLIN_STORES_PLANNED,SELLIN_SKU1,SELLIN_SKU2,SELLIN_SKU3,SELLIN_SKU4,SELLIN_SKU5,SELLIN_SKU6,"
+			+ "SELLIN_SKU7,SELLIN_SKU8,SELLIN_SKU9,SELLIN_SKU10,SELLIN_SKU11,SELLIN_SKU12,SELLIN_SKU13,SELLIN_SKU14,SELLIN_ROTATIONS,"
+			+ "SELLIN_UPLIFT_N1,SELLIN_UPLIFT_N2,CREATED_BY,CREATED_DATE,ERROR_MSG) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+	
 	public void setSessionFactory(SessionFactory sf) {
 		this.sessionFactory = sf;
 	}
@@ -1821,5 +1832,400 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 		}
 		return obj;
 	}
+	
+
+	public int getCountofSKU(String launchId) { 
+		 try {
+			 Integer recCount =0;
+				Query query1 = sessionFactory.getCurrentSession().createNativeQuery(
+						"SELECT COUNT(BP_CODE) FROM TBL_LAUNCH_BASEPACK WHERE LAUNCH_ID IN (:launchID) ");
+
+				query1.setString("launchID", launchId);
+				recCount = ((BigInteger)query1.uniqueResult()).intValue();
+	
+				return recCount;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return 0;
+			}
+	}
+	
+	
+	// Added By Harsha For Q6 fix
+	@Override
+	public String validateSellInByUploadImpl(List<Object> saveLaunchSellIn, String userID, String string, boolean b, boolean c,
+			String launchId) {
+		SaveErroredLaunchSellInList saveLaunchSellInRequestList = new SaveErroredLaunchSellInList();
+		List<SaveErroredLaunchSellInRequest> listsellIn = new ArrayList<>();
+		Iterator<Object> iterator = saveLaunchSellIn.iterator();
+		int skuLimit = getCountofSKU(launchId);
+		while (iterator.hasNext()) {
+			LaunchSellIn obj = (LaunchSellIn) iterator.next();
+			StringBuilder errorMsg1 = new StringBuilder();
+			SaveErroredLaunchSellInRequest saveErroredLaunchSellInRequest = new SaveErroredLaunchSellInRequest();
+			saveErroredLaunchSellInRequest.setL1Chain(obj.getL1_CHAIN());
+			saveErroredLaunchSellInRequest.setL2Chain(obj.getL2_CHAIN());
+			saveErroredLaunchSellInRequest.setStoreFormat(obj.getSTORE_FORMAT());
+			saveErroredLaunchSellInRequest.setStoresPlanned(obj.getSTORES_PLANNED());
+			
+			if(skuLimit>=1) {
+				if(obj.getSKU1_SELLIN()==null || obj.getSKU1_SELLIN().isEmpty()) {
+					saveErroredLaunchSellInRequest.setSku1(obj.getSKU1_SELLIN());
+					errorMsg1.append("SKU1_SELLIN");
+					
+				}
+				else {
+				saveErroredLaunchSellInRequest.setSku1(obj.getSKU1_SELLIN());
+				}
+			}
+			
+			 if(skuLimit>=2) {
+				if(obj.getSKU2_SELLIN()==null || obj.getSKU2_SELLIN().isEmpty()) {
+					saveErroredLaunchSellInRequest.setSku2(obj.getSKU2_SELLIN());
+					errorMsg1.append(",SKU2_SELLIN");
+					
+				}
+				else {
+				saveErroredLaunchSellInRequest.setSku2(obj.getSKU2_SELLIN());
+				}
+			}
+			
+			
+			 if(skuLimit>=3) {
+				if(obj.getSKU3_SELLIN()==null || obj.getSKU3_SELLIN().isEmpty()) {
+					saveErroredLaunchSellInRequest.setSku3(obj.getSKU3_SELLIN());
+					errorMsg1.append(",SKU3_SELLIN");
+					
+				}
+				else {
+				saveErroredLaunchSellInRequest.setSku3(obj.getSKU3_SELLIN());
+				}
+			}
+			
+			
+			 if(skuLimit>=4) {
+				if(obj.getSKU4_SELLIN()==null || obj.getSKU4_SELLIN().isEmpty()) {
+					saveErroredLaunchSellInRequest.setSku4(obj.getSKU4_SELLIN());
+					
+					errorMsg1.append(",SKU4_SELLIN");
+					
+				}
+				else {
+				saveErroredLaunchSellInRequest.setSku4(obj.getSKU4_SELLIN());
+				}
+			}
+			
+			
+			 if(skuLimit>=5) {
+				if(obj.getSKU5_SELLIN()==null || obj.getSKU5_SELLIN().isEmpty()) {
+					saveErroredLaunchSellInRequest.setSku5(obj.getSKU5_SELLIN());
+					errorMsg1.append(",SKU5_SELLIN");
+					
+				}
+				else {
+				saveErroredLaunchSellInRequest.setSku5(obj.getSKU5_SELLIN());
+				}
+			}
+			
+			 if(skuLimit>=6) {
+				if(obj.getSKU6_SELLIN()==null || obj.getSKU6_SELLIN().isEmpty()) {
+					saveErroredLaunchSellInRequest.setSku6(obj.getSKU6_SELLIN());
+					errorMsg1.append(",SKU6_SELLIN");
+					
+				}
+				else {
+				saveErroredLaunchSellInRequest.setSku6(obj.getSKU6_SELLIN());
+				}
+			}
+			
+			 if(skuLimit>=7) {
+				if(obj.getSKU7_SELLIN()==null || obj.getSKU7_SELLIN().isEmpty()) {
+					saveErroredLaunchSellInRequest.setSku7(obj.getSKU7_SELLIN());
+					errorMsg1.append(",SKU7_SELLIN");
+					
+				}
+				else {
+				saveErroredLaunchSellInRequest.setSku7(obj.getSKU7_SELLIN());
+				}
+			}
+			
+			 if(skuLimit>=8) {
+				if(obj.getSKU8_SELLIN()==null || obj.getSKU8_SELLIN().isEmpty()) {
+					saveErroredLaunchSellInRequest.setSku8(obj.getSKU8_SELLIN());
+
+					errorMsg1.append(",SKU8_SELLIN");
+					
+				}
+				else {
+				saveErroredLaunchSellInRequest.setSku8(obj.getSKU8_SELLIN());
+				}
+			}
+			
+			if(skuLimit>=9) {
+				if(obj.getSKU9_SELLIN()==null || obj.getSKU9_SELLIN().isEmpty()) {
+					saveErroredLaunchSellInRequest.setSku9(obj.getSKU9_SELLIN());
+					errorMsg1.append(",SKU9_SELLIN");
+					
+				}
+				else {
+				saveErroredLaunchSellInRequest.setSku9(obj.getSKU9_SELLIN());
+				}
+			}
+			
+			if(skuLimit>=10) {
+				if(obj.getSKU10_SELLIN()==null || obj.getSKU10_SELLIN().isEmpty()) {
+					saveErroredLaunchSellInRequest.setSku10(obj.getSKU10_SELLIN());
+					errorMsg1.append(",SKU10_SELLIN");
+					
+				}
+				else {
+				saveErroredLaunchSellInRequest.setSku10(obj.getSKU10_SELLIN());
+				}
+			}
+			
+			if(skuLimit>=11) {
+				if(obj.getSKU11_SELLIN()==null || obj.getSKU11_SELLIN().isEmpty()) {
+					saveErroredLaunchSellInRequest.setSku11(obj.getSKU11_SELLIN());
+					errorMsg1.append(",SKU11_SELLIN");
+					
+				}
+				else {
+				saveErroredLaunchSellInRequest.setSku11(obj.getSKU11_SELLIN());
+				}
+			}
+			if(skuLimit>=12) {
+				if(obj.getSKU12_SELLIN()==null || obj.getSKU12_SELLIN().isEmpty()) {
+					saveErroredLaunchSellInRequest.setSku12(obj.getSKU12_SELLIN());
+					errorMsg1.append(",SKU12_SELLIN");
+					
+				}
+				else {
+				saveErroredLaunchSellInRequest.setSku12(obj.getSKU12_SELLIN());
+				}
+			}
+			
+			if(skuLimit>=13) {
+				if(obj.getSKU13_SELLIN()==null || obj.getSKU13_SELLIN().isEmpty()) {
+					saveErroredLaunchSellInRequest.setSku13(obj.getSKU13_SELLIN());
+					errorMsg1.append(",SKU13_SELLIN");
+					
+				}
+				else {
+				saveErroredLaunchSellInRequest.setSku13(obj.getSKU13_SELLIN());
+				}
+			}
+			
+			if(skuLimit>=14) {
+				if(obj.getSKU14_SELLIN()==null || obj.getSKU14_SELLIN().isEmpty()) {
+					saveErroredLaunchSellInRequest.setSku14(obj.getSKU14_SELLIN());
+					errorMsg1.append(",SKU14_SELLIN");
+					
+				}
+				else {
+				saveErroredLaunchSellInRequest.setSku14(obj.getSKU14_SELLIN());
+				}
+			}
+			
+			if(obj.getROTATIONS()==null || obj.getROTATIONS().isEmpty()) {
+				saveErroredLaunchSellInRequest.setRotations(obj.getROTATIONS());
+				errorMsg1.append(",ROTATIONS");
+				
+			}
+			else {
+				saveErroredLaunchSellInRequest.setRotations(obj.getROTATIONS());
+			}
+			
+			if(obj.getUPLIFT_N1()==null || obj.getUPLIFT_N1().isEmpty()) {
+				saveErroredLaunchSellInRequest.setUpliftN1(obj.getUPLIFT_N1());
+				errorMsg1.append(",UPLIFT_N1");
+				
+			}
+			else {
+				saveErroredLaunchSellInRequest.setUpliftN1(obj.getUPLIFT_N1());
+			}
+			
+			if(obj.getUPLIFT_N2()==null || obj.getUPLIFT_N2().isEmpty()) {
+				saveErroredLaunchSellInRequest.setUpliftN2(obj.getUPLIFT_N2());
+				errorMsg1.append(",UPLIFT_N2");
+				
+			}
+			else {
+				saveErroredLaunchSellInRequest.setUpliftN2(obj.getUPLIFT_N2());
+			}
+			String errorMessage = errorMsg1.toString();
+			if(!errorMessage.isEmpty()) {
+				String finalErrorMsg = "Mandatory details are missing : ".concat(errorMessage);  
+				saveErroredLaunchSellInRequest.setErrorMsg(finalErrorMsg);
+			}
+			
+			listsellIn.add(saveErroredLaunchSellInRequest);
+		}
+		
+		saveLaunchSellInRequestList.setListOfSellIns(listsellIn);
+		saveLaunchSellInRequestList.setLaunchId(launchId);
+		String result = saveLaunchSellInErrorrecord(saveLaunchSellInRequestList, userID);
+		if (result.equals("Saved Successfully")) {
+			return "Wrong Data saved Sucessfully";
+		} else {
+			return "ERROR";
+		}
+	}
+	
+	// Implemented by Harsha for Q6
+	public String saveLaunchSellInErrorrecord(SaveErroredLaunchSellInList saveLaunchSellInRequestList, String userId) {
+		PreparedStatement batchUpdate = null;
+		try {
+			
+			Session session = sessionFactory.getCurrentSession();
+			SessionImpl sessionImpl = (SessionImpl) session;
+			batchUpdate = sessionImpl.connection()
+					.prepareStatement("DELETE from TBL_LAUNCH_TEMP_SELLIN where SELLIN_LAUNCH_ID=?");
+			batchUpdate.setString(1, saveLaunchSellInRequestList.getLaunchId());
+			batchUpdate.executeUpdate();
+			List<SaveErroredLaunchSellInRequest> listSellIn = saveLaunchSellInRequestList.getListOfSellIns();
+			for (SaveErroredLaunchSellInRequest saveLaunchSellInRequest : listSellIn) {
+				try (PreparedStatement preparedStatement = sessionImpl.connection().prepareStatement(TBL_LAUNCH_SELLIN_TEMP,
+						Statement.RETURN_GENERATED_KEYS)) {
+					preparedStatement.setString(1, saveLaunchSellInRequestList.getLaunchId());
+					preparedStatement.setString(2, saveLaunchSellInRequest.getL1Chain());
+					preparedStatement.setString(3, saveLaunchSellInRequest.getL2Chain());
+					preparedStatement.setString(4, saveLaunchSellInRequest.getStoreFormat());
+					preparedStatement.setString(5, saveLaunchSellInRequest.getStoresPlanned());
+					preparedStatement.setString(6, saveLaunchSellInRequest.getSku1());
+					preparedStatement.setString(7, saveLaunchSellInRequest.getSku2());
+					preparedStatement.setString(8, saveLaunchSellInRequest.getSku3());
+					preparedStatement.setString(9, saveLaunchSellInRequest.getSku4());
+					preparedStatement.setString(10, saveLaunchSellInRequest.getSku5());
+					preparedStatement.setString(11, saveLaunchSellInRequest.getSku6());
+					preparedStatement.setString(12, saveLaunchSellInRequest.getSku7());
+					preparedStatement.setString(13, saveLaunchSellInRequest.getSku8());
+					preparedStatement.setString(14, saveLaunchSellInRequest.getSku9());
+					preparedStatement.setString(15, saveLaunchSellInRequest.getSku10());
+					preparedStatement.setString(16, saveLaunchSellInRequest.getSku11());
+					preparedStatement.setString(17, saveLaunchSellInRequest.getSku12());
+					preparedStatement.setString(18, saveLaunchSellInRequest.getSku13());
+					preparedStatement.setString(19, saveLaunchSellInRequest.getSku14());
+					preparedStatement.setString(20, saveLaunchSellInRequest.getRotations());
+					preparedStatement.setString(21, saveLaunchSellInRequest.getUpliftN1());
+					preparedStatement.setString(22, saveLaunchSellInRequest.getUpliftN2());
+					preparedStatement.setString(23, userId);
+					preparedStatement.setTimestamp(24, new Timestamp(new Date().getTime()));
+					preparedStatement.setString(25,saveLaunchSellInRequest.getErrorMsg());
+					preparedStatement.executeUpdate();
+				} catch (Exception e) {
+					logger.error("Exception: " + e);
+				}
+			}
+		} catch (Exception e) {
+			logger.error("Exception: " + e);
+			return e.toString();
+		} finally {
+			try {
+				batchUpdate.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return "Saved Successfully";
+	}
+
+	// Implemented by Harsha for Q6
+	@Override
+	public int getCountofErrorMessage(String launchID) { 
+		 try {
+			 String errorMsg="Mandatory details are missing"; 
+			 Integer recCount =0;
+				Query query1 = sessionFactory.getCurrentSession().createNativeQuery(
+						"select count(*) from TBL_LAUNCH_TEMP_SELLIN where SELLIN_LAUNCH_ID IN (:launchID) AND ERROR_MSG LIKE '%"+errorMsg+"%' ");
+
+				query1.setString("launchID", launchID);
+				recCount = ((BigInteger)query1.uniqueResult()).intValue();
+				return recCount;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return 0;
+			}
+	}
+	// Implemented by Harsha for Q6
+	@Override
+	public List<ArrayList<String>> getErrorSellInDump(String userId, DownloadSellInRequestList downloadLaunchSellInRequest) {
+		List<ArrayList<String>> downloadErrorDataList = new ArrayList<>();
+		Session session = sessionFactory.getCurrentSession();
+		SessionImpl sessionImpl = (SessionImpl) session;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			ArrayList<String> headerDetail = new ArrayList<>();
+
+			headerDetail.add("L1_CHAIN");
+			headerDetail.add("L2_CHAIN");
+			headerDetail.add("STORE_FORMAT");
+			headerDetail.add("STORES_PLANNED");
+			headerDetail.add("SKU1_SELLIN");
+			headerDetail.add("SKU2_SELLIN");
+			headerDetail.add("SKU3_SELLIN");
+			headerDetail.add("SKU4_SELLIN");
+			headerDetail.add("SKU5_SELLIN");
+			headerDetail.add("SKU6_SELLIN");
+			headerDetail.add("SKU7_SELLIN");
+			headerDetail.add("SKU8_SELLIN");
+			headerDetail.add("SKU9_SELLIN");
+			headerDetail.add("SKU10_SELLIN");
+			headerDetail.add("SKU11_SELLIN");
+			headerDetail.add("SKU12_SELLIN");
+			headerDetail.add("SKU13_SELLIN");
+			headerDetail.add("SKU14_SELLIN");
+			headerDetail.add("ROTATIONS");
+			headerDetail.add("UPLIFT_N1");
+			headerDetail.add("UPLIFT_N2");
+			headerDetail.add("ERROR_MSG");
+			downloadErrorDataList.add(headerDetail);
+			// SQL to get details
+			stmt = sessionImpl.connection()
+					.prepareStatement("SELECT * FROM TBL_LAUNCH_TEMP_SELLIN WHERE SELLIN_LAUNCH_ID = '"
+							+ downloadLaunchSellInRequest.getLaunchId() + "'");
+			List<String> bpDesc = new ArrayList<>();
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				ArrayList<String> dataObjresult = new ArrayList<>();
+				dataObjresult.add(rs.getString("SELLIN_L1_CHAIN"));
+				dataObjresult.add(rs.getString("SELLIN_L2_CHAIN"));
+				dataObjresult.add(rs.getString("SELLIN_STORE_FORMAT"));
+				dataObjresult.add(rs.getString("SELLIN_STORES_PLANNED"));
+				dataObjresult.add(rs.getString("SELLIN_SKU1"));
+				dataObjresult.add(rs.getString("SELLIN_SKU2"));
+				dataObjresult.add(rs.getString("SELLIN_SKU3"));
+				dataObjresult.add(rs.getString("SELLIN_SKU4"));
+				dataObjresult.add(rs.getString("SELLIN_SKU5"));
+				dataObjresult.add(rs.getString("SELLIN_SKU6"));
+				dataObjresult.add(rs.getString("SELLIN_SKU7"));
+				dataObjresult.add(rs.getString("SELLIN_SKU8"));
+				dataObjresult.add(rs.getString("SELLIN_SKU9"));
+				dataObjresult.add(rs.getString("SELLIN_SKU10"));
+				dataObjresult.add(rs.getString("SELLIN_SKU11"));
+				dataObjresult.add(rs.getString("SELLIN_SKU12"));
+				dataObjresult.add(rs.getString("SELLIN_SKU13"));
+				dataObjresult.add(rs.getString("SELLIN_SKU14"));
+				dataObjresult.add(rs.getString("SELLIN_ROTATIONS"));
+				dataObjresult.add(rs.getString("SELLIN_UPLIFT_N1"));
+				dataObjresult.add(rs.getString("SELLIN_UPLIFT_N2"));//ERROR_MSG
+				dataObjresult.add(rs.getString("ERROR_MSG"));
+				downloadErrorDataList.add(dataObjresult);
+			}
+			return downloadErrorDataList;
+		} catch (Exception ex) {
+			logger.debug("Exception :", ex);
+			return null;
+		} finally {
+			try {
+				stmt.close();
+				rs.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 
 }
