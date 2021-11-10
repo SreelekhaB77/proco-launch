@@ -2179,7 +2179,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 			headerDetail.add("ROTATIONS");
 			headerDetail.add("UPLIFT_N1");
 			headerDetail.add("UPLIFT_N2");
-			headerDetail.add("ERROR_MSG");
+			headerDetail.add("Error Message");
 			downloadErrorDataList.add(headerDetail);
 			// SQL to get details
 			stmt = sessionImpl.connection()

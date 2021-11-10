@@ -2059,7 +2059,7 @@ public class TMELaunchPlanController {
 		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
 		String fileName = UploadUtil.getFileName("SellIn.Template.file", "",
 				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
-		fileName="ErrorSellIn.file";
+		fileName="TME_Sellin_Error.file";
 		String downloadFileName = absoluteFilePath + fileName;
 		String userId = (String) request.getSession().getAttribute("UserID");
 		List<ArrayList<String>> listDownload = launchSellInService.getErrorSellInDump(userId, downloadLaunchSellInRequest);
