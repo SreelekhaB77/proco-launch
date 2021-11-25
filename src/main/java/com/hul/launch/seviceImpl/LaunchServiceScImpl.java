@@ -45,6 +45,20 @@ public class LaunchServiceScImpl implements LaunchServiceSc {
 	public List<LaunchScMstnClearanceResponse> getScMstnClearanceData(List<String> listOfLaunchData) {
 		return launchDaoSc.getScMstnClearanceData(listOfLaunchData);
 	}
+	
+	// Harsha's changes Q6
+	@Override
+	public List<String> getScMstnClearanceDataChange(List<String> listOfLaunchData) {
+		return launchDaoSc.getMocDates(listOfLaunchData);
+	}
+	
+	// Added By Harsha for getting MSTN cleared Data in Q6
+	@Override
+	public List<LaunchScMstnClearanceResponse> getScMstnClearanceDataByfilter(List<String> listOfLaunchData, List<String> getdistinctMOC) {
+		return launchDaoSc.getScMstnClearanceDataFilter(listOfLaunchData,  getdistinctMOC);
+	}
+	
+
 
 	@Override
 	public String saveMstnClearanceByLaunchIdsSc(RequestMstnClearanceList requestMstnClearanceList, String userId) {
@@ -63,4 +77,6 @@ public class LaunchServiceScImpl implements LaunchServiceSc {
 	public List<String> getAllMoc() {
 		return launchDaoSc.getAllMoc();
 	}
+
+	
 }

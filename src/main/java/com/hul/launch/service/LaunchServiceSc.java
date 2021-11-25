@@ -27,4 +27,12 @@ public interface LaunchServiceSc {
 	
 	//Q2 sprint feb 2021 kavitha
 	public List<String> getAllMoc();
+
+	//Added by Harsha for Q6
+	public List<String> getScMstnClearanceDataChange(List<String> listOfLaunchData);
+	//Added by Harsha for Q6
+	public List<LaunchScMstnClearanceResponse> getScMstnClearanceDataByfilter(List<String> listOfLaunchData,
+			List<String> getdistinctMOC);
+
+	
 }

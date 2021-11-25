@@ -787,6 +787,7 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 	
 	@SuppressWarnings("unchecked")
 	public List<Disaggregate> getDisaggregatedFinalBuildUpTempDataNew(String[] promoId) {
+		
 		List<Disaggregate> liReturn = new ArrayList<>();
 		List<String> promoIdList = Arrays.asList(promoId);
 		
@@ -797,6 +798,9 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 			Query query = null;
 			for(int i=0; i<promoId.length;i++) {
 				
+			int count=0 ;
+			double dpPerSplit = 0;
+			double dpQtySplit = 0;
 			sBuildupQry = " SELECT DISTINCT A.PROMO_ID,B.GEOGRAPHY,A.BASEPACK,B.CUSTOMER_CHAIN_L1,A.DEPOT,C.BRANCH,C.CLUSTER, " + 
 					" CAST(A.PERCENTAGE AS DECIMAL(5,2)), A.QUANTITY, CASE WHEN A.KAM_SPLIT_STATUS = 0 THEN A.QUANTITY ELSE A.KAM_SPLIT END AS KAM_SPLIT , D.CATEGORY " + 
 					" from TBL_PROCO_PROMOTION_DISAGGREGATION_DEPOT_LEVEL AS A INNER JOIN TBL_PROCO_PROMOTION_MASTER AS B ON A.PROMO_ID = B.PROMO_ID AND " + 
@@ -807,9 +811,14 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 				query.setParameter("launchId",promoId[i]);
 				//query.setParameterList("launchId", promoIdList);
 			Iterator<Object> itr = query.list().iterator();
+			int size =query.list().size();
+			
 			int[] temp = { 1 };
 			while (itr.hasNext()) {
 				Object[] obj = (Object[]) itr.next();
+				count++;
+				dpPerSplit += Double.parseDouble(obj[7].toString());
+				dpQtySplit += Double.parseDouble(obj[8].toString());
 				Disaggregate disaggregate = new Disaggregate();
 				disaggregate.setPromo_Id((String) obj[0]);
 				disaggregate.setGeography((String) obj[1]);
@@ -823,7 +832,10 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 				disaggregate.setDepot_Qty((String) obj[8]);
 				disaggregate.setKam_Split((String) obj[9]);
 				disaggregate.setSales_category((String) obj[10]);
-
+				if(count == size) { // Added By Harsha in Q6 for making entry at last
+					disaggregate.setDp_Per_Split(String.valueOf(Math.round(dpPerSplit))+"%");
+					disaggregate.setdP_Qty_Split(String.valueOf(Math.round(dpQtySplit)));
+				}
 				liReturn.add(disaggregate);
 				temp[0]++;
 			}
@@ -2037,9 +2049,9 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 	}
 
 	@Override
-	public List<ArrayList<String>> getMstnClearanceDataDump(String userId, List<String> listOfLaunchData) {
+	public List<ArrayList<String>> getMstnClearanceDataDump(String userId, List<String> listOfLaunchData, String moc) { // Added MOC as additional parameter
 		List<ArrayList<String>> downloadedData = new ArrayList<>();
-		List<LaunchScMstnClearanceResponse> listOfFinalBuildups = launchDaoSc.getScMstnClearanceDataDump(listOfLaunchData);
+		List<LaunchScMstnClearanceResponse> listOfFinalBuildups = launchDaoSc.getScMstnClearanceDataDump(listOfLaunchData, moc); // Added MOC as additional parameter
 		ArrayList<String> headerDetail = new ArrayList<>();
 		headerDetail.add("LAUNCH_ID");
 		headerDetail.add("LAUNCH_NAME");

@@ -117,6 +117,18 @@
 			<c:out value="${success_file_upload}"></c:out>
 		</div>
 	</c:if>
+	<!--bharati added code for sucessblock and error block for sprint-6 US-5-->
+	                 
+                                    <div class="alert alert-danger marginT15" style="display: none;" id="sellinerrorblockUpload">
+                                        <button type="button" class="close" data-hide="alert">&times;</button>
+                                       
+                                            <span>File contains error...</span>
+                                            <a href="#" onClick="downloadLaunchSellInErrorTemplate();" id="downloadTempFileLink">Click here to Download Error File</a>
+                                    </div>
+									
+									<!--bharati changes end here-->
+	
+	
 	<%-- </c:if> --%>
 	<%-- <c:if test="${errorMsg!=null}">
 			<div class="alert alert-danger sucess-msg" id="errorblock">
@@ -723,7 +735,8 @@
 										</div>
 
 										<div class="upload-max-size">Maximum Upload File
-											Size:2MB</div>
+											Size:2MB / SKU, Rotation and Uplift are mandatory to be filled</div>
+											
 										<span id="uploadSellInErrorMsg"
 											style="display: none; color: red">Please upload .xls
 											or .xlsx file</span>

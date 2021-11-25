@@ -39,6 +39,13 @@ public class LaunchSellInServiceImpl implements LaunchSellInService {
 		return launchSellInDao.getSellInDump(userId,downloadLaunchSellInRequest);
 	}
 	
+	// Added By Harsha for downloading ErrorList
+	@Override
+	public List<ArrayList<String>> getErrorSellInDump(String userId,
+			DownloadSellInRequestList downloadLaunchSellInRequest) {
+		return launchSellInDao.getErrorSellInDump(userId,downloadLaunchSellInRequest);
+	}
+	
 	@Override
 	public String saveSellInByUpload(List<Object> saveLaunchSellIn, String userID, String string, boolean b, boolean c,
 			String launchId) {
@@ -81,4 +88,18 @@ public class LaunchSellInServiceImpl implements LaunchSellInService {
 			return "ERROR";
 		}
 	}
+	// Added By Harsha for saving in TEMP DB
+	@Override
+	public String validateSellInByUpload(List<Object> saveLaunchSellIn, String userID, String string, boolean b, boolean c,
+			String launchId) {
+		return launchSellInDao.validateSellInByUploadImpl( saveLaunchSellIn,  userID,  string,  b,  c, launchId);
+	}
+	
+	// Added By Harsha for saving in TEMP DB
+		@Override
+		public int getCountofErrorMessage(String launchId) {
+			return launchSellInDao.getCountofErrorMessage( launchId);
+		}
+
+
 }

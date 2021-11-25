@@ -16,4 +16,12 @@ public interface LaunchSellInService {
 
 	public String saveSellInByUpload(List<Object> saveLaunchSellIn, String userID, String string, boolean b, boolean c,
 			String launchId);
+
+	public String validateSellInByUpload(List<Object> saveLaunchSellIn, String userID, String string, boolean b, boolean c,
+			String launchId);
+
+	public int getCountofErrorMessage(String launchId);
+
+	// Added By Harsha for downloading error file 
+	public List<ArrayList<String>> getErrorSellInDump(String userId, DownloadSellInRequestList downloadLaunchSellInRequest);
 }

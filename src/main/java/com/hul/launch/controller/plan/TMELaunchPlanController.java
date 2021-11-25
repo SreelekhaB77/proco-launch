@@ -1100,6 +1100,8 @@ public class TMELaunchPlanController {
 		String downloadFileName = absoluteFilePath + fileName;
 		String userId = (String) request.getSession().getAttribute("UserID");
 		List<ArrayList<String>> listDownload = launchSellInService.getSellInDump(userId, downloadLaunchSellInRequest);
+		//testing purpose
+
 		try {
 			if (listDownload != null) {
 				UploadUtil.writeXLSFile(downloadFileName, listDownload, null, ".xls");
@@ -1851,8 +1853,18 @@ public class TMELaunchPlanController {
 							throw new Exception((String) errorList.get(0));
 						} else if (map.containsKey("DATA")) {
 							List<Object> list = map.get("DATA");
-							savedData = launchSellInService.saveSellInByUpload(list, userID, "CREATED BY TME", true,
+							// Implementing for error in uploading file
+							
+							savedData = launchSellInService.validateSellInByUpload(list, userID, "CREATED BY TME", true,
 									false, launchId);
+							int count = launchSellInService.getCountofErrorMessage(launchId);
+							
+							// new implementation ends here
+							if(count == 0) {
+								savedData = launchSellInService.saveSellInByUpload(list, userID, "CREATED BY TME", true,
+										false, launchId);
+							}
+							
 							if (!savedData.contains("Exception")) {
 								if (savedData != null && savedData.equals("SUCCESS_FILE")) {
 									successMessage = commUtils.getProperty("File.Upload.Success");
@@ -1860,6 +1872,9 @@ public class TMELaunchPlanController {
 									throw new Exception("File Uploaded with errors");
 								} else if (savedData != null && savedData.equals("ERROR")) {
 									throw new Exception("Error while uploading file");
+								}
+								else if (savedData != null && savedData.equals("Wrong Data saved Sucessfully")) {
+									throw new Exception("Tried uploading Wrong Data");
 								}
 							} else {
 								throw new Exception(savedData);
@@ -2032,6 +2047,37 @@ public class TMELaunchPlanController {
 		headerDetail.add("DEPTH_PER_SHELF_PER_SKU5");
 		return headerDetail;
 	}
+	
+	// Adding method to download wrong data file by harsha
+	@RequestMapping(value = "downloadErrorSellInTemplate.htm", method = RequestMethod.POST)
+	public @ResponseBody String downloadErrorSellInTemplate(@RequestBody String jsonBody, Model model,
+			HttpServletRequest request) {
+		String absoluteFilePath = "";
+		Gson gson = new Gson();
+		DownloadSellInRequestList downloadLaunchSellInRequest = gson.fromJson(jsonBody,
+				DownloadSellInRequestList.class);
+		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
+		String fileName = UploadUtil.getFileName("SellIn.Template.file", "",
+				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
+		fileName="TME_Sellin_Error.file";
+		String downloadFileName = absoluteFilePath + fileName;
+		String userId = (String) request.getSession().getAttribute("UserID");
+		List<ArrayList<String>> listDownload = launchSellInService.getErrorSellInDump(userId, downloadLaunchSellInRequest);
+		try {
+			if (listDownload != null) {
+				UploadUtil.writeXLSFile(downloadFileName, listDownload, null, ".xls");
+			}
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
+			Map<String, String> map = new HashMap<>();
+			map.put("Error", e.toString());
+			return gson.toJson(map);
+		}
+		Map<String, String> map = new HashMap<>();
+		map.put("FileToDownload", fileName);
+		return gson.toJson(map);
+	}
+
 	
 	
 }
