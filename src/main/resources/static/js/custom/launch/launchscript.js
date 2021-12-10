@@ -18,6 +18,7 @@ $(document).ready(function() {
 	$.ajaxSetup({ cache: false });
 	$('#errorblockUpload').hide();
 	$('#sellinerrorblockUpload').hide();
+	$('#annexerrorblockUpload').hide();
 	 $("[data-hide]").on("click", function() {
          $(this).closest("." + $(this).attr("data-hide")).hide();
      });
@@ -1370,13 +1371,19 @@ function uploadAnnexureDoc(isExistingUpload) {
             if("SUCCESS_FILE" == data) {
             	isFileOneUploaded = true;
             	$('#errorblockUpload').hide();
+            	$('#annexerrorblockUpload').hide();  //bharati added for sprint-7
             	$('#annxr').hide();
             	 $('#successblockUpload').show().find('span').html(' Files Uploaded Successfully !!!');
             	 $( '#annexfile' ).parent().removeClass( 'btn-primary' ).addClass('btn-success').find( 'i' ).attr( 'class', 'glyphicon glyphicon-ok' ).parent().find( 'span' ).html( "&nbsp;" );
 
-            } else {
+            }  //bharati added this else block for annex file size in sprint-7 Dec-21 
+            else if(data.includes('File size')){
+				$('#annexerrorblockUpload').show().find('span').html("File Size Exceeded");
+				                	
+				} else {
             	$('#successblockUpload').hide();
             	$('#errorblockUpload').show();
+            	$('#annexerrorblockUpload').hide();  //bharati added for sprint-7
      		}
             return false;
            // $("#launchstrFileUploadBtn").prop("disabled", false);
@@ -1459,6 +1466,7 @@ function uploadArtDoc(isExistingUpload) {
 		success : function(data) {
 			$('#uploadartErrorMsg').hide();
 			$('#errorblockUpload').hide();
+			$('#annexerrorblockUpload').hide();  //bharati added for sprint-7
 			 $('.loader').hide();
 			if ("SUCCESS_FILE" == data) {
 				isFileTwoUploaded = true;
@@ -1469,9 +1477,14 @@ function uploadArtDoc(isExistingUpload) {
 						' Files Uploaded Successfully !!!');
 				$( '#artfile' ).parent().removeClass( 'btn-primary' ).addClass('btn-success').find( 'i' ).attr( 'class', 'glyphicon glyphicon-ok' ).parent().find( 'span' ).html( "&nbsp;" );
 
-			} else {
+			}  //bharati added this else block for annex file size in sprint-7 Dec-21 
+			 else if(data.includes('File size')){
+				$('#annexerrorblockUpload').show().find('span').html("File Size Exceeded");
+				                	
+				} else {
 				$('#successblockUpload').hide();
 				$('#errorblockUpload').show();
+				$('#annexerrorblockUpload').hide();  //bharati added for sprint-7
 			}
 			return false;
 			// $("#launchstrFileUploadBtn").prop("disabled", false);
@@ -1552,13 +1565,19 @@ function uploadmdgDoc(isExistingUpload) {
         	 $('.loader').hide();
             if("SUCCESS_FILE" == data) {
             	$('#errorblockUpload').hide();
+            	$('#annexerrorblockUpload').hide();   //bharati added for sprint-7
             	isFileThreeUploaded = true;
             	 $('#successblockUpload').show().find('span').html(' Files Uploaded Successfully !!!');
             	 $( '#mdgfile' ).parent().removeClass( 'btn-primary' ).addClass('btn-success').find( 'i' ).attr( 'class', 'glyphicon glyphicon-ok' ).parent().find( 'span' ).html( "&nbsp;" );
 
-            } else  {
+            }   //bharati added this else block for annex file size in sprint-7 Dec-21 
+            else if(data.includes('File size')){
+				$('#annexerrorblockUpload').show().find('span').html("File Size Exceeded");
+				                	
+				} else  {
             	$('#successblockUpload').hide();
             	$('#errorblockUpload').show();
+            	$('#annexerrorblockUpload').hide(); //bharati added for sprint-7
 			}
             return false;
            // $("#launchstrFileUploadBtn").prop("disabled", false);
