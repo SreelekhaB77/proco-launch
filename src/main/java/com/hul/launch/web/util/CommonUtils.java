@@ -39,7 +39,10 @@ public class CommonUtils {
 	public CommonUtils() {
 	}
 
-	public static final long maxFileSize = 1024 * 1024 * 6;//Harsha changes increased file size from 2 MB to 6 MB 
+	public static final long maxFileSize = 1024 * 1024 * 2;
+	public static final long AnnexureDocFileSize = 1024 * 1024 * 6;//Harsha changes increased file size from 2 MB to 6 MB 
+	public static final long MdgDocFileSize = 1024 * 1024 * 6;//Harsha changes increased file size from 2 MB to 6 MB 
+	public static final long ArtworkDocFileSize = 1024 * 1024 * 6;//Harsha changes increased file size from 2 MB to 6 MB 
 	public static final long maxFileSizeForProcMeasureReport = 1024 * 1024 * 4;
 	public static final long  maxFileSizeForExcel = 1024 * 1024 * 25;
 	public static final long  maxFileSizeForTOTExcel = 1024 * 1024 * 5;
@@ -206,7 +209,29 @@ public class CommonUtils {
 			return false;
 		}
 	}
-	
+	//Added by harsha for Sprint 7
+	public static boolean isAnnexureDocFileSizeExceeds(MultipartFile file) {
+		if (file.getSize() > (AnnexureDocFileSize)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public static boolean isMdgDocFileSizeExceeds(MultipartFile file) {
+		if (file.getSize() > (MdgDocFileSize)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public static boolean isArtworkDocFileSizeExceeds(MultipartFile file) {
+		if (file.getSize() > (ArtworkDocFileSize)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	//Ended of changes for Sprint 7
 	public static boolean isMearsureReportFileSizeExceeds(MultipartFile file) {
 		if (file.getSize() > (maxFileSizeForProcMeasureReport)) {
 			return true;
