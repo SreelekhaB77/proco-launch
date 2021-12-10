@@ -39,7 +39,7 @@ public class CommonUtils {
 	public CommonUtils() {
 	}
 
-	public static final long maxFileSize = 1024 * 1024 * 2;
+	public static final long maxFileSize = 1024 * 1024 * 6;//Harsha changes increased file size from 2 MB to 6 MB 
 	public static final long maxFileSizeForProcMeasureReport = 1024 * 1024 * 4;
 	public static final long  maxFileSizeForExcel = 1024 * 1024 * 25;
 	public static final long  maxFileSizeForTOTExcel = 1024 * 1024 * 5;
