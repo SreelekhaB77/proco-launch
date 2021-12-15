@@ -72,7 +72,7 @@ public interface LaunchDaoKam {
 	
 	public List<String> getLaunchAccounts(String launchId, String userId);
 	
-	public List<String> getAllMoc(String userId, String launchMOC);
+	public List<String> getAllMoc(List<LaunchDataResponse> listOfLaunch);// Modified by Harsha as part of Q7 sprint
 	
 	//Q2 sprint feb 2021
 	public List<String> getAllMocApprovalStatus(String userId);
