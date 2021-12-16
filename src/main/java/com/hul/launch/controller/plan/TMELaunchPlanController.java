@@ -1352,7 +1352,7 @@ public class TMELaunchPlanController {
 
 				if (extList.contains(fileExt)) {
 					if (!CommonUtils.isFileEmpty(file)) {
-						if (CommonUtils.isFileSizeExceeds(file)) {
+						if (CommonUtils.isAnnexureDocFileSizeExceeds(file)) {
 							throw new Exception("File size exceeded");
 						} else {
 							String filePath = FilePaths.LAUNCH_ANNEXURE_UPLOAD_FILE_PATH;
@@ -1441,7 +1441,7 @@ public class TMELaunchPlanController {
 
 				if (extList.contains(fileExt.toUpperCase())) {
 					if (!CommonUtils.isFileEmpty(file)) {
-						if (CommonUtils.isFileSizeExceeds(file)) {
+						if (CommonUtils.isArtworkDocFileSizeExceeds(file)) {
 							throw new Exception("File size exceeded");
 						} else {
 							String filePath = FilePaths.LAUNCH_ARTWORK_UPLOAD_FILE_PATH;
@@ -1515,7 +1515,7 @@ public class TMELaunchPlanController {
 
 				if (extList.contains(fileExt)) {
 					if (!CommonUtils.isFileEmpty(file)) {
-						if (CommonUtils.isFileSizeExceeds(file)) {
+						if (CommonUtils.isMdgDocFileSizeExceeds(file)) {
 							throw new Exception("File size exceeded");
 						} else {
 							String filePath = FilePaths.LAUNCH_MDG_UPLOAD_FILE_PATH;
@@ -1570,7 +1570,7 @@ public class TMELaunchPlanController {
 			String fileName = file.getOriginalFilename();
 			fileName = filepath + fileName;
 			if (!CommonUtils.isFileEmpty(file)) {
-				if (CommonUtils.isFileSizeExceeds(file)) {
+				if (CommonUtils.isMdgDocFileSizeExceeds(file)) {
 					throw new Exception("File size exceeded");
 				} else {
 					if (UploadUtil.movefile(file, fileName)) {

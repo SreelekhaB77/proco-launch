@@ -115,7 +115,8 @@ public class KamLaunchPlanController {
 			
 			int  launchId =listOfLaunch.get(0).getLaunchId();
 			//Q1 sprint kavitha
-			List<String> kammoclist=launchServiceKam.getAllMoc(userId, kamMoc);
+			//List<String> kammoclist=launchServiceKam.getAllMoc(userId, kamMoc,listOfLaunch); --- previous implementation before Q7
+			List<String> kammoclist=launchServiceKam.getAllMoc(listOfLaunch);// Modified by Harsha for Q7 sprint
 			model.addAttribute("kammoclist",kammoclist);
 			//model.addAttribute("kamApprovalStatusNotification",listOfKamChangeReq.stream().map(n->n.getLaunchReadStatus()=="NEW").count());
 			

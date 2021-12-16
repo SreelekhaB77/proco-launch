@@ -151,6 +151,7 @@
 		<span>Error while uploading file.</span>
 		<!--  <a href="downloadTmeUploadErrorFile.htm" id="downloadTempFileLink">Click here to Download Error File</a> -->
 	</div>
+	
 
 	<form id="launchPlanForm" action="#" method="POST"
 		enctype="multipart/form-data">
@@ -1024,6 +1025,15 @@
 												<%-- <c:out value="${success}"></c:out> --%>
 												<span></span>
 											</div>
+											
+											<!---bharati added this error block for annexeerrorblock in sprint-7 dec-21 file size exceeded error-->
+	                                           <div class="alert alert-danger marginT15" id="annexerrorblockUpload" style="display:none">
+		                                       <button type="button" class="close" data-hide="alert">&times;</button>
+		
+		                                       <span> </span>
+		
+	                                          </div>
+	                                         <!--bharati code end here-->
 
 											<form action="#" method="POST" enctype="multipart/form-data"
 												id="tmeannexFileUploadBean" class="form-horizontal"

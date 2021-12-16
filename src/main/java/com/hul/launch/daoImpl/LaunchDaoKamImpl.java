@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -23,6 +25,7 @@ import org.hibernate.internal.SessionImpl;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import com.hul.launch.constants.ResponseCodeConstants;
 import com.hul.launch.controller.masters.StoreMasterBean;
@@ -190,6 +193,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		Session session = sessionFactory.getCurrentSession();
 		SessionImpl sessionImpl = (SessionImpl) session;
 		List<LaunchDataResponse> listOfCompletedLaunch = new ArrayList<>();
+		List<LaunchDataResponse> finallistOfCompletedLaunch = new ArrayList<>();
 		PreparedStatement stmt = null;
 		PreparedStatement stmt1 = null;
 		// PreparedStatement stmt2 = null; // Commeneted by Harsha for getting remaining accounts rejection lists
@@ -289,15 +293,20 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 							|| launchDataResponse.getLaunchMoc().equalsIgnoreCase(launchMOC)) {
 						listOfCompletedLaunch.add(launchDataResponse);
 					}
-					// listOfCompletedLaunch.add(launchDataResponse);
-				//} // Commeneted by Harsha for getting remaining accounts rejection lists
+					
+				
+			}//Added By Harsha for sprint Q7 to get Launch's based on user ID
+			finallistOfCompletedLaunch = kamAccountFilter (listOfCompletedLaunch,  account);
+			if(finallistOfCompletedLaunch==null) {
+				return null;
 			}
+				return finallistOfCompletedLaunch;
+					
 		} catch (Exception ex) {
 			logger.debug("Exception :", ex);
 			LaunchDataResponse launchDataResponse = new LaunchDataResponse();
 			launchDataResponse.setError(ex.toString());
-			listOfCompletedLaunch.add(launchDataResponse);
-			return listOfCompletedLaunch;
+			finallistOfCompletedLaunch.add(launchDataResponse);
 		} finally {
 			try {
 				stmt.close();
@@ -312,11 +321,88 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 				logger.debug("Exception :", e);
 				LaunchDataResponse launchDataResponse = new LaunchDataResponse();
 				launchDataResponse.setError(e.toString());
-				listOfCompletedLaunch.add(launchDataResponse);
-				return listOfCompletedLaunch;
+				 finallistOfCompletedLaunch.add(launchDataResponse);
 			}
 		}
-		return listOfCompletedLaunch;
+		return finallistOfCompletedLaunch;
+	}
+	
+	
+	//Added By Harsha for sprint Q7 to get Launch's based on user ID
+	public List<LaunchDataResponse> kamAccountFilter (List<LaunchDataResponse> listOfCompletedLaunch, String account) {
+		List<LaunchDataResponse> finalListOfCompletedLaunch = new ArrayList<>();
+		String userId=account;
+		for(LaunchDataResponse name : listOfCompletedLaunch) {
+			LaunchDataResponse launchDataResponsedub = new LaunchDataResponse();
+			int launchId = name.getLaunchId();
+		Session session = sessionFactory.getCurrentSession();
+		SessionImpl sessionImpl = (SessionImpl) session;
+		String AccountNames = "";
+		String VatUserAcc = "";
+		try {
+			PreparedStatement stmt = sessionImpl.connection()
+					.prepareStatement("SELECT CLUSTER_ACCOUNT FROM TBL_LAUNCH_CLUSTERS WHERE CLUSTER_LAUNCH_ID = '" + launchId + "'");
+			ResultSet rs = stmt.executeQuery();
+			ArrayList<String> accountslist=new ArrayList<>();
+			ArrayList<String> vatUserDetails=new ArrayList<>();
+			while (rs.next()) {
+				AccountNames = rs.getString("CLUSTER_ACCOUNT");
+				String[] parts = AccountNames.split(",");
+				for(String acc:parts){  
+					String[] accountName = acc.split(":");
+					String part1 = accountName[0].trim();
+					accountslist.add(part1.trim());
+					}
+			
+				PreparedStatement stmt3 = sessionImpl.connection()
+						.prepareStatement("SELECT ACCOUNT_NAME FROM TBL_VAT_USER_DETAILS WHERE USERID = '" + userId + "'" );
+				ResultSet rs3 = stmt3.executeQuery();
+				while (rs3.next()) {
+					VatUserAcc = rs3.getString("ACCOUNT_NAME");
+					String[] part2 = VatUserAcc.split(",");
+					for(String vatAcc:part2){  
+						vatUserDetails.add(vatAcc);
+						}
+				}
+				boolean var=CollectionUtils.containsAny(vatUserDetails,accountslist);
+				if(var) {
+					launchDataResponsedub.setLaunchId(name.getLaunchId());
+		        	launchDataResponsedub.setLaunchName(name.getLaunchName());
+		        	launchDataResponsedub.setLaunchDate(name.getLaunchDate());
+		        	launchDataResponsedub.setLaunchMoc(name.getLaunchMoc());
+					launchDataResponsedub.setLaunchNature(name.getLaunchNature());
+					launchDataResponsedub.setLaunchNature2(name.getLaunchNature2());
+					launchDataResponsedub.setLaunchBusinessCase(name.getLaunchBusinessCase());
+					launchDataResponsedub.setCategorySize(name.getCategorySize());
+					launchDataResponsedub.setClassification(name.getClassification());
+					launchDataResponsedub.setAnnexureDocName(name.getAnnexureDocName());
+					launchDataResponsedub.setArtWorkPackShotsDocName(name.getArtWorkPackShotsDocName());
+					launchDataResponsedub.setMdgDeckDocName(name.getMdgDeckDocName());
+					launchDataResponsedub.setSampleShared(name.getSampleShared());
+					launchDataResponsedub.setCreatedBy(name.getCreatedBy());
+					launchDataResponsedub.setCreatedDate(name.getCreatedDate());
+					launchDataResponsedub.setUpdatedBy(name.getUpdatedBy());
+					launchDataResponsedub.setUpdatedDate(name.getUpdatedDate());
+					launchDataResponsedub.setLaunchFinalStatus(name.getLaunchFinalStatus());
+					launchDataResponsedub.setLaunchMocKam(name.getLaunchMocKam());
+					launchDataResponsedub.setLaunchSubmissionDate(name.getLaunchSubmissionDate());
+					launchDataResponsedub.setAccountName(name.getAccountName());
+					launchDataResponsedub.setOriginalLaunchMoc(name.getOriginalLaunchMoc());
+					launchDataResponsedub.setChangedMoc(name.getChangedMoc());
+					finalListOfCompletedLaunch.add(launchDataResponsedub);
+				}
+				
+			}
+		} catch (Exception ex) {
+			logger.debug("Exception :", ex);
+			return (List<LaunchDataResponse>) ex;
+		}
+		
+		}
+		if(!finalListOfCompletedLaunch.isEmpty()) {
+			return finalListOfCompletedLaunch; 
+		}
+		return null;
 	}
 
 	@Override
@@ -742,15 +828,17 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 	// Q1 sprint kavitha feb2021
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<String> getAllMoc(String userId, String launchMOC) {
+	public List<String> getAllMoc(List<LaunchDataResponse> listOfLaunch) {// Commented by Harsha As part of Sprint 7 changes
 		try {
 
-			Query query = sessionFactory.getCurrentSession().createNativeQuery(
+			
+			/*Query query = sessionFactory.getCurrentSession().createNativeQuery(
 					"SELECT DISTINCT LAUNCH_MOC FROM (SELECT CASE WHEN TLK.LAUNCH_MOC IS NULL THEN tlc.LAUNCH_MOC ELSE TLK.LAUNCH_MOC END AS LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc "
 							+ "LEFT OUTER JOIN TBL_LAUNCH_MOC_KAM TLK ON TLK.LAUNCH_ID = tlc.LAUNCH_ID AND LAUNCH_ACCOUNT = '"
 							+ userId + "' "
 							+ "WHERE SAMPLE_SHARED IS NOT NULL AND LAUNCH_REJECTED NOT IN ('1','2') AND date_format(str_to_date(LAUNCH_DATE,'%d/%m/%Y'),'%Y-%m-%d') > NOW() )A "
-							+ "ORDER BY concat(substr(LAUNCH_MOC, 3, 4), substr(LAUNCH_MOC, 1, 2))");
+							+ "ORDER BY concat(substr(LAUNCH_MOC, 3, 4), substr(LAUNCH_MOC, 1, 2))");*/
+			// Commented by Harsha As part of Sprint 7 changes
 			/*
 			 * "SELECT DISTINCT LAUNCH_MOC FROM TBL_LAUNCH_MASTER tlc WHERE SAMPLE_SHARED IS NOT NULL "
 			 * +
@@ -758,8 +846,20 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			 * + " ORDER BY concat(substr(LAUNCH_MOC, 3, 4), substr(LAUNCH_MOC, 1, 2))");
 			 */
 
-			List<String> list = query.list();
-			return list;
+			// List<String> list = query.list(); Commented by Harsha As part of Sprint 7 changes 
+			List<String> finallist = new ArrayList<String>() ;
+			
+			for(LaunchDataResponse mocn : listOfLaunch) {
+				finallist.add(mocn.getLaunchMoc());
+			}
+			
+			Set<String> set = new LinkedHashSet<String>();
+			set.addAll(finallist);
+			finallist.clear();
+			finallist.addAll(set);
+			
+			// return list; Previous implementation
+			return finallist;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
