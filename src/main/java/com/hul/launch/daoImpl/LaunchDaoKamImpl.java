@@ -345,6 +345,8 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			ResultSet rs = stmt.executeQuery();
 			ArrayList<String> accountslist=new ArrayList<>();
 			ArrayList<String> vatUserDetails=new ArrayList<>();
+			ArrayList<String> allCustomers=new ArrayList<>();
+			allCustomers.add("ALL CUSTOMERS");
 			while (rs.next()) {
 				AccountNames = rs.getString("CLUSTER_ACCOUNT");
 				String[] parts = AccountNames.split(",");
@@ -365,7 +367,9 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 						}
 				}
 				boolean var=CollectionUtils.containsAny(vatUserDetails,accountslist);
-				if(var) {
+				boolean allCustomer = CollectionUtils.containsAny(allCustomers,accountslist);
+				
+				if(var || allCustomer) {
 					launchDataResponsedub.setLaunchId(name.getLaunchId());
 		        	launchDataResponsedub.setLaunchName(name.getLaunchName());
 		        	launchDataResponsedub.setLaunchDate(name.getLaunchDate());
