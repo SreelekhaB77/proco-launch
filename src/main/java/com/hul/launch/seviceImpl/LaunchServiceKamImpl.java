@@ -206,8 +206,11 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 	public List<String> getLaunchAccountsforRejection(String launchId, String userId) {
 		return launchDaoKam.getLaunchAccountsforRejection( launchId,  userId);
 	}
-
-	
+	//Added by Kavitha D-SPRINT 7 DEC 2021
+	@Override
+	public String getLaunchName(String launchId) {
+		return launchDaoKam.getLaunchName(launchId);
+	}
 	
 
 

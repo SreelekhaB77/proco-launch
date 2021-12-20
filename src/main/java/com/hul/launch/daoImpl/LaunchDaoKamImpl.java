@@ -1789,4 +1789,27 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		return iValid;
 		// Q1 Sprint3 Notification Changes - Kavitha D ends
 	}
+	//Kavitha D implementation-SPRINT 7 2021 starts
+	public String getLaunchName(String launchId) {
+		
+		Session session = sessionFactory.getCurrentSession();
+		SessionImpl sessionImpl = (SessionImpl) session;
+		String launchName = "";
+		try {
+			PreparedStatement stmt = sessionImpl.connection()
+					.prepareStatement("SELECT LAUNCH_NAME FROM TBL_LAUNCH_MASTER WHERE LAUNCH_ID = '" + launchId + "'" );		
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				launchName = rs.getString(1);
+			}
+			//return launchName;
+		} catch (Exception ex) {
+			logger.debug("Exception :", ex);
+			return ex.toString();
+		}
+		return launchName;
 }
+	//Kavitha D implementation-SPRINT 7 2021 ends
+
+}
+
