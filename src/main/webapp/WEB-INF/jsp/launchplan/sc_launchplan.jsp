@@ -35,7 +35,17 @@
 	
 </script>
 </head>
-
+<!--bharati added style for upload mstn in first tab sprint-7 US-16 Dec-21-->
+<style>
+.scmstnUpload{
+margin-top:45%!important;
+}
+@media only screen and (max-width: 767px) {
+.scmstnUpload{
+margin-top: 625px!important;
+}
+}
+</style>
 <body class="OpenSans-font">
 	<div class="loader">
 		<center>
@@ -65,12 +75,12 @@
 					<div class="row">
 						<ul class="nav nav-pills">
 
-							<li role="presentation" class="active col-md-2 col-sm-8 col-xs-12 launch-icon-active">
+							<li role="presentation" class="active col-md-3 col-sm-8 col-xs-12 launch-icon-active">
 								<a href="http://localhost:8083/VisibilityAssetTracker/getAllCompletedLaunchDataSc.htm"> <!-- <div class="launch-icon"></div> -->
 										<div class="tab-label-launch">Launch Plannning</div>
 								</a>
 							</li>
-							<li role="presentation" class="active col-md-2 col-sm-8 col-xs-12 launch-icon-inactive">
+							<li role="presentation" class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
 								<a href="http://localhost:8083/VisibilityAssetTracker/getAllCompletedLaunchDataSc.htm"> <!-- <div class="launch-icon"></div> -->
 									<div class="tab-label-launch">Performance</div>
 								</a>
@@ -165,7 +175,11 @@
 										</table>
 										
 										<div class="coebtnclass">
-											
+										<!--bharati added download mstn clearnce in sprint-7 US-16 Dec-21-->
+											<button type="button" id="mstndownload" class="btn col-md-2 leftBtn" onclick="scdownloadLaunchmstnFirst()" style="width: 18%;" disabled="disabled">
+												<span class="glyphicon glyphicon-arrow-down" style="color: yellow; float:left;"></span> Download MSTN Clearance
+											</button>
+											<!--Bharati code end here-->
 											<input type="button" onclick="scLaunch()" value="Launch Details" class="btn btn-secondary nxtclassification" id="sclnchDets" style="float: right;" disabled="disabled" />
 										</div>
 										
@@ -175,7 +189,38 @@
 							
 							
 							</div>
+							
+							
 						</div>
+						<!--bharati added upload mstn clearnce file in sprint-7 US-16 Dec-21-->
+						<div class="container-fluid">
+						<div class="row">
+							<form id="launchMultimstnfileupload" class="form-horizontal" action="#" modelAttribute="LAUNCHFileUploadBean" enctype="multipart/form-data" name="launchmultifileupload">
+										<div class="launchupload-parent scmstnUpload">
+											<div class="col-md-12 col-sm-12 ddd">
+												<div style="text-align: center; color: #878787;">
+				
+													<h2 class="SEGOEUIL-font">Upload MSTN</h2>
+													<div class="upload-image">
+														<img src="assets/images/upload-icon-n-body.png" alt="" />
+													</div>
+				
+													<div class="upload-max-size">Maximum Upload File Size:2MB</div>
+													<span id="uploadmultiErrorMsg" style="display: none; color: red">Please upload .xls or .xlsx file</span>
+													<div class="input-group upload-file">
+														<input id="uploadMultimstn" name="file" type="file" class="file">
+													</div>
+													<button class="validate_upload_mstn btn marginT10 btn-primary" id="btnMultiUploadmstn" disabled>Upload MSTN</button>
+				
+												</div>
+											</div>
+
+										</div>
+
+					</form>
+					</div>
+					</div>
+					<!--Bharati code end here-->
 					</div>
 					<div id="step-2" data-blockid="2" class="tab_content">
 						<!-- class="card secondCard hide_tab" id="launch_basepack" -->
