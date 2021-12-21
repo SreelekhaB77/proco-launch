@@ -345,6 +345,8 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			ResultSet rs = stmt.executeQuery();
 			ArrayList<String> accountslist=new ArrayList<>();
 			ArrayList<String> vatUserDetails=new ArrayList<>();
+			ArrayList<String> allCustomers=new ArrayList<>();
+			allCustomers.add("ALL CUSTOMERS");
 			while (rs.next()) {
 				AccountNames = rs.getString("CLUSTER_ACCOUNT");
 				String[] parts = AccountNames.split(",");
@@ -365,7 +367,9 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 						}
 				}
 				boolean var=CollectionUtils.containsAny(vatUserDetails,accountslist);
-				if(var) {
+				boolean allCustomer = CollectionUtils.containsAny(allCustomers,accountslist);
+				
+				if(var || allCustomer) {
 					launchDataResponsedub.setLaunchId(name.getLaunchId());
 		        	launchDataResponsedub.setLaunchName(name.getLaunchName());
 		        	launchDataResponsedub.setLaunchDate(name.getLaunchDate());
@@ -1785,4 +1789,27 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		return iValid;
 		// Q1 Sprint3 Notification Changes - Kavitha D ends
 	}
+	//Kavitha D implementation-SPRINT 7 2021 starts
+	public String getLaunchName(String launchId) {
+		
+		Session session = sessionFactory.getCurrentSession();
+		SessionImpl sessionImpl = (SessionImpl) session;
+		String launchName = "";
+		try {
+			PreparedStatement stmt = sessionImpl.connection()
+					.prepareStatement("SELECT LAUNCH_NAME FROM TBL_LAUNCH_MASTER WHERE LAUNCH_ID = '" + launchId + "'" );		
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				launchName = rs.getString(1);
+			}
+			//return launchName;
+		} catch (Exception ex) {
+			logger.debug("Exception :", ex);
+			return ex.toString();
+		}
+		return launchName;
 }
+	//Kavitha D implementation-SPRINT 7 2021 ends
+
+}
+

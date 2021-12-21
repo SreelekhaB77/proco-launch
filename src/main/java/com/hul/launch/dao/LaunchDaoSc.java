@@ -29,7 +29,7 @@ public interface LaunchDaoSc {
 
 	String saveMstnClearanceByLaunchIdsSc(RequestMstnClearanceList requestMstnClearanceList, String userId);
 
-	String uploadMstnClearanceByLaunchIdSc(List<Object> list, String userID);
+	String uploadMstnClearanceByLaunchIdSc(List<Object> list, String userID, boolean c);// Modified by Harsha for Q7 to accept mulitpile file upload 
 
 	List<LaunchScMstnClearanceResponse> getScMstnClearanceDataDump(List<String> listOfLaunchData, String moc); // Added MOC for excel download
 	
@@ -41,6 +41,6 @@ public interface LaunchDaoSc {
 	// Added by Harsha as part of Q6
 	public List<LaunchScMstnClearanceResponse> getScMstnClearanceDataFilter(List<String> listOfLaunchData, List<String> listOfMOCData);
 	
-	public String saveMstnClearanceByLaunchIdsScandLaunchMOC(RequestMstnClearanceList requestMstnClearanceList, String userId) ;
+	public String saveMstnClearanceByLaunchIdsScandLaunchMOC(RequestMstnClearanceList requestMstnClearanceList, String userId,boolean multipleFileUpload) ;
 
 }
