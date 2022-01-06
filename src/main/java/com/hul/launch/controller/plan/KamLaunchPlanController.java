@@ -668,7 +668,11 @@ public class KamLaunchPlanController {
 				throw new Exception("ERROR_FILE");
 			} else if (savedData.equals("ERROR")) {
 				throw new Exception("File Upload is UnSuccessful.");
-			} else {
+			} 
+			else if (savedData != null && savedData.equals("Minimum targeted stores should be approved by KAM")) {//Added By Harsha as part of US7 Jan 22
+				throw new Exception("Minimum targeted stores should be approved by KAM");
+			}
+			else {
 				successMessage = "SUCCESS_FILE";
 			}
 		} catch (Exception e) {

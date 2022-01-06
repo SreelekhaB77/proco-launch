@@ -105,5 +105,22 @@ public interface LaunchBasePacksDao {
 	String getStoreCountOnCustSellIIn(String storeFormat, List<String> liCluster, String classification, boolean isCustomStoreFormat);  //Sarin Changes - Q1Sprint Feb2021 - Added parameter isCustomStoreFormat 
 
 	public List<String> getBasepackCodeOnBpId(List<String> bpIds, String launchId);
+	
+	// Added By Harsha
+	public String insertdiffCustomerStoreFormatesToTemp(List<Object> saveLaunchCluster, String userId,String launchId) ;
+	////getCountofErrorMSgfromTblLaunchClusterTemp (String launchId)
+	public String getCountofErrorMSgfromCustmstorTblLaunchClusterTempAndinserttopermtbl (String launchId); //
+	public String getCountofErrorMSgfromTblLaunchClusterTempStroeFormate (String launchId); 
+
+	List<ArrayList<String>> getLaunchClusterErrorDataforCustomerStoreFormat(ArrayList<String> headerDetail, String userId,
+			String launchId);
+	public String getCountofStoreFixed (String launchId);
+	
+	public String insertdiffStoreFormatesToTemp(List<Object> saveLaunchCluster, String launchId,String userId);
+	
+	
+	
+	public List<ArrayList<String>> getLaunchClusterErrorDataforStoreFormat(ArrayList<String> headerDetail,
+			String userId, String launchID);
 
 	}

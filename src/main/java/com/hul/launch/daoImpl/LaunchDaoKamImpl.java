@@ -11,9 +11,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.transaction.Transactional;
@@ -1259,7 +1261,100 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		}
 		return downloadDataList;
 	}
+	
+	// Added by Harsha for Sprint 7 22 Jan - Starts
+	
+	public List<String> check (List<Object> saveLaunchStorelist) {
+		
+		Iterator<Object> iterator0 = saveLaunchStorelist.iterator();
+		 HashSet<String> hashset = new HashSet<>();   
+		 List<String> list=new ArrayList<String>();  
+		 List<String> list1=new ArrayList<String>();
+		 
+		 while (iterator0.hasNext()) {
+				SaveUploadededLaunchStore obj = (SaveUploadededLaunchStore) iterator0.next();
+				String wholevalue="";
+				wholevalue=obj.getL1_Chain()+":"+obj.getKam_Remarks()+"-"+obj.getCluster();
+				list1.add(wholevalue);
+			}
+		 
+		Iterator<Object> iterator1 = saveLaunchStorelist.iterator();
+		while (iterator1.hasNext()) {
+			SaveUploadededLaunchStore obj = (SaveUploadededLaunchStore) iterator1.next();
+			hashset.add(obj.getL1_Chain().toString()+":"+obj.getCluster().toString());
+		}
+		
+		
+		for(String account : hashset) {
+			int count =0;
+			String[] accountCluster=account.split(":");
+			String accountName=accountCluster[0];
+			String Cluster =accountCluster[1];
+			 for(String values : list1) {
+				 if(values.contains(accountName) && !values.contains("rejected") && values.contains(Cluster)) {
+					 count++;
+				 }
+			 }
+			
+		
+			list.add(account+":"+count);
+		}
+		
+		return list;
+		
+	}
 
+
+	
+	public boolean checkLimitofStores(List<String> list1, String launchId) {
+		for(String consider : list1) {
+			
+			String[] words=consider.split(":");
+			
+			String accountName = words[0].toString();
+			
+			String clusterName = words[1].toString();
+			
+			String totalCount=words[2].toString();
+			
+			int minmumStoresbyTME =ValidateSumof(launchId,accountName,clusterName);
+			
+			int KAMStores = Integer.valueOf(words[2].toString());
+			if(minmumStoresbyTME>KAMStores) {
+				return false;
+			}
+
+		}
+		return true;
+		
+	}
+	
+	
+	private int ValidateSumof(String launchId,String account, String clusterName) {
+		Integer iValid = 0;
+		Query query = null;
+		Session session = sessionFactory.getCurrentSession();
+		SessionImpl sessionImpl = (SessionImpl) session;
+		//String result = null;
+		String qryValidate = "SELECT SUM(TOTAL_TME_STORES_PLANED) FROM TBL_LAUNCH_CLUSTERS_DETAILS WHERE CLUSTER_ACCOUNT_L1 IN ( '"+account+"') and LAUNCH_ID="+launchId+" AND CLUSTER_REGION LIKE ('%"+clusterName+"%')";
+		try {
+			PreparedStatement stmt = sessionImpl.connection()
+					.prepareStatement(qryValidate);
+			ResultSet result = stmt.executeQuery();
+		     result.next();
+		     String sum = result.getString(1);
+		     iValid = (int) Double.parseDouble(sum);
+		     
+		} catch (Exception e) {
+			logger.debug("Exception: ", e);
+		}
+		return iValid;
+	}
+	
+	
+	
+	// Added by Harsha for Sprint 7 22 Jan - Ends
+	
 	@Override
 	@Transactional
 	public String saveStoreListByUpload(List<Object> saveLaunchStorelist, String userId, String status,
@@ -1268,8 +1363,16 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		Session session = sessionFactory.getCurrentSession();
 		SessionImpl sessionImpl = (SessionImpl) session;
 		String result = null;
+		int count = 0;
+		List<Object> valuesInput = saveLaunchStorelist;
+		//check (saveLaunchStorelist);
+		
+		boolean KAMlimit=checkLimitofStores(check(valuesInput),launchId);// Added by harsha to check minimum stores are met
 
-		if (!saveLaunchStorelist.isEmpty()) {
+	
+		
+		if(KAMlimit) {		
+			if (!saveLaunchStorelist.isEmpty()) {
 			List<String> listOfStores = new ArrayList<>();
 			while (iterator.hasNext()) {
 				SaveUploadededLaunchStore obj = (SaveUploadededLaunchStore) iterator.next();
@@ -1353,10 +1456,21 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 
 			result = "Saved Successfully";
 		}
+		}
+		
+		else {
+		result="Minimum targeted stores should be approved by KAM";
+		}
+
 
 		if (result.equals("Saved Successfully")) {
 			return "SUCCESS_FILE";
-		} else {
+		} 
+		if (result.equals("Minimum targeted stores should be approved by KAM")) {
+			return "Minimum targeted stores should be approved by KAM";
+		}
+		
+		else {
 			return "ERROR";
 		}
 	}

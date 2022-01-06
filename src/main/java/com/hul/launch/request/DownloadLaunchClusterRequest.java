@@ -10,6 +10,16 @@ public class DownloadLaunchClusterRequest {
 	private String l1l2Cluster;
 	private String storeFormat;
 	private String custStoreFormat;
+	private String LaunchId;   // bharati added for sprint-7
+	private String SelStoreFormat;
+
+	public String getSelStoreFormat() {
+		return SelStoreFormat;
+	}
+
+	public void setSelStoreFormat(String selStoreFormat) {
+		SelStoreFormat = selStoreFormat;
+	}
 
 	public String getRegionCluster() {
 		return regionCluster;
@@ -41,5 +51,14 @@ public class DownloadLaunchClusterRequest {
 
 	public void setCustStoreFormat(String custStoreFormat) {
 		this.custStoreFormat = custStoreFormat;
+	}
+	
+	 // bharati added for sprint-7
+	public String getLaunchId() {
+		return LaunchId;
+	}
+
+	public void setLaunchId(String launchId) {
+		LaunchId = launchId;
 	}
 }

@@ -147,11 +147,36 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	public List<ArrayList<String>> getClusterErrorDumpforCustomerStoreformat(ArrayList<String> headerDetail, String userId,
+			String LaunchID) {
+		return launchBacePacksDao.getLaunchClusterErrorDataforCustomerStoreFormat(headerDetail, userId,
+				LaunchID);
+	}
+	
+	
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	public List<ArrayList<String>> getClusterErrorDumpforStoreformat(ArrayList<String> headerDetail, String userId,
+			String LaunchID) {
+		return launchBacePacksDao.getLaunchClusterErrorDataforStoreFormat(headerDetail, userId,
+				LaunchID);
+	}
+	
+	
+	
+	
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public List<ArrayList<String>> getClusterDumpforCustomerStoreformat(ArrayList<String> headerDetail, String userId,
 			DownloadLaunchClusterRequest downloadLaunchClusterRequest) {
 		return launchBacePacksDao.getLaunchClusterDataforCustomerStoreFormat(headerDetail, userId,
 				downloadLaunchClusterRequest);
 	}
+	
+	
+	
+	
+	
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
@@ -682,6 +707,8 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 		}
 		return "SUCCESS_FILE";
 	}
+	
+	
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
@@ -829,5 +856,41 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 		}
 
 	}
+	
+	public String saveClusterByUploadForCustomerStoreFormateCluster(List<Object> saveLaunchCluster, String userID, String string, boolean b,
+			boolean c, String launchId) {
+		
+		return launchBacePacksDao.insertdiffCustomerStoreFormatesToTemp(saveLaunchCluster, launchId,userID);
+				
+	}
+	
+
+	
+	public String countofErrormsginCustStoreformate( String launchId) {
+		
+		return launchBacePacksDao.getCountofErrorMSgfromCustmstorTblLaunchClusterTempAndinserttopermtbl(launchId);
+				
+	}
+//  Added by Harsha FOR STORE FORMATE
+	public String countofErrormsginStoreformate( String launchId) {
+		
+		return launchBacePacksDao.getCountofErrorMSgfromTblLaunchClusterTempStroeFormate(launchId);
+				
+	}
+//  Added by Harsha 
+public String countofFixedStores( String launchId) {
+		
+		return launchBacePacksDao.getCountofStoreFixed(launchId);
+				
+	}
+
+//  Added by Harsha FOR STORE FORMATE
+
+public String saveClusterByUploadForStoreFormateCluster(List<Object> saveLaunchCluster, String userID, String string, boolean b,
+		boolean c, String launchId) {
+	
+	return launchBacePacksDao.insertdiffStoreFormatesToTemp(saveLaunchCluster, launchId,userID);
+			
+}
 
 }

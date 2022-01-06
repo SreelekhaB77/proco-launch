@@ -9,7 +9,34 @@ public class LaunchClusterDataStoreForm {
 	private String Account_L2;
 	private String Store_Format;
 	private String Launch_planned;
+	private String Total_Stores;// Added By Harsha for US 7 Ja22
+	private String TME_Total_Stores;
+	private String Error_Msg;	
 	private String error;
+
+	public String getTotal_Stores() {
+		return Total_Stores;
+	}
+
+	public void setTotal_Stores(String total_Stores) {
+		Total_Stores = total_Stores;
+	}
+
+	public String getTME_Total_Stores() {
+		return TME_Total_Stores;
+	}
+
+	public void setTME_Total_Stores(String tME_Total_Stores) {
+		TME_Total_Stores = tME_Total_Stores;
+	}
+
+	public String getError_Msg() {
+		return Error_Msg;
+	}
+
+	public void setError_Msg(String error_Msg) {
+		Error_Msg = error_Msg;
+	}
 
 	public MultipartFile getFile() {
 		return file;

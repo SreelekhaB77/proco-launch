@@ -3,18 +3,23 @@ package com.hul.launch.daoImpl;
 import java.math.BigInteger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
 import org.apache.log4j.Logger;
 import org.hibernate.query.Query;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.internal.SessionImpl;
@@ -22,6 +27,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.hul.launch.dao.LaunchBasePacksDao;
+import com.hul.launch.model.LaunchClusterDataCustStoreForm;
+import com.hul.launch.model.LaunchClusterDataStoreForm;
 import com.hul.launch.model.TblLaunchBasebacks;
 import com.hul.launch.model.TblLaunchMaster;
 import com.hul.launch.model.TblLaunchRequest;
@@ -56,6 +63,19 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 
 	private final static String TBL_LAUNCH_CLUSTERS = "INSERT INTO TBL_LAUNCH_CLUSTERS(CLUSTER_LAUNCH_ID,CLUSTER_REGION, CLUSTER_ACCOUNT,CLUSTER_STORE_FORMAT, CLUSTER_CUST_STORE_FORMAT, TOTAL_STORES_TO_LAUNCH,LAUNCH_PLANNED, CREATED_BY,  CREATED_DATE, INCLUDE_ALL_STORE_FORMAT)"  //Sarin Changes - Added new column INCLUDE_ALL_STORE_FORMAT Q1Sprint Feb2021 
 			+ " VALUES (?,?,?,?,?,?,?,?,?,?) ";
+	
+	private final static String TBL_LAUNCH_CLUSTERS_TEMP = "INSERT INTO TBL_LAUNCH_CLUSTERS_TEMP(LAUNCH_ID, CLUSTER_REGION,CLUSTER_ACCOUNT_L1, CLUSTER_ACCOUNT_L2, CLUSTER_CUST_STORE_FORMAT, LAUNCH_PLANNED, TOTAL_STORES_TO_LAUNCH,TOTAL_TME_STORES_PLANED,ERROR_MSG,CREATED_BY,CREATED_DATE)"  //Sarin Changes - Added new column INCLUDE_ALL_STORE_FORMAT Q1Sprint Feb2021 
+			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?) ";
+	
+	private final static String TBL_LAUNCH_CLUSTERS_TEMP_STORE = "INSERT INTO TBL_LAUNCH_CLUSTERS_TEMP(LAUNCH_ID, CLUSTER_REGION,CLUSTER_ACCOUNT_L1, CLUSTER_ACCOUNT_L2, CLUSTER_STORE_FORMAT, LAUNCH_PLANNED, TOTAL_STORES_TO_LAUNCH,TOTAL_TME_STORES_PLANED,ERROR_MSG,CREATED_BY,CREATED_DATE)"  //Sarin Changes - Added new column INCLUDE_ALL_STORE_FORMAT Q1Sprint Feb2021 
+			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?) ";
+	
+	private final static String TBL_LAUNCH_CLUSTERS_DETAILS = "INSERT INTO TBL_LAUNCH_CLUSTERS_DETAILS(LAUNCH_ID, CLUSTER_REGION,CLUSTER_ACCOUNT_L1, CLUSTER_ACCOUNT_L2, CLUSTER_CUST_STORE_FORMAT, LAUNCH_PLANNED, TOTAL_STORES_TO_LAUNCH,TOTAL_TME_STORES_PLANED,CREATED_BY,CREATED_DATE)"  //Sarin Changes - Added new column INCLUDE_ALL_STORE_FORMAT Q1Sprint Feb2021 
+			+ " VALUES (?,?,?,?,?,?,?,?,?,?) ";
+	
+	private final static String TBL_LAUNCH_CLUSTERS_DETAILS_STORE = "INSERT INTO TBL_LAUNCH_CLUSTERS_DETAILS(LAUNCH_ID, CLUSTER_REGION,CLUSTER_ACCOUNT_L1, CLUSTER_ACCOUNT_L2, CLUSTER_STORE_FORMAT, LAUNCH_PLANNED, TOTAL_STORES_TO_LAUNCH,TOTAL_TME_STORES_PLANED,CREATED_BY,CREATED_DATE)"  //Sarin Changes - Added new column INCLUDE_ALL_STORE_FORMAT Q1Sprint Feb2021 
+			+ " VALUES (?,?,?,?,?,?,?,?,?,?) ";
+	
 
 	private final static String TBL_LAUNCH_BASEPACK = "INSERT INTO TBL_LAUNCH_BASEPACK "
 			+ "(LAUNCH_ID, BP_SALES_CAT, BP_PSA_CAT, BP_BRAND, BP_CODE, BP_DESCRIPTION, BP_MRP, BP_TUR, BP_GSV, BP_CLD_CONFIG, BP_GRAMMAGE, BP_CLASSIFICATION, BP_CREATED_BY, BP_CREATED_DATE) "
@@ -204,7 +224,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 					preparedStatement.setString(12, tblLaunchbasePacks.getClassification());
 					preparedStatement.setString(13, userId);
 					preparedStatement.setTimestamp(14, new Timestamp(new Date().getTime()));
-					System.out.println(preparedStatement.toString());
+					
 					result = preparedStatement.executeUpdate();
 				} catch (Exception e) {
 					logger.error("Exception: " + e);
@@ -537,31 +557,130 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 	public List<ArrayList<String>> getLaunchClusterDataforStoreFormat(ArrayList<String> headerDetail, String userId,
 			DownloadLaunchClusterRequest downloadLaunchClusterRequest) {
 		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
+		String wholeCluster = "";
+		String wholeCuststrfrmt = "";
 		try {
 			downloadDataList.add(headerDetail);
 			String[] l1l2CustomerList = downloadLaunchClusterRequest.getL1l2Cluster().split(",");
+			String storeFormat12 = downloadLaunchClusterRequest.getStoreFormat();
+			
+			String StoreFormate = downloadLaunchClusterRequest.getSelStoreFormat();
+			String launchId=downloadLaunchClusterRequest.getLaunchId();
 			List<String> listOfL1L2 = Arrays.asList(l1l2CustomerList);
-
-			if (!listOfL1L2.contains("ALL CUSTOMERS")) {
+			String busiClasification = getClasisification(launchId);
+			String unprocessedString = downloadLaunchClusterRequest.getCustStoreFormat();;
+			String customerStoreFormat = unprocessedString.replaceAll("\'","");
+			
+		
+			String [] items2 = downloadLaunchClusterRequest.getRegionCluster().split("\\s*,\\s*");
+			List<String> regionCluster = Arrays.asList(items2);
+	
+			if (!listOfL1L2.contains("ALL CUSTOMERS") 
+					) {
+				List<String> allIndiaCluster = new ArrayList<String>();
+				if(downloadLaunchClusterRequest.getRegionCluster().toString().contains("ALL INDIA")) {
+					
+					for(String accountsNames : getClusters()) {
+							allIndiaCluster.add(accountsNames);
+					}
+					
+				}
+				
+		
+				
 				for (int i = 0; i < l1l2CustomerList.length; i++) {
 					if (l1l2CustomerList[i].split(":").length > 1) {
 						String custL1 = l1l2CustomerList[i].split(":")[0];
 						String custL2 = l1l2CustomerList[i].split(":")[1];
 						List<String> listOfL1 = new ArrayList<>();
+						 List<String> custStorefmt = new ArrayList<String>();
 						listOfL1.add(custL1);
+						
+						if(!customerStoreFormat.isEmpty()) {
+							
+							List<String> regionName = new ArrayList<String>();
+							if(downloadLaunchClusterRequest.getRegionCluster().equals("ALL INDIA")) {
+								
+								for(String accountsNames : getClusters()) {
+									String[] stringarray = accountsNames.split(":");  
+									
+									if(!stringarray[0].contains("B")) {
+										regionName.add("'"+stringarray[1].toString()+"'");
+									}
+								}
+							}
+							
+							else if(!downloadLaunchClusterRequest.getRegionCluster().equals("ALL INDIA")){
+								String [] items = downloadLaunchClusterRequest.getRegionCluster().split("\\s*,\\s*");
+								List<String> container = Arrays.asList(items);
+								 LinkedHashSet<String> Account=new LinkedHashSet();
+							
+								for(String embeder:container) {
+									String[] stringarray = embeder.split(":");  
+									
+									if(!stringarray[0].contains("B")) {
+										regionName.add("'"+stringarray[1].toString()+"'");
+									}
+								}
+							}
+							
+							
+							
+							
+						
+							
+							
+							String [] multipleCustomerStoreFormat = customerStoreFormat.split("\\s*,\\s*");
+							List<String> listofCustomerStoreFormat = Arrays.asList(multipleCustomerStoreFormat);
+							
+							for(String valueCustomerStoreFormat:listofCustomerStoreFormat) {  
+							
+								custStorefmt.add("'"+valueCustomerStoreFormat.toString()+"'");
+								
+							}
+							
+						
+							wholeCluster=regionName.toString();
+							wholeCluster=wholeCluster.replace("[", "");
+							wholeCluster=wholeCluster.replace("]", "");
+						
+							
+							
+							wholeCuststrfrmt=custStorefmt.toString();
+							wholeCuststrfrmt=wholeCuststrfrmt.replace("[", "");
+							wholeCuststrfrmt=wholeCuststrfrmt.replace("]", "");
+							
+							
+						}
+						String thing =wholeCluster;
+						
+						
+						//System.out.println(listOfSelectedForL1);
+						String custStoreFormat = wholeCuststrfrmt;
+						List<String> listOfSelectedForL1;
+						
 						List<String> listOfAllForL1 = createPromoService.getClusterOnCustomerList(listOfL1);
 						String[] ArrayOfSelectedForL1 = downloadLaunchClusterRequest.getRegionCluster().split(",");
-						List<String> listOfSelectedForL1 = Arrays.asList(ArrayOfSelectedForL1);
+						if(downloadLaunchClusterRequest.getRegionCluster().toString().contains("ALL INDIA")) {
+							listOfSelectedForL1 = allIndiaCluster;
+						}
+						else {
+							listOfSelectedForL1 = Arrays.asList(ArrayOfSelectedForL1);
+						}
+					
 						listOfAllForL1.retainAll(listOfSelectedForL1);
-						String storeFormat = downloadLaunchClusterRequest.getStoreFormat();
-
+						String thing2 =wholeCluster;
+						
+						String custStoreFormat2 = wholeCuststrfrmt;
+						
 						listOfSelectedForL1.forEach(data -> {
 							ArrayList<String> dataObj = new ArrayList<>();
 							dataObj.add(data);
 							dataObj.add(custL1);
 							dataObj.add(custL2);
-							dataObj.add(storeFormat);
+							dataObj.add(storeFormat12);
 							dataObj.add("Yes");
+							dataObj.add(getCountofStores( data, custL1,  busiClasification,StoreFormate, custStoreFormat, thing));
 							downloadDataList.add(dataObj);
 						});
 					}
@@ -570,22 +689,470 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 				String custL1 = l1l2CustomerList[0];
 				String custL2 = "";
 				List<String> listOfL1 = new ArrayList<>();
+				List<String> listOfL2 = new ArrayList<>();
+				List<String> custStorefmt = new ArrayList<String>();
 				listOfL1.add(custL1);
+				
+				if(!customerStoreFormat.isEmpty()) {
+					
+					List<String> regionName = new ArrayList<String>();
+					if(downloadLaunchClusterRequest.getRegionCluster().equals("ALL INDIA")) {
+						
+						for(String accountsNames : getClusters()) {
+							String[] stringarray = accountsNames.split(":");  
+							
+							if(!stringarray[0].contains("B")) {
+								regionName.add("'"+stringarray[1].toString()+"'");
+							}
+						}
+					}
+					
+					else if(!downloadLaunchClusterRequest.getRegionCluster().equals("ALL INDIA")){
+						String [] items = downloadLaunchClusterRequest.getRegionCluster().split("\\s*,\\s*");
+						List<String> container = Arrays.asList(items);
+						 LinkedHashSet<String> Account=new LinkedHashSet();
+					
+						for(String embeder:container) {
+							String[] stringarray = embeder.split(":");  
+							
+							if(!stringarray[0].contains("B")) {
+								regionName.add("'"+stringarray[1].toString()+"'");
+							}
+						}
+					}
+					
+					
+					
+					
+				
+					
+					
+					String [] multipleCustomerStoreFormat = customerStoreFormat.split("\\s*,\\s*");
+					List<String> listofCustomerStoreFormat = Arrays.asList(multipleCustomerStoreFormat);
+					
+					for(String valueCustomerStoreFormat:listofCustomerStoreFormat) {  
+					
+						custStorefmt.add("'"+valueCustomerStoreFormat.toString()+"'");
+						
+					}
+					
+				
+					wholeCluster=regionName.toString();
+					wholeCluster=wholeCluster.replace("[", "");
+					wholeCluster=wholeCluster.replace("]", "");
+					
+					
+					wholeCuststrfrmt=custStorefmt.toString();
+					wholeCuststrfrmt=wholeCuststrfrmt.replace("[", "");
+					wholeCuststrfrmt=wholeCuststrfrmt.replace("]", "");
+					
+				}
+				
+				String thing2 =wholeCluster;
+				
+				String custStoreFormat2 = wholeCuststrfrmt;
+				
+				
+				
+				
+				
 				List<String> listOfAllForL1 = createPromoService.getClusterOnCustomerList(listOfL1);
 				String[] ArrayOfSelectedForL1 = downloadLaunchClusterRequest.getRegionCluster().split(",");
 				List<String> listOfSelectedForL1 = Arrays.asList(ArrayOfSelectedForL1);
+				List<String> listOfSelectedForL2 = new ArrayList<String>();
 				listOfAllForL1.retainAll(listOfSelectedForL1);
-				String storeFormat = downloadLaunchClusterRequest.getStoreFormat();
+				String custStoreFormat = downloadLaunchClusterRequest.getCustStoreFormat();
+				
+				if(listOfL1.contains("ALL CUSTOMERS") && listOfSelectedForL1.contains("ALL INDIA")) {
+					 LinkedHashSet<String> listCluster = new LinkedHashSet<String>();
+					Set<String> lhs = new LinkedHashSet<String>();
+					listCluster=getClusters();
+					int wholeSize=listCluster.size();
+					String[] arr = new String[wholeSize];
+			        arr = listCluster.toArray(arr);
+			        for (int j = 0; j < arr.length; j++) {
+			        	String listOfaacc = arr[j];
+			            
+			            listOfSelectedForL2.add(listOfaacc.toString());
+			        }
+			      
+			        listOfSelectedForL1=listOfSelectedForL2;
+			      
+			        
+			    
+			        	l1l2CustomerList=getDistinctAccounts().split(",");
+			     
+					
+					for (int i = 0; i < l1l2CustomerList.length; i++) {
+						if (l1l2CustomerList[i]!=null) {
+							String custL11 = l1l2CustomerList[i].split(":")[0];
+							String custL21 = l1l2CustomerList[i].split(":")[0];
+							List<String> listOfL11 = new ArrayList<>();
+							 List<String> custStorefmt1 = new ArrayList<String>();
+							listOfL11.add(custL11);
+							List<String> regionName = new ArrayList<String>();
+							if(!customerStoreFormat.isEmpty()) {
+								
+								
+								if(downloadLaunchClusterRequest.getRegionCluster().equals("ALL INDIA")) {
+									
+									for(String accountsNames : getClusters()) {
+										String[] stringarray = accountsNames.split(":");  
+										
+										if(!stringarray[0].contains("B")) {
+											regionName.add("'"+stringarray[1].toString()+"'");
+										}
+									}
+								}
+								
+								
+								else if(!downloadLaunchClusterRequest.getRegionCluster().equals("ALL INDIA")){
+									String [] items = downloadLaunchClusterRequest.getRegionCluster().split("\\s*,\\s*");
+									List<String> container = Arrays.asList(items);
+									 LinkedHashSet<String> Account=new LinkedHashSet();
+									
+									for(String embeder:container) {
+										String[] stringarray = embeder.split(":");  
+										
+										if(!stringarray[0].contains("B")) {
+											regionName.add("'"+stringarray[1].toString()+"'");
+										}
+									}
+								}
+								
+								
+								
+								
+							
+								
+							
+								String [] multipleCustomerStoreFormat = customerStoreFormat.split("\\s*,\\s*");
+								List<String> listofCustomerStoreFormat = Arrays.asList(multipleCustomerStoreFormat);
+								
+								for(String valueCustomerStoreFormat:listofCustomerStoreFormat) {  
+									
+									custStorefmt1.add("'"+valueCustomerStoreFormat.toString()+"'");
+									
+								}
+								
+								
+								wholeCluster=regionName.toString();
+								wholeCluster=wholeCluster.replace("[", "");
+								wholeCluster=wholeCluster.replace("]", "");
+								
+								
+								wholeCuststrfrmt=custStorefmt1.toString();
+								wholeCuststrfrmt=wholeCuststrfrmt.replace("[", "");
+								wholeCuststrfrmt=wholeCuststrfrmt.replace("]", "");
+								
+							
+								
+								
+								
+							}
+							String thing =wholeCluster;
+						
+							
+							
+							
+							String custStoreFormat1 = wholeCuststrfrmt;
+						
+							
+							List<String> listOfAllForL11 = createPromoService.getClusterOnCustomerList(listOfL11);
+							
+							String thing3 =wholeCluster;
+						
+							
+							
+							
+							String custStoreFormat3 = wholeCuststrfrmt;
+							
+							if(((thing3!=null && custStoreFormat3!=null) && (!custStoreFormat3.isEmpty() && !thing3.isEmpty()) )) { //&& (StoreFormate.isEmpty() && StoreFormate.equals("''")) ) {// come here
+								
+								
+							
 
-				listOfSelectedForL1.forEach(data -> {
-					ArrayList<String> dataObj = new ArrayList<>();
-					dataObj.add(data);
-					dataObj.add(custL1);
-					dataObj.add(custL2);
-					dataObj.add(storeFormat);
-					dataObj.add("Yes");
-					downloadDataList.add(dataObj);
-				});
+							for(String namer : getClusters()) {
+								
+								
+								
+								
+								
+								String regionCluster12="";
+								ArrayList<String> finallist = new ArrayList<>();
+								
+									Session session = sessionFactory.getCurrentSession();
+									String distinctAccounts="";
+									List<String> set = new ArrayList<String>();
+									SessionImpl sessionImpl = (SessionImpl) session;
+									PreparedStatement stmt = null;
+									ResultSet rs = null;
+									String just=namer;
+									if(!just.contains("B0")) {
+										String[] parts = just.split(":");
+										regionCluster12 = parts[1];
+										
+										
+										try {
+											stmt = sessionImpl.connection().prepareStatement("Select ACCOUNT_NAME,FINAL_CLUSTER,COUNT(ACCOUNT_NAME) AS TOTAL from (SELECT * FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND CURRENT_STORE_FORMAT IN (" + 
+													"SELECT DISTINCT CURRENT_STORE_FORMAT FROM TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE FINAL_CLUSTER IN ("+thing3+")" + 
+													"AND ACCOUNT_NAME != '' " +
+													"AND CUSTOMER_STORE_FORMAT IN ("+ custStoreFormat3 +"))  AND FINAL_CLUSTER IN (" + thing3 +") ) as aa where aa.FINAL_CLUSTER IN ('" + regionCluster12 +"')  group by ACCOUNT_NAME");
+											rs = stmt.executeQuery();
+											
+											while (rs.next()) {
+												
+											
+											ArrayList<String> dataObj = new ArrayList<>();
+											dataObj.add(namer);
+											dataObj.add(rs.getString("ACCOUNT_NAME"));
+											dataObj.add(rs.getString("ACCOUNT_NAME"));
+											dataObj.add(storeFormat12);
+											dataObj.add("Yes");
+											dataObj.add(String.valueOf(rs.getInt("TOTAL")));
+											
+											downloadDataList.add(dataObj);
+											}
+										
+										} catch (HibernateException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										} catch (SQLException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+
+										
+									}
+									
+									else {
+										ArrayList<String> dataObj = new ArrayList<>();
+										dataObj.add(namer);
+										dataObj.add(" ");
+										dataObj.add(" ");
+										dataObj.add(storeFormat12);
+										dataObj.add("Yes");
+										dataObj.add("0");
+										downloadDataList.add(dataObj);
+									}
+								
+								
+								
+								
+								
+							} return downloadDataList;
+						}
+					
+							listOfSelectedForL1.forEach(data -> {
+								ArrayList<String> dataObj = new ArrayList<>();
+								dataObj.add(data);
+								dataObj.add(custL11);
+								
+								dataObj.add(custL21);
+								dataObj.add(storeFormat12);
+								dataObj.add("Yes");
+								dataObj.add(getAllStoreCount( data, custL11,  busiClasification,StoreFormate, custStoreFormat3, thing3));
+								downloadDataList.add(dataObj);
+							});
+						}
+					}
+				
+			     
+				}
+				else if(listOfL1L2.contains("ALL CUSTOMERS")) {
+				
+
+					 LinkedHashSet<String> lstClusteracc = new LinkedHashSet<String>();
+					Set<String> lhs = new LinkedHashSet<String>();
+					lstClusteracc=getClusters();
+					int wholeSize=lstClusteracc.size();
+					String[] arr = new String[wholeSize];
+			        arr = lstClusteracc.toArray(arr);
+			        for (int j = 0; j < arr.length; j++) {
+			        	String listofL2 = arr[j];
+			            
+			            listOfSelectedForL2.add(listofL2.toString());
+			        }
+			       
+			        
+			   
+			        	l1l2CustomerList=getDistinctAccounts().split(",");
+			    
+					
+					for (int i = 0; i < l1l2CustomerList.length; i++) {
+						if (l1l2CustomerList[i]!=null) {
+							String custL11 = l1l2CustomerList[i].split(":")[0];
+							String custL21 = l1l2CustomerList[i].split(":")[0];
+							List<String> listOfL11 = new ArrayList<>();
+							 List<String> custStorefmt1 = new ArrayList<String>();
+							listOfL11.add(custL11);
+							
+							if(!customerStoreFormat.isEmpty()) {
+								
+								List<String> regionName = new ArrayList<String>();
+								if(downloadLaunchClusterRequest.getRegionCluster().equals("ALL INDIA")) {
+									
+									for(String accountsNames : getClusters()) {
+										String[] stringarray = accountsNames.split(":");  
+										
+										if(!stringarray[0].contains("B")) {
+											regionName.add("'"+stringarray[1].toString()+"'");
+										}
+									}
+								}
+								
+								else if(!downloadLaunchClusterRequest.getRegionCluster().equals("ALL INDIA")){
+									String [] items = downloadLaunchClusterRequest.getRegionCluster().split("\\s*,\\s*");
+									List<String> container = Arrays.asList(items);
+									 LinkedHashSet<String> Account=new LinkedHashSet();
+									
+									for(String embeder:container) {
+										String[] stringarray = embeder.split(":");  
+										
+										if(!stringarray[0].contains("B")) {
+											regionName.add("'"+stringarray[1].toString()+"'");
+										}
+									}
+								}
+								
+								
+								
+								
+							
+								
+								
+								String [] multipleCustomerStoreFormat = customerStoreFormat.split("\\s*,\\s*");
+								List<String> listofCustomerStoreFormat = Arrays.asList(multipleCustomerStoreFormat);
+								
+								for(String valueCustomerStoreFormat:listofCustomerStoreFormat) {  
+									
+									custStorefmt1.add("'"+valueCustomerStoreFormat.toString()+"'");
+									
+								}
+								
+							
+								wholeCluster=regionName.toString();
+								wholeCluster=wholeCluster.replace("[", "");
+								wholeCluster=wholeCluster.replace("]", "");
+								
+								wholeCuststrfrmt=custStorefmt1.toString();
+								wholeCuststrfrmt=wholeCuststrfrmt.replace("[", "");
+								wholeCuststrfrmt=wholeCuststrfrmt.replace("]", "");
+								
+								
+							}
+							String thing =wholeCluster;
+							
+							String custStoreFormat1 = wholeCuststrfrmt;
+							
+							
+							List<String> listOfAllForL11 = createPromoService.getClusterOnCustomerList(listOfL11);
+							
+							String thing3 =wholeCluster;
+							
+							
+							
+							
+							String custStoreFormat3 = wholeCuststrfrmt;
+							
+							
+							if(((thing3!=null && custStoreFormat3!=null) && (!custStoreFormat3.isEmpty() && !thing3.isEmpty())  )) {
+								for(String namer : regionCluster) {
+									
+									
+									
+									
+									//ListArrayList<String> downloadDataList = new ArrayList<ArrayList<String>>();
+									String regionCluster12="";
+									ArrayList<String> finallist = new ArrayList<>();
+									//	List<String> Clusters = new ArrayList<String>();
+										Session session = sessionFactory.getCurrentSession();
+										String distinctAccounts="";
+										List<String> set = new ArrayList<String>();
+										SessionImpl sessionImpl = (SessionImpl) session;
+										PreparedStatement stmt = null;
+										ResultSet rs = null;
+										String just=namer;
+										if(!just.contains("B0")) {
+											String[] parts = just.split(":");
+											regionCluster12 = parts[1];
+											
+											
+											
+											
+											
+											try {
+												stmt = sessionImpl.connection().prepareStatement("Select ACCOUNT_NAME,FINAL_CLUSTER,COUNT(ACCOUNT_NAME) AS TOTAL from (SELECT * FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND CURRENT_STORE_FORMAT IN (" + 
+														"SELECT DISTINCT CURRENT_STORE_FORMAT FROM TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE FINAL_CLUSTER IN ("+thing3+")" + 
+														"AND ACCOUNT_NAME != '' " +
+														"AND CUSTOMER_STORE_FORMAT IN ("+ custStoreFormat3 +"))  AND FINAL_CLUSTER IN (" + thing3 +") ) as aa where aa.FINAL_CLUSTER IN ('" + regionCluster12 +"')  group by ACCOUNT_NAME");
+												rs = stmt.executeQuery();
+												
+												while (rs.next()) {
+													
+												
+												
+												ArrayList<String> dataObj = new ArrayList<>();
+												dataObj.add(just);
+												dataObj.add(rs.getString("ACCOUNT_NAME"));
+												dataObj.add(rs.getString("ACCOUNT_NAME"));
+												dataObj.add(custStoreFormat1);
+												dataObj.add("Yes");
+												dataObj.add(String.valueOf(rs.getInt("TOTAL")));
+												
+												downloadDataList.add(dataObj);
+												}
+											
+											} catch (HibernateException e) {
+												// TODO Auto-generated catch block
+												e.printStackTrace();
+											} catch (SQLException e) {
+												// TODO Auto-generated catch block
+												e.printStackTrace();
+											}
+
+											
+										}
+										
+										else {
+											ArrayList<String> dataObj = new ArrayList<>();
+											dataObj.add(namer);
+											dataObj.add(" ");
+											dataObj.add(" ");
+											dataObj.add(custStoreFormat1);
+											dataObj.add("Yes");
+											dataObj.add("0");
+											downloadDataList.add(dataObj);
+										}
+									
+									
+									
+									
+									
+								} return downloadDataList;
+							}
+							
+							
+							
+							
+							else {
+							
+								listOfSelectedForL1.forEach(data -> {
+								ArrayList<String> dataObj = new ArrayList<>();
+								dataObj.add(data);
+								dataObj.add(custL11);
+								dataObj.add(custL21);
+								dataObj.add(storeFormat12);
+								dataObj.add("Yes");
+								dataObj.add(getAllStoreCount( data, custL11,  busiClasification,StoreFormate, custStoreFormat3, thing3));
+								downloadDataList.add(dataObj);
+							});
+							}
+						}
+					}
+		
+				}
+
 			}
 			return downloadDataList;
 		} catch (Exception ex) {
@@ -598,24 +1165,126 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 	public List<ArrayList<String>> getLaunchClusterDataforCustomerStoreFormat(ArrayList<String> headerDetail,
 			String userId, DownloadLaunchClusterRequest downloadLaunchClusterRequest) {
 		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
+		String wholeCluster = "";
+		String wholeCuststrfrmt = "";
 		try {
 			downloadDataList.add(headerDetail);
 			String[] l1l2CustomerList = downloadLaunchClusterRequest.getL1l2Cluster().split(",");
+			
+			
+			String StoreFormate = downloadLaunchClusterRequest.getSelStoreFormat();
+			String launchId= downloadLaunchClusterRequest.getLaunchId();
 			List<String> listOfL1L2 = Arrays.asList(l1l2CustomerList);
+			String busiClasification = getClasisification(launchId);
+			String customerStoreFormat = downloadLaunchClusterRequest.getCustStoreFormat();
+			
+			
+			String [] items2 = downloadLaunchClusterRequest.getRegionCluster().split("\\s*,\\s*");
+			List<String> regionCluster = Arrays.asList(items2);
+			
+			
+			
+		
+			
+			
 
-			if (!listOfL1L2.contains("ALL CUSTOMERS")) {
+			if (!listOfL1L2.contains("ALL CUSTOMERS") //|| downloadLaunchClusterRequest.getRegionCluster().toString().contains("ALL INDIA")
+					) {
+				List<String> allIndiaCluster = new ArrayList<String>();
+				if(downloadLaunchClusterRequest.getRegionCluster().toString().contains("ALL INDIA")) {
+					
+					for(String accountsNames : getClusters()) {
+							allIndiaCluster.add(accountsNames);
+					}
+					
+				}
+				
+				
+				
 				for (int i = 0; i < l1l2CustomerList.length; i++) {
 					if (l1l2CustomerList[i].split(":").length > 1) {
 						String custL1 = l1l2CustomerList[i].split(":")[0];
 						String custL2 = l1l2CustomerList[i].split(":")[1];
 						List<String> listOfL1 = new ArrayList<>();
+						 List<String> custStorefmt = new ArrayList<String>();
 						listOfL1.add(custL1);
+						
+						if(!customerStoreFormat.isEmpty()) {
+							
+							List<String> regionName = new ArrayList<String>();
+							if(downloadLaunchClusterRequest.getRegionCluster().equals("ALL INDIA")) {
+								
+								for(String accountsNames : getClusters()) {
+									String[] stringarray = accountsNames.split(":");  
+									
+									if(!stringarray[0].contains("B")) {
+										regionName.add("'"+stringarray[1].toString()+"'");
+									}
+								}
+							}
+							
+							else if(!downloadLaunchClusterRequest.getRegionCluster().equals("ALL INDIA")){
+								String [] items = downloadLaunchClusterRequest.getRegionCluster().split("\\s*,\\s*");
+								List<String> container = Arrays.asList(items);
+								 LinkedHashSet<String> Account=new LinkedHashSet();
+								
+								for(String embeder:container) {
+									String[] stringarray = embeder.split(":");  
+									
+									if(!stringarray[0].contains("B")) {
+										regionName.add("'"+stringarray[1].toString()+"'");
+									}
+								}
+							}
+							
+							
+							
+							
+						
+							
+							
+							String [] multipleCustomerStoreFormat = customerStoreFormat.split("\\s*,\\s*");
+							List<String> listofCustomerStoreFormat = Arrays.asList(multipleCustomerStoreFormat);
+						
+							for(String valueCustomerStoreFormat:listofCustomerStoreFormat) {  
+								
+								custStorefmt.add("'"+valueCustomerStoreFormat.toString()+"'");
+								
+							}
+							
+							
+							wholeCluster=regionName.toString();
+							wholeCluster=wholeCluster.replace("[", "");
+							wholeCluster=wholeCluster.replace("]", "");
+							
+							wholeCuststrfrmt=custStorefmt.toString();
+							wholeCuststrfrmt=wholeCuststrfrmt.replace("[", "");
+							wholeCuststrfrmt=wholeCuststrfrmt.replace("]", "");
+							
+							
+						}
+						String thing =wholeCluster;
+						
+						
+						
+						//System.out.println(listOfSelectedForL1);
+						String custStoreFormat = wholeCuststrfrmt;
+						List<String> listOfSelectedForL1;
+						
 						List<String> listOfAllForL1 = createPromoService.getClusterOnCustomerList(listOfL1);
 						String[] ArrayOfSelectedForL1 = downloadLaunchClusterRequest.getRegionCluster().split(",");
-						List<String> listOfSelectedForL1 = Arrays.asList(ArrayOfSelectedForL1);
+						if(downloadLaunchClusterRequest.getRegionCluster().toString().contains("ALL INDIA")) {
+							listOfSelectedForL1 = allIndiaCluster;
+						}
+						else {
+							listOfSelectedForL1 = Arrays.asList(ArrayOfSelectedForL1);
+						}
+					
 						listOfAllForL1.retainAll(listOfSelectedForL1);
-						String custStoreFormat = downloadLaunchClusterRequest.getCustStoreFormat();
-
+						String thing2 =wholeCluster;
+						
+						String custStoreFormat2 = wholeCuststrfrmt;
+						
 						listOfSelectedForL1.forEach(data -> {
 							ArrayList<String> dataObj = new ArrayList<>();
 							dataObj.add(data);
@@ -623,6 +1292,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 							dataObj.add(custL2);
 							dataObj.add(custStoreFormat);
 							dataObj.add("Yes");
+							dataObj.add(getCountofStores( data, custL1,  busiClasification,StoreFormate, custStoreFormat, thing));
 							downloadDataList.add(dataObj);
 						});
 					}
@@ -631,22 +1301,467 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 				String custL1 = l1l2CustomerList[0];
 				String custL2 = "";
 				List<String> listOfL1 = new ArrayList<>();
+				List<String> listOfL2 = new ArrayList<>();
+				List<String> custStorefmt = new ArrayList<String>();
 				listOfL1.add(custL1);
+				
+				if(!customerStoreFormat.isEmpty()) {
+				
+					List<String> regionName = new ArrayList<String>();
+					if(downloadLaunchClusterRequest.getRegionCluster().equals("ALL INDIA")) {
+						
+						for(String accountsNames : getClusters()) {
+							String[] stringarray = accountsNames.split(":");  
+							
+							if(!stringarray[0].contains("B")) {
+								regionName.add("'"+stringarray[1].toString()+"'");
+							}
+						}
+					}
+					
+					else if(!downloadLaunchClusterRequest.getRegionCluster().equals("ALL INDIA")){
+						String [] items = downloadLaunchClusterRequest.getRegionCluster().split("\\s*,\\s*");
+						List<String> container = Arrays.asList(items);
+						 LinkedHashSet<String> Account=new LinkedHashSet();
+						
+						for(String embeder:container) {
+							String[] stringarray = embeder.split(":");  
+							
+							if(!stringarray[0].contains("B")) {
+								regionName.add("'"+stringarray[1].toString()+"'");
+							}
+						}
+					}
+					
+					
+					
+					
+				
+					
+				
+					String [] multipleCustomerStoreFormat = customerStoreFormat.split("\\s*,\\s*");
+					List<String> listofCustomerStoreFormat = Arrays.asList(multipleCustomerStoreFormat);
+					
+					for(String valueCustomerStoreFormat:listofCustomerStoreFormat) {  
+						
+						custStorefmt.add("'"+valueCustomerStoreFormat.toString()+"'");
+						
+					}
+					
+				
+					wholeCluster=regionName.toString();
+					wholeCluster=wholeCluster.replace("[", "");
+					wholeCluster=wholeCluster.replace("]", "");
+					
+					wholeCuststrfrmt=custStorefmt.toString();
+					wholeCuststrfrmt=wholeCuststrfrmt.replace("[", "");
+					wholeCuststrfrmt=wholeCuststrfrmt.replace("]", "");
+					
+					//getCustomerStoreFormate( regionName, accountName,  busiClasification, CustomerStoreFormate );
+					
+					
+				}
+				
+				String thing2 =wholeCluster;
+				
+				String custStoreFormat2 = wholeCuststrfrmt;
+				
+				
+				
+				
+				
 				List<String> listOfAllForL1 = createPromoService.getClusterOnCustomerList(listOfL1);
 				String[] ArrayOfSelectedForL1 = downloadLaunchClusterRequest.getRegionCluster().split(",");
 				List<String> listOfSelectedForL1 = Arrays.asList(ArrayOfSelectedForL1);
+				List<String> listOfSelectedForL2 = new ArrayList<String>();
 				listOfAllForL1.retainAll(listOfSelectedForL1);
 				String custStoreFormat = downloadLaunchClusterRequest.getCustStoreFormat();
+				
+				if(listOfL1.contains("ALL CUSTOMERS") && listOfSelectedForL1.contains("ALL INDIA")) {
+					 LinkedHashSet<String> listClusteraccn = new LinkedHashSet<String>();
+					Set<String> lhs = new LinkedHashSet<String>();
+					listClusteraccn=getClusters();
+					int wholeSize=listClusteraccn.size();
+					String[] arr = new String[wholeSize];
+			        arr = listClusteraccn.toArray(arr);
+			        for (int j = 0; j < arr.length; j++) {
+			        	String Selectedl1 = arr[j];
+			           
+			            listOfSelectedForL2.add(Selectedl1.toString());
+			        }
+			       
+			        listOfSelectedForL1=listOfSelectedForL2;
+			       
+			      
 
-				listOfSelectedForL1.forEach(data -> {
-					ArrayList<String> dataObj = new ArrayList<>();
-					dataObj.add(data);
-					dataObj.add(custL1);
-					dataObj.add(custL2);
-					dataObj.add(custStoreFormat);
-					dataObj.add("Yes");
-					downloadDataList.add(dataObj);
-				});
+			        
+			        
+			        
+			        	l1l2CustomerList=getDistinctAccounts().split(",");
+			 
+					
+					for (int i = 0; i < l1l2CustomerList.length; i++) {
+						if (l1l2CustomerList[i]!=null) {
+							String custL11 = l1l2CustomerList[i].split(":")[0];
+							String custL21 = l1l2CustomerList[i].split(":")[0];
+							List<String> listOfL11 = new ArrayList<>();
+							 List<String> custStorefmt1 = new ArrayList<String>();
+							listOfL11.add(custL11);
+							
+							if(!customerStoreFormat.isEmpty()) {
+								
+								List<String> regionName = new ArrayList<String>();
+								if(downloadLaunchClusterRequest.getRegionCluster().equals("ALL INDIA")) {
+									
+									for(String accountsNames : getClusters()) {
+										String[] stringarray = accountsNames.split(":");  
+										
+										if(!stringarray[0].contains("B")) {
+											regionName.add("'"+stringarray[1].toString()+"'");
+										}
+									}
+								}
+								
+								else if(!downloadLaunchClusterRequest.getRegionCluster().equals("ALL INDIA")){
+									String [] items = downloadLaunchClusterRequest.getRegionCluster().split("\\s*,\\s*");
+									List<String> container = Arrays.asList(items);
+									 LinkedHashSet<String> Account=new LinkedHashSet();
+									
+									for(String embeder:container) {
+										String[] stringarray = embeder.split(":");  
+										
+										if(!stringarray[0].contains("B")) {
+											regionName.add("'"+stringarray[1].toString()+"'");
+										}
+									}
+								}
+								
+								
+								
+								
+							
+								
+								
+								String [] multipleCustomerStoreFormat = customerStoreFormat.split("\\s*,\\s*");
+								List<String> listofCustomerStoreFormat = Arrays.asList(multipleCustomerStoreFormat);
+								
+								for(String valueCustomerStoreFormat:listofCustomerStoreFormat) {  
+									
+									custStorefmt1.add("'"+valueCustomerStoreFormat.toString()+"'");
+									
+								}
+								
+							
+								wholeCluster=regionName.toString();
+								wholeCluster=wholeCluster.replace("[", "");
+								wholeCluster=wholeCluster.replace("]", "");
+								
+								wholeCuststrfrmt=custStorefmt1.toString();
+								wholeCuststrfrmt=wholeCuststrfrmt.replace("[", "");
+								wholeCuststrfrmt=wholeCuststrfrmt.replace("]", "");
+								
+							}
+							String thing =wholeCluster;
+							
+							
+							
+							//System.out.println(listOfSelectedForL1);
+							String custStoreFormat1 = wholeCuststrfrmt;
+							
+							
+							List<String> listOfAllForL11 = createPromoService.getClusterOnCustomerList(listOfL11);
+							
+							String thing3 =wholeCluster;
+							
+							String custStoreFormat3 = wholeCuststrfrmt;
+							if(((thing3!=null && custStoreFormat3!=null) && (!custStoreFormat3.isEmpty() && !thing3.isEmpty()) )) { //&& (StoreFormate.isEmpty() && StoreFormate.equals("''")) ) {// come here
+								
+								
+							
+
+							for(String namer : getClusters()) {
+								
+								
+								
+								
+								//ListArrayList<String> downloadDataList = new ArrayList<ArrayList<String>>();
+								String regionCluster12="";
+								ArrayList<String> finallist = new ArrayList<>();
+								//	List<String> Clusters = new ArrayList<String>();
+									Session session = sessionFactory.getCurrentSession();
+									String distinctAccounts="";
+									List<String> set = new ArrayList<String>();
+									SessionImpl sessionImpl = (SessionImpl) session;
+									PreparedStatement stmt = null;
+									ResultSet rs = null;
+									String just=namer;
+									if(!just.contains("B0")) {
+										String[] parts = just.split(":");
+										regionCluster12 = parts[1];
+								
+										
+										try {
+											stmt = sessionImpl.connection().prepareStatement("Select ACCOUNT_NAME,FINAL_CLUSTER,COUNT(ACCOUNT_NAME) AS TOTAL from (SELECT * FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND CURRENT_STORE_FORMAT IN (" + 
+													"SELECT DISTINCT CURRENT_STORE_FORMAT FROM TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE FINAL_CLUSTER IN ("+thing3+")" + 
+													"AND ACCOUNT_NAME != '' " +
+													"AND CUSTOMER_STORE_FORMAT IN ("+ custStoreFormat3 +"))  AND FINAL_CLUSTER IN (" + thing3 +") ) as aa where aa.FINAL_CLUSTER IN ('" + regionCluster12 +"')  group by ACCOUNT_NAME");
+											rs = stmt.executeQuery();
+											
+											while (rs.next()) {
+												
+											
+											ArrayList<String> dataObj = new ArrayList<>();
+											dataObj.add(just);
+											dataObj.add(rs.getString("ACCOUNT_NAME"));
+											dataObj.add(rs.getString("ACCOUNT_NAME"));
+											dataObj.add(custStoreFormat1);
+											dataObj.add("Yes");
+											dataObj.add(String.valueOf(rs.getInt("TOTAL")));
+											
+											downloadDataList.add(dataObj);
+											}
+										
+										} catch (HibernateException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										} catch (SQLException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+
+										
+									}
+									
+									else {
+										ArrayList<String> dataObj = new ArrayList<>();
+										dataObj.add(just);
+										dataObj.add(" ");
+										dataObj.add(" ");
+										dataObj.add(custStoreFormat1);
+										dataObj.add("Yes");
+										dataObj.add("0");
+										downloadDataList.add(dataObj);
+									}
+								
+								
+								
+								
+								
+							} return downloadDataList;
+						}
+					
+							listOfSelectedForL1.forEach(data -> {
+								ArrayList<String> dataObj = new ArrayList<>();
+								dataObj.add(data);
+								dataObj.add(custL11);
+								
+								dataObj.add(custL21);
+								dataObj.add(custStoreFormat1);
+								dataObj.add("Yes");
+								dataObj.add(getAllStoreCount( data, custL11,  busiClasification,StoreFormate, custStoreFormat3, thing3));
+								downloadDataList.add(dataObj);
+							});
+						}
+					}
+				
+			     
+				}
+				else if(listOfL1L2.contains("ALL CUSTOMERS")) {
+					
+					
+
+					 LinkedHashSet<String> listAcclcn2 = new LinkedHashSet<String>();
+					Set<String> lhs = new LinkedHashSet<String>();
+					listAcclcn2=getClusters();
+					int wholeSize=listAcclcn2.size();
+					String[] arr = new String[wholeSize];
+			        arr = listAcclcn2.toArray(arr);
+			        for (int j = 0; j < arr.length; j++) {
+			        	String listofaccL2 = arr[j];
+			            
+			            listOfSelectedForL2.add(listofaccL2.toString());
+			        }
+			      
+			        	l1l2CustomerList=getDistinctAccounts().split(",");
+			 
+					
+					for (int i = 0; i < l1l2CustomerList.length; i++) {
+						if (l1l2CustomerList[i]!=null) {
+							String custL11 = l1l2CustomerList[i].split(":")[0];
+							String custL21 = l1l2CustomerList[i].split(":")[0];
+							List<String> listOfL11 = new ArrayList<>();
+							 List<String> custStorefmt1 = new ArrayList<String>();
+							listOfL11.add(custL11);
+							
+							if(!customerStoreFormat.isEmpty()) {
+								
+								List<String> regionName = new ArrayList<String>();
+								if(downloadLaunchClusterRequest.getRegionCluster().equals("ALL INDIA")) {
+									
+									for(String accountsNames : getClusters()) {
+										String[] stringarray = accountsNames.split(":");  
+										
+										if(!stringarray[0].contains("B")) {
+											regionName.add("'"+stringarray[1].toString()+"'");
+										}
+									}
+								}
+								
+								else if(!downloadLaunchClusterRequest.getRegionCluster().equals("ALL INDIA")){
+									String [] items = downloadLaunchClusterRequest.getRegionCluster().split("\\s*,\\s*");
+									List<String> container = Arrays.asList(items);
+									 LinkedHashSet<String> Account=new LinkedHashSet();
+								
+									for(String embeder:container) {
+										String[] stringarray = embeder.split(":");  
+										
+										if(!stringarray[0].contains("B")) {
+											regionName.add("'"+stringarray[1].toString()+"'");
+										}
+									}
+								}
+								
+								
+								
+								
+							
+								
+								String [] multipleCustomerStoreFormat = customerStoreFormat.split("\\s*,\\s*");
+								List<String> listofCustomerStoreFormat = Arrays.asList(multipleCustomerStoreFormat);
+								for(String valueCustomerStoreFormat:listofCustomerStoreFormat) {  
+									custStorefmt1.add("'"+valueCustomerStoreFormat.toString()+"'");
+									
+								}
+								
+								
+								wholeCluster=regionName.toString();
+								wholeCluster=wholeCluster.replace("[", "");
+								wholeCluster=wholeCluster.replace("]", "");
+								
+								
+								wholeCuststrfrmt=custStorefmt1.toString();
+								wholeCuststrfrmt=wholeCuststrfrmt.replace("[", "");
+								wholeCuststrfrmt=wholeCuststrfrmt.replace("]", "");
+								
+								
+							}
+							String thing =wholeCluster;
+							
+							String custStoreFormat1 = wholeCuststrfrmt;
+							
+							
+							List<String> listOfAllForL11 = createPromoService.getClusterOnCustomerList(listOfL11);
+							
+							String thing3 =wholeCluster;
+						
+							String custStoreFormat3 = wholeCuststrfrmt;
+							
+							// this implementation for one cluster and all account from customer store
+						
+							if(((thing3!=null && custStoreFormat3!=null) && (!custStoreFormat3.isEmpty() && !thing3.isEmpty())  )) {
+								for(String namer : regionCluster) {
+									
+									
+									
+									
+									String regionCluster12="";
+									ArrayList<String> finallist = new ArrayList<>();
+										Session session = sessionFactory.getCurrentSession();
+										String distinctAccounts="";
+										List<String> set = new ArrayList<String>();
+										SessionImpl sessionImpl = (SessionImpl) session;
+										PreparedStatement stmt = null;
+										ResultSet rs = null;
+										String just=namer;
+										if(!just.contains("B0")) {
+											String[] parts = just.split(":");
+											regionCluster12 = parts[1];
+											
+											
+											try {
+												stmt = sessionImpl.connection().prepareStatement("Select ACCOUNT_NAME,FINAL_CLUSTER,COUNT(ACCOUNT_NAME) AS TOTAL from (SELECT * FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND CURRENT_STORE_FORMAT IN (" + 
+														"SELECT DISTINCT CURRENT_STORE_FORMAT FROM TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE FINAL_CLUSTER IN ("+thing3+")" + 
+														"AND ACCOUNT_NAME != '' " +
+														"AND CUSTOMER_STORE_FORMAT IN ("+ custStoreFormat3 +"))  AND FINAL_CLUSTER IN (" + thing3 +") ) as aa where aa.FINAL_CLUSTER IN ('" + regionCluster12 +"')  group by ACCOUNT_NAME");
+												rs = stmt.executeQuery();
+												
+												while (rs.next()) {
+													
+												ArrayList<String> dataObj = new ArrayList<>();
+												dataObj.add(just);
+												dataObj.add(rs.getString("ACCOUNT_NAME"));
+												dataObj.add(rs.getString("ACCOUNT_NAME"));
+												dataObj.add(custStoreFormat1);
+												dataObj.add("Yes");
+												dataObj.add(String.valueOf(rs.getInt("TOTAL")));
+												downloadDataList.add(dataObj);
+												}
+											
+											} catch (HibernateException e) {
+												// TODO Auto-generated catch block
+												e.printStackTrace();
+											} catch (SQLException e) {
+												// TODO Auto-generated catch block
+												e.printStackTrace();
+											}
+
+											
+										}
+										
+										else {
+											ArrayList<String> dataObj = new ArrayList<>();
+											dataObj.add(just);
+											dataObj.add(" ");
+											dataObj.add(" ");
+											dataObj.add(custStoreFormat1);
+											dataObj.add("Yes");
+											dataObj.add("0");
+											downloadDataList.add(dataObj);
+										}
+									
+									
+									
+									
+									
+								} return downloadDataList;
+							}
+							
+							
+							
+							
+							else {
+							
+								listOfSelectedForL1.forEach(data -> {
+								ArrayList<String> dataObj = new ArrayList<>();
+								dataObj.add(data);
+								dataObj.add(custL11);
+								
+								dataObj.add(custL21);
+								dataObj.add(custStoreFormat1);
+								dataObj.add("Yes");
+								dataObj.add(getAllStoreCount( data, custL11,  busiClasification,StoreFormate, custStoreFormat3, thing3));
+								downloadDataList.add(dataObj);
+							});
+							}
+						}
+					}
+				
+			     
+				
+					
+					
+					
+					
+					
+					
+					
+				}
+
+
+				
+					
+				
+				
 			}
 			return downloadDataList;
 		} catch (Exception ex) {
@@ -654,7 +1769,622 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			return null;
 		}
 	}
+	
+	// Harsha Added this code for big mike story
+	
+	public LinkedHashSet<String> getClusters(){
+	//	List<String> Clusters = new ArrayList<String>();
+		Session session = sessionFactory.getCurrentSession();
+		LinkedHashSet<String> set=new LinkedHashSet();
+		SessionImpl sessionImpl = (SessionImpl) session;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			stmt = sessionImpl.connection().prepareStatement("select distinct CONCAT(BRANCH_CODE,':',BRANCH) AS BRANCH ,CONCAT(CLUSTER_CODE,':',CLUSTER) AS CLUSTER  from TBL_PROCO_CUSTOMER_MASTER order by BRANCH ");
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+			set.add(rs.getString("BRANCH"));
+				set.add(rs.getString("CLUSTER"));
+			}
+		
+		} catch (HibernateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		
+		
+		return set;
+	} 
+	
+	public String getDistinctAccounts(){
+		//	List<String> Clusters = new ArrayList<String>();
+			Session session = sessionFactory.getCurrentSession();
+			String distinctAccounts="";
+			List<String> set = new ArrayList<String>();
+			SessionImpl sessionImpl = (SessionImpl) session;
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
+			
+			try {
+				stmt = sessionImpl.connection().prepareStatement("SELECT DISTINCT ACCOUNT_NAME FROM TBL_VAT_COMM_OUTLET_MASTER");
+				rs = stmt.executeQuery();
+				while (rs.next()) {
+				set.add(rs.getString("ACCOUNT_NAME"));
+				}
+			
+			} catch (HibernateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			distinctAccounts=set.toString();
+			distinctAccounts=distinctAccounts.replace("[", "");
+			distinctAccounts=	distinctAccounts.replace("]", "");
+			return distinctAccounts;
+		} 
 
+	
+
+	
+	
+	
+	
+	public String getClasisification (String launchId) {
+		String clasification="";
+
+		List<String> bpCodes = null;
+		try {
+			Query queryToGetLaunchIDclasification = sessionFactory.getCurrentSession()
+					.createNativeQuery("SELECT CLASSIFICATION FROM TBL_LAUNCH_MASTER WHERE LAUNCH_ID = '" + launchId + "'");
+			bpCodes = queryToGetLaunchIDclasification.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		for (String clasifi : bpCodes) {
+			clasification=clasifi;
+		}
+		return clasification;
+		
+	}
+	
+	public String getCountofStores(String regionCluster,String accountName, String busiClasification, String StoreFormate, String  CustomerStoreFormate, String whoelString) {
+		
+		Session session = sessionFactory.getCurrentSession();
+		LinkedHashSet<String> set=new LinkedHashSet();
+		SessionImpl sessionImpl = (SessionImpl) session;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String launchClassification="";
+		List<BigInteger> storeCount = null;
+		List<Integer> intList = new ArrayList<Integer>();
+		String totalStoreCount="";
+		String region ="";
+		String place2="";
+		String launchFormate;
+		if(StoreFormate.equals("''") || StoreFormate.isEmpty()) {
+			launchFormate=null;
+		}
+		else {
+			launchFormate=StoreFormate;
+		}
+		String sqlBit="";
+		
+		
+		if(regionCluster.equals("ALL INDIA")) // this loop whn all ALL INDIA
+		{
+			region="ALL INDIA";
+			
+			if (busiClasification.equals("Gold")) {
+				launchClassification = "'GOLD','SILVER','BRONZE'";
+				
+			} else if (busiClasification.equals("Silver")) {
+				launchClassification = "'BRONZE','SILVER'";
+			} else {
+				launchClassification = "'BRONZE'";
+			}
+			if(launchFormate!=null && !launchFormate.isEmpty() ) {
+				//launchClassification=launchClassification+",'NA'";
+				sqlBit=" AND CURRENT_STORE_FORMAT IN ("+launchFormate+")";
+				}
+			
+
+			
+			if(region!=null && !region.isEmpty()) {
+				try {
+					stmt = sessionImpl.connection().prepareStatement("select distinct CONCAT(BRANCH_CODE,':',BRANCH) AS BRANCH ,CONCAT(CLUSTER_CODE,':',CLUSTER) AS CLUSTER  from TBL_PROCO_CUSTOMER_MASTER order by BRANCH ");
+					rs = stmt.executeQuery();
+					while (rs.next()) {
+					set.add(rs.getString("BRANCH"));
+						set.add(rs.getString("CLUSTER"));
+					}
+					
+					for(String place: set) {
+						
+							String[] parts = place.split(":");
+							String clusterOrBranch = parts[0];
+							
+							if(!clusterOrBranch.contains("B")) {
+								place2 = parts[1];
+								Query queryToGetLaunchIDclasification;
+								if(sqlBit.isEmpty() && (CustomerStoreFormate.isEmpty() &&  whoelString.isEmpty()) ) {
+									 queryToGetLaunchIDclasification = sessionFactory.getCurrentSession()
+											.createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER WHERE ACTIVE_STATUS = 'ACTIVE' " //+ " tlb.LAUNCH_ID IN (:launchIds)"
+													+"AND ACCOUNT_NAME = '" + accountName + "'" +"AND FINAL_CLUSTER = '" + place2 +"'" + "AND LAUNCH_FORMAT IN (" +launchClassification+")"  );
+									
+								}
+								else if(!CustomerStoreFormate.isEmpty() &&  !whoelString.isEmpty()) {
+									 queryToGetLaunchIDclasification = sessionFactory.getCurrentSession()
+											 .createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND CURRENT_STORE_FORMAT IN " + 
+											 		"(SELECT DISTINCT CURRENT_STORE_FORMAT FROM TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE FINAL_CLUSTER IN ("+whoelString+")" + 
+											 		"AND ACCOUNT_NAME = '"+accountName+"'  AND ACCOUNT_NAME != '' "+ 
+											 		"AND DP_CHAIN = '"+accountName+"'"+ 
+											 		"AND  CUSTOMER_STORE_FORMAT IN ("+CustomerStoreFormate+"))"+ 
+											 		"AND FINAL_CLUSTER = '"+place2+"'");
+										
+								}
+								
+								else {
+									queryToGetLaunchIDclasification = sessionFactory.getCurrentSession()
+											.createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER WHERE ACTIVE_STATUS = 'ACTIVE' " //+ " tlb.LAUNCH_ID IN (:launchIds)"
+													+ sqlBit+"AND ACCOUNT_NAME = '" + accountName + "'" +"AND FINAL_CLUSTER = '" + place2 +"'");
+									
+								}
+				
+								
+								storeCount = queryToGetLaunchIDclasification.list();
+								for(BigInteger value : storeCount) {
+									int counter=value.intValue();
+									intList.add(counter);
+								}
+							}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			int sum=0;
+			for (int i = 0; i < intList.size(); i++)
+	            sum += intList.get(i);
+	       totalStoreCount=String.valueOf(sum);
+			
+			
+			
+			if(storeCount==null) {
+				return "0";
+			}
+				if(!totalStoreCount.equals("0") && totalStoreCount!=null) {
+					return totalStoreCount;
+				}
+				else {
+					return "0";
+				}
+
+			
+		}
+		
+		else {
+			if(launchFormate!=null && !launchFormate.isEmpty()) {// Checking correct flow
+				
+				sqlBit=" AND CURRENT_STORE_FORMAT IN ("+launchFormate+")";
+				}
+			
+		
+
+		String[] parts = regionCluster.split(":");
+		String clusterOrBranch = parts[0];
+		if(!clusterOrBranch.contains("B")) {
+			region = parts[1];
+		}
+		else {
+			region=null;
+		}
+		
+		
+		if (busiClasification.equals("Gold")) {
+			launchClassification = "('GOLD','SILVER','BRONZE')";
+			
+		} else if (busiClasification.equals("Silver")) {
+			launchClassification = "('BRONZE','SILVER')";
+		} else {
+			launchClassification = "('BRONZE')";
+		}
+		
+
+		if(region!=null && !region.isEmpty()) {
+			try {
+				
+				Query queryToGetLaunchIDclasification;
+				if(sqlBit.isEmpty() && (CustomerStoreFormate.isEmpty() &&  whoelString.isEmpty())) {
+					 queryToGetLaunchIDclasification = sessionFactory.getCurrentSession()
+							 .createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' " //+ " tlb.LAUNCH_ID IN (:launchIds)"
+										+ "AND ACCOUNT_NAME = '" + accountName + "'"+" AND DP_CHAIN = '" + accountName + "'" +"AND FINAL_CLUSTER = '" + region +"'" + "AND LAUNCH_FORMAT IN " +launchClassification+"");
+						
+				}
+				
+				else if(!CustomerStoreFormate.isEmpty() &&  !whoelString.isEmpty()) {
+					 queryToGetLaunchIDclasification = sessionFactory.getCurrentSession()
+							 .createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND CURRENT_STORE_FORMAT IN " + 
+							 		"(SELECT DISTINCT CURRENT_STORE_FORMAT FROM TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE FINAL_CLUSTER IN ("+whoelString+")" + 
+							 		"AND ACCOUNT_NAME = '"+accountName+"'  AND ACCOUNT_NAME != '' "+ 
+							 		"AND DP_CHAIN = '"+accountName+"'"+ 
+							 		"AND  CUSTOMER_STORE_FORMAT IN ("+CustomerStoreFormate+"))"+ 
+							 		"AND FINAL_CLUSTER = '"+region+"'");
+						
+				}
+				
+				else {
+					queryToGetLaunchIDclasification = sessionFactory.getCurrentSession()
+							.createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER WHERE ACTIVE_STATUS = 'ACTIVE' " //+ " tlb.LAUNCH_ID IN (:launchIds)"
+									+ sqlBit+"AND ACCOUNT_NAME = '" + accountName + "'" +"AND FINAL_CLUSTER = '" + region +"'");
+					
+				}
+				
+				
+				/*Query queryToGetLaunchIDclasification = sessionFactory.getCurrentSession()
+						.createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' " //+ " tlb.LAUNCH_ID IN (:launchIds)"
+								+ "AND ACCOUNT_NAME = '" + accountName + "'"+" AND DP_CHAIN = '" + accountName + "'" +"AND FINAL_CLUSTER = '" + region +"'" + "AND LAUNCH_FORMAT IN " +launchClassification+"");
+				*/
+				storeCount = queryToGetLaunchIDclasification.list();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		if(storeCount==null) {
+			return "0";
+		}
+
+	for (BigInteger count : storeCount) {
+		totalStoreCount=String.valueOf(count);
+			if(!totalStoreCount.equals("0") && totalStoreCount!=null) {
+				return totalStoreCount;
+			}
+			else {
+				return "0";
+			}
+		}
+		
+		return totalStoreCount;
+		}
+	}
+	
+	// TO GET COUNT OF ALL CUSTOMER's
+	
+public String getCountofALLCustomers(String regionCluster,String accountName, String busiClasification, String StoreFormate,String  CustomerStoreFormate, String whoelString ) {
+		
+	Session session = sessionFactory.getCurrentSession();
+	SessionImpl sessionImpl = (SessionImpl) session;
+	PreparedStatement stmt = null;
+	ResultSet rs = null;	
+	
+	
+	String launchFormate;
+	if(StoreFormate.equals("''") || StoreFormate.isEmpty()) {
+		launchFormate=null;
+	}
+	else {
+		launchFormate=StoreFormate;
+	}
+	String sqlBit="";
+	
+	String launchClassification="";
+		LinkedHashSet<String> set=new LinkedHashSet();
+		List<BigInteger> storeCount = null;
+		List<Integer> intList = new ArrayList<Integer>();
+		List<Integer> Addwhole = new ArrayList<Integer>();
+		List<String> Accountsnames = null;
+		String totalStoreCount="";
+		int fianltotal = 0;
+		String region ="";
+		
+		
+		if(!regionCluster.contains(":")) {
+			region=regionCluster;
+				if (busiClasification.equals("Gold")) {
+					launchClassification = "('GOLD','SILVER','BRONZE')";
+					
+				} else if (busiClasification.equals("Silver")) {
+					launchClassification = "('BRONZE','SILVER')";
+				} else {
+					launchClassification = "('BRONZE')";
+				}
+				
+				if(launchFormate!=null) {
+					//launchClassification=launchClassification+",'NA'";
+					sqlBit=" AND CURRENT_STORE_FORMAT IN ("+launchFormate+")";
+					}
+				
+				
+
+				if(region!=null && !region.isEmpty()) {
+				
+					
+					try {
+						
+						Query queryTogetDistinctAccountNames = sessionFactory.getCurrentSession()
+								.createNativeQuery("SELECT DISTINCT ACCOUNT_NAME FROM TBL_VAT_COMM_OUTLET_MASTER");
+						Accountsnames=queryTogetDistinctAccountNames.list();
+						
+						
+						for(String allCustomers : Accountsnames) {
+							Query queryToGetLaunchIDclasification;
+							if(sqlBit.isEmpty() && (CustomerStoreFormate.isEmpty() &&  whoelString.isEmpty())) {
+								queryToGetLaunchIDclasification = sessionFactory.getCurrentSession()
+										.createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' " //+ " tlb.LAUNCH_ID IN (:launchIds)"
+												+ "AND ACCOUNT_NAME = '" + allCustomers+ "'"
+												+"AND FINAL_CLUSTER = '" + region +"'" + "AND LAUNCH_FORMAT IN " +launchClassification+"");
+								
+							}
+							
+							else if(!CustomerStoreFormate.isEmpty() &&  !whoelString.isEmpty()) {
+								 queryToGetLaunchIDclasification = sessionFactory.getCurrentSession()
+										 .createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND CURRENT_STORE_FORMAT IN " + 
+										 		"(SELECT DISTINCT CURRENT_STORE_FORMAT FROM TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE FINAL_CLUSTER IN ("+whoelString+")" + 
+										 		"AND ACCOUNT_NAME = '"+allCustomers+"'  AND ACCOUNT_NAME != '' "+ 
+										 		"AND DP_CHAIN = '"+allCustomers+"'"+ 
+										 		"AND  CUSTOMER_STORE_FORMAT IN ("+CustomerStoreFormate+"))"+ 
+										 		"AND FINAL_CLUSTER = '"+region+"'");
+									
+							}
+							
+							else {
+								queryToGetLaunchIDclasification = sessionFactory.getCurrentSession()
+										.createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER WHERE ACTIVE_STATUS = 'ACTIVE' " //+ " tlb.LAUNCH_ID IN (:launchIds)"
+												+ sqlBit+"AND ACCOUNT_NAME = '" + allCustomers + "'" +"AND FINAL_CLUSTER = '" + region +"'");
+								
+							}
+							
+							/*Query queryToGetLaunchIDclasification = sessionFactory.getCurrentSession()
+									.createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' " //+ " tlb.LAUNCH_ID IN (:launchIds)"
+											+ "AND ACCOUNT_NAME = '" + allCustomers+ "'"
+											+"AND FINAL_CLUSTER = '" + region +"'" + "AND LAUNCH_FORMAT IN " +launchClassification+"");
+							*/
+							storeCount=queryToGetLaunchIDclasification.list();
+							for(BigInteger num : storeCount) {
+								int pls = num.intValue();
+								intList.add(pls);
+							}
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				
+				int sum =0;
+				for (int i = 0; i < intList.size(); i++)
+		            sum += intList.get(i);
+		       totalStoreCount=String.valueOf(sum);
+		
+			return totalStoreCount;
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		String[] parts = regionCluster.split(":");
+		String clusterOrBranch = parts[0];
+		region=parts[1];
+		if(launchFormate!=null) {
+			//launchClassification=launchClassification+",'NA'";
+			sqlBit=" AND CURRENT_STORE_FORMAT IN ("+launchFormate+")";
+			}
+		
+		if(!clusterOrBranch.contains("B")) {
+			parts[1]=region;
+			
+			if (busiClasification.equals("Gold")) {
+				launchClassification = "('GOLD','SILVER','BRONZE')";
+				
+			} else if (busiClasification.equals("Silver")) {
+				launchClassification = "('BRONZE','SILVER')";
+			} else {
+				launchClassification = "('BRONZE')";
+			}
+			
+			
+
+			
+			if((region!=null && !region.isEmpty())|| region.equals("ALL INDIA")) {
+				
+				try {
+					
+					Query queryTogetDistinctAccountNames = sessionFactory.getCurrentSession()
+							.createNativeQuery("SELECT DISTINCT ACCOUNT_NAME FROM TBL_VAT_COMM_OUTLET_MASTER");
+					Accountsnames=queryTogetDistinctAccountNames.list();
+					
+					for(String allCustomers : Accountsnames) {
+						Query queryToGetLaunchIDclasification;
+						if(sqlBit.isEmpty() && (CustomerStoreFormate.isEmpty() &&  whoelString.isEmpty())) {
+							queryToGetLaunchIDclasification = sessionFactory.getCurrentSession()
+									.createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' " //+ " tlb.LAUNCH_ID IN (:launchIds)"
+											+ "AND ACCOUNT_NAME = '" + allCustomers+ "'"
+											+"AND FINAL_CLUSTER = '" + region +"'" + "AND LAUNCH_FORMAT IN " +launchClassification+"");
+							
+						}
+						
+						else if(!CustomerStoreFormate.isEmpty() &&  !whoelString.isEmpty()) {
+							 queryToGetLaunchIDclasification = sessionFactory.getCurrentSession()
+									 .createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND CURRENT_STORE_FORMAT IN " + 
+									 		"(SELECT DISTINCT CURRENT_STORE_FORMAT FROM TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE FINAL_CLUSTER IN ('"+region+"')" + //whoelString
+									 		"AND ACCOUNT_NAME = '"+allCustomers+"'  AND ACCOUNT_NAME != '' "+ 
+									 		"AND DP_CHAIN = '"+allCustomers+"'"+ 
+									 		"AND  CUSTOMER_STORE_FORMAT IN ("+CustomerStoreFormate+"))"+ 
+									 		"AND FINAL_CLUSTER = '"+region+"'");
+								
+						}
+						
+						else {
+							queryToGetLaunchIDclasification = sessionFactory.getCurrentSession()
+									.createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER WHERE ACTIVE_STATUS = 'ACTIVE' " //+ " tlb.LAUNCH_ID IN (:launchIds)"
+											+ sqlBit+"AND ACCOUNT_NAME = '" + allCustomers + "'" +"AND FINAL_CLUSTER = '" + region +"'");
+							
+						}
+						
+						/*Query queryToGetLaunchIDclasification = sessionFactory.getCurrentSession()
+								.createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' " //+ " tlb.LAUNCH_ID IN (:launchIds)"
+										+ "AND ACCOUNT_NAME = '" + allCustomers+ "'"
+										+"AND FINAL_CLUSTER = '" + region +"'" + "AND LAUNCH_FORMAT IN " +launchClassification+"");
+						*/
+						storeCount=queryToGetLaunchIDclasification.list();
+						for(BigInteger num : storeCount) {
+							int pls = num.intValue();
+							intList.add(pls);
+						}
+					}
+					
+					
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			int sum =0;
+			for (int i = 0; i < intList.size(); i++)
+	            sum += intList.get(i);
+	       totalStoreCount=String.valueOf(sum);
+		}
+		else {
+			return "0";
+		}
+		return totalStoreCount;
+	}
+
+	// To Get count of Customer Store Formate Harsha ekada kotha replacing method 
+
+public String getAllStoreCount(String regionCluster,String accountName, String busiClasification, String StoreFormate, String  CustomerStoreFormate, String whoelString) {
+	
+	Session session = sessionFactory.getCurrentSession();
+	LinkedHashSet<String> set=new LinkedHashSet();
+	SessionImpl sessionImpl = (SessionImpl) session;
+	PreparedStatement stmt = null;
+	ResultSet rs = null;
+	String launchClassification="";
+	List<BigInteger> storeCount = null;
+	List<Integer> intList = new ArrayList<Integer>();
+	String totalStoreCount="";
+	String region ="";
+	String place2="";
+	String launchFormate;
+	if(StoreFormate.equals("''") || StoreFormate.isEmpty()) {
+		launchFormate=null;
+	}
+	else {
+		launchFormate=StoreFormate;
+	}
+	String sqlBit="";
+	
+	
+	
+		if(launchFormate!=null && !launchFormate.isEmpty()) {// Checking correct flow
+			//launchClassification=launchClassification+",'NA'";
+			sqlBit=" AND CURRENT_STORE_FORMAT IN ("+launchFormate+")";
+			}
+		
+	
+
+	String[] parts = regionCluster.split(":");
+	String clusterOrBranch = parts[0];
+	if(!clusterOrBranch.contains("B")) {
+		region = parts[1];
+	}
+	else {
+		region=null;
+	}
+	
+	
+	if (busiClasification.equals("Gold")) {
+		launchClassification = "('GOLD','SILVER','BRONZE')";
+		
+	} else if (busiClasification.equals("Silver")) {
+		launchClassification = "('BRONZE','SILVER')";
+	} else {
+		launchClassification = "('BRONZE')";
+	}
+	
+	
+	if(region!=null && !region.isEmpty()) {
+		try {
+			Query queryToGetLaunchIDclasification;
+			if(sqlBit.isEmpty() && (CustomerStoreFormate.isEmpty() &&  whoelString.isEmpty())) {
+				queryToGetLaunchIDclasification = sessionFactory.getCurrentSession()
+						.createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' " //+ " tlb.LAUNCH_ID IN (:launchIds)"
+								+ "AND ACCOUNT_NAME = '" + accountName.trim()+ "'"
+								+"AND FINAL_CLUSTER = '" + region +"'" + "AND LAUNCH_FORMAT IN " +launchClassification+"");
+				
+			
+			}
+			
+			else if(!CustomerStoreFormate.isEmpty() &&  !whoelString.isEmpty()) {
+				 queryToGetLaunchIDclasification = sessionFactory.getCurrentSession()
+						 .createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' AND CURRENT_STORE_FORMAT IN " + 
+						 		"(SELECT DISTINCT CURRENT_STORE_FORMAT FROM TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE FINAL_CLUSTER IN ("+whoelString+")" + 
+						 		"AND ACCOUNT_NAME = '"+accountName.trim()+"'  AND ACCOUNT_NAME != '' "+ 
+						 		//"AND DP_CHAIN = '"+accountName.trim()+"'"+ 
+						 		"AND  CUSTOMER_STORE_FORMAT IN ("+CustomerStoreFormate+"))"+ 
+						 		"AND FINAL_CLUSTER IN ("+whoelString+")");
+					
+			}
+			
+			else {
+				queryToGetLaunchIDclasification = sessionFactory.getCurrentSession()
+						.createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER WHERE ACTIVE_STATUS = 'ACTIVE' " //+ " tlb.LAUNCH_ID IN (:launchIds)"
+								+ sqlBit+"AND ACCOUNT_NAME = '" + accountName.trim() + "'" +"AND FINAL_CLUSTER = '" + region +"' AND LAUNCH_FORMAT !=''");
+				
+			}
+			
+			
+			/*Query queryToGetLaunchIDclasification = sessionFactory.getCurrentSession()
+					.createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' " //+ " tlb.LAUNCH_ID IN (:launchIds)"
+							+ "AND ACCOUNT_NAME = '" + accountName + "'"+" AND DP_CHAIN = '" + accountName + "'" +"AND FINAL_CLUSTER = '" + region +"'" + "AND LAUNCH_FORMAT IN " +launchClassification+"");
+			*/
+			storeCount = queryToGetLaunchIDclasification.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	if(storeCount==null) {
+		return "0";
+	}
+
+for (BigInteger count : storeCount) {
+
+		totalStoreCount=String.valueOf(count);
+		if(!totalStoreCount.equals("0") && totalStoreCount!=null) {
+			return totalStoreCount;
+		}
+		else {
+			return "0";
+		}
+	}
+	
+	return totalStoreCount;
+	
+}
+
+
+
+		
+	
+	
+	
+	// Harsha Ended this code for big mike story
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<LaunchBasePackResponse> getLaunchBasePackDetails(String basepackCode) {
@@ -811,6 +2541,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			}
 			//kiran - bigint to int changes
 			//List<Integer> count = queryToGetCustomeChainL1.list();
+			
 			List<BigInteger> count = queryToGetCustomeChainL1.list();
 			//String storeCount = String.valueOf(count.get(0));
 			String storeCount = String.valueOf(count.get(0).intValue());
@@ -1378,4 +3109,391 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			return null;
 		}
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional(rollbackOn = Exception.class)
+	public String insertdiffCustomerStoreFormatesToTemp(List<Object> saveLaunchCluster, String launchId,String userId) {
+		//List<String> liReturn = null;
+		Session session = sessionFactory.getCurrentSession();
+		SessionImpl sessionImpl = (SessionImpl) session;
+		
+		int clusterId = 0;
+		try {
+		Iterator<Object> iterator = saveLaunchCluster.iterator();
+		
+		PreparedStatement preparedStatement1 = sessionImpl.connection().prepareStatement("DELETE FROM TBL_LAUNCH_CLUSTERS_TEMP where LAUNCH_ID = "+launchId+" ");
+		preparedStatement1.execute();
+		
+		while (iterator.hasNext()) {
+			
+			LaunchClusterDataCustStoreForm obj = (LaunchClusterDataCustStoreForm) iterator.next();
+	
+			ResultSet rs = null;
+			try (PreparedStatement preparedStatement = sessionImpl.connection().prepareStatement(TBL_LAUNCH_CLUSTERS_TEMP,
+					Statement.RETURN_GENERATED_KEYS)) {
+				preparedStatement.setString(1, launchId);
+				preparedStatement.setString(2, obj.getCluster());
+				preparedStatement.setString(3, obj.getAccount_L1());
+				preparedStatement.setString(4, obj.getAccount_L2());
+				preparedStatement.setString(5, obj.getCustomer_Store_Format());
+				preparedStatement.setString(6, obj.getLaunch_planned());
+				preparedStatement.setString(7, obj.getTotal_Stores());
+				preparedStatement.setString(8, obj.getTME_Total_Stores());
+				preparedStatement.setString(9, errorMessage(obj.getTotal_Stores().trim(),obj.getTME_Total_Stores().trim()));
+				preparedStatement.setString(10, userId);
+				preparedStatement.setTimestamp(11, new Timestamp(new Date().getTime()));
+				preparedStatement.executeUpdate();
+				rs = preparedStatement.getGeneratedKeys();
+				if (rs != null && rs.next()) {
+					clusterId = rs.getInt(1);
+					
+				}
+			} catch (Exception e) {
+				logger.error("Exception: " + e);
+				return e.toString();
+			} 
+			}
+			
+		} catch (Exception ex) {
+			logger.debug("Exception :", ex);
+			return ex.toString();
+		
+		}
+		return "Sucessfully Written to TEMP Table";
+	}
+	
+	
+	
+	
+	
+	public String errorMessage(String totalStores, String tmeTotalStores) {
+		String message="";
+		int totalStore;
+		int tmeTotalStore;
+		String tmeTotalStorestr="";
+			if(totalStores.isEmpty()) {
+				totalStore=0;
+			}
+			else {
+				totalStore=Integer. parseInt(totalStores);
+			}
+			
+			if(tmeTotalStores.isEmpty()) {
+				return message="";
+			}
+			else {
+				tmeTotalStore = Integer. parseInt(tmeTotalStores);
+			}
+			if(totalStores.equals("0")) {
+				return message="";
+			}
+			
+			else if (tmeTotalStore>totalStore){
+				return message = "TME Selected stores count should not be greater than given Total Stores";
+			}
+			
+			else if (totalStore>=1 && tmeTotalStore<=0){
+				return	message = "TME Selected stores should not be less than 1";
+			}
+				return message;
+	}
+	
+
+
+	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional(rollbackOn = Exception.class)
+	public String getCountofErrorMSgfromCustmstorTblLaunchClusterTempAndinserttopermtbl(String launchId) {
+		//List<String> liReturn = null;
+		Session session = sessionFactory.getCurrentSession();
+		SessionImpl sessionImpl = (SessionImpl) session;
+		 ResultSet rst = null;
+		int count = 0 ;
+		String countofError="";
+		try {
+		
+		PreparedStatement preparedStatement1 = sessionImpl.connection().prepareStatement("Select count(ERROR_MSG) FROM TBL_LAUNCH_CLUSTERS_TEMP where LAUNCH_ID = "+launchId+" AND ERROR_MSG LIKE '%TME%' ");
+		rst=preparedStatement1.executeQuery();
+		
+		while(rst.next()) {
+            count=rst.getInt(1);
+          //  return countofError=String.valueOf(rst.getInt(1));
+         }
+		
+		
+		if(count==0) {
+			
+			PreparedStatement preparedStatement2 = sessionImpl.connection().prepareStatement("DELETE FROM TBL_LAUNCH_CLUSTERS_DETAILS where LAUNCH_ID = "+launchId+" ");
+			preparedStatement2.execute();
+			
+			PreparedStatement preparedStatement3 = sessionImpl.connection().prepareStatement("Select * FROM TBL_LAUNCH_CLUSTERS_TEMP where LAUNCH_ID = "+launchId+" AND TOTAL_STORES_TO_LAUNCH>0");
+			rst=preparedStatement3.executeQuery();
+			
+			while(rst.next()) {
+	            ResultSet rs = null;
+	            
+	            PreparedStatement preparedStatement4 = sessionImpl.connection().prepareStatement(TBL_LAUNCH_CLUSTERS_DETAILS,
+						Statement.RETURN_GENERATED_KEYS);
+	            
+	            preparedStatement4.setString(1, rst.getString("LAUNCH_ID"));
+	            preparedStatement4.setString(2, rst.getString("CLUSTER_REGION"));
+	            preparedStatement4.setString(3, rst.getString("CLUSTER_ACCOUNT_L1"));
+	            preparedStatement4.setString(4, rst.getString("CLUSTER_ACCOUNT_L2"));
+	            preparedStatement4.setString(5, rst.getString("CLUSTER_CUST_STORE_FORMAT"));
+	            preparedStatement4.setString(6, rst.getString("LAUNCH_PLANNED"));
+	            preparedStatement4.setString(7, rst.getString("TOTAL_STORES_TO_LAUNCH"));
+	            preparedStatement4.setString(8, rst.getString("TOTAL_TME_STORES_PLANED"));
+				preparedStatement4.setString(9, rst.getString("CREATED_BY"));
+	            preparedStatement4.setTimestamp(10, new Timestamp(new Date().getTime()));
+	            preparedStatement4.executeUpdate();
+				rs = preparedStatement4.getGeneratedKeys();
+	            
+	         }
+			
+		}
+		
+		else {
+			return countofError=String.valueOf(count);
+		}
+		
+		} catch (Exception ex) {
+			logger.debug("Exception :", ex);
+			return ex.toString();
+		
+		}
+		return "SUCESS";
+	}
+	
+	
+	// Added by harsha to get count of final stores -- starts
+	@SuppressWarnings("unchecked")
+	@Transactional(rollbackOn = Exception.class)
+	public String getCountofStoreFixed(String launchId) {
+		Session session = sessionFactory.getCurrentSession();
+		SessionImpl sessionImpl = (SessionImpl) session;
+		 ResultSet rst = null;
+		String clusterId = "";
+		try {
+		
+		PreparedStatement preparedStatement1 = sessionImpl.connection().prepareStatement("Select SUM(TOTAL_TME_STORES_PLANED) FROM TBL_LAUNCH_CLUSTERS_DETAILS where LAUNCH_ID = "+launchId+"");
+		rst=preparedStatement1.executeQuery();
+		
+		while(rst.next()) {
+            return clusterId=String.valueOf(rst.getInt(1));
+         }
+		} catch (Exception ex) {
+			logger.debug("Exception :", ex);
+			return ex.toString();
+		
+		}
+		return "SUCESS";
+	} // Added by harsha to get count of final stores -- Ends
+	
+	//  Added by Harsha FOR STORE FORMATE -- Starts
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional(rollbackOn = Exception.class)
+	public String getCountofErrorMSgfromTblLaunchClusterTempStroeFormate(String launchId) {
+		//List<String> liReturn = null;
+		Session session = sessionFactory.getCurrentSession();
+		SessionImpl sessionImpl = (SessionImpl) session;
+		 ResultSet rst = null;
+		int count = 0 ;
+		String countofError="";
+		try {
+		
+		PreparedStatement preparedStatement1 = sessionImpl.connection().prepareStatement("Select count(ERROR_MSG) FROM TBL_LAUNCH_CLUSTERS_TEMP where LAUNCH_ID = "+launchId+" AND ERROR_MSG LIKE '%TME%' ");
+		rst=preparedStatement1.executeQuery();
+		
+		while(rst.next()) {
+            count=rst.getInt(1);
+         }
+		
+		
+		if(count==0) {
+			
+			PreparedStatement preparedStatement2 = sessionImpl.connection().prepareStatement("DELETE FROM TBL_LAUNCH_CLUSTERS_DETAILS where LAUNCH_ID = "+launchId+" ");
+			preparedStatement2.execute();
+			
+			PreparedStatement preparedStatement3 = sessionImpl.connection().prepareStatement("Select * FROM TBL_LAUNCH_CLUSTERS_TEMP where LAUNCH_ID = "+launchId+" AND TOTAL_STORES_TO_LAUNCH>0");
+			rst=preparedStatement3.executeQuery();
+			
+			while(rst.next()) {
+	            ResultSet rs = null;
+	            
+	            PreparedStatement preparedStatement4 = sessionImpl.connection().prepareStatement(TBL_LAUNCH_CLUSTERS_DETAILS_STORE,
+						Statement.RETURN_GENERATED_KEYS);
+	            
+	            preparedStatement4.setString(1, rst.getString("LAUNCH_ID"));
+	            preparedStatement4.setString(2, rst.getString("CLUSTER_REGION"));
+	            preparedStatement4.setString(3, rst.getString("CLUSTER_ACCOUNT_L1"));
+	            preparedStatement4.setString(4, rst.getString("CLUSTER_ACCOUNT_L2"));
+	            preparedStatement4.setString(5, rst.getString("CLUSTER_STORE_FORMAT"));
+	            preparedStatement4.setString(6, rst.getString("LAUNCH_PLANNED"));
+	            preparedStatement4.setString(7, rst.getString("TOTAL_STORES_TO_LAUNCH"));
+	            preparedStatement4.setString(8, rst.getString("TOTAL_TME_STORES_PLANED"));
+				preparedStatement4.setString(9, rst.getString("CREATED_BY"));
+	            preparedStatement4.setTimestamp(10, new Timestamp(new Date().getTime()));
+	            preparedStatement4.executeUpdate();
+				rs = preparedStatement4.getGeneratedKeys();
+	            
+	         }
+			
+		}
+		
+		else {
+			return countofError=String.valueOf(count);
+		}
+		
+		} catch (Exception ex) {
+			logger.debug("Exception :", ex);
+			return ex.toString();
+		
+		}
+		return "SUCESS";
+	} //  Added by Harsha FOR STORE FORMATE -- End's
+
+	
+	// For customerStoreFormat
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional(rollbackOn = Exception.class)
+	public List<ArrayList<String>> getLaunchClusterErrorDataforCustomerStoreFormat(ArrayList<String> headerDetail,
+	String userId, String launchID) {
+		//String launchID=downloadLaunchClusterRequest.getLaunchId();
+	List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
+	downloadDataList.add(headerDetail);
+	Session session = sessionFactory.getCurrentSession();
+	SessionImpl sessionImpl = (SessionImpl) session;
+	ResultSet rst = null;
+	String clusterId = "";
+	
+	try {
+		PreparedStatement preparedStatement1 = sessionImpl.connection().prepareStatement("Select * FROM TBL_LAUNCH_CLUSTERS_TEMP where LAUNCH_ID = "+launchID+"");
+		rst=preparedStatement1.executeQuery();
+		
+		while(rst.next()) {
+			ArrayList<String> dataObj = new ArrayList<>();
+			dataObj.add(rst.getString("CLUSTER_REGION"));
+			dataObj.add(rst.getString("CLUSTER_ACCOUNT_L1"));
+			dataObj.add(rst.getString("CLUSTER_ACCOUNT_L2"));
+			dataObj.add(rst.getString("CLUSTER_CUST_STORE_FORMAT"));
+			dataObj.add(rst.getString("LAUNCH_PLANNED"));
+			dataObj.add(rst.getString("TOTAL_STORES_TO_LAUNCH"));
+			dataObj.add(rst.getString("TOTAL_TME_STORES_PLANED"));
+			dataObj.add(rst.getString("ERROR_MSG"));
+			downloadDataList.add(dataObj);
+         }
+		
+		
+	} catch (Exception ex) {
+	logger.debug("Exception :", ex);
+	return downloadDataList;
+	}
+	return downloadDataList;
+	}
+	
+	// for error files of store formate
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional(rollbackOn = Exception.class)
+	public List<ArrayList<String>> getLaunchClusterErrorDataforStoreFormat(ArrayList<String> headerDetail,
+	String userId, String launchID) {
+		//String launchID=downloadLaunchClusterRequest.getLaunchId();
+	List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
+	downloadDataList.add(headerDetail);
+	Session session = sessionFactory.getCurrentSession();
+	SessionImpl sessionImpl = (SessionImpl) session;
+	ResultSet rst = null;
+	String clusterId = "";
+	
+	try {
+		PreparedStatement preparedStatement1 = sessionImpl.connection().prepareStatement("Select * FROM TBL_LAUNCH_CLUSTERS_TEMP where LAUNCH_ID = "+launchID+"");
+		rst=preparedStatement1.executeQuery();
+		
+		while(rst.next()) {
+			ArrayList<String> dataObj = new ArrayList<>();
+			dataObj.add(rst.getString("CLUSTER_REGION"));
+			dataObj.add(rst.getString("CLUSTER_ACCOUNT_L1"));
+			dataObj.add(rst.getString("CLUSTER_ACCOUNT_L2"));
+			dataObj.add(rst.getString("CLUSTER_CUST_STORE_FORMAT"));
+			dataObj.add(rst.getString("LAUNCH_PLANNED"));
+			dataObj.add(rst.getString("TOTAL_STORES_TO_LAUNCH"));
+			dataObj.add(rst.getString("TOTAL_TME_STORES_PLANED"));
+			dataObj.add(rst.getString("ERROR_MSG"));
+			downloadDataList.add(dataObj);
+         }
+		
+		
+	} catch (Exception ex) {
+	logger.debug("Exception :", ex);
+	return downloadDataList;
+	}
+	return downloadDataList;
+	}
+	
+	// Added by Harsha for sptinr 7 us 7 -- start
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional(rollbackOn = Exception.class)
+	public String insertdiffStoreFormatesToTemp(List<Object> saveLaunchCluster, String launchId,String userId) {
+		//List<String> liReturn = null;
+		Session session = sessionFactory.getCurrentSession();
+		SessionImpl sessionImpl = (SessionImpl) session;
+		
+		int clusterId = 0;
+		try {
+		Iterator<Object> iterator = saveLaunchCluster.iterator();
+		
+		PreparedStatement preparedStatement1 = sessionImpl.connection().prepareStatement("DELETE FROM TBL_LAUNCH_CLUSTERS_TEMP where LAUNCH_ID = "+launchId+" ");
+		preparedStatement1.execute();
+		
+		while (iterator.hasNext()) {
+			
+			LaunchClusterDataStoreForm obj = (LaunchClusterDataStoreForm) iterator.next();
+			
+		
+			ResultSet rs = null;
+			try (PreparedStatement preparedStatement = sessionImpl.connection().prepareStatement(TBL_LAUNCH_CLUSTERS_TEMP_STORE,
+					Statement.RETURN_GENERATED_KEYS)) {
+				preparedStatement.setString(1, launchId);
+				preparedStatement.setString(2, obj.getCluster());
+				preparedStatement.setString(3, obj.getAccount_L1());
+				preparedStatement.setString(4, obj.getAccount_L2());
+				preparedStatement.setString(5, obj.getStore_Format());
+				preparedStatement.setString(6, obj.getLaunch_planned());
+				preparedStatement.setString(7, obj.getTotal_Stores());
+				preparedStatement.setString(8, obj.getTME_Total_Stores());
+				preparedStatement.setString(9, errorMessage(obj.getTotal_Stores().trim(),obj.getTME_Total_Stores().trim()));
+				preparedStatement.setString(10, userId);
+				preparedStatement.setTimestamp(11, new Timestamp(new Date().getTime()));
+				preparedStatement.executeUpdate();
+				rs = preparedStatement.getGeneratedKeys();
+				if (rs != null && rs.next()) {
+					clusterId = rs.getInt(1);
+					
+				}
+			} catch (Exception e) {
+				logger.error("Exception: " + e);
+				return e.toString();
+			} 
+			}
+			
+		} catch (Exception ex) {
+			logger.debug("Exception :", ex);
+			return ex.toString();
+		
+		}
+		return "Sucessfully Written to TEMP Table";
+	}// Added by Harsha for sptinr 7 us 7 -- End's
+	
+	
+	
+	 
+	
 }
