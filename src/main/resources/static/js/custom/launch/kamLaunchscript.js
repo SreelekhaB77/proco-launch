@@ -14,6 +14,7 @@ $(document).ready(function() {
 	$('#kamlnchDets').attr("disabled",true);
 	$('#rejectLaunch').attr("disabled",true);
 	$('#kamerrorblockUpload').hide();
+	 $('#targetStoreErrorBlock').hide();
 	if( window.location.hash != "#step-1" && window.location.hash != '' ){
 		window.location = window.location.href.split('#')[0];
 	}
@@ -407,27 +408,23 @@ $(document).ready(function() {
 	         	// upldatanew = typeof upldata == "string" ? JSON.parse(upldata) :
 	 			// upldata;
 	         	var errmsg = upllnchstrdata.responseData;
-	         	console.log(upllnchstrdata.responseData);
+	         	//console.log(upllnchstrdata.responseData);
 		
 	         	 $('.loader').hide();
-			//sprint-4 US-5 confirmation msg bharati added
 			
-			var fileNamesuccess = fileName;
-			
-			if(fileNamesuccess.includes("Store.Download") && fileName != ''){
-				
-			$('#storelist-successblock').show().find('span').html('Uploaded Successfully !!!');
-			}else{
-				$('#storelist-successblock').hide();
-			}
-			//sprint-4 US-5 confirmation msg bharati ended
 			
 	             if("SUCCESS_FILE" ==  upllnchstrdata) {
 					 	
 	             	 $("#kamlaunchVisiTab").click();
 	             	 $('#kamuploadErrorMsg').hide();
 	             	 $('#kamerrorblockUpload').hide();
-					 
+	             	 $('#targetStoreErrorBlock').hide();
+					 //sprint-4 US-5 confirmation msg bharati added
+					 //var fileNamesuccess = fileName;
+			       //if(fileNamesuccess.includes("Store.Download") && fileName != ''){
+			          $('#storelist-successblock').show().find('span').html('Uploaded Successfully !!!');
+			         //}
+			         //sprint-4 US-5 confirmation msg bharati ended
 					
 					//sprint-4 US-5 redirect on same page changes done by bharati
 					 
@@ -437,6 +434,10 @@ $(document).ready(function() {
 	             	kamgetVissiData();
 
 	             	// getlaunchStores();
+	             	//bharati added for spint-7 US-7 Error block for minimum target store
+	             }else if(upllnchstrdata.includes('Minimum targeted stores should be')){
+	                   $('#targetStoreErrorBlock').show().find('span').html('Please Accept Minimum Target Stores as Confirmed by TME');  
+	                   $('#storelist-successblock').hide(); 
 	             }
 	             else {
 	             	$('#kamerrorblockUpload').show();

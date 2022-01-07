@@ -130,11 +130,18 @@
 			</div>
 		</c:if>
 
-		<div class="alert alert-danger marginT15" id="kamerrorblockUpload">
+		<div class="alert alert-danger marginT15" style="display: none;" id="kamerrorblockUpload">
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			<%-- <c:out value="${errorMsgUpload}"></c:out> --%>
 			<span> File does not contains any data.</span>
 		</div>
+		<!--bharati added error block for US-7 IN Sprint-7-->
+		<div class="alert alert-danger marginT15" style="display: none;" id="targetStoreErrorBlock">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			
+			<span> </span>
+		</div>
+		<!--bharati code end here-->
 		<!-- modal for change moc -->
 		<div id="kammocChange" class="modal fade" role="dialog"
 			data-backdrop="static" data-keyboard="false" style="display: none;">

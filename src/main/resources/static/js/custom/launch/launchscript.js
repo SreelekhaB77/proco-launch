@@ -19,6 +19,10 @@ $(document).ready(function() {
 	$('#errorblockUpload').hide();
 	$('#sellinerrorblockUpload').hide();
 	$('#annexerrorblockUpload').hide();
+	//next-2 lines added for sprint-7 US-7
+	$('#launchStoreerrorblockUpload').hide();
+	$('#launchStoreErrorFileForStoreFormat').hide();
+	
 	 $("[data-hide]").on("click", function() {
          $(this).closest("." + $(this).attr("data-hide")).hide();
      });
@@ -1003,17 +1007,30 @@ $(document).ready(function() {
 				            	lnchStrdatanew = typeof lnchStrdata == "string" ?  JSON.parse(lnchStrdata) : lnchStrdata;
 				            	var errmsg = lnchStrdatanew.Error;
 				            	 $('.loader').hide();
-				                if("SUCCESS_FILE" == lnchStrdatanew.Success) {
+				            	
+				               if(lnchStrdata.includes('SUCCESS_FILE')) {
 				                	 $("#launchSellInTab").click();
 				                	 $('#errorblockUpload').hide();
+				                	 //next 4 lines  added bharati for sprint-7 US-7
+				                	 $('#launchStoreErrorFileForStoreFormat').hide();
+				                	 $('#successblock').show().find('span').html(' File Uploaded Successfully !!!');
 				                	 getSellInData();
+				                	  var custStoreSuccvalue = lnchStrdatanew.Success;
+				            	      var SuccesCustStoreFormatSplit = custStoreSuccvalue.split(/(\d+)/);
+				            	
+				                	  $('#tmeapprovedstorecount').val(SuccesCustStoreFormatSplit[1]);
+				                	  $('.launchStoreNext').prop('disabled', false);
 				                }
-				                else if(lnchStrdata.includes('Error')){
+				                //bharati added this condition for download customer store error file US-7 In sprint-7
+				                else if(lnchStrdata.includes('File Upload is UnSuccessful')){
+				                $('#launchStoreErrorFileForStoreFormat').show();
+				                $('.launchStoreNext').prop('disabled', true);
+				                }
+				                else {
 				                	$('#errorblockUpload').show();
-				                	
-				                }
-				               
-				                $("#launchstrFileUploadBtn").prop("disabled", false);
+		                         }
+				                 window.location.href = storepageURL;    // bharati added for sprint-7 US-7 stay on same page
+				                 $("#launchstrFileUploadBtn").prop("disabled", false);
 				            },
 				            error: function (e) {
 				            	// $('#errorblockUpload').find('span').text(e.responseText);
@@ -1023,6 +1040,8 @@ $(document).ready(function() {
 				                      
 				            }
 				        });
+				        //bharati added for find current page -url in sprint-7
+					      var storepageURL = $(location).attr("href");
 					    	
 				    });
 					
@@ -1085,16 +1104,28 @@ $(document).ready(function() {
 				            	lnchStrdatanew = typeof lnchStrdata == "string" ?  JSON.parse(lnchStrdata) : lnchStrdata;
 				            	var errmsg = lnchStrdatanew.Error;
 				            	 $('.loader').hide();
-				                if("SUCCESS_FILE" == lnchStrdatanew.Success) {
+				            	 if(lnchStrdata.includes('SUCCESS_FILE')) {
 				                	 $("#launchSellInTab").click();
 				                	 $('#errorblockUpload').hide();
-				                	 getSellInData();
+				                	 //next 4 lines  added bharati for sprint-7 US-7
+				                	 $('#launchStoreerrorblockUpload').hide();
+				                	 $('#successblock').show().find('span').html(' File Uploaded Successfully !!!');
+				                	  getSellInData();
+				                	  var custStoreSuccvalue = lnchStrdatanew.Success;
+				            	      var SuccesCustStoreFormatSplit = custStoreSuccvalue.split(/(\d+)/);
+				            	      $('#tmeapprovedstorecount').val(SuccesCustStoreFormatSplit[1]);
+				                	  $('.launchStoreNext').prop('disabled', false);
 				                }
-				                else if(lnchStrdata.includes('Error')){
+				                //bharati added this condition for download customer store error file US-7 In sprint-7
+				                else if(lnchStrdata.includes('File Upload is UnSuccessful')){
+				                $('#launchStoreerrorblockUpload').show();
+				                $('.launchStoreNext').prop('disabled', true);
+				                }
+				                else{
 				                	$('#errorblockUpload').show();
-				                	
-				                }
-				               
+				              	 }
+				                
+				                 window.location.href = storepageURL;    // bharati added for sprint-7 US-7 stay on same page
 				                $("#launchstrFileUploadBtn").prop("disabled", false);
 				            },
 				            error: function (e) {
@@ -1105,6 +1136,8 @@ $(document).ready(function() {
 				                      
 				            }
 				        });
+				        //bharati added for find current page -url in sprint-7
+					      var storepageURL = $(location).attr("href");
 					    	
 				    });
 					
@@ -1733,7 +1766,7 @@ function multiSelectionForCustChainStore() {
 			        });
 
 				strData = custselVals.toString();
-				
+			
 				$.ajax({
 		            type: "post",
 		            url: "getStoreDataOnStore.htm",
@@ -2163,8 +2196,38 @@ function downloadFinalPlan() {
 
 function downloadLaunchStrClusterTemplate() {
 	var regionCluster = $("#cluster").val();
+	var launchId = $("#dynamicLaunchId").val();    //bharati added sprint-7
 	var customerChainL1Thrscn = $("#customerChainL1Thrscn").val();
 	// var storeFormat = $("#custstrfrmt").val();
+	//bharati added for to get clusters values in sprint-7 US-7 
+	var custselValsForStore = [];
+	var selStoreFormat;
+			var selectedOptions = $('#cust-chain-store option:selected');
+			
+			if (selectedOptions.length >= 0) {
+				
+				 $(selectedOptions).each(function(index, selectedOptions){
+					 custselValsForStore.push([$(this).val()]);
+			        });
+
+				var addsinqt = custselValsForStore.toString();
+				 selStoreFormat = '\'' + addsinqt.split(',').join('\',\'') + '\'';
+				}
+				
+	var customerSelForStore = [];
+	var CustStoreFormat;
+			var selectedOptions = $('#cust-chain-cst-store option:selected');
+			
+			if (selectedOptions.length >= 0) {
+				
+				 $(selectedOptions).each(function(index, selectedOptions){
+					 customerSelForStore.push([$(this).val()]);
+			        });
+
+				var addsinqt = customerSelForStore.toString();
+				 CustStoreFormat = '\'' + addsinqt.split(',').join('\',\'') + '\'';
+				}
+	//bharati code end here
 	var customerStoreFormat = $("#cust-chain-cst-store").val();
 	var storeFormat = document.getElementById("cust-chain-store").nextElementSibling.firstElementChild.getAttribute('title');
 	var temp = 0;
@@ -2224,7 +2287,11 @@ function downloadLaunchStrClusterTemplate() {
 				"regionCluster": regionCluster, 
 				"l1l2Cluster": customerChainL1Thrscn,
 				"storeFormat" : storeFormat,
-				"custStoreFormat" : ""
+				"custStoreFormat" : CustStoreFormat,
+				"LaunchId" : launchId,                             //bharati added for sprint-7 US-7
+				"SelStoreFormat": selStoreFormat                   //bharati added for sprint-7 US-7
+				                     
+				
 			}),
 		    success: function( data, textStatus, jQxhr ){
 		    	 $('.loader').hide();
@@ -2242,9 +2309,26 @@ function downloadLaunchStrClusterTemplate() {
 
 function downloadLaunchClusterTemplate() {
 	var regionCluster = $("#cluster").val();
+	var launchId = $("#dynamicLaunchId").val();    //bharati added sprint-7
 	var customerChainL1Thrscn = $("#customerChainL1Thrscn").val();
-	// var storeFormat = $("#custstrfrmt").val();
+	//var storeFormat = $("#custstrfrmt").val();
 	// var customerStoreFormat = $("#cust-chain-cst-store").val();
+	//bharati added for to got store format values in sprint-7 US-7 
+	var custselVals = [];
+	var selStoreFormat;
+			var selectedOptions = $('#cust-chain-store option:selected');
+			
+			if (selectedOptions.length >= 0) {
+				
+				 $(selectedOptions).each(function(index, selectedOptions){
+					 custselVals.push([$(this).val()]);
+			        });
+
+				var addsinqt = custselVals.toString();
+				 selStoreFormat = '\'' + addsinqt.split(',').join('\',\'') + '\'';
+				}
+	//console.log(selStoreFormat);
+	//bharati code end here
 	var custStoreFormat =[]; 
 	var storeFormat=[];
 	var strfrmt='';
@@ -2359,7 +2443,9 @@ function downloadLaunchClusterTemplate() {
 				"regionCluster": regionCluster, 
 				"l1l2Cluster": customerChainL1Thrscn,
 				"storeFormat" : "",
-				"custStoreFormat" : cstmstrfrmt
+				"custStoreFormat" : cstmstrfrmt,
+				"LaunchId" : launchId,                             //bharati added for sprint-7 US-7
+				"SelStoreFormat": selStoreFormat                      //bharati added for sprint-7 US-7
 			}),
 		    success: function( data, textStatus, jQxhr ){
 		    	 $('.loader').hide();
@@ -4157,6 +4243,51 @@ function downloadLaunchSellInErrorTemplate() {
 	
 	$.ajax({
 	    url: 'downloadErrorSellInTemplate.htm',
+	    type: 'post',
+	    contentType: 'application/json',
+	    dataType : 'JSON',
+	    beforeSend: function() {
+            ajaxLoader(spinnerWidth, spinnerHeight);
+        },
+	    data : JSON.stringify( { "launchId": launchId } ),
+	    success: function( data, textStatus, jQxhr ){
+	    	 $('.loader').hide();
+	    	window.location.assign(data.FileToDownload+"/downloadFileTemplate.htm");
+	    },
+	    error: function( jqXhr, textStatus, errorThrown ){
+	       // console.log( errorThrown );
+	    }
+	});
+}
+//bharati added changes for sprint-7 US-7 download error file for customer store format
+function downloadLaunchStoreErrorTemplate() {
+	var launchId = $("#dynamicLaunchId").val();
+	
+	$.ajax({
+	    url: 'downloadErrorClusterTempforCustStoreformat.htm',
+	    type: 'post',
+	    contentType: 'application/json',
+	    dataType : 'JSON',
+	    beforeSend: function() {
+            ajaxLoader(spinnerWidth, spinnerHeight);
+        },
+	    data : JSON.stringify( { "launchId": launchId } ),
+	    success: function( data, textStatus, jQxhr ){
+	    	 $('.loader').hide();
+	    	window.location.assign(data.FileToDownload+"/downloadFileTemplate.htm");
+	    },
+	    error: function( jqXhr, textStatus, errorThrown ){
+	       // console.log( errorThrown );
+	    }
+	});
+}
+
+//bharati added code for download store format error file for sprint-7 US-7
+function downloadLaunchStoreErrorTemplateForStoreFormat() {
+	var launchId = $("#dynamicLaunchId").val();
+	
+	$.ajax({
+	    url: 'downloadErrorClusterTempforStoreformat.htm',
 	    type: 'post',
 	    contentType: 'application/json',
 	    dataType : 'JSON',
