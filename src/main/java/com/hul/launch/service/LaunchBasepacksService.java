@@ -87,5 +87,24 @@ public interface LaunchBasepacksService {
 
 	public String saveClusterByUploadForCluster(List<Object> list, String userID, String string, boolean b, boolean c,
 			String launchId);
+	
+	// Added By Harsha 
+	public String saveClusterByUploadForCustomerStoreFormateCluster(List<Object> saveLaunchCluster, String userID, String string, boolean b,
+			boolean c, String launchId);
+	public String countofErrormsginCustStoreformate( String launchId); //countofFixedStores 
+	public String countofErrormsginStoreformate( String launchId);
+	public String countofFixedStores( String launchId);
+	
+	
+	List<ArrayList<String>> getClusterErrorDumpforCustomerStoreformat(ArrayList<String> headerDetail, String userId,
+			String launchId);
+// Store formate 
+	public String saveClusterByUploadForStoreFormateCluster(List<Object> saveLaunchCluster, String userID, String string, boolean b,
+			boolean c, String launchId);
+
+	
+	public List<ArrayList<String>> getClusterErrorDumpforStoreformat(ArrayList<String> headerDetail, String userId,
+			String LaunchID);
+	
 
 }

@@ -128,7 +128,22 @@
 									
 									<!--bharati changes end here-->
 	
-	
+	<!--bharati added code for errorblock with download error file for sprint-7 US-7-->
+	                 
+                                    <div class="alert alert-danger marginT15" style="display: none;" id="launchStoreerrorblockUpload">
+                                        <button type="button" class="close" data-hide="alert">&times;</button>
+                                       
+                                            <span>File contains error...</span>
+                                            <a href="#" onClick="downloadLaunchStoreErrorTemplate();" id="downloadTempFileLink">Click here to Download Error File</a>
+                                    </div>
+									<div class="alert alert-danger marginT15" style="display: none;" id="launchStoreErrorFileForStoreFormat">
+                                        <button type="button" class="close" data-hide="alert">&times;</button>
+                                       
+                                            <span>File contains error...</span>
+                                            <a href="#" onClick="downloadLaunchStoreErrorTemplateForStoreFormat();" id="downloadTempFileLink">Click here to Download Error File</a>
+                                    </div>
+									
+									<!--bharati changes end here-->
 	<%-- </c:if> --%>
 	<%-- <c:if test="${errorMsg!=null}">
 			<div class="alert alert-danger sucess-msg" id="errorblock">
@@ -538,6 +553,16 @@
 												id="storecount" name="assetDesc" disabled>
 										</div>
 									</div>
+									
+								<!--bharati added for sprint-7 US-7 -->
+									<div class="form-group col-md-6">
+										<label class="col-sm-4 control-label">Please upload minimum target stores for the launch</label>
+										<div class="col-sm-8 offset-col-md-2 switch-dynamic-first">
+											<input type="text" class="form-control assetDesc" value="0"
+												id="tmeapprovedstorecount" name="assetDesc" disabled>
+										</div>
+									</div>
+									
 									<div class="form-group col-md-12">
 
 										<button type="button" class="btn col-md-3 rightBtn"
@@ -556,8 +581,8 @@
 											class="btn btn-secondary nxtclassification previousTme"
 											id="prevClust" style="float: left;" /> <input type="button"
 											onclick="saveLunchstrs()" value="Next"
-											class="btn btn-secondary nxtclassification" id="lnchstr"
-											style="float: right;" />
+											class="btn btn-secondary nxtclassification launchStoreNext" id="lnchstr"
+											style="float: right;" disabled />
 
 									</div>
 								</div>
