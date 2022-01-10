@@ -1031,6 +1031,7 @@ $(document).ready(function() {
 		                         }
 				                 window.location.href = storepageURL;    // bharati added for sprint-7 US-7 stay on same page
 				                 $("#launchstrFileUploadBtn").prop("disabled", false);
+				                 $('#launchstrfileupload')[0].reset();
 				            },
 				            error: function (e) {
 				            	// $('#errorblockUpload').find('span').text(e.responseText);
@@ -1040,7 +1041,7 @@ $(document).ready(function() {
 				                      
 				            }
 				        });
-				        //bharati added for find current page -url in sprint-7
+				        //bharati added for find current pageurl in sprint-7
 					      var storepageURL = $(location).attr("href");
 					    	
 				    });
@@ -1127,6 +1128,7 @@ $(document).ready(function() {
 				                
 				                 window.location.href = storepageURL;    // bharati added for sprint-7 US-7 stay on same page
 				                $("#launchstrFileUploadBtn").prop("disabled", false);
+				                $('#launchCuststrfileupload')[0].reset();
 				            },
 				            error: function (e) {
 				            	// $('#errorblockUpload').find('span').text(e.responseText);
