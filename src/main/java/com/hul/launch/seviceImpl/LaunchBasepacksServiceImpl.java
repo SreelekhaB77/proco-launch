@@ -442,8 +442,11 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 			String[] accStringArr = saveLaunchClustersRequest.getAccountString().split(",");
 			for (int i = 0; i < accStringArr.length; i++) {
 				if (accStringArr[i].indexOf(':') != -1) {
-					finalAccString = finalAccString + accStringArr[i] + ",";
-					accountCombo.add(accStringArr[i]);
+					if(!accStringArr[i].equals(":")) { // Added by harsha for null check
+						finalAccString = finalAccString + accStringArr[i].trim() + ",";
+						accountCombo.add(accStringArr[i]);
+					}
+					
 				}
 			}
 		} else {

@@ -2040,7 +2040,7 @@ public class TMELaunchPlanController {
 		headerDetail.add("Customer_Store_Format");
 		headerDetail.add("Launch_planned");
 		headerDetail.add("Total_Stores");
-		headerDetail.add("TME_Total_Stores");
+		headerDetail.add("Minimum_Target_Stores");
 		return headerDetail;
 	}
 	
@@ -2052,7 +2052,7 @@ public class TMELaunchPlanController {
 		headerDetail.add("Customer_Store_Format");
 		headerDetail.add("Launch_planned");
 		headerDetail.add("Total_Stores");
-		headerDetail.add("TME_Total_Stores");
+		headerDetail.add("Minimum_Target_Stores");
 		headerDetail.add("Error_Msg");
 		
 		return headerDetail;
@@ -2066,7 +2066,7 @@ public class TMELaunchPlanController {
 		headerDetail.add("Store_Format");
 		headerDetail.add("Launch_planned");
 		headerDetail.add("Total_Stores");
-		headerDetail.add("TME_Total_Stores");
+		headerDetail.add("Minimum_Target_Stores");
 		return headerDetail;
 	}
 	
@@ -2078,7 +2078,7 @@ public class TMELaunchPlanController {
 		headerDetail.add("Store_Format");
 		headerDetail.add("Launch_planned");
 		headerDetail.add("Total_Stores");
-		headerDetail.add("TME_Total_Stores");
+		headerDetail.add("Minimum_Target_Stores");
 		headerDetail.add("Error_Msg");
 		return headerDetail;
 	}

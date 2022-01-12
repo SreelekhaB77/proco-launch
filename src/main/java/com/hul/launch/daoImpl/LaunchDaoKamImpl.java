@@ -354,8 +354,11 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 				String[] parts = AccountNames.split(",");
 				for(String acc:parts){  
 					String[] accountName = acc.split(":");
-					String part1 = accountName[0].trim();
-					accountslist.add(part1.trim());
+					String part1 = accountName[0];
+					if(!part1.isEmpty()) {
+						accountslist.add(part1.trim());
+					}
+					
 					}
 			
 				PreparedStatement stmt3 = sessionImpl.connection()
@@ -373,7 +376,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 				
 				if(var || allCustomer) {
 					launchDataResponsedub.setLaunchId(name.getLaunchId());
-		        	launchDataResponsedub.setLaunchName(name.getLaunchName());
+					launchDataResponsedub.setLaunchName(name.getLaunchName());
 		        	launchDataResponsedub.setLaunchDate(name.getLaunchDate());
 		        	launchDataResponsedub.setLaunchMoc(name.getLaunchMoc());
 					launchDataResponsedub.setLaunchNature(name.getLaunchNature());
@@ -1274,7 +1277,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		 while (iterator0.hasNext()) {
 				SaveUploadededLaunchStore obj = (SaveUploadededLaunchStore) iterator0.next();
 				String wholevalue="";
-				wholevalue=obj.getL1_Chain()+":"+obj.getKam_Remarks()+"-"+obj.getCluster();
+				wholevalue=obj.getL1_Chain()+":"+obj.getKam_Remarks()+":"+obj.getCluster();
 				list1.add(wholevalue);
 			}
 		 
@@ -1291,8 +1294,11 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 			String accountName=accountCluster[0];
 			String Cluster =accountCluster[1];
 			 for(String values : list1) {
-				 if(values.contains(accountName) && !values.contains("rejected") && values.contains(Cluster)) {
-					 count++;
+				 String[] words=values.split(":");//splits the string  
+				 String kamRemarks = words[1].toLowerCase();
+
+				 if(values.contains(accountName) && (!kamRemarks.equals("rejected")) && values.contains(Cluster)) {
+					 count++; 
 				 }
 			 }
 			
@@ -1458,7 +1464,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		}
 		}
 		
-		else {
+		else { //Added by Harsha
 		result="Minimum targeted stores should be approved by KAM";
 		}
 
@@ -1466,7 +1472,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		if (result.equals("Saved Successfully")) {
 			return "SUCCESS_FILE";
 		} 
-		if (result.equals("Minimum targeted stores should be approved by KAM")) {
+		else if (result.equals("Minimum targeted stores should be approved by KAM")) {//Added by Harsha
 			return "Minimum targeted stores should be approved by KAM";
 		}
 		
