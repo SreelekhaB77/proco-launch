@@ -15,6 +15,8 @@ $(document).ready(function() {
 	$('#rejectLaunch').attr("disabled",true);
 	$('#kamerrorblockUpload').hide();
 	 $('#targetStoreErrorBlock').hide();
+	 $('#storelist-successblock').hide();
+	
 	if( window.location.hash != "#step-1" && window.location.hash != '' ){
 		window.location = window.location.href.split('#')[0];
 	}
@@ -425,16 +427,11 @@ $(document).ready(function() {
 			          $('#storelist-successblock').show().find('span').html('Uploaded Successfully !!!');
 			         //}
 			         //sprint-4 US-5 confirmation msg bharati ended
-					
-					//sprint-4 US-5 redirect on same page changes done by bharati
-					 
-					saveBuildUp();
-					window.location.href = "getAllCompletedLaunchDataKam.htm#step-4";
-					
-	             	kamgetVissiData();
-
-	             	// getlaunchStores();
-	             	//bharati added for spint-7 US-7 Error block for minimum target store
+					  saveBuildUp();
+					  //window.location.href = "getAllCompletedLaunchDataKam.htm#step-4";
+					   kamgetVissiData();
+                     // getlaunchStores();
+	             	//bharati added for sprint-7 US-7 Error block for minimum target store
 	             }else if(upllnchstrdata.includes('Minimum targeted stores should be')){
 	                   $('#targetStoreErrorBlock').show().find('span').html('Please Accept Minimum Target Stores as Confirmed by TME');  
 	                   $('#storelist-successblock').hide(); 
@@ -443,9 +440,10 @@ $(document).ready(function() {
 	             	$('#kamerrorblockUpload').show();
 	             	//$('#kamuploadErrorMsg span').text(errmsg);
 	             }
-				 
+	            //sprint-4 US-5 redirect on same page changes done by bharati
+				 window.location.href = storepageURL;
 	             $("#btnSubmitBasePack").prop("disabled", false);
-				 
+				  $('#kamlaunchStoreUpload')[0].reset();
 				 
 	         },
 	         error: function (jqXHR, textStatus, errorThrown) {
@@ -456,7 +454,8 @@ $(document).ready(function() {
 	                   
 	         }
 	     });
-			
+		 //bharati added for find current page -url in sprint-7
+		  var storepageURL = $(location).attr("href");	
 	 });
 	 
 
@@ -1935,5 +1934,12 @@ function loadrejectKamAccounts() {
 			}
 		});
 	}
+//bharati added for sprint-7 US-7 successblock not display 2nd time 
+$('#storelist-successblock .close').click(function(){
+   $(this).parent().hide();
+});
+$('#targetStoreErrorBlock .close').click(function(){
+   $(this).parent().hide();
+});
 
-
+//bharati code end here

@@ -10,7 +10,7 @@ public class LaunchClusterDataCustStoreForm {
 	private String Customer_Store_Format;
 	private String Launch_planned;
 	private String Total_Stores; // Added By Harsha for US 7 jan22
-	private String TME_Total_Stores;
+	private String Minimum_Target_Stores;
 	private String Error_Msg;	
 	private String error;
 
@@ -30,13 +30,7 @@ public class LaunchClusterDataCustStoreForm {
 		Total_Stores = total_Stores;
 	}
 
-	public String getTME_Total_Stores() {
-		return TME_Total_Stores;
-	}
 
-	public void setTME_Total_Stores(String tME_Total_Stores) {
-		TME_Total_Stores = tME_Total_Stores;
-	}
 
 	public String getError_Msg() {
 		return Error_Msg;
@@ -48,6 +42,14 @@ public class LaunchClusterDataCustStoreForm {
 
 	public String getCluster() {
 		return Cluster;
+	}
+
+	public String getMinimum_Target_Stores() {
+		return Minimum_Target_Stores;
+	}
+
+	public void setMinimum_Target_Stores(String minimum_Target_Stores) {
+		Minimum_Target_Stores = minimum_Target_Stores;
 	}
 
 	public void setCluster(String cluster) {

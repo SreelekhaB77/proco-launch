@@ -14,10 +14,13 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.transaction.Transactional;
 
 import org.apache.log4j.Logger;
+import org.apache.tools.ant.filters.TokenFilter.Trim;
 import org.hibernate.query.Query;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -485,8 +488,9 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 				preparedStatement.setString(1, saveLaunchClustersRequest.getLaunchId());
 				preparedStatement.setString(2, saveLaunchClustersRequest.getClusterString());
 				preparedStatement.setString(3, saveLaunchClustersRequest.getAccountString());
-				preparedStatement.setString(4, saveLaunchClustersRequest.getStoreFormat());
-				preparedStatement.setString(5, saveLaunchClustersRequest.getCustomerStoreFormat());
+				preparedStatement.setString(4, saveLaunchClustersRequest.getStoreFormat().replace("'", "").trim()); // Added By Harsha
+				preparedStatement.setString(5, saveLaunchClustersRequest.getCustomerStoreFormat().replace("'", "").trim()); // Added By Harsha
+	
 				preparedStatement.setString(6, saveLaunchClustersRequest.getTotalStoresToLaunch());
 				preparedStatement.setString(7, saveLaunchClustersRequest.getLaunchPlanned());
 				preparedStatement.setString(8, userId);
@@ -511,8 +515,8 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 					"UPDATE TBL_LAUNCH_CLUSTERS SET CLUSTER_REGION=?0,CLUSTER_ACCOUNT=?1,CLUSTER_STORE_FORMAT=?2,CLUSTER_CUST_STORE_FORMAT=?3,TOTAL_STORES_TO_LAUNCH=?4,UPDATED_BY=?5,UPDATED_DATE=?6, INCLUDE_ALL_STORE_FORMAT=?9 WHERE CLUSTER_LAUNCH_ID=?7 and LAUNCH_PLANNED = ?8");  //Sarin - Added Parameters position //Sarin Changes - Added for CustomStoreSelection Q1Sprint Feb2021
 			query2.setParameter(0, saveLaunchClustersRequest.getClusterString());
 			query2.setParameter(1, saveLaunchClustersRequest.getAccountString());
-			query2.setParameter(2, saveLaunchClustersRequest.getStoreFormat());
-			query2.setParameter(3, saveLaunchClustersRequest.getCustomerStoreFormat());
+			query2.setParameter(2, saveLaunchClustersRequest.getStoreFormat().replace("'", "").trim());// Added  By Harsha
+			query2.setParameter(3, saveLaunchClustersRequest.getCustomerStoreFormat().replace("'", "").trim());// Added  By Harsha
 			query2.setParameter(4, saveLaunchClustersRequest.getTotalStoresToLaunch());
 			query2.setParameter(5, userId);
 			query2.setParameter(6, new Timestamp(new Date().getTime()));
@@ -552,6 +556,70 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 		}
 		return responseId;
 	}
+	
+	/*@Override // As Part of US 7 in sprint 7 Jan 22 
+	public List<ArrayList<String>> getLaunchClusterDataforStoreFormat(ArrayList<String> headerDetail, String userId,
+			DownloadLaunchClusterRequest downloadLaunchClusterRequest) {
+		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
+		try {
+			downloadDataList.add(headerDetail);
+			String[] l1l2CustomerList = downloadLaunchClusterRequest.getL1l2Cluster().split(",");
+			List<String> listOfL1L2 = Arrays.asList(l1l2CustomerList);
+
+			if (!listOfL1L2.contains("ALL CUSTOMERS")) {
+				for (int i = 0; i < l1l2CustomerList.length; i++) {
+					if (l1l2CustomerList[i].split(":").length > 1) {
+						String custL1 = l1l2CustomerList[i].split(":")[0];
+						String custL2 = l1l2CustomerList[i].split(":")[1];
+						List<String> listOfL1 = new ArrayList<>();
+						listOfL1.add(custL1);
+						List<String> listOfAllForL1 = createPromoService.getClusterOnCustomerList(listOfL1);
+						String[] ArrayOfSelectedForL1 = downloadLaunchClusterRequest.getRegionCluster().split(",");
+						List<String> listOfSelectedForL1 = Arrays.asList(ArrayOfSelectedForL1);
+						listOfAllForL1.retainAll(listOfSelectedForL1);
+						String storeFormat = downloadLaunchClusterRequest.getStoreFormat();
+
+						listOfSelectedForL1.forEach(data -> {
+							ArrayList<String> dataObj = new ArrayList<>();
+							dataObj.add(data);
+							dataObj.add(custL1);
+							dataObj.add(custL2);
+							dataObj.add(storeFormat);
+							dataObj.add("Yes");
+							downloadDataList.add(dataObj);
+						});
+					}
+				}
+			} else {
+				String custL1 = l1l2CustomerList[0];
+				String custL2 = "";
+				List<String> listOfL1 = new ArrayList<>();
+				listOfL1.add(custL1);
+				List<String> listOfAllForL1 = createPromoService.getClusterOnCustomerList(listOfL1);
+				String[] ArrayOfSelectedForL1 = downloadLaunchClusterRequest.getRegionCluster().split(",");
+				List<String> listOfSelectedForL1 = Arrays.asList(ArrayOfSelectedForL1);
+				listOfAllForL1.retainAll(listOfSelectedForL1);
+				String storeFormat = downloadLaunchClusterRequest.getStoreFormat();
+
+				listOfSelectedForL1.forEach(data -> {
+					ArrayList<String> dataObj = new ArrayList<>();
+					dataObj.add(data);
+					dataObj.add(custL1);
+					dataObj.add(custL2);
+					dataObj.add(storeFormat);
+					dataObj.add("Yes");
+					downloadDataList.add(dataObj);
+				});
+			}
+			return downloadDataList;
+		} catch (Exception ex) {
+			logger.debug("Exception :", ex);
+			return null;
+		}
+	}
+*/
+	
+	
 
 	@Override
 	public List<ArrayList<String>> getLaunchClusterDataforStoreFormat(ArrayList<String> headerDetail, String userId,
@@ -559,7 +627,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
 		String wholeCluster = "";
 		String wholeCuststrfrmt = "";
-		try {
+		try {// Harsha chnages starts here 
 			downloadDataList.add(headerDetail);
 			String[] l1l2CustomerList = downloadLaunchClusterRequest.getL1l2Cluster().split(",");
 			String storeFormat12 = downloadLaunchClusterRequest.getStoreFormat();
@@ -1160,14 +1228,78 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 			return null;
 		}
 	}
+	/*
+	 @Override // Commented As part of U7 Sprint 7 Jan22
+	public List<ArrayList<String>> getLaunchClusterDataforCustomerStoreFormat(ArrayList<String> headerDetail,
+			String userId, DownloadLaunchClusterRequest downloadLaunchClusterRequest) {
+		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
+		try {
+			downloadDataList.add(headerDetail);
+			String[] l1l2CustomerList = downloadLaunchClusterRequest.getL1l2Cluster().split(",");
+			List<String> listOfL1L2 = Arrays.asList(l1l2CustomerList);
 
+			if (!listOfL1L2.contains("ALL CUSTOMERS")) {
+				for (int i = 0; i < l1l2CustomerList.length; i++) {
+					if (l1l2CustomerList[i].split(":").length > 1) {
+						String custL1 = l1l2CustomerList[i].split(":")[0];
+						String custL2 = l1l2CustomerList[i].split(":")[1];
+						List<String> listOfL1 = new ArrayList<>();
+						listOfL1.add(custL1);
+						List<String> listOfAllForL1 = createPromoService.getClusterOnCustomerList(listOfL1);
+						String[] ArrayOfSelectedForL1 = downloadLaunchClusterRequest.getRegionCluster().split(",");
+						List<String> listOfSelectedForL1 = Arrays.asList(ArrayOfSelectedForL1);
+						listOfAllForL1.retainAll(listOfSelectedForL1);
+						String custStoreFormat = downloadLaunchClusterRequest.getCustStoreFormat();
+
+						listOfSelectedForL1.forEach(data -> {
+							ArrayList<String> dataObj = new ArrayList<>();
+							dataObj.add(data);
+							dataObj.add(custL1);
+							dataObj.add(custL2);
+							dataObj.add(custStoreFormat);
+							dataObj.add("Yes");
+							downloadDataList.add(dataObj);
+						});
+					}
+				}
+			} else {
+				String custL1 = l1l2CustomerList[0];
+				String custL2 = "";
+				List<String> listOfL1 = new ArrayList<>();
+				listOfL1.add(custL1);
+				List<String> listOfAllForL1 = createPromoService.getClusterOnCustomerList(listOfL1);
+				String[] ArrayOfSelectedForL1 = downloadLaunchClusterRequest.getRegionCluster().split(",");
+				List<String> listOfSelectedForL1 = Arrays.asList(ArrayOfSelectedForL1);
+				listOfAllForL1.retainAll(listOfSelectedForL1);
+				String custStoreFormat = downloadLaunchClusterRequest.getCustStoreFormat();
+
+				listOfSelectedForL1.forEach(data -> {
+					ArrayList<String> dataObj = new ArrayList<>();
+					dataObj.add(data);
+					dataObj.add(custL1);
+					dataObj.add(custL2);
+					dataObj.add(custStoreFormat);
+					dataObj.add("Yes");
+					downloadDataList.add(dataObj);
+				});
+			}
+			return downloadDataList;
+		} catch (Exception ex) {
+			logger.debug("Exception :", ex);
+			return null;
+		}
+	}
+
+	 */
+
+	// Harsha chnages starts here - ends here
 	@Override
 	public List<ArrayList<String>> getLaunchClusterDataforCustomerStoreFormat(ArrayList<String> headerDetail,
 			String userId, DownloadLaunchClusterRequest downloadLaunchClusterRequest) {
 		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
 		String wholeCluster = "";
 		String wholeCuststrfrmt = "";
-		try {
+		try {// Harsha's Implementation starts
 			downloadDataList.add(headerDetail);
 			String[] l1l2CustomerList = downloadLaunchClusterRequest.getL1l2Cluster().split(",");
 			
@@ -1770,7 +1902,7 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 		}
 	}
 	
-	// Harsha Added this code for big mike story
+	// Harsha Added this code for big mike story Implementation Ends
 	
 	public LinkedHashSet<String> getClusters(){
 	//	List<String> Clusters = new ArrayList<String>();
@@ -3137,11 +3269,11 @@ for (BigInteger count : storeCount) {
 				preparedStatement.setString(2, obj.getCluster());
 				preparedStatement.setString(3, obj.getAccount_L1());
 				preparedStatement.setString(4, obj.getAccount_L2());
-				preparedStatement.setString(5, obj.getCustomer_Store_Format());
+				preparedStatement.setString(5, obj.getCustomer_Store_Format().toString().replace("'", "").trim()); // Added By Harsha
 				preparedStatement.setString(6, obj.getLaunch_planned());
 				preparedStatement.setString(7, obj.getTotal_Stores());
-				preparedStatement.setString(8, obj.getTME_Total_Stores());
-				preparedStatement.setString(9, errorMessage(obj.getTotal_Stores().trim(),obj.getTME_Total_Stores().trim()));
+				preparedStatement.setString(8, obj.getMinimum_Target_Stores());
+				preparedStatement.setString(9, errorMessage(obj.getTotal_Stores().trim(),obj.getMinimum_Target_Stores().trim()));
 				preparedStatement.setString(10, userId);
 				preparedStatement.setTimestamp(11, new Timestamp(new Date().getTime()));
 				preparedStatement.executeUpdate();
@@ -3168,14 +3300,38 @@ for (BigInteger count : storeCount) {
 	
 	
 	
-	public String errorMessage(String totalStores, String tmeTotalStores) {
+	public String errorMessage(String totalStores, String tmeTotalStores) { // Added By Harsha
 		String message="";
+        boolean result = tmeTotalStores.matches("[a-zA-Z]+");
+        boolean hasSpecial = tmeTotalStores.matches("[^a-zA-Z0-9]");
+
+		
 		int totalStore;
 		int tmeTotalStore;
+	
+		if(result) {
+			return message = "Targeted or Total Store cannot contain Alphabets";
+		}
+		
+		else if(hasSpecial) {
+			return message = "Targeted or Total Store cannot have Special characters";
+		}
+		
+		else if ((!totalStores.equals("0") && tmeTotalStores.isEmpty())){
+			return	message = "TME Selected stores cannot be blank";
+		}
+		
+		else if (tmeTotalStores.contains("-")){
+			return	message = "Targeted Store count cannot be a negtive number";
+		}
+		
+		
 		String tmeTotalStorestr="";
 			if(totalStores.isEmpty()) {
 				totalStore=0;
 			}
+			
+			
 			else {
 				totalStore=Integer. parseInt(totalStores);
 			}
@@ -3190,13 +3346,15 @@ for (BigInteger count : storeCount) {
 				return message="";
 			}
 			
+			
 			else if (tmeTotalStore>totalStore){
 				return message = "TME Selected stores count should not be greater than given Total Stores";
 			}
 			
-			else if (totalStore>=1 && tmeTotalStore<=0){
-				return	message = "TME Selected stores should not be less than 1";
+			else if ((totalStore>=1 && tmeTotalStore<=0) || (totalStore>=1 && tmeTotalStores.isEmpty())){
+				return	message = "TME Selected stores should not be less than 1 or blank";
 			}
+			
 				return message;
 	}
 	
@@ -3243,7 +3401,7 @@ for (BigInteger count : storeCount) {
 	            preparedStatement4.setString(2, rst.getString("CLUSTER_REGION"));
 	            preparedStatement4.setString(3, rst.getString("CLUSTER_ACCOUNT_L1"));
 	            preparedStatement4.setString(4, rst.getString("CLUSTER_ACCOUNT_L2"));
-	            preparedStatement4.setString(5, rst.getString("CLUSTER_CUST_STORE_FORMAT"));
+	            preparedStatement4.setString(5, rst.getString("CLUSTER_CUST_STORE_FORMAT").replace("'", "").toString().trim()); // Added By Harsha
 	            preparedStatement4.setString(6, rst.getString("LAUNCH_PLANNED"));
 	            preparedStatement4.setString(7, rst.getString("TOTAL_STORES_TO_LAUNCH"));
 	            preparedStatement4.setString(8, rst.getString("TOTAL_TME_STORES_PLANED"));
@@ -3333,7 +3491,7 @@ for (BigInteger count : storeCount) {
 	            preparedStatement4.setString(2, rst.getString("CLUSTER_REGION"));
 	            preparedStatement4.setString(3, rst.getString("CLUSTER_ACCOUNT_L1"));
 	            preparedStatement4.setString(4, rst.getString("CLUSTER_ACCOUNT_L2"));
-	            preparedStatement4.setString(5, rst.getString("CLUSTER_STORE_FORMAT"));
+	            preparedStatement4.setString(5, rst.getString("CLUSTER_STORE_FORMAT").toString().replace("'", "").trim()); // Added By Harsha
 	            preparedStatement4.setString(6, rst.getString("LAUNCH_PLANNED"));
 	            preparedStatement4.setString(7, rst.getString("TOTAL_STORES_TO_LAUNCH"));
 	            preparedStatement4.setString(8, rst.getString("TOTAL_TME_STORES_PLANED"));
@@ -3382,7 +3540,7 @@ for (BigInteger count : storeCount) {
 			dataObj.add(rst.getString("CLUSTER_REGION"));
 			dataObj.add(rst.getString("CLUSTER_ACCOUNT_L1"));
 			dataObj.add(rst.getString("CLUSTER_ACCOUNT_L2"));
-			dataObj.add(rst.getString("CLUSTER_CUST_STORE_FORMAT"));
+			dataObj.add(rst.getString("CLUSTER_CUST_STORE_FORMAT").toString().replace("'", "").trim()); // Added By Harsha
 			dataObj.add(rst.getString("LAUNCH_PLANNED"));
 			dataObj.add(rst.getString("TOTAL_STORES_TO_LAUNCH"));
 			dataObj.add(rst.getString("TOTAL_TME_STORES_PLANED"));
@@ -3421,7 +3579,7 @@ for (BigInteger count : storeCount) {
 			dataObj.add(rst.getString("CLUSTER_REGION"));
 			dataObj.add(rst.getString("CLUSTER_ACCOUNT_L1"));
 			dataObj.add(rst.getString("CLUSTER_ACCOUNT_L2"));
-			dataObj.add(rst.getString("CLUSTER_CUST_STORE_FORMAT"));
+			dataObj.add(rst.getString("CLUSTER_CUST_STORE_FORMAT").toString().replace("'", "").trim()); // Added By Harsha
 			dataObj.add(rst.getString("LAUNCH_PLANNED"));
 			dataObj.add(rst.getString("TOTAL_STORES_TO_LAUNCH"));
 			dataObj.add(rst.getString("TOTAL_TME_STORES_PLANED"));
@@ -3465,11 +3623,11 @@ for (BigInteger count : storeCount) {
 				preparedStatement.setString(2, obj.getCluster());
 				preparedStatement.setString(3, obj.getAccount_L1());
 				preparedStatement.setString(4, obj.getAccount_L2());
-				preparedStatement.setString(5, obj.getStore_Format());
+				preparedStatement.setString(5, obj.getStore_Format().replace("'", "").trim()); // Added By Harsha
 				preparedStatement.setString(6, obj.getLaunch_planned());
 				preparedStatement.setString(7, obj.getTotal_Stores());
-				preparedStatement.setString(8, obj.getTME_Total_Stores());
-				preparedStatement.setString(9, errorMessage(obj.getTotal_Stores().trim(),obj.getTME_Total_Stores().trim()));
+				preparedStatement.setString(8, obj.getMinimum_Target_Stores());
+				preparedStatement.setString(9, errorMessage(obj.getTotal_Stores().trim(),obj.getMinimum_Target_Stores().trim()));
 				preparedStatement.setString(10, userId);
 				preparedStatement.setTimestamp(11, new Timestamp(new Date().getTime()));
 				preparedStatement.executeUpdate();

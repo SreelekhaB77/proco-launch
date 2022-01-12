@@ -556,11 +556,15 @@
 									
 								<!--bharati added for sprint-7 US-7 -->
 									<div class="form-group col-md-6">
-										<label class="col-sm-4 control-label">Please upload minimum target stores for the launch</label>
+										<label class="col-sm-4 control-label">Please upload minimum target stores for the launch<span
+											class="astrick">*</span></label>
 										<div class="col-sm-8 offset-col-md-2 switch-dynamic-first">
 											<input type="text" class="form-control assetDesc" value="0"
 												id="tmeapprovedstorecount" name="assetDesc" disabled>
 										</div>
+									</div>
+									<div class="form-group col-md-6 col-md-offset-6" style="margin-bottom: 3px">
+									<label class="col-sm-12 control-label" style="font-size: 11px;color: #e41604;">To enter minimum target store- Download any one of the files below , enter value in Column G and upload</label>
 									</div>
 									
 									<div class="form-group col-md-12">
