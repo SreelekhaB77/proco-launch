@@ -3324,6 +3324,9 @@ for (BigInteger count : storeCount) {
 		else if (tmeTotalStores.contains("-")){
 			return	message = "Targeted Store count cannot be a negtive number";
 		}
+		else if (totalStores.isEmpty()){
+			return	message = "Total Stores cannot be blank";
+		}
 		
 		
 		String tmeTotalStorestr="";
@@ -3351,8 +3354,8 @@ for (BigInteger count : storeCount) {
 				return message = "TME Selected stores count should not be greater than given Total Stores";
 			}
 			
-			else if ((totalStore>=1 && tmeTotalStore<=0) || (totalStore>=1 && tmeTotalStores.isEmpty())){
-				return	message = "TME Selected stores should not be less than 1 or blank";
+			else if (totalStore>=1 && tmeTotalStores.isEmpty()){//Modified By Harsha
+				return	message = "TME Selected stores should not be blank";
 			}
 			
 				return message;
@@ -3579,7 +3582,7 @@ for (BigInteger count : storeCount) {
 			dataObj.add(rst.getString("CLUSTER_REGION"));
 			dataObj.add(rst.getString("CLUSTER_ACCOUNT_L1"));
 			dataObj.add(rst.getString("CLUSTER_ACCOUNT_L2"));
-			dataObj.add(rst.getString("CLUSTER_CUST_STORE_FORMAT").toString().replace("'", "").trim()); // Added By Harsha
+			dataObj.add(rst.getString("CLUSTER_STORE_FORMAT").toString().replace("'", "").trim()); // Added By Harsha
 			dataObj.add(rst.getString("LAUNCH_PLANNED"));
 			dataObj.add(rst.getString("TOTAL_STORES_TO_LAUNCH"));
 			dataObj.add(rst.getString("TOTAL_TME_STORES_PLANED"));

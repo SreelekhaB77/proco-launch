@@ -1675,6 +1675,12 @@ public class TMELaunchPlanController {
 									throw new Exception("File Uploaded with errors");
 								} else if (savedData != null && savedData.equals("ERROR")) {
 									throw new Exception("Error while uploading file");
+								}// Added By Harsha as part of US 7 Jan22
+								else if (savedData != null && savedData.equals("Minimum stores for Total Stores has to be grater than 0")) {
+									throw new Exception("Minimum stores for Total Stores has to be grater than 0");
+								}
+								else if (savedData != null && savedData.equals("Total TME Targeted Stores has to be grater than 1")) {
+									throw new Exception("Total TME Targeted Stores has to be grater than 1");
 								}
 							} else {
 								throw new Exception(savedData);
@@ -1770,6 +1776,13 @@ public class TMELaunchPlanController {
 								} else if (savedData != null && savedData.equals("ERROR")) {
 									throw new Exception("Error while uploading file");
 								}
+								//Added By Harsha
+								else if (savedData != null && savedData.equals("Minimum stores for Total Stores has to be grater than 0")) {
+									throw new Exception("Minimum stores for Total Stores has to be grater than 0");
+								}
+								else if (savedData != null && savedData.equals("Total TME Targeted Stores has to be grater than 1")) {
+									throw new Exception("Total TME Targeted Stores has to be grater than 1");
+								}//
 							} else {
 								throw new Exception(savedData);
 							}
@@ -2216,7 +2229,7 @@ public class TMELaunchPlanController {
 		ArrayList<String> headerDetail = getErrorClusterHeadersforStoreFormat() ;
 		downloadedData.add(headerDetail);
 		String userId = (String) request.getSession().getAttribute("UserID");
-		List<ArrayList<String>> listDownload = launchBasepacksService.getClusterErrorDumpforCustomerStoreformat(headerDetail,
+		List<ArrayList<String>> listDownload = launchBasepacksService.getClusterErrorDumpforStoreformat(headerDetail,
 					userId, launchId);
 		
 		try {
