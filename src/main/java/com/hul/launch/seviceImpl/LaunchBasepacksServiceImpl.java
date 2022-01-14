@@ -481,7 +481,7 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 		    	 finalcount+=targetedTotalStoreCount;
 		        }
 		}
-		if(finalcount>1) {
+		if(finalcount>=1) {
 			return true;
 		}
 		else {
@@ -796,7 +796,7 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 		    	 finalcount+=targetedTotalStoreCount;
 		        }
 		}
-		if(finalcount>1) {
+		if(finalcount>=1) {
 			return true;
 		}
 		else {
