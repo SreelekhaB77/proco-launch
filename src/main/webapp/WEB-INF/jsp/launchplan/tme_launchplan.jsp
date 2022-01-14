@@ -128,7 +128,7 @@
 									
 									<!--bharati changes end here-->
 	
-	<!--bharati added code for errorblock with download error file for sprint-7 US-7-->
+	                                <!--bharati added code for errorblock with download error file for sprint-7 US-7-->
 	                 
                                     <div class="alert alert-danger marginT15" style="display: none;" id="launchStoreerrorblockUpload">
                                         <button type="button" class="close" data-hide="alert">&times;</button>
@@ -142,7 +142,10 @@
                                             <span>File contains error...</span>
                                             <a href="#" onClick="downloadLaunchStoreErrorTemplateForStoreFormat();" id="downloadTempFileLink">Click here to Download Error File</a>
                                     </div>
-									
+									<div class="alert alert-danger marginT15" style="display: none;" id="launchvalidateZero">
+                                        <button type="button" class="close" data-hide="alert">&times;</button>
+                                         <span></span>
+                                    </div>
 									<!--bharati changes end here-->
 	<%-- </c:if> --%>
 	<%-- <c:if test="${errorMsg!=null}">
