@@ -1025,7 +1025,15 @@ $(document).ready(function() {
 				                else if(lnchStrdata.includes('File Upload is UnSuccessful')){
 				                $('#launchStoreErrorFileForStoreFormat').show();
 				                $('.launchStoreNext').prop('disabled', true);
+				                } else if(lnchStrdata.includes('Total TME Targeted Stores has to be')){
+				                 $('#launchvalidateZero').show().find('span').html('Please Enter Minimum One Target Store');
+				                 $('.launchStoreNext').prop('disabled', true);
+				                 
 				                }
+				                 else if(lnchStrdata.includes('Minimum stores for Total Stores has to be grater than 0')){
+				                 $('#launchvalidateZero').show().find('span').html('Please Upload Minimum Stores for Total Stores Greater than 0');
+				                 $('.launchStoreNext').prop('disabled', true);
+				                } 
 				                else {
 				                	$('#errorblockUpload').show();
 		                         }
@@ -1121,7 +1129,13 @@ $(document).ready(function() {
 				                else if(lnchStrdata.includes('File Upload is UnSuccessful')){
 				                $('#launchStoreerrorblockUpload').show();
 				                $('.launchStoreNext').prop('disabled', true);
-				                }
+				                }else if(lnchStrdata.includes('Total TME Targeted Stores has to be')){
+				                 $('#launchvalidateZero').show().find('span').html('Please Enter Minimum One Target Store');
+				                 $('.launchStoreNext').prop('disabled', true);
+				                }else if(lnchStrdata.includes('Minimum stores for Total Stores has to be grater than 0')){
+				                 $('#launchvalidateZero').show().find('span').html('Please Upload Minimum Stores for Total Stores Greater than 0');
+				                 $('.launchStoreNext').prop('disabled', true);
+				                } 
 				                else{
 				                	$('#errorblockUpload').show();
 				              	 }

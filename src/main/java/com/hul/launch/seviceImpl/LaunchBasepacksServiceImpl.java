@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -463,6 +465,58 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 	public String updateLaunchDetails(SaveLaunchMasterRequest tblLaunchMaster, String userId) {
 		return launchBacePacksDao.updateLaunchMaster(tblLaunchMaster, userId);
 	}
+	
+	public boolean checkTMETotalTargetedStoreForm(List<Object> saveLaunchCluster) {// Added By Harsha For US 7 Jan 22 Story -- Starts
+		Iterator<Object> iterator = saveLaunchCluster.iterator();
+		int finalcount=0;
+		while (iterator.hasNext()) {
+			int targetedTotalStoreCount = 0;
+			 LaunchClusterDataStoreForm obj = (LaunchClusterDataStoreForm) iterator.next();
+			 String targetedStoresCount=obj.getMinimum_Target_Stores();
+			 String regex = "[0-9]+";
+		     Pattern p = Pattern.compile(regex);
+		     Matcher m = p.matcher(targetedStoresCount);
+		     if (m.matches()) {
+		    	 targetedTotalStoreCount=Integer.valueOf(targetedStoresCount);
+		    	 finalcount+=targetedTotalStoreCount;
+		        }
+		}
+		if(finalcount>1) {
+			return true;
+		}
+		else {
+			return false;
+		}
+		
+	}// Added By Harsha For US 7 Jan 22 Story -- Ends
+	
+	public boolean checkTotalStoreForm(List<Object> saveLaunchCluster) {// Added By Harsha For US 7 Jan 22 Story -- Starts
+		Iterator<Object> iterator = saveLaunchCluster.iterator();
+		while (iterator.hasNext()) {
+			int targetedTotalStoreCount = 0;
+			 int totalStoresCountNum=0;
+			 LaunchClusterDataStoreForm obj = (LaunchClusterDataStoreForm) iterator.next();
+			 String targetedStoresCount=obj.getMinimum_Target_Stores();
+			 String totalStoresCount=obj.getTotal_Stores();
+			 String regex = "[0-9]+";
+		     Pattern p = Pattern.compile(regex);
+		     Matcher m = p.matcher(targetedStoresCount);
+		     Matcher n = p.matcher(totalStoresCount);
+		     if(totalStoresCount.isEmpty() || totalStoresCount==null) {
+	    		 return false;
+	    	 }
+		     if (m.matches() && n.matches()) {
+		    	 targetedTotalStoreCount=Integer.valueOf(targetedStoresCount);
+		    	 totalStoresCountNum=Integer.valueOf(totalStoresCount);
+		    	 if((totalStoresCountNum == 0 && totalStoresCountNum<targetedTotalStoreCount) ) {
+		    		 return false;
+		    		 }}
+		    	 
+		}
+		
+		return true;
+		
+	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
@@ -473,6 +527,8 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 
 		String storeFormNo = "";
 		try {
+			if(checkTotalStoreForm(saveLaunchCluster)) {// Added by harsha as part of US 7 
+			if(checkTMETotalTargetedStoreForm( saveLaunchCluster)) { // Added by harsha as part of US 7 
 			Set<String> geoClusterYes = new HashSet<>();
 			Set<String> geoClusterNo = new HashSet<>();
 			Iterator<Object> iterator = saveLaunchCluster.iterator();
@@ -599,6 +655,16 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 				saveLaunchClustersRequest2.setLaunchPlanned("No");
 				result = result + saveLaunchClustersAndAcc(saveLaunchClustersRequest2, userID);
 			}
+		}
+			
+			else { // Added By Harsha - US 7 Jan22
+				return "Total TME Targeted Stores has to be grater than 1";
+			}
+		}
+			
+		else { // Added By Harsha - US 7 Jan22
+			return "Minimum stores for Total Stores has to be grater than 0";
+		}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -710,7 +776,63 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 		}
 		return "SUCCESS_FILE";
 	}
+	// Added By Harsha For US 7 Jan 22 Story -- Starts
+	public boolean checkTMETotalTargetedCustStoreForm(List<Object> saveLaunchCluster) {// Added By Harsha For US 7 Jan 22 Story -- Starts
+		Iterator<Object> iterator = saveLaunchCluster.iterator();
+		int finalcount=0;
+		while (iterator.hasNext()) {
+			int targetedTotalStoreCount = 0;
+			 int totalStoresCountNum=0;
+			LaunchClusterDataCustStoreForm obj = (LaunchClusterDataCustStoreForm) iterator.next();
+			 String targetedStoresCount=obj.getMinimum_Target_Stores();
+			 String totalStoresCount=obj.getMinimum_Target_Stores();
+			 totalStoresCountNum=Integer.valueOf(obj.getTotal_Stores().toString());
+			 String regex = "[0-9]+";
+		     Pattern p = Pattern.compile(regex);
+		     Matcher m = p.matcher(targetedStoresCount);
+		     Matcher n = p.matcher(totalStoresCount);
+		     if (m.matches() && n.matches()) {
+		    	 targetedTotalStoreCount=Integer.valueOf(targetedStoresCount);
+		    	 finalcount+=targetedTotalStoreCount;
+		        }
+		}
+		if(finalcount>1) {
+			return true;
+		}
+		else {
+			return false;
+		}
+		
+	} // Added By Harsha For US 7 Jan 22 Story -- ends
 	
+	public boolean checkTotalCustStoreForm(List<Object> saveLaunchCluster) {// Added By Harsha For US 7 Jan 22 Story -- Starts
+		Iterator<Object> iterator = saveLaunchCluster.iterator();
+		while (iterator.hasNext()) {
+			int targetedTotalStoreCount = 0;
+			 int totalStoresCountNum=0;
+			LaunchClusterDataCustStoreForm obj = (LaunchClusterDataCustStoreForm) iterator.next();
+			 String targetedStoresCount=obj.getMinimum_Target_Stores();
+			 String totalStoresCount=obj.getTotal_Stores();
+			 String regex = "[0-9]+";
+		     Pattern p = Pattern.compile(regex);
+		     Matcher m = p.matcher(targetedStoresCount);
+		     Matcher n = p.matcher(totalStoresCount);
+		     if(totalStoresCount.isEmpty() || totalStoresCount==null) {
+	    		 return false;
+	    	 }
+		     if (m.matches() && n.matches()) {
+		    	 targetedTotalStoreCount=Integer.valueOf(targetedStoresCount);
+		    	 totalStoresCountNum=Integer.valueOf(totalStoresCount);
+		    	 if((totalStoresCountNum == 0 && totalStoresCountNum<targetedTotalStoreCount) ) {
+		    		 return false;
+		    		 }
+		    	 
+		}
+		}
+		return true;
+		
+	} // Added By Harsha For US 7 Jan 22 Story -- ends
+
 	
 
 	@Override
@@ -720,7 +842,12 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 		int result = 0;
 		String custStoreFormYes = "";
 		String custStoreFormNo = "";
+	
 		try {
+			if(checkTotalCustStoreForm( saveLaunchCluster)) {// Added By Harsha - US 7 Jan22
+				
+		
+			if(checkTMETotalTargetedCustStoreForm(saveLaunchCluster)) {// Added By Harsha - US 7 Jan22
 			Set<String> geoClusterYes = new HashSet<>();
 			Set<String> geoClusterNo = new HashSet<>();
 			Iterator<Object> iterator = saveLaunchCluster.iterator();
@@ -847,7 +974,22 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 				saveLaunchClustersRequest2.setLaunchPlanned("No");
 				result = result + saveLaunchClustersAndAcc(saveLaunchClustersRequest2, userID);
 			}
+			
+			
 
+		}
+			else { // Added By Harsha - US 7 Jan22
+				return "Total TME Targeted Stores has to be grater than 1";
+			} 
+			
+			}
+			
+			else {// Added By Harsha - US 7 Jan22
+				return "Minimum stores for Total Stores has to be grater than 0";
+			}
+			
+			
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "ERROR";
