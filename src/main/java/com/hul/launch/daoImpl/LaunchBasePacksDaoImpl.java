@@ -3317,9 +3317,10 @@ for (BigInteger count : storeCount) {
 			return message = "Targeted or Total Store cannot have Special characters";
 		}
 		
+		/*
 		else if ((!totalStores.equals("0") && tmeTotalStores.isEmpty())){
 			return	message = "TME Selected stores cannot be blank";
-		}
+		} */
 		
 		else if (tmeTotalStores.contains("-")){
 			return	message = "Targeted Store count cannot be a negtive number";
@@ -3391,7 +3392,7 @@ for (BigInteger count : storeCount) {
 			PreparedStatement preparedStatement2 = sessionImpl.connection().prepareStatement("DELETE FROM TBL_LAUNCH_CLUSTERS_DETAILS where LAUNCH_ID = "+launchId+" ");
 			preparedStatement2.execute();
 			
-			PreparedStatement preparedStatement3 = sessionImpl.connection().prepareStatement("Select * FROM TBL_LAUNCH_CLUSTERS_TEMP where LAUNCH_ID = "+launchId+" AND TOTAL_STORES_TO_LAUNCH>0");
+			PreparedStatement preparedStatement3 = sessionImpl.connection().prepareStatement("Select CLUSTER_ID, LAUNCH_ID, CLUSTER_REGION, CLUSTER_ACCOUNT_L1, CLUSTER_ACCOUNT_L2, CLUSTER_STORE_FORMAT, CLUSTER_CUST_STORE_FORMAT, LAUNCH_PLANNED, TOTAL_STORES_TO_LAUNCH, CASE WHEN TOTAL_TME_STORES_PLANED = '' THEN '0' ELSE TOTAL_TME_STORES_PLANED END AS TOTAL_TME_STORES_PLANED, CREATED_BY, CREATED_DATE FROM TBL_LAUNCH_CLUSTERS_TEMP where LAUNCH_ID = "+launchId+" AND TOTAL_STORES_TO_LAUNCH>0");
 			rst=preparedStatement3.executeQuery();
 			
 			while(rst.next()) {
@@ -3481,7 +3482,7 @@ for (BigInteger count : storeCount) {
 			PreparedStatement preparedStatement2 = sessionImpl.connection().prepareStatement("DELETE FROM TBL_LAUNCH_CLUSTERS_DETAILS where LAUNCH_ID = "+launchId+" ");
 			preparedStatement2.execute();
 			
-			PreparedStatement preparedStatement3 = sessionImpl.connection().prepareStatement("Select * FROM TBL_LAUNCH_CLUSTERS_TEMP where LAUNCH_ID = "+launchId+" AND TOTAL_STORES_TO_LAUNCH>0");
+			PreparedStatement preparedStatement3 = sessionImpl.connection().prepareStatement("Select CLUSTER_ID, LAUNCH_ID, CLUSTER_REGION, CLUSTER_ACCOUNT_L1, CLUSTER_ACCOUNT_L2, CLUSTER_STORE_FORMAT, CLUSTER_CUST_STORE_FORMAT, LAUNCH_PLANNED, TOTAL_STORES_TO_LAUNCH, CASE WHEN TOTAL_TME_STORES_PLANED = '' THEN '0' ELSE TOTAL_TME_STORES_PLANED END AS TOTAL_TME_STORES_PLANED, CREATED_BY, CREATED_DATE FROM TBL_LAUNCH_CLUSTERS_TEMP where LAUNCH_ID = "+launchId+" AND TOTAL_STORES_TO_LAUNCH>0");
 			rst=preparedStatement3.executeQuery();
 			
 			while(rst.next()) {
