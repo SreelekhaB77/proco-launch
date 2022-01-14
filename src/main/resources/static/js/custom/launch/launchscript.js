@@ -1013,6 +1013,7 @@ $(document).ready(function() {
 				                	 $('#errorblockUpload').hide();
 				                	 //next 4 lines  added bharati for sprint-7 US-7
 				                	 $('#launchStoreErrorFileForStoreFormat').hide();
+				                	 $('#launchvalidateZero').hide();
 				                	 $('#successblock').show().find('span').html(' File Uploaded Successfully !!!');
 				                	 getSellInData();
 				                	  var custStoreSuccvalue = lnchStrdatanew.Success;
@@ -1025,17 +1026,25 @@ $(document).ready(function() {
 				                else if(lnchStrdata.includes('File Upload is UnSuccessful')){
 				                $('#launchStoreErrorFileForStoreFormat').show();
 				                $('.launchStoreNext').prop('disabled', true);
+				                $('#successblock').hide();
+				                $('#launchvalidateZero').hide();
 				                } else if(lnchStrdata.includes('Total TME Targeted Stores has to be')){
 				                 $('#launchvalidateZero').show().find('span').html('Please Enter Minimum One Target Store');
 				                 $('.launchStoreNext').prop('disabled', true);
-				                 
+				                 $('#successblock').hide();
+				                 $('#launchStoreErrorFileForStoreFormat').hide();
 				                }
 				                 else if(lnchStrdata.includes('Minimum stores for Total Stores has to be grater than 0')){
 				                 $('#launchvalidateZero').show().find('span').html('Please Upload Minimum Stores for Total Stores Greater than 0');
 				                 $('.launchStoreNext').prop('disabled', true);
+				                 $('#successblock').hide();
+				                  $('#launchStoreErrorFileForStoreFormat').hide();
 				                } 
 				                else {
 				                	$('#errorblockUpload').show();
+				                	 $('#launchStoreErrorFileForStoreFormat').hide();
+				                	 $('#launchvalidateZero').hide();
+				                	$('#successblock').hide();
 		                         }
 				                 window.location.href = storepageURL;    // bharati added for sprint-7 US-7 stay on same page
 				                 $("#launchstrFileUploadBtn").prop("disabled", false);
@@ -1046,6 +1055,7 @@ $(document).ready(function() {
 				               // console.log("ERROR : ", e);
 				            	// $('#errorblockUpload').find('span').text(e.responseText);
 				                $("#launchstrFileUploadBtn").prop("disabled", true);
+				                $('#successblock').hide();
 				                      
 				            }
 				        });
@@ -1117,6 +1127,7 @@ $(document).ready(function() {
 				                	 $("#launchSellInTab").click();
 				                	 $('#errorblockUpload').hide();
 				                	 //next 4 lines  added bharati for sprint-7 US-7
+				                	 $('#launchvalidateZero').hide();
 				                	 $('#launchStoreerrorblockUpload').hide();
 				                	 $('#successblock').show().find('span').html(' File Uploaded Successfully !!!');
 				                	  getSellInData();
@@ -1129,15 +1140,24 @@ $(document).ready(function() {
 				                else if(lnchStrdata.includes('File Upload is UnSuccessful')){
 				                $('#launchStoreerrorblockUpload').show();
 				                $('.launchStoreNext').prop('disabled', true);
+				                $('#successblock').hide();
+				                $('#launchvalidateZero').hide();
 				                }else if(lnchStrdata.includes('Total TME Targeted Stores has to be')){
 				                 $('#launchvalidateZero').show().find('span').html('Please Enter Minimum One Target Store');
 				                 $('.launchStoreNext').prop('disabled', true);
+				                 $('#successblock').hide();
+				                 $('#launchStoreerrorblockUpload').hide();
 				                }else if(lnchStrdata.includes('Minimum stores for Total Stores has to be grater than 0')){
 				                 $('#launchvalidateZero').show().find('span').html('Please Upload Minimum Stores for Total Stores Greater than 0');
 				                 $('.launchStoreNext').prop('disabled', true);
+				                 $('#successblock').hide();
+				                 $('#launchStoreerrorblockUpload').hide();
 				                } 
 				                else{
 				                	$('#errorblockUpload').show();
+				                	$('#successblock').hide();
+				                	$('#launchStoreerrorblockUpload').hide();
+				                	 $('#launchvalidateZero').hide();
 				              	 }
 				                
 				                 window.location.href = storepageURL;    // bharati added for sprint-7 US-7 stay on same page
@@ -1149,6 +1169,7 @@ $(document).ready(function() {
 				               // console.log("ERROR : ", e);
 				            	// $('#errorblockUpload').find('span').text(e.responseText);
 				                $("#launchstrFileUploadBtn").prop("disabled", true);
+				                $('#successblock').hide();
 				                      
 				            }
 				        });
