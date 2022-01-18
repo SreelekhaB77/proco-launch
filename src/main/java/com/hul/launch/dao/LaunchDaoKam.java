@@ -72,7 +72,7 @@ public interface LaunchDaoKam {
 	
 	public List<String> getLaunchAccounts(String launchId, String userId);
 	
-	public List<String> getAllMoc(String userId, String launchMOC);
+	public List<String> getAllMoc(List<LaunchDataResponse> listOfLaunch);// Modified by Harsha as part of Q7 sprint
 	
 	//Q2 sprint feb 2021
 	public List<String> getAllMocApprovalStatus(String userId);
@@ -81,6 +81,9 @@ public interface LaunchDaoKam {
 
 	// Added By Harsha for Q4 Sprint
 	public List<String> getLaunchAccountsforRejection(String launchId, String userId);
+	
+	//Added by Kavitha D-SPRINT 7 DEC 2021
+	public String getLaunchName(String launchId);
 
 	
 

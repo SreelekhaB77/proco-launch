@@ -508,23 +508,51 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 	
 	@Override
 	public String saveMstnClearanceByLaunchIdsScandLaunchMOC(RequestMstnClearanceList requestMstnClearanceList,
-			String userId) { // Harsha Added code for inserting detail into mstn clearence in Q6
+			String userId,boolean multipleFileUpload) { // Harsha Added code for inserting detail into mstn clearence in Q6
 		try {
 			Session session = sessionFactory.getCurrentSession();
 			SessionImpl sessionImpl = (SessionImpl) session;
-			int launchID=0 ;
+			
 			String launchMoc = "";
-			HashSet<String> set=new HashSet();  
-			for (RequestMstnClearance reqMstnCleared : requestMstnClearanceList.getListOfRequestMstnClearance()) {
-				launchID = Integer.parseInt(reqMstnCleared.getLaunchId().trim());
-				launchMoc = reqMstnCleared.getLaunchMoc().trim();
-				   set.add(launchMoc);    
+			HashSet<String> set=new HashSet();
+			HashSet<String> Extralaunchid=new HashSet();
+			// multipleFileUpload;
+			
+			if(multipleFileUpload) {
+				for (RequestMstnClearance reqMstnCleared : requestMstnClearanceList.getListOfRequestMstnClearance()) {
+					launchMoc = reqMstnCleared.getLaunchMoc().trim();
+					String idAndMoc=reqMstnCleared.getLaunchId().trim()+":"+launchMoc; // Modified by Harsha as part of Q7 to accept multiple Launch ID's to insert
+					   set.add(idAndMoc);  
+			}}
+			
+			else if(!multipleFileUpload) {//Modified by Harsha as part of Q7 to accept single Launch ID to insert
+				for (RequestMstnClearance CheckreqMstnClearedlaunchid : requestMstnClearanceList.getListOfRequestMstnClearance()) {
+					String launchID = CheckreqMstnClearedlaunchid.getLaunchId().trim();
+					Extralaunchid.add(launchID);
+				}
+			
+				if(Extralaunchid.size()>1) {
+					throw new Exception("More than one Launch ID found") ;
+				}
 				
+
+				for (RequestMstnClearance reqMstnCleared : requestMstnClearanceList.getListOfRequestMstnClearance()) {
+					launchMoc = reqMstnCleared.getLaunchMoc().trim();
+					String idAndMoc=reqMstnCleared.getLaunchId().trim()+":"+launchMoc; // Modified by Harsha as part of Q7 to accept multiple Launch ID's to insert
+					   set.add(idAndMoc);  // add this to proper validation
+				}
 			}
+			
+			
 			for(String distinctLaunchMoc :set) {
-		           PreparedStatement batchUpdate = sessionImpl.connection()
+				int launchID=0 ;
+				String moc ="";
+				String[] arrOfStr = distinctLaunchMoc.split(":");
+				launchID = Integer.parseInt(arrOfStr[0].toString().trim()); // Added by Harsha as part of Q7 to accept multiple Launch ID's to insert
+				moc=arrOfStr[1].toString().trim();
+		          PreparedStatement batchUpdate = sessionImpl.connection()
 							.prepareStatement("DELETE from TBL_LAUNCH_MSTN_CLEARANCE where LAUNCH_ID =" + launchID
-									+ " AND LAUNCH_MOC IN (" + distinctLaunchMoc + ")");
+									+ " AND LAUNCH_MOC IN (" + moc + ")");
 					batchUpdate.executeUpdate();
 				
 			}
@@ -590,10 +618,11 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 	}
 
 	@Override
-	public String uploadMstnClearanceByLaunchIdSc(List<Object> listOfMstnClearance, String userID) {
+	public String uploadMstnClearanceByLaunchIdSc(List<Object> listOfMstnClearance, String userID,boolean multipleFileUpload) {
 		RequestMstnClearanceList requestMstnClearanceList = new RequestMstnClearanceList();
 		List<RequestMstnClearance> listOfRequestMstnClearance = new ArrayList<>();
 
+		
 		String launchMOC = "";
 		String launchID = "";
 		Iterator<Object> iterator = listOfMstnClearance.iterator();
@@ -628,7 +657,7 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 		String result = "";
 
 		// Added by harsha to write into a table as part of Q6 sprint
-			result = saveMstnClearanceByLaunchIdsScandLaunchMOC(requestMstnClearanceList, userID);
+			result = saveMstnClearanceByLaunchIdsScandLaunchMOC(requestMstnClearanceList, userID,multipleFileUpload);
 
 		
 			// old implementation for saving 
@@ -636,9 +665,14 @@ public class LaunchScDaoImpl implements LaunchDaoSc {
 
 		if (result.equals("Saved Successfully")) {
 			return "SUCCESS_FILE";
-		} else if (result.equals("Wrong date")) {
+		} 
+		else if (result.contains("More than one Launch ID found")) {
+			return "Not allowed to upload more than one Launch MSTN clearence";
+		}
+		else if (result.equals("Wrong date")) { //
 			return "Wrong date";
-		} else {
+		} 
+		else {
 			return "ERROR";
 		}
 	}

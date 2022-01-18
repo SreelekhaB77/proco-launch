@@ -241,7 +241,90 @@ public class ScLaunchPlanController {
 						} else if (map.containsKey("DATA")) {
 							List<Object> list = map.get("DATA");
 							savedData = launchServiceSc.uploadMstnClearanceByLaunchIdSc(list, userID, "CREATED BY TME",
-									true, false);
+									true, false);//MultipleMstnUpload check is made as false
+							if (!savedData.contains("Exception")) {
+								if (savedData != null && savedData.equals("SUCCESS_FILE")) {
+									successMessage = commUtils.getProperty("File.Upload.Success");
+								} 
+								else if (savedData != null && savedData.equals("Not allowed to upload more than one Launch MSTN clearence")) {
+									throw new Exception("Please upload MSTN Clearance only for the selected launch");
+								}
+								else if (savedData != null && savedData.equals("ERROR_FILE")) {
+									throw new Exception("File Uploaded with errors");
+								} else if (savedData != null && savedData.equals("ERROR")) {
+									throw new Exception("Error while uploading file");
+								}
+								else if (savedData != null && savedData.equals("Wrong date")) {
+									throw new Exception("MSTN CLEARENCE DATE CLOSED");
+								}//
+							} else {
+								throw new Exception(savedData);
+							}
+						}
+					}
+				}
+			} else {
+				throw new Exception(commUtils.getProperty("File.Empty"));
+			}
+			if (savedData.equals("ERROR_FILE")) {
+				throw new Exception("ERROR_FILE");
+			} else if (savedData.equals("ERROR")) {
+				throw new Exception("File Upload is UnSuccessful.");
+			} else {
+				successMessage = "SUCCESS_FILE";
+			}
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
+			apiResponse.put("Error", e.toString());
+			return gson.toJson(apiResponse);
+		} catch (Throwable e) {
+			logger.error("Exception: ", e);
+			apiResponse.put("Error", e.toString());
+			return gson.toJson(apiResponse);
+		}
+		apiResponse.put("Success", successMessage);
+		return gson.toJson(apiResponse);
+	}
+	
+	// Added By Harsha for multiple files upload in Q7 as part of US 16
+	
+	@RequestMapping(value = "uploadMultipleMstnClearanceByLaunchIdSc.htm", method = RequestMethod.POST)
+	public String uploadMultipleMstnClearanceByLaunchIdSc(MultipartHttpServletRequest multi, Model model,
+			HttpServletRequest request, HttpServletResponse response) {
+		Gson gson = new Gson();
+		String savedData = null;
+		CommonPropUtils commUtils = CommonPropUtils.getInstance();
+		String userID = (String) request.getSession().getAttribute("UserID");
+		MultipartFile file = multi.getFile("file");
+		boolean multipleFileRequest = true;// if request for multiple file upload
+
+		String filepath = FilePaths.LAUNCH_MDG_UPLOAD_FILE_PATH;
+		String fileName = file.getOriginalFilename();
+		String fileType =file.getContentType()+file.getName()+file.getSize();
+		
+		
+		fileName = filepath + fileName;
+	
+		String successMessage = "";
+		Map<String, String> apiResponse = new HashMap<>();
+		try {
+			if (!CommonUtils.isFileEmpty(file)) {
+				if (CommonUtils.isFileSizeExceeds(file)) {
+					throw new Exception("File size exceeded");
+				} else {
+					if (UploadUtil.movefile(file, fileName)) {
+						Map<String, List<Object>> map = ExOM.mapFromExcel(new File(fileName))
+								.to(LaunchMstnClearance.class).map(15, false, null); // Modified by Harsha for Q5 sprint from 14 to 15
+						if (map.isEmpty()) {
+							throw new Exception("File does not contain data");
+						}
+						if (map.containsKey("ERROR")) {
+							List<Object> errorList = map.get("ERROR");
+							throw new Exception((String) errorList.get(0));
+						} else if (map.containsKey("DATA")) {
+							List<Object> list = map.get("DATA");//Using boolean function aleady existing 
+							savedData = launchServiceSc.uploadMstnClearanceByLaunchIdSc(list, userID, "CREATED BY TME",
+									true, /*,false,*/multipleFileRequest);
 							if (!savedData.contains("Exception")) {
 								if (savedData != null && savedData.equals("SUCCESS_FILE")) {
 									successMessage = commUtils.getProperty("File.Upload.Success");
@@ -282,6 +365,12 @@ public class ScLaunchPlanController {
 		return gson.toJson(apiResponse);
 	}
 
+	
+	
+	
+	
+	
+
 	@RequestMapping(value = "{launchId}/downloadFinalBuildUpTemplateSc.htm", method = RequestMethod.GET)
 	public @ResponseBody String downloadFinalBuildUpTemplate(@PathVariable("launchId") String launchId, Model model,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -319,11 +408,54 @@ public class ScLaunchPlanController {
 		return gson.toJson(map);
 	}
 
+	
 	@RequestMapping(value = "{launchIds}/{requiredMoc}/downloadMstnClearanceTemplateSc.htm", method = RequestMethod.GET) // Added MOC parameter for downloading excel based on MOC and launchId
 	public @ResponseBody String downloadMstnClTemplate(@PathVariable("launchIds") String launchId,
 			@PathVariable("requiredMoc") String requiredMoc, Model model,
 			HttpServletRequest request, HttpServletResponse response) {
 		String moc = requiredMoc;
+		String absoluteFilePath = "";
+		InputStream is;
+		String downloadLink = "";
+		Gson gson = new Gson();
+		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
+		String fileName = UploadUtil.getFileName("MSTNClearance.Template.file", "",
+				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
+		String downloadFileName = absoluteFilePath + fileName;
+		String userId = (String) request.getSession().getAttribute("UserID");
+		String launchIds[] = launchId.split(",");
+		List<String> listOfLaunchData = Arrays.asList(launchIds);
+		List<ArrayList<String>> listDownload = launchFinalPlanService.getMstnClearanceDataDump(userId,
+				listOfLaunchData, moc);
+		try {
+			if (listDownload != null) {
+				UploadUtil.writeXLSFile(downloadFileName, listDownload, null, ".xls");
+				downloadLink = downloadFileName + ".xls";
+				is = new FileInputStream(new File(downloadLink));
+				response.setContentType("application/force-download");
+				response.setHeader("Content-Disposition", "attachment; filename=MSTNClearanceTemplate"
+						+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+				IOUtils.copy(is, response.getOutputStream());
+				response.flushBuffer();
+			}
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
+			Map<String, String> map = new HashMap<>();
+			map.put("Error", e.toString());
+			return gson.toJson(map);
+		}
+		Map<String, String> map = new HashMap<>();
+		map.put("FileToDownload", fileName);
+		return gson.toJson(map);
+	}
+	
+	// Adding new block for US 16 story in Q7 by Harsha
+	
+	@RequestMapping(value = "{launchIds}/downloadMultipleMstnClearanceTemplateSc.htm", method = RequestMethod.GET) // Added MOC parameter for downloading excel based on MOC and launchId
+	public @ResponseBody String downloadMstnClTemplate(@PathVariable("launchIds") String launchId, Model model,
+			HttpServletRequest request, HttpServletResponse response) {
+		//launchId ="162,164";
+		String moc = "All"; // making MOC as all for multiple file select 
 		String absoluteFilePath = "";
 		InputStream is;
 		String downloadLink = "";

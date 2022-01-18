@@ -14,6 +14,9 @@ $(document).ready(function() {
 	$('#kamlnchDets').attr("disabled",true);
 	$('#rejectLaunch').attr("disabled",true);
 	$('#kamerrorblockUpload').hide();
+	 $('#targetStoreErrorBlock').hide();
+	 $('#storelist-successblock').hide();
+	
 	if( window.location.hash != "#step-1" && window.location.hash != '' ){
 		window.location = window.location.href.split('#')[0];
 	}
@@ -407,44 +410,40 @@ $(document).ready(function() {
 	         	// upldatanew = typeof upldata == "string" ? JSON.parse(upldata) :
 	 			// upldata;
 	         	var errmsg = upllnchstrdata.responseData;
-	         	console.log(upllnchstrdata.responseData);
+	         	//console.log(upllnchstrdata.responseData);
 		
 	         	 $('.loader').hide();
-			//sprint-4 US-5 confirmation msg bharati added
 			
-			var fileNamesuccess = fileName;
-			
-			if(fileNamesuccess.includes("Store.Download") && fileName != ''){
-				
-			$('#storelist-successblock').show().find('span').html('Uploaded Successfully !!!');
-			}else{
-				$('#storelist-successblock').hide();
-			}
-			//sprint-4 US-5 confirmation msg bharati ended
 			
 	             if("SUCCESS_FILE" ==  upllnchstrdata) {
 					 	
 	             	 $("#kamlaunchVisiTab").click();
 	             	 $('#kamuploadErrorMsg').hide();
 	             	 $('#kamerrorblockUpload').hide();
-					 
-					
-					//sprint-4 US-5 redirect on same page changes done by bharati
-					 
-					saveBuildUp();
-					window.location.href = "getAllCompletedLaunchDataKam.htm#step-4";
-					
-	             	kamgetVissiData();
-
-	             	// getlaunchStores();
+	             	 $('#targetStoreErrorBlock').hide();
+					 //sprint-4 US-5 confirmation msg bharati added
+					 //var fileNamesuccess = fileName;
+			       //if(fileNamesuccess.includes("Store.Download") && fileName != ''){
+			          $('#storelist-successblock').show().find('span').html('Uploaded Successfully !!!');
+			         //}
+			         //sprint-4 US-5 confirmation msg bharati ended
+					  saveBuildUp();
+					  //window.location.href = "getAllCompletedLaunchDataKam.htm#step-4";
+					   kamgetVissiData();
+                     // getlaunchStores();
+	             	//bharati added for sprint-7 US-7 Error block for minimum target store
+	             }else if(upllnchstrdata.includes('Minimum targeted stores should be')){
+	                   $('#targetStoreErrorBlock').show().find('span').html('Please Accept Minimum Target Stores as Confirmed by TME');  
+	                   $('#storelist-successblock').hide(); 
 	             }
 	             else {
 	             	$('#kamerrorblockUpload').show();
 	             	//$('#kamuploadErrorMsg span').text(errmsg);
 	             }
-				 
+	            //sprint-4 US-5 redirect on same page changes done by bharati
+				 window.location.href = storepageURL;
 	             $("#btnSubmitBasePack").prop("disabled", false);
-				 
+				  $('#kamlaunchStoreUpload')[0].reset();
 				 
 	         },
 	         error: function (jqXHR, textStatus, errorThrown) {
@@ -455,7 +454,8 @@ $(document).ready(function() {
 	                   
 	         }
 	     });
-			
+		 //bharati added for find current page -url in sprint-7
+		  var storepageURL = $(location).attr("href");	
 	 });
 	 
 
@@ -1934,5 +1934,12 @@ function loadrejectKamAccounts() {
 			}
 		});
 	}
+//bharati added for sprint-7 US-7 successblock not display 2nd time 
+$('#storelist-successblock .close').click(function(){
+   $(this).parent().hide();
+});
+$('#targetStoreErrorBlock .close').click(function(){
+   $(this).parent().hide();
+});
 
-
+//bharati code end here

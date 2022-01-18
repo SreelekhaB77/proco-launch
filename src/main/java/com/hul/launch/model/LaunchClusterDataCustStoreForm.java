@@ -9,6 +9,9 @@ public class LaunchClusterDataCustStoreForm {
 	private String Account_L2;
 	private String Customer_Store_Format;
 	private String Launch_planned;
+	private String Total_Stores; // Added By Harsha for US 7 jan22
+	private String Minimum_Target_Stores;
+	private String Error_Msg;	
 	private String error;
 
 	public MultipartFile getFile() {
@@ -19,8 +22,34 @@ public class LaunchClusterDataCustStoreForm {
 		this.file = file;
 	}
 
+	public String getTotal_Stores() {
+		return Total_Stores;
+	}
+
+	public void setTotal_Stores(String total_Stores) {
+		Total_Stores = total_Stores;
+	}
+
+
+
+	public String getError_Msg() {
+		return Error_Msg;
+	}
+
+	public void setError_Msg(String error_Msg) {
+		Error_Msg = error_Msg;
+	}
+
 	public String getCluster() {
 		return Cluster;
+	}
+
+	public String getMinimum_Target_Stores() {
+		return Minimum_Target_Stores;
+	}
+
+	public void setMinimum_Target_Stores(String minimum_Target_Stores) {
+		Minimum_Target_Stores = minimum_Target_Stores;
 	}
 
 	public void setCluster(String cluster) {

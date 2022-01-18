@@ -130,11 +130,25 @@
 			</div>
 		</c:if>
 
-		<div class="alert alert-danger marginT15" id="kamerrorblockUpload">
+		<div class="alert alert-danger marginT15" style="display: none;" id="kamerrorblockUpload">
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			<%-- <c:out value="${errorMsgUpload}"></c:out> --%>
 			<span> File does not contains any data.</span>
 		</div>
+		<!--sprint-4 US-5 changes bharati added-->
+						<div class="alert alert-success alert-dismissible" id="storelist-successblock" style="display:none;">
+		                 <button type="button" class="close" aria-label="Close">&times;</button>
+		                <strong>Store List </strong><span></span>
+		               </div>
+		          
+			   <!--sprint-4 US-5 changes bharati ended-->
+		<!--bharati added error block for US-7 IN Sprint-7-->
+		<div class="alert alert-danger marginT15" style="display: none;" id="targetStoreErrorBlock">
+			<button type="button" class="close" aria-label="Close">&times;</button>
+			
+			<span> </span>
+		</div>
+		<!--bharati code end here-->
 		<!-- modal for change moc -->
 		<div id="kammocChange" class="modal fade" role="dialog"
 			data-backdrop="static" data-keyboard="false" style="display: none;">
@@ -767,20 +781,6 @@
 					<div class="card thirdCard tab_content" data-blockid="4"
 						id="step-4">
 						
-						<!--sprint-4 US-5 changes bharati added-->
-						<div class="alert alert-success alert-dismissible" id="storelist-successblock" style="display:none;">
-		                 <button type="button" class="close" data-dismiss="alert">&times;</button>
-		                 <strong>Store List </strong><span></span>
-		               </div>
-		          <c:if test="${success_file_upload!=null}">
-			    <div class="alert alert-success sucess-msg" id="storelist-successblock"
-				style="display: block">
-				<button id="refresh" type="button" class="close" data-hide="alert">&times;</button>
-				<c:out value="${success_file_upload}"></c:out>
-			    </div>
-		      </c:if>
-			   <!--sprint-4 US-5 changes bharati ended-->
-			   
 						<div class="card-header" role="tab" id="headingOne">
 							<div class="">
 								<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false"

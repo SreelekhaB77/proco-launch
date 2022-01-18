@@ -67,7 +67,7 @@ public class LaunchServiceScImpl implements LaunchServiceSc {
 
 	@Override
 	public String uploadMstnClearanceByLaunchIdSc(List<Object> list, String userID, String string, boolean b, boolean c) {
-		return launchDaoSc.uploadMstnClearanceByLaunchIdSc(list, userID);
+		return launchDaoSc.uploadMstnClearanceByLaunchIdSc(list, userID,c);
 	}
 	
 

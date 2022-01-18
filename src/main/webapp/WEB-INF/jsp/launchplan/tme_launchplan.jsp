@@ -128,7 +128,25 @@
 									
 									<!--bharati changes end here-->
 	
-	
+	                                <!--bharati added code for errorblock with download error file for sprint-7 US-7-->
+	                 
+                                    <div class="alert alert-danger marginT15" style="display: none;" id="launchStoreerrorblockUpload">
+                                        <button type="button" class="close" data-hide="alert">&times;</button>
+                                       
+                                            <span>File contains error...</span>
+                                            <a href="#" onClick="downloadLaunchStoreErrorTemplate();" id="downloadTempFileLink">Click here to Download Error File</a>
+                                    </div>
+									<div class="alert alert-danger marginT15" style="display: none;" id="launchStoreErrorFileForStoreFormat">
+                                        <button type="button" class="close" data-hide="alert">&times;</button>
+                                       
+                                            <span>File contains error...</span>
+                                            <a href="#" onClick="downloadLaunchStoreErrorTemplateForStoreFormat();" id="downloadTempFileLink">Click here to Download Error File</a>
+                                    </div>
+									<div class="alert alert-danger marginT15" style="display: none;" id="launchvalidateZero">
+                                        <button type="button" class="close" data-hide="alert">&times;</button>
+                                         <span></span>
+                                    </div>
+									<!--bharati changes end here-->
 	<%-- </c:if> --%>
 	<%-- <c:if test="${errorMsg!=null}">
 			<div class="alert alert-danger sucess-msg" id="errorblock">
@@ -151,6 +169,7 @@
 		<span>Error while uploading file.</span>
 		<!--  <a href="downloadTmeUploadErrorFile.htm" id="downloadTempFileLink">Click here to Download Error File</a> -->
 	</div>
+	
 
 	<form id="launchPlanForm" action="#" method="POST"
 		enctype="multipart/form-data">
@@ -537,6 +556,20 @@
 												id="storecount" name="assetDesc" disabled>
 										</div>
 									</div>
+									
+								<!--bharati added for sprint-7 US-7 -->
+									<div class="form-group col-md-6">
+										<label class="col-sm-4 control-label">Please upload minimum target stores for the launch<span
+											class="astrick">*</span></label>
+										<div class="col-sm-8 offset-col-md-2 switch-dynamic-first">
+											<input type="text" class="form-control assetDesc" value="0"
+												id="tmeapprovedstorecount" name="assetDesc" disabled>
+										</div>
+									</div>
+									<div class="form-group col-md-6 col-md-offset-6" style="margin-bottom: 3px">
+									<label class="col-sm-12 control-label" style="font-size: 11px;color: #e41604;">To enter minimum target store- Download any one of the files below , enter value in Column G and upload</label>
+									</div>
+									
 									<div class="form-group col-md-12">
 
 										<button type="button" class="btn col-md-3 rightBtn"
@@ -555,8 +588,8 @@
 											class="btn btn-secondary nxtclassification previousTme"
 											id="prevClust" style="float: left;" /> <input type="button"
 											onclick="saveLunchstrs()" value="Next"
-											class="btn btn-secondary nxtclassification" id="lnchstr"
-											style="float: right;" />
+											class="btn btn-secondary nxtclassification launchStoreNext" id="lnchstr"
+											style="float: right;" disabled />
 
 									</div>
 								</div>
@@ -1024,6 +1057,15 @@
 												<%-- <c:out value="${success}"></c:out> --%>
 												<span></span>
 											</div>
+											
+											<!---bharati added this error block for annexeerrorblock in sprint-7 dec-21 file size exceeded error-->
+	                                           <div class="alert alert-danger marginT15" id="annexerrorblockUpload" style="display:none">
+		                                       <button type="button" class="close" data-hide="alert">&times;</button>
+		
+		                                       <span> </span>
+		
+	                                          </div>
+	                                         <!--bharati code end here-->
 
 											<form action="#" method="POST" enctype="multipart/form-data"
 												id="tmeannexFileUploadBean" class="form-horizontal"

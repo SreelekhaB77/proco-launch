@@ -115,7 +115,8 @@ public class KamLaunchPlanController {
 			
 			int  launchId =listOfLaunch.get(0).getLaunchId();
 			//Q1 sprint kavitha
-			List<String> kammoclist=launchServiceKam.getAllMoc(userId, kamMoc);
+			//List<String> kammoclist=launchServiceKam.getAllMoc(userId, kamMoc,listOfLaunch); --- previous implementation before Q7
+			List<String> kammoclist=launchServiceKam.getAllMoc(listOfLaunch);// Modified by Harsha for Q7 sprint
 			model.addAttribute("kammoclist",kammoclist);
 			//model.addAttribute("kamApprovalStatusNotification",listOfKamChangeReq.stream().map(n->n.getLaunchReadStatus()=="NEW").count());
 			
@@ -561,7 +562,9 @@ public class KamLaunchPlanController {
 		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
 		String fileName = UploadUtil.getFileName("Store.Download.file", "",
 				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
-		String downloadFileName = absoluteFilePath + fileName;
+		//Added by Kavitha D Sprint 7-DEC2021
+		String launchName=launchServiceKam.getLaunchName(launchId);
+		String downloadFileName = absoluteFilePath + fileName + launchName;
 		ArrayList<String> headerList = launchServiceKam.getHeaderListForBaseFile();
 		// String KamRemarks =request.getParameter(arg0)
 		try {
@@ -573,8 +576,10 @@ public class KamLaunchPlanController {
 			is = new FileInputStream(new File(downloadLink));
 			// copy it to response's OutputStream
 			response.setContentType("application/force-download");
+			//response.setHeader("Content-Disposition", "attachment; filename=Store.Download.file_" + CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+			//Kavitha D changes for storelist download file name
 			response.setHeader("Content-Disposition", "attachment; filename=Store.Download.file_"
-					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + "_" +launchName + ".xls");
 			IOUtils.copy(is, response.getOutputStream());
 			response.flushBuffer();
 		} catch (FileNotFoundException e) {
@@ -663,7 +668,11 @@ public class KamLaunchPlanController {
 				throw new Exception("ERROR_FILE");
 			} else if (savedData.equals("ERROR")) {
 				throw new Exception("File Upload is UnSuccessful.");
-			} else {
+			} 
+			else if (savedData != null && savedData.equals("Minimum targeted stores should be approved by KAM")) {//Added By Harsha as part of US7 Jan 22
+				throw new Exception("Minimum targeted stores should be approved by KAM");
+			}
+			else {
 				successMessage = "SUCCESS_FILE";
 			}
 		} catch (Exception e) {

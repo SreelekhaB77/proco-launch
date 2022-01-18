@@ -9,6 +9,7 @@ var bscaddTable,
 	scTable;
 
 $(document).ready(function() {
+	  
 	
 	//Q2 Sprint feb 2021 kavitha
 	loadSCLauches('All');
@@ -294,15 +295,33 @@ $(document).ready(function() {
 		});
 //Q2 sprint feb 2021 kavitha 
 function enableScLaunchButtons(obj) {
-	$('input[type="checkbox"]').on('change', function() {
-		   $('input[type="checkbox"]').not(this).prop('checked', false);
-		});
+//Bharati added code for US-16 in sprint-7 multiple checkbox checked and enable disable btns
+var checkboxValues = [];
+        $('input[type="checkbox"]:checked').each(function(index, elem) {
+            checkboxValues.push($(elem).val());
+        });
+       // console.log(checkboxValues);
+        
+	//$('input[type="checkbox"]').on('change', function() {
+		//   $('input[type="checkbox"]').not(this).prop('checked', false);
+		//});
+		
 	var checked_field = $("[name=scchecklaunch]:checked");
-	if (checked_field.length != 0) {
+	if (checked_field.length == 1) {
 		document.getElementById("sclnchDets").removeAttribute("disabled");
-	} else {
+		 document.getElementById("mstndownload").removeAttribute("disabled");
+		
+		
+	} else if(checked_field.length > 1) {
+	        document.getElementById("sclnchDets").setAttribute("disabled",
+		        "disabled");
+		        document.getElementById("mstndownload").removeAttribute("disabled");
+		        
+	}else {
 		document.getElementById("sclnchDets").setAttribute("disabled",
 		        "disabled");
+		    document.getElementById("mstndownload").setAttribute("disabled",
+		        "disabled");    
 	}
 }
 
@@ -704,7 +723,7 @@ function loadSCLauches(scselectedmoc) {
 						{
 						  mData: 'launchId',
 						  "mRender": function(data, type, full) {
-							return '<input type="checkbox" name="scchecklaunch" class="editlaunchsel scchecklaunch" onChange="enableScLaunchButtons(this)" value=' + data + '>';
+							return '<input type="checkbox" name="scchecklaunch" class="editlaunchsel scchecklaunch" onChange="enableScLaunchButtons(this)" multiple="multiple" value=' + data + '>';
 						  }
 						},
 						{mData : 'launchName'},
@@ -805,3 +824,107 @@ $("#mocdistCol").on('change', function () {
 	        }
 	    });
 });
+
+//Bharati added mstn download and mstn upload in Launch details first tab in sprint-7 US-16 Dec-21
+//bharati added for uable disable upload btn
+$("#uploadMultimstn").change(function() {
+		
+		$('.validate_upload_mstn').prop('disabled', false);
+	});
+	
+
+//download multiple Launches for mstn cleareance
+function scdownloadLaunchmstnFirst() {
+ var launchIds = [];
+   var oTable = $("#scbasepack_add").dataTable();
+   $(".scchecklaunch:checked", oTable.fnGetNodes()).each(function() {
+   launchIds.push($(this).val());
+   });
+//console.log(launchIds);
+ 
+		var set1 = new Set(launchIds);
+		var commaSepLaunchIds = Array.from(set1).toString();
+	window.location.assign(commaSepLaunchIds+"/downloadMultipleMstnClearanceTemplateSc.htm");
+}
+//download end here
+
+//Upload multiple Launches for mstn cleareance
+
+	
+ $("#btnMultiUploadmstn").click(function (event) {
+			event.preventDefault();
+	  var fileName = $('#uploadMultimstn').val();
+		if (fileName == '') {
+			$('#uploadmultiErrorMsg').show().html("Please select a file to upload");
+			return false;
+		} else {
+			$('#uploadmultiErrorMsg').hide();
+			var FileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+			if (FileExt != "xlsx") {
+				if (FileExt != "xls") {
+					$('#uploadmultiErrorMsg').show().html("Please upload .xls or .xlsx file");
+					$("#uploadmultiErrorMsg").submit(function(e) {
+						e.preventDefault();
+					});
+					return false;
+				}
+
+			}
+		}
+
+		// Get form
+		//var multiform = $('#launchMultimstnfileupload')[0];
+
+		// Create an FormData object
+		//var multidata = new FormData(multiform);
+
+		 var formData = new FormData();
+         formData.append('file', $('#uploadMultimstn').get(0).files[0]);
+        
+        $.ajax({
+			type : "POST",
+			enctype : 'multipart/form-data',
+			url :  'uploadMultipleMstnClearanceByLaunchIdSc.htm',
+			data : formData,
+			processData : false,
+			contentType : false,
+			cache : false,
+			timeout : 600000,
+			beforeSend: function() {
+	            ajaxLoader(spinnerWidth, spinnerHeight);
+	        },
+			success : function(data) {
+				$('#uploadartErrorMsg').hide();
+				$('#errorblockUpload').hide();
+				 $('.loader').hide();
+				 var msdata = JSON.parse(data);
+				// $("#launchMultimstnfileupload")[0].reset();
+				 
+				if ("SUCCESS_FILE" == msdata.Success) {
+				  $("#mstnClearance").dataTable().fnDestroy();
+					$('#uploadartErrorMsg').hide();
+					
+					//getmstnData();
+					$('#successblock').show().find('span').html(' Files Uploaded Successfully !!!');
+					window.location.href = pageURL;
+					
+
+				} else if( typeof msdata.Error == "string" && msdata.Error != "" ) {
+					$('#successblock').hide();
+					$('#errorblockUpload span').html(msdata.Error.replace('java.lang.Exception: ', ""));
+					$('#errorblockUpload').show();
+					window.location.href = pageURL;
+				}
+				
+			},
+			error : function(e) {
+				$("#uploadErrorMsg").text(e.responseText);
+				
+
+			}
+		});
+		 //bharati added for find current page -url
+		 var pageURL = $(location).attr("href");
+});
+//bharati sprint-7 code end here	  
+

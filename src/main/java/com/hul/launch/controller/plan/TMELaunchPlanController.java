@@ -1352,7 +1352,7 @@ public class TMELaunchPlanController {
 
 				if (extList.contains(fileExt)) {
 					if (!CommonUtils.isFileEmpty(file)) {
-						if (CommonUtils.isFileSizeExceeds(file)) {
+						if (CommonUtils.isAnnexureDocFileSizeExceeds(file)) {
 							throw new Exception("File size exceeded");
 						} else {
 							String filePath = FilePaths.LAUNCH_ANNEXURE_UPLOAD_FILE_PATH;
@@ -1441,7 +1441,7 @@ public class TMELaunchPlanController {
 
 				if (extList.contains(fileExt.toUpperCase())) {
 					if (!CommonUtils.isFileEmpty(file)) {
-						if (CommonUtils.isFileSizeExceeds(file)) {
+						if (CommonUtils.isArtworkDocFileSizeExceeds(file)) {
 							throw new Exception("File size exceeded");
 						} else {
 							String filePath = FilePaths.LAUNCH_ARTWORK_UPLOAD_FILE_PATH;
@@ -1515,7 +1515,7 @@ public class TMELaunchPlanController {
 
 				if (extList.contains(fileExt)) {
 					if (!CommonUtils.isFileEmpty(file)) {
-						if (CommonUtils.isFileSizeExceeds(file)) {
+						if (CommonUtils.isMdgDocFileSizeExceeds(file)) {
 							throw new Exception("File size exceeded");
 						} else {
 							String filePath = FilePaths.LAUNCH_MDG_UPLOAD_FILE_PATH;
@@ -1570,7 +1570,7 @@ public class TMELaunchPlanController {
 			String fileName = file.getOriginalFilename();
 			fileName = filepath + fileName;
 			if (!CommonUtils.isFileEmpty(file)) {
-				if (CommonUtils.isFileSizeExceeds(file)) {
+				if (CommonUtils.isMdgDocFileSizeExceeds(file)) {
 					throw new Exception("File size exceeded");
 				} else {
 					if (UploadUtil.movefile(file, fileName)) {
@@ -1623,6 +1623,7 @@ public class TMELaunchPlanController {
 			MultipartHttpServletRequest multi, Model model, HttpServletRequest request, HttpServletResponse response) {
 		Gson gson = new Gson();
 		String savedData = null;
+		String countofFixedStores = null;
 		CommonPropUtils commUtils = CommonPropUtils.getInstance();
 		String userID = (String) request.getSession().getAttribute("UserID");
 		MultipartFile file = multi.getFile("file");
@@ -1639,7 +1640,7 @@ public class TMELaunchPlanController {
 				} else {
 					if (UploadUtil.movefile(file, fileName)) {
 						Map<String, List<Object>> map = ExOM.mapFromExcel(new File(fileName))
-								.to(LaunchClusterDataStoreForm.class).map(5, false, null);
+								.to(LaunchClusterDataStoreForm.class).map(7, false, null);
 						if (map.isEmpty()) {
 							throw new Exception("File does not contain data");
 						}
@@ -1648,8 +1649,25 @@ public class TMELaunchPlanController {
 							throw new Exception((String) errorList.get(0));
 						} else if (map.containsKey("DATA")) {
 							List<Object> list = map.get("DATA");
+							//Existing Implementation
 							savedData = launchBasepacksService.saveClusterByUpload(list, userID, "CREATED BY TME", true,
-									false, launchId);
+								false, launchId);
+							
+							// Added By Harsha for US 7 DEC -- Starts
+							if(savedData.equals("SUCCESS_FILE")) {
+								
+								savedData = launchBasepacksService.saveClusterByUploadForStoreFormateCluster(list, userID, "CREATED BY TME", true,
+										false, launchId);
+								savedData = launchBasepacksService.countofErrormsginStoreformate(  launchId);
+								if(savedData.equals("SUCESS")) {
+									countofFixedStores = launchBasepacksService.countofFixedStores(  launchId);
+								}
+								else {
+									throw new Exception("File Upload is UnSuccessful Due to error in entries.");
+								}
+							
+							} // Added By Harsha for US 7 DEC -- Ends
+
 							if (!savedData.contains("Exception")) {
 								if (savedData != null && savedData.equals("SUCCESS_FILE")) {
 									successMessage = commUtils.getProperty("File.Upload.Success");
@@ -1657,6 +1675,12 @@ public class TMELaunchPlanController {
 									throw new Exception("File Uploaded with errors");
 								} else if (savedData != null && savedData.equals("ERROR")) {
 									throw new Exception("Error while uploading file");
+								}// Added By Harsha as part of US 7 Jan22
+								else if (savedData != null && savedData.equals("Minimum stores for Total Stores has to be grater than 0")) {
+									throw new Exception("Minimum stores for Total Stores has to be grater than 0");
+								}
+								else if (savedData != null && savedData.equals("Total TME Targeted Stores has to be grater than 1")) {
+									throw new Exception("Total TME Targeted Stores has to be grater than 1");
 								}
 							} else {
 								throw new Exception(savedData);
@@ -1672,7 +1696,7 @@ public class TMELaunchPlanController {
 			} else if (savedData.equals("ERROR")) {
 				throw new Exception("File Upload is UnSuccessful.");
 			} else {
-				successMessage = "SUCCESS_FILE";
+				successMessage = "SUCCESS_FILE"+countofFixedStores;
 			}
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
@@ -1700,6 +1724,7 @@ public class TMELaunchPlanController {
 		String fileName = file.getOriginalFilename();
 		fileName = filepath + fileName;
 		String successMessage = "";
+		String countofFixedStores="";
 		Map<String, String> apiResponse = new HashMap<>();
 		try {
 			if (!CommonUtils.isFileEmpty(file)) {
@@ -1708,7 +1733,7 @@ public class TMELaunchPlanController {
 				} else {
 					if (UploadUtil.movefile(file, fileName)) {
 						Map<String, List<Object>> map = ExOM.mapFromExcel(new File(fileName))
-								.to(LaunchClusterDataCustStoreForm.class).map(5, false, null);
+								.to(LaunchClusterDataCustStoreForm.class).map(7, false, null);
 						if (map.isEmpty()) {
 							throw new Exception("File does not contain data");
 						}
@@ -1717,8 +1742,32 @@ public class TMELaunchPlanController {
 							throw new Exception((String) errorList.get(0));
 						} else if (map.containsKey("DATA")) {
 							List<Object> list = map.get("DATA");
+							//Existing implementation 
 							savedData = launchBasepacksService.saveClusterByUploadForCluster(list, userID,
 									"CREATED BY TME", true, false, launchId);
+							
+							
+							
+							//Added by Harsha for Sprint 7 - Starts
+							
+							if(savedData.equals("SUCCESS_FILE")) {
+								savedData = launchBasepacksService.saveClusterByUploadForCustomerStoreFormateCluster(list, userID, "CREATED BY TME", true,
+										false, launchId);
+								savedData = launchBasepacksService.countofErrormsginCustStoreformate(  launchId);
+								
+								if(savedData.equals("SUCESS")) {
+									
+									countofFixedStores = launchBasepacksService.countofFixedStores(  launchId);
+								}
+								else {
+									throw new Exception("File Upload is UnSuccessful Due to error in entries.");
+								}
+								
+							}
+							
+							
+							
+							//Added by Harsha for Sprint 7 - Ends
 							if (!savedData.contains("Exception")) {
 								if (savedData != null && savedData.equals("SUCCESS_FILE")) {
 									successMessage = commUtils.getProperty("File.Upload.Success");
@@ -1727,6 +1776,13 @@ public class TMELaunchPlanController {
 								} else if (savedData != null && savedData.equals("ERROR")) {
 									throw new Exception("Error while uploading file");
 								}
+								//Added By Harsha
+								else if (savedData != null && savedData.equals("Minimum stores for Total Stores has to be grater than 0")) {
+									throw new Exception("Minimum stores for Total Stores has to be grater than 0");
+								}
+								else if (savedData != null && savedData.equals("Total TME Targeted Stores has to be grater than 1")) {
+									throw new Exception("Total TME Targeted Stores has to be grater than 1");
+								}//
 							} else {
 								throw new Exception(savedData);
 							}
@@ -1741,7 +1797,7 @@ public class TMELaunchPlanController {
 			} else if (savedData.equals("ERROR")) {
 				throw new Exception("File Upload is UnSuccessful.");
 			} else {
-				successMessage = "SUCCESS_FILE";
+				successMessage = "SUCCESS_FILE"+countofFixedStores; // Added By Harsha
 			}
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
@@ -1996,6 +2052,22 @@ public class TMELaunchPlanController {
 		headerDetail.add("Account_L2");
 		headerDetail.add("Customer_Store_Format");
 		headerDetail.add("Launch_planned");
+		headerDetail.add("Total_Stores");
+		headerDetail.add("Minimum_Target_Stores");
+		return headerDetail;
+	}
+	
+	private ArrayList<String> getErrorClusterHeadersforCustomerStoreformat() {
+		ArrayList<String> headerDetail = new ArrayList<>();
+		headerDetail.add("Cluster");
+		headerDetail.add("Account_L1");
+		headerDetail.add("Account_L2");
+		headerDetail.add("Customer_Store_Format");
+		headerDetail.add("Launch_planned");
+		headerDetail.add("Total_Stores");
+		headerDetail.add("Minimum_Target_Stores");
+		headerDetail.add("Error_Msg");
+		
 		return headerDetail;
 	}
 
@@ -2006,6 +2078,21 @@ public class TMELaunchPlanController {
 		headerDetail.add("Account_L2");
 		headerDetail.add("Store_Format");
 		headerDetail.add("Launch_planned");
+		headerDetail.add("Total_Stores");
+		headerDetail.add("Minimum_Target_Stores");
+		return headerDetail;
+	}
+	
+	private ArrayList<String> getErrorClusterHeadersforStoreFormat() {
+		ArrayList<String> headerDetail = new ArrayList<>();
+		headerDetail.add("Cluster");
+		headerDetail.add("Account_L1");
+		headerDetail.add("Account_L2");
+		headerDetail.add("Store_Format");
+		headerDetail.add("Launch_planned");
+		headerDetail.add("Total_Stores");
+		headerDetail.add("Minimum_Target_Stores");
+		headerDetail.add("Error_Msg");
 		return headerDetail;
 	}
 
@@ -2063,6 +2150,88 @@ public class TMELaunchPlanController {
 		String downloadFileName = absoluteFilePath + fileName;
 		String userId = (String) request.getSession().getAttribute("UserID");
 		List<ArrayList<String>> listDownload = launchSellInService.getErrorSellInDump(userId, downloadLaunchSellInRequest);
+		try {
+			if (listDownload != null) {
+				UploadUtil.writeXLSFile(downloadFileName, listDownload, null, ".xls");
+			}
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
+			Map<String, String> map = new HashMap<>();
+			map.put("Error", e.toString());
+			return gson.toJson(map);
+		}
+		Map<String, String> map = new HashMap<>();
+		map.put("FileToDownload", fileName);
+		return gson.toJson(map);
+	}
+
+	// Added by Harsha for fetching error File for CustStoreformat
+	
+	@RequestMapping(value = "downloadErrorClusterTempforCustStoreformat.htm", method = RequestMethod.POST)
+	public @ResponseBody String downloadErrorClusterTempforCustStoreformat(@RequestBody String jsonBody, Model model,
+			HttpServletRequest request) {
+		String absoluteFilePath = "";
+		Gson gson = new Gson();
+		List<ArrayList<String>> downloadedData = new ArrayList<>();
+		DownloadLaunchClusterRequest downloadLaunchClusterRequest = gson.fromJson(jsonBody,
+				DownloadLaunchClusterRequest.class);
+		//jsonBody
+		String launchId= jsonBody.toString();
+		launchId = launchId.replace("\"", "");
+		
+		String str=launchId;
+		launchId= launchId.replaceAll("[^0-9]", "");
+		
+		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
+		String fileName = UploadUtil.getFileName("Cluster.CustStoreFormat.Template.file", "",
+				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
+		String downloadFileName = absoluteFilePath + fileName;
+		ArrayList<String> headerDetail = getErrorClusterHeadersforCustomerStoreformat();
+		downloadedData.add(headerDetail);
+		String userId = (String) request.getSession().getAttribute("UserID");
+		List<ArrayList<String>> listDownload = launchBasepacksService.getClusterErrorDumpforCustomerStoreformat(headerDetail,
+				userId, launchId);
+		
+		try {
+			if (listDownload != null) {
+				UploadUtil.writeXLSFile(downloadFileName, listDownload, null, ".xls");
+			}
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
+			Map<String, String> map = new HashMap<>();
+			map.put("Error", e.toString());
+			return gson.toJson(map);
+		}
+		Map<String, String> map = new HashMap<>();
+		map.put("FileToDownload", fileName);
+		return gson.toJson(map);
+	}
+	
+
+	// Added by Harsha for fetching error File for Storeformat
+	@RequestMapping(value = "downloadErrorClusterTempforStoreformat.htm", method = RequestMethod.POST)
+	public @ResponseBody String downloadErrorClusterTempforStoreformat(@RequestBody String jsonBody, Model model,
+			HttpServletRequest request) {
+		String absoluteFilePath = "";
+		Gson gson = new Gson();
+		List<ArrayList<String>> downloadedData = new ArrayList<>();
+		DownloadLaunchClusterRequest downloadLaunchClusterRequest = gson.fromJson(jsonBody,
+				DownloadLaunchClusterRequest.class);
+
+		String launchId= jsonBody.toString();
+		launchId = launchId.replace("\"", "");
+		launchId= launchId.replaceAll("[^0-9]", "");
+		
+		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
+		String fileName = UploadUtil.getFileName("Cluster.CustStoreFormat.Template.file", "",
+				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
+		String downloadFileName = absoluteFilePath + fileName;
+		ArrayList<String> headerDetail = getErrorClusterHeadersforStoreFormat() ;
+		downloadedData.add(headerDetail);
+		String userId = (String) request.getSession().getAttribute("UserID");
+		List<ArrayList<String>> listDownload = launchBasepacksService.getClusterErrorDumpforStoreformat(headerDetail,
+					userId, launchId);
+		
 		try {
 			if (listDownload != null) {
 				UploadUtil.writeXLSFile(downloadFileName, listDownload, null, ".xls");

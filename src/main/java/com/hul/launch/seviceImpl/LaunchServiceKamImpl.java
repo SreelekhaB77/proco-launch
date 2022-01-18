@@ -184,8 +184,8 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 	
 	@Override
 	@Transactional
-	public List<String> getAllMoc(String userId, String launchMOC) {
-		return launchDaoKam.getAllMoc(userId, launchMOC);
+	public List<String> getAllMoc(List<LaunchDataResponse> listOfLaunch) {// Modified by Harsha as part of Q7 sprint
+		return launchDaoKam.getAllMoc(listOfLaunch);
 	}
 
 	//Q2 sprint feb 2021 Kavitha
@@ -206,8 +206,11 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 	public List<String> getLaunchAccountsforRejection(String launchId, String userId) {
 		return launchDaoKam.getLaunchAccountsforRejection( launchId,  userId);
 	}
-
-	
+	//Added by Kavitha D-SPRINT 7 DEC 2021
+	@Override
+	public String getLaunchName(String launchId) {
+		return launchDaoKam.getLaunchName(launchId);
+	}
 	
 
 
