@@ -821,9 +821,16 @@
 								</div>
 
 								<div>
+								<!--sprint-8 Us-6 store list file download added bharati-->
+									<button type="button" class="btn col-md-2 rightBtn" onclick="kamdownloadStorelimitFile()">
+										<span class="glyphicon glyphicon-arrow-down" style="color: yellow"></span> Download Store Limit File
+									</button>
+									<!--bharati changes end here-->
 									 <button type="button" class="btn col-md-2 rightBtn" onclick="kamdownloadLaunchStoreLst()">
 										<span class="glyphicon glyphicon-arrow-down" style="color: yellow"></span> Download Store List
 									</button> 
+									 
+									
 									<input type="button" value="Previous" class="btn btn-secondary nxtclassification previousKam" id="kamprevstrLst" style="float: left;" />
 									<input type="button" onclick="kamsaveStoreData()" value="Next" class="btn btn-secondary nxtclassification" id="kamlnchstrNext" style="float: right;" />
 								</div>
