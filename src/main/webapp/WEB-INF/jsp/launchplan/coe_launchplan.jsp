@@ -528,7 +528,8 @@
 						<div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false" style="height: 0px; display: block;">
 							<div class="card-block">
 								<div class="child-table">
-									<div class="table-responsive">
+								<!--bharati commented below line scoll issues on page in sprint-8--> 
+									<!--<div class="table-responsive">-->
 										<table class="table table-striped table-bordered" id="coefinalTable">
 											<thead class="thead-dark">
 												<tr>
@@ -592,6 +593,11 @@
 										<div class="btnclass">
 												<input type="button" value="Previous" class="btn btn-secondary nxtclassification previousCoe" id="coeprevfinal" style="float: left;" />
 											<!--  <input type="button" onclick="coesaveFinalBuildUpData()" value="Next" class="btn btn-secondary nxtclassification" id="coefinalnext" style="float: right;" />-->
+									 	<!--sprint-8 Us-7 store list limit file download added bharati-->
+									<button type="button" class="btn col-md-2 rightBtn" onclick="coedownloadStorelimitFile()">
+										<span class="glyphicon glyphicon-arrow-down" style="color: yellow"></span> Download Store Limit File
+									</button>
+									<!--bharati changes end here-->
 									 	<form id="downloadFinalStrLst" method="post">
 												<button type="button" class="btn col-md-2 rightBtn"
 													onClick="javascript: coedownloadFinalStrLst();">
@@ -609,7 +615,7 @@
 
 						</div>
 
-						</div>
+						<!--</div>-->
 					</div>
 		<!-- </form> -->
 </div>

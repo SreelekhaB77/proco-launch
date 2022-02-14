@@ -1015,4 +1015,11 @@ $('input[type="checkbox"]', '#coebasepack_add').prop('checked', false);
        });
    } 
 });
+//sprint-8 Us-7 Coe store list file download added by bharati
+function coedownloadStorelimitFile() {
+	var launchIdsArr =   getlaunchId().toString();
+	window.location.assign(launchIdsArr+"/downloadLaunchStoreListLimitCoe.htm");  
+		
+}
+
 
