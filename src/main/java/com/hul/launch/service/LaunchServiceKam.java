@@ -41,8 +41,12 @@ public interface LaunchServiceKam {
 	public String saveLaunchStores(SaveLaunchStore saveFinalLaunchListRequest, String userId, String launchId);
 
 	public List<ArrayList<String>> getUpdatedBaseFile(ArrayList<String> headerList, String launchId, String userId);
+	
+	public List<ArrayList<String>> getStoreLimitFile(ArrayList<String> headerList, String launchId, String userId);
 
 	public ArrayList<String> getHeaderListForBaseFile();
+	
+	public ArrayList<String> getHeaderListForStorelimitFile(); // Added By Harsha
 
 	public String saveStoreListByUpload(List<Object> list, String userID, String string, boolean b, boolean c,
 			String launchId) throws Exception;
