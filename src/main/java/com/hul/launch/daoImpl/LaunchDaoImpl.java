@@ -845,6 +845,51 @@ public class LaunchDaoImpl implements LaunchDao {
 			return downloadDataList;
 		}
 	}
+	
+	// Added By Harsha as part of Sprint -8 starts
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<ArrayList<String>> getLaunchStoreLimitListDump(ArrayList<String> headerDetail, String userId,
+			List<String> listOfLaunchData) {
+		
+		List<ArrayList<String>> downloadDataList = new ArrayList<>();
+		
+		
+		try {
+			for(String launchId : listOfLaunchData) {
+			Query query2 = sessionFactory.getCurrentSession().createNativeQuery("SELECT CLUSTER_REGION,CLUSTER_ACCOUNT_L1,CLUSTER_ACCOUNT_L2,"
+					+ "CLUSTER_STORE_FORMAT,CLUSTER_CUST_STORE_FORMAT,LAUNCH_PLANNED,TOTAL_STORES_TO_LAUNCH,TOTAL_TME_STORES_PLANED"
+					+ " FROM TBL_LAUNCH_CLUSTERS_DETAILS WHERE LAUNCH_ID = '" + launchId + "'"); 
+			
+			Iterator<Object> itr = query2.list().iterator();
+			ArrayList<String> s = new ArrayList<>();
+			if (itr.hasNext()) {
+				downloadDataList.add(headerDetail);
+			} else {
+				s.add("no data available for given launch key");
+				downloadDataList.add(s);
+			}
+			
+			while (itr.hasNext()) {
+				Object[] obj = (Object[]) itr.next();
+					ArrayList<String> dataObj = new ArrayList<String>();
+					for (Object ob : obj) {
+						String value = "";
+						value = (ob == null) ? "" : ob.toString();
+						dataObj.add(value.replaceAll("\\^", ","));
+					}
+					obj = null;
+					downloadDataList.add(dataObj);
+				
+			}}
+		} catch (Exception e) {
+			logger.debug("Exception: ", e);
+		}
+		return downloadDataList;
+	}
+
+	
+	//Sprint 8 ends
 
 	@Override
 	public String saveLaunchStatus(String launchId, String userId) {

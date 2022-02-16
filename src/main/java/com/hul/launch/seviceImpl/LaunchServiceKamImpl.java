@@ -111,12 +111,22 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 	public String saveLaunchStores(SaveLaunchStore saveFinalLaunchListRequest, String userId, String launchId) {
 		return launchDaoKam.saveLaunchStores(userId, saveFinalLaunchListRequest, launchId);
 	}
-
+	
 	@Override
 	public List<ArrayList<String>> getUpdatedBaseFile(ArrayList<String> headerList, String launchId, String userId) {
 		return launchDaoKam.getUpdatedBaseFile(headerList, launchId, userId);
 
 	}
+
+	
+	// Added By Harsha for sprint 8 -- start
+
+	@Override
+	public List<ArrayList<String>> getStoreLimitFile(ArrayList<String> headerList, String launchId, String userId) {
+		return launchDaoKam.getStoreslimitFile(headerList, launchId, userId);
+	}
+	//Harsha changes End's
+	
 
 	@Override
 	public ArrayList<String> getHeaderListForBaseFile() {
@@ -131,6 +141,22 @@ public class LaunchServiceKamImpl implements LaunchServiceKam {
 		headerList.add("KAM_REMARKS");
 		return headerList;
 	}
+	
+	// Added By Harsha For storeslimit header files -- Starts 
+
+	public ArrayList<String> getHeaderListForStorelimitFile() {
+		ArrayList<String> headerList = new ArrayList<String>();
+		headerList.add("CLUSTER_REGION");
+		headerList.add("CLUSTER_ACCOUNT_L1");
+		headerList.add("CLUSTER_ACCOUNT_L2");
+		headerList.add("CLUSTER_STORE_FORMAT");
+		headerList.add("CLUSTER_CUST_STORE_FORMAT");
+		headerList.add("LAUNCH_PLANNED");
+		headerList.add("TOTAL_STORES_TO_LAUNCH");
+		headerList.add("TOTAL_TME_STORES_PLANED");
+		return headerList;
+	}
+	// Added By Harsha For storeslimit header files -- Ends
 
 	@Override
 	public String saveStoreListByUpload(List<Object> list, String userID, String string, boolean b, boolean c,

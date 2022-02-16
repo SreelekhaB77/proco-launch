@@ -569,7 +569,7 @@ public class KamLaunchPlanController {
 		// String KamRemarks =request.getParameter(arg0)
 		try {
 			String userId = (String) request.getSession().getAttribute("UserID");
-			downloadedData = launchServiceKam.getUpdatedBaseFile(headerList, launchId, userId);
+			 downloadedData = launchServiceKam.getUpdatedBaseFile(headerList, launchId, userId);
 			UploadUtil.writeXLSFile(downloadFileName, downloadedData, null, ".xls");
 
 			downloadLink = downloadFileName + ".xls";
@@ -589,6 +589,43 @@ public class KamLaunchPlanController {
 		}
 		return null;
 	}
+	
+	// Harsha's changes for Downloading Stores list limit -- Starts
+	@RequestMapping(value = "downloadStoreLimitFile.htm", method = RequestMethod.GET)
+	public ModelAndView downloadStoreLimitFile(@RequestParam("launchId") String launchId, HttpServletRequest request,
+			Model model, HttpServletResponse response) {
+		InputStream is;
+		String downloadLink = "", absoluteFilePath = "";
+		List<ArrayList<String>> downloadedData = null;
+		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
+		String fileName = UploadUtil.getFileName("Store.Download.file", "",
+				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
+		String launchName=launchServiceKam.getLaunchName(launchId);
+		String downloadFileName = absoluteFilePath + fileName + launchName;
+		ArrayList<String> headerList = launchServiceKam.getHeaderListForStorelimitFile();
+		
+		try {
+			String userId = (String) request.getSession().getAttribute("UserID");
+			downloadedData = launchServiceKam.getStoreLimitFile(headerList, launchId, userId);
+			UploadUtil.writeXLSFile(downloadFileName, downloadedData, null, ".xls");
+
+			downloadLink = downloadFileName + ".xls";
+			is = new FileInputStream(new File(downloadLink));
+			response.setContentType("application/force-download");
+			response.setHeader("Content-Disposition", "attachment; filename=Store.Download.file_"
+					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + "_" +launchName + ".xls");
+			IOUtils.copy(is, response.getOutputStream());
+			response.flushBuffer();
+		} catch (FileNotFoundException e) {
+			return null;
+		} catch (IOException e) {
+			return null;
+		}
+		return null;
+	}
+	// Harsha's changes for Downloading Stores list limit -- Ends
+
+	
 
 	@RequestMapping(value = "downloadVisiListFileKam.htm", method = RequestMethod.GET)
 	public ModelAndView downloadVisiListFileKam(@RequestParam("launchId") String launchId, HttpServletRequest request,

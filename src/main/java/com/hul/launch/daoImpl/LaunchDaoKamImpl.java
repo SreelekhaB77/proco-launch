@@ -17,6 +17,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -1264,8 +1265,65 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		}
 		return downloadDataList;
 	}
+	// Harsha's Code changes starts for sprint 8 -- Starts
 	
-	// Added by Harsha for Sprint 7 22 Jan - Starts
+	public List<String> getKamAccountNames(String userId) {
+		try {
+
+			Query query = sessionFactory.getCurrentSession().createNativeQuery("SELECT ACCOUNT_NAME"
+					+ " FROM TBL_VAT_USER_DETAILS WHERE USERID = '" + userId + "'");
+			List<String> list = query.list();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ArrayList<String>> getStoreslimitFile(ArrayList<String> headerList, String launchId, String userId) {
+		List<ArrayList<String>> downloadDataList = new ArrayList<>();
+		
+		
+		try {
+			String accountNames  ="'"+getKamAccountNames(userId).toString().replace("[","").replace("]", "").replace(" ","").replace(",","','")+"'";
+			Query query2 = sessionFactory.getCurrentSession().createNativeQuery("SELECT CLUSTER_REGION,CLUSTER_ACCOUNT_L1,CLUSTER_ACCOUNT_L2,"
+					+ "CLUSTER_STORE_FORMAT,CLUSTER_CUST_STORE_FORMAT,LAUNCH_PLANNED,TOTAL_STORES_TO_LAUNCH,TOTAL_TME_STORES_PLANED"
+					+ " FROM TBL_LAUNCH_CLUSTERS_DETAILS WHERE CLUSTER_ACCOUNT_L1 IN ("+accountNames.trim()+") AND LAUNCH_ID = '" + launchId + "'"); 
+			
+			Iterator<Object> itr = query2.list().iterator();
+			ArrayList<String> s = new ArrayList<>();
+			if (itr.hasNext()) {
+				downloadDataList.add(headerList);
+			} else {
+				s.add("no data available for given launch key");
+				downloadDataList.add(s);
+			}
+			
+			while (itr.hasNext()) {
+				Object[] obj = (Object[]) itr.next();
+					ArrayList<String> dataObj = new ArrayList<String>();
+					for (Object ob : obj) {
+						String value = "";
+						value = (ob == null) ? "" : ob.toString();
+						dataObj.add(value.replaceAll("\\^", ","));
+					}
+					obj = null;
+					downloadDataList.add(dataObj);
+				
+			}
+			return downloadDataList;
+		} catch (Exception e) {
+			logger.debug("Exception: ", e);
+		}
+		return downloadDataList;
+	}
+	
+	
+	// Harsha's Code changes for sprint 8 -- Ends
 	
 	public List<String> check (List<Object> saveLaunchStorelist) {
 		
