@@ -1598,7 +1598,8 @@ public class LaunchDaoImpl implements LaunchDao {
 				saveFinalLaunchRequest.setLaunchSellInValue(launchFinalPlanResponse.getLaunchSellInValue());
 				saveFinalLaunchRequest.setLaunchSellInValueN1(launchFinalPlanResponse.getLaunchN1SellInVal());
 				saveFinalLaunchRequest.setLaunchSellInValueN2(launchFinalPlanResponse.getLaunchN2SellInVal());
-				saveFinalLaunchRequest.setLaunchStoreCount(Integer.parseInt(launchFinalPlanResponse.getStoreCount()));
+				//saveFinalLaunchRequest.setLaunchStoreCount(Integer.parseInt(launchFinalPlanResponse.getStoreCount()));  //Commented & Added Below By Sarin - sprint8Feb2022
+				saveFinalLaunchRequest.setLaunchStoreCount((int)Double.parseDouble(launchFinalPlanResponse.getStoreCount()));  //Added By Sarin - sprint8Feb2022
 				listOfSaveFinalLaunchRequest.add(saveFinalLaunchRequest);
 			}
 			saveFinalLaunchListRequest.setLaunchId(rs.getString("LAUNCH_ID"));
