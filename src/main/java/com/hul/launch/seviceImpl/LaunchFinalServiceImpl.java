@@ -892,10 +892,28 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 			}
 
 			launchFinalDao.deleteAllTempCal(launchId);
+			
+			//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Starts
+			Map<String, String> mapDepoCldGsv = launchFinalDao.getCldGsvForDepoBasepack(launchId);
+			List<LaunchBuildUpTemp> lstLaunchBuildUpTemp = launchFinalDao.getFinalBuildUpDepoLevelList(launchId);
+			int iCnt = 0;
+			//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Ends
+			
 			for (String depoBasepackFmcgModifiedChainClusCombo : allDistinctFinalBuildsCombo) {
 				LaunchBuildUpTemp launchBuildUpTemp = new LaunchBuildUpTemp();
-				LaunchBuildUpTemp listOfBuildUps = launchFinalDao
-						.getFinalBuildUpDepoLevel(depoBasepackFmcgModifiedChainClusCombo, launchId);
+				//LaunchBuildUpTemp listOfBuildUps = launchFinalDao.getFinalBuildUpDepoLevel(depoBasepackFmcgModifiedChainClusCombo, launchId);  //Commented By Sarin - Launch Performance Issue Fix - 22Feb2022
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Starts
+				LaunchBuildUpTemp listOfBuildUps = new LaunchBuildUpTemp();
+				for (LaunchBuildUpTemp launchBuildup: lstLaunchBuildUpTemp) {
+					if (launchBuildup.getUKEY().equalsIgnoreCase(depoBasepackFmcgModifiedChainClusCombo)) {
+						listOfBuildUps.setREVISED_SELLIN_FOR_STORE_N(launchBuildup.getREVISED_SELLIN_FOR_STORE_N());
+						listOfBuildUps.setREVISED_SELLIN_FOR_STORE_N1(launchBuildup.getREVISED_SELLIN_FOR_STORE_N1());
+						listOfBuildUps.setREVISED_SELLIN_FOR_STORE_N2(launchBuildup.getREVISED_SELLIN_FOR_STORE_N2());
+						listOfBuildUps.setSTORE_COUNT(launchBuildup.getSTORE_COUNT());
+						break;
+					}
+				}
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Ends
 				String substr = "";
 				List<Integer> list = new ArrayList<>();
 				char character = ',';
@@ -905,7 +923,16 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 					}
 				}
 				substr = depoBasepackFmcgModifiedChainClusCombo.substring(0, list.get(1));
-				LaunchBuildUpTemp cldValue = launchFinalDao.getCldForDepoBasepack(substr, launchId);
+				//LaunchBuildUpTemp cldValue = launchFinalDao.getCldForDepoBasepack(substr, launchId);  //Commented By Sarin - Launch Performance Issue Fix - 22Feb2022
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Starts
+				LaunchBuildUpTemp cldValue = new LaunchBuildUpTemp();
+				String cldGsv = mapDepoCldGsv.get(substr);
+				String[] arrCldGsv = cldGsv.split("~");
+				String Cld = arrCldGsv[0];
+				String Gsv = arrCldGsv[1];
+				cldValue.setCLD_SIZE(Cld);
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Ends
+				
 				Map<String, String> calculationData = finalData.get(substr);
 				double cldWithFactorsN = (Double.parseDouble(listOfBuildUps.getREVISED_SELLIN_FOR_STORE_N())
 						/ Double.parseDouble(cldValue.getCLD_SIZE()))
@@ -927,7 +954,12 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 				double finalUnitsN1 = finalCldN1 * Double.parseDouble(cldValue.getCLD_SIZE());
 				double finalUnitsN2 = finalCldN2 * Double.parseDouble(cldValue.getCLD_SIZE());
 
-				LaunchBuildUpTemp gsvValue = launchFinalDao.getGsvForDepoBasepack(substr, launchId);
+				//LaunchBuildUpTemp gsvValue = launchFinalDao.getGsvForDepoBasepack(substr, launchId);  //Commented By Sarin - Launch Performance Issue Fix - 22Feb2022
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Starts
+				LaunchBuildUpTemp gsvValue = new LaunchBuildUpTemp();
+				gsvValue.setGSV(Gsv);
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Ends
+				
 				double finalValueN = finalUnitsN * Double.parseDouble(gsvValue.getGSV());
 				double finalValueN1 = finalUnitsN1 * Double.parseDouble(gsvValue.getGSV());
 				double finalValueN2 = finalUnitsN2 * Double.parseDouble(gsvValue.getGSV());
@@ -949,10 +981,14 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 				launchBuildUpTemp.setSELLIN_UNITS_N2(Double.toString(finalUnitsN2));
 				launchBuildUpTemp.setSTORE_COUNT(listOfBuildUps.getSTORE_COUNT());
 				launchBuildUpTemp.setCLUSTER(listOfBuildUps.getCLUSTER());
-				launchFinalDao.saveFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp,
-						userId);
-				launchFinalDao.updateFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp,
-						userId);
+				launchFinalDao.saveFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp, userId);
+				//launchFinalDao.updateFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp, userId);  //Commented By Sarin - Launch Performance Issue Fix - 22Feb2022
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Starts
+				if (iCnt == allDistinctFinalBuildsCombo.size() - 1) {
+					launchFinalDao.updateFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp, userId);
+				} 
+				iCnt++;
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Ends
 			}
 			List<LaunchFinalPlanResponse> listOfFinal = launchFinalDao.getLaunchFinalRespose(launchId);
 
@@ -1034,10 +1070,28 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 			}
 
 			launchFinalDao.deleteAllTempCal(launchId);
+			
+			//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Starts
+			Map<String, String> mapDepoCldGsv = launchFinalDao.getCldGsvForDepoBasepack(launchId);
+			List<LaunchBuildUpTemp> lstLaunchBuildUpTemp = launchFinalDao.getFinalBuildUpDepoLevelList(launchId);
+			int iCnt = 0;
+			//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Ends
+			
 			for (String depoBasepackFmcgModifiedChainClusCombo : allDistinctFinalBuildsCombo) {
 				LaunchBuildUpTemp launchBuildUpTemp = new LaunchBuildUpTemp();
-				LaunchBuildUpTemp listOfBuildUps = launchFinalDao
-						.getFinalBuildUpDepoLevel(depoBasepackFmcgModifiedChainClusCombo, launchId);
+				//LaunchBuildUpTemp listOfBuildUps = launchFinalDao.getFinalBuildUpDepoLevel(depoBasepackFmcgModifiedChainClusCombo, launchId);  //Commented By Sarin - Launch Performance Issue Fix - 22Feb2022
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Starts
+				LaunchBuildUpTemp listOfBuildUps = new LaunchBuildUpTemp();
+				for (LaunchBuildUpTemp launchBuildup: lstLaunchBuildUpTemp) {
+					if (launchBuildup.getUKEY().equalsIgnoreCase(depoBasepackFmcgModifiedChainClusCombo)) {
+						listOfBuildUps.setREVISED_SELLIN_FOR_STORE_N(launchBuildup.getREVISED_SELLIN_FOR_STORE_N());
+						listOfBuildUps.setREVISED_SELLIN_FOR_STORE_N1(launchBuildup.getREVISED_SELLIN_FOR_STORE_N1());
+						listOfBuildUps.setREVISED_SELLIN_FOR_STORE_N2(launchBuildup.getREVISED_SELLIN_FOR_STORE_N2());
+						listOfBuildUps.setSTORE_COUNT(launchBuildup.getSTORE_COUNT());
+						break;
+					}
+				}
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Ends
 				String substr = "";
 				List<Integer> list = new ArrayList<>();
 				char character = ',';
@@ -1047,7 +1101,16 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 					}
 				}
 				substr = depoBasepackFmcgModifiedChainClusCombo.substring(0, list.get(1));
-				LaunchBuildUpTemp cldValue = launchFinalDao.getCldForDepoBasepack(substr, launchId);
+				//LaunchBuildUpTemp cldValue = launchFinalDao.getCldForDepoBasepack(substr, launchId);  //Commented By Sarin - Launch Performance Issue Fix - 22Feb2022
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Starts
+				LaunchBuildUpTemp cldValue = new LaunchBuildUpTemp();
+				String cldGsv = mapDepoCldGsv.get(substr);
+				String[] arrCldGsv = cldGsv.split("~");
+				String Cld = arrCldGsv[0];
+				String Gsv = arrCldGsv[1];
+				cldValue.setCLD_SIZE(Cld);
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Ends
+				
 				Map<String, String> calculationData = finalData.get(substr);
 				double cldWithFactorsN = (Double.parseDouble(listOfBuildUps.getREVISED_SELLIN_FOR_STORE_N())
 						/ Double.parseDouble(cldValue.getCLD_SIZE()))
@@ -1069,7 +1132,12 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 				double finalUnitsN1 = finalCldN1 * Double.parseDouble(cldValue.getCLD_SIZE());
 				double finalUnitsN2 = finalCldN2 * Double.parseDouble(cldValue.getCLD_SIZE());
 
-				LaunchBuildUpTemp gsvValue = launchFinalDao.getGsvForDepoBasepack(substr, launchId);
+				//LaunchBuildUpTemp gsvValue = launchFinalDao.getGsvForDepoBasepack(substr, launchId);  //Commented By Sarin - Launch Performance Issue Fix - 22Feb2022
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Starts
+				LaunchBuildUpTemp gsvValue = new LaunchBuildUpTemp();
+				gsvValue.setGSV(Gsv);
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Ends
+				
 				double finalValueN = finalUnitsN * Double.parseDouble(gsvValue.getGSV());
 				double finalValueN1 = finalUnitsN1 * Double.parseDouble(gsvValue.getGSV());
 				double finalValueN2 = finalUnitsN2 * Double.parseDouble(gsvValue.getGSV());
@@ -1091,10 +1159,14 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 				launchBuildUpTemp.setSELLIN_UNITS_N2(Double.toString(finalUnitsN2));
 				launchBuildUpTemp.setSTORE_COUNT(listOfBuildUps.getSTORE_COUNT());
 				launchBuildUpTemp.setCLUSTER(listOfBuildUps.getCLUSTER());
-				launchFinalDao.saveFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp,
-						userId);
-				launchFinalDao.updateFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp,
-						userId);
+				launchFinalDao.saveFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp, userId);
+				//launchFinalDao.updateFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp, userId);  //Commented By Sarin - Launch Performance Issue Fix - 22Feb2022
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Starts
+				if (iCnt == allDistinctFinalBuildsCombo.size() - 1) {
+					launchFinalDao.updateFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp, userId);
+				} 
+				iCnt++;
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Ends
 			}
 			List<LaunchFinalPlanResponse> listOfFinal = launchFinalDao.getLaunchFinalRespose(launchId);
 
@@ -1179,10 +1251,28 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 			}
 
 			launchFinalDao.deleteAllTempCal(launchId);
+			
+			//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Starts
+			Map<String, String> mapDepoCldGsv = launchFinalDao.getCldGsvForDepoBasepack(launchId);
+			List<LaunchBuildUpTemp> lstLaunchBuildUpTemp = launchFinalDao.getFinalBuildUpDepoLevelList(launchId);
+			int iCnt = 0;
+			//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Ends
+			
 			for (String depoBasepackFmcgModifiedChainClusCombo : allDistinctFinalBuildsCombo) {
 				LaunchBuildUpTemp launchBuildUpTemp = new LaunchBuildUpTemp();
-				LaunchBuildUpTemp listOfBuildUps = launchFinalDao
-						.getFinalBuildUpDepoLevel(depoBasepackFmcgModifiedChainClusCombo, launchId);
+				//LaunchBuildUpTemp listOfBuildUps = launchFinalDao.getFinalBuildUpDepoLevel(depoBasepackFmcgModifiedChainClusCombo, launchId); //Commented By Sarin - Launch Performance Issue Fix - 22Feb2022
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Starts
+				LaunchBuildUpTemp listOfBuildUps = new LaunchBuildUpTemp();
+				for (LaunchBuildUpTemp launchBuildup: lstLaunchBuildUpTemp) {
+					if (launchBuildup.getUKEY().equalsIgnoreCase(depoBasepackFmcgModifiedChainClusCombo)) {
+						listOfBuildUps.setREVISED_SELLIN_FOR_STORE_N(launchBuildup.getREVISED_SELLIN_FOR_STORE_N());
+						listOfBuildUps.setREVISED_SELLIN_FOR_STORE_N1(launchBuildup.getREVISED_SELLIN_FOR_STORE_N1());
+						listOfBuildUps.setREVISED_SELLIN_FOR_STORE_N2(launchBuildup.getREVISED_SELLIN_FOR_STORE_N2());
+						listOfBuildUps.setSTORE_COUNT(launchBuildup.getSTORE_COUNT());
+						break;
+					}
+				}
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Ends
 				String substr = "";
 				List<Integer> list = new ArrayList<>();
 				char character = ',';
@@ -1192,7 +1282,16 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 					}
 				}
 				substr = depoBasepackFmcgModifiedChainClusCombo.substring(0, list.get(1));
-				LaunchBuildUpTemp cldValue = launchFinalDao.getCldForDepoBasepack(substr, launchId);
+				//LaunchBuildUpTemp cldValue = launchFinalDao.getCldForDepoBasepack(substr, launchId);  //Commented By Sarin - Launch Performance Issue Fix - 22Feb2022
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Starts
+				LaunchBuildUpTemp cldValue = new LaunchBuildUpTemp();
+				String cldGsv = mapDepoCldGsv.get(substr);
+				String[] arrCldGsv = cldGsv.split("~");
+				String Cld = arrCldGsv[0];
+				String Gsv = arrCldGsv[1];
+				cldValue.setCLD_SIZE(Cld);
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Ends
+				
 				Map<String, String> calculationData = finalData.get(substr);
 				double cldWithFactorsN = (Double.parseDouble(listOfBuildUps.getREVISED_SELLIN_FOR_STORE_N())
 						/ Double.parseDouble(cldValue.getCLD_SIZE()))
@@ -1214,7 +1313,12 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 				double finalUnitsN1 = finalCldN1 * Double.parseDouble(cldValue.getCLD_SIZE());
 				double finalUnitsN2 = finalCldN2 * Double.parseDouble(cldValue.getCLD_SIZE());
 
-				LaunchBuildUpTemp gsvValue = launchFinalDao.getGsvForDepoBasepack(substr, launchId);
+				//LaunchBuildUpTemp gsvValue = launchFinalDao.getGsvForDepoBasepack(substr, launchId);  //Commented By Sarin - Launch Performance Issue Fix - 22Feb2022
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Starts
+				LaunchBuildUpTemp gsvValue = new LaunchBuildUpTemp();
+				gsvValue.setGSV(Gsv);
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Ends
+				
 				double finalValueN = finalUnitsN * Double.parseDouble(gsvValue.getGSV());
 				double finalValueN1 = finalUnitsN1 * Double.parseDouble(gsvValue.getGSV());
 				double finalValueN2 = finalUnitsN2 * Double.parseDouble(gsvValue.getGSV());
@@ -1236,10 +1340,14 @@ public class LaunchFinalServiceImpl implements LaunchFinalService {
 				launchBuildUpTemp.setSELLIN_UNITS_N2(Double.toString(finalUnitsN2));
 				launchBuildUpTemp.setSTORE_COUNT(listOfBuildUps.getSTORE_COUNT());
 				launchBuildUpTemp.setCLUSTER(listOfBuildUps.getCLUSTER());
-				launchFinalDao.saveFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp,
-						userId);
-				launchFinalDao.updateFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp,
-						userId);
+				launchFinalDao.saveFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp, userId);
+				//launchFinalDao.updateFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp, userId);  //Commented By Sarin - Launch Performance Issue Fix - 22Feb2022
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Starts
+				if (iCnt == allDistinctFinalBuildsCombo.size() - 1) {
+					launchFinalDao.updateFinalValue(depoBasepackFmcgModifiedChainClusCombo, launchId, launchBuildUpTemp, userId);
+				} 
+				iCnt++;
+				//Added by Sarin - Launch Performance Issue Fix - 22Feb2022 - Ends
 			}
 			List<LaunchFinalPlanResponse> listOfFinal = launchFinalDao.getLaunchFinalRespose(launchId);
 
