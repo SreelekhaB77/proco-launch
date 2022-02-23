@@ -1289,7 +1289,7 @@ public class LaunchDaoKamImpl implements LaunchDaoKam {
 		
 		
 		try {
-			String accountNames  ="'"+getKamAccountNames(userId).toString().replace("[","").replace("]", "").replace(" ","").replace(",","','")+"'";
+			String accountNames  ="'"+getKamAccountNames(userId).toString().replace("[","").replace("]", "").replace(",","','")+"'";//Modified here
 			Query query2 = sessionFactory.getCurrentSession().createNativeQuery("SELECT CLUSTER_REGION,CLUSTER_ACCOUNT_L1,CLUSTER_ACCOUNT_L2,"
 					+ "CLUSTER_STORE_FORMAT,CLUSTER_CUST_STORE_FORMAT,LAUNCH_PLANNED,TOTAL_STORES_TO_LAUNCH,TOTAL_TME_STORES_PLANED"
 					+ " FROM TBL_LAUNCH_CLUSTERS_DETAILS WHERE CLUSTER_ACCOUNT_L1 IN ("+accountNames.trim()+") AND LAUNCH_ID = '" + launchId + "'"); 
