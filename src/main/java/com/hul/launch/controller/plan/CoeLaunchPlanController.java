@@ -637,6 +637,60 @@ public class CoeLaunchPlanController {
 		map.put("FileToDownload", fileName);
 		return gson.toJson(map);
 	}
+	
+	// Added By Harsha as part of sprint 8 changes -- Starts 
+	
+	@RequestMapping(value = "{launchIds}/downloadLaunchStoreListLimitCoe.htm", method = RequestMethod.GET)
+	public @ResponseBody String downloadLaunchStoreListLimitCoe(@PathVariable("launchIds") String launchIds,
+			Model model, HttpServletRequest request, HttpServletResponse response) {
+		Gson gson = new Gson();
+		
+			InputStream is;
+			String downloadLink = "", absoluteFilePath = "";
+			List<ArrayList<String>> downloadedData = new ArrayList<ArrayList<String>>();
+			absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
+			String fileName = UploadUtil.getFileName("LaunchStoreList.Template.file", "",
+					CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
+			String downloadFileName = absoluteFilePath + fileName;
+		try {
+			ArrayList<String> headerDetail = getStoreslimitheader();
+			downloadedData.add(headerDetail);
+			String userId = (String) request.getSession().getAttribute("UserID");
+			String[] launchId = launchIds.split(",");
+			List<String> listOfLaunchData = Arrays.asList(launchId);
+			List<ArrayList<String>> listDownload = launchService.getLaunchStoreListLimitDump(headerDetail, userId,
+					listOfLaunchData);
+			if (listDownload != null) {
+				UploadUtil.writeXLSFile(downloadFileName, listDownload, null, ".xls");
+				downloadLink = downloadFileName + ".xls";
+				is = new FileInputStream(new File(downloadLink));
+				response.setContentType("application/force-download");
+				response.setHeader("Content-Disposition", "attachment; filename=LaunchStoreListTemplate"
+						+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+				IOUtils.copy(is, response.getOutputStream());
+				response.flushBuffer();
+			}
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
+			/*
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.addObject("Error", e.toString());
+			return modelAndView;
+			*/
+			Map<String, String> map = new HashMap<>();
+			map.put("Error", e.toString());
+			return gson.toJson(map);
+		}
+		//return new ModelAndView("productsPage");
+		Map<String, String> map = new HashMap<>();
+		map.put("FileToDownload", fileName);
+		return gson.toJson(map);
+	}
+
+	
+	
+	// Sprint 8 changes ends
+	
 
 	@RequestMapping(value = "{launchId}/downloadAnnexureListDataCoe.htm", method = RequestMethod.GET)
 	//public @ResponseBody ModelAndView downloadAnnexureListDataCoe(@PathVariable("launchId") String launchId, //Sarin Prod changes
@@ -802,5 +856,21 @@ public class CoeLaunchPlanController {
 		headerDetail.add("Customer Code");
 		return headerDetail;
 	}
+	
+	// Added By Harsha As part of sprint 8 changes -- Starts
+	
+	private ArrayList<String> getStoreslimitheader() {
+		ArrayList<String> headerDetail = new ArrayList<>();
+		headerDetail.add("CLUSTER_REGION");
+		headerDetail.add("CLUSTER_ACCOUNT_L1");
+		headerDetail.add("CLUSTER_ACCOUNT_L2");
+		headerDetail.add("CLUSTER_STORE_FORMAT");
+		headerDetail.add("CLUSTER_CUST_STORE_FORMAT");
+		headerDetail.add("LAUNCH_PLANNED");
+		headerDetail.add("TOTAL_STORES_TO_LAUNCH");
+		headerDetail.add("TOTAL_TME_STORES_PLANED");
+		return headerDetail;
+	}
+	// Added By Harsha As part of sprint 8 changes -- Ends
 
 }

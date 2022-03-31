@@ -109,6 +109,11 @@ public interface LaunchFinalDao {
 	public List<LaunchBuildUpTemp> getFinalBuildUpDepoLevelList(String launchId);
 
 	List<ArrayList<String>> getDisaggregatedByDp(String[] promoId);
+	
+	//Added by Sarin - sprint8 - Launch Performance Issue Fix - 22Feb2022 - Starts
+	public List<LaunchBuildUpTemp> getFinalBuildUpDepoLevelListKAM(String launchId, String forWhichAcc);
+	public Map<String, String> getCldGsvForDepoBasepackKAM(String launchId, String forWhichKam);
+	//Added by Sarin - sprint8 - Launch Performance Issue Fix - 22Feb2022 - Ends
 
 	
 }

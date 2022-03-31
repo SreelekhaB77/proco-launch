@@ -2138,7 +2138,9 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 				if(sqlBit.isEmpty() && (CustomerStoreFormate.isEmpty() &&  whoelString.isEmpty())) {
 					 queryToGetLaunchIDclasification = sessionFactory.getCurrentSession()
 							 .createNativeQuery("SELECT COUNT(*) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm WHERE ACTIVE_STATUS = 'ACTIVE' " //+ " tlb.LAUNCH_ID IN (:launchIds)"
-										+ "AND ACCOUNT_NAME = '" + accountName + "'"+" AND DP_CHAIN = '" + accountName + "'" +"AND FINAL_CLUSTER = '" + region +"'" + "AND LAUNCH_FORMAT IN " +launchClassification+"");
+										+ "AND ACCOUNT_NAME = '" + accountName + "'"
+									// +" AND DP_CHAIN = '" + accountName + "'" As part of Sprint 8 By Harsha
+									 + "AND FINAL_CLUSTER = '" + region +"'" + "AND LAUNCH_FORMAT IN " +launchClassification+"");
 						
 				}
 				

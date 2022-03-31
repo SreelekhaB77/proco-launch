@@ -1943,3 +1943,8 @@ $('#targetStoreErrorBlock .close').click(function(){
 });
 
 //bharati code end here
+//sprint-8 Us-6 store list file download added bharati
+function kamdownloadStorelimitFile() {
+	var launchIdsArr =  $( ".kamLnchDetscr1:checked" ).val();
+	window.location.assign("/VisibilityAssetTracker/downloadStoreLimitFile.htm?launchId="+launchIdsArr);
+}

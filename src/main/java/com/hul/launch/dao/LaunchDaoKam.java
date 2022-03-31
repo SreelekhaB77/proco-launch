@@ -46,6 +46,8 @@ public interface LaunchDaoKam {
 	String saveLaunchStores(String userId, SaveLaunchStore saveFinalLaunchListRequest, String launchId);
 
 	List<ArrayList<String>> getUpdatedBaseFile(ArrayList<String> headerList, String launchId, String userId);
+	//Added By Harsha As part of Sprint 8
+	List<ArrayList<String>> getStoreslimitFile(ArrayList<String> headerList, String launchId, String userId);
 
 	String saveStoreListByUpload(List<Object> list, String userID, String string, boolean b, boolean c, String launchId)
 			throws Exception;
