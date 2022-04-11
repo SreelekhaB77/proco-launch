@@ -807,6 +807,7 @@ public class LaunchDaoImpl implements LaunchDao {
 								+" THEN tvcom.FMCG_CSP_CODE ELSE COLOUR_CSP_CODE END) AS DEPO_CODE"
 								+" from MODTRD.TBL_LAUNCH_BUILDUP_TEMP abc,TBL_VAT_COMM_OUTLET_MASTER tvcom,MODTRD.TBL_LAUNCH_MASTER asd,TBL_LAUNCH_BASEPACK tlb WHERE "
 								+" tvcom.HUL_OUTLET_CODE = abc.HFS_CODE AND abc.LAUNCH_ID = asd.launch_id and  LAUNCH_REJECTED !='2' and asd.LAUNCH_ID = tlb.LAUNCH_ID"
+								+" and tlb.BP_CODE = trim(substr(SKU_NAME, 1, locate(':', SKU_NAME) - 1)) "  //Added By Sarin - sprint8 11Apr2022 Issuefix , basepack is showing for accounts even if the basepack is rejected.
 								+" AND (tlb.BP_STATUS != 'REJECTED BY TME' OR tlb.BP_STATUS IS NULL) and tlb.LAUNCH_ID IN (:listOfLaunchData)");
 
 				query2.setParameter("listOfLaunchData", launchId);
