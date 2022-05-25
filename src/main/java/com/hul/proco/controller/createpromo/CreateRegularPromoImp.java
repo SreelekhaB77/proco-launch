@@ -149,7 +149,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				flag = 1;
 			}
 
-			if (bean.getPromo_time_period().isEmpty() || bean.getPromo_time_period().isBlank()
+			if (bean.getPromo_time_period().isEmpty() //|| bean.getPromo_time_period().isBlank()
 					|| bean.getPromo_time_period() == "") {
 
 				String new_moc = bean.getMoc();
@@ -230,7 +230,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				}
 			}
 			
-			if (bean.getPromo_time_period().isEmpty() || bean.getPromo_time_period().isBlank()
+			if (bean.getPromo_time_period().isEmpty() //|| bean.getPromo_time_period().isBlank()
 					|| bean.getPromo_time_period() == "") {
 
 				String new_moc = bean.getMoc();
