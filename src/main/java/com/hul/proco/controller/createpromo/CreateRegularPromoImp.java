@@ -3,9 +3,14 @@ package com.hul.proco.controller.createpromo;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -13,7 +18,9 @@ import org.hibernate.query.Query;
 
 @Repository
 public class CreateRegularPromoImp implements CreatePromoRegular {
-
+	
+	private Logger logger = Logger.getLogger(CreatePromoRegular.class);
+	
 	private String error_msg = "";
 	private int flag = 0;
 	private int globle_flag = 0;
@@ -414,4 +421,397 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		Integer recCount = ((BigInteger) inner_query.uniqueResult()).intValue();
 		return recCount;
 	}
+	
+	// Added by Kavitha D for download promo regular template starts-SPRINT-9
+
+	@SuppressWarnings({ "rawtypes" })
+	@Override
+	public Map<String, List<List<String>>> getMastersForRegularTemplate() {
+		Map<String, List<List<String>>> downloadDataMap = new HashMap<>();
+		List<List<String>> clusterList = new ArrayList<>();
+		List<List<String>> customerList = new ArrayList<>();
+		List<List<String>> abcreationList = new ArrayList<>();
+		List<List<String>> modalityList = new ArrayList<>();
+		List<List<String>> offertypeList = new ArrayList<>();
+		
+		
+		List<String> clusterHeaders = new ArrayList<String>();
+		List<String> customerHeaders = new ArrayList<String>();
+		List<String> abcreationHeaders = new ArrayList<String>();
+		List<String> modalityHeaders = new ArrayList<String>();
+		List<String> offertypeHeaders = new ArrayList<String>();
+		try {
+			clusterHeaders.add("BRANCH CODE");
+			clusterHeaders.add("BRANCH");
+			clusterHeaders.add("CLUSTER CODE");
+			clusterHeaders.add("CLUSTER");
+			customerHeaders.add("CUSTOMER CHAIN L1");
+			customerHeaders.add("CUSTOMER CHAIN L2");
+			abcreationHeaders.add("AB CREATION NAME");
+			modalityHeaders.add("MODALITY_NO");
+			modalityHeaders.add("MODALITY");
+			offertypeHeaders.add("OFFER TYPE");
+
+			String clusterQry = "SELECT DISTINCT BRANCH_CODE, BRANCH, CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER";
+			String customerQry = "SELECT DISTINCT CUSTOMER_CHAIN_L1,CUSTOMER_CHAIN_L2 FROM TBL_PROCO_CUSTOMER_MASTER ORDER BY CUSTOMER_CHAIN_L1";
+			String abcreationQry = "SELECT DISTINCT AB_CREATION_NAME FROM TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE=1";
+			String modalityQry = "SELECT MODALITY_NO,MODALITY FROM TBL_PROCO_MODALITY_MASTER WHERE ACTIVE=1";
+			String offertypeQry = " SELECT DISTINCT OFFER_TYPE FROM TBL_PROCO_OFFER_TYPE_V2 WHERE ACTIVE=1";
+
+			Query query = sessionFactory.getCurrentSession().createNativeQuery(clusterQry);
+			
+			Iterator itr = query.list().iterator();
+			clusterList.add(clusterHeaders);
+			while (itr.hasNext()) {
+				Object[] obj = (Object[]) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				for (Object ob : obj) {
+					String value = "";
+					value = (ob == null) ? "" : ob.toString();
+					dataObj.add(value.replaceAll("\\^", ","));
+				}
+				obj = null;
+				clusterList.add(dataObj);
+			}
+			ArrayList<String> allIndia = new ArrayList<String>();
+			allIndia.add("ALL INDIA");
+			clusterList.add(allIndia);
+			downloadDataMap.put("CLUSTER", clusterList);
+
+			query = sessionFactory.getCurrentSession().createNativeQuery(customerQry);
+
+			itr = query.list().iterator();
+			customerList.add(customerHeaders);
+			while (itr.hasNext()) {
+				Object[] obj = (Object[]) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				for (Object ob : obj) {
+					String value = "";
+					value = (ob == null) ? "" : ob.toString();
+					dataObj.add(value.replaceAll("\\^", ","));
+				}
+				obj = null;
+				customerList.add(dataObj);
+			}
+			downloadDataMap.put("CUSTOMER", customerList);
+
+			query = sessionFactory.getCurrentSession().createNativeQuery(abcreationQry);
+
+			abcreationList.add(abcreationHeaders);
+			itr = query.list().iterator();
+			while (itr.hasNext()) {
+				String obj = (String) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				String value = "";
+				value = (obj == null) ? "" : obj.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
+				obj = null;
+				abcreationList.add(dataObj);
+			}
+
+			downloadDataMap.put("AB CREATION", abcreationList);
+
+			query = sessionFactory.getCurrentSession().createNativeQuery(offertypeQry);
+
+			offertypeList.add(offertypeHeaders);
+			itr = query.list().iterator();
+			while (itr.hasNext()) {
+				String obj = (String) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				String value = "";
+				value = (obj == null) ? "" : obj.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
+				obj = null;
+				offertypeList.add(dataObj);
+			}
+
+			downloadDataMap.put("OFFER TYPE", offertypeList);
+
+			query = sessionFactory.getCurrentSession().createNativeQuery(modalityQry);
+
+			modalityList.add(modalityHeaders);
+			itr = query.list().iterator();
+			while (itr.hasNext()) {
+				Object[] obj = (Object[]) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				for (Object ob : obj) {
+					String value = "";
+					value = (ob == null) ? "" : ob.toString();
+					dataObj.add(value.replaceAll("\\^", ","));
+				}
+				obj = null;
+				modalityList.add(dataObj);
+			}
+
+			downloadDataMap.put("MODALITY", modalityList);
+		} catch (Exception e) {
+			logger.debug("Exception: ", e);
+		}
+		return downloadDataMap;				// Added by Kavitha D for download promo regular template ends-SPRINT-9
+
+	}
+
+	// Added by Kavitha D for download promo new template starts-SPRINT-9
+	
+	@SuppressWarnings({ "rawtypes" })
+	@Override
+	public Map<String, List<List<String>>> getMastersForNewTemplate() {
+		Map<String, List<List<String>>> downloadDataMap = new HashMap<>();
+		List<List<String>> clusterList = new ArrayList<>();
+		List<List<String>> customerList = new ArrayList<>();
+		List<List<String>> abcreationList = new ArrayList<>();
+		List<List<String>> modalityList = new ArrayList<>();
+		List<List<String>> offertypeList = new ArrayList<>();
+		
+		
+		List<String> clusterHeaders = new ArrayList<String>();
+		List<String> customerHeaders = new ArrayList<String>();
+		List<String> abcreationHeaders = new ArrayList<String>();
+		List<String> modalityHeaders = new ArrayList<String>();
+		List<String> offertypeHeaders = new ArrayList<String>();
+		try {
+			clusterHeaders.add("BRANCH CODE");
+			clusterHeaders.add("BRANCH");
+			clusterHeaders.add("CLUSTER CODE");
+			clusterHeaders.add("CLUSTER");
+			customerHeaders.add("CUSTOMER CHAIN L1");
+			customerHeaders.add("CUSTOMER CHAIN L2");
+			abcreationHeaders.add("AB CREATION NAME");
+			modalityHeaders.add("MODALITY_NO");
+			modalityHeaders.add("MODALITY");
+			offertypeHeaders.add("OFFER TYPE");
+
+			String clusterQry = "SELECT DISTINCT BRANCH_CODE, BRANCH, CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER";
+			String customerQry = "SELECT DISTINCT CUSTOMER_CHAIN_L1,CUSTOMER_CHAIN_L2 FROM TBL_PROCO_CUSTOMER_MASTER ORDER BY CUSTOMER_CHAIN_L1";
+			String abcreationQry = "SELECT DISTINCT AB_CREATION_NAME FROM TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE=1";
+			String modalityQry = "SELECT MODALITY_NO,MODALITY FROM TBL_PROCO_MODALITY_MASTER WHERE ACTIVE=1";
+			String offertypeQry = " SELECT DISTINCT OFFER_TYPE FROM TBL_PROCO_OFFER_TYPE_V2 WHERE ACTIVE=1";
+
+			Query query = sessionFactory.getCurrentSession().createNativeQuery(clusterQry);
+			
+			Iterator itr = query.list().iterator();
+			clusterList.add(clusterHeaders);
+			while (itr.hasNext()) {
+				Object[] obj = (Object[]) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				for (Object ob : obj) {
+					String value = "";
+					value = (ob == null) ? "" : ob.toString();
+					dataObj.add(value.replaceAll("\\^", ","));
+				}
+				obj = null;
+				clusterList.add(dataObj);
+			}
+			ArrayList<String> allIndia = new ArrayList<String>();
+			allIndia.add("ALL INDIA");
+			clusterList.add(allIndia);
+			downloadDataMap.put("CLUSTER", clusterList);
+
+			query = sessionFactory.getCurrentSession().createNativeQuery(customerQry);
+
+			itr = query.list().iterator();
+			customerList.add(customerHeaders);
+			while (itr.hasNext()) {
+				Object[] obj = (Object[]) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				for (Object ob : obj) {
+					String value = "";
+					value = (ob == null) ? "" : ob.toString();
+					dataObj.add(value.replaceAll("\\^", ","));
+				}
+				obj = null;
+				customerList.add(dataObj);
+			}
+			downloadDataMap.put("CUSTOMER", customerList);
+
+			query = sessionFactory.getCurrentSession().createNativeQuery(abcreationQry);
+
+			abcreationList.add(abcreationHeaders);
+			itr = query.list().iterator();
+			while (itr.hasNext()) {
+				String obj = (String) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				String value = "";
+				value = (obj == null) ? "" : obj.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
+				obj = null;
+				abcreationList.add(dataObj);
+			}
+
+			downloadDataMap.put("AB CREATION", abcreationList);
+
+			query = sessionFactory.getCurrentSession().createNativeQuery(offertypeQry);
+
+			offertypeList.add(offertypeHeaders);
+			itr = query.list().iterator();
+			while (itr.hasNext()) {
+				String obj = (String) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				String value = "";
+				value = (obj == null) ? "" : obj.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
+				obj = null;
+				offertypeList.add(dataObj);
+			}
+
+			downloadDataMap.put("OFFER TYPE", offertypeList);
+
+			query = sessionFactory.getCurrentSession().createNativeQuery(modalityQry);
+
+			modalityList.add(modalityHeaders);
+			itr = query.list().iterator();
+			while (itr.hasNext()) {
+				Object[] obj = (Object[]) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				for (Object ob : obj) {
+					String value = "";
+					value = (ob == null) ? "" : ob.toString();
+					dataObj.add(value.replaceAll("\\^", ","));
+				}
+				obj = null;
+				modalityList.add(dataObj);
+			}
+
+			downloadDataMap.put("MODALITY", modalityList);
+		} catch (Exception e) {
+			logger.debug("Exception: ", e);
+		}
+		return downloadDataMap;
+			
+	}
+	// Added by Kavitha D for download promo new template ends-SPRINT-9
+
+	
+		// Added by Kavitha D for download promo CR template starts-SPRINT-9	
+		@SuppressWarnings({ "rawtypes" })
+		@Override
+		public Map<String, List<List<String>>> getMastersForCrTemplate() {
+			Map<String, List<List<String>>> downloadDataMap = new HashMap<>();
+			List<List<String>> clusterList = new ArrayList<>();
+			List<List<String>> customerList = new ArrayList<>();
+			List<List<String>> abcreationList = new ArrayList<>();
+			List<List<String>> modalityList = new ArrayList<>();
+			List<List<String>> offertypeList = new ArrayList<>();
+			
+			
+			List<String> clusterHeaders = new ArrayList<String>();
+			List<String> customerHeaders = new ArrayList<String>();
+			List<String> abcreationHeaders = new ArrayList<String>();
+			List<String> modalityHeaders = new ArrayList<String>();
+			List<String> offertypeHeaders = new ArrayList<String>();
+			try {
+				clusterHeaders.add("BRANCH CODE");
+				clusterHeaders.add("BRANCH");
+				clusterHeaders.add("CLUSTER CODE");
+				clusterHeaders.add("CLUSTER");
+				customerHeaders.add("CUSTOMER CHAIN L1");
+				customerHeaders.add("CUSTOMER CHAIN L2");
+				abcreationHeaders.add("AB CREATION NAME");
+				modalityHeaders.add("MODALITY_NO");
+				modalityHeaders.add("MODALITY");
+				offertypeHeaders.add("OFFER TYPE");
+
+				String clusterQry = "SELECT DISTINCT BRANCH_CODE, BRANCH, CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER";
+				String customerQry = "SELECT DISTINCT CUSTOMER_CHAIN_L1,CUSTOMER_CHAIN_L2 FROM TBL_PROCO_CUSTOMER_MASTER ORDER BY CUSTOMER_CHAIN_L1";
+				String abcreationQry = "SELECT DISTINCT AB_CREATION_NAME FROM TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE=1";
+				String modalityQry = "SELECT MODALITY_NO,MODALITY FROM TBL_PROCO_MODALITY_MASTER WHERE ACTIVE=1";
+				String offertypeQry = " SELECT DISTINCT OFFER_TYPE FROM TBL_PROCO_OFFER_TYPE_V2 WHERE ACTIVE=1";
+
+				Query query = sessionFactory.getCurrentSession().createNativeQuery(clusterQry);
+				
+				Iterator itr = query.list().iterator();
+				clusterList.add(clusterHeaders);
+				while (itr.hasNext()) {
+					Object[] obj = (Object[]) itr.next();
+					ArrayList<String> dataObj = new ArrayList<String>();
+					for (Object ob : obj) {
+						String value = "";
+						value = (ob == null) ? "" : ob.toString();
+						dataObj.add(value.replaceAll("\\^", ","));
+					}
+					obj = null;
+					clusterList.add(dataObj);
+				}
+				ArrayList<String> allIndia = new ArrayList<String>();
+				allIndia.add("ALL INDIA");
+				clusterList.add(allIndia);
+				downloadDataMap.put("CLUSTER", clusterList);
+
+				query = sessionFactory.getCurrentSession().createNativeQuery(customerQry);
+
+				itr = query.list().iterator();
+				customerList.add(customerHeaders);
+				while (itr.hasNext()) {
+					Object[] obj = (Object[]) itr.next();
+					ArrayList<String> dataObj = new ArrayList<String>();
+					for (Object ob : obj) {
+						String value = "";
+						value = (ob == null) ? "" : ob.toString();
+						dataObj.add(value.replaceAll("\\^", ","));
+					}
+					obj = null;
+					customerList.add(dataObj);
+				}
+				downloadDataMap.put("CUSTOMER", customerList);
+
+				query = sessionFactory.getCurrentSession().createNativeQuery(abcreationQry);
+
+				abcreationList.add(abcreationHeaders);
+				itr = query.list().iterator();
+				while (itr.hasNext()) {
+					String obj = (String) itr.next();
+					ArrayList<String> dataObj = new ArrayList<String>();
+					String value = "";
+					value = (obj == null) ? "" : obj.toString();
+					dataObj.add(value.replaceAll("\\^", ","));
+					obj = null;
+					abcreationList.add(dataObj);
+				}
+
+				downloadDataMap.put("AB CREATION", abcreationList);
+
+				query = sessionFactory.getCurrentSession().createNativeQuery(offertypeQry);
+
+				offertypeList.add(offertypeHeaders);
+				itr = query.list().iterator();
+				while (itr.hasNext()) {
+					String obj = (String) itr.next();
+					ArrayList<String> dataObj = new ArrayList<String>();
+					String value = "";
+					value = (obj == null) ? "" : obj.toString();
+					dataObj.add(value.replaceAll("\\^", ","));
+					obj = null;
+					offertypeList.add(dataObj);
+				}
+
+				downloadDataMap.put("OFFER TYPE", offertypeList);
+
+				query = sessionFactory.getCurrentSession().createNativeQuery(modalityQry);
+
+				modalityList.add(modalityHeaders);
+				itr = query.list().iterator();
+				while (itr.hasNext()) {
+					Object[] obj = (Object[]) itr.next();
+					ArrayList<String> dataObj = new ArrayList<String>();
+					for (Object ob : obj) {
+						String value = "";
+						value = (ob == null) ? "" : ob.toString();
+						dataObj.add(value.replaceAll("\\^", ","));
+					}
+					obj = null;
+					modalityList.add(dataObj);
+				}
+
+				downloadDataMap.put("MODALITY", modalityList);
+			} catch (Exception e) {
+				logger.debug("Exception: ", e);
+			}
+			return downloadDataMap;
+				
+		}
+		// Added by Kavitha D for download promo Cr template ends-SPRINT-9
+
+
 }
+
+
