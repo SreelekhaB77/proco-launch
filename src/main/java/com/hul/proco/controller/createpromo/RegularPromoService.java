@@ -11,8 +11,8 @@ public class RegularPromoService {
 	CreatePromoRegular createCRPromo;
 	
 	@Transactional(rollbackFor = { Exception.class })
-	public String createCRPromo(CreateBeanRegular[] bean,String uid) throws Exception {
-		return createCRPromo.createPromotion(bean,uid);
+	public String createCRPromo(CreateBeanRegular[] bean,String uid,String template) throws Exception {
+		return createCRPromo.createPromotion(bean,uid,template);
 	}
 	
 }

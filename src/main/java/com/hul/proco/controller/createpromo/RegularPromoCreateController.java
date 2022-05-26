@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -35,9 +36,11 @@ public class RegularPromoCreateController {
 	RegularPromoService createCRPromo;
 
 	@RequestMapping(value = "createCRBean.htm", method = RequestMethod.POST)
-	public @ResponseBody ModelAndView uploadCRFile(@ModelAttribute("CreateCRBean") CreateBeanRegular createCRBean,
-			Model model, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+	public @ResponseBody String uploadCRFile(@ModelAttribute("CreateBeanRegular") CreateBeanRegular createCRBean,
+			@RequestParam(name = "template") String template, Model model, HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse) {
 		String save_data = null;
+
 		CommonPropUtils commUtils = CommonPropUtils.getInstance();
 		String userId = (String) httpServletRequest.getSession().getAttribute("UserID");
 		MultipartFile file = createCRBean.getFile();
@@ -48,31 +51,39 @@ public class RegularPromoCreateController {
 		try {
 			if (!CommonUtils.isFileEmpty(file)) {
 				if (CommonUtils.isFileSizeExceeds(file)) {
-					System.out.println("File size is greater than 2 MB");
-				} 
-				else 
-				if (UploadUtil.movefile(file, fileName)) {
+					model.addAttribute("FILE_STAUS", "FILE_SIZE_EXCEED");
+				} else if (UploadUtil.movefile(file, fileName)) {
+					Map<String, List<Object>> map = null;
+					if (template.equalsIgnoreCase("regular")) {
+						map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(16, false, null);
+					} else if (template.equalsIgnoreCase("new")) {
+						map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(17, false, null);
+					}
 
-					Map<String, List<Object>> map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(16,
-							false, null);
 					if (map.isEmpty()) {
-						System.out.println("file is empty");
+						model.addAttribute("FILE_STAUS", "FILE_EMPTY");
 					}
 					if (map.containsKey("ERROR")) {
-						System.out.println("Error while mapping file");
+						model.addAttribute("FILE_STAUS", "CHECK_COL_MISMATCH");
 					} else if (map.containsKey("DATA")) {
 						List<?> datafromexcel = map.get("DATA");
-						beanArray = (CreateBeanRegular[]) datafromexcel.toArray(new CreateBeanRegular[datafromexcel.size()]);
-						createCRPromo.createCRPromo(beanArray, userId);
-						//datafromexcel.forEach(i -> System.out.println(i));
+						beanArray = (CreateBeanRegular[]) datafromexcel
+								.toArray(new CreateBeanRegular[datafromexcel.size()]);
+						save_data = createCRPromo.createCRPromo(beanArray, userId, template);
 
 					}
-					
+
 				} else {
 					System.out.println("Can't copy file, file should not open/use by other application.");
 				}
-			}else
-				System.out.println("File is empty");
+			} else
+				model.addAttribute("FILE_STAUS", "FILE_EMPTY");
+			if (save_data.equals("EXCEL_UPLOADED")) {
+				model.addAttribute("FILE_STAUS", "EXCEL_UPLOADED");
+			} else {
+				model.addAttribute("FILE_STAUS", "EXCEL_NOT_UPLOADED");
+			}
+
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} catch (Throwable e) {
@@ -80,7 +91,7 @@ public class RegularPromoCreateController {
 			e.printStackTrace();
 		}
 
-		return null;
+		return save_data;
 
 	}
 }

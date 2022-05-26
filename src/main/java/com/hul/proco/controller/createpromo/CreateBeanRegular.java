@@ -56,6 +56,17 @@ public class CreateBeanRegular {
 	@Column(name = "CLUSTER")
 	private String cluster;
 
+	@Column(name = "Quantity")
+	private String quantity;
+
+	public String getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(String quantity) {
+		this.quantity = quantity;
+	}
+
 	public MultipartFile getFile() {
 		return file;
 	}
@@ -191,6 +202,5 @@ public class CreateBeanRegular {
 	public void setCluster(String cluster) {
 		this.cluster = cluster;
 	}
-	
-	
+
 }
