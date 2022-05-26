@@ -116,6 +116,8 @@ public class RegularPromoService {
 				headerList.add("BASEPACK ADDITION");
 				headerList.add("TOPUP");
 				headerList.add("ADDITIONAL QTY");
+				headerList.add("ADDITIONAL BUDGET");
+
 				return headerList;
 			}
 }			//Added by Kavitha D for downloading promo CR template ends-SPRINT 9
