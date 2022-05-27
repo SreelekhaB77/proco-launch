@@ -8,55 +8,55 @@ public class CreateBeanRegular {
 
 	private MultipartFile file;
 
-	@Column(name = "Channel")
+	@Column(name = "CHANNEL")
 	private String channel;
 
 	@Column(name = "MOC")
 	private String moc;
 
-	@Column(name = "Scondary channel")
+	@Column(name = "SECONDARY CHANNEL")
 	private String secondary_channel;
 
-	@Column(name = "PPM Account")
+	@Column(name = "PPM ACCOUNT")
 	private String ppm_account;
 
-	@Column(name = "Promo Timeperiod")
+	@Column(name = "PROMO TIMEPERIOD")
 	private String promo_time_period;
 
-	@Column(name = "AB CREATION")
+	@Column(name = "AB CREATION (ONLY FOR KA Accounts)")
 	private String ab_creation;
 
-	@Column(name = "Basepack Code")
+	@Column(name = "BASEPACK CODE")
 	private String basepack_code;
 
-	@Column(name = "Basepack Description")
+	@Column(name = "BASEPACK DESCRIPTION")
 	private String baseback_desc;
 
-	@Column(name = "Child Pack Code")
+	@Column(name = "CHILDPACK CODE")
 	private String c_pack_code;
 
-	@Column(name = "Offer description")
+	@Column(name = "OFFER DESCRIPTION")
 	private String offer_desc;
 
-	@Column(name = "Offer Type")
+	@Column(name = "OFFER TYPE")
 	private String ofr_type;
 
-	@Column(name = "Offer Modality")
+	@Column(name = "OFFER MODALITY")
 	private String offer_mod;
 
-	@Column(name = "Price off")
+	@Column(name = "PRICE OFF")
 	private String price_off;
 
 	@Column(name = "BUDGET")
 	private String budget;
 
-	@Column(name = "Branch")
+	@Column(name = "BRANCH")
 	private String branch;
 
 	@Column(name = "CLUSTER")
 	private String cluster;
 
-	@Column(name = "Quantity")
+	@Column(name = "QTY")
 	private String quantity;
 
 	public String getQuantity() {

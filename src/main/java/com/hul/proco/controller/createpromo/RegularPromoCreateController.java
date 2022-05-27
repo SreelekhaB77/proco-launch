@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,6 +42,8 @@ public class RegularPromoCreateController {
 	@Autowired
 	RegularPromoService createCRPromo;
 
+	static Logger logger = Logger.getLogger(RegularPromoCreateController.class);
+
 	@RequestMapping(value = "createCRBean.htm", method = RequestMethod.POST)
 	public @ResponseBody String uploadCRFile(@ModelAttribute("CreateBeanRegular") CreateBeanRegular createCRBean,
 			@RequestParam(name = "template") String template, Model model, HttpServletRequest httpServletRequest,
@@ -58,6 +61,7 @@ public class RegularPromoCreateController {
 			if (!CommonUtils.isFileEmpty(file)) {
 				if (CommonUtils.isFileSizeExceeds(file)) {
 					model.addAttribute("FILE_STAUS", "FILE_SIZE_EXCEED");
+					return "FILE_SIZE_EXCEED";
 				} else if (UploadUtil.movefile(file, fileName)) {
 					Map<String, List<Object>> map = null;
 					if (template.equalsIgnoreCase("regular")) {
@@ -68,9 +72,12 @@ public class RegularPromoCreateController {
 
 					if (map.isEmpty()) {
 						model.addAttribute("FILE_STAUS", "FILE_EMPTY");
+						return "FILE_EMPTY";
 					}
 					if (map.containsKey("ERROR")) {
 						model.addAttribute("FILE_STAUS", "CHECK_COL_MISMATCH");
+
+						return "CHECK_COL_MISMATCH";
 					} else if (map.containsKey("DATA")) {
 						List<?> datafromexcel = map.get("DATA");
 						beanArray = (CreateBeanRegular[]) datafromexcel
@@ -80,128 +87,178 @@ public class RegularPromoCreateController {
 					}
 
 				} else {
-					System.out.println("Can't copy file, file should not open/use by other application.");
+
+					model.addAttribute("FILE_STAUS", "FILE_EMPTY");
+					return "FILE_EMPTY";
 				}
-			} else
+			} else {
 				model.addAttribute("FILE_STAUS", "FILE_EMPTY");
+				return "FILE_EMPTY";
+			}
 			if (save_data.equals("EXCEL_UPLOADED")) {
 				model.addAttribute("FILE_STAUS", "EXCEL_UPLOADED");
 			} else {
 				model.addAttribute("FILE_STAUS", "EXCEL_NOT_UPLOADED");
+				save_data = "EXCEL_NOT_UPLOADED";
 			}
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			logger.error("Exception: ", e);
 		} catch (Throwable e) {
-			// TODO Auto-generated catch block
+			logger.error("Exception: ", e);
 			e.printStackTrace();
 		}
 
 		return save_data;
 
 	}
-	
-	//Added by Kavitha D for downloading promo regular template starts-SPRINT 9
-	
-		@RequestMapping(value = "downloadPromotionRegularTemplateFile.htm", method = RequestMethod.GET)
-		public @ResponseBody ModelAndView downloadPromotionRegularTemplateFile(
-				@ModelAttribute("CreatePromotionBeanRegular") CreateBeanRegular createPromotionBeanRegular, Model model,
-				HttpServletRequest request, HttpServletResponse response) {
-			InputStream is;
-			String downloadLink = "", absoluteFilePath = "";
-			List<ArrayList<String>> downloadedData = new ArrayList<ArrayList<String>>();
-			ArrayList<String> headerDetail = createCRPromo.getHeaderListForPromotionRegularTemplateDownload();
-			absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
-			String fileName = UploadUtil.getFileName("Promotion.RegularTemplate.file", "",CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
-			String downloadFileName = absoluteFilePath + fileName;
-			downloadedData.add(headerDetail);
-			Map<String, List<List<String>>> mastersForRegularTemplate = createCRPromo.getMastersForRegularTemplate();
-			try {
-				UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForRegularTemplate, ".xls");
-				downloadLink = downloadFileName + ".xls";
-				is = new FileInputStream(new File(downloadLink));
-				// copy it to response's OutputStream
-				response.setContentType("application/force-download");
-				response.setHeader("Content-Disposition", "attachment; filename=PromotionRegularFile_"
-						+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
-				IOUtils.copy(is, response.getOutputStream());
-				response.flushBuffer();
-			} catch (FileNotFoundException e) {
-				return null;
-			} catch (IOException e) {
-				return null;
-			}
-			return null;
-			}
-		//Added by Kavitha D for downloading promo regular template  ends-SPRINT 9
 
-		
-		//Added by Kavitha D for downloading promo new template starts-SPRINT 9
-		
-			@RequestMapping(value = "downloadPromotionNewTemplateFile.htm", method = RequestMethod.GET)
-			public @ResponseBody ModelAndView downloadPromotionNewTemplateFile(
-					@ModelAttribute("CreatePromotionBeanRegular") CreateBeanRegular createPromotionBeanNew, Model model,
-					HttpServletRequest request, HttpServletResponse response) {
-				InputStream is;
-				String downloadLink = "", absoluteFilePath = "";
-				List<ArrayList<String>> downloadedData = new ArrayList<ArrayList<String>>();
-				ArrayList<String> headerDetail = createCRPromo.getHeaderListForPromotionNewTemplateDownload();
-				absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
-				String fileName = UploadUtil.getFileName("Promotion.RegularTemplate.file", "",CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
-				String downloadFileName = absoluteFilePath + fileName;
-				downloadedData.add(headerDetail);
-				Map<String, List<List<String>>> mastersForNewTemplate = createCRPromo.getMastersForNewTemplate();
-				try {
-					UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForNewTemplate, ".xls");
-					downloadLink = downloadFileName + ".xls";
-					is = new FileInputStream(new File(downloadLink));
-					// copy it to response's OutputStream
-					response.setContentType("application/force-download");
-					response.setHeader("Content-Disposition", "attachment; filename=PromotionNewFile_"
-							+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
-					IOUtils.copy(is, response.getOutputStream());
-					response.flushBuffer();
-				} catch (FileNotFoundException e) {
-					return null;
-				} catch (IOException e) {
-					return null;
-				}
-				return null;
-				}
-			//Added by Kavitha D for downloading promo new template  ends-SPRINT 9
-			
-			//Added by Kavitha D for downloading promo CR template starts-SPRINT 9
-			
-			@RequestMapping(value = "downloadPromotionCrTemplateFile.htm", method = RequestMethod.GET)
-			public @ResponseBody ModelAndView downloadPromotionCrTemplateFile(
-					@ModelAttribute("CreatePromotionBeanRegular") CreateBeanRegular createPromotionBeanCr, Model model,
-					HttpServletRequest request, HttpServletResponse response) {
-				InputStream is;
-				String downloadLink = "", absoluteFilePath = "";
-				List<ArrayList<String>> downloadedData = new ArrayList<ArrayList<String>>();
-				ArrayList<String> headerDetail = createCRPromo.getHeaderListForPromotionCrTemplateDownload();
-				absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
-				String fileName = UploadUtil.getFileName("Promotion.RegularTemplate.file", "",CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
-				String downloadFileName = absoluteFilePath + fileName;
-				downloadedData.add(headerDetail);
-				Map<String, List<List<String>>> mastersForCrTemplate = createCRPromo.getMastersForCrTemplate();
-				try {
-					UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForCrTemplate, ".xls");
-					downloadLink = downloadFileName + ".xls";
-					is = new FileInputStream(new File(downloadLink));
-					// copy it to response's OutputStream
-					response.setContentType("application/force-download");
-					response.setHeader("Content-Disposition", "attachment; filename=PromotionCrFile_"
-							+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
-					IOUtils.copy(is, response.getOutputStream());
-					response.flushBuffer();
-				} catch (FileNotFoundException e) {
-					return null;
-				} catch (IOException e) {
-					return null;
-				}
-				return null;
-				}
-			//Added by Kavitha D for downloading promo Cr template  ends-SPRINT 9
+	// Added by Kavitha D for downloading promo regular template starts-SPRINT 9
+
+	@RequestMapping(value = "downloadPromotionRegularTemplateFile.htm", method = RequestMethod.GET)
+	public @ResponseBody ModelAndView downloadPromotionRegularTemplateFile(
+			@ModelAttribute("CreatePromotionBeanRegular") CreateBeanRegular createPromotionBeanRegular, Model model,
+			HttpServletRequest request, HttpServletResponse response) {
+		InputStream is;
+		String downloadLink = "", absoluteFilePath = "";
+		List<ArrayList<String>> downloadedData = new ArrayList<ArrayList<String>>();
+		ArrayList<String> headerDetail = createCRPromo.getHeaderListForPromotionRegularTemplateDownload();
+		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
+		String fileName = UploadUtil.getFileName("Promotion.RegularTemplate.file", "",
+				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
+		String downloadFileName = absoluteFilePath + fileName;
+		downloadedData.add(headerDetail);
+		Map<String, List<List<String>>> mastersForRegularTemplate = createCRPromo.getMastersForRegularTemplate();
+		try {
+			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForRegularTemplate, ".xls");
+			downloadLink = downloadFileName + ".xls";
+			is = new FileInputStream(new File(downloadLink));
+			// copy it to response's OutputStream
+			response.setContentType("application/force-download");
+			response.setHeader("Content-Disposition", "attachment; filename=PromotionRegularFile_"
+					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+			IOUtils.copy(is, response.getOutputStream());
+			response.flushBuffer();
+		} catch (FileNotFoundException e) {
+			return null;
+		} catch (IOException e) {
+			return null;
+		}
+		return null;
+	}
+	// Added by Kavitha D for downloading promo regular template ends-SPRINT 9
+
+	// Added by Kavitha D for downloading promo new template starts-SPRINT 9
+
+	@RequestMapping(value = "downloadPromotionNewTemplateFile.htm", method = RequestMethod.GET)
+	public @ResponseBody ModelAndView downloadPromotionNewTemplateFile(
+			@ModelAttribute("CreatePromotionBeanRegular") CreateBeanRegular createPromotionBeanNew, Model model,
+			HttpServletRequest request, HttpServletResponse response) {
+		InputStream is;
+		String downloadLink = "", absoluteFilePath = "";
+		List<ArrayList<String>> downloadedData = new ArrayList<ArrayList<String>>();
+		ArrayList<String> headerDetail = createCRPromo.getHeaderListForPromotionNewTemplateDownload();
+		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
+		String fileName = UploadUtil.getFileName("Promotion.RegularTemplate.file", "",
+				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
+		String downloadFileName = absoluteFilePath + fileName;
+		downloadedData.add(headerDetail);
+		Map<String, List<List<String>>> mastersForNewTemplate = createCRPromo.getMastersForNewTemplate();
+		try {
+			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForNewTemplate, ".xls");
+			downloadLink = downloadFileName + ".xls";
+			is = new FileInputStream(new File(downloadLink));
+			// copy it to response's OutputStream
+			response.setContentType("application/force-download");
+			response.setHeader("Content-Disposition", "attachment; filename=PromotionNewFile_"
+					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+			IOUtils.copy(is, response.getOutputStream());
+			response.flushBuffer();
+		} catch (FileNotFoundException e) {
+			return null;
+		} catch (IOException e) {
+			return null;
+		}
+		return null;
+	}
+	// Added by Kavitha D for downloading promo new template ends-SPRINT 9
+
+	// Added by Kavitha D for downloading promo CR template starts-SPRINT 9
+
+	@RequestMapping(value = "downloadPromotionCrTemplateFile.htm", method = RequestMethod.GET)
+	public @ResponseBody ModelAndView downloadPromotionCrTemplateFile(
+			@ModelAttribute("CreatePromotionBeanRegular") CreateBeanRegular createPromotionBeanCr, Model model,
+			HttpServletRequest request, HttpServletResponse response) {
+		InputStream is;
+		String downloadLink = "", absoluteFilePath = "";
+		List<ArrayList<String>> downloadedData = new ArrayList<ArrayList<String>>();
+		ArrayList<String> headerDetail = createCRPromo.getHeaderListForPromotionCrTemplateDownload();
+		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
+		String fileName = UploadUtil.getFileName("Promotion.RegularTemplate.file", "",
+				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
+		String downloadFileName = absoluteFilePath + fileName;
+		downloadedData.add(headerDetail);
+		Map<String, List<List<String>>> mastersForCrTemplate = createCRPromo.getMastersForCrTemplate();
+		try {
+			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForCrTemplate, ".xls");
+			downloadLink = downloadFileName + ".xls";
+			is = new FileInputStream(new File(downloadLink));
+			// copy it to response's OutputStream
+			response.setContentType("application/force-download");
+			response.setHeader("Content-Disposition", "attachment; filename=PromotionCrFile_"
+					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+			IOUtils.copy(is, response.getOutputStream());
+			response.flushBuffer();
+		} catch (FileNotFoundException e) {
+			return null;
+		} catch (IOException e) {
+			return null;
+		}
+		return null;
+	}
+	// Added by Kavitha D for downloading promo Cr template ends-SPRINT 9
+
+	@RequestMapping(value = "downloadPromotionErrorFilensp.htm", method = RequestMethod.GET)
+	public @ResponseBody ModelAndView downloadPromotionErrorFile(
+			@ModelAttribute("CreatePromotionBean") CreatePromotionBean createPromotionBean, Model model,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		InputStream is;
+		String downloadLink = "", absoluteFilePath = "";
+		List<ArrayList<String>> downloadedData = null;
+		String userID = (String) request.getSession().getAttribute("UserID");
+
+		ArrayList<String> headerDetail = createCRPromo.getHeaderListForPromotionErrorDownload();
+		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
+		String fileName = UploadUtil.getFileName("Promotion.Error.file", "",
+				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
+		String downloadFileName = absoluteFilePath + fileName;
+
+		downloadedData = createCRPromo.getPromotionErrorDetails(headerDetail, userID);
+
+		Map<String, List<List<String>>> mastersForNewTemplate = createCRPromo.getMastersForNewTemplate();
+		try {
+			UploadUtil.writeXLSFile(downloadFileName, downloadedData, mastersForNewTemplate, ".xls");
+			downloadLink = downloadFileName + ".xls";
+			is = new FileInputStream(new File(downloadLink));
+			/*
+			 * String actualFileName = downloadLink.substring(downloadLink.lastIndexOf("/")
+			 * + 1, downloadLink.indexOf("."));
+			 */
+			// copy it to response's OutputStream
+			response.setContentType("application/force-download");
+			response.setHeader("Content-Disposition", "attachment; filename=PromotionErrorFile_"
+					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+			IOUtils.copy(is, response.getOutputStream());
+			response.flushBuffer();
+		} catch (FileNotFoundException e) {
+			// e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			// e.printStackTrace();
+			return null;
+		}
+		return null;
+	}
 
 }

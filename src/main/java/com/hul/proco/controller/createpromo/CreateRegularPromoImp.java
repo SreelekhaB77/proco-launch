@@ -18,9 +18,9 @@ import org.hibernate.query.Query;
 
 @Repository
 public class CreateRegularPromoImp implements CreatePromoRegular {
-	
+
 	private Logger logger = Logger.getLogger(CreatePromoRegular.class);
-	
+
 	private String error_msg = "";
 	private int flag = 0;
 	private int globle_flag = 0;
@@ -80,6 +80,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					flag = 1;
 				}
 				if (!isPPMValid(bean.getPpm_account())) {
+					
 					if (flag == 1)
 						error_msg = error_msg + ",Invalid Account";
 					else {
@@ -173,23 +174,27 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					error_msg = error_msg + "Offer description should not be empty";
 					flag = 1;
 				}
+				if (flag == 0) {
+					if (bean.getPromo_time_period().isEmpty() // || bean.getPromo_time_period().isBlank()
+							|| bean.getPromo_time_period() == "") {
 
-				if (bean.getPromo_time_period().isEmpty() // || bean.getPromo_time_period().isBlank()
-						|| bean.getPromo_time_period() == "") {
+						String new_moc = bean.getMoc();
 
-					String new_moc = bean.getMoc();
+						List<Object[]> se_date = getStartEndDate(
+								new_moc.substring(4, 6).concat(new_moc.substring(0, 4)), bean.getPpm_account());
+						
+						query.setString(18, se_date.get(0)[0].toString()); // start date
+						query.setString(19, se_date.get(0)[1].toString()); // end date
 
-					List<Object[]> se_date = getStartEndDate(new_moc.substring(4, 6).concat(new_moc.substring(0, 4)),
-							bean.getPpm_account());
-
-					query.setString(18, se_date.get(0)[0].toString()); // start date
-					query.setString(19, se_date.get(0)[1].toString()); // end date
-
-				} else {
+					} else {
+						query.setString(18, "");
+						query.setString(19, "");
+					}
+				}else
+				{
 					query.setString(18, "");
 					query.setString(19, "");
 				}
-
 				if (flag == 1)
 					globle_flag = 1;
 
@@ -208,7 +213,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			return "EXCEL_UPLOADED";
 
 		} else {
-			System.out.println("Can not upload excel, Excel contain error..!");
+		
 			globle_flag = 0;
 			return "EXCEL_NOT_UPLOADED";
 		}
@@ -316,7 +321,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		if (excuteValidationQuery(checkPromoID) == 0) {
 			return list;
 		} else {
-			String promo_id = "SELECT DISTINCT PROMO_ID,PID from TBL_PROCO_PROMOTION_MASTER_V2 where moc='" + moc
+			String promo_id = "SELECT DISTINCT PROMO_ID,PID from TBL_PROCO_PROMOTION_MASTER_V2 WHERE MOC='" + moc
 					+ "' AND CUSTOMER_CHAIN_L2='" + ppm_account + "' AND OFFER_DESC='" + offer_desc + "'";
 			list = sessionFactory.getCurrentSession().createNativeQuery(promo_id).list();
 			return list;
@@ -350,8 +355,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	}
 
 	private boolean isValidBranch(String branch) {
-		String branch_query = "select count(1) from TBL_PROCO_CUSTOMER_MASTER where BRANCH='" + branch
-				+ "' and ACTIVE=1";
+		String branch_query = "SELECT COUNT(1) from TBL_PROCO_CUSTOMER_MASTER WHERE BRANCH='" + branch
+				+ "' AND ACTIVE=1";
 		if (excuteValidationQuery(branch_query) > 0) {
 			return true;
 		}
@@ -360,8 +365,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	}
 
 	private boolean isOfferModalityValid(String offer_mod) {
-		String mod_query = "select count(1) from TBL_PROCO_OFFER_MODALITY_MASTER where MODALITY_NAME='" + offer_mod
-				+ "' and ACTIVE=1";
+		String mod_query = "SELECT COUNT(1) from TBL_PROCO_OFFER_MODALITY_MASTER WHERE MODALITY_NAME='" + offer_mod
+				+ "' AND ACTIVE=1";
 		if (excuteValidationQuery(mod_query) == 1) {
 			return true;
 		}
@@ -369,8 +374,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	}
 
 	private boolean isOfferTypeValid(String ofr_type) {
-		String str_query = "select count(1) from TBL_PROCO_OFFER_TYPE_V2 where OFFER_TYPE='" + ofr_type
-				+ "' and ACTIVE=1";
+		String str_query = "SELECT COUNT(1) from TBL_PROCO_OFFER_TYPE_V2 WHERE OFFER_TYPE='" + ofr_type
+				+ "' AND ACTIVE=1";
 		if (excuteValidationQuery(str_query) == 1) {
 			return true;
 		}
@@ -378,8 +383,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	}
 
 	private boolean isBasepackValid(String basepack_code) {
-		String basepack = "select count(1) from TBL_PROCO_PRODUCT_MASTER where basepack='" + basepack_code
-				+ "' and ACTIVE=1";
+		String basepack = "SELECT COUNT(1) from TBL_PROCO_PRODUCT_MASTER WHERE BASEPACK='" + basepack_code
+				+ "' AND ACTIVE=1";
 		if (excuteValidationQuery(basepack) == 1) {
 			return true;
 		}
@@ -387,7 +392,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	}
 
 	private boolean isABCreationValid(String ab_creation) {
-		String ab_query = "select count(1) from  TBL_PROCO_AB_CREATION_MASTER where AB_CREATION_NAME='" + ab_creation
+		String ab_query = "SELECT COUNT(1) from  TBL_PROCO_AB_CREATION_MASTER where AB_CREATION_NAME='" + ab_creation
 				+ "' and ACTIVE=1";
 		if (excuteValidationQuery(ab_query) == 1)
 			return true;
@@ -399,9 +404,10 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	private boolean isPPMValid(String ppm_account) {
 		String ppm_qury = "select count(1) from TBL_PROCO_CUSTOMER_MASTER where CUSTOMER_CHAIN_L2='" + ppm_account
 				+ "' AND ACTIVE=1";
-
 		if (excuteValidationQuery(ppm_qury) > 0)
 			return true;
+		else if (excuteValidationQuery(ppm_qury) == 0)
+			return false;
 		else
 			return false;
 
@@ -421,7 +427,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		Integer recCount = ((BigInteger) inner_query.uniqueResult()).intValue();
 		return recCount;
 	}
-	
+
 	// Added by Kavitha D for download promo regular template starts-SPRINT-9
 
 	@SuppressWarnings({ "rawtypes" })
@@ -433,8 +439,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		List<List<String>> abcreationList = new ArrayList<>();
 		List<List<String>> modalityList = new ArrayList<>();
 		List<List<String>> offertypeList = new ArrayList<>();
-		
-		
+
 		List<String> clusterHeaders = new ArrayList<String>();
 		List<String> customerHeaders = new ArrayList<String>();
 		List<String> abcreationHeaders = new ArrayList<String>();
@@ -459,7 +464,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			String offertypeQry = " SELECT DISTINCT OFFER_TYPE FROM TBL_PROCO_OFFER_TYPE_V2 WHERE ACTIVE=1";
 
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(clusterQry);
-			
+
 			Iterator itr = query.list().iterator();
 			clusterList.add(clusterHeaders);
 			while (itr.hasNext()) {
@@ -547,12 +552,12 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		} catch (Exception e) {
 			logger.debug("Exception: ", e);
 		}
-		return downloadDataMap;				// Added by Kavitha D for download promo regular template ends-SPRINT-9
+		return downloadDataMap; // Added by Kavitha D for download promo regular template ends-SPRINT-9
 
 	}
 
 	// Added by Kavitha D for download promo new template starts-SPRINT-9
-	
+
 	@SuppressWarnings({ "rawtypes" })
 	@Override
 	public Map<String, List<List<String>>> getMastersForNewTemplate() {
@@ -562,8 +567,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		List<List<String>> abcreationList = new ArrayList<>();
 		List<List<String>> modalityList = new ArrayList<>();
 		List<List<String>> offertypeList = new ArrayList<>();
-		
-		
+
 		List<String> clusterHeaders = new ArrayList<String>();
 		List<String> customerHeaders = new ArrayList<String>();
 		List<String> abcreationHeaders = new ArrayList<String>();
@@ -588,7 +592,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			String offertypeQry = " SELECT DISTINCT OFFER_TYPE FROM TBL_PROCO_OFFER_TYPE_V2 WHERE ACTIVE=1";
 
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(clusterQry);
-			
+
 			Iterator itr = query.list().iterator();
 			clusterList.add(clusterHeaders);
 			while (itr.hasNext()) {
@@ -677,141 +681,170 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			logger.debug("Exception: ", e);
 		}
 		return downloadDataMap;
-			
+
 	}
 	// Added by Kavitha D for download promo new template ends-SPRINT-9
 
-	
-		// Added by Kavitha D for download promo CR template starts-SPRINT-9	
-		@SuppressWarnings({ "rawtypes" })
-		@Override
-		public Map<String, List<List<String>>> getMastersForCrTemplate() {
-			Map<String, List<List<String>>> downloadDataMap = new HashMap<>();
-			List<List<String>> clusterList = new ArrayList<>();
-			List<List<String>> customerList = new ArrayList<>();
-			List<List<String>> abcreationList = new ArrayList<>();
-			List<List<String>> modalityList = new ArrayList<>();
-			List<List<String>> offertypeList = new ArrayList<>();
-			
-			
-			List<String> clusterHeaders = new ArrayList<String>();
-			List<String> customerHeaders = new ArrayList<String>();
-			List<String> abcreationHeaders = new ArrayList<String>();
-			List<String> modalityHeaders = new ArrayList<String>();
-			List<String> offertypeHeaders = new ArrayList<String>();
-			try {
-				clusterHeaders.add("BRANCH CODE");
-				clusterHeaders.add("BRANCH");
-				clusterHeaders.add("CLUSTER CODE");
-				clusterHeaders.add("CLUSTER");
-				customerHeaders.add("CUSTOMER CHAIN L1");
-				customerHeaders.add("CUSTOMER CHAIN L2");
-				abcreationHeaders.add("AB CREATION NAME");
-				modalityHeaders.add("MODALITY_NO");
-				modalityHeaders.add("MODALITY");
-				offertypeHeaders.add("OFFER TYPE");
+	// Added by Kavitha D for download promo CR template starts-SPRINT-9
+	@SuppressWarnings({ "rawtypes" })
+	@Override
+	public Map<String, List<List<String>>> getMastersForCrTemplate() {
+		Map<String, List<List<String>>> downloadDataMap = new HashMap<>();
+		List<List<String>> clusterList = new ArrayList<>();
+		List<List<String>> customerList = new ArrayList<>();
+		List<List<String>> abcreationList = new ArrayList<>();
+		List<List<String>> modalityList = new ArrayList<>();
+		List<List<String>> offertypeList = new ArrayList<>();
 
-				String clusterQry = "SELECT DISTINCT BRANCH_CODE, BRANCH, CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER";
-				String customerQry = "SELECT DISTINCT CUSTOMER_CHAIN_L1,CUSTOMER_CHAIN_L2 FROM TBL_PROCO_CUSTOMER_MASTER ORDER BY CUSTOMER_CHAIN_L1";
-				String abcreationQry = "SELECT DISTINCT AB_CREATION_NAME FROM TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE=1";
-				String modalityQry = "SELECT MODALITY_NO,MODALITY FROM TBL_PROCO_MODALITY_MASTER WHERE ACTIVE=1";
-				String offertypeQry = " SELECT DISTINCT OFFER_TYPE FROM TBL_PROCO_OFFER_TYPE_V2 WHERE ACTIVE=1";
+		List<String> clusterHeaders = new ArrayList<String>();
+		List<String> customerHeaders = new ArrayList<String>();
+		List<String> abcreationHeaders = new ArrayList<String>();
+		List<String> modalityHeaders = new ArrayList<String>();
+		List<String> offertypeHeaders = new ArrayList<String>();
+		try {
+			clusterHeaders.add("BRANCH CODE");
+			clusterHeaders.add("BRANCH");
+			clusterHeaders.add("CLUSTER CODE");
+			clusterHeaders.add("CLUSTER");
+			customerHeaders.add("CUSTOMER CHAIN L1");
+			customerHeaders.add("CUSTOMER CHAIN L2");
+			abcreationHeaders.add("AB CREATION NAME");
+			modalityHeaders.add("MODALITY_NO");
+			modalityHeaders.add("MODALITY");
+			offertypeHeaders.add("OFFER TYPE");
 
-				Query query = sessionFactory.getCurrentSession().createNativeQuery(clusterQry);
-				
-				Iterator itr = query.list().iterator();
-				clusterList.add(clusterHeaders);
-				while (itr.hasNext()) {
-					Object[] obj = (Object[]) itr.next();
-					ArrayList<String> dataObj = new ArrayList<String>();
-					for (Object ob : obj) {
-						String value = "";
-						value = (ob == null) ? "" : ob.toString();
-						dataObj.add(value.replaceAll("\\^", ","));
-					}
-					obj = null;
-					clusterList.add(dataObj);
-				}
-				ArrayList<String> allIndia = new ArrayList<String>();
-				allIndia.add("ALL INDIA");
-				clusterList.add(allIndia);
-				downloadDataMap.put("CLUSTER", clusterList);
+			String clusterQry = "SELECT DISTINCT BRANCH_CODE, BRANCH, CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER";
+			String customerQry = "SELECT DISTINCT CUSTOMER_CHAIN_L1,CUSTOMER_CHAIN_L2 FROM TBL_PROCO_CUSTOMER_MASTER ORDER BY CUSTOMER_CHAIN_L1";
+			String abcreationQry = "SELECT DISTINCT AB_CREATION_NAME FROM TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE=1";
+			String modalityQry = "SELECT MODALITY_NO,MODALITY FROM TBL_PROCO_MODALITY_MASTER WHERE ACTIVE=1";
+			String offertypeQry = " SELECT DISTINCT OFFER_TYPE FROM TBL_PROCO_OFFER_TYPE_V2 WHERE ACTIVE=1";
 
-				query = sessionFactory.getCurrentSession().createNativeQuery(customerQry);
+			Query query = sessionFactory.getCurrentSession().createNativeQuery(clusterQry);
 
-				itr = query.list().iterator();
-				customerList.add(customerHeaders);
-				while (itr.hasNext()) {
-					Object[] obj = (Object[]) itr.next();
-					ArrayList<String> dataObj = new ArrayList<String>();
-					for (Object ob : obj) {
-						String value = "";
-						value = (ob == null) ? "" : ob.toString();
-						dataObj.add(value.replaceAll("\\^", ","));
-					}
-					obj = null;
-					customerList.add(dataObj);
-				}
-				downloadDataMap.put("CUSTOMER", customerList);
-
-				query = sessionFactory.getCurrentSession().createNativeQuery(abcreationQry);
-
-				abcreationList.add(abcreationHeaders);
-				itr = query.list().iterator();
-				while (itr.hasNext()) {
-					String obj = (String) itr.next();
-					ArrayList<String> dataObj = new ArrayList<String>();
+			Iterator itr = query.list().iterator();
+			clusterList.add(clusterHeaders);
+			while (itr.hasNext()) {
+				Object[] obj = (Object[]) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				for (Object ob : obj) {
 					String value = "";
-					value = (obj == null) ? "" : obj.toString();
+					value = (ob == null) ? "" : ob.toString();
 					dataObj.add(value.replaceAll("\\^", ","));
-					obj = null;
-					abcreationList.add(dataObj);
 				}
-
-				downloadDataMap.put("AB CREATION", abcreationList);
-
-				query = sessionFactory.getCurrentSession().createNativeQuery(offertypeQry);
-
-				offertypeList.add(offertypeHeaders);
-				itr = query.list().iterator();
-				while (itr.hasNext()) {
-					String obj = (String) itr.next();
-					ArrayList<String> dataObj = new ArrayList<String>();
-					String value = "";
-					value = (obj == null) ? "" : obj.toString();
-					dataObj.add(value.replaceAll("\\^", ","));
-					obj = null;
-					offertypeList.add(dataObj);
-				}
-
-				downloadDataMap.put("OFFER TYPE", offertypeList);
-
-				query = sessionFactory.getCurrentSession().createNativeQuery(modalityQry);
-
-				modalityList.add(modalityHeaders);
-				itr = query.list().iterator();
-				while (itr.hasNext()) {
-					Object[] obj = (Object[]) itr.next();
-					ArrayList<String> dataObj = new ArrayList<String>();
-					for (Object ob : obj) {
-						String value = "";
-						value = (ob == null) ? "" : ob.toString();
-						dataObj.add(value.replaceAll("\\^", ","));
-					}
-					obj = null;
-					modalityList.add(dataObj);
-				}
-
-				downloadDataMap.put("MODALITY", modalityList);
-			} catch (Exception e) {
-				logger.debug("Exception: ", e);
+				obj = null;
+				clusterList.add(dataObj);
 			}
-			return downloadDataMap;
-				
-		}
-		// Added by Kavitha D for download promo Cr template ends-SPRINT-9
+			ArrayList<String> allIndia = new ArrayList<String>();
+			allIndia.add("ALL INDIA");
+			clusterList.add(allIndia);
+			downloadDataMap.put("CLUSTER", clusterList);
 
+			query = sessionFactory.getCurrentSession().createNativeQuery(customerQry);
+
+			itr = query.list().iterator();
+			customerList.add(customerHeaders);
+			while (itr.hasNext()) {
+				Object[] obj = (Object[]) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				for (Object ob : obj) {
+					String value = "";
+					value = (ob == null) ? "" : ob.toString();
+					dataObj.add(value.replaceAll("\\^", ","));
+				}
+				obj = null;
+				customerList.add(dataObj);
+			}
+			downloadDataMap.put("CUSTOMER", customerList);
+
+			query = sessionFactory.getCurrentSession().createNativeQuery(abcreationQry);
+
+			abcreationList.add(abcreationHeaders);
+			itr = query.list().iterator();
+			while (itr.hasNext()) {
+				String obj = (String) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				String value = "";
+				value = (obj == null) ? "" : obj.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
+				obj = null;
+				abcreationList.add(dataObj);
+			}
+
+			downloadDataMap.put("AB CREATION", abcreationList);
+
+			query = sessionFactory.getCurrentSession().createNativeQuery(offertypeQry);
+
+			offertypeList.add(offertypeHeaders);
+			itr = query.list().iterator();
+			while (itr.hasNext()) {
+				String obj = (String) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				String value = "";
+				value = (obj == null) ? "" : obj.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
+				obj = null;
+				offertypeList.add(dataObj);
+			}
+
+			downloadDataMap.put("OFFER TYPE", offertypeList);
+
+			query = sessionFactory.getCurrentSession().createNativeQuery(modalityQry);
+
+			modalityList.add(modalityHeaders);
+			itr = query.list().iterator();
+			while (itr.hasNext()) {
+				Object[] obj = (Object[]) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				for (Object ob : obj) {
+					String value = "";
+					value = (ob == null) ? "" : ob.toString();
+					dataObj.add(value.replaceAll("\\^", ","));
+				}
+				obj = null;
+				modalityList.add(dataObj);
+			}
+
+			downloadDataMap.put("MODALITY", modalityList);
+		} catch (Exception e) {
+			logger.debug("Exception: ", e);
+		}
+		return downloadDataMap;
+
+	}
+	// Added by Kavitha D for download promo Cr template ends-SPRINT-9
+
+	public List<ArrayList<String>> getPromotionErrorDetails(ArrayList<String> headerDetail, String userId) {
+		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
+		try {
+			String qry = "SELECT CHANNEL_NAME,MOC,CUSTOMER_CHAIN_L1,CUSTOMER_CHAIN_L2,PROMO_TIMEPERIOD,AB_CREATION,BASEPACK_CODE,BASEPACK_DESC,CHILD_BASEPACK_CODE,OFFER_DESC,OFFER_TYPE,OFFER_MODALITY,QUANTITY,ERROR_MSG,TEMPLATE_TYPE,USER_ID"
+					+ " FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE USER_ID=?0";
+			Query query = sessionFactory.getCurrentSession().createNativeQuery(qry);
+			query.setParameter(0, userId);
+			Iterator itr = query.list().iterator();
+			downloadDataList.add(headerDetail);
+			while (itr.hasNext()) {
+				Object[] obj = (Object[]) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				for (Object ob : obj) {
+					String value = "";
+					value = (ob == null) ? "" : ob.toString();
+					dataObj.add(value.replaceAll("\\^", ","));
+				}
+				obj = null;
+				downloadDataList.add(dataObj);
+			}
+			return downloadDataList;
+
+		} catch (Exception e) {
+			logger.debug(e);
+		}
+		return downloadDataList;
+	}
+
+	@Override
+	public Map<String, List<List<String>>> getMastersForTemplate() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
-
-

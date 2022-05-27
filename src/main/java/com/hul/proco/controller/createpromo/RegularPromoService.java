@@ -63,8 +63,9 @@ public class RegularPromoService {
 				headerList.add("PROMO TIMEPERIOD");
 				headerList.add("AB CREATION (ONLY FOR KA Accounts)");
 				headerList.add("BASEPACK CODE");
+				headerList.add("BASEPACK DESCRIPTION");
 				headerList.add("CHILDPACK CODE");
-				headerList.add("PROMO DESCRIPTION");
+				headerList.add("OFFER DESCRIPTION");
 				headerList.add("OFFER TYPE");
 				headerList.add("OFFER MODALITY");
 				headerList.add("PRICE OFF");
@@ -116,9 +117,43 @@ public class RegularPromoService {
 				headerList.add("BASEPACK ADDITION");
 				headerList.add("TOPUP");
 				headerList.add("ADDITIONAL QTY");
-				headerList.add("ADDITIONAL BUDGET");
-
 				return headerList;
 			}
-}			//Added by Kavitha D for downloading promo CR template ends-SPRINT 9
+			//Added by Kavitha D for downloading promo CR template ends-SPRINT 9
+
+			public ArrayList<String> getHeaderListForPromotionErrorDownload() {
+				ArrayList<String> headerList = new ArrayList<String>();
+				headerList.add("CHANNEL_NAME");
+				headerList.add("MOC");
+				headerList.add("CUSTOMER_CHAIN_L1");
+				headerList.add("CUSTOMER_CHAIN_L2");
+				headerList.add("PROMO_TIMEPERIOD");
+				headerList.add("AB_CREATION");
+				headerList.add("BASEPACK_CODE");
+				headerList.add("BASEPACK_DESC");
+				headerList.add("CHILD_BASEPACK_CODE");
+				headerList.add("OFFER_DESC");
+				headerList.add("OFFER_TYPE");
+				headerList.add("OFFER_MODALITY");
+				headerList.add("QUANTITY");
+				headerList.add("ERROR_MSG");
+				headerList.add("TEMPLATE_TYPE");
+				headerList.add("USER_ID");
+
+				
+				return headerList;
+			}
+
+			@Transactional(rollbackFor = { Exception.class })
+			public List<ArrayList<String>> getPromotionErrorDetails(ArrayList<String> headerDetail, String userId) {
+				
+				return createCRPromo.getPromotionErrorDetails(headerDetail, userId);
+			}
+
+
+			public Map<String, List<List<String>>> getMastersForTemplate() {
+				// TODO Auto-generated method stub
+				return createCRPromo.getMastersForTemplate();
+			}
+}			
 
