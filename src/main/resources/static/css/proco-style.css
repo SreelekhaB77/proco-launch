@@ -589,6 +589,18 @@ select.promolistselect {
 	position: absolute;
 	z-index: -1;
 }
+/*bharati added below code for sprint-9 us-1*/
+#upload-file1 {
+	opacity: 0;
+	position: absolute;
+	z-index: -1;
+}
+#upload-file2 {
+	opacity: 0;
+	position: absolute;
+	z-index: -1;
+}
+/*code end here*/
 .input-group.upload-status-files {
     width: 60%;
     margin: 0 auto;
@@ -601,7 +613,24 @@ select.promolistselect {
 	overflow: hidden;
 	text-align: center;
 }
-
+/*bharati added below css for upload in sprint-9 US-1*/
+.file-name1 {
+	padding: 7px;
+	color: #2A8351;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	text-align: center;
+}
+.file-name2 {
+	padding: 7px;
+	color: #2A8351;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	text-align: center;
+}
+/*bharati code end here*/
 .cust-file {
 	float: right;
 }
@@ -890,15 +919,16 @@ span.comboTreeItemTitle {
 	max-height: 300px;
 	overflow: auto;
 }
-
+/*bharati added below changes in sprint-9 US-1*/
 .sample-upload-file {
 	background: #3B5999;
 	padding: 10px;
-	/*   width: 50%; */
 	font-size: larger;
 	margin-top: 20px;
 	color: #fff;
 	border-radius: 3px;
+	
+	
 }
 
 .sample-upload-file span {
