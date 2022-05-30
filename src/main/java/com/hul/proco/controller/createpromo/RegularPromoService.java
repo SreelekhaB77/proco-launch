@@ -63,16 +63,15 @@ public class RegularPromoService {
 				headerList.add("PROMO TIMEPERIOD");
 				headerList.add("AB CREATION (ONLY FOR KA Accounts)");
 				headerList.add("BASEPACK CODE");
-				headerList.add("BASEPACK DESCRIPTION");
 				headerList.add("CHILDPACK CODE");
-				headerList.add("OFFER DESCRIPTION");
+				headerList.add("PROMO DESCRIPTION");
 				headerList.add("OFFER TYPE");
 				headerList.add("OFFER MODALITY");
 				headerList.add("PRICE OFF");
 				headerList.add("BUDGET");
 				headerList.add("BRANCH");
 				headerList.add("CLUSTER");
-				headerList.add("QTY");
+				headerList.add("QUANTITY");
 
 				
 				return headerList;
@@ -108,7 +107,7 @@ public class RegularPromoService {
 				headerList.add("BRANCH");
 				headerList.add("CLUSTER CODE");
 				headerList.add("CLUSTER");
-				headerList.add("QTY");
+				headerList.add("QUANTITY");
 				headerList.add("BUDGET");
 				headerList.add("SOL TYPE");
 				headerList.add("REMARK");
@@ -116,7 +115,9 @@ public class RegularPromoService {
 				headerList.add("CLUSTER SELECTION");
 				headerList.add("BASEPACK ADDITION");
 				headerList.add("TOPUP");
-				headerList.add("ADDITIONAL QTY");
+				headerList.add("ADDITIONAL QUANTITY");
+				headerList.add("ADDITIONAL BUDGET");
+
 				return headerList;
 			}
 			//Added by Kavitha D for downloading promo CR template ends-SPRINT 9
