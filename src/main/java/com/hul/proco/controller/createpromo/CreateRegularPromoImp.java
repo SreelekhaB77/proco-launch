@@ -235,7 +235,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								String startDate = getStartDate(new_moc.substring(4, 6).concat(new_moc.substring(0, 4)),
 										bean.getPpm_account(), new_date);
 								if (startDate.isEmpty() || startDate.equals("")) {
-									error_msg = error_msg + "Invalid promo time period";
+									error_msg = error_msg + "Can't obtain Start date for ppm account/moc";
 									query.setString(18, "");
 									query.setString(19, "");
 								} else {
@@ -457,6 +457,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						query.setString(20, bean.getPromo_time_period());
 					} else {
 						query.setString(19, "");
+						
 						query.setString(20, "");
 					}
 
