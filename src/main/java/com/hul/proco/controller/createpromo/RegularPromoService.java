@@ -124,18 +124,22 @@ public class RegularPromoService {
 
 			public ArrayList<String> getHeaderListForPromotionErrorDownload() {
 				ArrayList<String> headerList = new ArrayList<String>();
-				headerList.add("CHANNEL_NAME");
+				headerList.add("CHANNEL NAME");
 				headerList.add("MOC");
-				headerList.add("CUSTOMER_CHAIN_L1");
-				headerList.add("CUSTOMER_CHAIN_L2");
-				headerList.add("PROMO_TIMEPERIOD");
-				headerList.add("AB_CREATION");
-				headerList.add("BASEPACK_CODE");
-				headerList.add("BASEPACK_DESC");
-				headerList.add("CHILD_BASEPACK_CODE");
-				headerList.add("OFFER_DESC");
-				headerList.add("OFFER_TYPE");
-				headerList.add("OFFER_MODALITY");
+				headerList.add("SECONDARY CHANNEL");
+				headerList.add("PPM ACCOUNT");
+				headerList.add("PROMO TIMEPERIOD");
+				headerList.add("AB CREATION (ONLY FOR KA Accounts)");
+				headerList.add("BASEPACK CODE");
+				headerList.add("BASEPACK DESCRIPTION");
+				headerList.add("CHILDPACK CODE");
+				headerList.add("OFFER DESCRIPTION");
+				headerList.add("OFFER TYPE");
+				headerList.add("OFFER MODALITY");
+				headerList.add("PRICE OFF");
+				headerList.add("BUDGET");
+				headerList.add("BRANCH");
+				headerList.add("CLUSTER");
 				headerList.add("QUANTITY");
 				headerList.add("ERROR_MSG");
 				headerList.add("TEMPLATE_TYPE");
