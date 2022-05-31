@@ -961,6 +961,22 @@ public class UploadUtil {
 					}
 				}
 
+				sheet = wb.createSheet("Masters-Channel");
+				List<List<String>> channelList = masters.get("CHANNEL");
+				if (channelList != null) {
+					rowCount = 0;
+					for (int r = 0; r < channelList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = channelList.get(r);
+						HSSFRow row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							HSSFCell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
+				}
 			
 
 			fileOut = new FileOutputStream(filePath + extension);
