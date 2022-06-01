@@ -228,8 +228,10 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								query.setString(19, "");
 								if (flag == 1) {
 									error_msg = error_msg + ",Can't obtain Start date";
+									flag=1;
 								} else {
 									error_msg = error_msg + "Can't obtain Start date";
+									flag=1;
 								}
 							} else {
 								String startDate = getStartDate(new_moc.substring(4, 6).concat(new_moc.substring(0, 4)),
@@ -238,6 +240,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 									error_msg = error_msg + "Can't obtain Start date for ppm account/moc";
 									query.setString(18, "");
 									query.setString(19, "");
+									flag=1;
 								} else {
 
 									SimpleDateFormat sdf_1 = new SimpleDateFormat("dd/MM/yyyy");
@@ -249,10 +252,12 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						} else {
 							if (flag == 1) {
 								error_msg = error_msg + ",Invalid promo time period";
+								flag = 1;
 							} else {
 								error_msg = error_msg + "Invalid promo time period";
+								flag = 1;
 							}
-							flag = 1;
+							
 							query.setString(18, "");
 							query.setString(19, "");
 						}
