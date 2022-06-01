@@ -1043,18 +1043,18 @@ $("#ProcoRegularFileUpload").click(function (event) {
 				                $('#errorblockUpload').hide();
 				                }
 				                else if(resdata.includes('FILE_EMPTY')){
-									$('#errorblockUpload').show().find('span').html('Error while uploading Empty File');
+									$('#errorblockUpload').show().find('span').html('Error While Uploading Empty File');
 									$('#ProcoRegularerrorblockUpload').hide();
 									$('#Procosuccessblock').hide();
 								}
 								else if(resdata.includes('CHECK_COL_MISMATCH')){
-									$('#errorblockUpload').show().find('span').html('Mismatch Columns in excel');
+									$('#errorblockUpload').show().find('span').html('Please Check Uploaded File');
 									$('#ProcoRegularerrorblockUpload').hide();
 									$('#Procosuccessblock').hide();
 								}
 								else{
 									//console.log("Error");
-				                	$('#errorblockUpload').show().find('span').html('Error while uploading File');
+				                	$('#errorblockUpload').show().find('span').html('Error While Uploading File');
 				                	$('#Procosuccessblock').hide();
 				                	$('#ProcoRegularerrorblockUpload').hide();
 				                	 
@@ -1128,18 +1128,18 @@ $("#ProcoRegularFileUpload").click(function (event) {
 				                $('#errorblockUpload').hide();
 				                }
 				                else if(resdata.includes('FILE_EMPTY')){
-									$('#errorblockUpload').show().find('span').html('Error while uploading Empty File');
+									$('#errorblockUpload').show().find('span').html('Error While Uploading Empty File');
 									$('#ProcoRegularerrorblockUpload').hide();
 									$('#Procosuccessblock').hide();
 								}
 								else if(resdata.includes('CHECK_COL_MISMATCH')){
-									$('#errorblockUpload').show().find('span').html('Mismatch Columns in excel');
+									$('#errorblockUpload').show().find('span').html('Please Check Uploaded File');
 									$('#ProcoRegularerrorblockUpload').hide();
 									$('#Procosuccessblock').hide();
 								}
 								else{
 									//console.log("Error");
-				                	$('#errorblockUpload').show().find('span').html('Error while uploading File');
+				                	$('#errorblockUpload').show().find('span').html('Error While Uploading File');
 				                	$('#Procosuccessblock').hide();
 				                	$('#ProcoRegularerrorblockUpload').hide();
 				                	 
@@ -1215,18 +1215,18 @@ $("#ProcoRegularFileUpload").click(function (event) {
 				                $('#errorblockUpload').hide();
 				                }
 				                else if(resdata.includes('FILE_EMPTY')){
-									$('#errorblockUpload').show().find('span').html('Error while uploading Empty File');
+									$('#errorblockUpload').show().find('span').html('Error While Uploading Empty File');
 									$('#ProcoRegularerrorblockUpload').hide();
 									$('#Procosuccessblock').hide();
 								}
 								else if(resdata.includes('CHECK_COL_MISMATCH')){
-									$('#errorblockUpload').show().find('span').html('Mismatch Columns in excel');
+									$('#errorblockUpload').show().find('span').html('Please Check Uploaded File');
 									$('#ProcoRegularerrorblockUpload').hide();
 									$('#Procosuccessblock').hide();
 								}
 								else{
 									//console.log("Error");
-				                	$('#errorblockUpload').show().find('span').html('Error while uploading File');
+				                	$('#errorblockUpload').show().find('span').html('Error While Uploading File');
 				                	$('#Procosuccessblock').hide();
 				                	$('#ProcoRegularerrorblockUpload').hide();
 				                	 
