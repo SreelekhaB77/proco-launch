@@ -70,13 +70,14 @@ public class PPMLinkageDAO implements PPMLinkageInterface {
 			}else
 			{
 				query.executeUpdate();
-				Session session =sessionFactory.getCurrentSession();
-				StoredProcedureQuery proc=session.createStoredProcedureQuery("PPMinsertIntoMainTable");
-				proc.execute();
 				//sessionFactory.getCurrentSession().createSQLQuery("call insertIntoMainTable19()").addEntity(PPMLinkageBean.class);
 			}
 				
 		}
+		
+		Session session =sessionFactory.getCurrentSession();
+		StoredProcedureQuery proc=session.createStoredProcedureQuery("PPMinsertIntoMainTable");
+		proc.execute();
 		return "EXCEL_UPLOADED";
 	}
 
