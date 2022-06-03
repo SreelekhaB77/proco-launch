@@ -63,7 +63,7 @@ public class PPMLinkageDAO implements PPMLinkageInterface {
 			query.setString(27, bean.getInvestment_amount());
 			query.setString(28, userId);
 			int count = checkExist(bean);
-			System.out.println("count:"+count);
+			
 			if(count>0)
 			{
 				
@@ -122,7 +122,7 @@ public class PPMLinkageDAO implements PPMLinkageInterface {
 		query.setString(25, bean.getFund_type());
 		query.setString(26, bean.getMoc());
 		query.setString(27, bean.getInvestment_amount());
-		System.out.println("Query Exist:" + query.getQueryString());
+		
 		return ((BigInteger)query.uniqueResult()).intValue();
 	}
 

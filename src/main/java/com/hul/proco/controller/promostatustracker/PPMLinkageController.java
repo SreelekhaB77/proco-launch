@@ -49,7 +49,8 @@ public class PPMLinkageController {
 			if (!CommonUtils.isFileEmpty(file)) {
 				if (CommonUtils.isMearsureReportFileSizeExceeds(file)) {
 					model.addAttribute("errorMsg", commUtils.getProperty("File.Size.Exceeds"));
-					ModRes = "File Size Exceeds";
+					model.addAttribute("ModRes", "File Size Exceeds");
+					return "File Size Exceeds";
 				} else {
 					if (UploadUtil.movefile(file, fileName)) {
 						int excelColumnCount = UploadUtil.readExcelCellCount(fileName);
@@ -72,13 +73,23 @@ public class PPMLinkageController {
 								
 								//save_data = createCRPromo.createCRPromo(beanArray, userId, template);
 								save_data=linkageService.addTotempTable(beanArray, userId);
-								System.out.println("Saved data:"+save_data);
+								
+							}
+							
+							if(save_data.equals("EXCEL_UPLOADED"))
+							{
+								model.addAttribute("ModRes", "EXCEL_UPLOADED");
+								return"EXCEL_UPLOADED";
+							}else
+							{
+								model.addAttribute("ModRes", "EXCEL_NOT_UPLOADED");
+								return"EXCEL_NOT_UPLOADED";
 							}
 							
 							
-							
 						} else {
-							ModRes = "Column count is not match with expected";
+							model.addAttribute("ModRes", "Column count is not match with expected");
+							return "Column count is not match with expected";
 						}
 					}
 				}
@@ -89,7 +100,7 @@ public class PPMLinkageController {
 		catch (Throwable e) {
 			logger.error(e);
 		}
-		return null;
+		return save_data;
 	}
 
 }
