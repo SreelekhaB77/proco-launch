@@ -4,7 +4,7 @@
  
 $(document).ready(function() {
 	
-	$(document).on("click", "#btnSubmitBasePack, #btnSubmitBasePack, .validate_dowload", function(){
+	$(document).on("click", "#btnSubmitBasePack1, #btnSubmitBasePack, .validate_dowload", function(){
         $("#successblock, #errorblock, #successblockUpload, #erorblockUpload").hide();
 	});
 	
@@ -952,3 +952,94 @@ function downloadMeasureReport(e){
 		
 	
 }
+//bharati added code for PPlinkage upload in sprint-9 US-15
+	
+					$("#btnSubmitBasePack1").click(function (event) {
+						event.preventDefault();
+						
+						var fileName = $('#uploadmeasscre').val();
+						if (fileName == '') {
+							$('#uploadErrorMeaMsg').show().html("Please select a file to upload");
+							return false;
+						} else {
+							$('#uploadErrorMeaMsg').hide();
+							var FileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+							if (FileExt != "xlsx") {
+								if (FileExt != "xls") {
+									$('#uploadErrorMeaMsg').show().html("Please upload .xls or .xlsx file");
+									$("#coeStatusMeasFileUpload").submit(function(e) {
+										e.preventDefault();
+									});
+									return false;
+								}
+
+							}
+						}
+						
+				        // Get form
+				        var form = $('#coeStatusMeasFileUpload')[0];
+                           var data = new FormData(form);
+                        $.ajax({
+				            type: "POST",
+				            enctype: 'multipart/form-data',
+				            url: 'ppminkageupload.htm' ,
+				            data: data,
+				            processData: false,
+				            contentType: false,
+				            cache: false,
+				            timeout: 600000,
+				            beforeSend: function() {
+                                ajaxLoader(spinnerWidth, spinnerHeight);
+                            },
+							
+				            success: function (resdata) {
+				            	//console.log(resdata);
+				            	
+				            	 $('.loader').hide();
+				            	 if(resdata.includes('EXCEL_UPLOADED')) {
+				                    $('#ppmerrorblockUpload').hide();
+				                	$('#ppmsuccessblock').show().find('span').html(' File Uploaded Successfully !!!');
+				                	 
+				                }
+				                
+				                else if(resdata.includes('EXCEL_NOT_UPLOADED')){
+				               $('#ppmsuccessblock').hide();
+				                $('#ppmerrorblockUpload').show().find('span').html(' File Contains Error ');
+				                }
+								 else if(resdata.includes('File Size Exceeds')){
+									 $('#ppmerrorblockUpload').show().find('span').html('File Size Limit Exceeded');
+                                     $('#ppmsuccessblock').hide();
+								 }
+				                else if(resdata.includes('FILE_EMPTY')){
+									$('#ppmerrorblockUpload').show().find('span').html('Error While Uploading Empty File');
+									$('#ppmsuccessblock').hide();
+								}
+								else if(resdata.includes('CHECK_COL_MISMATCH')){
+									$('#ppmerrorblockUpload').show().find('span').html('Please Check Uploaded File');
+									$('#ppmsuccessblock').hide();
+								}else if(resdata.includes('Column count is not match with expected')){
+									$('#ppmerrorblockUpload').show().find('span').html('Please Upload correct File');
+									$('#ppmsuccessblock').hide();
+								}
+								else{
+									
+				                	$('#ppmerrorblockUpload').show().find('span').html('Error While Uploading File');
+				                	$('#ppmsuccessblock').hide();
+				                	
+				                	 
+				              	 }
+				                    
+				                 $('#coeStatusMeasFileUpload')[0].reset();
+								 //$('.file-name').html("No file chosen");
+				            },
+				            error: function (e) {
+				            $('#ppmsuccessblock').hide();
+				                 
+				            }
+				        });
+				       
+					    
+					    	
+				    });
+					
+					//bharati code end here for sprint-9
