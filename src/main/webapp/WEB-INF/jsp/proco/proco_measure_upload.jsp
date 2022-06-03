@@ -34,6 +34,23 @@
 footer {
 	position: initial !important;
 }
+.launchupload-parent {
+   
+    min-height: 330px!important;
+}
+.proco-measure-upload-wrapper h2, .proco-measure-download-wrapper h2 {
+font-size: 25px!important;
+}
+.promo-lib-bg-active a {
+   
+    line-height: 2.9!important;
+    font-size: 1.5em!important;
+	
+}
+.tab-label-proco-status-inactive {
+   line-height: 2.9!important;
+  font-size: 1.4em!important;
+}
 </style>
 </head>
 <body class="Verdana-font">
@@ -119,6 +136,24 @@ footer {
 				</c:if>
 			</div>
 		</c:if>
+		
+		<!--bharati added code for errorblock and successblock for sprint-9 US-15-->
+	                 				<div class="alert alert-success sucess-msg" style="display: none;margin-top:35px;" id="ppmsuccessblock">
+		                                 <button type="button" class="close" data-hide="alert">&times;</button>
+		                                 <span></span>
+	                                </div>
+                                   
+									<div class="alert alert-danger" style="display: none;margin-top:35px;" id="ppmerrorblockUpload">
+		                            <button type="button" class="close" data-hide="alert">&times;</button>
+		
+		                           <!-- <span>Error while uploading file.</span>-->
+								   <span></span>
+		
+	                               </div>
+								  
+		
+		<!--bharati code end here for sprint-9-->
+		
 		<div class="alert err-alert-danger" id="MocDownloadErorblockUpload" style="display:none; margin-top:35px;" data-hide="alert">
 			  <a href="#" class="close new-close-btn" aria-label="close">&times;</a>
 			  <strong>Error! </strong> <span>Please select the MOC.</span>
@@ -137,13 +172,14 @@ footer {
 			
 		</div>
 			
-			
+				
 		
 		
 		 <div class="promo-measure-upload">PROCO MEASURE REPORT UPLOAD</div>
 							<div class="row">
 								<div class="col-md-6 col-sm-6 ddd">
-									<form id="coeStatusMeasFileUpload" class="form-horizontal" action="http://34.120.128.205/VisibilityAssetTracker/uploadProcoMeasureReport.htm" method="post" enctype="multipart/form-data" name="coeStatusFileUpload">
+								<!--bharati changes this below form for sprint-9 US-15 ppminkageupload-->
+									<form id="coeStatusMeasFileUpload" class="form-horizontal" action="#" enctype="multipart/form-data" name="coeStatusFileUpload">
 		
 									<div class="launchupload-parent">
 										<div class="proco-measure-upload-wrapper">
@@ -156,12 +192,12 @@ footer {
 			
 												<div class="upload-max-size">Maximum Upload File Size
 													:4MB</div>
-												<span id="uploadErrorMeaMsg" style="display: none; color: red">Please
-													upload .xls or .xlsx file</span>
+												<span id="uploadErrorMeaMsg" style="display: none; color: red"></span>
+												
 												<div class="input-group upload-status-files">
 													<input id="uploadmeasscre" name="file" type="file" class="file">
 												</div>
-												<input class="validate_upload btn marginT10 new-btn-primary" type="submit" id="btnSubmitBasePack" value="Upload" />
+												<input class="validate_upload btn marginT10 new-btn-primary" type="submit" id="btnSubmitBasePack1" value="Upload" />
 												<a href="http://34.120.128.205/VisibilityAssetTracker/downloadSampleMeasureReport.htm" class="validate_upload btn marginT10 new-btn-download" id="btnSubmitBasePack">Promo Measure Template</a>
 											</div>
 										</div>

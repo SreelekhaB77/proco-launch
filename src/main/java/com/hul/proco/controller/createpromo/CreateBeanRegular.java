@@ -56,7 +56,7 @@ public class CreateBeanRegular {
 	@Column(name = "CLUSTER")
 	private String cluster;
 
-	@Column(name = "QTY")
+	@Column(name = "QUANTITY")
 	private String quantity;
 
 	public String getQuantity() {

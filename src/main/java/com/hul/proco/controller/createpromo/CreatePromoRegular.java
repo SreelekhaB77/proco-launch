@@ -19,4 +19,5 @@ public interface CreatePromoRegular  {
 	public List<ArrayList<String>> getPromotionErrorDetails(ArrayList<String> headerDetail, String userId);
 
 	public Map<String, List<List<String>>> getMastersForTemplate();
+	
 }
