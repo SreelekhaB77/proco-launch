@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import javax.persistence.ParameterMode;
 import javax.persistence.StoredProcedureQuery;
 
 import org.hibernate.Hibernate;
@@ -31,6 +32,11 @@ public class PPMLinkageDAO implements PPMLinkageInterface {
 	@Override
 	public String addTotempTable(PPMLinkageBean[] beanArray, String userId) {
 
+		Query queryToDelete = sessionFactory.getCurrentSession()
+				.createNativeQuery("DELETE from TBL_PROCO_MEASURE_REPORT_TEMP_V2 where USER_ID=:userId");
+		queryToDelete.setString("userId", userId);
+		queryToDelete.executeUpdate();
+
 		Query query = sessionFactory.getCurrentSession().createNativeQuery(INSERT_INTO_TEMP_TABLE);
 
 		for (PPMLinkageBean bean : beanArray) {
@@ -52,78 +58,27 @@ public class PPMLinkageDAO implements PPMLinkageInterface {
 			query.setString(16, bean.getBrand());
 			query.setString(17, bean.getSub_brand());
 			query.setString(18, bean.getUom());
-			query.setString(19, bean.getTax());
+			query.setString(19, String.valueOf((double) Math.round(Double.parseDouble(bean.getTax()) * 100) / 100));
 			query.setString(20, bean.getDiscount());
 			query.setString(21, bean.getList_price());
 			query.setString(22, bean.getPercent_promoted_volume());
-			query.setString(23, bean.getQuantity());
+			query.setString(23, String.valueOf((double) Math.round(Double.parseDouble(bean.getQuantity()) * 100) / 100));
 			query.setString(24, bean.getBudget_holder_name());
 			query.setString(25, bean.getFund_type());
 			query.setString(26, bean.getMoc());
-			query.setString(27, bean.getInvestment_amount());
+			query.setString(27,String.valueOf((double) Math.round(Double.parseDouble(bean.getInvestment_amount()) * 100) / 100));
 			query.setString(28, userId);
-			int count = checkExist(bean);
-			
-			if(count>0)
-			{
-				
-			}else
-			{
-				query.executeUpdate();
-				//sessionFactory.getCurrentSession().createSQLQuery("call insertIntoMainTable19()").addEntity(PPMLinkageBean.class);
-			}
-				
+
+			query.executeUpdate();
+
 		}
-		
-		Session session =sessionFactory.getCurrentSession();
-		StoredProcedureQuery proc=session.createStoredProcedureQuery("PPMinsertIntoMainTable");
+
+		Session session = sessionFactory.getCurrentSession();
+		StoredProcedureQuery proc = session.createStoredProcedureQuery("PMRInsertIntoMainTable");
+		proc.registerStoredProcedureParameter(0, String.class, ParameterMode.IN);
+		proc.setParameter(0, userId);
 		proc.execute();
 		return "EXCEL_UPLOADED";
-	}
-
-	private int checkExist(PPMLinkageBean bean) {
-
-	String checkdublicate = "SELECT COUNT(1) FROM TBL_PROCO_MEASURE_REPORT_TEMP_V2"
-			+ " WHERE VERSIONED_PROMOTION_ID=?1  AND CHART_BY_TYPE=?2  AND PROMOTION_CREATOR=?3  AND PROMOTION_STATUS=?4  "
-			+ "AND PROMOTION_ID=?5  AND PROMOTION_NAME=?6  AND PROMOTION_SELL_IN_START_DATE=?7  AND PROMOTION_SELL_IN_END_DATE=?8  "
-			+ "AND PROMOTION_MECHANICS=?9  AND INVESTMENT_TYPE=?10  AND CLUSTER_CODE=?11  AND CLUSTER_NAME=?12  AND BASEPACK=?13"
-			+ "  AND BASEPACK_NAME=?14  AND CATEGORY=?15  AND BRAND=?16  AND SUB_BRAND=?17  AND UOM=?18  AND TAX=?19  AND DISCOUNT=?20  "
-			+ "AND LIST_PRICE=?21  AND PERCENT_PROMOTED_VOLUME=?22  AND QUANTITY=?23  AND BUDGET_HOLDER_NAME=?24  AND FUND_TYPE=?25  "
-			+ "AND MOC=?26  AND INVESTMENT_AMOUNT=?27  ";
-				
-		
-		
-		Query query=sessionFactory.getCurrentSession().createNativeQuery(checkdublicate);
-		
-		query.setString(1, bean.getVersion_promo_id());
-		query.setString(2, bean.getChart_by_type());
-		query.setString(3, bean.getPromo_creator());
-		query.setString(4, bean.getPromo_status());
-		query.setString(5, bean.getPromo_id());
-		query.setString(6, bean.getPromo_name());
-		query.setString(7, bean.getSell_in_start_date());
-		query.setString(8, bean.getSell_in_end_date());
-		query.setString(9, bean.getPromo_mechanics());
-		query.setString(10, bean.getInvestment_type());
-		query.setString(11, bean.getCluster_code());
-		query.setString(12, bean.getCluster_name());
-		query.setString(13, bean.getBasepack_code());
-		query.setString(14, bean.getBasepack_name());
-		query.setString(15, bean.getCategory());
-		query.setString(16, bean.getBrand());
-		query.setString(17, bean.getSub_brand());
-		query.setString(18, bean.getUom());
-		query.setString(19, bean.getTax());
-		query.setString(20, bean.getDiscount());
-		query.setString(21, bean.getList_price());
-		query.setString(22, bean.getPercent_promoted_volume());
-		query.setString(23, bean.getQuantity());
-		query.setString(24, bean.getBudget_holder_name());
-		query.setString(25, bean.getFund_type());
-		query.setString(26, bean.getMoc());
-		query.setString(27, bean.getInvestment_amount());
-		
-		return ((BigInteger)query.uniqueResult()).intValue();
 	}
 
 }
