@@ -291,12 +291,14 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						} else {
 							if (flag == 1) {
 								error_msg = error_msg + ",Price off invalid for STPR/STPR Liquidation";
+								query.setString(12, bean.getPrice_off());
 								flag = 1;
 							} else {
 								error_msg = error_msg + " Price off invalid for STPR/STPR Liquidation";
+								query.setString(12, bean.getPrice_off());
 								flag = 1;
 							}
-							query.setString(12, "");
+							
 						}
 
 					}
