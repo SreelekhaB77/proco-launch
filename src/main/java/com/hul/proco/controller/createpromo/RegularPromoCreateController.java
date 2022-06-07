@@ -57,6 +57,7 @@ public class RegularPromoCreateController {
 		CreateBeanRegular[] beanArray = null;
 		String filepath = FilePaths.FILE_TEMPUPLOAD_PATH;
 		fileName = filepath + fileName;
+
 		try {
 			if (!CommonUtils.isFileEmpty(file)) {
 				if (CommonUtils.isFileSizeExceeds(file)) {
@@ -68,6 +69,10 @@ public class RegularPromoCreateController {
 						map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(16, false, null);
 					} else if (template.equalsIgnoreCase("new")) {
 						map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(17, false, null);
+					} else if (template.equalsIgnoreCase("cr")) {
+
+						map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(7, false, null);
+
 					}
 
 					if (map.isEmpty()) {
@@ -82,6 +87,7 @@ public class RegularPromoCreateController {
 						List<?> datafromexcel = map.get("DATA");
 						beanArray = (CreateBeanRegular[]) datafromexcel
 								.toArray(new CreateBeanRegular[datafromexcel.size()]);
+
 						save_data = createCRPromo.createCRPromo(beanArray, userId, template);
 
 					}
