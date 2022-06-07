@@ -60,7 +60,7 @@ public class RegularPromoCreateController {
 
 		try {
 			if (!CommonUtils.isFileEmpty(file)) {
-				if (CommonUtils.isFileSizeExceeds(file)) {
+				if (CommonUtils.isFileProcoSizeExceeds(file)) {
 					model.addAttribute("FILE_STAUS", "FILE_SIZE_EXCEED");
 					return "FILE_SIZE_EXCEED";
 				} else if (UploadUtil.movefile(file, fileName)) {
@@ -244,7 +244,7 @@ public class RegularPromoCreateController {
 
 		Map<String, List<List<String>>> mastersForNewTemplate = createCRPromo.getMastersForNewTemplate();
 		try {
-			UploadUtil.writeXLSFile(downloadFileName, downloadedData, mastersForNewTemplate, ".xls");
+			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForNewTemplate, ".xls");
 			downloadLink = downloadFileName + ".xls";
 			is = new FileInputStream(new File(downloadLink));
 			/*
