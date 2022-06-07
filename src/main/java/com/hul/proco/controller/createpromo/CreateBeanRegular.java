@@ -59,6 +59,75 @@ public class CreateBeanRegular {
 	@Column(name = "QUANTITY")
 	private String quantity;
 
+	@Column(name = "SOL TYPE")
+	private String sol_type;
+
+	@Column(name = "END DATE")
+	private String end_date;
+	
+	@Column(name = "Cluster Selection")
+	private String cluster_selection;
+	
+	@Column(name = "Basepack Addition")
+	private String basepack_addition;
+	
+	@Column(name = "TOPUP")
+	private String topup;
+	
+	@Column(name="Additional QTY")
+	private String additional_QTY;
+	
+	
+	
+	
+	public String getSol_type() {
+		return sol_type;
+	}
+
+	public String getEnd_date() {
+		return end_date;
+	}
+
+	public String getCluster_selection() {
+		return cluster_selection;
+	}
+
+	public String getBasepack_addition() {
+		return basepack_addition;
+	}
+
+	public String getTopup() {
+		return topup;
+	}
+
+	public String getAdditional_QTY() {
+		return additional_QTY;
+	}
+
+	public void setSol_type(String sol_type) {
+		this.sol_type = sol_type;
+	}
+
+	public void setEnd_date(String end_date) {
+		this.end_date = end_date;
+	}
+
+	public void setCluster_selection(String cluster_selection) {
+		this.cluster_selection = cluster_selection;
+	}
+
+	public void setBasepack_addition(String basepack_addition) {
+		this.basepack_addition = basepack_addition;
+	}
+
+	public void setTopup(String topup) {
+		this.topup = topup;
+	}
+
+	public void setAdditional_QTY(String additional_QTY) {
+		this.additional_QTY = additional_QTY;
+	}
+
 	public String getQuantity() {
 		return quantity;
 	}
