@@ -82,7 +82,7 @@ public class DPVolumeUploadDAO implements DPVolumeUpload {
 		Query query = sessionFactory.getCurrentSession().createNativeQuery(SQL_QUERY_INSERT_INTO_PROMOTION_MASTER_TEMP);
 
 		for (CreateBeanRegular bean : beanArray) {
-			System.out.println("QUANTITY:" + bean.getQuantity());
+			
 			if (bean.getQuantity().isEmpty() || !bean.getQuantity().matches("\\d+")) {
 				error_msg = "Quantity empty/not number";
 				flag = 1;
