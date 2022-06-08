@@ -78,8 +78,30 @@ public class CreateBeanRegular {
 	private String additional_QTY;
 	
 	
+	@Column(name="PROMO ID")
+	private String promo_id;
+	
+	@Column(name = "Remark")
+	private String Remark;
 	
 	
+	
+	public String getRemark() {
+		return Remark;
+	}
+
+	public void setRemark(String remark) {
+		Remark = remark;
+	}
+
+	public String getPromo_id() {
+		return promo_id;
+	}
+
+	public void setPromo_id(String promo_id) {
+		this.promo_id = promo_id;
+	}
+
 	public String getSol_type() {
 		return sol_type;
 	}

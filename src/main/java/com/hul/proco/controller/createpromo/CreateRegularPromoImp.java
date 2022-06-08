@@ -491,14 +491,14 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	}
 
 	private String getStartDate(String concat, String ppm_account, String promo_time_period) {
-		String start_date_c = "SELECT count(START_DATE) FROM TBL_VAT_MOC_GROUP_ACCOUNT_MASTER A"
+		String start_date_c = "SELECT count(START_DATE) FROM TBL_PROCO_CUSTOMER_MASTER_V2 A"
 				+ " INNER JOIN TBL_VAT_MOC_MASTER B ON A.MOC_GROUP=B.MOC_GROUP AND" + " '" + promo_time_period
-				+ "' BETWEEN START_DATE AND END_DATE AND B.MOC='" + concat + "' AND A.ACCOUNT_NAME='" + ppm_account
+				+ "' BETWEEN START_DATE AND END_DATE AND B.MOC='" + concat + "' AND A.PPM_ACCOUNT='" + ppm_account
 				+ "'";
 
-		String start_date_1 = "SELECT START_DATE FROM TBL_VAT_MOC_GROUP_ACCOUNT_MASTER A"
+		String start_date_1 = "SELECT START_DATE FROM TBL_PROCO_CUSTOMER_MASTER_V2 A"
 				+ " INNER JOIN TBL_VAT_MOC_MASTER B ON A.MOC_GROUP=B.MOC_GROUP AND" + " '" + promo_time_period
-				+ "' BETWEEN START_DATE AND END_DATE AND B.MOC='" + concat + "' AND A.ACCOUNT_NAME='" + ppm_account
+				+ "' BETWEEN START_DATE AND END_DATE AND B.MOC='" + concat + "' AND A.PPM_ACCOUNT='" + ppm_account
 				+ "'";
 
 		int startdate = excuteValidationQuery(start_date_c);
@@ -526,8 +526,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	}
 
 	private List<Object[]> getStartEndDate(String moc, String ppm_account) {
-		String se_query = "SELECT START_DATE,END_DATE FROM TBL_VAT_MOC_GROUP_ACCOUNT_MASTER A"
-				+ " INNER JOIN TBL_VAT_MOC_MASTER B ON A.MOC_GROUP=B.MOC_GROUP AND A.ACCOUNT_NAME='" + ppm_account
+		String se_query = "SELECT START_DATE,END_DATE FROM TBL_PROCO_CUSTOMER_MASTER_V2 A"
+				+ " INNER JOIN TBL_VAT_MOC_MASTER B ON A.MOC_GROUP=B.MOC_GROUP AND A.PPM_ACCOUNT='" + ppm_account
 				+ "' AND MOC='" + moc + "'";
 		return sessionFactory.getCurrentSession().createNativeQuery(se_query).list();
 	}
