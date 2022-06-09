@@ -154,7 +154,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					}
 				}
 				
-				if (!validationmap.get("Secondary").contains(bean.getSecondary_channel()) 
+				/*if (!validationmap.get("Secondary").contains(bean.getSecondary_channel()) 
 						|| bean.getSecondary_channel().contains(",")) {
 					if (flag == 1)
 						error_msg = error_msg + ",Invalid Secondary Channel";
@@ -163,7 +163,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						flag = 1;
 					}
 				}
-				
+				*/
 				
 				if (!validationmap.get("cluster").contains(bean.getCluster()) || bean.getCluster().contains(",")) {
 					if (flag == 1)
@@ -724,7 +724,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	}
 
 	private ArrayList<String> getValidPPMAccount() {
-		String ppm_qury = "SELECT DISTINCT CUSTOMER_CHAIN_L2 FROM TBL_PROCO_CUSTOMER_MASTER WHERE ACTIVE='1'";
+		String ppm_qury = "SELECT DISTINCT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE  IS_ACTIVE='Y'";
 		return (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(ppm_qury).list();
 
 	}
