@@ -136,7 +136,7 @@ public class DPVolumeUploadController {
 			if (save_data.equals("EXCEL_UPLOADED")) {
 				model.addAttribute("FILE_STAUS", "EXCEL_UPLOADED");
 			} else {
-				model.addAttribute("FILE_STAUS", save_data);
+				model.addAttribute("FILE_STAUS", "EXCEL_NOT_UPLOADED");
 				save_data = "EXCEL_NOT_UPLOADED";
 			}
 		} catch (Exception e) {
