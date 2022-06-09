@@ -126,7 +126,7 @@ public class DPVolumeUploadDAO implements DPVolumeUpload {
 			flag = 0;
 			gloabal=0;
 			if (updateQuantity() > 0)
-				return "EXCEL_UPLOADED";
+				return "NO_DATA_TO_UPLOAD";
 			else
 				return "EXCEL_NOT_UPLOADED";
 		}
