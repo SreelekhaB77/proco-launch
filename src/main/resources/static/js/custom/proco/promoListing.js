@@ -162,7 +162,7 @@ $(document).ready(function() {
 				       promoTable = $('.promo-list-table').DataTable({
 
 				              /* added for second tab start */
-				             "bProcessing": true,
+				          "bProcessing": true,
 				             "bServerSide": true,
 				             "scrollY":       "300px",
 						        "scrollX":        true,
@@ -184,7 +184,7 @@ $(document).ready(function() {
 					                  "sEmptyTable": "No Pending Visibilities."
 					
 					              },
-				             "iDisplayLength": 5,
+				             "iDisplayLength": 10,
 						     "iDisplayStart": 0,
 				              "sAjaxSource": "promoListingPagination.htm",
 				               "fnServerParams": function(aoData) {
@@ -202,12 +202,12 @@ $(document).ready(function() {
 				    	                );
 				              }, 
 				              "fnDrawCallback": function(oSettings){
-				            	 /* $('table.promo-list-table input[type="checkbox"]').change(function() {
+				            	 $('table.promo-list-table input[type="checkbox"]').change(function() {
 									    $('table.promo-list-table input[type="checkbox"]').not(this).prop('checked', false);  
-									});*/
+									});
 				            	  $("table.promo-list-table input[name='select_all']").prop('checked',false);
                     	    	  /* Select all checkbox */
-                    	    	  $("table.promo-list-table input[name='select_all']").change(function() {
+                    	    	 $("table.promo-list-table input[name='select_all']").change(function() {
                                       if ($(this).prop("checked")) {
                                         $("table.promo-list-table input:checkbox").prop("checked", true);
 
@@ -225,6 +225,7 @@ $(document).ready(function() {
                             			}
                     				});
 				              },
+							  //bharati commented uom,kitting value, reason, remark,originalId in sprint-9 US-2
 				              "aoColumns": [{
 				                  "mData": "promo_id",
 				                  "mRender": function(data, type, full) {
@@ -232,9 +233,10 @@ $(document).ready(function() {
 				                  } 
 				                  },{
 				                    "mData": "promo_id"
-				                  },{
+				                  },/*{
 				                    "mData": "originalId"
-				                  },{
+				                  },*/
+								  {
 				                    "mData": "startDate"
 				                  },{
 				                    "mData": "endDate"
@@ -254,20 +256,27 @@ $(document).ready(function() {
 				                    "mData": "geography",
 				                  }, {
 				                    "mData": "quantity",
-				                  }, {
+				                  }, 
+								  /*{
 				                    "mData": "uom",
-				                  }, {
+				                  },*/
+								  {
 				                    "mData": "offer_value",
-				                  },{
+				                  },
+								  /*{
 					                 "mData": "kitting_value",
-					              },{
+					              },*/
+								  
+								  {
 					                 "mData": "status",
-					              },{
+					              },
+								  /*{
 						                 "mData": "reason",
 						              }
 					              ,{
 						                 "mData": "remark",
-						              },{
+						              },*/
+									  {
 						                 "mData": "investmentType",
 						              } ,{
 						                 "mData": "solCode",
@@ -280,7 +289,7 @@ $(document).ready(function() {
 				                /* added for second tab end */
 
 				            });
-				       
+						  
 				      
 				       promoTable.columns.adjust().draw();
 				       

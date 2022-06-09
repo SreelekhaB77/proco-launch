@@ -198,7 +198,9 @@ font-size: 25px!important;
 													<input id="uploadmeasscre" name="file" type="file" class="file">
 												</div>
 												<input class="validate_upload btn marginT10 new-btn-primary" type="submit" id="btnSubmitBasePack1" value="Upload" />
-												<a href="http://localhost:8083/VisibilityAssetTracker/downloadSampleMeasureReport.htm" class="validate_upload btn marginT10 new-btn-download" id="btnSubmitBasePack">Promo Measure Template</a>
+												<!--<a href="http://localhost:8083/VisibilityAssetTracker/downloadSampleMeasureReport.htm" class="validate_upload btn marginT10 new-btn-download" id="btnSubmitBasePack">Promo Measure Template</a>-->
+												<!--bharati commented above line and added below line for measure report download in sprint-9-->
+											<a href="http://localhost:8083/VisibilityAssetTracker/promoMeasureDownloadTemplate.htm" class="validate_upload btn marginT10 new-btn-download" id="btnSubmitBasePack">Promo Measure Template</a>
 											</div>
 										</div>
 									</div>
