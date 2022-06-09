@@ -215,6 +215,11 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 		return procoStatusTrackerDao.getProcoMeasureReportErrorDetails(headerList, userId);
 	}
 	
+	//Added by Kavitha D for promo measure template-SPRINT 9
+	public ArrayList<String> getPromoMeasureDownload(){
+		return procoStatusTrackerDao.getPromoMeasureDownload();	
+	}
+
 	
 
 }

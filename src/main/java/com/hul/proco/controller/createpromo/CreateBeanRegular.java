@@ -59,6 +59,179 @@ public class CreateBeanRegular {
 	@Column(name = "QUANTITY")
 	private String quantity;
 
+	@Column(name = "SOL TYPE")
+	private String sol_type;
+
+	@Column(name = "END DATE")
+	private String end_date;
+	
+	@Column(name = "Cluster Selection")
+	private String cluster_selection;
+	
+	@Column(name = "Basepack Addition")
+	private String basepack_addition;
+	
+	@Column(name = "TOPUP")
+	private String topup;
+	
+	@Column(name="Additional QTY")
+	private String additional_QTY;
+	
+	
+	@Column(name="PROMO ID")
+	private String promo_id;
+	
+	@Column(name = "Remark")
+	private String Remark;
+	
+	private String investmentType;
+	private String solCodeStatus;
+	private String userId;
+	private String customer_chain_l1;
+	private String status;
+	private String promotionMechanics;
+	private String solCode;
+	private String originalId;
+	private String start_Date;
+	
+	
+	
+	public String getStart_Date() {
+		return start_Date;
+	}
+
+	public void setStart_Date(String start_Date) {
+		this.start_Date = start_Date;
+	}
+
+	public String getInvestmentType() {
+		return investmentType;
+	}
+
+	public void setInvestmentType(String investmentType) {
+		this.investmentType = investmentType;
+	}
+
+	public String getSolCodeStatus() {
+		return solCodeStatus;
+	}
+
+	public void setSolCodeStatus(String solCodeStatus) {
+		this.solCodeStatus = solCodeStatus;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getCustomer_chain_l1() {
+		return customer_chain_l1;
+	}
+
+	public void setCustomer_chain_l1(String customer_chain_l1) {
+		this.customer_chain_l1 = customer_chain_l1;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getPromotionMechanics() {
+		return promotionMechanics;
+	}
+
+	public void setPromotionMechanics(String promotionMechanics) {
+		this.promotionMechanics = promotionMechanics;
+	}
+
+	public String getSolCode() {
+		return solCode;
+	}
+
+	public void setSolCode(String solCode) {
+		this.solCode = solCode;
+	}
+
+	public String getOriginalId() {
+		return originalId;
+	}
+
+	public void setOriginalId(String originalId) {
+		this.originalId = originalId;
+	}
+
+	public String getRemark() {
+		return Remark;
+	}
+
+	public void setRemark(String remark) {
+		Remark = remark;
+	}
+
+	public String getPromo_id() {
+		return promo_id;
+	}
+
+	public void setPromo_id(String promo_id) {
+		this.promo_id = promo_id;
+	}
+
+	public String getSol_type() {
+		return sol_type;
+	}
+
+	public String getEnd_date() {
+		return end_date;
+	}
+
+	public String getCluster_selection() {
+		return cluster_selection;
+	}
+
+	public String getBasepack_addition() {
+		return basepack_addition;
+	}
+
+	public String getTopup() {
+		return topup;
+	}
+
+	public String getAdditional_QTY() {
+		return additional_QTY;
+	}
+
+	public void setSol_type(String sol_type) {
+		this.sol_type = sol_type;
+	}
+
+	public void setEnd_date(String end_date) {
+		this.end_date = end_date;
+	}
+
+	public void setCluster_selection(String cluster_selection) {
+		this.cluster_selection = cluster_selection;
+	}
+
+	public void setBasepack_addition(String basepack_addition) {
+		this.basepack_addition = basepack_addition;
+	}
+
+	public void setTopup(String topup) {
+		this.topup = topup;
+	}
+
+	public void setAdditional_QTY(String additional_QTY) {
+		this.additional_QTY = additional_QTY;
+	}
+
 	public String getQuantity() {
 		return quantity;
 	}
@@ -201,6 +374,22 @@ public class CreateBeanRegular {
 
 	public void setCluster(String cluster) {
 		this.cluster = cluster;
+	}
+
+	@Override
+	public String toString() {
+		return "CreateBeanRegular [file=" + file + ", channel=" + channel + ", moc=" + moc + ", secondary_channel="
+				+ secondary_channel + ", ppm_account=" + ppm_account + ", promo_time_period=" + promo_time_period
+				+ ", ab_creation=" + ab_creation + ", basepack_code=" + basepack_code + ", baseback_desc="
+				+ baseback_desc + ", c_pack_code=" + c_pack_code + ", offer_desc=" + offer_desc + ", ofr_type="
+				+ ofr_type + ", offer_mod=" + offer_mod + ", price_off=" + price_off + ", budget=" + budget
+				+ ", branch=" + branch + ", cluster=" + cluster + ", quantity=" + quantity + ", sol_type=" + sol_type
+				+ ", end_date=" + end_date + ", cluster_selection=" + cluster_selection + ", basepack_addition="
+				+ basepack_addition + ", topup=" + topup + ", additional_QTY=" + additional_QTY + ", promo_id="
+				+ promo_id + ", Remark=" + Remark + ", investmentType=" + investmentType + ", solCodeStatus="
+				+ solCodeStatus + ", userId=" + userId + ", customer_chain_l1=" + customer_chain_l1 + ", status="
+				+ status + ", promotionMechanics=" + promotionMechanics + ", solCode=" + solCode + ", originalId="
+				+ originalId + ", start_Date=" + start_Date + "]";
 	}
 
 }

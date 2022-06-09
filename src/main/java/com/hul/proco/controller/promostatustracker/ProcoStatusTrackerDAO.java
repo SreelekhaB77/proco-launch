@@ -45,4 +45,7 @@ public interface ProcoStatusTrackerDAO {
 	public List<ArrayList<String>> getProcoMeasureReportErrorDetails(ArrayList<String> headerList, String userId);
 
 	public boolean batchCustomerStatusTrackerReport(List<ArrayList<String>> dataObj);
+
+	public ArrayList<String> getPromoMeasureDownload(); //Added by Kavitha D for promo measure template-SPRINT 9
+
 }

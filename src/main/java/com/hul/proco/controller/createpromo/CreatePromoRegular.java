@@ -14,10 +14,14 @@ public interface CreatePromoRegular  {
 	public Map<String, List<List<String>>> getMastersForNewTemplate();
 
 	public Map<String, List<List<String>>> getMastersForCrTemplate();
+	
+	public List<ArrayList<String>> getPromotionDownloadCR(ArrayList<String> headerDetail, String userId);
+
     //Added by Kavitha D for promo templates ends-SPRINT 9
 
 	public List<ArrayList<String>> getPromotionErrorDetails(ArrayList<String> headerDetail, String userId);
 
 	public Map<String, List<List<String>>> getMastersForTemplate();
+
 	
 }

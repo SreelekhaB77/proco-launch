@@ -57,9 +57,10 @@ public class RegularPromoCreateController {
 		CreateBeanRegular[] beanArray = null;
 		String filepath = FilePaths.FILE_TEMPUPLOAD_PATH;
 		fileName = filepath + fileName;
+
 		try {
 			if (!CommonUtils.isFileEmpty(file)) {
-				if (CommonUtils.isFileSizeExceeds(file)) {
+				if (CommonUtils.isFileProcoSizeExceeds(file)) {
 					model.addAttribute("FILE_STAUS", "FILE_SIZE_EXCEED");
 					return "FILE_SIZE_EXCEED";
 				} else if (UploadUtil.movefile(file, fileName)) {
@@ -68,6 +69,10 @@ public class RegularPromoCreateController {
 						map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(16, false, null);
 					} else if (template.equalsIgnoreCase("new")) {
 						map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(17, false, null);
+					} else if (template.equalsIgnoreCase("cr")) {
+
+						map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(7, false, null);
+
 					}
 
 					if (map.isEmpty()) {
@@ -82,6 +87,7 @@ public class RegularPromoCreateController {
 						List<?> datafromexcel = map.get("DATA");
 						beanArray = (CreateBeanRegular[]) datafromexcel
 								.toArray(new CreateBeanRegular[datafromexcel.size()]);
+
 						save_data = createCRPromo.createCRPromo(beanArray, userId, template);
 
 					}
@@ -191,13 +197,14 @@ public class RegularPromoCreateController {
 			HttpServletRequest request, HttpServletResponse response) {
 		InputStream is;
 		String downloadLink = "", absoluteFilePath = "";
+		String userId = (String) request.getSession().getAttribute("UserID");
 		List<ArrayList<String>> downloadedData = new ArrayList<ArrayList<String>>();
 		ArrayList<String> headerDetail = createCRPromo.getHeaderListForPromotionCrTemplateDownload();
+		downloadedData = createCRPromo.getPromotionDownloadCR(headerDetail, userId);
 		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
 		String fileName = UploadUtil.getFileName("Promotion.RegularTemplate.file", "",
 				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 		String downloadFileName = absoluteFilePath + fileName;
-		downloadedData.add(headerDetail);
 		Map<String, List<List<String>>> mastersForCrTemplate = createCRPromo.getMastersForCrTemplate();
 		try {
 			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForCrTemplate, ".xls");
@@ -238,7 +245,7 @@ public class RegularPromoCreateController {
 
 		Map<String, List<List<String>>> mastersForNewTemplate = createCRPromo.getMastersForNewTemplate();
 		try {
-			UploadUtil.writeXLSFile(downloadFileName, downloadedData, mastersForNewTemplate, ".xls");
+			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForNewTemplate, ".xls");
 			downloadLink = downloadFileName + ".xls";
 			is = new FileInputStream(new File(downloadLink));
 			/*

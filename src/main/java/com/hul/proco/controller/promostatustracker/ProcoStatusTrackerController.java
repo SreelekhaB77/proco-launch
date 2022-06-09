@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -259,6 +260,33 @@ public class ProcoStatusTrackerController {
 		return Sampleimp;
 	}
 	
+	//Added by Kavitha D for promo measure template starts-SPRINT 9
+	@GetMapping(value="promoMeasureDownloadTemplate.htm")
+	public @ResponseBody ModelAndView promoMeasureDownloadTemplate(
+			@ModelAttribute("PPMLinkageBean") PPMLinkageBean ppmLinkageBean, Model model,
+			HttpServletRequest request, HttpServletResponse response)  {
+		try {	
+			List<String> downloadedData = procoStatusTrackerService.getPromoMeasureDownload();
+		if (downloadedData != null) {
+			String downloadFileName = null;
+			UploadUtil.writeXLSFilePromo(downloadFileName, downloadedData, null,".xls");
+			String downloadLink = downloadFileName + ".xls";
+			FileInputStream is = new FileInputStream(new File(downloadLink));
+			response.setContentType("application/force-download");
+			response.setHeader("Content-Disposition", "attachment; filename=PromoMeasureDownloadFile"
+					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+			IOUtils.copy(is, response.getOutputStream());
+			response.flushBuffer();
+		}
+	} catch (Exception e) {
+		logger.debug("Exception: ", e);
+		return null;
+	}
+		return null;
+		
+	}
+	//Added by Kavitha D for promo measure template ends-SPRINT 9
+
 	@RequestMapping(value = "downloadPromoStatusTracker.htm", method = RequestMethod.POST)
 	public ModelAndView downloadPromoStatusTracker(HttpServletRequest request, HttpServletResponse response,
 			Model model) {

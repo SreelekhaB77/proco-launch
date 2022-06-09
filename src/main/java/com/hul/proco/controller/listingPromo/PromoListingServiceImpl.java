@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hul.proco.controller.createpromo.CreateBeanRegular;
 import com.hul.proco.controller.createpromo.CreatePromotionBean;
 
 @Service
@@ -206,5 +207,62 @@ public class PromoListingServiceImpl implements PromoListingService {
 			String modality, String year, String moc, String userId, int active, String role) {
 		return promoListingDAO.getDeletePromotionDump(headerList, cagetory, brand, basepack, custChainL1, custChainL2, geography, offerType, modality, year, moc, userId, active, role);
 	}
+
+	//Added by Kavitha D for promo listing download starts-SPRINT 9
+	@Override
+	public ArrayList<String> getHeaderListForPromoDownloadListing() {
+		ArrayList<String> headerList=new ArrayList<String>();
+		headerList.add("CHANNEL");
+		headerList.add("MOC");
+		headerList.add("ACCOUNT_TYPE");
+		headerList.add("POS_ONINVOICE");
+		headerList.add("SECONDARY_CHANNEL");
+		headerList.add("PPM_ACCOUNT");
+		headerList.add("PROMO_ID");
+		headerList.add("EXISTING SOL CODE");
+		headerList.add("BM/MOC CYLCLE");
+		headerList.add("PROMO TIMEPERIOD");
+		headerList.add("AB CREATION");
+		headerList.add("SOL WILL RELEASE ON");
+		headerList.add("START DATE");
+		headerList.add("START END");
+		headerList.add("OFFER DESCRIPTION");
+		headerList.add("PPM DESCRIPTION");
+		headerList.add("BASEPACK");
+		headerList.add("CHILDPACK");
+		headerList.add("OFFER TYPE");
+		headerList.add("OFFER MODALITY");
+		headerList.add("PRICE OFF");
+		headerList.add("QUANTITY");
+		headerList.add("BUDGET");
+		headerList.add("BRANCH");
+		headerList.add("CLUSTER");
+		headerList.add("SOL TYPE");
+		headerList.add("REMARK");
+		headerList.add("CMM NAME");
+		headerList.add("TME NAME");
+		headerList.add("SALES CATEGORY");
+		headerList.add("PSA CATEGORY");
+		
+		return headerList;
+	}
+	
+	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId){
+		return promoListingDAO.getPromotionListingDownload(headerList,userId );
+	}
+	//Added by Kavitha D for promo listing download ends-SPRINT 9
+
+
+	@Override
+	public int getPromoListRowCountGrid(String userId) {
+		return promoListingDAO.getPromoListRowCountGrid(userId);
+	}
+
+	@Override
+	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId,
+			String searchParameter) {
+		return promoListingDAO.getPromoTableListGrid(pageDisplayStart,pageDisplayLength,userId,searchParameter);
+	}
+
 
 }

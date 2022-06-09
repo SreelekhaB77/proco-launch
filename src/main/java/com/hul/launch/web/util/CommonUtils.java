@@ -40,13 +40,17 @@ public class CommonUtils {
 	}
 
 	public static final long maxFileSize = 1024 * 1024 * 2;
-	public static final long AnnexureDocFileSize = 1024 * 1024 * 6;//Harsha changes increased file size from 2 MB to 6 MB 
-	public static final long MdgDocFileSize = 1024 * 1024 * 6;//Harsha changes increased file size from 2 MB to 6 MB 
-	public static final long ArtworkDocFileSize = 1024 * 1024 * 6;//Harsha changes increased file size from 2 MB to 6 MB 
+	public static final long AnnexureDocFileSize = 1024 * 1024 * 6;// Harsha changes increased file size from 2 MB to 6
+																	// MB
+	public static final long MdgDocFileSize = 1024 * 1024 * 6;// Harsha changes increased file size from 2 MB to 6 MB
+	public static final long ArtworkDocFileSize = 1024 * 1024 * 6;// Harsha changes increased file size from 2 MB to 6
+																	// MB
 	public static final long maxFileSizeForProcMeasureReport = 1024 * 1024 * 4;
-	public static final long  maxFileSizeForExcel = 1024 * 1024 * 25;
-	public static final long  maxFileSizeForTOTExcel = 1024 * 1024 * 5;
-	
+	public static final long maxFileSizeForExcel = 1024 * 1024 * 25;
+	public static final long maxFileSizeForTOTExcel = 1024 * 1024 * 5;
+
+	public static final long maxProcoFileSize = 1024 * 1024 * 10; // Mayur Changes to increase the proco file size to 10 MB
+
 	public static final long maxImgFileSize = 8388608;
 	public static final int maxFileNameLen = 255;
 
@@ -209,7 +213,17 @@ public class CommonUtils {
 			return false;
 		}
 	}
-	//Added by harsha for Sprint 7
+	
+	//Mayur added the method
+	public static boolean isFileProcoSizeExceeds(MultipartFile file) {
+		if (file.getSize() > (maxProcoFileSize)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// Added by harsha for Sprint 7
 	public static boolean isAnnexureDocFileSizeExceeds(MultipartFile file) {
 		if (file.getSize() > (AnnexureDocFileSize)) {
 			return true;
@@ -217,6 +231,7 @@ public class CommonUtils {
 			return false;
 		}
 	}
+
 	public static boolean isMdgDocFileSizeExceeds(MultipartFile file) {
 		if (file.getSize() > (MdgDocFileSize)) {
 			return true;
@@ -224,6 +239,7 @@ public class CommonUtils {
 			return false;
 		}
 	}
+
 	public static boolean isArtworkDocFileSizeExceeds(MultipartFile file) {
 		if (file.getSize() > (ArtworkDocFileSize)) {
 			return true;
@@ -231,7 +247,8 @@ public class CommonUtils {
 			return false;
 		}
 	}
-	//Ended of changes for Sprint 7
+
+	// Ended of changes for Sprint 7
 	public static boolean isMearsureReportFileSizeExceeds(MultipartFile file) {
 		if (file.getSize() > (maxFileSizeForProcMeasureReport)) {
 			return true;
@@ -240,7 +257,6 @@ public class CommonUtils {
 		}
 	}
 
-	
 	public static boolean isExcelFileSizeExceeds(MultipartFile file) {
 		if (file.getSize() > (maxFileSizeForExcel)) {
 			return true;
@@ -248,8 +264,7 @@ public class CommonUtils {
 			return false;
 		}
 	}
-	
-	
+
 	public static boolean isTOTFileSizeExceeds(MultipartFile file) {
 		if (file.getSize() > (maxFileSizeForTOTExcel)) {
 			return true;
@@ -257,8 +272,7 @@ public class CommonUtils {
 			return false;
 		}
 	}
-	
-	
+
 	public static boolean isProperFile(String file) {
 
 		if (file.endsWith(".csv")) {
@@ -902,7 +916,7 @@ public class CommonUtils {
 
 	public static String getMocMonthYear(String startDate, String endDate) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		//logger.info("startDate: " + startDate + " endDate: " + endDate);
+		// logger.info("startDate: " + startDate + " endDate: " + endDate);
 		sdf.setLenient(false);
 		try {
 			java.util.Date usd = sdf.parse(startDate.toString());
@@ -975,89 +989,63 @@ public class CommonUtils {
 			return null;
 		}
 		return null;
-		
+
 		// OLD MOC LOGIC
-		
-		/*SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		sdf.setLenient(false);
 
-		try {
-			java.util.Date usd = sdf.parse(startDate.toString());
-			java.util.Date ued = sdf.parse(endDate.toString());
-
-			if ((CommonUtils.isToday(usd) || usd.after(new Date()) || usd.before(new Date()))
-					&& (CommonUtils.isSameDate(usd, ued) || ued.after(usd))) {
-				StringBuilder sb = new StringBuilder();
-				String stdt = CommonUtils.getNumOfMOnths(startDate.toString());
-
-				int diff = CommonUtils.differenceInMonths(sdf.parse(stdt), sdf.parse(endDate.toString()));
-
-				Calendar currMonthPr = null;
-
-				if (diff >= 0) {
-					for (int count = 0; count <= diff; count++) {
-						currMonthPr = Calendar.getInstance();
-						currMonthPr.setTime(sdf.parse(stdt));
-						currMonthPr.setLenient(false);
-						currMonthPr.add(Calendar.MONTH, 1);
-
-						StringBuilder currMothPr = new StringBuilder("21");
-						currMothPr.append(
-								"/" + (currMonthPr.get(Calendar.MONTH) + 1) + "/" + currMonthPr.get(Calendar.YEAR));
-						stdt = currMothPr.toString();
-						if (currMonthPr.get(Calendar.MONTH) == 0) {
-							sb.append(12);
-							sb.append(currMonthPr.get(Calendar.YEAR) - 1 + ",");
-						} else {
-							if (currMonthPr.get(Calendar.MONTH) < 10) {
-								sb.append("0" + currMonthPr.get(Calendar.MONTH));
-								sb.append(currMonthPr.get(Calendar.YEAR) + ",");
-							} else {
-								sb.append(currMonthPr.get(Calendar.MONTH));
-								sb.append(currMonthPr.get(Calendar.YEAR) + ",");
-							}
-						}
-					}
-				} else {
-					currMonthPr = Calendar.getInstance();
-					currMonthPr.setTime(sdf.parse(stdt));
-					currMonthPr.setLenient(false);
-					currMonthPr.add(Calendar.MONTH, 1);
-					StringBuilder currMothPr = new StringBuilder("21");
-					currMothPr
-							.append("/" + (currMonthPr.get(Calendar.MONTH) + 1) + "/" + currMonthPr.get(Calendar.YEAR));
-					stdt = currMothPr.toString();
-					if (currMonthPr.get(Calendar.MONTH) == 0) {
-						sb.append(12);
-						sb.append(currMonthPr.get(Calendar.YEAR) - 1 + ",");
-					} else {
-						if (currMonthPr.get(Calendar.MONTH) < 10) {
-							sb.append("0" + currMonthPr.get(Calendar.MONTH));
-							sb.append(currMonthPr.get(Calendar.YEAR) + ",");
-						} else {
-							sb.append(currMonthPr.get(Calendar.MONTH));
-							sb.append(currMonthPr.get(Calendar.YEAR) + ",");
-						}
-
-					}
-
-				}
-				if (sb.length() - 1 == 7) {
-					return sb.substring(1, sb.length() - 1);
-				} else {
-					return sb.substring(0, sb.length() - 1);
-				}
-			}
-		} catch (Exception e) {
-			logger.error("Error Occured ", e);
-		}
-		return null;*/
+		/*
+		 * SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		 * sdf.setLenient(false);
+		 * 
+		 * try { java.util.Date usd = sdf.parse(startDate.toString()); java.util.Date
+		 * ued = sdf.parse(endDate.toString());
+		 * 
+		 * if ((CommonUtils.isToday(usd) || usd.after(new Date()) || usd.before(new
+		 * Date())) && (CommonUtils.isSameDate(usd, ued) || ued.after(usd))) {
+		 * StringBuilder sb = new StringBuilder(); String stdt =
+		 * CommonUtils.getNumOfMOnths(startDate.toString());
+		 * 
+		 * int diff = CommonUtils.differenceInMonths(sdf.parse(stdt),
+		 * sdf.parse(endDate.toString()));
+		 * 
+		 * Calendar currMonthPr = null;
+		 * 
+		 * if (diff >= 0) { for (int count = 0; count <= diff; count++) { currMonthPr =
+		 * Calendar.getInstance(); currMonthPr.setTime(sdf.parse(stdt));
+		 * currMonthPr.setLenient(false); currMonthPr.add(Calendar.MONTH, 1);
+		 * 
+		 * StringBuilder currMothPr = new StringBuilder("21"); currMothPr.append( "/" +
+		 * (currMonthPr.get(Calendar.MONTH) + 1) + "/" +
+		 * currMonthPr.get(Calendar.YEAR)); stdt = currMothPr.toString(); if
+		 * (currMonthPr.get(Calendar.MONTH) == 0) { sb.append(12);
+		 * sb.append(currMonthPr.get(Calendar.YEAR) - 1 + ","); } else { if
+		 * (currMonthPr.get(Calendar.MONTH) < 10) { sb.append("0" +
+		 * currMonthPr.get(Calendar.MONTH)); sb.append(currMonthPr.get(Calendar.YEAR) +
+		 * ","); } else { sb.append(currMonthPr.get(Calendar.MONTH));
+		 * sb.append(currMonthPr.get(Calendar.YEAR) + ","); } } } } else { currMonthPr =
+		 * Calendar.getInstance(); currMonthPr.setTime(sdf.parse(stdt));
+		 * currMonthPr.setLenient(false); currMonthPr.add(Calendar.MONTH, 1);
+		 * StringBuilder currMothPr = new StringBuilder("21"); currMothPr .append("/" +
+		 * (currMonthPr.get(Calendar.MONTH) + 1) + "/" +
+		 * currMonthPr.get(Calendar.YEAR)); stdt = currMothPr.toString(); if
+		 * (currMonthPr.get(Calendar.MONTH) == 0) { sb.append(12);
+		 * sb.append(currMonthPr.get(Calendar.YEAR) - 1 + ","); } else { if
+		 * (currMonthPr.get(Calendar.MONTH) < 10) { sb.append("0" +
+		 * currMonthPr.get(Calendar.MONTH)); sb.append(currMonthPr.get(Calendar.YEAR) +
+		 * ","); } else { sb.append(currMonthPr.get(Calendar.MONTH));
+		 * sb.append(currMonthPr.get(Calendar.YEAR) + ","); }
+		 * 
+		 * }
+		 * 
+		 * } if (sb.length() - 1 == 7) { return sb.substring(1, sb.length() - 1); } else
+		 * { return sb.substring(0, sb.length() - 1); } } } catch (Exception e) {
+		 * logger.error("Error Occured ", e); } return null;
+		 */
 	}
 
 	// get getMocMonthYear for proco
 	public static String getMocMonthYearForProco(String startDate, String endDate) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		//logger.info("startDate: " + startDate + " endDate: " + endDate);
+		// logger.info("startDate: " + startDate + " endDate: " + endDate);
 		sdf.setLenient(false);
 		try {
 			java.util.Date usd = sdf.parse(startDate.toString());
@@ -1181,7 +1169,7 @@ public class CommonUtils {
 		}
 		return dateVal;
 	}
-	
+
 	public static String getDateInYyyyMmDdFormat(String date) {
 		String dateVal = null;
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -1200,8 +1188,8 @@ public class CommonUtils {
 	public static boolean zipMultiplefile(List<String> srcFiles, String zippedPath) throws IOException {
 		logger.info("START :: CommonUtils.zipMultiplefile()");
 		FileOutputStream fos = null;
-        ZipOutputStream zipOut = null;
-        FileInputStream fis = null;
+		ZipOutputStream zipOut = null;
+		FileInputStream fis = null;
 		try {
 			fos = new FileOutputStream(zippedPath);
 			zipOut = new ZipOutputStream(fos);
@@ -1217,7 +1205,7 @@ public class CommonUtils {
 					zipOut.write(bytes, 0, length);
 				}
 				fis.close();
-				
+
 			}
 		} catch (FileNotFoundException e) {
 			logger.error("ERROR :: " + e);
@@ -1227,7 +1215,7 @@ public class CommonUtils {
 			return false;
 		} finally {
 			try {
-				if(zipOut!=null ) {
+				if (zipOut != null) {
 					zipOut.close();
 				}
 				if (fos != null)
@@ -1239,7 +1227,7 @@ public class CommonUtils {
 		logger.info("END :: CommonUtils.zipMultiplefile()");
 		return true;
 	}
-	
+
 	public static long getDiffInDaysBetweenCurrentAndGivenDate(String date) {
 		try {
 			SimpleDateFormat sdFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -1249,49 +1237,49 @@ public class CommonUtils {
 			long daysDiff = timeDiff / (1000 * 60 * 60 * 24);
 			return daysDiff;
 		} catch (Exception e) {
-			logger.debug("Exception:",e);
+			logger.debug("Exception:", e);
 		}
 		return 0;
 	}
-	
+
 	public static String arrayToString(String[] theAray) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < theAray.length; i++) {
 			String item = theAray[i];
-			if(item!=null && !item.trim().equals("") && !item.trim().equals(",")) {
+			if (item != null && !item.trim().equals("") && !item.trim().equals(",")) {
 				sb.append(item);
 			}
-			if (i < theAray.length-1) {
+			if (i < theAray.length - 1) {
 				sb.append(",");
 			}
 		}
 		return sb.toString();
-	} 
-	
+	}
+
 	public static String getDateinDDMMYYYFormat(String date) {
-		String date2=null;
+		String date2 = null;
 		try {
-		    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		    SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-		    date2=sdf.format(sdf2.parse(date));
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+			date2 = sdf.format(sdf2.parse(date));
 		} catch (ParseException e) {
-		   logger.debug("Exception: ",e);
-		   return null;
+			logger.debug("Exception: ", e);
+			return null;
 		}
 		return date2;
 	}
-	
+
 	public synchronized static String generateTID(String moc) {
-		Random random=new Random();
+		Random random = new Random();
 		String id = String.format("%04d", random.nextInt(10000));
-		return "CD"+moc+id;
+		return "CD" + moc + id;
 	}
-	
-	public static List<String> stringToList(String input){
-		List<String> list=new ArrayList<>();
-		if(input!=null) {
+
+	public static List<String> stringToList(String input) {
+		List<String> list = new ArrayList<>();
+		if (input != null) {
 			String[] split = input.split(",");
-			list=Arrays.asList(split);
+			list = Arrays.asList(split);
 		}
 		return list;
 	}

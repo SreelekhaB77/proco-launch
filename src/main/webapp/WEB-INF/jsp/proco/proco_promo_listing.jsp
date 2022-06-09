@@ -179,7 +179,8 @@
 				</span>
 				<div class="clearfix"></div> -->
 			</div>
-		<form action="http://34.120.128.205/VisibilityAssetTracker/downloadPromoFromListing.htm" method="POST" enctype="multipart/form-data" id="download">
+			<!--bharati change below end point downloadPromoFromListing.htm to downloadPromoListing.htm for promo list download in sprint-9-->
+		<form action="http://34.120.128.205/VisibilityAssetTracker/downloadPromoListing.htm" method="POST" enctype="multipart/form-data" id="download">
 		<input type="hidden" name="remarkText" id="remarkText" value="" />
 			<div class="promo-form-details proco-listing-form">
 				<div class="col-md-4">
@@ -306,12 +307,13 @@
 		</form>
 			<div class="promo-list table-header-listing">PROMO LIST</div>
 			<form>
+			<!--bharati commented uom,kitting value, reason,remark in sprint-9 US-2-->
 			<table id="table-id-promo-list-table" class="table table-striped table-bordered promo-list-table table-responsive" style="width: 100%;">
 				<thead>
 					<tr>
 						<th><input name="select_all" class="userCheck" value="1" type="checkbox" /></th>
-						<th>UNIQUE ID</th>
-						<th>ORIGINAL ID</th>
+						<th>PROMO ID</th>
+						<!--<th>ORIGINAL ID</th>-->
 						<th>START DATE</th>
 						<th>END DATE</th>
 						<th>MOC</th>
@@ -322,12 +324,8 @@
 						<th>OFFER MODALITY</th>
 						<th>GEOGRAPHY</th>
 						<th>QUANTITY</th>
-						<th>UOM</th>
 						<th>OFFER VALUE</th>
-						<th>KITTING VALUE</th>
 						<th name="stat">STATUS</th>
-						<th>REASON</th>
-						<th>REMARK</th>
 						<th>INVESTMENT TYPES</th>
 						<th>SOL CODE</th>
 						<th>PROMOTION MECHANICS</th>
@@ -336,7 +334,8 @@
 				</thead>
 							</table>
 			</form>
-			<c:if test="${roleId eq 'TME'}">			
+			<!--bharati commented below 4 btns and upload part in sprint-9 US-2-->
+			<!--<c:if test="${roleId eq 'TME'}">			
 			<div class="promo-list-btns">
 				<div class="col-md-3 col-xs-12">
 					<a href="#" id="delete_promo"><button
@@ -355,7 +354,7 @@
 						class="btn promo-primary-btn col-md-10 col-md-offset-1 col-xs-12">CREATE
 						PROMO</button></a>
 				</div>
-				</c:if>	
+				</c:if>	-->
 				<div class="clearfix"></div>
 			</div>
 			<!-- <p>Choose file -> Submit Selected File -> Import</p>
@@ -390,7 +389,8 @@
 				<input type="button" class="btn new-btn-download" value="PROMO DOWNLOAD" onclick="javascript: downloadPromotionFile();"></input>
 			</div>
 			</c:if>
-			<c:if test="${roleId eq 'TME'}">
+			<!--bharati added comment for below code in sprint-9-->
+			<!--<c:if test="${roleId eq 'TME'}">
 			<form:form action="http://34.120.128.205/VisibilityAssetTracker/uploadPromoEdit.htm" id="promoEditUpload"
 				method="POST" modelAttribute="VolumeUploadBean"
 				enctype="multipart/form-data" onsubmit="return uploadValidation()">
@@ -423,7 +423,7 @@
 				<div class="clearfix"></div>
 			</div>
 		</form:form>
-		</c:if>
+		</c:if>-->
 			
 		</div>
 		

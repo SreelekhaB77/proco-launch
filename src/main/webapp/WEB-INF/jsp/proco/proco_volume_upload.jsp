@@ -28,6 +28,13 @@
 </head>
 <body>
 	<jsp:include page="../proco/proco-header.jsp" />
+	
+	<div class="loader">
+	<center>
+		<img class="loading-image" src="assets/images/spinner.gif"
+			alt="loading..." style="height: 150px; width: auto;">
+	</center>
+</div>
 	<nav class="navbar navbar-inverse navbar-fixed-top container-bg"
 		style="position:relative;top: 115px;z-index: 2;background-image: none! important;
     border: none! important;background: #F6F3F3;
@@ -111,7 +118,27 @@
 				</c:if>
 			</div>
 		</c:if>
-	
+	<!--bharati added code for errorblock with download error file for volume upload sprint-9-->
+	                 				<div class="alert alert-success sucess-msg" style="display: none;margin-top:35px;margin-bottom: -23px" id="ProcoVolumesuccessblock">
+		                                 <button type="button" class="close" data-hide="alert">&times;</button>
+		                                 <span></span>
+	                                </div>
+                                    <div class="alert alert-danger" style="display: none;margin-top:35px;margin-bottom: -23px" id="ProcoVolumeerrorblockUpload">
+                                        <button type="button" class="close" data-hide="alert">&times;</button>
+                                       
+                                            <span>File contains error...</span>
+                                            <a href="http://34.120.128.205/VisibilityAssetTracker/downloadPromotionErrorFilensp.htm" id="downloadTempFileLink">Click here to Download Error File</a>
+                                    </div>
+									<div class="alert alert-danger" style="display: none;margin-top:35px;margin-bottom: -23px" id="errorblockVolumeUpload">
+		                            <button type="button" class="close" data-hide="alert">&times;</button>
+		
+		                           <!-- <span>Error while uploading file.</span>-->
+								   <span></span>
+		
+	                               </div>
+								  
+		
+		<!--bharati code end here for sprint-9-->	
 	
 		<div class="proco-creation form-horizontal">
 			<!--   <div class="promo-back"><a href="Home.html"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Volume Upload</div> -->
@@ -277,11 +304,15 @@
 					</tr>
 				</thead>
 			</table>
-			<form:form action="http://34.120.128.205/VisibilityAssetTracker/uploadPromoVolume.htm" id="promoVolumeUpload"
-				method="POST" modelAttribute="VolumeUploadBean"
-				enctype="multipart/form-data" onsubmit="return uploadValidation()">
 			<div class="promo-upload">PROMO UPLOAD</div>
 			<div class="upload-file">
+			<!--Bharati change below url for dp volumn upload in sprint-9-->
+			<%--<form:form action="http://34.120.128.205/VisibilityAssetTracker/uploadPromoVolume.htm" id="promoVolumeUpload"
+				method="POST" modelAttribute="VolumeUploadBean"
+				enctype="multipart/form-data" onsubmit="return uploadValidation()">--%>
+				<form:form action="#" id="promoVolumeUpload" modelAttribute="VolumeUploadBean" 
+				enctype="multipart/form-data" onsubmit="return uploadValidation()">
+				
 				<div class="col-md-4 col-md-offset-4" style="padding: 30px 0px;">
 					<div class="upload-label">
 						<span><i class="glyphicon glyphicon-cloud-upload"></i></span> <span>
@@ -302,17 +333,24 @@
 						<div class="file-name" style="line-height: 2.3">No file
 							chosen</div>
 					</div>
-
+                    <span id="uploadErrorMsg" style="display: none; color: red">Please upload .xls or .xlsx file</span>
 					<div class="" style="color: #fff; text-align: center">
-						<button class="btn new-btn-primary">UPLOAD</button>
+						<button id="PromoVolumeUpload" class="btn new-btn-primary">UPLOAD</button>
 
 					</div>
 				</div>
-
+</form:form>
 				<div class="clearfix"></div>
+				<!--bharati added this below btn for dp volumn download in sprint-9-->
+				<form:form action="http://34.120.128.205/VisibilityAssetTracker/downloadDpVolume.htm" id="getPromoVolumnUploadTemplate"
+				method="GET" modelAttribute="VolumeUploadBean"
+				enctype="multipart/form-data" style="text-align:center">
+				<button class="sample-upload-file" style="color: #ffffff;width:250px;margin-bottom:20px;">Download Volume File</button>
+			</form:form>
+			<div class="clearfix"></div>
 			</div>
-		</form:form>
-
+		
+              
 		</div>
 	</div>
 	<jsp:include page="../proco/proco-footer.jsp" />
