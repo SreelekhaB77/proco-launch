@@ -31,6 +31,7 @@ import com.hul.launch.web.util.CommonPropUtils;
 import com.hul.launch.web.util.CommonUtils;
 import com.hul.launch.web.util.FilePaths;
 import com.hul.launch.web.util.UploadUtil;
+import com.hul.proco.controller.createpromo.CreateBeanRegular;
 import com.hul.proco.controller.createpromo.CreatePromoService;
 import com.hul.proco.controller.createpromo.CreatePromotionBean;
 import com.hul.proco.excelreader.exom.ExOM;
@@ -123,11 +124,17 @@ public class PromoListingController {
 			moc = mocValue;
 		}
 
-		int rowCount = promoListingService.getPromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2,
+		//Added by kavitha D for promolisting changes-SPRINT 9
+		/*int rowCount = promoListingService.getPromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2,
 				geography, offerType, modality, year, moc, userId, 1,roleId);
 		List<PromoListingBean> promoList = promoListingService.getPromoTableList((pageDisplayStart + 1),
 				(pageNumber * pageDisplayLength), cagetory, brand, basepack, custChainL1, custChainL2, geography,
-				offerType, modality, year, moc, userId, 1,roleId ,searchParameter);
+				offerType, modality, year, moc, userId, 1,roleId ,searchParameter);*/
+		
+		int rowCount = promoListingService.getPromoListRowCountGrid(userId);
+		List<PromoListingBean> promoList = promoListingService.getPromoTableListGrid((pageDisplayStart + 1),
+				(pageNumber * pageDisplayLength),userId ,searchParameter);
+
 
 		PromoListingJsonObject jsonObj = new PromoListingJsonObject();
 		jsonObj.setJsonBean(promoList);
@@ -779,5 +786,69 @@ public class PromoListingController {
 		}
 		return null;
 	}
+
+	//Added by Kavitha D for promo listing download starts-SPRINT 9
+
+	@RequestMapping(value = "downloadPromoListing.htm", method = RequestMethod.POST)
+	public ModelAndView downloadPromosForListing(@ModelAttribute("CreateBeanRegular") CreateBeanRegular createBeanRegular,HttpServletRequest request, HttpServletResponse response,
+			Model model) {
+		logger.info("START downloadPromos for listing():");
+		try {
+
+			InputStream is;
+			String downloadLink = "", absoluteFilePath = "";
+			List<ArrayList<String>> downloadedData = null;
+			absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
+			String fileName = UploadUtil.getFileName("Promotion.Download.Template.file", "",
+					CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
+			String downloadFileName = absoluteFilePath + fileName;
+			String userId = (String) request.getSession().getAttribute("UserID");
+			
+			ArrayList<String> headerList = promoListingService.getHeaderListForPromoDownloadListing();
+			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId);
+			if (downloadedData != null) {
+				UploadUtil.writeXLSFile(downloadFileName, downloadedData, null,".xls");
+				downloadLink = downloadFileName + ".xls";
+				is = new FileInputStream(new File(downloadLink));
+				// copy it to response's OutputStream
+				response.setContentType("application/force-download");
+				response.setHeader("Content-Disposition", "attachment; filename=PromotionListingDownloadFile"
+						+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+				IOUtils.copy(is, response.getOutputStream());
+				response.flushBuffer();
+			}
+		} catch (Exception e) {
+			logger.debug("Exception: ", e);
+			return null;
+		}
+		return null;
+	}
 	
+	//Added by Kavitha D for promo listing download ends-SPRINT 9
+	
+	
+	//@RequestMapping(value = "promoListingPaginationGrid.htm", method = RequestMethod.GET, produces = "application/json", headers = "Accept=*/*")
+	/*public @ResponseBody String promoListingPaginationGrid( HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("UserID");
+		Integer pageDisplayStart = Integer.valueOf(request.getParameter("iDisplayStart"));
+		Integer pageDisplayLength = Integer.valueOf(request.getParameter("iDisplayLength"));
+		String searchParameter = request.getParameter("sSearch");
+		Integer pageNumber = (pageDisplayStart / pageDisplayLength) + 1;
+
+		int rowCount = promoListingService.getPromoListRowCountGrid(userId);
+		List<CreateBeanRegular> promoList = promoListingService.getPromoTableListGrid((pageDisplayStart + 1),
+				(pageNumber * pageDisplayLength),userId ,searchParameter);
+
+		PromoListingJsonObject jsonObj = new PromoListingJsonObject();
+		jsonObj.setJsonBean1(promoList);
+		jsonObj.setiTotalDisplayRecords(rowCount);
+		jsonObj.setiTotalRecords(rowCount);
+
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		String json = gson.toJson(jsonObj);
+		System.out.println(json);
+		return json;
+	} 
+	*/
+
 }

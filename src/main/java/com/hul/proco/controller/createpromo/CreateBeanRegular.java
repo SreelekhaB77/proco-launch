@@ -84,8 +84,90 @@ public class CreateBeanRegular {
 	@Column(name = "Remark")
 	private String Remark;
 	
+	private String investmentType;
+	private String solCodeStatus;
+	private String userId;
+	private String customer_chain_l1;
+	private String status;
+	private String promotionMechanics;
+	private String solCode;
+	private String originalId;
+	private String start_Date;
 	
 	
+	
+	public String getStart_Date() {
+		return start_Date;
+	}
+
+	public void setStart_Date(String start_Date) {
+		this.start_Date = start_Date;
+	}
+
+	public String getInvestmentType() {
+		return investmentType;
+	}
+
+	public void setInvestmentType(String investmentType) {
+		this.investmentType = investmentType;
+	}
+
+	public String getSolCodeStatus() {
+		return solCodeStatus;
+	}
+
+	public void setSolCodeStatus(String solCodeStatus) {
+		this.solCodeStatus = solCodeStatus;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getCustomer_chain_l1() {
+		return customer_chain_l1;
+	}
+
+	public void setCustomer_chain_l1(String customer_chain_l1) {
+		this.customer_chain_l1 = customer_chain_l1;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getPromotionMechanics() {
+		return promotionMechanics;
+	}
+
+	public void setPromotionMechanics(String promotionMechanics) {
+		this.promotionMechanics = promotionMechanics;
+	}
+
+	public String getSolCode() {
+		return solCode;
+	}
+
+	public void setSolCode(String solCode) {
+		this.solCode = solCode;
+	}
+
+	public String getOriginalId() {
+		return originalId;
+	}
+
+	public void setOriginalId(String originalId) {
+		this.originalId = originalId;
+	}
+
 	public String getRemark() {
 		return Remark;
 	}
@@ -292,6 +374,22 @@ public class CreateBeanRegular {
 
 	public void setCluster(String cluster) {
 		this.cluster = cluster;
+	}
+
+	@Override
+	public String toString() {
+		return "CreateBeanRegular [file=" + file + ", channel=" + channel + ", moc=" + moc + ", secondary_channel="
+				+ secondary_channel + ", ppm_account=" + ppm_account + ", promo_time_period=" + promo_time_period
+				+ ", ab_creation=" + ab_creation + ", basepack_code=" + basepack_code + ", baseback_desc="
+				+ baseback_desc + ", c_pack_code=" + c_pack_code + ", offer_desc=" + offer_desc + ", ofr_type="
+				+ ofr_type + ", offer_mod=" + offer_mod + ", price_off=" + price_off + ", budget=" + budget
+				+ ", branch=" + branch + ", cluster=" + cluster + ", quantity=" + quantity + ", sol_type=" + sol_type
+				+ ", end_date=" + end_date + ", cluster_selection=" + cluster_selection + ", basepack_addition="
+				+ basepack_addition + ", topup=" + topup + ", additional_QTY=" + additional_QTY + ", promo_id="
+				+ promo_id + ", Remark=" + Remark + ", investmentType=" + investmentType + ", solCodeStatus="
+				+ solCodeStatus + ", userId=" + userId + ", customer_chain_l1=" + customer_chain_l1 + ", status="
+				+ status + ", promotionMechanics=" + promotionMechanics + ", solCode=" + solCode + ", originalId="
+				+ originalId + ", start_Date=" + start_Date + "]";
 	}
 
 }

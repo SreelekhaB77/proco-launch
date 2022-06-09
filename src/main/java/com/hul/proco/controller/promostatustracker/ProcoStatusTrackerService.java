@@ -48,5 +48,8 @@ public interface ProcoStatusTrackerService {
 
 	public boolean batchCustomerStatusTrackerReport(List<ArrayList<String>> downloadedData);
 	
+	public ArrayList<String> getPromoMeasureDownload(); //Added by Kavitha D for promo measure template-SPRINT 9
+
+
 
 }

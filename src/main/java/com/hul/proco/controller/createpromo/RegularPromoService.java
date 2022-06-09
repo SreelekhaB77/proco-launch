@@ -102,12 +102,10 @@ public class RegularPromoService {
 		headerList.add("PPM DESCRIPTION");
 		headerList.add("PRICE OFF");
 		headerList.add("BRANCH");
-		headerList.add("CLUSTER CODE");
 		headerList.add("CLUSTER");
 		headerList.add("QUANTITY");
 		headerList.add("BUDGET");
 		headerList.add("SOL TYPE");
-		headerList.add("REMARK");
 		headerList.add("END DATE");
 		headerList.add("CLUSTER SELECTION");
 		headerList.add("BASEPACK ADDITION");
@@ -116,6 +114,11 @@ public class RegularPromoService {
 		headerList.add("ADDITIONAL BUDGET");
 
 		return headerList;
+	}
+	
+	@Transactional(rollbackFor = { Exception.class })
+	public List<ArrayList<String>> getPromotionDownloadCR(ArrayList<String> headerDetail, String userId) {
+		return createCRPromo.getPromotionDownloadCR(headerDetail,userId);
 	}
 	// Added by Kavitha D for downloading promo CR template ends-SPRINT 9
 
@@ -155,4 +158,7 @@ public class RegularPromoService {
 		// TODO Auto-generated method stub
 		return createCRPromo.getMastersForTemplate();
 	}
+
+	
+	
 }

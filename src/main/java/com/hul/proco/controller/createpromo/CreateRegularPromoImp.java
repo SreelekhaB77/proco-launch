@@ -1035,6 +1035,42 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	// Added by Kavitha D for download promo new template ends-SPRINT-9
 
 	// Added by Kavitha D for download promo CR template starts-SPRINT-9
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ArrayList<String>> getPromotionDownloadCR(ArrayList<String> headerDetail, String userId){
+		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
+		try {
+		String qry=" SELECT PM.CHANNEL_NAME, PM.MOC, CM.SECONDARY_CHANNEL, CM.PPM_ACCOUNT, PR.PROMOTION_ID AS SOL_CODE, CM.AB_CREATION,"
+				+ " CM.SOL_RELEASE_ON, PM.BASEPACK_CODE, PR.PROMOTION_NAME, PM.PRICE_OFF, PM.BRANCH, PM.CLUSTER, PM.QUANTITY, PM.BUDGET "
+				+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 PM "
+				+ " INNER JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID) PR ON PR.PROMO_ID = PM.PROMO_ID "
+				+ " INNER JOIN (SELECT MOC FROM TBL_VAT_MOC_MASTER WHERE STATUS = 'Y' LIMIT 1) MM ON PM.MOC >= concat(substr(MM.MOC, 3, 4), substr(MM.MOC, 1, 2)) "
+				+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.CUSTOMER_CHAIN_L2 WHERE PM.USER_ID=:userId ";
+		Query query  =sessionFactory.getCurrentSession().createNativeQuery(qry);
+
+		query.setString("userId", userId);
+		
+		Iterator itr = query.list().iterator();
+		downloadDataList.add(headerDetail);
+		while (itr.hasNext()) {
+			Object[] obj = (Object[]) itr.next();
+			ArrayList<String> dataObj = new ArrayList<String>();
+			for (Object ob : obj) {
+				String value = "";
+				value = (ob == null) ? "" : ob.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
+			}
+			obj = null;
+			downloadDataList.add(dataObj);
+		}
+		return downloadDataList;
+	} catch (Exception e) {
+		logger.debug("Exception: ", e);
+	}
+	return downloadDataList;
+	}
+	
 	@SuppressWarnings({ "rawtypes" })
 	@Override
 	public Map<String, List<List<String>>> getMastersForCrTemplate() {

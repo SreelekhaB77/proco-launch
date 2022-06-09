@@ -2156,5 +2156,40 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	//Added by Kavitha D for promo measure template starts-SPRINT 9
+	public ArrayList<String> getPromoMeasureDownload(){
+	ArrayList<String> headerList=new ArrayList<String>();
+	headerList.add("Versioned Promotion ID");	
+	headerList.add("ChartByType");		
+	headerList.add("PromotionCreator");		
+	headerList.add("PromotionStatus");		
+	headerList.add("Promotion ID");		
+	headerList.add("PromotionName");		
+	headerList.add("Sell-in Start Date");		
+	headerList.add("Sell-in End Date");	   
+	headerList.add("Promotion Mechanics");		
+	headerList.add("Investment Type");		
+	headerList.add("Cluster Code");		
+	headerList.add("Cluster Name");		
+	headerList.add("Basepack Code");		
+	headerList.add("Basepack Name");		
+	headerList.add("Category");		
+	headerList.add("Brand");	
+	headerList.add("Sub-Brand");
+	headerList.add("UOM");	   
+	headerList.add("Tax");		
+	headerList.add("Discount");		
+	headerList.add("List Price");		
+	headerList.add("Percent Promoted Volume");		
+	headerList.add("Quantity");		
+	headerList.add("BudgetHolderName");		
+	headerList.add("FundType");		
+	headerList.add("MOC");	
+	headerList.add("InvestmentAmount");
+	return headerList;
+	}
+	//Added by Kavitha D for promo measure template ends-SPRINT 9
+
 
 }

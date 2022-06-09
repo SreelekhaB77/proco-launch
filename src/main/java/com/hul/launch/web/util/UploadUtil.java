@@ -995,9 +995,59 @@ public class UploadUtil {
 		}
 		return res;
 	}
-	
 	//Added by Kavitha D for promo templates ends -SPRINT 9
-
 	
+	//Added by Kavitha D for promo measure template starts -SPRINT 9
+	@SuppressWarnings("resource")
+	public static void writeXLSFilePromo(String downloadFileName, List<String> downloadedData, Object masters,
+			String extension) throws IOException {
+		String sheetName = "Sheet";// name of sheet
+		FileOutputStream fileOut = null;
+		int sheetCount = 1;
+		boolean res = false;
+		try {
+			HSSFWorkbook wb = new HSSFWorkbook();
+			HSSFSheet sheet = wb.createSheet(sheetName + String.valueOf(sheetCount));
+			// iterating r number of rows
+			HSSFDataFormat fmt = wb.createDataFormat();
+			HSSFCellStyle textStyle = wb.createCellStyle();
+			textStyle.setDataFormat(fmt.getFormat("@"));
+			int rowCount = 0;
+					if (rowCount > 0 && rowCount % 65535 == 0) {
+					sheetCount++;
+					sheet = wb.createSheet(sheetName + String.valueOf(sheetCount));
+					rowCount = 0;
+				}
+				HSSFRow row = sheet.createRow(rowCount);
+				rowCount++;
+				for (int c = 0; c < downloadedData.size(); c++) {
+					sheet.setDefaultColumnStyle(c, textStyle);
+					HSSFCell cell = row.createCell(c);
+					cell.setCellValue(downloadedData.get(c));
+				}
+			
+		
+			fileOut = new FileOutputStream(downloadFileName + extension);
+			// write this workbook to an Outputstream.
+			wb.write(fileOut);
+			fileOut.flush();
+			fileOut.close();
+			res = true;
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
+			// e.printStackTrace();
+		} finally {
+			if (fileOut != null) {
+				fileOut.close();
+			}
+		}
+		return;
+	}
+	
+	//Added by Kavitha D for promo measure template ends-SPRINT 9
 
 }
+
+
+		
+

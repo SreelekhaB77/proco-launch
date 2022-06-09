@@ -197,13 +197,14 @@ public class RegularPromoCreateController {
 			HttpServletRequest request, HttpServletResponse response) {
 		InputStream is;
 		String downloadLink = "", absoluteFilePath = "";
+		String userId = (String) request.getSession().getAttribute("UserID");
 		List<ArrayList<String>> downloadedData = new ArrayList<ArrayList<String>>();
 		ArrayList<String> headerDetail = createCRPromo.getHeaderListForPromotionCrTemplateDownload();
+		downloadedData = createCRPromo.getPromotionDownloadCR(headerDetail, userId);
 		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
 		String fileName = UploadUtil.getFileName("Promotion.RegularTemplate.file", "",
 				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 		String downloadFileName = absoluteFilePath + fileName;
-		downloadedData.add(headerDetail);
 		Map<String, List<List<String>>> mastersForCrTemplate = createCRPromo.getMastersForCrTemplate();
 		try {
 			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForCrTemplate, ".xls");
