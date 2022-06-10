@@ -144,6 +144,14 @@ public class RegularPromoService {
 		headerList.add("ERROR_MSG");
 		headerList.add("TEMPLATE_TYPE");
 		headerList.add("USER_ID");
+		
+		headerList.add("SOL TYPE");
+		headerList.add("END DATE");
+		headerList.add("Cluster Selection");
+		headerList.add("Basepack Addition");
+		headerList.add("TOPUP");
+		headerList.add("Additional Quantity");
+		
 
 		return headerList;
 	}

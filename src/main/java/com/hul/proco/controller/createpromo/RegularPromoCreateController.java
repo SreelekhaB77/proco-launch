@@ -71,7 +71,7 @@ public class RegularPromoCreateController {
 						map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(17, false, null);
 					} else if (template.equalsIgnoreCase("cr")) {
 
-						map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(7, false, null);
+						map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(20, false, null);
 
 					}
 

@@ -65,16 +65,16 @@ public class CreateBeanRegular {
 	@Column(name = "END DATE")
 	private String end_date;
 	
-	@Column(name = "Cluster Selection")
+	@Column(name = "CLUSTER SELECTION")
 	private String cluster_selection;
 	
-	@Column(name = "Basepack Addition")
+	@Column(name = "BASEPACK ADDITION")
 	private String basepack_addition;
 	
 	@Column(name = "TOPUP")
 	private String topup;
 	
-	@Column(name="Additional QTY")
+	@Column(name="ADDITIONAL QUANTITY")
 	private String additional_QTY;
 	
 	
@@ -84,6 +84,40 @@ public class CreateBeanRegular {
 	@Column(name = "Remark")
 	private String Remark;
 	
+	@Column(name = "SOL WILL RELEASE ON")
+	private String sol_release_on;
+	
+	@Column(name = "ADDITIONAL BUDGET")
+	private String addition_budget;
+	
+	@Column(name = "EXISTING SOL CODE")
+	private String existing_sol_code;
+	
+	
+	public String getExisting_sol_code() {
+		return existing_sol_code;
+	}
+
+	public void setExisting_sol_code(String existing_sol_code) {
+		this.existing_sol_code = existing_sol_code;
+	}
+
+	public String getAddition_budget() {
+		return addition_budget;
+	}
+
+	public void setAddition_budget(String addition_budget) {
+		this.addition_budget = addition_budget;
+	}
+
+	public String getSol_release_on() {
+		return sol_release_on;
+	}
+
+	public void setSol_release_on(String sol_release_on) {
+		this.sol_release_on = sol_release_on;
+	}
+
 	private String investmentType;
 	private String solCodeStatus;
 	private String userId;
