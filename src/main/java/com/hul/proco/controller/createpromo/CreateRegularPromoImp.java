@@ -892,7 +892,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			channelHeaders.add("CHANNEL");
 
 			String clusterQry = "SELECT DISTINCT BRANCH_CODE, BRANCH, CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER";
-			String customerQry = "SELECT DISTINCT CUSTOMER_CHAIN_L1,CUSTOMER_CHAIN_L2 FROM TBL_PROCO_CUSTOMER_MASTER ORDER BY CUSTOMER_CHAIN_L1";
+			String customerQry = "SELECT DISTINCT SECONDARY_CHANNEL,PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y'ORDER BY SECONDARY_CHANNEL";
 			String abcreationQry = "SELECT DISTINCT AB_CREATION_NAME FROM TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE=1";
 			String modalityQry = "SELECT MODALITY_NAME FROM TBL_PROCO_OFFER_MODALITY_MASTER WHERE ACTIVE=1";
 			String offertypeQry = " SELECT DISTINCT OFFER_TYPE FROM TBL_PROCO_OFFER_TYPE_V2 WHERE ACTIVE=1";
@@ -1038,7 +1038,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			channelHeaders.add("CHANNEL");
 
 			String clusterQry = "SELECT DISTINCT BRANCH_CODE, BRANCH, CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER";
-			String customerQry = "SELECT DISTINCT CUSTOMER_CHAIN_L1,CUSTOMER_CHAIN_L2 FROM TBL_PROCO_CUSTOMER_MASTER ORDER BY CUSTOMER_CHAIN_L1";
+			String customerQry = "SELECT DISTINCT SECONDARY_CHANNEL,PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y'ORDER BY SECONDARY_CHANNEL";
 			String abcreationQry = "SELECT DISTINCT AB_CREATION_NAME FROM TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE=1";
 			String modalityQry = "SELECT MODALITY_NAME FROM TBL_PROCO_OFFER_MODALITY_MASTER WHERE ACTIVE=1";
 			String offertypeQry = " SELECT DISTINCT OFFER_TYPE FROM TBL_PROCO_OFFER_TYPE_V2 WHERE ACTIVE=1";
@@ -1199,6 +1199,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		List<List<String>> modalityList = new ArrayList<>();
 		List<List<String>> offertypeList = new ArrayList<>();
 		List<List<String>> channelList = new ArrayList<>();
+		List<List<String>> solList = new ArrayList<>();
+
 
 		List<String> clusterHeaders = new ArrayList<String>();
 		List<String> customerHeaders = new ArrayList<String>();
@@ -1206,6 +1208,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		List<String> modalityHeaders = new ArrayList<String>();
 		List<String> offertypeHeaders = new ArrayList<String>();
 		List<String> channelHeaders = new ArrayList<String>();
+		List<String> solHeaders = new ArrayList<String>();
+
 
 		try {
 			clusterHeaders.add("BRANCH CODE");
@@ -1218,13 +1222,17 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			modalityHeaders.add("OFFER MODALITY");
 			offertypeHeaders.add("OFFER TYPE");
 			channelHeaders.add("CHANNEL");
+			solHeaders.add("SOL TYPE");
+			solHeaders.add("SOL REMARK");
+
 
 			String clusterQry = "SELECT DISTINCT BRANCH_CODE, BRANCH, CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER";
-			String customerQry = "SELECT DISTINCT CUSTOMER_CHAIN_L1,CUSTOMER_CHAIN_L2 FROM TBL_PROCO_CUSTOMER_MASTER ORDER BY CUSTOMER_CHAIN_L1";
+			String customerQry = "SELECT DISTINCT SECONDARY_CHANNEL,PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y' ORDER BY SECONDARY_CHANNEL";
 			String abcreationQry = "SELECT DISTINCT AB_CREATION_NAME FROM TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE=1";
 			String modalityQry = "SELECT MODALITY_NAME FROM TBL_PROCO_OFFER_MODALITY_MASTER WHERE ACTIVE=1";
 			String offertypeQry = " SELECT DISTINCT OFFER_TYPE FROM TBL_PROCO_OFFER_TYPE_V2 WHERE ACTIVE=1";
 			String channelQry = " SELECT CHANNEL_NAME FROM TBL_PROCO_CHANNEL_MASTER WHERE ACTIVE=1";
+			String solQry = " SELECT SOL_TYPE,SOL_REMARK FROM TBL_PROCO_SOL_TYPE WHERE IS_ACTIVE=1";
 
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(clusterQry);
 
@@ -1326,6 +1334,25 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			}
 
 			downloadDataMap.put("CHANNEL", channelList);
+			
+			query = sessionFactory.getCurrentSession().createNativeQuery(solQry);
+
+			itr = query.list().iterator();
+			solList.add(solHeaders);
+			while (itr.hasNext()) {
+				Object[] obj = (Object[]) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				for (Object ob : obj) {
+					String value = "";
+					value = (ob == null) ? "" : ob.toString();
+					dataObj.add(value.replaceAll("\\^", ","));
+				}
+				obj = null;
+				solList.add(dataObj);
+			}
+			downloadDataMap.put("SOLTYPE", solList);
+			
+			
 		} catch (Exception e) {
 			logger.debug("Exception: ", e);
 		}

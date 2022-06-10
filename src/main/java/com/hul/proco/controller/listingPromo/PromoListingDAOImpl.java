@@ -1597,7 +1597,6 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ " LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
 					+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";
 		
-
 			if (roleId.equalsIgnoreCase("TME")) {
 				promoQueryGrid += "WHERE PM.USER_ID='"+ userId +"'";
 			}

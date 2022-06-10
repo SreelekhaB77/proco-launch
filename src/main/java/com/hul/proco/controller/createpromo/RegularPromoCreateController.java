@@ -207,7 +207,7 @@ public class RegularPromoCreateController {
 		String downloadFileName = absoluteFilePath + fileName;
 		Map<String, List<List<String>>> mastersForCrTemplate = createCRPromo.getMastersForCrTemplate();
 		try {
-			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForCrTemplate, ".xls");
+			UploadUtil.writePromoCrXLSFile(downloadFileName, downloadedData, mastersForCrTemplate, ".xls");
 			downloadLink = downloadFileName + ".xls";
 			is = new FileInputStream(new File(downloadLink));
 			// copy it to response's OutputStream
