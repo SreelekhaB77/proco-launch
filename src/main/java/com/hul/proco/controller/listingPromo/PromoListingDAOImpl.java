@@ -1561,7 +1561,8 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.CUSTOMER_CHAIN_L2 "
 					+ " LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR ON PR.PROMO_ID = PM.PROMO_ID "
 					+ " LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE"
-					+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";			
+					+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";	
+			
 			if (roleId.equalsIgnoreCase("TME")) {
 				promoQueryCount += "WHERE PM.USER_ID='"+ userId +"'";
 			}
@@ -1580,7 +1581,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId,
-			String searchParameter,String roleId) {
+			String roleId,String searchParameter) {
 		List<PromoListingBean> promoListDisplay = new ArrayList<>();
 		try {
 			

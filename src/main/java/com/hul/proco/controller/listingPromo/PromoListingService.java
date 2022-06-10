@@ -60,7 +60,7 @@ public interface PromoListingService {
 
 	public int getPromoListRowCountGrid(String userId, String roleId);
 
-	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId, String searchParameter, String roleId);
+	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId, String roleId, String searchParameter);
 
 	
 }
