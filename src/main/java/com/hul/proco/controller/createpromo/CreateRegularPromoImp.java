@@ -338,13 +338,14 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					}
 				}
 
-				if (bean.getSol_type().equals("_BE_") && bean.getBudget().isEmpty() ||(bean.getSol_type().equals("_BE_") && !isStringNumber(bean.getBudget())) ) {
+				if (bean.getSol_type().equals("_BE_") && bean.getAddition_budget().isEmpty() ||
+						(bean.getSol_type().equals("_BE_") && !isStringNumber(bean.getAddition_budget())) ) {
 
 					if (flag == 1) {
-						error_msg = error_msg + ",for _BE_ SOL,Budget empty/not number";
+						error_msg = error_msg + ",for _BE_ SOL,Additional Budget empty/not number";
 						flag = 1;
 					} else {
-						error_msg = error_msg + "for _BE_ SOL, Budget empty/not number";
+						error_msg = error_msg + "for _BE_ SOL,Additional Budget empty/not number";
 						flag = 1;
 					}
 				}
@@ -727,7 +728,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				query.setString(28, bean.getBasepack_addition());
 				query.setString(29, bean.getTopup());
 				query.setString(30, bean.getAdditional_QTY());
-				query.setString(31, bean.getBudget());
+				query.setString(31, bean.getAddition_budget());
 				query.setString(32, bean.getExisting_sol_code());
 
 			}

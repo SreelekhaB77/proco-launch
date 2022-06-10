@@ -96,10 +96,10 @@ public class RegularPromoService {
 		headerList.add("SECONDARY CHANNEL");
 		headerList.add("PPM ACCOUNT");
 		headerList.add("EXISTING SOL CODE");
-		headerList.add("AB CREATION");
+		headerList.add("AB CREATION (ONLY FOR KA Accounts)");
 		headerList.add("SOL WILL RELEASE ON");
 		headerList.add("BASEPACK CODE");
-		headerList.add("PPM DESCRIPTION");
+		headerList.add("OFFER DESCRIPTION");
 		headerList.add("PRICE OFF");
 		headerList.add("BRANCH");
 		headerList.add("CLUSTER");
