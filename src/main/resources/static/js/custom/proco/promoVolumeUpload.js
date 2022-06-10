@@ -143,8 +143,7 @@ $(document).ready(function() {
 
 					promoTable = $('.promo-list-table').DataTable(
 									{
-
-										/* added for second tab start */
+                                       /* added for second tab start */
 										"bProcessing" : true,
 										"bServerSide" : true,
 										"lengthChange" : false,
@@ -194,6 +193,7 @@ $(document).ready(function() {
 												});
 
 										},
+										//bharati changes below columns in sprint-9
 										"aoColumns" : [
 												/*{
 													"mData" : "promo_id",
@@ -214,9 +214,9 @@ $(document).ready(function() {
 												{
 													"mData" : "promo_id"
 												},
-												{
+												/*{
 													"mData" : "originalId"
-												},
+												},*/
 												{
 													"mData" : "startDate"
 												},
@@ -228,9 +228,11 @@ $(document).ready(function() {
 												},
 												{
 													"mData" : "customer_chain_l1"
-												}, {
+												}, 
+												/*{
 													"mData" : "category"
-												}, {
+												},*/ 
+												{
 													"mData" : "basepack"
 												}, {
 													"mData" : "offer_desc"
@@ -242,19 +244,33 @@ $(document).ready(function() {
 													"mData" : "geography",
 												}, {
 													"mData" : "quantity",
-												}, {
+												}, /*{
 													"mData" : "uom",
-												}, {
+												},*/
+												{
 													"mData" : "offer_value",
-												}, {
+												}, 
+												/*{
 													"mData" : "kitting_value",
-												}, {
+												},*/
+												{
 													"mData" : "status",
-												}, {
+												},
+												/*{
 													"mData" : "reason",
 												}, {
 													"mData" : "remark",
-												} ]
+												}*/
+{
+						                 "mData": "investmentType",
+						              } ,{
+						                 "mData": "solCode",
+						              } ,{
+						                 "mData": "promotionMechanics",
+						              } ,{
+						                 "mData": "solCodeStatus",
+						              }
+												]
 									/* added for second tab end */
 
 									});

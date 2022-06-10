@@ -96,10 +96,10 @@ public class RegularPromoService {
 		headerList.add("SECONDARY CHANNEL");
 		headerList.add("PPM ACCOUNT");
 		headerList.add("EXISTING SOL CODE");
-		headerList.add("AB CREATION");
+		headerList.add("AB CREATION (ONLY FOR KA Accounts)");
 		headerList.add("SOL WILL RELEASE ON");
 		headerList.add("BASEPACK CODE");
-		headerList.add("PPM DESCRIPTION");
+		headerList.add("OFFER DESCRIPTION");
 		headerList.add("PRICE OFF");
 		headerList.add("BRANCH");
 		headerList.add("CLUSTER");
@@ -144,6 +144,14 @@ public class RegularPromoService {
 		headerList.add("ERROR_MSG");
 		headerList.add("TEMPLATE_TYPE");
 		headerList.add("USER_ID");
+		
+		headerList.add("SOL TYPE");
+		headerList.add("END DATE");
+		headerList.add("Cluster Selection");
+		headerList.add("Basepack Addition");
+		headerList.add("TOPUP");
+		headerList.add("Additional Quantity");
+		
 
 		return headerList;
 	}

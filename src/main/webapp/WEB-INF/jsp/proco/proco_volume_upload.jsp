@@ -147,7 +147,6 @@
 
 			</div>
 			<form action="http://34.120.128.205/VisibilityAssetTracker/downloadPromosForVolumeUpload.htm" method="POST" enctype="multipart/form-data">
-			
 			<div class="promo-form-details proco-volume-form">
 				<div class="col-md-4">
 					<div class="form-group">
@@ -269,50 +268,67 @@
 
 				<div class="clearfix"></div>
 			</div>
-			<div class="download-btn">
+			<!--bharati commented this btn in sprint-9-->
+			<!--<div class="download-btn">
 				<input type="submit" class="btn new-btn-download" value="PROMO DOWNLOAD"></input>
-			</div>
+			</div>-->
 			</form>
-			
+			<!--bharati added this below btn for dp volumn download in sprint-9-->
+				<form:form action="http://localhost:8083/VisibilityAssetTracker/downloadDpVolume.htm" id="getPromoVolumnUploadTemplate"
+				method="GET" modelAttribute="VolumeUploadBean"
+				enctype="multipart/form-data" style="text-align:center">
+				<button class="btn new-btn-download" style="margin: 10px;float: right;color:#fff;">PROMO DOWNLOAD</button>
+			</form:form>
+			<div class="clearfix"></div>
+			<!--bharati changes end for sprint-9-->
 			<!-- Listing table -->
 			<div class="promo-list table-header-volume">PROMO LIST</div>
 			
 			<table class="table table-striped table-bordered promo-list-table"
 				style="width: 100%;overflow-x: scroll;display: block;">
 				<thead>
+				<!--bharati commented this below columns for dp volumn listing in sprint-9-->
 					<tr>
 						<th>ACTION</th>
-						<th>UNIQUE ID</th>
-						<th>ORIGINAL ID</th>
+						<th>PROMO ID</th>
+						<!--<th>ORIGINAL ID</th>-->
 						<th>START DATE</th>
 						<th>END DATE</th>
 						<th>MOC</th>
 						<th>CUSTOMER CHAIN L1</th>
-						<th>SALES CATEGORY</th>
+						<!--<th>SALES CATEGORY</th>-->
 						<th>BASEPACK</th>
 						<th>OFFER DESCRIPTION</th>
 						<th>OFFER TYPE</th>
 						<th>OFFER MODALITY</th>
 						<th>GEOGRAPHY</th>
 						<th>QUANTITY</th>
-						<th>UOM</th>
+						<!--<th>UOM</th>-->
 						<th>OFFER VALUE</th>
-						<th>KITTING VALUE</th>
+						<!--<th>KITTING VALUE</th>-->
 						<th name="stat">STATUS</th>
-						<th>REASON</th>
-						<th>REMARK</th>
+						<!--<th>REASON</th>
+						<th>REMARK</th>-->
+						<!--bharati addedbelow columns in sprint-9-->
+						<th>INVESTMENT TYPES</th>
+						<th>SOL CODE</th>
+						<th>PROMOTION MECHANICS</th>
+						<th>SOL CODE STATUS</th>
 					</tr>
 				</thead>
 			</table>
-			<div class="promo-upload">PROMO UPLOAD</div>
-			<div class="upload-file">
 			<!--Bharati change below url for dp volumn upload in sprint-9-->
 			<%--<form:form action="http://34.120.128.205/VisibilityAssetTracker/uploadPromoVolume.htm" id="promoVolumeUpload"
 				method="POST" modelAttribute="VolumeUploadBean"
 				enctype="multipart/form-data" onsubmit="return uploadValidation()">--%>
-				<form:form action="#" id="promoVolumeUpload" modelAttribute="VolumeUploadBean" 
+				
+			<form:form action="#" id="promoVolumeUpload" modelAttribute="VolumeUploadBean" 
 				enctype="multipart/form-data" onsubmit="return uploadValidation()">
 				
+			<div class="promo-upload">PROMO UPLOAD</div>
+			<div class="upload-file">
+			
+			
 				<div class="col-md-4 col-md-offset-4" style="padding: 30px 0px;">
 					<div class="upload-label">
 						<span><i class="glyphicon glyphicon-cloud-upload"></i></span> <span>
@@ -339,19 +355,13 @@
 
 					</div>
 				</div>
-</form:form>
+
 				<div class="clearfix"></div>
-				<!--bharati added this below btn for dp volumn download in sprint-9-->
-				<form:form action="http://34.120.128.205/VisibilityAssetTracker/downloadDpVolume.htm" id="getPromoVolumnUploadTemplate"
-				method="GET" modelAttribute="VolumeUploadBean"
-				enctype="multipart/form-data" style="text-align:center">
-				<button class="sample-upload-file" style="color: #ffffff;width:250px;margin-bottom:20px;">Download Volume File</button>
-			</form:form>
-			<div class="clearfix"></div>
 			</div>
-		
+		</form:form>
               
 		</div>
+		
 	</div>
 	<jsp:include page="../proco/proco-footer.jsp" />
 	<!-- Bootstrap core JavaScript

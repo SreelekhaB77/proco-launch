@@ -254,14 +254,14 @@ public class PromoListingServiceImpl implements PromoListingService {
 
 
 	@Override
-	public int getPromoListRowCountGrid(String userId) {
-		return promoListingDAO.getPromoListRowCountGrid(userId);
+	public int getPromoListRowCountGrid(String userId,String roleId) {
+		return promoListingDAO.getPromoListRowCountGrid(userId,roleId);
 	}
 
 	@Override
-	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId,
+	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId,String roleId,
 			String searchParameter) {
-		return promoListingDAO.getPromoTableListGrid(pageDisplayStart,pageDisplayLength,userId,searchParameter);
+		return promoListingDAO.getPromoTableListGrid(pageDisplayStart,pageDisplayLength,userId,roleId,searchParameter);
 	}
 
 

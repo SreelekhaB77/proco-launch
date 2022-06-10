@@ -71,7 +71,7 @@ public class RegularPromoCreateController {
 						map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(17, false, null);
 					} else if (template.equalsIgnoreCase("cr")) {
 
-						map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(7, false, null);
+						map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(21, false, null);
 
 					}
 
@@ -207,7 +207,7 @@ public class RegularPromoCreateController {
 		String downloadFileName = absoluteFilePath + fileName;
 		Map<String, List<List<String>>> mastersForCrTemplate = createCRPromo.getMastersForCrTemplate();
 		try {
-			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForCrTemplate, ".xls");
+			UploadUtil.writePromoCrXLSFile(downloadFileName, downloadedData, mastersForCrTemplate, ".xls");
 			downloadLink = downloadFileName + ".xls";
 			is = new FileInputStream(new File(downloadLink));
 			// copy it to response's OutputStream
