@@ -274,7 +274,7 @@
 			</div>-->
 			</form>
 			<!--bharati added this below btn for dp volumn download in sprint-9-->
-				<form:form action="http://localhost:8083/VisibilityAssetTracker/downloadDpVolume.htm" id="getPromoVolumnUploadTemplate"
+				<form:form action="http://34.120.128.205/VisibilityAssetTracker/downloadDpVolume.htm" id="getPromoVolumnUploadTemplate"
 				method="GET" modelAttribute="VolumeUploadBean"
 				enctype="multipart/form-data" style="text-align:center">
 				<button class="btn new-btn-download" style="margin: 10px;float: right;color:#fff;">PROMO DOWNLOAD</button>
