@@ -25,10 +25,10 @@ public class RegularPromoService {
 		ArrayList<String> headerList = new ArrayList<String>();
 		headerList.add("CHANNEL");
 		headerList.add("MOC");
-		headerList.add("SECONDARY CHANNEL");
+		//headerList.add("SECONDARY CHANNEL");
 		headerList.add("PPM ACCOUNT");
 		headerList.add("PROMO TIMEPERIOD");
-		headerList.add("AB CREATION (ONLY FOR KA Accounts)");
+		//headerList.add("AB CREATION (ONLY FOR KA Accounts)");
 		headerList.add("BASEPACK CODE");
 		headerList.add("BASEPACK DESCRIPTION");
 		headerList.add("CHILDPACK CODE");
@@ -37,7 +37,7 @@ public class RegularPromoService {
 		headerList.add("OFFER MODALITY");
 		headerList.add("PRICE OFF");
 		headerList.add("BUDGET");
-		headerList.add("BRANCH");
+		//headerList.add("BRANCH");
 		headerList.add("CLUSTER");
 
 		return headerList;
@@ -56,10 +56,10 @@ public class RegularPromoService {
 		ArrayList<String> headerList = new ArrayList<String>();
 		headerList.add("CHANNEL");
 		headerList.add("MOC");
-		headerList.add("SECONDARY CHANNEL");
+		//headerList.add("SECONDARY CHANNEL");
 		headerList.add("PPM ACCOUNT");
 		headerList.add("PROMO TIMEPERIOD");
-		headerList.add("AB CREATION (ONLY FOR KA Accounts)");
+		//headerList.add("AB CREATION (ONLY FOR KA Accounts)");
 		headerList.add("BASEPACK CODE");
 		headerList.add("BASEPACK DESCRIPTION");
 		headerList.add("CHILDPACK CODE");
@@ -68,7 +68,7 @@ public class RegularPromoService {
 		headerList.add("OFFER MODALITY");
 		headerList.add("PRICE OFF");
 		headerList.add("BUDGET");
-		headerList.add("BRANCH");
+		//headerList.add("BRANCH");
 		headerList.add("CLUSTER");
 		headerList.add("QUANTITY");
 

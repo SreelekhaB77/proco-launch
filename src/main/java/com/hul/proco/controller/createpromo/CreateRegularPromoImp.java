@@ -908,14 +908,14 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		Map<String, List<List<String>>> downloadDataMap = new HashMap<>();
 		List<List<String>> clusterList = new ArrayList<>();
 		List<List<String>> customerList = new ArrayList<>();
-		List<List<String>> abcreationList = new ArrayList<>();
+		//List<List<String>> abcreationList = new ArrayList<>();
 		List<List<String>> modalityList = new ArrayList<>();
 		List<List<String>> offertypeList = new ArrayList<>();
 		List<List<String>> channelList = new ArrayList<>();
 
 		List<String> clusterHeaders = new ArrayList<String>();
 		List<String> customerHeaders = new ArrayList<String>();
-		List<String> abcreationHeaders = new ArrayList<String>();
+		//List<String> abcreationHeaders = new ArrayList<String>();
 		List<String> modalityHeaders = new ArrayList<String>();
 		List<String> offertypeHeaders = new ArrayList<String>();
 		List<String> channelHeaders = new ArrayList<String>();
@@ -925,16 +925,16 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			clusterHeaders.add("BRANCH");
 			clusterHeaders.add("CLUSTER CODE");
 			clusterHeaders.add("CLUSTER");
-			customerHeaders.add("SECONDARY CHANNEL");
+			//customerHeaders.add("SECONDARY CHANNEL");
 			customerHeaders.add("PPM ACCOUNT");
-			abcreationHeaders.add("AB CREATION NAME");
+			//abcreationHeaders.add("AB CREATION NAME");
 			modalityHeaders.add("OFFER MODALITY");
 			offertypeHeaders.add("OFFER TYPE");
 			channelHeaders.add("CHANNEL");
 
 			String clusterQry = "SELECT DISTINCT BRANCH_CODE, BRANCH, CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER";
-			String customerQry = "SELECT DISTINCT SECONDARY_CHANNEL,PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y'ORDER BY SECONDARY_CHANNEL";
-			String abcreationQry = "SELECT DISTINCT AB_CREATION_NAME FROM TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE=1";
+			String customerQry = "SELECT DISTINCT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y'ORDER BY PPM_ACCOUNT";
+			//String abcreationQry = "SELECT DISTINCT AB_CREATION_NAME FROM TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE=1";
 			String modalityQry = "SELECT MODALITY_NAME FROM TBL_PROCO_OFFER_MODALITY_MASTER WHERE ACTIVE=1";
 			String offertypeQry = " SELECT DISTINCT OFFER_TYPE FROM TBL_PROCO_OFFER_TYPE_V2 WHERE ACTIVE=1";
 			String channelQry = " SELECT CHANNEL_NAME FROM TBL_PROCO_CHANNEL_MASTER WHERE ACTIVE=1";
@@ -954,29 +954,27 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				obj = null;
 				clusterList.add(dataObj);
 			}
-			ArrayList<String> allIndia = new ArrayList<String>();
+			/*ArrayList<String> allIndia = new ArrayList<String>();
 			allIndia.add("ALL INDIA");
-			clusterList.add(allIndia);
+			clusterList.add(allIndia);*/
 			downloadDataMap.put("CLUSTER", clusterList);
 
 			query = sessionFactory.getCurrentSession().createNativeQuery(customerQry);
 
-			itr = query.list().iterator();
 			customerList.add(customerHeaders);
+			itr = query.list().iterator();
 			while (itr.hasNext()) {
-				Object[] obj = (Object[]) itr.next();
+				String obj = (String) itr.next();
 				ArrayList<String> dataObj = new ArrayList<String>();
-				for (Object ob : obj) {
-					String value = "";
-					value = (ob == null) ? "" : ob.toString();
-					dataObj.add(value.replaceAll("\\^", ","));
-				}
+				String value = "";
+				value = (obj == null) ? "" : obj.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
 				obj = null;
 				customerList.add(dataObj);
 			}
 			downloadDataMap.put("CUSTOMER", customerList);
 
-			query = sessionFactory.getCurrentSession().createNativeQuery(abcreationQry);
+			/*query = sessionFactory.getCurrentSession().createNativeQuery(abcreationQry);
 
 			abcreationList.add(abcreationHeaders);
 			itr = query.list().iterator();
@@ -990,7 +988,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				abcreationList.add(dataObj);
 			}
 
-			downloadDataMap.put("AB CREATION", abcreationList);
+			downloadDataMap.put("AB CREATION", abcreationList);*/
 
 			query = sessionFactory.getCurrentSession().createNativeQuery(offertypeQry);
 
@@ -1054,14 +1052,14 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		Map<String, List<List<String>>> downloadDataMap = new HashMap<>();
 		List<List<String>> clusterList = new ArrayList<>();
 		List<List<String>> customerList = new ArrayList<>();
-		List<List<String>> abcreationList = new ArrayList<>();
+		//List<List<String>> abcreationList = new ArrayList<>();
 		List<List<String>> modalityList = new ArrayList<>();
 		List<List<String>> offertypeList = new ArrayList<>();
 		List<List<String>> channelList = new ArrayList<>();
 
 		List<String> clusterHeaders = new ArrayList<String>();
 		List<String> customerHeaders = new ArrayList<String>();
-		List<String> abcreationHeaders = new ArrayList<String>();
+		//List<String> abcreationHeaders = new ArrayList<String>();
 		List<String> modalityHeaders = new ArrayList<String>();
 		List<String> offertypeHeaders = new ArrayList<String>();
 		List<String> channelHeaders = new ArrayList<String>();
@@ -1071,16 +1069,16 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			clusterHeaders.add("BRANCH");
 			clusterHeaders.add("CLUSTER CODE");
 			clusterHeaders.add("CLUSTER");
-			customerHeaders.add("SECONDARY CHANNEL");
+			//customerHeaders.add("SECONDARY CHANNEL");
 			customerHeaders.add("PPM ACCOUNT");
-			abcreationHeaders.add("AB CREATION NAME");
+			//abcreationHeaders.add("AB CREATION NAME");
 			modalityHeaders.add("OFFER MODALITY");
 			offertypeHeaders.add("OFFER TYPE");
 			channelHeaders.add("CHANNEL");
 
 			String clusterQry = "SELECT DISTINCT BRANCH_CODE, BRANCH, CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER";
-			String customerQry = "SELECT DISTINCT SECONDARY_CHANNEL,PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y'ORDER BY SECONDARY_CHANNEL";
-			String abcreationQry = "SELECT DISTINCT AB_CREATION_NAME FROM TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE=1";
+			String customerQry = "SELECT DISTINCT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y'ORDER BY PPM_ACCOUNT";
+			//String abcreationQry = "SELECT DISTINCT AB_CREATION_NAME FROM TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE=1";
 			String modalityQry = "SELECT MODALITY_NAME FROM TBL_PROCO_OFFER_MODALITY_MASTER WHERE ACTIVE=1";
 			String offertypeQry = " SELECT DISTINCT OFFER_TYPE FROM TBL_PROCO_OFFER_TYPE_V2 WHERE ACTIVE=1";
 			String channelQry = " SELECT CHANNEL_NAME FROM TBL_PROCO_CHANNEL_MASTER WHERE ACTIVE=1";
@@ -1100,29 +1098,28 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				obj = null;
 				clusterList.add(dataObj);
 			}
-			ArrayList<String> allIndia = new ArrayList<String>();
+			/*ArrayList<String> allIndia = new ArrayList<String>();
 			allIndia.add("ALL INDIA");
-			clusterList.add(allIndia);
+			clusterList.add(allIndia);*/
+			
 			downloadDataMap.put("CLUSTER", clusterList);
 
 			query = sessionFactory.getCurrentSession().createNativeQuery(customerQry);
 
-			itr = query.list().iterator();
 			customerList.add(customerHeaders);
+			itr = query.list().iterator();
 			while (itr.hasNext()) {
-				Object[] obj = (Object[]) itr.next();
+				String obj = (String) itr.next();
 				ArrayList<String> dataObj = new ArrayList<String>();
-				for (Object ob : obj) {
-					String value = "";
-					value = (ob == null) ? "" : ob.toString();
-					dataObj.add(value.replaceAll("\\^", ","));
-				}
+				String value = "";
+				value = (obj == null) ? "" : obj.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
 				obj = null;
 				customerList.add(dataObj);
 			}
-			downloadDataMap.put("CUSTOMER", customerList);
 
-			query = sessionFactory.getCurrentSession().createNativeQuery(abcreationQry);
+			downloadDataMap.put("CUSTOMER", customerList);
+			/*query = sessionFactory.getCurrentSession().createNativeQuery(abcreationQry);
 
 			abcreationList.add(abcreationHeaders);
 			itr = query.list().iterator();
@@ -1136,7 +1133,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				abcreationList.add(dataObj);
 			}
 
-			downloadDataMap.put("AB CREATION", abcreationList);
+			downloadDataMap.put("AB CREATION", abcreationList);*/
 
 			query = sessionFactory.getCurrentSession().createNativeQuery(offertypeQry);
 
@@ -1287,9 +1284,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				obj = null;
 				clusterList.add(dataObj);
 			}
-			ArrayList<String> allIndia = new ArrayList<String>();
+			/*ArrayList<String> allIndia = new ArrayList<String>();
 			allIndia.add("ALL INDIA");
-			clusterList.add(allIndia);
+			clusterList.add(allIndia);*/
 			downloadDataMap.put("CLUSTER", clusterList);
 
 			query = sessionFactory.getCurrentSession().createNativeQuery(customerQry);
