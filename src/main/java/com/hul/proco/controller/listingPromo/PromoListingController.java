@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -124,17 +127,20 @@ public class PromoListingController {
 			moc = mocValue;
 		}
 
-		//Added by kavitha D for promolisting changes-SPRINT 9
-		/*int rowCount = promoListingService.getPromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2,
-				geography, offerType, modality, year, moc, userId, 1,roleId);
-		List<PromoListingBean> promoList = promoListingService.getPromoTableList((pageDisplayStart + 1),
-				(pageNumber * pageDisplayLength), cagetory, brand, basepack, custChainL1, custChainL2, geography,
-				offerType, modality, year, moc, userId, 1,roleId ,searchParameter);*/
-		
-		int rowCount = promoListingService.getPromoListRowCountGrid(userId,roleId);
-		List<PromoListingBean> promoList = promoListingService.getPromoTableListGrid((pageDisplayStart + 1),
-				(pageNumber * pageDisplayLength),userId,roleId,searchParameter);
+		// Added by kavitha D for promolisting changes-SPRINT 9
+		/*
+		 * int rowCount = promoListingService.getPromoListRowCount(cagetory, brand,
+		 * basepack, custChainL1, custChainL2, geography, offerType, modality, year,
+		 * moc, userId, 1,roleId); List<PromoListingBean> promoList =
+		 * promoListingService.getPromoTableList((pageDisplayStart + 1), (pageNumber *
+		 * pageDisplayLength), cagetory, brand, basepack, custChainL1, custChainL2,
+		 * geography, offerType, modality, year, moc, userId, 1,roleId
+		 * ,searchParameter);
+		 */
 
+		int rowCount = promoListingService.getPromoListRowCountGrid(userId, roleId);
+		List<PromoListingBean> promoList = promoListingService.getPromoTableListGrid((pageDisplayStart + 1),
+				(pageNumber * pageDisplayLength), userId, roleId, searchParameter);
 
 		PromoListingJsonObject jsonObj = new PromoListingJsonObject();
 		jsonObj.setJsonBean(promoList);
@@ -151,26 +157,26 @@ public class PromoListingController {
 			HttpServletRequest request) {
 		String roleId = (String) request.getSession().getAttribute("roleId");
 		String userId = (String) request.getSession().getAttribute("UserID");
-		String moc="";
-		
+		String moc = "";
+
 		CreatePromotionBean promoList = promoListingService.getPromotions(promoId).get(0);
-		if(promoList.getMoc()!=null) {
-		moc = promoList.getMoc();
+		if (promoList.getMoc() != null) {
+			moc = promoList.getMoc();
 		}
-		if(moc.length()==4) {
-			moc=moc.substring(3,4);
-			moc="0"+moc+promoList.getYear();
+		if (moc.length() == 4) {
+			moc = moc.substring(3, 4);
+			moc = "0" + moc + promoList.getYear();
 			promoList.setMoc(moc);
 		}
-		if(moc.length()==5) {
-			moc=moc.substring(3,5);
-			moc=moc+promoList.getYear();
+		if (moc.length() == 5) {
+			moc = moc.substring(3, 5);
+			moc = moc + promoList.getYear();
 			promoList.setMoc(moc);
 		}
-		
+
 		model.addAttribute("CreatePromotionBean", promoList);
 		model.addAttribute("roleId", roleId);
-		setModelAttributes(model,userId);
+		setModelAttributes(model, userId);
 		return new ModelAndView("proco/promo_edit");
 	}
 
@@ -180,20 +186,19 @@ public class PromoListingController {
 		String userId = (String) request.getSession().getAttribute("UserID");
 		String promoId = request.getParameter("promoIdList");
 		String remark = request.getParameter("remark");
-		promoListingService.deletePromotion(promoId,userId,remark);
+		promoListingService.deletePromotion(promoId, userId, remark);
 		model.addAttribute("roleId", roleId);
-		setModelAttributes(model,userId);
+		setModelAttributes(model, userId);
 		model.addAttribute("success", "Promotion deleted successfully. ");
 		return new ModelAndView("proco/proco_promo_listing");
 	}
-	
-	
+
 	@RequestMapping(value = "checkDropDate.htm", method = RequestMethod.POST)
-	public @ResponseBody String kamDropPlanDate(HttpServletRequest request, Model model,@RequestParam("checkValues")String checkValues) {
-			String result = promoListingService.promoDeleteDate(checkValues);	
+	public @ResponseBody String kamDropPlanDate(HttpServletRequest request, Model model,
+			@RequestParam("checkValues") String checkValues) {
+		String result = promoListingService.promoDeleteDate(checkValues);
 		return result;
 	}
-	
 
 	@RequestMapping(value = "duplicatePromotion.htm", method = RequestMethod.GET)
 	public ModelAndView createDuplicatePromotion(@RequestParam("promoid") String promoId, Model model,
@@ -204,7 +209,7 @@ public class PromoListingController {
 		model.addAttribute("CreatePromotionBean", promoList);
 		model.addAttribute("roleId", roleId);
 		model.addAttribute("duplicate", true);
-		setModelAttributes(model,userId);
+		setModelAttributes(model, userId);
 
 		return new ModelAndView("proco/proco_create");
 	}
@@ -215,10 +220,11 @@ public class PromoListingController {
 		String roleId = (String) request.getSession().getAttribute("roleId");
 		String userId = (String) request.getSession().getAttribute("UserID");
 		try {
-			createPromotionBean.setOfferValue(createPromotionBean.getOfferValue().concat(createPromotionBean.getOfferValDrop()));
+			createPromotionBean
+					.setOfferValue(createPromotionBean.getOfferValue().concat(createPromotionBean.getOfferValDrop()));
 			String reason = (String) request.getParameter("reasonText");
 			String remark = (String) request.getParameter("remarkText");
-			String changesMade=(String) request.getParameter("changesMadeText");
+			String changesMade = (String) request.getParameter("changesMadeText");
 			String[] customerChainL2FromPage = request.getParameterValues("cust-chain");
 			String[] customerChainL1FromPage = request.getParameterValues("customerChainL1");
 			String customerChainL2 = "";
@@ -250,18 +256,18 @@ public class PromoListingController {
 			createPromotionBean.setReason(reason);
 			createPromotionBean.setRemark(remark);
 			createPromotionBean.setChangesMade(changesMade);
-			CreatePromotionBean[] beans= new CreatePromotionBean[1];
-			beans[0]=createPromotionBean;
-			String createPromotion = promoListingService.updatePromotion(beans, userId,true);
+			CreatePromotionBean[] beans = new CreatePromotionBean[1];
+			beans[0] = createPromotionBean;
+			String createPromotion = promoListingService.updatePromotion(beans, userId, true);
 			if (!createPromotion.equals("SUCCESS_FILE")) {
 				if (createPromotion.equals("ERROR_FILE")) {
 					String errorMsg = createPromoService.getErrorMsg(userId);
 					model.addAttribute("errorMsg", errorMsg);
-					setModelAttributes(model,userId);
+					setModelAttributes(model, userId);
 					return new ModelAndView("proco/promo_edit");
 				} else if (createPromotion.equals("ERROR")) {
 					model.addAttribute("errorMsg", "Unhandled exception: Failed to update promotion");
-					setModelAttributes(model,userId);
+					setModelAttributes(model, userId);
 					return new ModelAndView("proco/promo_edit");
 				}
 
@@ -269,18 +275,18 @@ public class PromoListingController {
 				model.addAttribute("success", "Promotion updated successfully.");
 			}
 			model.addAttribute("roleId", roleId);
-			setModelAttributes(model,userId);
+			setModelAttributes(model, userId);
 		} catch (Exception e) {
 			logger.debug("Exception: ", e);
 			model.addAttribute("errorMsg", "Failed to update promotion");
-			setModelAttributes(model,userId);
+			setModelAttributes(model, userId);
 			return new ModelAndView("proco/promo_edit");
 		}
 		return new ModelAndView("proco/proco_promo_listing");
 	}
 
 	@SuppressWarnings("unchecked")
-	private void setModelAttributes(Model model,String userId) {
+	private void setModelAttributes(Model model, String userId) {
 		List<String> customerChainL1 = createPromoService.getCustomerChainL1();
 		List<String> offerTypes = createPromoService.getOfferTypes();
 		String geographyJson = createPromoService.getGeography(false);
@@ -424,7 +430,7 @@ public class PromoListingController {
 					custChainL2, geography, offerType, modality, year, moc, userId, 1);
 			Map<String, List<List<String>>> mastersForTemplate = promoListingService.getMastersForTemplate();
 			if (downloadedData != null) {
-				UploadUtil.writeXLSFile(downloadFileName, downloadedData, mastersForTemplate,".xls");
+				UploadUtil.writeXLSFile(downloadFileName, downloadedData, mastersForTemplate, ".xls");
 				downloadLink = downloadFileName + ".xls";
 				is = new FileInputStream(new File(downloadLink));
 				// copy it to response's OutputStream
@@ -465,19 +471,19 @@ public class PromoListingController {
 						if (map.isEmpty()) {
 							model.addAttribute("FILE_STATUS", "ERROR");
 							model.addAttribute("errorMsg", "File does not contain data");
-							setModelAttributes(model,userId);
+							setModelAttributes(model, userId);
 							return new ModelAndView("proco/proco_promo_listing");
 						}
 						if (map.containsKey("ERROR")) {
 							List<Object> errorList = map.get("ERROR");
 							String errorMsg = (String) errorList.get(0);
 							model.addAttribute("errorMsg", errorMsg);
-							setModelAttributes(model,userId);
+							setModelAttributes(model, userId);
 							return new ModelAndView("proco/proco_promo_listing");
 						} else if (map.containsKey("DATA")) {
 							List<?> list = map.get("DATA");
 							beanArray = (CreatePromotionBean[]) list.toArray(new CreatePromotionBean[list.size()]);
-							savedData = promoListingService.promoEditUpload(beanArray, userId,false);
+							savedData = promoListingService.promoEditUpload(beanArray, userId, false);
 							if (savedData != null && savedData.equals("SUCCESS_FILE")) {
 								model.addAttribute("success", commUtils.getProperty("File.Upload.Success"));
 								model.addAttribute("FILE_STATUS", "SUCCESS_FILE");
@@ -487,7 +493,7 @@ public class PromoListingController {
 							} else if (savedData != null && savedData.equals("ERROR")) {
 								model.addAttribute("errorMsg", "Error while updating promos");
 							}
-							setModelAttributes(model,userId);
+							setModelAttributes(model, userId);
 						}
 					}
 				}
@@ -497,12 +503,12 @@ public class PromoListingController {
 		} catch (Exception e) {
 			logger.debug("Exception: ", e);
 			model.addAttribute("errorMsg", "Error while uploading file");
-			setModelAttributes(model,userId);
+			setModelAttributes(model, userId);
 			return new ModelAndView("proco/proco_promo_listing");
 		} catch (Throwable e) {
 			logger.debug("Exception: ", e);
 			model.addAttribute("errorMsg", "Error while uploading file");
-			setModelAttributes(model,userId);
+			setModelAttributes(model, userId);
 			return new ModelAndView("proco/proco_promo_listing");
 		}
 		return new ModelAndView("proco/proco_promo_listing");
@@ -525,7 +531,7 @@ public class PromoListingController {
 		Map<String, List<List<String>>> mastersForTemplate = promoListingService.getMastersForTemplate();
 		try {
 			if (downloadedData != null) {
-				UploadUtil.writeXLSFile(downloadFileName, downloadedData, mastersForTemplate,".xls");
+				UploadUtil.writeXLSFile(downloadFileName, downloadedData, mastersForTemplate, ".xls");
 				downloadLink = downloadFileName + ".xls";
 				is = new FileInputStream(new File(downloadLink));
 				response.setContentType("application/force-download");
@@ -535,19 +541,19 @@ public class PromoListingController {
 				response.flushBuffer();
 			}
 		} catch (FileNotFoundException e) {
-			logger.debug("Exception: ",e);
+			logger.debug("Exception: ", e);
 			return null;
 		} catch (IOException e) {
-			logger.debug("Exception: ",e);
+			logger.debug("Exception: ", e);
 			return null;
 		}
 		return null;
 	}
-	
+
 	@RequestMapping(value = "getReasonListForEdit.htm", method = RequestMethod.POST)
 	public @ResponseBody String getReasonListForEdit() {
 		List<String> reasonList = new ArrayList<>();
-		Gson gson=new Gson();
+		Gson gson = new Gson();
 		try {
 			reasonList = promoListingService.getReasonListForEdit();
 		} catch (Exception e) {
@@ -556,7 +562,7 @@ public class PromoListingController {
 		}
 		return gson.toJson(reasonList);
 	}
-	
+
 	@RequestMapping(value = "promoDeletePagination.htm", method = RequestMethod.GET, produces = "application/json", headers = "Accept=*/*")
 	public @ResponseBody String promoDeletePagination(@RequestParam("category") String cagetoryValue,
 			@RequestParam("brand") String brandValue, @RequestParam("custChainL1") String custChainL1Value,
@@ -635,11 +641,11 @@ public class PromoListingController {
 			moc = mocValue;
 		}
 
-		int rowCount = promoListingService.getDeletePromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2,
-				geography, offerType, modality, year, moc, userId, 1,roleId);
+		int rowCount = promoListingService.getDeletePromoListRowCount(cagetory, brand, basepack, custChainL1,
+				custChainL2, geography, offerType, modality, year, moc, userId, 1, roleId);
 		List<PromoListingBean> promoList = promoListingService.getDeletePromoTableList((pageDisplayStart + 1),
 				(pageNumber * pageDisplayLength), cagetory, brand, basepack, custChainL1, custChainL2, geography,
-				offerType, modality, year, moc, userId, 1,roleId,searchParameter);
+				offerType, modality, year, moc, userId, 1, roleId, searchParameter);
 
 		PromoListingJsonObject jsonObj = new PromoListingJsonObject();
 		jsonObj.setJsonBean(promoList);
@@ -650,10 +656,9 @@ public class PromoListingController {
 		String json = gson.toJson(jsonObj);
 		return json;
 	}
-	
+
 	@RequestMapping(value = "downloadDeletedPromo.htm", method = RequestMethod.POST)
-	public ModelAndView downloadDeletedPromo(HttpServletRequest request, HttpServletResponse response,
-			Model model) {
+	public ModelAndView downloadDeletedPromo(HttpServletRequest request, HttpServletResponse response, Model model) {
 		logger.info("START downloadPromosForVolumeUpload():");
 		try {
 			String categoryValue = (String) request.getParameter("category");
@@ -766,11 +771,12 @@ public class PromoListingController {
 			}
 			String roleId = (String) request.getSession().getAttribute("roleId");
 			ArrayList<String> headerList = promoListingService.getHeaderListForPromoDumpDownload();
-			downloadedData = promoListingService.getDeletePromotionDump(headerList, cagetory, brand, basepack, custChainL1,
-					custChainL2, geography, offerType, modality, year, moc, userId, 1, roleId);
-			//Map<String, List<List<String>>> mastersForTemplate = promoListingService.getMastersForTemplate();
+			downloadedData = promoListingService.getDeletePromotionDump(headerList, cagetory, brand, basepack,
+					custChainL1, custChainL2, geography, offerType, modality, year, moc, userId, 1, roleId);
+			// Map<String, List<List<String>>> mastersForTemplate =
+			// promoListingService.getMastersForTemplate();
 			if (downloadedData != null) {
-				UploadUtil.writeDeletePromoXLSFile(downloadFileName, downloadedData, null,".xls");
+				UploadUtil.writeDeletePromoXLSFile(downloadFileName, downloadedData, null, ".xls");
 				downloadLink = downloadFileName + ".xls";
 				is = new FileInputStream(new File(downloadLink));
 				// copy it to response's OutputStream
@@ -787,11 +793,12 @@ public class PromoListingController {
 		return null;
 	}
 
-	//Added by Kavitha D for promo listing download starts-SPRINT 9
+	// Added by Kavitha D for promo listing download starts-SPRINT 9
 
 	@RequestMapping(value = "downloadPromoListing.htm", method = RequestMethod.POST)
-	public ModelAndView downloadPromosForListing(@ModelAttribute("CreateBeanRegular") CreateBeanRegular createBeanRegular,HttpServletRequest request, HttpServletResponse response,
-			Model model) {
+	public ModelAndView downloadPromosForListing(
+			@ModelAttribute("CreateBeanRegular") CreateBeanRegular createBeanRegular, HttpServletRequest request,
+			HttpServletResponse response, Model model) {
 		logger.info("START downloadPromos for listing():");
 		try {
 
@@ -803,11 +810,11 @@ public class PromoListingController {
 					CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 			String downloadFileName = absoluteFilePath + fileName;
 			String userId = (String) request.getSession().getAttribute("UserID");
-			
+
 			ArrayList<String> headerList = promoListingService.getHeaderListForPromoDownloadListing();
 			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId);
 			if (downloadedData != null) {
-				UploadUtil.writeXLSFile(downloadFileName, downloadedData, null,".xls");
+				UploadUtil.writeXLSFile(downloadFileName, downloadedData, null, ".xls");
 				downloadLink = downloadFileName + ".xls";
 				is = new FileInputStream(new File(downloadLink));
 				// copy it to response's OutputStream
@@ -823,32 +830,45 @@ public class PromoListingController {
 		}
 		return null;
 	}
-	
-	//Added by Kavitha D for promo listing download ends-SPRINT 9
-	
-	
-	//@RequestMapping(value = "promoListingPaginationGrid.htm", method = RequestMethod.GET, produces = "application/json", headers = "Accept=*/*")
-	/*public @ResponseBody String promoListingPaginationGrid( HttpServletRequest request) {
-		String userId = (String) request.getSession().getAttribute("UserID");
-		Integer pageDisplayStart = Integer.valueOf(request.getParameter("iDisplayStart"));
-		Integer pageDisplayLength = Integer.valueOf(request.getParameter("iDisplayLength"));
-		String searchParameter = request.getParameter("sSearch");
-		Integer pageNumber = (pageDisplayStart / pageDisplayLength) + 1;
 
-		int rowCount = promoListingService.getPromoListRowCountGrid(userId);
-		List<CreateBeanRegular> promoList = promoListingService.getPromoTableListGrid((pageDisplayStart + 1),
-				(pageNumber * pageDisplayLength),userId ,searchParameter);
+	// Added by Kavitha D for promo listing download ends-SPRINT 9
 
-		PromoListingJsonObject jsonObj = new PromoListingJsonObject();
-		jsonObj.setJsonBean1(promoList);
-		jsonObj.setiTotalDisplayRecords(rowCount);
-		jsonObj.setiTotalRecords(rowCount);
+	// @RequestMapping(value = "promoListingPaginationGrid.htm", method =
+	// RequestMethod.GET, produces = "application/json", headers = "Accept=*/*")
+	/*
+	 * public @ResponseBody String promoListingPaginationGrid( HttpServletRequest
+	 * request) { String userId = (String)
+	 * request.getSession().getAttribute("UserID"); Integer pageDisplayStart =
+	 * Integer.valueOf(request.getParameter("iDisplayStart")); Integer
+	 * pageDisplayLength = Integer.valueOf(request.getParameter("iDisplayLength"));
+	 * String searchParameter = request.getParameter("sSearch"); Integer pageNumber
+	 * = (pageDisplayStart / pageDisplayLength) + 1;
+	 * 
+	 * int rowCount = promoListingService.getPromoListRowCountGrid(userId);
+	 * List<CreateBeanRegular> promoList =
+	 * promoListingService.getPromoTableListGrid((pageDisplayStart + 1), (pageNumber
+	 * * pageDisplayLength),userId ,searchParameter);
+	 * 
+	 * PromoListingJsonObject jsonObj = new PromoListingJsonObject();
+	 * jsonObj.setJsonBean1(promoList); jsonObj.setiTotalDisplayRecords(rowCount);
+	 * jsonObj.setiTotalRecords(rowCount);
+	 * 
+	 * Gson gson = new GsonBuilder().setPrettyPrinting().create(); String json =
+	 * gson.toJson(jsonObj); System.out.println(json); return json; }
+	 */
+	@RequestMapping(value = "getMocPromo.htm", method = RequestMethod.GET)
+	public @ResponseBody String  getMocPromo(HttpServletRequest request, Model model,
+			HttpServletResponse response) {
+		ArrayList<String> mocValue = new ArrayList();
+
+		mocValue = promoListingService.getMoc();
+		System.out.println("mocValue:" + mocValue.toString());
 
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String json = gson.toJson(jsonObj);
-		System.out.println(json);
-		return json;
-	} 
-	*/
+		String json = gson.toJson(mocValue);
+		model.addAttribute("jsonvalue", json);
 
+		return json;
+
+	}
 }
