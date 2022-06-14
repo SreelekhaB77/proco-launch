@@ -1553,23 +1553,22 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 	//Added by Kavitha D for promo display grid download starts-SPRINT 9
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public int getPromoListRowCountGrid(String userId,String roleId) {
+	public int getPromoListRowCountGrid(String userId,String roleId,String moc) {
 		List<BigInteger> list = null;
 		try {
 			String promoQueryCount =" SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM "
-					+ " INNER JOIN (SELECT MOC FROM TBL_VAT_MOC_MASTER WHERE STATUS = 'Y' LIMIT 1) MM ON PM.MOC >= concat(substr(MM.MOC, 3, 4), substr(MM.MOC, 1, 2))"
 					+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.CUSTOMER_CHAIN_L2 "
 					+ " LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR ON PR.PROMO_ID = PM.PROMO_ID "
 					+ " LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE"
 					+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";	
 			
 			if (roleId.equalsIgnoreCase("TME")) {
-				promoQueryCount += "WHERE PM.USER_ID='"+ userId +"'";
+				promoQueryCount += "WHERE PM.USER_ID='"+ userId +"'AND PM.MOC='"+moc+"'";
 			}
 			if (roleId.equalsIgnoreCase("DP")) {
-				promoQueryCount += " WHERE PM.STATUS = 1 ";
+				promoQueryCount += " WHERE PM.STATUS = 1 AND PM.MOC='"+moc+"' ";
 			}
-
+			
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQueryCount);
 			list = query.list();
 		} catch (Exception ex) {
@@ -1581,7 +1580,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId,
-			String roleId,String searchParameter) {
+			String roleId,String moc,String searchParameter) {
 		List<PromoListingBean> promoListDisplay = new ArrayList<>();
 		try {
 			
@@ -1590,7 +1589,6 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ " PM.CLUSTER AS GEOGRAPHY,PM.QUANTITY,PM.PRICE_OFF AS OFFER_VALUE,PSM.STATUS,PR.INVESTMENT_TYPE,"
 					+ " PR.PROMOTION_ID AS SOL_CODE,PR.PROMOTION_MECHANICS,PR.PROMOTION_STATUS AS SOL_CODE_STATUS,ROW_NUMBER() OVER (ORDER BY PM.UPDATE_STAMP DESC) AS ROW_NEXT "
 					+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 PM "
-					+ " INNER JOIN (SELECT MOC FROM TBL_VAT_MOC_MASTER WHERE STATUS = 'Y' LIMIT 1) MM ON PM.MOC >= concat(substr(MM.MOC, 3, 4), substr(MM.MOC, 1, 2)) "
 					+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.CUSTOMER_CHAIN_L2 "
 					+ " INNER JOIN TBL_PROCO_STATUS_MASTER PSM ON PSM.STATUS_ID = PM.STATUS "
 					+ " LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR ON PR.PROMO_ID = PM.PROMO_ID "
@@ -1598,10 +1596,10 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";
 		
 			if (roleId.equalsIgnoreCase("TME")) {
-				promoQueryGrid += "WHERE PM.USER_ID='"+ userId +"'";
+				promoQueryGrid += "WHERE PM.USER_ID='"+ userId +"' AND PM.MOC='"+moc+"'";
 			}
 			if (roleId.equalsIgnoreCase("DP")) {
-				promoQueryGrid += " WHERE PM.STATUS = 1 ";
+				promoQueryGrid += " WHERE PM.STATUS = 1 AND PM.MOC='"+moc+ "' ";
 			}
 			
 			if(searchParameter!=null && searchParameter.length()>0){
@@ -1646,6 +1644,25 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 		return promoListDisplay;
 	}
 	//Added by Kavitha D for promo display grid download ends-SPRINT 9
+	
+	
+	//Added by Kavitha D for promo listing MOC filter-SPRINT 9
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getPromoMoc() {
+		List<String> promoMOC = new ArrayList<String>();
+		try {
+			Query qryPromoMoc = sessionFactory.getCurrentSession().createNativeQuery("SELECT DISTINCT PM.MOC FROM TBL_PROCO_PROMOTION_MASTER_V2 PM INNER JOIN TBL_VAT_MOC_MASTER MM ON CONCAT(SUBSTR(MM.MOC, 3, 4), SUBSTR(MM.MOC, 1, 2)) = PM.MOC ORDER BY PM.MOC DESC");
+			promoMOC = qryPromoMoc.list();
+		} catch (Exception ex) {
+			logger.debug("Exception: ", ex);
+			return null;
+		}
+		return promoMOC;
+	
+		
+	}
 
 
 }

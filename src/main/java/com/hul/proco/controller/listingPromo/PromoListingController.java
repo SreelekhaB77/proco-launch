@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -117,8 +119,7 @@ public class PromoListingController {
 		} else {
 			year = yearValue;
 		}
-		if (mocValue == null || mocValue.isEmpty() || (mocValue.equalsIgnoreCase("undefined"))
-				|| (mocValue.equalsIgnoreCase("FULL YEAR"))) {
+		if (mocValue == null || mocValue.isEmpty() || (mocValue.equalsIgnoreCase("undefined"))) {
 			moc = "all";
 		} else {
 			moc = mocValue;
@@ -131,9 +132,9 @@ public class PromoListingController {
 				(pageNumber * pageDisplayLength), cagetory, brand, basepack, custChainL1, custChainL2, geography,
 				offerType, modality, year, moc, userId, 1,roleId ,searchParameter);*/
 		
-		int rowCount = promoListingService.getPromoListRowCountGrid(userId,roleId);
+		int rowCount = promoListingService.getPromoListRowCountGrid(userId,roleId,moc);
 		List<PromoListingBean> promoList = promoListingService.getPromoTableListGrid((pageDisplayStart + 1),
-				(pageNumber * pageDisplayLength),userId,roleId,searchParameter);
+				(pageNumber * pageDisplayLength),userId,roleId,moc,searchParameter);
 
 
 		PromoListingJsonObject jsonObj = new PromoListingJsonObject();
@@ -293,6 +294,9 @@ public class PromoListingController {
 		List<String> basepacks = createPromoService.getAllBasepacks(userId);
 		List<String> changesMadeListForEdit = promoListingService.getChangesMadeListForEdit();
 		List<String> reasonListForEdit = promoListingService.getReasonListForEdit();
+		List<String> mocValue = promoListingService.getPromoMoc();
+		System.out.println("mocValue:" + mocValue.toString());
+		
 		model.addAttribute("mocJson", mocJson);
 		model.addAttribute("years", yearList);
 		model.addAttribute("customerChainL1", customerChainL1);
@@ -304,6 +308,8 @@ public class PromoListingController {
 		model.addAttribute("basepacks", basepacks);
 		model.addAttribute("changesMadeList", changesMadeListForEdit);
 		model.addAttribute("reasonList", reasonListForEdit);
+		model.addAttribute("mocList", mocValue);
+
 	}
 
 	@RequestMapping(value = "downloadPromoFromListing.htm", method = RequestMethod.POST)
@@ -823,6 +829,21 @@ public class PromoListingController {
 		}
 		return null;
 	}
+	
+	//Added by Kavitha D for Moc  
+	/*
+	 * @RequestMapping(value = "getMocPromo.htm", method = RequestMethod.GET)
+	 * public @ResponseBody String getMocPromo(HttpServletRequest request, Model
+	 * model, HttpServletResponse response) { ArrayList<String> mocValue = new
+	 * ArrayList(); mocValue = promoListingService.getMoc();
+	 * //System.out.println("mocValue:" + mocValue.toString()); Gson gson = new
+	 * GsonBuilder().setPrettyPrinting().create(); String json =
+	 * gson.toJson(mocValue); model.addAttribute("mocList", json); return json;
+	 * 
+	 * }
+	 */
+	
+	
 	
 	//Added by Kavitha D for promo listing download ends-SPRINT 9
 	

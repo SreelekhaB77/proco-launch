@@ -1,5 +1,6 @@
 package com.hul.proco.controller.homeController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.hul.proco.controller.createpromo.CreatePromoService;
 import com.hul.proco.controller.createpromo.CreatePromotionBean;
 import com.hul.proco.controller.disaggregatepromo.DisaggregationService;
@@ -75,6 +78,9 @@ public class ProcoHomeController {
 		String geographyJson = createPromoService.getGeography(false);
 		List<String> yearList = (List<String>) yearAndMoc.get("years");
 		String mocJson = (String) yearAndMoc.get("moc");
+		
+		List<String> mocValue = promoListingService.getPromoMoc(); //Added by Kavitha D for promo listing MOC filter-SPRINT 9
+		
 		if(roleId.equalsIgnoreCase("TME") || roleId.equalsIgnoreCase("DP")){
 			List<String> category = createPromoService.getAllCategories(userId);
 			List<String> brand = createPromoService.getAllBrands(userId);
@@ -91,10 +97,12 @@ public class ProcoHomeController {
 			model.addAttribute("basepacks", basepacks);
 		}
 		model.addAttribute("geographyJson", geographyJson);
-		model.addAttribute("mocJson", mocJson);
+		//model.addAttribute("mocJson", mocJson);
 		model.addAttribute("years", yearList);
 		model.addAttribute("modality", modality);
 		model.addAttribute("offerTypes", offerTypes);
+		model.addAttribute("mocList", mocValue);
+
 		return new ModelAndView("proco/proco_promo_listing");
 	}
 

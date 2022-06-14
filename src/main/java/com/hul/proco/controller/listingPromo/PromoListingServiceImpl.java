@@ -252,17 +252,25 @@ public class PromoListingServiceImpl implements PromoListingService {
 	}
 	//Added by Kavitha D for promo listing download ends-SPRINT 9
 
+	//Added by Kavitha D for promo listing Grid dispaly starts-SPRINT 9
 
 	@Override
-	public int getPromoListRowCountGrid(String userId,String roleId) {
-		return promoListingDAO.getPromoListRowCountGrid(userId,roleId);
+	public int getPromoListRowCountGrid(String userId,String roleId,String moc) {
+		return promoListingDAO.getPromoListRowCountGrid(userId,roleId,moc);
 	}
 
 	@Override
 	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId,String roleId,
-			String searchParameter) {
-		return promoListingDAO.getPromoTableListGrid(pageDisplayStart,pageDisplayLength,userId,roleId,searchParameter);
+			String moc,String searchParameter) {
+		return promoListingDAO.getPromoTableListGrid(pageDisplayStart,pageDisplayLength,userId,roleId,moc,searchParameter);
 	}
+
+
+	@Override
+	public List<String> getPromoMoc() {
+		return promoListingDAO.getPromoMoc();
+	}
+	//Added by Kavitha D for promo listing grid display ends-SPRINT 9
 
 
 }
