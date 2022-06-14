@@ -270,7 +270,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							flag = 1;
 						}
 					} else {
-						if (isPromoTimeisValid(bean.getEnd_date())) {
+						if (isPromoTimeisValid(bean.getEnd_date())) { //checking end date in format
 							try {
 
 								SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -282,10 +282,10 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 									query.setString(18, "");
 									query.setString(19, "");
 									if (flag == 1) {
-										error_msg = error_msg + ",Can't obtain Start date";
+										error_msg = error_msg + ",Invalid Date extension DATE should with in moc ";
 										flag = 1;
 									} else {
-										error_msg = error_msg + "Can't obtain Start date";
+										error_msg = error_msg + "Invalid Date extension DATE should with in moc ";
 										flag = 1;
 									}
 								} else {
@@ -293,7 +293,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 											bean.getMoc().substring(4, 6).concat(bean.getMoc().substring(0, 4)),
 											bean.getPpm_account(), new_date);
 									if (startDate.isEmpty() || startDate.equals("")) {
-										error_msg = error_msg + "Can't obtain Start date for ppm account/moc";
+										error_msg = error_msg + "Invalid Date extension DATE should with in moc";
 										query.setString(18, "");
 										query.setString(19, "");
 										flag = 1;
@@ -331,7 +331,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						query.setString(19, se_date.get(0)[1].toString()); // end date
 					} else {
 						if (flag == 1) {
-							error_msg = error_msg + ",Can not obtain start/end date";
+							error_msg = error_msg + "Invalid Date extension DATE should with in moc";
 							flag = 1;
 						}
 
