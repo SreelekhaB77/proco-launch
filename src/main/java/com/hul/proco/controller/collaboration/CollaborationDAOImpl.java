@@ -281,10 +281,10 @@ public class CollaborationDAOImpl implements CollaborationDAO {
 				bean.setBasepack(obj[5].toString());
 				bean.setOffer_desc(obj[6].toString());
 				bean.setOffer_type(obj[7].toString());
-				bean.setOffer_modality(obj[8].toString());
-				bean.setGeography(obj[9].toString());
-				bean.setQuantity(obj[10].toString());
-				bean.setOffer_value(obj[11].toString());
+				bean.setOffer_modality(obj[8] == null ? "" : obj[8].toString());
+				bean.setGeography(obj[9] == null ? "" : obj[9].toString());
+				bean.setQuantity(obj[10] == null ? "" : obj[10].toString());
+				bean.setOffer_value(obj[11] == null ? "" : obj[11].toString());
 				//bean.setUom(obj[12].toString());
 				
 				//bean.setPlannedQty(obj[14].toString());
