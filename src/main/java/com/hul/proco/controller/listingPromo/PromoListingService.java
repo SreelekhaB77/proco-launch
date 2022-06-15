@@ -55,7 +55,7 @@ public interface PromoListingService {
 	
 	//Added by Kavitha D for promo listing download starts-SPRINT 9
 	public ArrayList<String> getHeaderListForPromoDownloadListing();
-	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId);
+	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc);
 	//Added by Kavitha D for promo listing download ends-SPRINT 9
 
 	public int getPromoListRowCountGrid(String userId, String roleId,String moc);

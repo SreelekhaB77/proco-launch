@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -795,12 +796,11 @@ public class PromoListingController {
 
 	//Added by Kavitha D for promo listing download starts-SPRINT 9
 
-	@RequestMapping(value = "downloadPromoListing.htm", method = RequestMethod.POST)
-	public ModelAndView downloadPromosForListing(@ModelAttribute("CreateBeanRegular") CreateBeanRegular createBeanRegular,HttpServletRequest request, HttpServletResponse response,
-			Model model) {
+	@RequestMapping(value = "{moc}/downloadPromoListing.htm", method = RequestMethod.GET)
+	public @ResponseBody String downloadPromosForListing(@ModelAttribute("CreateBeanRegular") CreateBeanRegular createBeanRegular,@PathVariable("moc") String moc,
+			Model model,HttpServletRequest request, HttpServletResponse response) {
 		logger.info("START downloadPromos for listing():");
 		try {
-
 			InputStream is;
 			String downloadLink = "", absoluteFilePath = "";
 			List<ArrayList<String>> downloadedData = null;
@@ -811,7 +811,7 @@ public class PromoListingController {
 			String userId = (String) request.getSession().getAttribute("UserID");
 			
 			ArrayList<String> headerList = promoListingService.getHeaderListForPromoDownloadListing();
-			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId);
+			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc);
 			if (downloadedData != null) {
 				UploadUtil.writeXLSFile(downloadFileName, downloadedData, null,".xls");
 				downloadLink = downloadFileName + ".xls";

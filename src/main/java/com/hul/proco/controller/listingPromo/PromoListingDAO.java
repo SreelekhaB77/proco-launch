@@ -51,7 +51,7 @@ public interface PromoListingDAO {
 	
 	public String promoDeleteDate(String Id);
 	
-	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId); //Added by Kavitha D for promo listing download-SPRINT 9
+	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc); //Added by Kavitha D for promo listing download-SPRINT 9
 
 	//Added by Kavitha D for promo listing Grid dispaly starts-SPRINT 9
 	public int getPromoListRowCountGrid(String userId, String roleId,String moc);
