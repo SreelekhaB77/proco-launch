@@ -44,96 +44,88 @@ public class CollaborationController {
 
 	@Autowired
 	private CreatePromoService createPromoService;
-	
+
 	@Autowired
 	private PromoCrService promoCrService;
 
 	private Logger logger = Logger.getLogger(CollaborationController.class);
 
 	@RequestMapping(value = "collaborationPagination.htm", method = RequestMethod.GET, produces = "application/json", headers = "Accept=*/*")
-	public @ResponseBody String promoListingPagination(/*@RequestParam("category") String cagetoryValue,
-			@RequestParam("brand") String brandValue, @RequestParam("custChainL1") String custChainL1Value,
-			@RequestParam("offerType") String offerTypeValue, @RequestParam("modality") String modalityValue,
-			@RequestParam("year") String yearValue, @RequestParam("custChainL2") String custChainL2Value,
-			@RequestParam("basepack") String basepackValue, */
-			HttpServletRequest request,
-			@RequestParam("moc") String mocValue) {
+	public @ResponseBody String promoListingPagination(/*
+														 * @RequestParam("category") String cagetoryValue,
+														 * 
+														 * @RequestParam("brand") String
+														 * brandValue, @RequestParam("custChainL1") String
+														 * custChainL1Value,
+														 * 
+														 * @RequestParam("offerType") String
+														 * offerTypeValue, @RequestParam("modality") String
+														 * modalityValue,
+														 * 
+														 * @RequestParam("year") String
+														 * yearValue, @RequestParam("custChainL2") String
+														 * custChainL2Value,
+														 * 
+														 * @RequestParam("basepack") String basepackValue,
+														 */
+			HttpServletRequest request, @RequestParam("moc") String moc) {
 
 		String userId = (String) request.getSession().getAttribute("UserID");
 		Integer pageDisplayStart = Integer.valueOf(request.getParameter("iDisplayStart"));
 		Integer pageDisplayLength = Integer.valueOf(request.getParameter("iDisplayLength"));
 		Integer pageNumber = (pageDisplayStart / pageDisplayLength) + 1;
-		String moc=mocValue;
-		System.out.println("Moc"+moc);
-/*
-		String cagetory = "", brand = "", basepack = "", custChainL1 = "", custChainL2 = "";
-		String offerType = "", modality = "", year = "", moc = "";
 
-		if (cagetoryValue.isEmpty() || null == cagetoryValue || (cagetoryValue.equalsIgnoreCase("undefined"))
-				|| (cagetoryValue.equalsIgnoreCase("ALL CATEGORIES"))) {
-			cagetory = "all";
-		} else {
-			cagetory = cagetoryValue;
-		}
-		if (brandValue.isEmpty() || null == brandValue || (brandValue.equalsIgnoreCase("undefined"))
-				|| (brandValue.equalsIgnoreCase("ALL BRANDS"))) {
-			brand = "all";
-		} else {
-			brand = brandValue;
-		}
-		if (basepackValue.isEmpty() || null == basepackValue || (basepackValue.equalsIgnoreCase("undefined"))
-				|| (basepackValue.equalsIgnoreCase("All"))) {
-			basepack = "all";
-		} else {
-			basepack = basepackValue;
-		}
-		if (custChainL1Value == null || custChainL1Value.isEmpty() || (custChainL1Value.equalsIgnoreCase("undefined"))
-				|| (custChainL1Value.equalsIgnoreCase("ALL CUSTOMERS")) || (custChainL1Value.equalsIgnoreCase("ALL"))) {
-			custChainL1 = "all";
-		} else {
-			custChainL1 = custChainL1Value;
-		}
-		if (custChainL2Value == null || custChainL2Value.isEmpty() || (custChainL2Value.equalsIgnoreCase("undefined"))
-				|| (custChainL2Value.equalsIgnoreCase("All CUSTOMERS")) || (custChainL2Value.equalsIgnoreCase("ALL"))) {
-			custChainL2 = "all";
-		} else {
-			custChainL2 = custChainL2Value;
-		}
-		if (offerTypeValue.isEmpty() || null == offerTypeValue || (offerTypeValue.equalsIgnoreCase("undefined"))
-				|| (offerTypeValue.equalsIgnoreCase("ALL TYPES"))) {
-			offerType = "all";
-		} else {
-			offerType = offerTypeValue;
-		}
-		if (modalityValue.isEmpty() || null == modalityValue || (modalityValue.equalsIgnoreCase("undefined"))
-				|| (modalityValue.equalsIgnoreCase("ALL MODALITIES"))) {
-			modality = "all";
-		} else {
-			modality = modalityValue;
-		}
-		if (yearValue.isEmpty() || null == yearValue || (yearValue.equalsIgnoreCase("undefined"))
-				|| (yearValue.equalsIgnoreCase("ALL YEAR"))) {
-			year = "all";
-		} else {
-			year = yearValue;
-		}
-		if (mocValue.isEmpty() || null == mocValue || (mocValue.equalsIgnoreCase("undefined"))
-				|| (mocValue.equalsIgnoreCase("FULL YEAR"))) {
-			moc = "all";
-		} else {
-			moc = mocValue;
-		}
-*/
-		//Mayur Change Start 
-		/*cagetory, brand, basepack, custChainL1,
-		custChainL2, offerType, modality, year, #Value removed from getCollaborationRowCount */
+		/*
+		 * String cagetory = "", brand = "", basepack = "", custChainL1 = "",
+		 * custChainL2 = ""; String offerType = "", modality = "", year = "", moc = "";
+		 * 
+		 * if (cagetoryValue.isEmpty() || null == cagetoryValue ||
+		 * (cagetoryValue.equalsIgnoreCase("undefined")) ||
+		 * (cagetoryValue.equalsIgnoreCase("ALL CATEGORIES"))) { cagetory = "all"; }
+		 * else { cagetory = cagetoryValue; } if (brandValue.isEmpty() || null ==
+		 * brandValue || (brandValue.equalsIgnoreCase("undefined")) ||
+		 * (brandValue.equalsIgnoreCase("ALL BRANDS"))) { brand = "all"; } else { brand
+		 * = brandValue; } if (basepackValue.isEmpty() || null == basepackValue ||
+		 * (basepackValue.equalsIgnoreCase("undefined")) ||
+		 * (basepackValue.equalsIgnoreCase("All"))) { basepack = "all"; } else {
+		 * basepack = basepackValue; } if (custChainL1Value == null ||
+		 * custChainL1Value.isEmpty() ||
+		 * (custChainL1Value.equalsIgnoreCase("undefined")) ||
+		 * (custChainL1Value.equalsIgnoreCase("ALL CUSTOMERS")) ||
+		 * (custChainL1Value.equalsIgnoreCase("ALL"))) { custChainL1 = "all"; } else {
+		 * custChainL1 = custChainL1Value; } if (custChainL2Value == null ||
+		 * custChainL2Value.isEmpty() ||
+		 * (custChainL2Value.equalsIgnoreCase("undefined")) ||
+		 * (custChainL2Value.equalsIgnoreCase("All CUSTOMERS")) ||
+		 * (custChainL2Value.equalsIgnoreCase("ALL"))) { custChainL2 = "all"; } else {
+		 * custChainL2 = custChainL2Value; } if (offerTypeValue.isEmpty() || null ==
+		 * offerTypeValue || (offerTypeValue.equalsIgnoreCase("undefined")) ||
+		 * (offerTypeValue.equalsIgnoreCase("ALL TYPES"))) { offerType = "all"; } else {
+		 * offerType = offerTypeValue; } if (modalityValue.isEmpty() || null ==
+		 * modalityValue || (modalityValue.equalsIgnoreCase("undefined")) ||
+		 * (modalityValue.equalsIgnoreCase("ALL MODALITIES"))) { modality = "all"; }
+		 * else { modality = modalityValue; } if (yearValue.isEmpty() || null ==
+		 * yearValue || (yearValue.equalsIgnoreCase("undefined")) ||
+		 * (yearValue.equalsIgnoreCase("ALL YEAR"))) { year = "all"; } else { year =
+		 * yearValue; } if (mocValue.isEmpty() || null == mocValue ||
+		 * (mocValue.equalsIgnoreCase("undefined")) ||
+		 * (mocValue.equalsIgnoreCase("FULL YEAR"))) { moc = "all"; } else { moc =
+		 * mocValue; }
+		 */
+		// Mayur Change Start
+		/*
+		 * cagetory, brand, basepack, custChainL1, custChainL2, offerType, modality,
+		 * year, #Value removed from getCollaborationRowCount
+		 */
 		int rowCount = collaborationService.getCollaborationRowCount(moc, userId);
-		
-		/*cagetory, brand, basepack, custChainL1,
-		custChainL2, offerType, modality, year,  #Value removed from getCollaborationTableList*/
-		
-		List<DisplayCollaborationBean> promoList = collaborationService.getCollaborationTableList(
-				(pageDisplayStart + 1), (pageNumber * pageDisplayLength),moc, userId);
+
+		/*
+		 * cagetory, brand, basepack, custChainL1, custChainL2, offerType, modality,
+		 * year, #Value removed from getCollaborationTableList
+		 */
+
+		List<DisplayCollaborationBean> promoList = collaborationService
+				.getCollaborationTableList((pageDisplayStart + 1), (pageNumber * pageDisplayLength), moc, userId);
 
 		CollaborationJsonObject jsonObj = new CollaborationJsonObject();
 		jsonObj.setAaData(promoList);
@@ -142,6 +134,7 @@ public class CollaborationController {
 
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String json = gson.toJson(jsonObj);
+
 		return json;
 	}
 
@@ -152,16 +145,16 @@ public class CollaborationController {
 		String userId = (String) request.getSession().getAttribute("UserID");
 		try {
 			String[] promoId = request.getParameterValues("promoId");
-			if(promoId==null || promoId.length==0){
+			if (promoId == null || promoId.length == 0) {
 				model.addAttribute("errorMsg", "Select atleast 1 Promo for Collaboration.");
-				setModelAttributes(model,userId);
+				setModelAttributes(model, userId);
 				return new ModelAndView("proco/promo_collaboration");
 			}
 			String levelFromPage = request.getParameter("level");
 			String level = "";
 			if (levelFromPage == null || levelFromPage.equals("")) {
-				level="L1";
-			}else if (levelFromPage.equalsIgnoreCase("L1 Depot level")) {
+				level = "L1";
+			} else if (levelFromPage.equalsIgnoreCase("L1 Depot level")) {
 				level = "L1";
 			} else {
 				level = "L2";
@@ -170,26 +163,26 @@ public class CollaborationController {
 			String downloadLink = "", absoluteFilePath = "";
 			List<ArrayList<String>> downloadedData = null;
 			absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
-			String fileName = "KamFile_"+CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS();
+			String fileName = "KamFile_" + CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS();
 			String downloadFileName = absoluteFilePath + fileName;
-			if(level.equals("L1")){
+			if (level.equals("L1")) {
 				ArrayList<String> headerList = collaborationService.getHeaderListForKamTemplateDownload();
 				downloadedData = collaborationService.getL1DepotDisaggregation(headerList, userId, promoId);
 				UploadUtil.writeKamL1DepotXLSFile(downloadFileName, downloadedData, ".xls");
 				downloadLink = downloadFileName + ".xls";
-				fileName="KamL1DepotCollaboration_";
-			}else{
+				fileName = "KamL1DepotCollaboration_";
+			} else {
 				ArrayList<String> headerList = collaborationService.getHeaderListForKamL2TemplateDownload();
 				downloadedData = collaborationService.getL2DepotDisaggregation(headerList, userId, promoId);
 				UploadUtil.writeKamL2DepotXLSFile(downloadFileName, downloadedData, ".xls");
 				downloadLink = downloadFileName + ".xls";
-				fileName="KamL2DepotCollaboration_";
+				fileName = "KamL2DepotCollaboration_";
 			}
-			
+
 			is = new FileInputStream(new File(downloadLink));
 			// copy it to response's OutputStream
 			response.setContentType("application/force-download");
-			response.setHeader("Content-Disposition", "attachment; filename="+fileName
+			response.setHeader("Content-Disposition", "attachment; filename=" + fileName
 					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
 			IOUtils.copy(is, response.getOutputStream());
 			response.flushBuffer();
@@ -209,8 +202,8 @@ public class CollaborationController {
 		String levelFromPage = request.getParameter("level");
 		String level = "";
 		if (levelFromPage == null || levelFromPage.equals("")) {
-			level="L1";
-		}else if (levelFromPage.equalsIgnoreCase("L1 Depot level")) {
+			level = "L1";
+		} else if (levelFromPage.equalsIgnoreCase("L1 Depot level")) {
 			level = "L1";
 		} else {
 			level = "L2";
@@ -227,33 +220,35 @@ public class CollaborationController {
 					model.addAttribute("errorMsg", commUtils.getProperty("File.Size.Exceeds"));
 				} else {
 					if (UploadUtil.movefile(file, fileName)) {
-						Map<String, List<Object>> map=null;
-						if(level.equals("L1")){
-							map = ExOM.mapFromExcel(new File(fileName))
-									.to(L1CollaborationBean.class).map(12, false, null);
-						}else{
-							map = ExOM.mapFromExcel(new File(fileName))
-									.to(L2CollaborationBean.class).map(15, false, null);
+						Map<String, List<Object>> map = null;
+						if (level.equals("L1")) {
+							map = ExOM.mapFromExcel(new File(fileName)).to(L1CollaborationBean.class).map(12, false,
+									null);
+						} else {
+							map = ExOM.mapFromExcel(new File(fileName)).to(L2CollaborationBean.class).map(15, false,
+									null);
 						}
 						if (map.isEmpty()) {
 							model.addAttribute("FILE_STATUS", "ERROR");
 							model.addAttribute("errorMsg", "File does not contain data");
-							setModelAttributes(model,userId);
+							setModelAttributes(model, userId);
 							return new ModelAndView("proco/promo_collaboration");
 						}
 						if (map.containsKey("ERROR")) {
 							List<Object> errorList = map.get("ERROR");
 							String errorMsg = (String) errorList.get(0);
 							model.addAttribute("errorMsg", errorMsg);
-							setModelAttributes(model,userId);
+							setModelAttributes(model, userId);
 							return new ModelAndView("proco/promo_collaboration");
 						} else if (map.containsKey("DATA")) {
 							List<?> list = map.get("DATA");
-							if(level.equals("L1")){
-								beanArrayL1 = (L1CollaborationBean[]) list.toArray(new L1CollaborationBean[list.size()]);
+							if (level.equals("L1")) {
+								beanArrayL1 = (L1CollaborationBean[]) list
+										.toArray(new L1CollaborationBean[list.size()]);
 								savedData = collaborationService.uploadKamL1(beanArrayL1, userId);
-							}else{
-								beanArrayL2 = (L2CollaborationBean[]) list.toArray(new L2CollaborationBean[list.size()]);
+							} else {
+								beanArrayL2 = (L2CollaborationBean[]) list
+										.toArray(new L2CollaborationBean[list.size()]);
 								savedData = collaborationService.uploadKamL2(beanArrayL2, userId);
 							}
 							if (savedData != null && savedData.equals("SUCCESS_FILE")) {
@@ -262,7 +257,7 @@ public class CollaborationController {
 								model.addAttribute("errorMsg", "File Uploaded with errors");
 								model.addAttribute("level", level);
 							}
-							setModelAttributes(model,userId);
+							setModelAttributes(model, userId);
 						}
 					}
 				}
@@ -271,11 +266,11 @@ public class CollaborationController {
 			}
 			if (savedData.equals("ERROR_FILE")) {
 				model.addAttribute("FILE_STATUS", "ERROR_FILE");
-				setModelAttributes(model,userId);
+				setModelAttributes(model, userId);
 				return new ModelAndView("proco/promo_collaboration");
 			} else if (savedData.equals("ERROR")) {
 				model.addAttribute("errorMsg", "File Upload is UnSuccessful.");
-				setModelAttributes(model,userId);
+				setModelAttributes(model, userId);
 				return new ModelAndView("proco/promo_collaboration");
 			} else {
 				model.addAttribute("FILE_STATUS", "SUCCESS_FILE");
@@ -283,58 +278,56 @@ public class CollaborationController {
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			model.addAttribute("errorMsg", "Error while uploading file");
-			setModelAttributes(model,userId);
+			setModelAttributes(model, userId);
 			return new ModelAndView("proco/promo_collaboration");
 		} catch (Throwable e) {
 			logger.error("Exception: ", e);
 			model.addAttribute("errorMsg", "Error while uploading file");
-			setModelAttributes(model,userId);
+			setModelAttributes(model, userId);
 			return new ModelAndView("proco/promo_collaboration");
 		}
 		return new ModelAndView("proco/promo_collaboration");
 	}
 
 	@RequestMapping(value = "downloadKamErrorFile.htm", method = RequestMethod.GET)
-	public @ResponseBody ModelAndView downloadPromotionVolumeErrorFile(
-			@RequestParam("level") String level, @ModelAttribute("VolumeUploadBean") VolumeUploadBean volumeUploadBean, Model model,
+	public @ResponseBody ModelAndView downloadPromotionVolumeErrorFile(@RequestParam("level") String level,
+			@ModelAttribute("VolumeUploadBean") VolumeUploadBean volumeUploadBean, Model model,
 			HttpServletRequest request, HttpServletResponse response) {
 		InputStream is;
 		String downloadLink = "", absoluteFilePath = "";
 		List<ArrayList<String>> downloadedData = null;
 		String userId = (String) request.getSession().getAttribute("UserID");
 		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
-		String fileName = "KamErrorFile_"+
-				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS();
+		String fileName = "KamErrorFile_" + CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS();
 		String downloadFileName = absoluteFilePath + fileName;
-		if(level.equals("L1")){
+		if (level.equals("L1")) {
 			ArrayList<String> headerDetail = collaborationService.getHeaderListForKamL1ErrorFileDownload();
 			downloadedData = collaborationService.getKamL1ErrorDetails(headerDetail, userId);
-		}else{
+		} else {
 			ArrayList<String> headerDetail = collaborationService.getHeaderListForKamL2ErrorFileDownload();
 			downloadedData = collaborationService.getKamL2ErrorDetails(headerDetail, userId);
 		}
-		
+
 		// UploadUtil.writeFileWithData(downloadFileName, downloadedData,
 		// ".csv");
 		// downloadLink = downloadFileName + ".csv";
 		try {
-			if(level.equals("L1")){
+			if (level.equals("L1")) {
 				UploadUtil.writeKamL1DepotXLSFile(downloadFileName, downloadedData, ".xls");
-				fileName="KamL1ErrorFile_";
-			}else{
+				fileName = "KamL1ErrorFile_";
+			} else {
 				UploadUtil.writeKamL2DepotXLSFile(downloadFileName, downloadedData, ".xls");
-				fileName="KamL2ErrorFile_";
+				fileName = "KamL2ErrorFile_";
 			}
 			downloadLink = downloadFileName + ".xls";
 			is = new FileInputStream(new File(downloadLink));
 			/*
-			 * String actualFileName =
-			 * downloadLink.substring(downloadLink.lastIndexOf("/") + 1,
-			 * downloadLink.indexOf("."));
+			 * String actualFileName = downloadLink.substring(downloadLink.lastIndexOf("/")
+			 * + 1, downloadLink.indexOf("."));
 			 */
 			// copy it to response's OutputStream
 			response.setContentType("application/force-download");
-			response.setHeader("Content-Disposition", "attachment; filename="+fileName
+			response.setHeader("Content-Disposition", "attachment; filename=" + fileName
 					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
 			IOUtils.copy(is, response.getOutputStream());
 			response.flushBuffer();
@@ -350,7 +343,7 @@ public class CollaborationController {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void setModelAttributes(Model model,String userId) {
+	private void setModelAttributes(Model model, String userId) {
 		List<String> customerChainL1 = createPromoService.getCustomerChainL1(userId);
 		List<String> offerTypes = createPromoService.getOfferTypes();
 		String geographyJson = createPromoService.getGeography(false);
