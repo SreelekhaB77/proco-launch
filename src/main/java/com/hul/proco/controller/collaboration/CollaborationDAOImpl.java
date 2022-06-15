@@ -38,13 +38,14 @@ public class CollaborationDAOImpl implements CollaborationDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public int getCollaborationRowCount(String cagetory, String brand, String basepack, String custChainL1,
-			String custChainL2, String offerType, String modality, String year, String moc, String userId) {
+	public int getCollaborationRowCount(/*String cagetory, String brand, String basepack, String custChainL1,
+			String custChainL2, String offerType, String modality, String year, */ String moc,String userId) {
 		//kiran - big int to int changes
 		//List<Integer> list = null;
 		List<BigInteger> list = null;
+		/* Mayur Commented for sprint 9
 		List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
-		List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
+		List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));*/
 		try {
 			//kiran - changes for rownumber() replaced with ROW_NUMBER()
 			/*String rowCount = "SELECT COUNT(1) FROM (SELECT A.PROMO_ID, A.MOC, A.CUSTOMER_CHAIN_L1, A.CUSTOMER_CHAIN_L2, B.CATEGORY, B.BRAND, B.BASEPACK, "
@@ -55,6 +56,7 @@ public class CollaborationDAOImpl implements CollaborationDAO {
 					+ "AND F.USER_ID='" + userId + "' "
 					+" AND A.STATUS IN(4,5,14,15,24,25,34,35,12,22,32)";*/
 			
+			/* mayur commented for sprint 9
 			String rowCount = "SELECT COUNT(1) FROM (SELECT A.PROMO_ID, A.MOC, A.CUSTOMER_CHAIN_L1, A.CUSTOMER_CHAIN_L2, B.CATEGORY, B.BRAND, B.BASEPACK, "
 					+ "B.BASEPACK_DESC, OFFER_TYPE, OFFER_MODALITY, OFFER_DESC, OFFER_VALUE, UOM, GEOGRAPHY, A.QUANTITY, '100.00%', ROW_NUMBER() OVER (ORDER BY PROMO_ID ASC) AS ROW_NEXT  "
 					+ "FROM TBL_PROCO_PROMOTION_MASTER AS A INNER JOIN TBL_PROCO_PRODUCT_MASTER AS B ON A.P1_BASEPACK=B.BASEPACK INNER JOIN TBL_PROCO_STATUS_MASTER AS D ON A.STATUS=D.STATUS_ID "
@@ -124,9 +126,17 @@ public class CollaborationDAOImpl implements CollaborationDAO {
 				}
 			}
 			//rowCount += " AND A.START_DATE>=CURRENT_DATE ";
-			rowCount += ") AS PLAN_TEMP";
+			rowCount += ") AS PLAN_TEMP";*/
+			//Mayur's Change start Sprint 9
+			String rowCount="SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM "
+					+ "INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.CUSTOMER_CHAIN_L2 "
+					+ "LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS "
+					+ "FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR ON PR.PROMO_ID = PM.PROMO_ID "
+					+ "LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
+					+ "LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE WHERE PM.MOC='"+moc+"'";
+			
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(rowCount);
-			// query.setParameter("userId", userId);
+			// query.setParameter("userId", userId);//Mayur's Change end
 
 			list = query.list();
 
@@ -141,11 +151,13 @@ public class CollaborationDAOImpl implements CollaborationDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DisplayCollaborationBean> getCollaborationTableList(int pageDisplayStart, int pageDisplayLength,
-			String cagetory, String brand, String basepack, String custChainL1, String custChainL2, String offerType,
-			String modality, String year, String moc, String userId) {
+			/*String cagetory, String brand, String basepack, String custChainL1, String custChainL2, String offerType,
+			String modality, String year, */ String moc, String userId) {
 		List<DisplayCollaborationBean> promoList = new ArrayList<>();
+		/*
 		List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
 		List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
+		*/
 		String promoQuery = "";
 		try {
 			//kiran - changes 
@@ -156,7 +168,7 @@ public class CollaborationDAOImpl implements CollaborationDAO {
 					+ "WHERE (A.QUANTITY IS NOT NULL AND A.QUANTITY<>'') AND A.ACTIVE = 1 AND A.PROMO_ID IN (SELECT DISTINCT PROMO_ID FROM TBL_PROCO_PROMOTION_DISAGGREGATION_DEPOT_LEVEL) "
 					+ "AND F.USER_ID='" + userId + "'"
 					+" AND A.STATUS IN(4,5,14,15,24,25,34,35,12,22,32)";*/
-			
+			/*
 			promoQuery = "SELECT * FROM (SELECT A.PROMO_ID, A.MOC, A.CUSTOMER_CHAIN_L1, A.CUSTOMER_CHAIN_L2, B.CATEGORY, B.BRAND, B.BASEPACK, "
 					+ "B.BASEPACK_DESC, OFFER_TYPE, OFFER_MODALITY, OFFER_DESC, OFFER_VALUE, UOM, GEOGRAPHY, A.QUANTITY, '100.00%', A.KITTING_VALUE, D.STATUS, A.UPDATE_STAMP, ROW_NUMBER() OVER (ORDER BY A.UPDATE_STAMP DESC) AS ROW_NEXT  "
 					+ "FROM TBL_PROCO_PROMOTION_MASTER AS A INNER JOIN TBL_PROCO_PRODUCT_MASTER AS B ON A.P1_BASEPACK=B.BASEPACK INNER JOIN TBL_PROCO_STATUS_MASTER AS D ON A.STATUS=D.STATUS_ID "
@@ -226,36 +238,64 @@ public class CollaborationDAOImpl implements CollaborationDAO {
 					promoQuery += "AND A.MOC = '" + moc + "' ";
 				}
 			}
+			*/
 		//	promoQuery += " AND A.START_DATE>=CURRENT_DATE ";
+			
+			promoQuery ="SELECT * FROM (SELECT PM.PROMO_ID AS UNIQUE_ID,PM.PROMO_ID AS ORIGINAL_ID,PM.START_DATE,PM.END_DATE,"
+					+ "PM.MOC,PM.CUSTOMER_CHAIN_L2,PM.BASEPACK_CODE AS BASEPACK,PM.OFFER_DESC,"
+					+ "PM.OFFER_TYPE,PM.OFFER_MODALITY, PM.CLUSTER AS GEOGRAPHY,PM.QUANTITY,PM.PRICE_OFF AS OFFER_VALUE,"
+					+ "PSM.STATUS,PR.INVESTMENT_TYPE, PR.PROMOTION_ID AS SOL_CODE,PR.PROMOTION_MECHANICS,"
+					+ "PR.PROMOTION_STATUS AS SOL_CODE_STATUS,ROW_NUMBER() OVER (ORDER BY PM.UPDATE_STAMP DESC) AS ROW_NEXT "
+					+ "FROM TBL_PROCO_PROMOTION_MASTER_V2 PM "
+					+ "INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.CUSTOMER_CHAIN_L2\r\n "
+					+ "INNER JOIN TBL_PROCO_STATUS_MASTER PSM ON PSM.STATUS_ID = PM.STATUS\r\n"
+					+ "LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS\r\n"
+					+ "FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR ON PR.PROMO_ID = PM.PROMO_ID\r\n"
+					+ "LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE\r\n"
+					+ "LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE\r\n"
+					+ "WHERE PM.MOC='"+moc+"'";
+			
 			if (pageDisplayLength == 0) {
-				promoQuery += " ORDER BY A.UPDATE_STAMP DESC) AS PROMO_TEMP ORDER BY PROMO_TEMP.UPDATE_STAMP DESC";
+				promoQuery += " ORDER BY PM.UPDATE_STAMP DESC) AS PROMO_TEMP";
 			} else {
-				promoQuery += " ORDER BY A.UPDATE_STAMP DESC) AS PROMO_TEMP WHERE ROW_NEXT BETWEEN " + pageDisplayStart
-						+ " AND " + pageDisplayLength + " ORDER BY PROMO_TEMP.UPDATE_STAMP DESC";
+				promoQuery += " ORDER BY PM.UPDATE_STAMP DESC) AS PROMO_TEMP WHERE ROW_NEXT BETWEEN " + pageDisplayStart
+						+ " AND " + pageDisplayLength + "";
 			}
+			
+			System.out.println("Query:"+promoQuery);
+			
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQuery);
 			// query.setParameter("userId", userId);
 			List<Object[]> list = query.list();
 			for (Object[] obj : list) {
 				DisplayCollaborationBean bean = new DisplayCollaborationBean();
 				bean.setPromo_id(obj[0].toString());
-				bean.setMoc(obj[1].toString());
-				bean.setCustomerChainL1(obj[2].toString());
-				// bean.setCustomerChainL2(obj[3].toString());
-				bean.setSalesCategory(obj[4].toString());
-				bean.setBrand(obj[5].toString());
-				bean.setBasepack(obj[6].toString());
-				bean.setBasepackDesc(obj[7].toString());
-				bean.setOffer_type(obj[8].toString());
-				bean.setOffer_modality(obj[9].toString());
-				bean.setOffer_desc(obj[10].toString());
+				bean.setStart_date(obj[1].toString());
+				bean.setEnd_date(obj[2].toString());
+				bean.setMoc(obj[3].toString());
+				
+				//bean.setCustomerChainL1(obj[2].toString());
+				bean.setCustomerChainL2(obj[4].toString());
+				//bean.setSalesCategory(obj[4].toString());
+				//bean.setBrand(obj[5].toString());
+				bean.setBasepack(obj[5].toString());
+				bean.setOffer_desc(obj[6].toString());
+				bean.setOffer_type(obj[7].toString());
+				bean.setOffer_modality(obj[8].toString());
+				bean.setGeography(obj[9].toString());
+				bean.setQuantity(obj[10].toString());
 				bean.setOffer_value(obj[11].toString());
-				bean.setUom(obj[12].toString());
-				bean.setGeography(obj[13].toString());
-				bean.setPlannedQty(obj[14].toString());
-				bean.setNational(obj[15].toString());
-				bean.setKitting_value(obj[16].toString());
-				bean.setStatus(obj[17] == null ? "" : obj[17].toString());
+				//bean.setUom(obj[12].toString());
+				
+				//bean.setPlannedQty(obj[14].toString());
+				//bean.setNational(obj[15].toString());
+				//bean.setKitting_value(obj[16].toString());
+				bean.setStatus(obj[12] == null ? "" : obj[12].toString());
+				bean.setInvestment_type(obj[13] == null ? "" : obj[13].toString());
+				bean.setSol_code(obj[14] == null ? "" : obj[14].toString());
+				bean.setPromotion_mechanics(obj[15] == null ? "" : obj[15].toString());
+				bean.setSol_code_status(obj[16] == null ? "" : obj[16].toString());
+				
 				promoList.add(bean);
 			}
 		} catch (Exception ex) {

@@ -51,18 +51,21 @@ public class CollaborationController {
 	private Logger logger = Logger.getLogger(CollaborationController.class);
 
 	@RequestMapping(value = "collaborationPagination.htm", method = RequestMethod.GET, produces = "application/json", headers = "Accept=*/*")
-	public @ResponseBody String promoListingPagination(@RequestParam("category") String cagetoryValue,
+	public @ResponseBody String promoListingPagination(/*@RequestParam("category") String cagetoryValue,
 			@RequestParam("brand") String brandValue, @RequestParam("custChainL1") String custChainL1Value,
 			@RequestParam("offerType") String offerTypeValue, @RequestParam("modality") String modalityValue,
 			@RequestParam("year") String yearValue, @RequestParam("custChainL2") String custChainL2Value,
-			@RequestParam("basepack") String basepackValue, @RequestParam("moc") String mocValue,
-			HttpServletRequest request) {
+			@RequestParam("basepack") String basepackValue, */
+			HttpServletRequest request,
+			@RequestParam("moc") String mocValue) {
 
 		String userId = (String) request.getSession().getAttribute("UserID");
 		Integer pageDisplayStart = Integer.valueOf(request.getParameter("iDisplayStart"));
 		Integer pageDisplayLength = Integer.valueOf(request.getParameter("iDisplayLength"));
 		Integer pageNumber = (pageDisplayStart / pageDisplayLength) + 1;
-
+		String moc=mocValue;
+		System.out.println("Moc"+moc);
+/*
 		String cagetory = "", brand = "", basepack = "", custChainL1 = "", custChainL2 = "";
 		String offerType = "", modality = "", year = "", moc = "";
 
@@ -120,12 +123,17 @@ public class CollaborationController {
 		} else {
 			moc = mocValue;
 		}
-
-		int rowCount = collaborationService.getCollaborationRowCount(cagetory, brand, basepack, custChainL1,
-				custChainL2, offerType, modality, year, moc, userId);
+*/
+		//Mayur Change Start 
+		/*cagetory, brand, basepack, custChainL1,
+		custChainL2, offerType, modality, year, #Value removed from getCollaborationRowCount */
+		int rowCount = collaborationService.getCollaborationRowCount(moc, userId);
+		
+		/*cagetory, brand, basepack, custChainL1,
+		custChainL2, offerType, modality, year,  #Value removed from getCollaborationTableList*/
+		
 		List<DisplayCollaborationBean> promoList = collaborationService.getCollaborationTableList(
-				(pageDisplayStart + 1), (pageNumber * pageDisplayLength), cagetory, brand, basepack, custChainL1,
-				custChainL2, offerType, modality, year, moc, userId);
+				(pageDisplayStart + 1), (pageNumber * pageDisplayLength),moc, userId);
 
 		CollaborationJsonObject jsonObj = new CollaborationJsonObject();
 		jsonObj.setAaData(promoList);
