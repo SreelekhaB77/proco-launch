@@ -20,15 +20,16 @@ $(document)
 						}*/
 					});
 					
+					//below commented by bharati for sprint-9
 					
-					var mocSelectedVal = $('#moc').comboTree({
+					/*var mocSelectedVal = $('#moc').comboTree({
 						source : JSON.parse(moc),
 						isMultiple : false
 						/*select:function(item){
 							mocVal = item.title;
 							promoTable.draw();
 						}*/
-					});
+					/*});*/
 
 					$(
 							'.comboTreeDropDownContainer ul li span.comboTreeParentPlus')
