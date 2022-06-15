@@ -1425,7 +1425,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ "LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";
 			if(roleId.equals("TME")) {
 				
-				promoQuery +=" PR.PROMOTION_STATUS='Financial Close' AND PM.USER_ID='"+ userId + "'AND PM.MOC='"+ moc + "' " ;
+				promoQuery +=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.USER_ID='"+ userId + "'AND PM.MOC='"+ moc + "' " ;
 			}
 			
 			/*if (!cagetory.equalsIgnoreCase("All")) {
