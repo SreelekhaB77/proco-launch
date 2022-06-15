@@ -393,7 +393,7 @@ margin-top: -75px!important;
 		</form>-->
 			<div class="promo-list table-header-deletion">PROMO LIST</div>
 			<!--bharati added below form for sprint-9 moc changes-->
-			<form action="http://localhost:8083/VisibilityAssetTracker/downloadPromoListing.htm" method="POST" enctype="multipart/form-data" id="download">
+			<form action="http://localhost:8083/VisibilityAssetTracker/downloadDeletedPromo.htm" method="POST" enctype="multipart/form-data" id="download">
 			<div class="form-group col-sm-4" style="margin-top: 20px;">
 						<label for="unique-id" class="control-label col-md-2">MOC</label>
 						<div class="col-md-5">

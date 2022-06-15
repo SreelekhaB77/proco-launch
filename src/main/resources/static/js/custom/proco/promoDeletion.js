@@ -493,7 +493,9 @@ function split(val){
 }
 
 function downloadPromotionFile(){
-	$("#download").submit();
+	//$("#download").submit();  //bharati commented this line for sprint-9 moc filter value pass to download promo file
+	var SelectedMoc = $("#Mocvalue").val();
+	window.location.assign(SelectedMoc+"/downloadDeletedPromo.htm");
 }
 
 function uploadValidation() {
