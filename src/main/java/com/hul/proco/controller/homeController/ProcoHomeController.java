@@ -250,6 +250,7 @@ public class ProcoHomeController {
 		String geographyJson = createPromoService.getGeography(false);
 		List<String> yearList = (List<String>) yearAndMoc.get("years");
 		String mocJson = (String) yearAndMoc.get("moc");
+		List<String> mocValue = promoListingService.getPromoMoc();
 		if(roleId.equalsIgnoreCase("TME") || roleId.equalsIgnoreCase("DP")){
 			List<String> category = createPromoService.getAllCategories(userId);
 			List<String> brand = createPromoService.getAllBrands(userId);
@@ -270,6 +271,7 @@ public class ProcoHomeController {
 		model.addAttribute("years", yearList);
 		model.addAttribute("modality", modality);
 		model.addAttribute("offerTypes", offerTypes);
+		model.addAttribute("mocList",mocValue);
 		return new ModelAndView("proco/proco_promo_deletion");
 	}
 

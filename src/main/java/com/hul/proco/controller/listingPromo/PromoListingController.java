@@ -642,11 +642,17 @@ public class PromoListingController {
 			moc = mocValue;
 		}
 
-		int rowCount = promoListingService.getDeletePromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2,
+		/*int rowCount = promoListingService.getDeletePromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2,
 				geography, offerType, modality, year, moc, userId, 1,roleId);
 		List<PromoListingBean> promoList = promoListingService.getDeletePromoTableList((pageDisplayStart + 1),
 				(pageNumber * pageDisplayLength), cagetory, brand, basepack, custChainL1, custChainL2, geography,
-				offerType, modality, year, moc, userId, 1,roleId,searchParameter);
+				offerType, modality, year, moc, userId, 1,roleId,searchParameter); */
+		
+		//Added by kavitha D-SPRINT 9
+
+		int rowCount = promoListingService.getDeletePromoListRowCount(moc, userId,roleId);
+		List<PromoListingBean> promoList = promoListingService.getDeletePromoTableList((pageDisplayStart + 1),
+				(pageNumber * pageDisplayLength), moc,userId,roleId,searchParameter);
 
 		PromoListingJsonObject jsonObj = new PromoListingJsonObject();
 		jsonObj.setJsonBean(promoList);
@@ -658,12 +664,12 @@ public class PromoListingController {
 		return json;
 	}
 	
-	@RequestMapping(value = "downloadDeletedPromo.htm", method = RequestMethod.POST)
-	public ModelAndView downloadDeletedPromo(HttpServletRequest request, HttpServletResponse response,
-			Model model) {
-		logger.info("START downloadPromosForVolumeUpload():");
+	@RequestMapping(value = "{moc}/downloadDeletedPromo.htm", method = RequestMethod.GET)
+	public ModelAndView downloadDeletedPromo(@PathVariable("moc") String moc,
+			Model model,HttpServletRequest request, HttpServletResponse response) {
+		logger.info("START downloadPromos for Dropped Offer:");
 		try {
-			String categoryValue = (String) request.getParameter("category");
+			 /*String categoryValue = (String) request.getParameter("category");
 			String brandValue = (String) request.getParameter("brand");
 			String custChainL1Value = "";
 			String custChainL2Value = "";
@@ -697,18 +703,18 @@ public class PromoListingController {
 			String modalityValue = (String) request.getParameter("modality");
 			String geographyValue = (String) request.getParameter("geography");
 			String yearValue = (String) request.getParameter("year");
-			String mocValue = (String) request.getParameter("moc");
+			String mocValue = (String) request.getParameter("moc"); */
 
 			InputStream is;
 			String downloadLink = "", absoluteFilePath = "";
 			List<ArrayList<String>> downloadedData = null;
 			absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
-			String fileName = UploadUtil.getFileName("Promotion.Error.file", "",
+			String fileName = UploadUtil.getFileName("Promotion.Download.Dropped.file", "",
 					CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 			String downloadFileName = absoluteFilePath + fileName;
 			String userId = (String) request.getSession().getAttribute("UserID");
-			String cagetory = "", brand = "", basepack = "", custChainL1 = "", custChainL2 = "", geography = "";
-			String offerType = "", modality = "", year = "", moc = "";
+			/*String cagetory = "", brand = "", basepack = "", custChainL1 = "", custChainL2 = "", geography = "";
+			String offerType = "", modality = "", year = "", ;
 			if (categoryValue == null || categoryValue.isEmpty() || (categoryValue.equalsIgnoreCase("undefined"))
 					|| (categoryValue.equalsIgnoreCase("ALL CATEGORIES"))) {
 				cagetory = "all";
@@ -770,11 +776,13 @@ public class PromoListingController {
 				moc = "all";
 			} else {
 				moc = mocValue;
-			}
+			} */
 			String roleId = (String) request.getSession().getAttribute("roleId");
 			ArrayList<String> headerList = promoListingService.getHeaderListForPromoDumpDownload();
-			downloadedData = promoListingService.getDeletePromotionDump(headerList, cagetory, brand, basepack, custChainL1,
-					custChainL2, geography, offerType, modality, year, moc, userId, 1, roleId);
+			
+			//downloadedData = promoListingService.getDeletePromotionDump(headerList, cagetory, brand, basepack, custChainL1,custChainL2, geography, offerType, modality, year, moc, userId, 1, roleId);
+			//Added by kavitha D-Sprint 9
+			downloadedData = promoListingService.getDeletePromotionDump(headerList, moc, userId,roleId);
 			//Map<String, List<List<String>>> mastersForTemplate = promoListingService.getMastersForTemplate();
 			if (downloadedData != null) {
 				UploadUtil.writeDeletePromoXLSFile(downloadFileName, downloadedData, null,".xls");
@@ -782,7 +790,7 @@ public class PromoListingController {
 				is = new FileInputStream(new File(downloadLink));
 				// copy it to response's OutputStream
 				response.setContentType("application/force-download");
-				response.setHeader("Content-Disposition", "attachment; filename=DroppedPromotionDumpFile"
+				response.setHeader("Content-Disposition", "attachment; filename=DroppedPromotionFile"
 						+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
 				IOUtils.copy(is, response.getOutputStream());
 				response.flushBuffer();

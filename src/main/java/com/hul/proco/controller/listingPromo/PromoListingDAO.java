@@ -37,17 +37,11 @@ public interface PromoListingDAO {
 	
 	public Map<String,List<List<String>>> getMastersForTemplate();
 	
-	public List<PromoListingBean> getDeletePromoTableList(int pageDisplayStart, int pageDisplayLength, String cagetory,
-			String brand, String basepack, String custChainL1, String custChainL2, String geography, String offerType,
-			String modality, String year, String moc, String userId, int active,String roleId,String searchParameter );
+	public List<PromoListingBean> getDeletePromoTableList(int pageDisplayStart, int pageDisplayLength, String moc, String userId,String roleId,String searchParameter );
 
-	public int getDeletePromoListRowCount(String cagetory, String brand, String basepack, String custChainL1,
-			String custChainL2, String geography, String offerType, String modality, String year, String moc,
-			String userId, int active,String roleId);
+	public int getDeletePromoListRowCount(String moc,String userId,String roleId);
 	
-	public List<ArrayList<String>> getDeletePromotionDump(ArrayList<String> headerList, String cagetory, String brand,
-			String basepack, String custChainL1, String custChainL2, String geography, String offerType,
-			String modality, String year, String moc, String userId, int active,String role);
+	public List<ArrayList<String>> getDeletePromotionDump(ArrayList<String> headerList, String moc, String userId,String roleId);
 	
 	public String promoDeleteDate(String Id);
 	
