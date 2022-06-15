@@ -95,8 +95,8 @@ $(document).ready(function() {
 					
 				}
 			});
-			
-			precheck($('#geography').val());
+			//bharati commented below line in sprint-9
+			//precheck($('#geography').val());
 			
 			/*$('.ComboTreeItemParent').first().find('span input').on('change',function(e){
 				if( $(this).is(':checked') == true ){
@@ -800,8 +800,8 @@ function uploadValidation() {
 	}
 }
 
-
-function precheck( _string ){
+//bharati commented below code for sprint-9
+/*function precheck( _string ){
 	var spans = $( ".comboTreeDropDownContainer .comboTreeItemTitle" )
 	readyString  = _string.split( "," );
 	for( var i = 0; i < spans.length; i++  ){
@@ -810,7 +810,8 @@ function precheck( _string ){
 			$( spans[i] ).find( "input:first" ).trigger( "change" );
 	  }
 	}
-}
+}*/
+
 
 
 function getCustChainValues(selVal) {

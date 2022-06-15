@@ -36,11 +36,12 @@ float: right!important;
 width: 30%!important;
 margin-top: -75px!important;
 }
-.table-header-listing {
-    background: #035597 !important;
-}
+
 #Mocvalue{
 	height:30px!important;
+}
+.table-header-listing {
+    background: #035597 !important;
 }
 @media only screen and (max-width: 767px) {
 	.promo-filter-div{
@@ -344,7 +345,7 @@ margin-top: -75px!important;
 					</div>
 			</form>
 			<form>
-			<!--bharati commented uom,kitting value, reason,remark in sprint-9 US-2-->
+			<!--bharati commented uom,kitting value, reason,remark and added last 4 columns in sprint-9 US-2-->
 			<table id="table-id-promo-list-table" class="table table-striped table-bordered promo-list-table table-responsive" style="width: 100%;">
 				<thead>
 					<tr>
@@ -354,7 +355,8 @@ margin-top: -75px!important;
 						<th>START DATE</th>
 						<th>END DATE</th>
 						<th>MOC</th>
-						<th>CUSTOMER CHAIN L1</th>
+						<!--<th>CUSTOMER CHAIN L1</th>--> <!--bharati rename this to ppm account in sprint-9-->
+						<th>PPM ACCOUNT</th>
 						<th>BASEPACK</th>
 						<th>OFFER DESCRIPTION</th>
 						<th>OFFER TYPE</th>
@@ -525,7 +527,7 @@ margin-top: -75px!important;
 		<script type="text/javascript" src="assets/js/custom/proco/alert-modal.js"></script>
 		<script type="text/javascript">
 		var moc = '${mocJson}';
-		var Mocvalue = $('#Mocvalue').val();
+		var Mocvalue = $('#Mocvalue').val(); //bharati added in sprint-9 for moc filter
 		var geographyData = '${geographyJson}';
 		var basepacks = '${basepacks}';
 		var newBasepacks = null;
