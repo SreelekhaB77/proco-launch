@@ -20,15 +20,16 @@ $(document)
 						}*/
 					});
 					
+					//below commented by bharati for sprint-9
 					
-					var mocSelectedVal = $('#moc').comboTree({
+					/*var mocSelectedVal = $('#moc').comboTree({
 						source : JSON.parse(moc),
 						isMultiple : false
 						/*select:function(item){
 							mocVal = item.title;
 							promoTable.draw();
 						}*/
-					});
+					/*});*/
 
 					$(
 							'.comboTreeDropDownContainer ul li span.comboTreeParentPlus')
@@ -162,6 +163,12 @@ $(document)
 						year = $(this).val();
 						promoTable.draw();
 						});
+						
+						//bharati added for sprint-9 moc filter US
+						$('#Mocvalue').change(function(){
+						Mocvalue = $(this).val();
+						promoTable.draw();
+						});
 					
 					/*PromoListing table pagination */
 				       promoTable = $('.promo-list-table').DataTable({
@@ -189,7 +196,7 @@ $(document)
 					                  "sEmptyTable": "No Pending Visibilities."
 					
 					              },
-				             "iDisplayLength": 5,
+				             "iDisplayLength": 10,
 						     "iDisplayStart": 0,
 				              "sAjaxSource": "promoDeletePagination.htm",
 				               "fnServerParams": function(aoData) {
@@ -203,7 +210,7 @@ $(document)
 				    	                {"name": "offerType", "value": offerType}, 
 				    	                {"name": "modality", "value": modality}, 
 				    	                {"name": "year","value": year},
-				    	                {"name": "moc","value": mocVal}
+				    	                {"name": "moc","value": Mocvalue} //bharati changes this mocVal to MocValue in sprint-9
 				    	                );
 				              }, 
 				              "fnDrawCallback": function(oSettings){
@@ -219,9 +226,10 @@ $(document)
 				                  },*/
 				            	  {
 				                    "mData": "promo_id"
-				                  },{
+				                  },/*{
 				                    "mData": "originalId"
-				                  },{
+				                  },*/
+								  {
 				                    "mData": "startDate"
 				                  },{
 				                    "mData": "endDate"
@@ -241,19 +249,28 @@ $(document)
 				                    "mData": "geography",
 				                  }, {
 				                    "mData": "quantity",
-				                  }, {
+				                  }, /*{
 				                    "mData": "uom",
-				                  }, {
+				                  },*/ {
 				                    "mData": "offer_value",
-				                  },{
+				                  },/*{
 					                 "mData": "kitting_value",
-					              },{
+					              },*/{
 					                 "mData": "status",
-					              },{
+					              },/*{
 						                 "mData": "reason",
 						              }
 					              ,{
 						                 "mData": "remark",
+						              }*/
+									  {
+						                 "mData": "investmentType",
+						              } ,{
+						                 "mData": "solCode",
+						              } ,{
+						                 "mData": "promotionMechanics",
+						              } ,{
+						                 "mData": "solCodeStatus",
 						              }
 				                ]
 				                /* added for second tab end */
@@ -476,7 +493,9 @@ function split(val){
 }
 
 function downloadPromotionFile(){
-	$("#download").submit();
+	//$("#download").submit();  //bharati commented this line for sprint-9 moc filter value pass to download promo file
+	var SelectedMoc = $("#Mocvalue").val();
+	window.location.assign(SelectedMoc+"/downloadDeletedPromo.htm");
 }
 
 function uploadValidation() {

@@ -175,7 +175,8 @@
 					class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promotion
 				Creation
 			</div> -->
-			<form:form action="http://34.120.128.205/VisibilityAssetTracker/createPromotion.htm"
+			<!--bharati commented below create form for sprint-9 -->
+			<!--<form:form action="http://34.120.128.205/VisibilityAssetTracker/createPromotion.htm"
 				modelAttribute="CreatePromotionBean" enctype="multipart/form-data"
 				method="POST" id="createPromoForm">
 				
@@ -211,12 +212,12 @@
 								<%-- <form:input type="text" class="form-control" id="mocCrdate"
 									value="Select MOC" readonly="true" path="customerChainL2" /> --%>
 							
-							</div>
+							<!--</div>
 							<%-- <div class="col-md-4">
 								<form:input type='text' name="end_date" path="endDate" id="enddate" readonly="true" placeholder="END DATE"
 									 class="form-control tme-datepickerend" style="background-color:#fff!important;" />
 							</div> --%>
-						</div>
+						<!--</div>
 						
 						<div class="form-group">
 							<label for="unique-id" class="control-label col-md-4">OFFER VALUE</label>
@@ -262,18 +263,18 @@
 								<%-- <form:input type="text" class="form-control" id="moc" readonly="true"
 									path="moc" name="moc" /> --%>
 								<form:select id="moc" name="moc" path="moc" class="form-control" multiple="multiple">
-								</form:select>
+								</form:select>--%>
 								<!-- <select class="form-control" id="">
 								<option>Q1</option>
 							</select> -->
-							</div>
+						<!--	</div>
 						</div>
 						<div class="form-group">
 							<label class="control-label col-md-4" for="uom">MODALITY</label>
 							<div class="col-md-8">
 								<!-- <input type="text" class="form-control" value="ALL MODALITY" id="modality"> -->
-								<form:select class="form-control" id="modality" path="modality">
-									<option>SELECT</option>
+								<%--<form:select class="form-control" id="modality" path="modality">
+								<!--	<option>SELECT</option>
 									<c:forEach var="item" items="${modality}">
 									<c:choose>
 									<c:when test="${CreatePromotionBean.modality == item.value}">
@@ -287,29 +288,29 @@
 								</form:select>
 							</div>
 						</div>
-						<div class="form-group">
+						<!--<div class="form-group">
 							<label class="control-label col-md-4" for="uom">GEOGRAPHY</label>
 							<div class="col-md-8">
 								<!-- <select class="form-control" id="geography">
 						
 						</select> -->
-							<c:choose>
+						<%--	<c:choose>
 							<c:when test="${duplicate eq true }">
 						<%-- 	<form:input type="text" class="form-control" value="ALL INDIA" disabled="true"
 									id="editGeography" path="geography" /> --%>
-							<form:input type="text" class="form-control" 
+						<%--	<form:input type="text" class="form-control" 
 									id="editGeography" path="geography" readonly="true" />
 							</c:when>
 							<c:otherwise>
 							<form:input type="text" class="form-control" value="ALL INDIA" 
 									id="geography" path="geography" />
 							</c:otherwise>
-							</c:choose>
+							</c:choose>--%>
 
 								<!-- <select class="form-control" id="">
 								<option>ALL INDIA</option>
 							</select> -->
-							</div>
+							<!--</div>
 						</div>
 
 					</div>
@@ -638,9 +639,11 @@
 				<div class="promo-create-btn">
 					<!-- <button class="btn btn-primary" id="createPromo">CREATE PROMO</button> -->
 					<!--bharati disable below btn in sprint-9 -->
-					<input class="btn new-btn-primary" type="button" id="createBtn" value="CREATE PROMO" onClick="javascript: validateForm();" disabled></input>
+					<!--<input class="btn new-btn-primary" type="button" id="createBtn" value="CREATE PROMO" onClick="javascript: validateForm();" disabled></input>
 				</div>
-			</form:form>
+			</form:form>-->
+			
+			<!--bharati commented part end here for sprint-9-->
 <!--bharati commented below code for sprint-9-->
 			<!--<form:form action="http://34.120.128.205/VisibilityAssetTracker/uploadPromoCreation.htm" id="promoCreateUpload"
 				method="POST" modelAttribute="CreatePromotionBean"

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
@@ -52,16 +53,17 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 		Query query = (Query) sessionFactory.getCurrentSession()
 				.createNativeQuery(SQL_QUERY_INSERT_INTO_PROMOTION_MASTER_TEMP);
-
+		Map<String, String> branchmap = getValidBranch();
+		Map<String, String> abmap = getValidAbcreation();
+		Map<String, String> secmap = getValidSecondaryChannel();
 		Map<String, ArrayList<String>> validationmap = getAllValidationRecords();
 
 		for (CreateBeanRegular bean : beans) {
 			query.setString(0, bean.getChannel());
 			query.setString(1, bean.getMoc());
-			query.setString(2, bean.getSecondary_channel());
+			
 			query.setString(3, bean.getPpm_account());
 			query.setString(4, bean.getPromo_time_period());
-			query.setString(5, bean.getAb_creation());
 			query.setString(6, bean.getBasepack_code());
 			query.setString(7, bean.getBaseback_desc());
 			query.setString(8, bean.getC_pack_code());
@@ -70,7 +72,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			query.setString(11, bean.getOffer_mod());
 			// query.setString(12, bean.getPrice_off());
 			query.setString(13, bean.getBudget());
-			query.setString(14, bean.getBranch());
+			query.setString(14, branchmap.get(bean.getCluster().toUpperCase()));
 			query.setString(15, bean.getCluster());
 			query.setString(16, uid);
 			query.setString(20, template);
@@ -80,7 +82,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					query.setString(21, bean.getQuantity());
 				else
 					query.setString(21, "");
-
+				query.setString(2, secmap.get(bean.getPpm_account().toUpperCase()));
+				query.setString(5, abmap.get(bean.getPpm_account().toUpperCase()));
 				query.setString(22, "");
 				query.setString(23, "");
 				query.setString(24, "");
@@ -90,7 +93,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				query.setString(28, "");
 				query.setString(29, "");
 				query.setString(30, "");
-				
+
 				if (!validationmap.get("baseback").contains(bean.getC_pack_code())) {
 					if (!bean.getC_pack_code().isEmpty()) {
 						if (flag == 1)
@@ -102,7 +105,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					}
 				}
 
-				if (!validationmap.get("offer type").contains(bean.getOfr_type())) {
+				if (!validationmap.get("offer type").contains(bean.getOfr_type().toUpperCase())) {
 					if (flag == 1)
 						error_msg = error_msg + ",Invalid Offer Type";
 					else {
@@ -111,7 +114,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					}
 				}
 
-				if (!validationmap.get("Offer modality").contains(bean.getOffer_mod())) {
+				if (!validationmap.get("Offer modality").contains(bean.getOffer_mod().toUpperCase())) {
 					if (flag == 1)
 						error_msg = error_msg + ",Invalid Offer Modality";
 					else {
@@ -124,7 +127,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 				if (bean.getPromo_time_period().isEmpty() // || bean.getPromo_time_period().isBlank()
 						|| bean.getPromo_time_period() == "") {
-					if (!isMocInFormat(new_moc) || !validationmap.get("AB creation").contains(bean.getAb_creation())
+					if (!isMocInFormat(new_moc) //|| !validationmap.get("AB creation").contains(bean.getAb_creation())
 							|| bean.getPpm_account().contains(",")) {
 						query.setString(18, ""); // start date
 						query.setString(19, ""); // end date
@@ -155,7 +158,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
 							String new_date = sdf2.format(sdf.parse(bean.getPromo_time_period().replace("/", "-")));
 							if (!isMocInFormat(new_moc)
-									|| !validationmap.get("AB creation").contains(bean.getAb_creation())
+									//|| !validationmap.get("AB creation").contains(bean.getAb_creation())
 									|| bean.getPpm_account().contains(",")) {
 								query.setString(18, "");
 								query.setString(19, "");
@@ -250,12 +253,12 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 				}
 			} else if (template.equalsIgnoreCase("cr")) {
-				if (!validationmap.get("SOL TYPE").contains(bean.getSol_type())) {
+				if (!validationmap.get("SOL TYPE").contains(bean.getSol_type().toUpperCase())) {
 					error_msg = error_msg + "Invalid SOL";
 					flag = 1;
 				}
 
-				//start
+				// start
 				if (bean.getSol_type().equals("_DE_")) {
 
 					if (bean.getEnd_date().isEmpty()) {
@@ -267,22 +270,22 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							flag = 1;
 						}
 					} else {
-						if (isPromoTimeisValid(bean.getEnd_date())) {
+						if (isPromoTimeisValid(bean.getEnd_date())) { //checking end date in format
 							try {
 
 								SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 								SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
 								String new_date = sdf2.format(sdf.parse(bean.getEnd_date().replace("/", "-")));
 								if (!isMocInFormat(bean.getMoc())
-										|| !validationmap.get("AB creation").contains(bean.getAb_creation())
+										//|| !validationmap.get("AB creation").contains(bean.getAb_creation())
 										|| bean.getPpm_account().contains(",")) {
 									query.setString(18, "");
 									query.setString(19, "");
 									if (flag == 1) {
-										error_msg = error_msg + ",Can't obtain Start date";
+										error_msg = error_msg + ",Invalid Date extension DATE should with in moc ";
 										flag = 1;
 									} else {
-										error_msg = error_msg + "Can't obtain Start date";
+										error_msg = error_msg + "Invalid Date extension DATE should with in moc ";
 										flag = 1;
 									}
 								} else {
@@ -290,7 +293,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 											bean.getMoc().substring(4, 6).concat(bean.getMoc().substring(0, 4)),
 											bean.getPpm_account(), new_date);
 									if (startDate.isEmpty() || startDate.equals("")) {
-										error_msg = error_msg + "Can't obtain Start date for ppm account/moc";
+										error_msg = error_msg + "Invalid Date extension DATE should with in moc";
 										query.setString(18, "");
 										query.setString(19, "");
 										flag = 1;
@@ -317,8 +320,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							}
 						}
 					}
-					
-					//end
+
+					// end
 
 				} else {
 					List<Object[]> se_date = getStartEndDate(
@@ -328,7 +331,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						query.setString(19, se_date.get(0)[1].toString()); // end date
 					} else {
 						if (flag == 1) {
-							error_msg = error_msg + ",Can not obtain start/end date";
+							error_msg = error_msg + "Invalid Date extension DATE should with in moc";
 							flag = 1;
 						}
 
@@ -338,8 +341,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					}
 				}
 
-				if (bean.getSol_type().equals("_BE_") && bean.getAddition_budget().isEmpty() ||
-						(bean.getSol_type().equals("_BE_") && !isStringNumber(bean.getAddition_budget())) ) {
+				if (bean.getSol_type().equals("_BE_") && bean.getAddition_budget().isEmpty()
+						|| (bean.getSol_type().equals("_BE_") && !isStringNumber(bean.getAddition_budget()))) {
 
 					if (flag == 1) {
 						error_msg = error_msg + ",for _BE_ SOL,Additional Budget empty/not number";
@@ -415,7 +418,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						flag = 1;
 					}
 				}
-
+				query.setString(2, bean.getSecondary_channel());
+				query.setString(5, bean.getAb_creation());
 				query.setString(12, bean.getPrice_off());
 				query.setString(21, bean.getQuantity());
 				query.setString(22, bean.getSol_type());
@@ -429,11 +433,11 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				query.setString(30, bean.getExisting_sol_code());
 			}
 
-			if (!validationmap.get("Channel name").contains(bean.getChannel())) {
+			if (!validationmap.get("Channel name").contains(bean.getChannel().toUpperCase())) {
 				error_msg = error_msg + "Invalid Channel";
 				flag = 1;
 			}
-			if (!validationmap.get("PPM Account").contains(bean.getPpm_account())
+			if (!validationmap.get("PPM Account").contains(bean.getPpm_account().toUpperCase())
 					|| bean.getPpm_account().contains(",")) {
 
 				if (flag == 1)
@@ -444,14 +448,6 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				}
 			}
 
-			if (!validationmap.get("AB creation").contains(bean.getAb_creation())) {
-				if (flag == 1)
-					error_msg = error_msg + ",Invalid AB creation";
-				else {
-					error_msg = error_msg + "Invalid AB creation";
-					flag = 1;
-				}
-			}
 
 			if (!validationmap.get("baseback").contains(bean.getBasepack_code())) {
 				if (flag == 1)
@@ -462,16 +458,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				}
 			}
 
-			if (!validationmap.get("branch").contains(bean.getBranch())) {
-				if (flag == 1)
-					error_msg = error_msg + ",Invalid Branch";
-				else {
-					error_msg = error_msg + "Invalid Branch";
-					flag = 1;
-				}
-			}
 
-			if (!validationmap.get("cluster").contains(bean.getCluster()) || bean.getCluster().contains(",")) {
+			if (!validationmap.get("cluster").contains(bean.getCluster().toUpperCase()) || bean.getCluster().contains(",")) {
 				if (flag == 1)
 					error_msg = error_msg + ",Invalid Cluster";
 				else {
@@ -536,12 +524,12 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		validationmap.put("SOL TYPE", getSOLType());
 		validationmap.put("Channel name", getValidChannels());
 		validationmap.put("PPM Account", getValidPPMAccount());
-		validationmap.put("AB creation", getABCreation());
+		//validationmap.put("AB creation", getABCreation());
 		validationmap.put("baseback", getValidBasepack());
 		validationmap.put("offer type", getValidOfferType());
 		validationmap.put("Offer modality", getValidOfferModality());
-		validationmap.put("branch", getValidBranch());
-		validationmap.put("Secondary", getValidSec());
+		// validationmap.put("branch", getValidBranch());
+		//validationmap.put("Secondary", getValidSec());
 		validationmap.put("cluster", getValidCluster());
 		return validationmap;
 	}
@@ -601,10 +589,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		for (CreateBeanRegular bean : beans) {
 			query.setString(0, bean.getChannel());
 			query.setString(1, bean.getMoc());
-			query.setString(2, bean.getSecondary_channel());
+			
 			query.setString(3, bean.getPpm_account());
 			query.setString(4, bean.getPromo_time_period());
-			query.setString(5, bean.getAb_creation());
 			query.setString(6, bean.getBasepack_code());
 			query.setString(7, bean.getBaseback_desc());
 			query.setString(8, bean.getC_pack_code());
@@ -613,7 +600,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			query.setString(11, bean.getOffer_mod());
 			query.setString(12, bean.getPrice_off());
 			query.setString(13, bean.getBudget());
-			query.setString(14, bean.getBranch());
+			query.setString(14, getValidBranch().get(bean.getCluster().toUpperCase()));
 			query.setString(15, bean.getCluster());
 			query.setString(16, uid);
 			query.setString(21, template);
@@ -625,6 +612,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					query.setString(22, bean.getQuantity());
 				else
 					query.setString(22, "");
+				
+				query.setString(2,  getValidSecondaryChannel().get(bean.getPpm_account().toUpperCase()));
+				query.setString(5, getValidAbcreation().get(bean.getPpm_account().toUpperCase()));
 				query.setString(25, "");
 				query.setString(26, "");
 				query.setString(27, "");
@@ -681,8 +671,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			} else if (template.equalsIgnoreCase("cr")) {
 				query.setString(22, bean.getQuantity());
 
-				if(bean.getSol_type().equalsIgnoreCase("_DE_"))
-				{
+				if (bean.getSol_type().equalsIgnoreCase("_DE_")) {
 					try {
 
 						if (isPromoTimeisValid(bean.getEnd_date())) {
@@ -711,8 +700,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						logger.debug("Exception: ", e);
 
 					}
-				}else
-				{
+				} else {
 					String new_moc = bean.getMoc();
 
 					List<Object[]> se_date = getStartEndDate(new_moc.substring(4, 6).concat(new_moc.substring(0, 4)),
@@ -721,7 +709,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					query.setString(19, se_date.get(0)[0].toString()); // start date
 					query.setString(20, se_date.get(0)[1].toString()); // end date
 				}
-				
+				query.setString(2,  bean.getSecondary_channel());
+				query.setString(5, bean.getAb_creation());
 				query.setString(25, bean.getSol_type());
 				query.setString(26, bean.getEnd_date());
 				query.setString(27, bean.getCluster_selection());
@@ -809,25 +798,41 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 	private ArrayList<String> getValidCluster() {
 		String cluster_query = "SELECT DISTINCT CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER WHERE ACTIVE='1'";
-
-		return (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(cluster_query).list();
+		ArrayList<String> ar = (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(cluster_query)
+				.list();
+		return (ArrayList<String>) ar.stream().map(String::toUpperCase).collect(Collectors.toList());
 	}
 
-	private ArrayList<String> getValidBranch() {
-		String branch_query = "SELECT DISTINCT BRANCH FROM TBL_PROCO_CUSTOMER_MASTER WHERE ACTIVE='1'";
-		return (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(branch_query).list();
+	private Map<String, String> getValidBranch() {
+
+		Map<String, String> map = new HashMap<String, String>();
+		ArrayList<String> clusters = getValidCluster();
+		for (String cluster : clusters) {
+			String branch_query = "SELECT DISTINCT BRANCH FROM TBL_PROCO_CUSTOMER_MASTER WHERE ACTIVE='1' AND CLUSTER"
+					+ "= '" + cluster + "'";
+			ArrayList<String> blist = (ArrayList<String>) sessionFactory.getCurrentSession()
+					.createNativeQuery(branch_query).list();
+			for (String brach : blist) {
+				map.put(cluster.toUpperCase(), brach);
+			}
+		}
+
+		return map;
 
 	}
 
 	private ArrayList<String> getValidOfferModality() {
 		String mod_query = "SELECT DISTINCT MODALITY_NAME FROM TBL_PROCO_OFFER_MODALITY_MASTER WHERE ACTIVE='1'";
-
-		return (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(mod_query).list();
+		ArrayList<String> ar = (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(mod_query)
+				.list();
+		return (ArrayList<String>) ar.stream().map(String::toUpperCase).collect(Collectors.toList());
 	}
 
 	private ArrayList<String> getValidOfferType() {
 		String str_query = "SELECT DISTINCT OFFER_TYPE FROM TBL_PROCO_OFFER_TYPE_V2 WHERE ACTIVE='1'";
-		return (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(str_query).list();
+		ArrayList<String> ar = (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(str_query)
+				.list();
+		return (ArrayList<String>) ar.stream().map(String::toUpperCase).collect(Collectors.toList());
 	}
 
 	private ArrayList<String> getValidBasepack() {
@@ -835,23 +840,59 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		return (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(basepack).list();
 	}
 
-	private ArrayList<String> getABCreation() {
-		String ab_query = "SELECT DISTINCT AB_CREATION_NAME FROM TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE='1'";
+	private Map<String, String> getValidAbcreation() {
 
-		return (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(ab_query).list();
+		Map<String, String> map = new HashMap<String, String>();
+
+		ArrayList<String> ppmaccounts = getValidPPMAccount();
+
+		for (String ppmac : ppmaccounts) {
+			String ab_query = "SELECT DISTINCT AB_CREATION FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y' AND"
+					+ " PPM_ACCOUNT='" + ppmac + "'";
+			List<String> ablist = sessionFactory.getCurrentSession().createNativeQuery(ab_query).list();
+			;
+			for (String ab : ablist) {
+				map.put(ppmac.toUpperCase(), ab);
+			}
+		}
+
+		return map;
 	}
 
+	private Map<String, String> getValidSecondaryChannel() {
+
+		Map<String, String> map = new HashMap<String, String>();
+
+		ArrayList<String> ppmaccounts = getValidPPMAccount();
+		for (String ppmac : ppmaccounts) {
+			String ab_query = "SELECT DISTINCT SECONDARY_CHANNEL FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y' AND"
+					+ " PPM_ACCOUNT='" + ppmac + "'";
+			ArrayList<String> seclist = (ArrayList<String>) sessionFactory.getCurrentSession()
+					.createNativeQuery(ab_query).list();
+			for (String sec : seclist) {
+				map.put(ppmac.toUpperCase(), sec);
+			}
+		}
+
+		return map;
+	}
+	
+	
 	private ArrayList<String> getValidPPMAccount() {
 		String ppm_qury = "SELECT DISTINCT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE  IS_ACTIVE='Y'";
-		return (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(ppm_qury).list();
+		ArrayList<String> ar = (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(ppm_qury)
+				.list();
+		return (ArrayList<String>) ar.stream().map(String::toUpperCase).collect(Collectors.toList());
 
 	}
 
 	private ArrayList<String> getValidChannels() {
 
 		String query = "SELECT DISTINCT CHANNEL_NAME FROM TBL_PROCO_CHANNEL_MASTER";
-		return (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(query).list();
+		ArrayList<String> ar = (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(query).list();
+		return (ArrayList<String>) ar.stream().map(String::toUpperCase).collect(Collectors.toList());
 	}
+
 
 	private int excuteValidationQuery(String query) {
 		Query inner_query = (Query) sessionFactory.getCurrentSession().createNativeQuery(query);
@@ -867,14 +908,14 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		Map<String, List<List<String>>> downloadDataMap = new HashMap<>();
 		List<List<String>> clusterList = new ArrayList<>();
 		List<List<String>> customerList = new ArrayList<>();
-		List<List<String>> abcreationList = new ArrayList<>();
+		//List<List<String>> abcreationList = new ArrayList<>();
 		List<List<String>> modalityList = new ArrayList<>();
 		List<List<String>> offertypeList = new ArrayList<>();
 		List<List<String>> channelList = new ArrayList<>();
 
 		List<String> clusterHeaders = new ArrayList<String>();
 		List<String> customerHeaders = new ArrayList<String>();
-		List<String> abcreationHeaders = new ArrayList<String>();
+		//List<String> abcreationHeaders = new ArrayList<String>();
 		List<String> modalityHeaders = new ArrayList<String>();
 		List<String> offertypeHeaders = new ArrayList<String>();
 		List<String> channelHeaders = new ArrayList<String>();
@@ -884,16 +925,16 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			clusterHeaders.add("BRANCH");
 			clusterHeaders.add("CLUSTER CODE");
 			clusterHeaders.add("CLUSTER");
-			customerHeaders.add("SECONDARY CHANNEL");
+			//customerHeaders.add("SECONDARY CHANNEL");
 			customerHeaders.add("PPM ACCOUNT");
-			abcreationHeaders.add("AB CREATION NAME");
+			//abcreationHeaders.add("AB CREATION NAME");
 			modalityHeaders.add("OFFER MODALITY");
 			offertypeHeaders.add("OFFER TYPE");
 			channelHeaders.add("CHANNEL");
 
 			String clusterQry = "SELECT DISTINCT BRANCH_CODE, BRANCH, CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER";
-			String customerQry = "SELECT DISTINCT SECONDARY_CHANNEL,PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y'ORDER BY SECONDARY_CHANNEL";
-			String abcreationQry = "SELECT DISTINCT AB_CREATION_NAME FROM TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE=1";
+			String customerQry = "SELECT DISTINCT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y'ORDER BY PPM_ACCOUNT";
+			//String abcreationQry = "SELECT DISTINCT AB_CREATION_NAME FROM TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE=1";
 			String modalityQry = "SELECT MODALITY_NAME FROM TBL_PROCO_OFFER_MODALITY_MASTER WHERE ACTIVE=1";
 			String offertypeQry = " SELECT DISTINCT OFFER_TYPE FROM TBL_PROCO_OFFER_TYPE_V2 WHERE ACTIVE=1";
 			String channelQry = " SELECT CHANNEL_NAME FROM TBL_PROCO_CHANNEL_MASTER WHERE ACTIVE=1";
@@ -913,29 +954,27 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				obj = null;
 				clusterList.add(dataObj);
 			}
-			ArrayList<String> allIndia = new ArrayList<String>();
+			/*ArrayList<String> allIndia = new ArrayList<String>();
 			allIndia.add("ALL INDIA");
-			clusterList.add(allIndia);
+			clusterList.add(allIndia);*/
 			downloadDataMap.put("CLUSTER", clusterList);
 
 			query = sessionFactory.getCurrentSession().createNativeQuery(customerQry);
 
-			itr = query.list().iterator();
 			customerList.add(customerHeaders);
+			itr = query.list().iterator();
 			while (itr.hasNext()) {
-				Object[] obj = (Object[]) itr.next();
+				String obj = (String) itr.next();
 				ArrayList<String> dataObj = new ArrayList<String>();
-				for (Object ob : obj) {
-					String value = "";
-					value = (ob == null) ? "" : ob.toString();
-					dataObj.add(value.replaceAll("\\^", ","));
-				}
+				String value = "";
+				value = (obj == null) ? "" : obj.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
 				obj = null;
 				customerList.add(dataObj);
 			}
 			downloadDataMap.put("CUSTOMER", customerList);
 
-			query = sessionFactory.getCurrentSession().createNativeQuery(abcreationQry);
+			/*query = sessionFactory.getCurrentSession().createNativeQuery(abcreationQry);
 
 			abcreationList.add(abcreationHeaders);
 			itr = query.list().iterator();
@@ -949,7 +988,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				abcreationList.add(dataObj);
 			}
 
-			downloadDataMap.put("AB CREATION", abcreationList);
+			downloadDataMap.put("AB CREATION", abcreationList);*/
 
 			query = sessionFactory.getCurrentSession().createNativeQuery(offertypeQry);
 
@@ -1013,14 +1052,14 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		Map<String, List<List<String>>> downloadDataMap = new HashMap<>();
 		List<List<String>> clusterList = new ArrayList<>();
 		List<List<String>> customerList = new ArrayList<>();
-		List<List<String>> abcreationList = new ArrayList<>();
+		//List<List<String>> abcreationList = new ArrayList<>();
 		List<List<String>> modalityList = new ArrayList<>();
 		List<List<String>> offertypeList = new ArrayList<>();
 		List<List<String>> channelList = new ArrayList<>();
 
 		List<String> clusterHeaders = new ArrayList<String>();
 		List<String> customerHeaders = new ArrayList<String>();
-		List<String> abcreationHeaders = new ArrayList<String>();
+		//List<String> abcreationHeaders = new ArrayList<String>();
 		List<String> modalityHeaders = new ArrayList<String>();
 		List<String> offertypeHeaders = new ArrayList<String>();
 		List<String> channelHeaders = new ArrayList<String>();
@@ -1030,16 +1069,16 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			clusterHeaders.add("BRANCH");
 			clusterHeaders.add("CLUSTER CODE");
 			clusterHeaders.add("CLUSTER");
-			customerHeaders.add("SECONDARY CHANNEL");
+			//customerHeaders.add("SECONDARY CHANNEL");
 			customerHeaders.add("PPM ACCOUNT");
-			abcreationHeaders.add("AB CREATION NAME");
+			//abcreationHeaders.add("AB CREATION NAME");
 			modalityHeaders.add("OFFER MODALITY");
 			offertypeHeaders.add("OFFER TYPE");
 			channelHeaders.add("CHANNEL");
 
 			String clusterQry = "SELECT DISTINCT BRANCH_CODE, BRANCH, CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER";
-			String customerQry = "SELECT DISTINCT SECONDARY_CHANNEL,PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y'ORDER BY SECONDARY_CHANNEL";
-			String abcreationQry = "SELECT DISTINCT AB_CREATION_NAME FROM TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE=1";
+			String customerQry = "SELECT DISTINCT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y'ORDER BY PPM_ACCOUNT";
+			//String abcreationQry = "SELECT DISTINCT AB_CREATION_NAME FROM TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE=1";
 			String modalityQry = "SELECT MODALITY_NAME FROM TBL_PROCO_OFFER_MODALITY_MASTER WHERE ACTIVE=1";
 			String offertypeQry = " SELECT DISTINCT OFFER_TYPE FROM TBL_PROCO_OFFER_TYPE_V2 WHERE ACTIVE=1";
 			String channelQry = " SELECT CHANNEL_NAME FROM TBL_PROCO_CHANNEL_MASTER WHERE ACTIVE=1";
@@ -1059,29 +1098,28 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				obj = null;
 				clusterList.add(dataObj);
 			}
-			ArrayList<String> allIndia = new ArrayList<String>();
+			/*ArrayList<String> allIndia = new ArrayList<String>();
 			allIndia.add("ALL INDIA");
-			clusterList.add(allIndia);
+			clusterList.add(allIndia);*/
+			
 			downloadDataMap.put("CLUSTER", clusterList);
 
 			query = sessionFactory.getCurrentSession().createNativeQuery(customerQry);
 
-			itr = query.list().iterator();
 			customerList.add(customerHeaders);
+			itr = query.list().iterator();
 			while (itr.hasNext()) {
-				Object[] obj = (Object[]) itr.next();
+				String obj = (String) itr.next();
 				ArrayList<String> dataObj = new ArrayList<String>();
-				for (Object ob : obj) {
-					String value = "";
-					value = (ob == null) ? "" : ob.toString();
-					dataObj.add(value.replaceAll("\\^", ","));
-				}
+				String value = "";
+				value = (obj == null) ? "" : obj.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
 				obj = null;
 				customerList.add(dataObj);
 			}
-			downloadDataMap.put("CUSTOMER", customerList);
 
-			query = sessionFactory.getCurrentSession().createNativeQuery(abcreationQry);
+			downloadDataMap.put("CUSTOMER", customerList);
+			/*query = sessionFactory.getCurrentSession().createNativeQuery(abcreationQry);
 
 			abcreationList.add(abcreationHeaders);
 			itr = query.list().iterator();
@@ -1095,7 +1133,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				abcreationList.add(dataObj);
 			}
 
-			downloadDataMap.put("AB CREATION", abcreationList);
+			downloadDataMap.put("AB CREATION", abcreationList);*/
 
 			query = sessionFactory.getCurrentSession().createNativeQuery(offertypeQry);
 
@@ -1201,7 +1239,6 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		List<List<String>> channelList = new ArrayList<>();
 		List<List<String>> solList = new ArrayList<>();
 
-
 		List<String> clusterHeaders = new ArrayList<String>();
 		List<String> customerHeaders = new ArrayList<String>();
 		List<String> abcreationHeaders = new ArrayList<String>();
@@ -1209,7 +1246,6 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		List<String> offertypeHeaders = new ArrayList<String>();
 		List<String> channelHeaders = new ArrayList<String>();
 		List<String> solHeaders = new ArrayList<String>();
-
 
 		try {
 			clusterHeaders.add("BRANCH CODE");
@@ -1224,7 +1260,6 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			channelHeaders.add("CHANNEL");
 			solHeaders.add("SOL TYPE");
 			solHeaders.add("SOL REMARK");
-
 
 			String clusterQry = "SELECT DISTINCT BRANCH_CODE, BRANCH, CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER";
 			String customerQry = "SELECT DISTINCT SECONDARY_CHANNEL,PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y' ORDER BY SECONDARY_CHANNEL";
@@ -1249,9 +1284,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				obj = null;
 				clusterList.add(dataObj);
 			}
-			ArrayList<String> allIndia = new ArrayList<String>();
+			/*ArrayList<String> allIndia = new ArrayList<String>();
 			allIndia.add("ALL INDIA");
-			clusterList.add(allIndia);
+			clusterList.add(allIndia);*/
 			downloadDataMap.put("CLUSTER", clusterList);
 
 			query = sessionFactory.getCurrentSession().createNativeQuery(customerQry);
@@ -1334,7 +1369,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			}
 
 			downloadDataMap.put("CHANNEL", channelList);
-			
+
 			query = sessionFactory.getCurrentSession().createNativeQuery(solQry);
 
 			itr = query.list().iterator();
@@ -1351,8 +1386,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				solList.add(dataObj);
 			}
 			downloadDataMap.put("SOLTYPE", solList);
-			
-			
+
 		} catch (Exception e) {
 			logger.debug("Exception: ", e);
 		}

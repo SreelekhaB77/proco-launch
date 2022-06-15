@@ -18,15 +18,15 @@ $(document).ready(function() {
 						}*/
 					});
 					
-					
-					var mocSelectedVal = $('#moc').comboTree({
+					//bharati commented below code for moc filter issue in sprint-9
+					/*var mocSelectedVal = $('#moc').comboTree({
 						source : JSON.parse(moc),
 						isMultiple : false
 						/*select:function(item){
 							mocVal = item.title;
 							promoTable.draw();
 						}*/
-					});
+					/*});*/
 
 					$('.comboTreeDropDownContainer ul li span.comboTreeParentPlus').html("+");
 					
@@ -157,6 +157,13 @@ $(document).ready(function() {
 						year = $(this).val();
 						promoTable.draw();
 						});
+						
+						//bharati added for sprint-9 moc filter US
+						$('#Mocvalue').change(function(){
+						Mocvalue = $(this).val();
+						promoTable.draw();
+						});
+					
 					
 					/*PromoListing table pagination */
 				       promoTable = $('.promo-list-table').DataTable({
@@ -187,6 +194,7 @@ $(document).ready(function() {
 				             "iDisplayLength": 10,
 						     "iDisplayStart": 0,
 				              "sAjaxSource": "promoListingPagination.htm",
+				              //bharati added mocvalue aodata in srint-9
 				               "fnServerParams": function(aoData) {
 				                aoData.push(
 				    	                {"name": "category", "value": category}, 
@@ -198,7 +206,9 @@ $(document).ready(function() {
 				    	                {"name": "offerType", "value": offerType}, 
 				    	                {"name": "modality", "value": modality}, 
 				    	                {"name": "year","value": year},
-				    	                {"name": "moc","value": mocVal}
+				    	                {"name": "moc","value": Mocvalue} //bharati changes this mocVal to MocValue in sprint-9
+				    	                
+				    	               
 				    	                );
 				              }, 
 				              "fnDrawCallback": function(oSettings){
@@ -460,7 +470,10 @@ function split(val){
 }
 
 function downloadPromotionFile(){
-	$("#download").submit();
+	//$("#download").submit();  //bharati commented this line for sprint-9 moc filter value pass to download promo file
+	var SelectedMoc = $("#Mocvalue").val();
+	window.location.assign(SelectedMoc+"/downloadPromoListing.htm");
+
 }
 
 function uploadValidation() {
@@ -513,3 +526,5 @@ function validateForm(){
 	document.getElementById('promoIdList').value = promoIdList;
 	$('#pwdform').submit();
 }
+
+
