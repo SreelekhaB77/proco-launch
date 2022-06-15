@@ -64,13 +64,13 @@
 								<div class="proco-volume-icon"></div>
 								<div class="tab-label-proco-volume-active">Volume Upload</div>
 						</a></li>
-						
-						<li role="presentation"
+						<!--bharati commented disaggregation tab in sprint-9-->
+						<!--<li role="presentation"
 								class="col-md-3 col-sm-6 col-xs-12 disaggregation"><a
 								href="http://localhost:8083/VisibilityAssetTracker/promoDisaggregation.htm">
 									<div class="proco-disaggregation-icon"></div>
 									<div class="tab-label-proco-disaggregation-inactive">Disaggregation</div>
-							</a></li>
+							</a></li>-->
 						
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 listing"><a
