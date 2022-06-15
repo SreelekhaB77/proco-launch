@@ -245,34 +245,35 @@ public class CollaborationDAOImpl implements CollaborationDAO {
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQuery);
 			// query.setParameter("userId", userId);
 			List<Object[]> list = query.list();
+			
 			for (Object[] obj : list) {
 				DisplayCollaborationBean bean = new DisplayCollaborationBean();
 				bean.setPromo_id(obj[0].toString());
-				bean.setStart_date(obj[1].toString());
-				bean.setEnd_date(obj[2].toString());
-				bean.setMoc(obj[3].toString());
+				bean.setStart_date(obj[2].toString());
+				bean.setEnd_date(obj[3].toString());
+				bean.setMoc(obj[4].toString());
 
 				// bean.setCustomerChainL1(obj[2].toString());
-				bean.setCustomerChainL2(obj[4].toString());
+				bean.setCustomerChainL2(obj[5].toString());
 				// bean.setSalesCategory(obj[4].toString());
 				// bean.setBrand(obj[5].toString());
-				bean.setBasepack(obj[5].toString());
-				bean.setOffer_desc(obj[6].toString());
-				bean.setOffer_type(obj[7].toString());
-				bean.setOffer_modality(obj[8] == null ? "" : obj[8].toString());
-				bean.setGeography(obj[9] == null ? "" : obj[9].toString());
-				bean.setQuantity(obj[10] == null ? "" : obj[10].toString());
-				bean.setOffer_value(obj[11] == null ? "" : obj[11].toString());
+				bean.setBasepack(obj[6].toString());
+				bean.setOffer_desc(obj[7].toString());
+				bean.setOffer_type(obj[8] == null ? "" : obj[8].toString());
+				bean.setOffer_modality(obj[9] == null ? "" : obj[9].toString());
+				bean.setGeography(obj[10] == null ? "" : obj[10].toString());
+				bean.setQuantity(obj[11] == null ? "" : obj[11].toString());
+				bean.setOffer_value(obj[12] == null ? "" : obj[12].toString());
 				// bean.setUom(obj[12].toString());
 
 				// bean.setPlannedQty(obj[14].toString());
 				// bean.setNational(obj[15].toString());
 				// bean.setKitting_value(obj[16].toString());
-				bean.setStatus(obj[12] == null ? "" : obj[12].toString());
-				bean.setInvestment_type(obj[13] == null ? "" : obj[13].toString());
-				bean.setSol_code(obj[14] == null ? "" : obj[14].toString());
-				bean.setPromotion_mechanics(obj[15] == null ? "" : obj[15].toString());
-				bean.setSol_code_status(obj[16] == null ? "" : obj[16].toString());
+				bean.setStatus(obj[13] == null ? "" : obj[13].toString());
+				bean.setInvestment_type(obj[14] == null ? "" : obj[14].toString());
+				bean.setSol_code(obj[15] == null ? "" : obj[15].toString());
+				bean.setPromotion_mechanics(obj[16] == null ? "" : obj[16].toString());
+				bean.setSol_code_status(obj[17] == null ? "" : obj[17].toString());
 
 				promoList.add(bean);
 			}
