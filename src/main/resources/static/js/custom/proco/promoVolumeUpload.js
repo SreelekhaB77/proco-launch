@@ -193,7 +193,7 @@ $(document).ready(function() {
 												});
 
 										},
-										//bharati changes below columns in sprint-9
+										//bharati done changes below columns in sprint-9
 										"aoColumns" : [
 												/*{
 													"mData" : "promo_id",
@@ -244,7 +244,8 @@ $(document).ready(function() {
 													"mData" : "geography",
 												}, {
 													"mData" : "quantity",
-												}, /*{
+												}, 
+												/*{
 													"mData" : "uom",
 												},*/
 												{
@@ -261,7 +262,7 @@ $(document).ready(function() {
 												}, {
 													"mData" : "remark",
 												}*/
-{
+                                       {
 						                 "mData": "investmentType",
 						              } ,{
 						                 "mData": "solCode",

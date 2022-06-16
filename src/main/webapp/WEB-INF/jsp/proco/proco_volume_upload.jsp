@@ -64,13 +64,13 @@
 								<div class="proco-volume-icon"></div>
 								<div class="tab-label-proco-volume-active">Volume Upload</div>
 						</a></li>
-						
-						<li role="presentation"
+						<!--bharati commented disaggregation tab in sprint-9-->
+						<!--<li role="presentation"
 								class="col-md-3 col-sm-6 col-xs-12 disaggregation"><a
 								href="http://34.120.128.205/VisibilityAssetTracker/promoDisaggregation.htm">
 									<div class="proco-disaggregation-icon"></div>
 									<div class="tab-label-proco-disaggregation-inactive">Disaggregation</div>
-							</a></li>
+							</a></li>-->
 						
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 listing"><a
@@ -147,7 +147,8 @@
 
 			</div>
 			<form action="http://34.120.128.205/VisibilityAssetTracker/downloadPromosForVolumeUpload.htm" method="POST" enctype="multipart/form-data">
-			<div class="promo-form-details proco-volume-form">
+			<!--bharati commented below div for sprint-9-->
+			<!--<div class="promo-form-details proco-volume-form">
 				<div class="col-md-4">
 					<div class="form-group">
 						<label for="unique-id" class="control-label col-md-4">CATEGORY</label>
@@ -243,7 +244,7 @@
 							<!-- <select class="form-control" id="">
 								<option>ALL INDIA</option>
 							</select> -->
-							<input type="text" class="form-control" value="ALL INDIA" name="geography"
+							<!--<input type="text" class="form-control" value="ALL INDIA" name="geography"
 								id="geography" />
 						</div>
 					</div>
@@ -267,13 +268,14 @@
 				</div>
 
 				<div class="clearfix"></div>
-			</div>
+			</div>-->
 			<!--bharati commented this btn in sprint-9-->
 			<!--<div class="download-btn">
 				<input type="submit" class="btn new-btn-download" value="PROMO DOWNLOAD"></input>
 			</div>-->
 			</form>
 			<!--bharati added this below btn for dp volumn download in sprint-9-->
+			<div class="promo-list table-header-volume">PROMO LIST</div>
 				<form:form action="http://34.120.128.205/VisibilityAssetTracker/downloadDpVolume.htm" id="getPromoVolumnUploadTemplate"
 				method="GET" modelAttribute="VolumeUploadBean"
 				enctype="multipart/form-data" style="text-align:center">
@@ -282,7 +284,7 @@
 			<div class="clearfix"></div>
 			<!--bharati changes end for sprint-9-->
 			<!-- Listing table -->
-			<div class="promo-list table-header-volume">PROMO LIST</div>
+			
 			
 			<table class="table table-striped table-bordered promo-list-table"
 				style="width: 100%;overflow-x: scroll;display: block;">
@@ -295,7 +297,8 @@
 						<th>START DATE</th>
 						<th>END DATE</th>
 						<th>MOC</th>
-						<th>CUSTOMER CHAIN L1</th>
+						<!--<th>CUSTOMER CHAIN L1</th>--> <!--bharati rename this to ppm account in sprint-9-->
+						<th>PPM ACCOUNT</th>
 						<!--<th>SALES CATEGORY</th>-->
 						<th>BASEPACK</th>
 						<th>OFFER DESCRIPTION</th>
@@ -317,6 +320,7 @@
 					</tr>
 				</thead>
 			</table>
+			
 			<!--Bharati change below url for dp volumn upload in sprint-9-->
 			<%--<form:form action="http://34.120.128.205/VisibilityAssetTracker/uploadPromoVolume.htm" id="promoVolumeUpload"
 				method="POST" modelAttribute="VolumeUploadBean"

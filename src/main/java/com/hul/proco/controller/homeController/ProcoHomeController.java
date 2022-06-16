@@ -223,7 +223,7 @@ public class ProcoHomeController {
 		model.addAttribute("categories", category);
 		model.addAttribute("brands", brand);
 		model.addAttribute("basepacks", basepacks);
-		model.addAttribute("mocValue",mocValue);
+		model.addAttribute("mocList",mocValue);
 		return new ModelAndView("proco/promo_collaboration");
 	}
 	

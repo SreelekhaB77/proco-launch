@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,9 +64,13 @@ public class DPVolumeUploadController {
 
 		downloadedData = dpVolumeUploadService.getDetailsofDP(headerDetail);
 
-		Map<String, List<List<String>>> mastersForNewTemplate = createCRPromo.getMastersForNewTemplate();
+		//Map<String, List<List<String>>> mastersForNewTemplate = createCRPromo.getMastersForNewTemplate();
+		
+		Map<String, List<List<String>>> mastersForNewTemplate = new HashMap<String, List<List<String>>>();
+		
+		
 		try {
-			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForNewTemplate, ".xls");
+			UploadUtil.writeDeletePromoXLSFile(downloadFileName, downloadedData, mastersForNewTemplate, ".xls");
 			downloadLink = downloadFileName + ".xls";
 			is = new FileInputStream(new File(downloadLink));
 			/*
