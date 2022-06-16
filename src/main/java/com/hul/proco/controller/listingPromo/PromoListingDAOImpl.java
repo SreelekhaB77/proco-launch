@@ -1612,7 +1612,9 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			if (roleId.equalsIgnoreCase("DP")) {
 				promoQueryCount += " WHERE PM.STATUS = 1 AND PM.MOC='"+moc+"' ";
 			}
-			
+			if (roleId.equalsIgnoreCase("KAM")) {
+				promoQueryCount += " WHERE PM.MOC='"+moc+ "' ";
+				}
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQueryCount);
 			list = query.list();
 		} catch (Exception ex) {
@@ -1645,7 +1647,9 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			if (roleId.equalsIgnoreCase("DP")) {
 				promoQueryGrid += " WHERE PM.STATUS = 1 AND PM.MOC='"+moc+ "' ";
 			}
-			
+			if (roleId.equalsIgnoreCase("KAM")) {
+				promoQueryGrid += " WHERE PM.MOC='"+moc+ "' ";
+			}
 			if(searchParameter!=null && searchParameter.length()>0){
 				promoQueryGrid +="AND UCASE(PM.PROMO_ID) LIKE UCASE('%"+searchParameter+"%')";
 			}
