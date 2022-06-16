@@ -296,8 +296,7 @@ public class PromoListingController {
 		List<String> changesMadeListForEdit = promoListingService.getChangesMadeListForEdit();
 		List<String> reasonListForEdit = promoListingService.getReasonListForEdit();
 		List<String> mocValue = promoListingService.getPromoMoc();
-		System.out.println("mocValue:" + mocValue.toString());
-		
+				
 		model.addAttribute("mocJson", mocJson);
 		model.addAttribute("years", yearList);
 		model.addAttribute("customerChainL1", customerChainL1);
@@ -810,6 +809,8 @@ public class PromoListingController {
 		logger.info("START downloadPromos for listing():");
 		try {
 			InputStream is;
+			String roleId = (String) request.getSession().getAttribute("roleId");
+			
 			String downloadLink = "", absoluteFilePath = "";
 			List<ArrayList<String>> downloadedData = null;
 			absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
@@ -819,7 +820,7 @@ public class PromoListingController {
 			String userId = (String) request.getSession().getAttribute("UserID");
 			
 			ArrayList<String> headerList = promoListingService.getHeaderListForPromoDownloadListing();
-			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc);
+			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc,roleId);
 			if (downloadedData != null) {
 				UploadUtil.writeXLSFile(downloadFileName, downloadedData, null,".xls");
 				downloadLink = downloadFileName + ".xls";

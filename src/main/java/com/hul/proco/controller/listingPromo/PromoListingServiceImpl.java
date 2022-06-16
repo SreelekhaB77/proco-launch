@@ -230,8 +230,8 @@ public class PromoListingServiceImpl implements PromoListingService {
 		return headerList;
 	}
 	
-	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc){
-		return promoListingDAO.getPromotionListingDownload(headerList,userId,moc);
+	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleid){
+		return promoListingDAO.getPromotionListingDownload(headerList,userId,moc,roleid);
 	}
 	//Added by Kavitha D for promo listing download ends-SPRINT 9
 

@@ -1550,7 +1550,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 	//Added by Kavitha D for promo listing download starts-SPRINT 9
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc){
+	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleid){
 		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
 		try {
 		String qry=" SELECT PM.CHANNEL_NAME, PM.MOC, CM.ACCOUNT_TYPE, CM.POS_ONINVOICE, CM.SECONDARY_CHANNEL, CM.PPM_ACCOUNT, PM.PROMO_ID,"
@@ -1563,13 +1563,26 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.CUSTOMER_CHAIN_L2 "
 				+ " LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID) PR ON PR.PROMO_ID = PM.PROMO_ID "
 				+ " LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
-				+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE "
-				+ " WHERE PM.USER_ID=:userId AND PM.MOC=:moc";			
-				
+				+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";
+		
+		if(roleid.equalsIgnoreCase("KAM"))
+		{
+			qry+=" WHERE PM.MOC='"+moc+"'";
+		}else
+		{
+			qry+=" WHERE PM.USER_ID=:userId AND PM.MOC=:moc";		
+		}
+		
+		
 		Query query  =sessionFactory.getCurrentSession().createNativeQuery(qry);
+		
+		if(!roleid.equalsIgnoreCase("KAM"))
+		{
+			query.setString("moc", moc);
+			query.setString("userId", userId);
+			
+		}
 
-		query.setString("userId", userId);
-		query.setString("moc", moc);
 
 		
 		Iterator itr = query.list().iterator();
