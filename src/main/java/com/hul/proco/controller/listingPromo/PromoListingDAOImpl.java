@@ -1116,7 +1116,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ "  LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
 					+ "  LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";
 			
-			if (roleId.equalsIgnoreCase("KAM")) {
+			if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP")) {
 				//promoQuery += " INNER JOIN TBL_PROCO_KAM_MAPPING AS F ON A.CUSTOMER_CHAIN_L1=F.CUSTOMER_CHAIN_L1 WHERE F.USER_ID='"
 				//		+ userId + "' ";
 				promoQuery+=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.MOC='"+moc+"'";
@@ -1286,7 +1286,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ " LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
 					+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE";
 			
-			if (roleId.equalsIgnoreCase("KAM")) {
+			if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP")) {
 				//promoQuery += " INNER JOIN TBL_PROCO_KAM_MAPPING AS F ON A.CUSTOMER_CHAIN_L1=F.CUSTOMER_CHAIN_L1 WHERE F.USER_ID='"
 					//	+ userId + "' "; Mayur commented for sprint 9
 				
@@ -1303,6 +1303,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				promoQuery +=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.USER_ID= '"+userId+"' AND PM.MOC='"+moc+"' ";
 			}
 
+			
 			/*if (!custChainL1.equalsIgnoreCase("All")) {
 				if (custL1.size() == 1) {
 					promoQuery += "AND (A.CUSTOMER_CHAIN_L1 = '" + custL1.get(0) + "' )";
@@ -1427,14 +1428,15 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ "LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID,PROMOTION_STATUS FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID,PROMOTION_STATUS) PR ON PR.PROMO_ID = PM.PROMO_ID "
 					+ "LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
 					+ "LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";
+			
 			if(roleId.equals("TME")) {
 				
 				promoQuery +=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.USER_ID='"+ userId + "'AND PM.MOC='"+ moc + "' " ;
 			}
 			 //mayur's changes for sprint 9
-			if(roleId.equalsIgnoreCase("KAM"))
+			if(roleId.equalsIgnoreCase("KAM")|| roleId.equalsIgnoreCase("DP"))
 			{
-				promoQuery+=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.MOC='"+moc+"';";
+				promoQuery+=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.MOC='"+moc+"'";
 			}
 			/*if (!cagetory.equalsIgnoreCase("All")) {
 				promoQuery += "AND C.CATEGORY = '" + cagetory + "' ";
@@ -1630,8 +1632,14 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			if (roleId.equalsIgnoreCase("TME")) {
 				promoQueryCount += "WHERE PM.USER_ID='"+ userId +"'AND PM.MOC='"+moc+"'";
 			}
-			if (roleId.equalsIgnoreCase("DP")) {
-				promoQueryCount += " WHERE PM.STATUS = 1 AND PM.MOC='"+moc+"' ";
+			if (roleId.equalsIgnoreCase("DP") && (moc== null || moc.isEmpty())) {
+				promoQueryCount += " WHERE PM.STATUS = 1 ";
+			}
+			if (roleId.equalsIgnoreCase("DP")&& (moc!= null || !moc.isEmpty())) {
+				if(moc.equalsIgnoreCase("all"))
+					promoQueryCount += " WHERE PM.STATUS = 1";
+				else
+				promoQueryCount += " WHERE PM.STATUS = 1 AND PM.MOC='"+moc+ "' ";
 			}
 			if (roleId.equalsIgnoreCase("KAM")) {
 				promoQueryCount += " WHERE PM.MOC='"+moc+ "' ";
@@ -1665,7 +1673,14 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			if (roleId.equalsIgnoreCase("TME")) {
 				promoQueryGrid += "WHERE PM.USER_ID='"+ userId +"' AND PM.MOC='"+moc+"'";
 			}
-			if (roleId.equalsIgnoreCase("DP")) {
+			if (roleId.equalsIgnoreCase("DP") && (moc== null || moc.isEmpty())) {
+				promoQueryGrid += "WHERE PM.STATUS = 1 ";
+			}
+			
+			if (roleId.equalsIgnoreCase("DP") && (moc!= null || !moc.isEmpty())) {
+				if(moc.equalsIgnoreCase("all"))
+					promoQueryGrid += " WHERE PM.STATUS = 1";
+				else
 				promoQueryGrid += " WHERE PM.STATUS = 1 AND PM.MOC='"+moc+ "' ";
 			}
 			if (roleId.equalsIgnoreCase("KAM")) {
@@ -1680,6 +1695,8 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				promoQueryGrid += " ORDER BY PM.UPDATE_STAMP DESC) AS PROMO_TEMP WHERE ROW_NEXT BETWEEN " + pageDisplayStart
 						+ " AND " + pageDisplayLength + "";
 			}
+			
+			//System.out.println("Volume upload promo:"+ promoQueryGrid);
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQueryGrid);
 			List<Object[]> list = query.list();
 			for (Object[] obj : list) {
