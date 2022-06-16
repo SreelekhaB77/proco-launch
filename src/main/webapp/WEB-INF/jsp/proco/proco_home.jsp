@@ -80,9 +80,8 @@
               </a>
            </div>
          <!--bharati commented disaggregation tab in sprint-9-->
-         <!-- <div class="col-md-2 col-sm-6 col-xs-6 ">
-         
-             <a href="http://localhost:8083/VisibilityAssetTracker/promoDisaggregation.htm">
+         <!--<div class="col-md-2 col-sm-6 col-xs-6 ">
+         <a href="http://localhost:8083/VisibilityAssetTracker/promoDisaggregation.htm">
            <div class="promo-create promo-disagg-bg">
               <img src="assets/images/proco/icon-3.png"  class="img-responsive" alt="">
                  <div class="promo-craete-txt promo-disagg-txt-bg"><div>Promo Disaggregation</div></div>
