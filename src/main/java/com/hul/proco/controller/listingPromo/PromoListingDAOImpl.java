@@ -1117,8 +1117,9 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ "  LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";
 			
 			if (roleId.equalsIgnoreCase("KAM")) {
-				promoQuery += " INNER JOIN TBL_PROCO_KAM_MAPPING AS F ON A.CUSTOMER_CHAIN_L1=F.CUSTOMER_CHAIN_L1 WHERE F.USER_ID='"
-						+ userId + "' ";
+				//promoQuery += " INNER JOIN TBL_PROCO_KAM_MAPPING AS F ON A.CUSTOMER_CHAIN_L1=F.CUSTOMER_CHAIN_L1 WHERE F.USER_ID='"
+				//		+ userId + "' ";
+				promoQuery+=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.MOC='"+moc+"'";
 			}
 
 			/*if (roleId.equalsIgnoreCase("TME") || roleId.equalsIgnoreCase("DP")) {
@@ -1286,8 +1287,11 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE";
 			
 			if (roleId.equalsIgnoreCase("KAM")) {
-				promoQuery += " INNER JOIN TBL_PROCO_KAM_MAPPING AS F ON A.CUSTOMER_CHAIN_L1=F.CUSTOMER_CHAIN_L1 WHERE F.USER_ID='"
-						+ userId + "' ";
+				//promoQuery += " INNER JOIN TBL_PROCO_KAM_MAPPING AS F ON A.CUSTOMER_CHAIN_L1=F.CUSTOMER_CHAIN_L1 WHERE F.USER_ID='"
+					//	+ userId + "' "; Mayur commented for sprint 9
+				
+				promoQuery+=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.MOC='"+moc+"'";
+				
 			}
 
 			/*if (roleId.equalsIgnoreCase("TME") || roleId.equalsIgnoreCase("DP")) {
@@ -1427,7 +1431,11 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				
 				promoQuery +=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.USER_ID='"+ userId + "'AND PM.MOC='"+ moc + "' " ;
 			}
-			
+			 //mayur's changes for sprint 9
+			if(roleId.equalsIgnoreCase("KAM"))
+			{
+				promoQuery+=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.MOC='"+moc+"';";
+			}
 			/*if (!cagetory.equalsIgnoreCase("All")) {
 				promoQuery += "AND C.CATEGORY = '" + cagetory + "' ";
 			}
