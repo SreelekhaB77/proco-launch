@@ -114,6 +114,32 @@ $(document).ready(function() {
 	
 	
 	/***** */
+	//bharati added below code for moc bind options in sprint-9
+	
+	$.ajax({
+		type : "GET",
+		contentType : "application/json; charset=utf-8",
+		cache : false,
+		url : "downloadDPMOC.htm",
+		success : function(data) {
+			var Mocvalue1 = $.parseJSON(data);
+			//console.log(branch);
+			$('#Mocvalue1').empty();
+			$('#Mocvalue1').append("<option value=SELECT>SELECT MOC</option>");
+			$.each(Mocvalue1,
+					function(key, value) {
+						$('#Mocvalue1').append(
+								"<option value='" + value + "'>" + value
+										+ "</option>");
+					});
+		},
+		error : function(error) {
+			console.log(error)
+		}
+	});
+	
+	
+	//bharati code end here
 	
 	$( document ).on( "change", "#comboTreemoc-filterDropDownContainer input[type=checkbox]", function(e){
 				e.preventDefault();e.stopPropagation();
@@ -321,7 +347,10 @@ $(document).ready(function() {
 						Mocvalue = $(this).val();
 						promoTable.draw();
 						});
+						
 					
+						//bharati code end here for sprint-9
+						
 					/*PromoListing table pagination */
 				       promoTable = $('.promo-list-table').DataTable({
 
@@ -1053,5 +1082,17 @@ function downloadMeasureReport(e){
 					    
 					    	
 				    });
-					
+		//bharati added below function for sprint-9
+	function downloadMeasureReport(){
+	//$("#download").submit();  //bharati commented this line for sprint-9 moc filter value pass to download promo file
+	var SelectedMoc = $("#Mocvalue1").val();
+	                 if(SelectedMoc == 'SELECT'){
+							$('#selectMsgMoc').show();
+						     
+						}else{
+							$('#selectMsgMoc').hide();
+							window.location.assign("dpMesureDownloadBasedOnMoc.htm?moc="+SelectedMoc);
+						}
+	
+}
 					//bharati code end here for sprint-9
