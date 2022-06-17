@@ -398,11 +398,11 @@ img#libimg {
 .promo-lib-bg {
     background-color: #fff;
 }
-
+/*bharati changes font size in sprint-9*/
 .tab-label-proco-Signops-inactive {
     padding-left: 17%;
     line-height: 2.5;
-    font-size: 1.7em;
+    font-size: 1.5em; 
     color: #3F3F3F;
 }
 div#DataTables_Table_0_processing {
@@ -1061,14 +1061,14 @@ span.comboTreeItemTitle {
 	margin: 45px 0 15px 0;
 	min-height: 320px;
 }
-
+/*change font size and left margin 87 to 60 in sprint- 9*/
 .tab-label-proco-create-active {
-	font-size: 1.7em;
+	font-size: 1.5em;
 	/*line-height:2em;*/
     float: left;
     height: 60px;
     position: absolute;
-    left: 87px;
+    left: 60px;
     top: 4px;
     color: #fff;
     padding-top: 10px;
@@ -1278,12 +1278,13 @@ img#delimg {
     font-size: 1.7em;
     
 }
+/*bharati chnaged below style left,fontsize,line height in spint-9*/ 
 .tab-label-proco-status-inactive {
     background-color: #fff;
     height: 60px;
-    line-height: 2.5;
-    padding-left: 24%;
-    font-size: 1.7em;
+    line-height: 2.8;
+    padding-left: 23%;
+    font-size: 1.4em;
     color: #3F3F3F;
     border-radius: 3px;
 }
