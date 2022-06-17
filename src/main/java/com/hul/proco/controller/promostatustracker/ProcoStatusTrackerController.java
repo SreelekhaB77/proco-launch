@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +34,7 @@ import com.google.gson.GsonBuilder;
 import com.hul.proco.controller.createpromo.CreatePromoService;
 import com.hul.proco.controller.listingPromo.PromoListingBean;
 import com.hul.proco.controller.listingPromo.PromoListingJsonObject;
+import com.hul.proco.controller.listingPromo.PromoListingService;
 import com.hul.proco.controller.listingPromo.PromoMeasureReportBean;
 import com.hul.proco.controller.promocr.PromoCrService;
 import com.hul.launch.web.util.CommonPropUtils;
@@ -54,6 +56,9 @@ public class ProcoStatusTrackerController {
 	
 	@Autowired
 	private CreatePromoService createPromoService;
+	
+	@Autowired 
+	public PromoListingService promoListingService;
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "promoStatusTracker.htm", method = RequestMethod.GET)
@@ -80,6 +85,9 @@ public class ProcoStatusTrackerController {
 		String geographyJson = createPromoService.getGeography(false);
 		List<String> yearList = (List<String>) yearAndMoc.get("years");
 		String mocJson = (String) yearAndMoc.get("moc");
+		List<String> mocValue = promoListingService.getPromoMoc(); //Added by Kavitha D for promo listing MOC filter-SPRINT 9
+
+		
 		//Sarin Changes Performance - Commented and added below
 		/*
 		List<String> category = promoCrService.getAllCategories();
@@ -111,6 +119,8 @@ public class ProcoStatusTrackerController {
 		model.addAttribute("brands", brand);
 		model.addAttribute("basepacks", basepacks);
 		model.addAttribute("promoIds", promoIds);
+		model.addAttribute("mocList", mocValue);
+
 		return new ModelAndView("proco/proco_status_tracker");
 	}
 	
@@ -200,12 +210,19 @@ public class ProcoStatusTrackerController {
 			promoIdVal = promoId;
 		}
 
-		int rowCount = procoStatusTrackerService.getPromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2,
+		//Added by Kavitha D for SPRINT 9 Changes
+		/*int rowCount = procoStatusTrackerService.getPromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2,
 				geography, offerType, modality, year, moc, userId, 1,promoIdVal);
 		List<PromoListingBean> promoList = procoStatusTrackerService.getPromoTableList((pageDisplayStart + 1),
 				(pageNumber * pageDisplayLength), cagetory, brand, basepack, custChainL1, custChainL2, geography,
-				offerType, modality, year, moc, userId, 1,promoIdVal,searchParameter);
+				offerType, modality, year, moc, userId, 1,promoIdVal,searchParameter);*/
+		
+		int rowCount = procoStatusTrackerService.getPromoListRowCount(moc);
+		List<PromoListingBean> promoList = procoStatusTrackerService.getPromoTableList((pageDisplayStart + 1),
+				(pageNumber * pageDisplayLength), moc,searchParameter);
 
+		
+		
 		long endTime = System.currentTimeMillis();
 		logger.info("duration of Promo pagination: "+(endTime-startTime));
 		
@@ -287,12 +304,12 @@ public class ProcoStatusTrackerController {
 	}
 	//Added by Kavitha D for promo measure template ends-SPRINT 9
 
-	@RequestMapping(value = "downloadPromoStatusTracker.htm", method = RequestMethod.POST)
-	public ModelAndView downloadPromoStatusTracker(HttpServletRequest request, HttpServletResponse response,
-			Model model) {
+	@RequestMapping(value = "{moc}/downloadPromoStatusTracker.htm", method = RequestMethod.GET)
+	public ModelAndView downloadPromoStatusTracker(@PathVariable("moc") String moc,
+			Model model,HttpServletRequest request, HttpServletResponse response) {
 		logger.info("START downloadPromoStatusTracker():");
 		try {
-			String categoryValue = (String) request.getParameter("category");
+			/*String categoryValue = (String) request.getParameter("category");
 			String brandValue = (String) request.getParameter("brand");
 			String custChainL1Value = "";
 			String custChainL2Value = "";
@@ -326,8 +343,10 @@ public class ProcoStatusTrackerController {
 			String modalityValue = (String) request.getParameter("modality");
 			String geographyValue = (String) request.getParameter("geography");
 			String yearValue = (String) request.getParameter("year");
-			String mocValue = (String) request.getParameter("moc");
-			String promoIdValue = (String) request.getParameter("promoIds");
+			String promoIdValue = (String) request.getParameter("promoIds");*/
+			
+			//String mocValue = (String) request.getParameter("moc");
+
 
 			InputStream is;
 			String downloadLink = "", absoluteFilePath = "";
@@ -337,9 +356,9 @@ public class ProcoStatusTrackerController {
 					CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 			String downloadFileName = absoluteFilePath + fileName;
 			String userId = (String) request.getSession().getAttribute("UserID");
-			String cagetory = "", brand = "", basepack = "", custChainL1 = "", custChainL2 = "", geography = "";
-			String offerType = "", modality = "", year = "", moc = "", promoId;
-			if (categoryValue == null || categoryValue.isEmpty() || (categoryValue.equalsIgnoreCase("undefined"))
+			//String cagetory = "", brand = "", basepack = "", custChainL1 = "", custChainL2 = "", offerType = "", modality = "", year = "",geography = "", promoId;
+			//String  moc = "";
+			/*if (categoryValue == null || categoryValue.isEmpty() || (categoryValue.equalsIgnoreCase("undefined"))
 					|| (categoryValue.equalsIgnoreCase("ALL CATEGORIES"))) {
 				cagetory = "all";
 			} else {
@@ -394,22 +413,25 @@ public class ProcoStatusTrackerController {
 				year = "all";
 			} else {
 				year = yearValue;
-			}
-			if (mocValue == null || mocValue.isEmpty() || (mocValue.equalsIgnoreCase("undefined"))
+			}*/
+			/*if (mocValue == null || mocValue.isEmpty() || (mocValue.equalsIgnoreCase("undefined"))
 					|| (mocValue.equalsIgnoreCase("FULL YEAR"))) {
 				moc = "all";
 			} else {
 				moc = mocValue;
-			}
-			if (promoIdValue == null || promoIdValue.isEmpty() || (promoIdValue.equalsIgnoreCase("undefined"))
+			}*/
+			/*if (promoIdValue == null || promoIdValue.isEmpty() || (promoIdValue.equalsIgnoreCase("undefined"))
 					|| (promoIdValue.equalsIgnoreCase("ALL PROMOS"))) {
 				promoId = "all";
 			} else {
 				promoId = promoIdValue;
-			}
+			} */
 			ArrayList<String> headerList = procoStatusTrackerService.getHeaderListForPromoStatusTracker(userId, false);
-			downloadedData = procoStatusTrackerService.getPromotionStatusTracker(headerList, cagetory, brand, basepack, custChainL1,
-					custChainL2, geography, offerType, modality, year, moc, userId, 1,promoId);
+			/*downloadedData = procoStatusTrackerService.getPromotionStatusTracker(headerList, cagetory, brand, basepack, custChainL1,
+					custChainL2, geography, offerType, modality, year, moc, userId, 1,promoId);*/
+			
+			downloadedData = procoStatusTrackerService.getPromotionStatusTracker(headerList, moc,userId);
+			
 			if (downloadedData != null) {
 				UploadUtil.writeXLSFile(downloadFileName, downloadedData, null,".xls");
 				downloadLink = downloadFileName + ".xls";

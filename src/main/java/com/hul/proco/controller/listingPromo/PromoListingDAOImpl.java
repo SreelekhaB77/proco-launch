@@ -1116,7 +1116,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ "  LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
 					+ "  LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";
 			
-			if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP")) {
+			if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE")) {
 				//promoQuery += " INNER JOIN TBL_PROCO_KAM_MAPPING AS F ON A.CUSTOMER_CHAIN_L1=F.CUSTOMER_CHAIN_L1 WHERE F.USER_ID='"
 				//		+ userId + "' ";
 				promoQuery+=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.MOC='"+moc+"'";
@@ -1131,6 +1131,9 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				
 				promoQuery +=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.USER_ID= '"+userId+"' AND PM.MOC='"+moc+"' ";
 			}
+			
+			
+			
 
 			/*if (!custChainL1.equalsIgnoreCase("All")) {
 				if (custL1.size() == 1) {
@@ -1286,7 +1289,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ " LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
 					+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE";
 			
-			if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP")) {
+			if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE")) {
 				//promoQuery += " INNER JOIN TBL_PROCO_KAM_MAPPING AS F ON A.CUSTOMER_CHAIN_L1=F.CUSTOMER_CHAIN_L1 WHERE F.USER_ID='"
 					//	+ userId + "' "; Mayur commented for sprint 9
 				
@@ -1434,7 +1437,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				promoQuery +=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.USER_ID='"+ userId + "'AND PM.MOC='"+ moc + "' " ;
 			}
 			 //mayur's changes for sprint 9
-			if(roleId.equalsIgnoreCase("KAM")|| roleId.equalsIgnoreCase("DP"))
+			if(roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE"))
 			{
 				promoQuery+=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.MOC='"+moc+"'";
 			}
