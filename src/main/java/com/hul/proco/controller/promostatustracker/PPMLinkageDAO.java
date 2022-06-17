@@ -2,9 +2,12 @@ package com.hul.proco.controller.promostatustracker;
 
 import java.math.BigInteger;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.ParameterMode;
@@ -79,6 +82,33 @@ public class PPMLinkageDAO implements PPMLinkageInterface {
 		proc.setParameter(0, userId);
 		proc.execute();
 		return "EXCEL_UPLOADED";
+	}
+
+	public List<String> getBasedonMOC() {
+		String q="SELECT DISTINCT MOC FROM TBL_PROCO_MEASURE_MASTER_V2 ORDER BY MOC";
+		
+		return sessionFactory.getCurrentSession().createNativeQuery(q).list();
+	}
+
+	public List<ArrayList<String>> getDownloadData(List<String> headers,String moc) {
+		String queryString="SELECT VERSIONED_PROMOTION_ID, CHART_BY_TYPE, PROMOTION_CREATOR, PROMOTION_STATUS, PROMOTION_ID, PROMOTION_NAME, PROMOTION_SELL_IN_START_DATE, PROMOTION_SELL_IN_END_DATE, PROMOTION_MECHANICS, INVESTMENT_TYPE, CLUSTER_CODE, CLUSTER_NAME, BASEPACK, BASEPACK_NAME, CATEGORY, BRAND, SUB_BRAND, UOM, TAX, DISCOUNT, LIST_PRICE, PERCENT_PROMOTED_VOLUME, QUANTITY, BUDGET_HOLDER_NAME, FUND_TYPE, MOC, INVESTMENT_AMOUNT FROM TBL_PROCO_MEASURE_MASTER_V2 "
+				+ " WHERE PROMOTION_ID IS NOT NULL AND MOC = '"+moc+"'";
+		Query query = sessionFactory.getCurrentSession().createNativeQuery(queryString);
+		Iterator itr = query.list().iterator();
+		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
+		downloadDataList.add((ArrayList<String>) headers);
+		while (itr.hasNext()) {
+			Object[] obj = (Object[]) itr.next();
+			ArrayList<String> dataObj = new ArrayList<String>();
+			for (Object ob : obj) {
+				String value = "";
+				value = (ob == null) ? "" : ob.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
+			}
+			obj = null;
+			downloadDataList.add(dataObj);
+		}
+		return downloadDataList;
 	}
 
 }
