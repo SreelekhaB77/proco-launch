@@ -320,7 +320,7 @@ margin-top: -75px!important;
 		</form>-->
 			<div class="promo-list table-header-tracker">PROMO LIST</div>
 			<!--bharati added this below form for moc filter-->
-			<form action="http://localhost:8083/VisibilityAssetTracker/downloadPromoStatusTracker.htm" method="POST" enctype="multipart/form-data" id="download">
+			<form action="http://34.120.128.205/VisibilityAssetTracker/downloadPromoStatusTracker.htm" method="POST" enctype="multipart/form-data" id="download">
 			<div class="form-group col-sm-4" style="margin-top: 20px;">
 						<label for="unique-id" class="control-label col-md-2">MOC</label>
 						<div class="col-md-5">

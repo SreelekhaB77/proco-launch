@@ -225,7 +225,7 @@ font-size: 22px!important;
 									</div>
 								</form>-->
 								
-								<form style="margin-top:45px;" action="http://localhost:8083/VisibilityAssetTracker/dpMesureDownloadBasedOnMoc.htm" id="download-measure-report" method="POST">
+								<form style="margin-top:45px;" action="http://34.120.128.205/VisibilityAssetTracker/dpMesureDownloadBasedOnMoc.htm" id="download-measure-report" method="POST">
 							 		<div class="launchupload-parent">
 										<div class="proco-measure-download-wrapper">
 											<h2 class="SEGOEUIL-font">Measure Report Download File</h2>
