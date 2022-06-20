@@ -39,7 +39,7 @@ footer {
     min-height: 330px!important;
 }
 .proco-measure-upload-wrapper h2, .proco-measure-download-wrapper h2 {
-font-size: 25px!important;
+font-size: 22px!important;
 }
 .promo-lib-bg-active a {
    
@@ -207,7 +207,8 @@ font-size: 25px!important;
 								</form> 
 							</div>
 							<div class="col-md-6 col-sm-6 ddd">
-							 	<form style="margin-top:45px;" action="http://34.120.128.205/VisibilityAssetTracker/downloadMeasureReport.htm" id="download-measure-report" method="POST" onsubmit="downloadMeasureReport(event)">
+							<!--bharati commented this form form sprint-9 moc changes-->
+							 	<!--<form style="margin-top:45px;" action="http://34.120.128.205/VisibilityAssetTracker/downloadMeasureReport.htm" id="download-measure-report" method="POST" onsubmit="downloadMeasureReport(event)">
 							 		<div class="launchupload-parent">
 										<div class="proco-measure-download-wrapper">
 											<h2 class="SEGOEUIL-font">Measure Report Download File</h2>
@@ -220,6 +221,27 @@ font-size: 25px!important;
 												<input id="MocMonth" name="MocMonth" type="hidden" class="form-control" />
 											</div>
 											<input class="validate_dowload btn marginT10 new-btn-download" type="submit" value="Download" />
+										</div>
+									</div>
+								</form>-->
+								
+								<form style="margin-top:45px;" action="http://localhost:8083/VisibilityAssetTracker/dpMesureDownloadBasedOnMoc.htm" id="download-measure-report" method="POST">
+							 		<div class="launchupload-parent">
+										<div class="proco-measure-download-wrapper">
+											<h2 class="SEGOEUIL-font">Measure Report Download File</h2>
+											<div class="upload-image">
+												<i class="fa fa-download" aria-hidden="true"></i>
+											</div>
+											<p id="selectMsgMoc" style="display: none; color: red; margin-left: 17px;">Please Select the MOC.</p>
+											<div class="form-group col-sm-12" style="margin-top: 0px;">
+											
+						<label for="unique-id" class="control-label col-md-2" style="margin-top:9px;">MOC</label>
+						<div class="col-md-9">
+						<select class="form-control" id="Mocvalue1" name="Mocvalue1">
+							</select>
+								 </div>
+                         </div>
+					<input class="validate_dowload btn marginT10 new-btn-download" style="margin-top:0px;" onclick="javascript: downloadMeasureReport();" type="button"  value="Download" />
 										</div>
 									</div>
 								</form>
