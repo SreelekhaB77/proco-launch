@@ -259,7 +259,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				}
 
 				// start
-				if (bean.getSol_type().equals("_DE_")) {
+				if (bean.getSol_type().equalsIgnoreCase("_DE_")) {
 
 					if (bean.getEnd_date().isEmpty()) {
 						if (flag == 1) {
@@ -269,6 +269,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							error_msg = error_msg + "for _DE_ SOL, End date empty";
 							flag = 1;
 						}
+						query.setString(18, "");
+						query.setString(19, "");
 					} else {
 						if (isPromoTimeisValid(bean.getEnd_date())) { //checking end date in format
 							try {
@@ -318,6 +320,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								error_msg = error_msg + "Invalid END date";
 								flag = 1;
 							}
+							query.setString(18, "");
+							query.setString(19, "");
 						}
 					}
 
@@ -341,8 +345,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					}
 				}
 
-				if (bean.getSol_type().equals("_BE_") && bean.getAddition_budget().isEmpty()
-						|| (bean.getSol_type().equals("_BE_") && !isStringNumber(bean.getAddition_budget()))) {
+				if (bean.getSol_type().equalsIgnoreCase("_BE_") && bean.getAddition_budget().isEmpty()
+						|| (bean.getSol_type().equalsIgnoreCase("_BE_") && !isStringNumber(bean.getAddition_budget()))) {
 
 					if (flag == 1) {
 						error_msg = error_msg + ",for _BE_ SOL,Additional Budget empty/not number";
@@ -353,7 +357,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					}
 				}
 
-				if (bean.getSol_type().equals("_AQ_") && bean.getAdditional_QTY().isEmpty()) {
+				if (bean.getSol_type().equalsIgnoreCase("_AQ_") && bean.getAdditional_QTY().isEmpty()) {
 
 					if (flag == 1) {
 						error_msg = error_msg + ", for _AQ_ SOL, Additional QTY empty";
@@ -364,7 +368,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					}
 				}
 
-				if (bean.getSol_type().equals("_MG_") && bean.getCluster_selection().isEmpty()) {
+				if (bean.getSol_type().equalsIgnoreCase("_MG_") && bean.getCluster_selection().isEmpty()) {
 
 					if (flag == 1) {
 						error_msg = error_msg + ", for _MG_ SOL, Cluster selection empty";
@@ -375,7 +379,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					}
 				}
 
-				if (bean.getSol_type().equals("_BPA_") && bean.getBasepack_addition().isEmpty()) {
+				if (bean.getSol_type().equalsIgnoreCase("_BPA_") && bean.getBasepack_addition().isEmpty()) {
 
 					if (flag == 1) {
 						error_msg = error_msg + ", for _BPA_ SOL, Basepack Addition empty";
@@ -386,35 +390,35 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					}
 				}
 
-				if (bean.getSol_type().equals("_TOPUP_") && bean.getTopup().isEmpty()) {
+				if (bean.getSol_type().equalsIgnoreCase("_TOPUP_") && bean.getTopup().isEmpty()) {
 
 					if (flag == 1) {
-						error_msg = error_msg + ", for _TOPUP LC_ or _TOPUP_ SOL, TOPUP empty";
+						error_msg = error_msg + ", for _TOPUP_ SOL, TOPUP empty";
 						flag = 1;
 					} else {
-						error_msg = error_msg + " for _TOPUP LC_ or _TOPUP_ SOL, TOPUP empty";
+						error_msg = error_msg + " for _TOPUP_ SOL, TOPUP empty";
 						flag = 1;
 					}
 				}
 
-				if (bean.getSol_type().equals("_TOPUP LC_") && bean.getTopup().isEmpty()) {
+				if (bean.getSol_type().equalsIgnoreCase("_TOPUP LC_") && bean.getTopup().isEmpty()) {
 
 					if (flag == 1) {
-						error_msg = error_msg + ", for _TOPUP LC_ , TOPUP empty";
+						error_msg = error_msg + ", for _TOPUP LC_ SOL, TOPUP empty";
 						flag = 1;
 					} else {
-						error_msg = error_msg + " for _TOPUP LC_, TOPUP empty";
+						error_msg = error_msg + " for _TOPUP LC_ SOL, TOPUP empty";
 						flag = 1;
 					}
 				}
 
-				if (bean.getSol_type().equals("_OM_") && bean.getBudget().isEmpty()) {
+				if (bean.getSol_type().equalsIgnoreCase("_OM_") && bean.getAddition_budget().isEmpty()) {
 
 					if (flag == 1) {
-						error_msg = error_msg + ", for _TOPUP LC_ or _TOPUP_ SOL, TOPUP empty";
+						error_msg = error_msg + ", for _OM_, Addition budget empty";
 						flag = 1;
 					} else {
-						error_msg = error_msg + "for _BPA_ SOL, TOPUP empty";
+						error_msg = error_msg + "for _OM_ SOL, Addition budget empty";
 						flag = 1;
 					}
 				}

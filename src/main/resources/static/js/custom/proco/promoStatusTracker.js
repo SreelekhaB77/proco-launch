@@ -31,7 +31,8 @@ $(document).ready(function() {
 	});
 	
 	/*** Convert db data into tree structure */
-	try {
+	//bharati commented this below part in sprint-9 for moc filter
+	/*try {
 		var mocRawList = JSON.parse(DownloadMocList);
 		var treeStruct = {};
 		for( var i = 0; i < mocRawList.length; i++){
@@ -101,7 +102,7 @@ $(document).ready(function() {
 		
 		
 		/** Intiate moc combotree */
-		$('#moc-filter').comboTree({
+		/*$('#moc-filter').comboTree({
 			id: 'moc-filter-selector',
 			source : treeStructMoc,
 			isMultiple : true
@@ -109,10 +110,36 @@ $(document).ready(function() {
 	
 	} catch (ex){
 		console.log(ex);
-	}
+	}*/
 	
 	
 	/***** */
+	//bharati added below code for moc bind options in sprint-9
+	
+	$.ajax({
+		type : "GET",
+		contentType : "application/json; charset=utf-8",
+		cache : false,
+		url : "downloadDPMOC.htm",
+		success : function(data) {
+			var Mocvalue1 = $.parseJSON(data);
+			//console.log(branch);
+			$('#Mocvalue1').empty();
+			$('#Mocvalue1').append("<option value=SELECT>SELECT MOC</option>");
+			$.each(Mocvalue1,
+					function(key, value) {
+						$('#Mocvalue1').append(
+								"<option value='" + value + "'>" + value
+										+ "</option>");
+					});
+		},
+		error : function(error) {
+			console.log(error)
+		}
+	});
+	
+	
+	//bharati code end here
 	
 	$( document ).on( "change", "#comboTreemoc-filterDropDownContainer input[type=checkbox]", function(e){
 				e.preventDefault();e.stopPropagation();
@@ -314,15 +341,24 @@ $(document).ready(function() {
 						year = $(this).val();
 						promoTable.draw();
 						});
+						
+						//bharati added for sprint-9 moc filter US
+						$('#Mocvalue').change(function(){
+						Mocvalue = $(this).val();
+						promoTable.draw();
+						});
+						
 					
+						//bharati code end here for sprint-9
+						
 					/*PromoListing table pagination */
 				       promoTable = $('.promo-list-table').DataTable({
 
 				              /* added for second tab start */
 				    	   "bProcessing": true,
 				             "bServerSide": true,
-				            /* "scrollY":       "300px",
-						        "scrollX":        true,*/
+				             "scrollY":       "200px",
+						        "scrollX":        true,
 						        "scrollCollapse": true,
 						        "paging":         true,
 						        "ordering": false,
@@ -341,7 +377,7 @@ $(document).ready(function() {
 					                  "sEmptyTable": "No Pending Promos."
 					
 					              },
-				             "iDisplayLength": 5,
+				             "iDisplayLength": 10,
 						     "iDisplayStart": 0,
 				              "sAjaxSource": "promoStatusPagination.htm",
 				               "fnServerParams": function(aoData) {
@@ -355,7 +391,7 @@ $(document).ready(function() {
 				    	                {"name": "offerType", "value": offerType}, 
 				    	                {"name": "modality", "value": modality}, 
 				    	                {"name": "year","value": year},
-				    	                {"name": "moc","value": mocVal},
+				    	                {"name": "moc","value": Mocvalue},//bharati changes this mocVal to MocValue in sprint-9
 				    	                {"name": "promoId","value": promoId}
 				    	                );
 				              }, 
@@ -366,17 +402,19 @@ $(document).ready(function() {
 				              },
 				              "aoColumns": [{
 				                    "mData": "promo_id"
-			                  },{
+			                  },/*{
 				                    "mData": "originalId"
-			                  },{
+			                  },*/
+							  {
 			                    "mData": "startDate"
 			                  },{
 			                    "mData": "endDate"
 			                  },{
 			                    "mData": "moc"
-			                  }, {
+			                  }, /*{
 			                    "mData": "customer_chain_l1"
-			                  },{
+			                  },*/
+							  {
 			                    "mData": "customerChainL2"
 			                  },{
 			                    "mData": "basepack"
@@ -390,23 +428,24 @@ $(document).ready(function() {
 			                    "mData": "geography",
 			                  }, {
 			                    "mData": "quantity",
-			                  }, {
+			                  }, /*{
 			                    "mData": "uom",
-			                  }, {
+			                  },*/ {
 			                    "mData": "offer_value",
-			                  },{
+			                  },/*{
 				                 "mData": "kitting_value",
-				              },{
+				              },*/{
 				                 "mData": "status",
-				              },{
+				              },/*{
 				                 "mData": "reason",
-				              },{
+				              },*/
+							  {
 				                 "mData": "remark",
-				              },{
+				              },/*{
 				                 "mData": "changeDate",
 				              },{
 				                 "mData": "changesMade",
-				              },{
+				              },*/{
 				                 "mData": "userId",
 				              },{
 				                 "mData": "investmentType",
@@ -610,7 +649,9 @@ function split(val){
 }
 
 function downloadPromotionFile(){
-	$("#download").submit();
+	//$("#download").submit();  //bharati commented this line for sprint-9 moc filter value pass to download promo file
+	var SelectedMoc = $("#Mocvalue").val();
+	window.location.assign(SelectedMoc+"/downloadPromoStatusTracker.htm");
 }
 
 function uploadValidation() {
@@ -1041,5 +1082,17 @@ function downloadMeasureReport(e){
 					    
 					    	
 				    });
-					
+		//bharati added below function for sprint-9
+	function downloadMeasureReport(){
+	//$("#download").submit();  //bharati commented this line for sprint-9 moc filter value pass to download promo file
+	var SelectedMoc = $("#Mocvalue1").val();
+	                 if(SelectedMoc == 'SELECT'){
+							$('#selectMsgMoc').show();
+						     
+						}else{
+							$('#selectMsgMoc').hide();
+							window.location.assign("dpMesureDownloadBasedOnMoc.htm?moc="+SelectedMoc);
+						}
+	
+}
 					//bharati code end here for sprint-9

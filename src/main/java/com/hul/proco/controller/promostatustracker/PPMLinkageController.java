@@ -1,26 +1,35 @@
 package com.hul.proco.controller.promostatustracker;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.hul.launch.web.util.CommonPropUtils;
 import com.hul.launch.web.util.CommonUtils;
 import com.hul.launch.web.util.FilePaths;
 import com.hul.launch.web.util.UploadUtil;
+import com.hul.proco.controller.collaboration.CollaborationJsonObject;
 import com.hul.proco.controller.createpromo.CreateBeanRegular;
 import com.hul.proco.controller.createpromo.RegularPromoCreateController;
 import com.hul.proco.excelreader.exom.ExOM;
@@ -33,6 +42,9 @@ public class PPMLinkageController {
 	
 	@Autowired
 	PPMLinkageService linkageService;
+	
+	@Autowired
+	ProcoStatusTrackerService procoStatusTrackerService;
 
 	@RequestMapping(value = "ppminkageupload.htm", method = RequestMethod.POST)
 	public @ResponseBody String uploadPPMLinkageFile(@ModelAttribute("PPMLinkageBean") PPMLinkageBean ppmlinkageBean,
@@ -102,5 +114,42 @@ public class PPMLinkageController {
 		}
 		return save_data;
 	}
+	
+	@RequestMapping(value = "downloadDPMOC.htm", method = RequestMethod.GET)
+	public @ResponseBody String getMOCforDP(  HttpServletResponse response,
+			Model model)
+	{
+		List<String> moctypes=linkageService.getBasedonMOC();
+		model.addAttribute("mocList",moctypes);
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		String json = gson.toJson(moctypes);
+		return json;
+	}
 
+	@GetMapping(value="dpMesureDownloadBasedOnMoc.htm")
+	public @ResponseBody ModelAndView dpMesureDownloadBasedOnMoc(
+			@ModelAttribute("PPMLinkageBean") PPMLinkageBean ppmLinkageBean, Model model, @RequestParam("moc") String moc,
+			HttpServletRequest request, HttpServletResponse response)  {
+		try {	
+			List<String> headers = procoStatusTrackerService.getPromoMeasureDownload();
+			List<ArrayList<String>> downloadData=linkageService.getDownloadData(headers,moc);
+		if (headers != null) {
+			String downloadFileName = null;
+			UploadUtil.writeDeletePromoXLSFile(downloadFileName, downloadData, null, ".xls");
+			String downloadLink = downloadFileName + ".xls";
+			FileInputStream is = new FileInputStream(new File(downloadLink));
+			response.setContentType("application/force-download");
+			response.setHeader("Content-Disposition", "attachment; filename=PromoMeasureDownloadFile"
+					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+			IOUtils.copy(is, response.getOutputStream());
+			response.flushBuffer();
+		}
+	} catch (Exception e) {
+		logger.debug("Exception: ", e);
+		return null;
+	}
+		return null;
+		
+	}
+	
 }

@@ -20,24 +20,18 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 	private ProcoStatusTrackerDAO procoStatusTrackerDao;
 	
 	@Override
-	public List<PromoListingBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String cagetory,
-			String brand, String basepack, String custChainL1, String custChainL2, String geography, String offerType,
-			String modality, String year, String moc, String userId, int actives,String promoId, String searchParameter) {
-		return procoStatusTrackerDao.getPromoTableList(pageDisplayStart, pageDisplayLength, cagetory, brand, basepack, custChainL1, custChainL2, geography, offerType, modality, year, moc, userId, actives,promoId,searchParameter);
+	public List<PromoListingBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String moc, String searchParameter) {
+		return procoStatusTrackerDao.getPromoTableList(pageDisplayStart, pageDisplayLength, moc,searchParameter);
 	}
 
 	@Override
-	public int getPromoListRowCount(String cagetory, String brand, String basepack, String custChainL1,
-			String custChainL2, String geography, String offerType, String modality, String year, String moc,
-			String userId, int active,String promoId) {
-		return procoStatusTrackerDao.getPromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2, geography, offerType, modality, year, moc, userId, active,promoId);
+	public int getPromoListRowCount(String moc) {
+		return procoStatusTrackerDao.getPromoListRowCount(moc);
 	}
 
 	@Override
-	public List<ArrayList<String>> getPromotionStatusTracker(ArrayList<String> headerList, String cagetory,
-			String brand, String basepack, String custChainL1, String custChainL2, String geography, String offerType,
-			String modality, String year, String moc, String userId, int active, String promoId) {
-		return procoStatusTrackerDao.getPromotionStatusTracker(headerList, cagetory, brand, basepack, custChainL1, custChainL2, geography, offerType, modality, year, moc, userId, active, promoId);
+	public List<ArrayList<String>> getPromotionStatusTracker(ArrayList<String> headerList, String moc, String userId) {
+		return procoStatusTrackerDao.getPromotionStatusTracker(headerList,moc,userId);
 	}
 	
 	@Override
@@ -96,37 +90,26 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 	public ArrayList<String> getHeaderListForPromoStatusTracker(String UserId, boolean isCron){
 		ArrayList<String> headerList = new ArrayList<String>();
 		if(procoStatusTrackerDao.getUserRoleId(UserId) == 2 || isCron) {
-			headerList.add("Promo Id");
-			headerList.add("Original Id");
-			headerList.add("Start Date");
-			headerList.add("End Date");
+			headerList.add("PROMO ID");
+			headerList.add("START DATE");
+			headerList.add("END DATE");
 			headerList.add("MOC");
-			headerList.add("Customer Chain L1");
-			headerList.add("Customer Chain L2");
-			headerList.add("Basepack");
-			headerList.add("Basepack Description");
-			headerList.add("Created By");
-			headerList.add("Sales Category");
-			headerList.add("Sales Brand");
-			headerList.add("Offer Description");
-			headerList.add("Offer Type");
-			headerList.add("Offer Modality");
-			headerList.add("Geography");
-			headerList.add("Quantity");
-			headerList.add("UOM");
-			headerList.add("Offer Value");
-			headerList.add("Kitting Value");
-			headerList.add("Sales Value");
-			headerList.add("Estimated Spend");
-			headerList.add("Status");
-			headerList.add("Reason");
-			headerList.add("Remarks");
-			headerList.add("Change Date");
-			headerList.add("Investment Type");
-			headerList.add("SolCode");
-			headerList.add("SolCode_Description");
-			headerList.add("Promotion Mechanics");
-			headerList.add("SolCode Status");
+			headerList.add("PPM ACCOUNT");
+			headerList.add("BASEPACK");
+			headerList.add("OFFER DESCRIPTION");
+			headerList.add("OFFER TYPE");
+			headerList.add("OFFER MODALITY");
+			headerList.add("GEOGRAPHY");
+			headerList.add("QUANTITY");
+			headerList.add("OFFER VALUE");
+			headerList.add("STATUS");
+			headerList.add("REMARK");
+			headerList.add("USER ID");
+			headerList.add("INVESTMENT TYPES");
+			headerList.add("SOL CODE ");
+			headerList.add("SOL CODE DESCRIPTION");
+			headerList.add("PROMOTION MECHANICS");
+			headerList.add("SOL CODE STATUS");
 		} else {
 			headerList = getHeaderListForPromoStatusTracker();
 		}
