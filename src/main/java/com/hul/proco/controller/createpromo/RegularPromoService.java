@@ -197,6 +197,12 @@ public class RegularPromoService {
 		return createCRPromo.getMastersForTemplate();
 	}
 
+	@Transactional(rollbackFor = { Exception.class })
+	public String getTemplateType(String uid) {
+		// TODO Auto-generated method stub
+		return createCRPromo.getTemplateType(uid);
+	}
+
 	
 	
 }

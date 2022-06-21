@@ -41,7 +41,7 @@ import com.hul.proco.excelreader.exom.ExOM;
 public class RegularPromoCreateController {
 	@Autowired
 	RegularPromoService createCRPromo;
-	private String error_template="";
+	
 	static Logger logger = Logger.getLogger(RegularPromoCreateController.class);
 
 	@RequestMapping(value = "createCRBean.htm", method = RequestMethod.POST)
@@ -57,7 +57,7 @@ public class RegularPromoCreateController {
 		CreateBeanRegular[] beanArray = null;
 		String filepath = FilePaths.FILE_TEMPUPLOAD_PATH;
 		fileName = filepath + fileName;
-		error_template=template;
+		
 		try {
 			if (!CommonUtils.isFileEmpty(file)) {
 				if (CommonUtils.isFileProcoSizeExceeds(file)) {
@@ -234,6 +234,8 @@ public class RegularPromoCreateController {
 		String downloadLink = "", absoluteFilePath = "";
 		List<ArrayList<String>> downloadedData = null;
 		String userID = (String) request.getSession().getAttribute("UserID");
+		String error_template=createCRPromo.getTemplateType(userID);
+		
 		ArrayList<String> headerDetail = createCRPromo.getHeaderListForPromotionErrorDownload(error_template);
 		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
 		String fileName = UploadUtil.getFileName("Promotion.Error.file", "",

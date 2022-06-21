@@ -23,5 +23,7 @@ public interface CreatePromoRegular  {
 
 	public Map<String, List<List<String>>> getMastersForTemplate();
 
+	public String getTemplateType(String uid);
+
 	
 }

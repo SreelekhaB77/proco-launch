@@ -1448,4 +1448,11 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		return null;
 	}
 
+	@Override
+	public String getTemplateType(String uid) {
+		String templateString="SELECT TEMPLATE_TYPE FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2  WHERE USER_ID='"+uid+"' LIMIT 1";
+		
+		return (String) sessionFactory.getCurrentSession().createNativeQuery(templateString).uniqueResult();
+	}
+
 }
