@@ -13,12 +13,14 @@ public class RegularPromoService {
 
 	@Autowired
 	CreatePromoRegular createCRPromo;
-
+	
+	
 	@Transactional(rollbackFor = { Exception.class })
 	public String createCRPromo(CreateBeanRegular[] bean, String uid, String template) throws Exception {
 		return createCRPromo.createPromotion(bean, uid, template);
 	}
 
+	
 	// Added by Kavitha D for downloading promo regular template starts-SPRINT 9
 
 	public ArrayList<String> getHeaderListForPromotionRegularTemplateDownload() {
@@ -122,8 +124,10 @@ public class RegularPromoService {
 	}
 	// Added by Kavitha D for downloading promo CR template ends-SPRINT 9
 
-	public ArrayList<String> getHeaderListForPromotionErrorDownload() {
+	public ArrayList<String> getHeaderListForPromotionErrorDownload(String error_template) {
 		ArrayList<String> headerList = new ArrayList<String>();
+		if(error_template.equalsIgnoreCase("cr"))
+		{
 		headerList.add("CHANNEL NAME");
 		headerList.add("MOC");
 		headerList.add("SECONDARY CHANNEL");
@@ -141,25 +145,51 @@ public class RegularPromoService {
 		headerList.add("BRANCH");
 		headerList.add("CLUSTER");
 		headerList.add("QUANTITY");
-		headerList.add("ERROR_MSG");
-		headerList.add("TEMPLATE_TYPE");
-		headerList.add("USER_ID");
-		
 		headerList.add("SOL TYPE");
 		headerList.add("END DATE");
 		headerList.add("Cluster Selection");
 		headerList.add("Basepack Addition");
 		headerList.add("TOPUP");
 		headerList.add("Additional Quantity");
+		headerList.add("ADDITIONAL BUDGET");
+		headerList.add("ERROR_MSG");
+		headerList.add("TEMPLATE_TYPE");
+		headerList.add("USER_ID");
 		
+		}else if(error_template.equalsIgnoreCase("regular") ||
+				error_template.equalsIgnoreCase("new"))
+		{
+			headerList.add("CHANNEL NAME");
+			headerList.add("MOC");
+			//headerList.add("SECONDARY CHANNEL");
+			headerList.add("PPM ACCOUNT");
+			headerList.add("PROMO TIMEPERIOD");
+			//headerList.add("AB CREATION (ONLY FOR KA Accounts)");
+			headerList.add("BASEPACK CODE");
+			headerList.add("BASEPACK DESCRIPTION");
+			headerList.add("CHILDPACK CODE");
+			headerList.add("OFFER DESCRIPTION");
+			headerList.add("OFFER TYPE");
+			headerList.add("OFFER MODALITY");
+			headerList.add("PRICE OFF");
+			headerList.add("BUDGET");
+			//headerList.add("BRANCH");
+			headerList.add("CLUSTER");
+			if(error_template.equalsIgnoreCase("new"))
+			headerList.add("QUANTITY");
+			headerList.add("TEMPLATE_TYPE");
+			headerList.add("USER_ID");
+			headerList.add("ERROR_MSG");
+			
+		}
 
 		return headerList;
 	}
 
 	@Transactional(rollbackFor = { Exception.class })
-	public List<ArrayList<String>> getPromotionErrorDetails(ArrayList<String> headerDetail, String userId) {
+	public List<ArrayList<String>> getPromotionErrorDetails(ArrayList<String> headerDetail, String userId,String error_template) {
 
-		return createCRPromo.getPromotionErrorDetails(headerDetail, userId);
+		return createCRPromo.getPromotionErrorDetails(headerDetail, userId,error_template);
 	}
 
 	public Map<String, List<List<String>>> getMastersForTemplate() {

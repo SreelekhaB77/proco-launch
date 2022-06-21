@@ -41,7 +41,7 @@ import com.hul.proco.excelreader.exom.ExOM;
 public class RegularPromoCreateController {
 	@Autowired
 	RegularPromoService createCRPromo;
-
+	private String error_template="";
 	static Logger logger = Logger.getLogger(RegularPromoCreateController.class);
 
 	@RequestMapping(value = "createCRBean.htm", method = RequestMethod.POST)
@@ -57,7 +57,7 @@ public class RegularPromoCreateController {
 		CreateBeanRegular[] beanArray = null;
 		String filepath = FilePaths.FILE_TEMPUPLOAD_PATH;
 		fileName = filepath + fileName;
-
+		error_template=template;
 		try {
 			if (!CommonUtils.isFileEmpty(file)) {
 				if (CommonUtils.isFileProcoSizeExceeds(file)) {
@@ -229,20 +229,19 @@ public class RegularPromoCreateController {
 	public @ResponseBody ModelAndView downloadPromotionErrorFile(
 			@ModelAttribute("CreatePromotionBean") CreatePromotionBean createPromotionBean, Model model,
 			HttpServletRequest request, HttpServletResponse response) {
-
+		
 		InputStream is;
 		String downloadLink = "", absoluteFilePath = "";
 		List<ArrayList<String>> downloadedData = null;
 		String userID = (String) request.getSession().getAttribute("UserID");
-
-		ArrayList<String> headerDetail = createCRPromo.getHeaderListForPromotionErrorDownload();
+		ArrayList<String> headerDetail = createCRPromo.getHeaderListForPromotionErrorDownload(error_template);
 		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
 		String fileName = UploadUtil.getFileName("Promotion.Error.file", "",
 				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 		String downloadFileName = absoluteFilePath + fileName;
 
-		downloadedData = createCRPromo.getPromotionErrorDetails(headerDetail, userID);
-
+		downloadedData = createCRPromo.getPromotionErrorDetails(headerDetail, userID,error_template);
+		
 		Map<String, List<List<String>>> mastersForNewTemplate = createCRPromo.getMastersForNewTemplate();
 		try {
 			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForNewTemplate, ".xls");
