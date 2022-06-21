@@ -176,7 +176,7 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 			} */
 			
 			if (searchParameter != null && searchParameter.length() > 0) {
-				promoQuery += " AND UCASE(A.PROMO_ID) LIKE UCASE('%" + searchParameter + "%')";
+				promoQuery += " AND UCASE(PM.PROMO_ID) LIKE UCASE('%" + searchParameter + "%')";
 			}
 			//Sarin Changes Performances
 			//promoQuery += " GROUP BY A.PROMO_ID,A.P1_BASEPACK,A.OFFER_DESC,A.OFFER_TYPE,A.OFFER_MODALITY,A.GEOGRAPHY,A.QUANTITY,A.UOM,A.OFFER_VALUE,A.MOC,A.CUSTOMER_CHAIN_L1,A.KITTING_VALUE,E.STATUS,DATE_FORMAT(A.START_DATE,'%d/%m/%Y'),DATE_FORMAT(A.END_DATE,'%d/%m/%Y'),A.CUSTOMER_CHAIN_L2, D.REMARK,A.REASON,A.REMARK,DATE_FORMAT(D.CHANGE_DATE,'%d/%m/%Y'),A.ORIGINAL_ID,A.CHANGES_MADE,D.USER_ID,A.UPDATE_STAMP,A.INVESTMENT_TYPE,A.SOL_CODE,A.SOL_CODE_DESC,A.PROMOTION_MECHANICS,A.SOL_CODE_STATUS ";
