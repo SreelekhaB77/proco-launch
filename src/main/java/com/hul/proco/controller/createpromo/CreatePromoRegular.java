@@ -19,9 +19,11 @@ public interface CreatePromoRegular  {
 
     //Added by Kavitha D for promo templates ends-SPRINT 9
 
-	public List<ArrayList<String>> getPromotionErrorDetails(ArrayList<String> headerDetail, String userId);
+	public List<ArrayList<String>> getPromotionErrorDetails(ArrayList<String> headerDetail, String userId,String error_template);
 
 	public Map<String, List<List<String>>> getMastersForTemplate();
+
+	public String getTemplateType(String uid);
 
 	
 }

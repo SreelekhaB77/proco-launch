@@ -25,7 +25,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	private String error_msg = "";
 	private int flag = 0;
 	private int globle_flag = 0;
-
+	Map<String,String> promo_map=new HashMap<String, String>();
 	@Autowired
 	private SessionFactory sessionFactory;
 
@@ -589,7 +589,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	private void saveTomainTable(CreateBeanRegular[] beans, String uid, String template) {
 
 		Query query = sessionFactory.getCurrentSession().createNativeQuery(SQL_QUERY_INSERT_INTO_PROMO_TABLE);
-
+		Map<String,String> branchmap=  getValidBranch();
+		Map<String,String> secondary=getValidSecondaryChannel();
+		Map<String,String> ab=getValidAbcreation();
 		for (CreateBeanRegular bean : beans) {
 			query.setString(0, bean.getChannel());
 			query.setString(1, bean.getMoc());
@@ -604,7 +606,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			query.setString(11, bean.getOffer_mod());
 			query.setString(12, bean.getPrice_off());
 			query.setString(13, bean.getBudget());
-			query.setString(14, getValidBranch().get(bean.getCluster().toUpperCase()));
+			query.setString(14, branchmap.get(bean.getCluster().toUpperCase()));
 			query.setString(15, bean.getCluster());
 			query.setString(16, uid);
 			query.setString(21, template);
@@ -617,8 +619,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				else
 					query.setString(22, "");
 				
-				query.setString(2,  getValidSecondaryChannel().get(bean.getPpm_account().toUpperCase()));
-				query.setString(5, getValidAbcreation().get(bean.getPpm_account().toUpperCase()));
+				query.setString(2,  secondary.get(bean.getPpm_account().toUpperCase()));
+				query.setString(5,  ab.get(bean.getPpm_account().toUpperCase()));
 				query.setString(25, "");
 				query.setString(26, "");
 				query.setString(27, "");
@@ -725,7 +727,23 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				query.setString(32, bean.getExisting_sol_code());
 
 			}
-
+			
+			if(promo_map.containsKey(bean.getMoc()+bean.getPpm_account()+bean.getOffer_desc())
+					&& promo_map.containsKey("Pid_max_"+bean.getMoc()+bean.getPpm_account()+bean.getOffer_desc()))
+			{
+				query.setString(17, promo_map.get(bean.getMoc()+bean.getPpm_account()+bean.getOffer_desc()));
+				query.setString(18, promo_map.get("Pid_max_"+bean.getMoc()+bean.getPpm_account()+bean.getOffer_desc()));
+			}else
+			{
+				
+				String new_pid=getPID(bean.getMoc());
+				String new_promo_id=createNewPromoId(bean.getMoc())+new_pid;
+				promo_map.put(bean.getMoc()+bean.getPpm_account()+bean.getOffer_desc(),new_promo_id );
+				promo_map.put("Pid_max_"+bean.getMoc()+bean.getPpm_account()+bean.getOffer_desc(),new_pid);
+				query.setString(17, new_promo_id);
+				query.setString(18,new_pid );
+			}
+			/*
 			List<Object[]> promo_list = getPromoId(bean.getMoc(), bean.getPpm_account(), bean.getOffer_desc());
 
 			if (promo_list == null || promo_list.size() == 0) {
@@ -736,19 +754,18 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					query.setString(17, promo_list.get(i)[0].toString());
 					query.setString(18, promo_list.get(i)[1].toString()); // getting same PID
 				}
-			}
-
+			} */
 			query.executeUpdate();
 		}
 	}
 
 	private String createNewPromoId(String moc) {
 
-		return "PID_" + moc + "_" + getPID(moc);
+		return "PID_" + moc + "_";
 	}
 
 	private String getPID(String moc) {
-		String pid = sessionFactory.getCurrentSession().createNativeQuery(Pid).setString(flag, moc).uniqueResult()
+		String pid = sessionFactory.getCurrentSession().createNativeQuery(Pid).setString(0, moc).uniqueResult()
 				.toString();
 
 		return pid;
@@ -756,10 +773,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 	private List<Object[]> getPromoId(String moc, String ppm_account, String offer_desc) {
 
-		String checkPromoID = "select count(PROMO_ID) from TBL_PROCO_PROMOTION_MASTER_V2 where moc='" + moc
-				+ "' AND CUSTOMER_CHAIN_L2='" + ppm_account + "' AND OFFER_DESC='" + offer_desc + "'";
 		List<Object[]> list = null;
-		if (excuteValidationQuery(checkPromoID) == 0) {
+		if (promo_map.containsKey(moc+ppm_account+offer_desc)) {
 			return list;
 		} else {
 			String promo_id = "SELECT DISTINCT PROMO_ID,PID from TBL_PROCO_PROMOTION_MASTER_V2 WHERE MOC='" + moc
@@ -1399,11 +1414,27 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	}
 	// Added by Kavitha D for download promo Cr template ends-SPRINT-9
 
-	public List<ArrayList<String>> getPromotionErrorDetails(ArrayList<String> headerDetail, String userId) {
+	public List<ArrayList<String>> getPromotionErrorDetails(ArrayList<String> headerDetail, String userId,String error_template) {
 		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
 		try {
-			String qry = "SELECT CHANNEL_NAME,MOC,CUSTOMER_CHAIN_L1 as 'SECONDARY CHANNEL',CUSTOMER_CHAIN_L2 as 'PPM ACCOUNT',PROMO_TIMEPERIOD as 'PROMO TIMEPERIOD',AB_CREATION as 'AB CREATION (ONLY FOR KA Accounts)',BASEPACK_CODE as 'BASEPACK CODE',BASEPACK_DESC as 'BASEPACK DESCRIPTION',CHILD_BASEPACK_CODE as 'CHILDPACK CODE',OFFER_DESC as 'OFFER DESCRIPTION',OFFER_TYPE as 'OFFER TYPE',OFFER_MODALITY as 'OFFER MODALITY',PRICE_OFF as 'PRICE OFF',BUDGET,BRANCH,CLUSTER,QUANTITY,ERROR_MSG as 'ERROR MESSAGE',TEMPLATE_TYPE as 'TEMPLATE TYPE',USER_ID as 'USER ID'"
-					+ ",CR_SOL_TYPE,CR_END_DATE,CR_CLUSTER,CR_BASEPACK_ADDITION,CR_TOPUP,CR_Additional_QTY FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE USER_ID=?0";
+			String qry = "";
+			if(error_template.equalsIgnoreCase("cr"))
+			{
+				qry="SELECT CHANNEL_NAME,MOC,CUSTOMER_CHAIN_L1 as 'SECONDARY CHANNEL',CUSTOMER_CHAIN_L2 as 'PPM ACCOUNT',PROMO_TIMEPERIOD as 'PROMO TIMEPERIOD',AB_CREATION as 'AB CREATION (ONLY FOR KA Accounts)',BASEPACK_CODE as 'BASEPACK CODE',BASEPACK_DESC as 'BASEPACK DESCRIPTION',CHILD_BASEPACK_CODE as 'CHILDPACK CODE',OFFER_DESC as 'OFFER DESCRIPTION',OFFER_TYPE as 'OFFER TYPE',OFFER_MODALITY as 'OFFER MODALITY',PRICE_OFF as 'PRICE OFF',BUDGET,BRANCH,CLUSTER,QUANTITY"
+					+ ",CR_SOL_TYPE,CR_END_DATE,CR_CLUSTER,CR_BASEPACK_ADDITION,CR_TOPUP,CR_Additional_QTY,CR_BUDGET,ERROR_MSG as 'ERROR MESSAGE',TEMPLATE_TYPE as 'TEMPLATE TYPE',USER_ID as 'USER ID' FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE USER_ID=?0";
+			}else if(error_template.equalsIgnoreCase("Regular"))
+			{
+				qry="SELECT CHANNEL_NAME,MOC,CUSTOMER_CHAIN_L2 as 'PPM ACCOUNT',PROMO_TIMEPERIOD as 'PROMO TIMEPERIOD',BASEPACK_CODE as 'BASEPACK CODE',BASEPACK_DESC as 'BASEPACK DESCRIPTION',CHILD_BASEPACK_CODE as 'CHILDPACK CODE',OFFER_DESC as 'OFFER DESCRIPTION',OFFER_TYPE as 'OFFER TYPE',OFFER_MODALITY as 'OFFER MODALITY',PRICE_OFF as 'PRICE OFF',BUDGET,CLUSTER,TEMPLATE_TYPE as 'TEMPLATE TYPE',USER_ID as 'USER ID',ERROR_MSG as 'ERROR MESSAGE' "
+						+ " FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE USER_ID=?0";
+						
+			}
+			else if(error_template.equalsIgnoreCase("new"))
+			{
+				qry="SELECT CHANNEL_NAME,MOC,CUSTOMER_CHAIN_L2 as 'PPM ACCOUNT',PROMO_TIMEPERIOD as 'PROMO TIMEPERIOD',BASEPACK_CODE as 'BASEPACK CODE',BASEPACK_DESC as 'BASEPACK DESCRIPTION',CHILD_BASEPACK_CODE as 'CHILDPACK CODE',OFFER_DESC as 'OFFER DESCRIPTION',OFFER_TYPE as 'OFFER TYPE',OFFER_MODALITY as 'OFFER MODALITY',PRICE_OFF as 'PRICE OFF',BUDGET,CLUSTER,QUANTITY,TEMPLATE_TYPE as 'TEMPLATE TYPE',USER_ID as 'USER ID',ERROR_MSG as 'ERROR MESSAGE' "
+						+ " FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE USER_ID=?0";
+						
+			}
+			
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(qry);
 			query.setParameter(0, userId);
 			Iterator itr = query.list().iterator();
@@ -1431,6 +1462,13 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	public Map<String, List<List<String>>> getMastersForTemplate() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public String getTemplateType(String uid) {
+		String templateString="SELECT TEMPLATE_TYPE FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2  WHERE USER_ID='"+uid+"' LIMIT 1";
+		
+		return (String) sessionFactory.getCurrentSession().createNativeQuery(templateString).uniqueResult();
 	}
 
 }
