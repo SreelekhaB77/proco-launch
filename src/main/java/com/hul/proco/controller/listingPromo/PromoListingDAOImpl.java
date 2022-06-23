@@ -1675,7 +1675,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";
 		
 			if (roleId.equalsIgnoreCase("TME")) {
-				promoQueryGrid += "WHERE PM.USER_ID='"+ userId +"' AND PM.MOC='"+moc+"'";
+				promoQueryGrid += "WHERE PM.CREATED_BY='"+ userId +"' AND PM.MOC='"+moc+"'";
 			}
 			/*
 			if (roleId.equalsIgnoreCase("DP") && (moc== null || moc.isEmpty())) {
@@ -1686,7 +1686,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				if(moc.equalsIgnoreCase("all"))
 					promoQueryGrid += " WHERE PM.STATUS = 1";  //For DP Volume Upload
 				else
-					promoQueryGrid += " WHERE PM.STATUS = 3 AND PM.MOC='"+moc+ "' ";  //For DP Promo Listing
+					promoQueryGrid += " WHERE PM.STATUS IN (1, 3) AND PM.MOC='"+moc+ "' ";  //For DP Promo Listing
 			}
 			
 			if (roleId.equalsIgnoreCase("KAM")) {
