@@ -1677,16 +1677,18 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			if (roleId.equalsIgnoreCase("TME")) {
 				promoQueryGrid += "WHERE PM.USER_ID='"+ userId +"' AND PM.MOC='"+moc+"'";
 			}
+			/*
 			if (roleId.equalsIgnoreCase("DP") && (moc== null || moc.isEmpty())) {
 				promoQueryGrid += "WHERE PM.STATUS = 1 ";
-			}
+			} */
 			
 			if (roleId.equalsIgnoreCase("DP") && (moc!= null || !moc.isEmpty())) {
 				if(moc.equalsIgnoreCase("all"))
-					promoQueryGrid += " WHERE PM.STATUS = 3";
+					promoQueryGrid += " WHERE PM.STATUS = 1";  //For DP Volume Upload
 				else
-				promoQueryGrid += " WHERE PM.STATUS = 3 AND PM.MOC='"+moc+ "' ";
+					promoQueryGrid += " WHERE PM.STATUS = 3 AND PM.MOC='"+moc+ "' ";  //For DP Promo Listing
 			}
+			
 			if (roleId.equalsIgnoreCase("KAM")) {
 				promoQueryGrid += " WHERE PM.MOC='"+moc+ "' AND PM.CUSTOMER_CHAIN_L2 IN (:kamAccount) ";
 			}
