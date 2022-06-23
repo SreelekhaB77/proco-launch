@@ -1129,7 +1129,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			
 			if (roleId.equalsIgnoreCase("TME")) {
 				
-				promoQuery +=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.USER_ID= '"+userId+"' AND PM.MOC='"+moc+"' ";
+				promoQuery +=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.CREATED_BY= '"+userId+"' AND PM.MOC='"+moc+"' ";
 			}
 			
 			
@@ -1425,7 +1425,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ " PM.PROMO_TIMEPERIOD, CM.AB_CREATION, CM.SOL_RELEASE_ON,"
 					+ "PM.START_DATE, PM.END_DATE, PM.OFFER_DESC, PR.PROMOTION_NAME, PM.BASEPACK_CODE, PM.CHILD_BASEPACK_CODE, PM.OFFER_TYPE, PM.OFFER_MODALITY, "
 					+ "PM.PRICE_OFF, PM.QUANTITY, PM.BUDGET, PM.BRANCH, PM.CLUSTER, CASE WHEN PM.CR_SOL_TYPE IS NULL THEN 'Regular' ELSE PM.CR_SOL_TYPE END AS SOL_TYPE, "
-					+ "CASE WHEN ST.SOL_REMARK IS NULL THEN 'Regular' ELSE ST.SOL_REMARK END AS REMARK, '' AS CMM_NAME, PM.USER_ID AS TME_NAME, "
+					+ "CASE WHEN ST.SOL_REMARK IS NULL THEN 'Regular' ELSE ST.SOL_REMARK END AS REMARK, '' AS CMM_NAME, PM.CREATED_BY AS TME_NAME, "
 					+ "PRM.CATEGORY AS SALES_CATEGORY, PRM.CATEGORY AS PSA_CATEGORY FROM TBL_PROCO_PROMOTION_MASTER_V2 PM "
 					+ "INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.CUSTOMER_CHAIN_L2 "
 					+ "LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID,PROMOTION_STATUS FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID,PROMOTION_STATUS) PR ON PR.PROMO_ID = PM.PROMO_ID "
@@ -1434,7 +1434,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			
 			if(roleId.equals("TME")) {
 				
-				promoQuery +=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.USER_ID='"+ userId + "'AND PM.MOC='"+ moc + "' " ;
+				promoQuery +=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.CREATED_BY='"+ userId + "'AND PM.MOC='"+ moc + "' " ;
 			}
 			 //mayur's changes for sprint 9
 			if(roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE"))
@@ -1583,7 +1583,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			qry+=" WHERE PM.MOC='"+moc+"' AND PM.CUSTOMER_CHAIN_L2 IN (:kamAccount) ";
 		}else
 		{
-			qry+=" WHERE PM.USER_ID=:userId AND PM.MOC=:moc";		
+			qry+=" WHERE PM.CREATED_BY=:userId AND PM.MOC=:moc";		
 		}
 		
 		
@@ -1634,16 +1634,17 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";	
 			
 			if (roleId.equalsIgnoreCase("TME")) {
-				promoQueryCount += "WHERE PM.USER_ID='"+ userId +"'AND PM.MOC='"+moc+"'";
+				promoQueryCount += "WHERE PM.CREATED_BY='"+ userId +"'AND PM.MOC='"+moc+"'";
 			}
+			/*
 			if (roleId.equalsIgnoreCase("DP") && (moc== null || moc.isEmpty())) {
 				promoQueryCount += " WHERE PM.STATUS = 1 ";
-			}
+			} */
 			if (roleId.equalsIgnoreCase("DP")&& (moc!= null || !moc.isEmpty())) {
 				if(moc.equalsIgnoreCase("all"))
-					promoQueryCount += " WHERE PM.STATUS = 1";
+					promoQueryCount += " WHERE PM.STATUS = 3";
 				else
-				promoQueryCount += " WHERE PM.STATUS = 1 AND PM.MOC='"+moc+ "' ";
+				promoQueryCount += " WHERE PM.STATUS IN (1, 3) AND PM.MOC='"+moc+ "' ";
 			}
 			if (roleId.equalsIgnoreCase("KAM")) {
 				promoQueryCount += " WHERE PM.MOC='"+moc+ "' ";
