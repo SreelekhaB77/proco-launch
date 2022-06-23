@@ -46,7 +46,7 @@
     padding: 10px!important;
 }
 .upload-group {
-	
+    
 	margin:20px 0px!important;
 }
 .upload-div{
@@ -747,11 +747,12 @@
 						<div class="upload-group">
 
 							<div class="cust-file">
-								<span class="btn btn-upload " id="choose-file1">Choose
+							<!--bharati change file type file to hidden for hide input and disable choose file btnin sprint-9-->
+								<span class="btn btn-upload " id="choose-file1" disabled>Choose
 									File</span>
 							</div>
 
-							<input type="file" class="form-control" value="" name="file"
+							<input type="hidden" class="form-control" value="" name="file"
 								id="upload-file1">
 
 							<div class="file-name1" style="line-height: 2.3">No file
@@ -759,7 +760,7 @@
 						</div>
                        <span id="uploadcrErrorMsg" style="display: none; color: red">Please upload .xls or .xlsx file</span>
 						<div class="upload-div">
-							<button id="procoCRUploadBtn" class="btn new-btn-primary">UPLOAD</button>
+							<button id="procoCRUploadBtn" class="btn new-btn-primary" disabled>UPLOAD</button>
 
 						</div>
 						

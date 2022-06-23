@@ -365,6 +365,9 @@ margin-top: -75px!important;
 						<th>QUANTITY</th>
 						<th>OFFER VALUE</th>
 						<th name="stat">STATUS</th>
+						<th>CREATED BY</th>
+						<th>CREATED DATE</th>
+						<th>REMARKS</th>
 						<th>INVESTMENT TYPES</th>
 						<th>SOL CODE</th>
 						<th>PROMOTION MECHANICS</th>

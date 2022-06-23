@@ -282,11 +282,14 @@ $(document).ready(function() {
 					              },
 								  /*{
 						                 "mData": "reason",
-						              }
-					              ,{
+						       },*/
+								  {
+				                    "mData": "userId"
+				                  },{
+				                    "mData": "changeDate"
+				                  },{
 						                 "mData": "remark",
-						              },*/
-									  {
+						         },{
 						                 "mData": "investmentType",
 						              } ,{
 						                 "mData": "solCode",
