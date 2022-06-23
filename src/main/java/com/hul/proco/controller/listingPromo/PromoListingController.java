@@ -814,6 +814,10 @@ public class PromoListingController {
 		try {
 			InputStream is;
 			String roleId = (String) request.getSession().getAttribute("roleId");
+			//Added Proco Sprint9 Changes - Starts
+			String accountNames = (String) request.getSession().getAttribute("accountName");
+			String[] kamAccountsArr = accountNames.split(",");
+			//Added Proco Sprint9 Changes - Ends
 			
 			String downloadLink = "", absoluteFilePath = "";
 			List<ArrayList<String>> downloadedData = null;
@@ -824,7 +828,7 @@ public class PromoListingController {
 			String userId = (String) request.getSession().getAttribute("UserID");
 			
 			ArrayList<String> headerList = promoListingService.getHeaderListForPromoDownloadListing();
-			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc,roleId);
+			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc,roleId, kamAccountsArr);
 			if (downloadedData != null) {
 				UploadUtil.writeXLSFile(downloadFileName, downloadedData, null,".xls");
 				downloadLink = downloadFileName + ".xls";

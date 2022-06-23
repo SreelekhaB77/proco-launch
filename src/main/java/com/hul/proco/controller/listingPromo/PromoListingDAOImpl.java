@@ -1563,7 +1563,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 	//Added by Kavitha D for promo listing download starts-SPRINT 9
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleid){
+	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleid, String[] kamAccounts){
 		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
 		try {
 		String qry=" SELECT PM.CHANNEL_NAME, PM.MOC, CM.ACCOUNT_TYPE, CM.POS_ONINVOICE, CM.SECONDARY_CHANNEL, CM.PPM_ACCOUNT, PM.PROMO_ID,"
@@ -1571,7 +1571,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				+ " PM.PROMO_TIMEPERIOD, CM.AB_CREATION, CM.SOL_RELEASE_ON,"
 				+ " PM.START_DATE, PM.END_DATE, PM.OFFER_DESC, PR.PROMOTION_NAME, PM.BASEPACK_CODE, PM.CHILD_BASEPACK_CODE, PM.OFFER_TYPE, PM.OFFER_MODALITY, "
 				+ " PM.PRICE_OFF, PM.QUANTITY, PM.BUDGET, PM.BRANCH, PM.CLUSTER, CASE WHEN PM.CR_SOL_TYPE IS NULL THEN 'Regular' ELSE PM.CR_SOL_TYPE END AS SOL_TYPE, "
-				+ " CASE WHEN ST.SOL_REMARK IS NULL THEN 'Regular' ELSE ST.SOL_REMARK END AS REMARK, '' AS CMM_NAME, PM.USER_ID AS TME_NAME, "
+				+ " CASE WHEN ST.SOL_REMARK IS NULL THEN 'Regular' ELSE ST.SOL_REMARK END AS REMARK, '' AS CMM_NAME, PM.CREATED_BY AS TME_NAME, "
 				+ " PRM.CATEGORY AS SALES_CATEGORY, PRM.CATEGORY AS PSA_CATEGORY FROM TBL_PROCO_PROMOTION_MASTER_V2 PM "
 				+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.CUSTOMER_CHAIN_L2 "
 				+ " LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID) PR ON PR.PROMO_ID = PM.PROMO_ID "
@@ -1580,7 +1580,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 		
 		if(roleid.equalsIgnoreCase("KAM"))
 		{
-			qry+=" WHERE PM.MOC='"+moc+"'";
+			qry+=" WHERE PM.MOC='"+moc+"' AND PM.CUSTOMER_CHAIN_L2 IN (:kamAccount) ";
 		}else
 		{
 			qry+=" WHERE PM.USER_ID=:userId AND PM.MOC=:moc";		
@@ -1589,11 +1589,12 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 		
 		Query query  =sessionFactory.getCurrentSession().createNativeQuery(qry);
 		
-		if(!roleid.equalsIgnoreCase("KAM"))
-		{
+		if(roleid.equalsIgnoreCase("KAM")) {
+			query.setParameterList("kamAccount", kamAccounts);
+			
+		} else {
 			query.setString("moc", moc);
 			query.setString("userId", userId);
-			
 		}
 
 
