@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -43,7 +44,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 	private static String Pid = "SELECT (CASE WHEN MAX(PID) IS NULL THEN '000001' ELSE LPAD(CAST(MAX(CAST(PID AS UNSIGNED)) + 1 AS CHAR),6,0) END) AS PID FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE MOC=?0 ";
 
-	public String createPromotion(CreateBeanRegular[] beans, String uid, String template) {
+	public String createPromotion(CreateBeanRegular[] beans, String uid, String template, String categories) {
 		// TODO Auto-generated method stub
 
 		Query queryToDelete = sessionFactory.getCurrentSession()
@@ -58,89 +59,324 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		Map<String, String> secmap = getValidSecondaryChannel();
 		Map<String, ArrayList<String>> validationmap = getAllValidationRecords();
 
+		// Mayur Adding changes for mapping of TME user for category
+		Map<String, String> duplicateMap = new HashMap<String, String>();
+		List<String> listofcategory = Arrays.asList(categories.split(",")).stream().map(String::trim)
+				.collect(Collectors.toList());
+
+		if (categories.contains("'")) {
+			int i = 0;
+			for (String category : listofcategory) {
+
+				if (category.contains("'")) {
+					listofcategory.set(i, "\"" + category + "\"");
+
+				}
+				i++;
+			}
+		}
+		Map<String, String> basepackmap = getAllCategory(listofcategory);
+
 		for (CreateBeanRegular bean : beans) {
-			query.setString(0, bean.getChannel());
-			query.setString(1, bean.getMoc());
+			if (!duplicateMap.containsKey(bean.getPpm_account() + bean.getBasepack_code() + bean.getCluster()
+					+ bean.getMoc() + bean.getOffer_desc())) {
+				query.setString(0, bean.getChannel());
+				query.setString(1, bean.getMoc());
 
-			query.setString(3, bean.getPpm_account());
-			query.setString(4, bean.getPromo_time_period());
-			query.setString(6, bean.getBasepack_code());
-			query.setString(7, bean.getBaseback_desc());
-			query.setString(8, bean.getC_pack_code());
-			query.setString(9, bean.getOffer_desc());
-			query.setString(10, bean.getOfr_type());
-			query.setString(11, bean.getOffer_mod());
-			// query.setString(12, bean.getPrice_off());
-			query.setString(13, bean.getBudget().isEmpty() ? ""
-					: String.valueOf((double) Math.round(Double.parseDouble(bean.getBudget()) * 100) / 100));
-			query.setString(14, branchmap.get(bean.getCluster().toUpperCase()));
-			query.setString(15, bean.getCluster());
-			query.setString(16, uid);
-			query.setString(20, template);
+				query.setString(3, bean.getPpm_account());
+				query.setString(4, bean.getPromo_time_period());
+				query.setString(6, bean.getBasepack_code());
+				query.setString(7, bean.getBaseback_desc());
+				query.setString(8, bean.getC_pack_code());
+				query.setString(9, bean.getOffer_desc());
+				query.setString(10, bean.getOfr_type());
+				query.setString(11, bean.getOffer_mod());
+				// query.setString(12, bean.getPrice_off());
+				query.setString(13, bean.getBudget().isEmpty() ? ""
+						: String.valueOf((double) Math.round(Double.parseDouble(bean.getBudget()) * 100) / 100));
+				query.setString(14, branchmap.get(bean.getCluster().toUpperCase()));
+				query.setString(15, bean.getCluster());
+				query.setString(16, uid);
+				query.setString(20, template);
 
-			if (template.equalsIgnoreCase("new") || template.equalsIgnoreCase("regular")) {
-				if (template.equalsIgnoreCase("new"))
-					query.setString(21, bean.getQuantity());
-				else
-					query.setString(21, "");
-				query.setString(2, secmap.get(bean.getPpm_account().toUpperCase()));
-				query.setString(5, abmap.get(bean.getPpm_account().toUpperCase()));
-				query.setString(22, "");
-				query.setString(23, "");
-				query.setString(24, "");
-				query.setString(25, "");
-				query.setString(26, "");
-				query.setString(27, "");
-				query.setString(28, "");
-				query.setString(29, "");
-				query.setString(30, "");
+				if (template.equalsIgnoreCase("new") || template.equalsIgnoreCase("regular")) {
+					if (template.equalsIgnoreCase("new"))
+						query.setString(21, bean.getQuantity());
+					else
+						query.setString(21, "");
+					query.setString(2, secmap.get(bean.getPpm_account().toUpperCase()));
+					query.setString(5, abmap.get(bean.getPpm_account().toUpperCase()));
+					query.setString(22, "");
+					query.setString(23, "");
+					query.setString(24, "");
+					query.setString(25, "");
+					query.setString(26, "");
+					query.setString(27, "");
+					query.setString(28, "");
+					query.setString(29, "");
+					query.setString(30, "");
 
-				if (!validationmap.get("baseback").contains(bean.getC_pack_code())) {
-					if (!bean.getC_pack_code().isEmpty()) {
+					if (!validationmap.get("baseback").contains(bean.getC_pack_code())) {
+						if (!bean.getC_pack_code().isEmpty()) {
+							if (flag == 1)
+								error_msg = error_msg + ",Invalid child basepack";
+							else {
+								error_msg = error_msg + "Invalid child baseback";
+								flag = 1;
+							}
+						}
+					}
+
+					if (!validationmap.get("offer type").contains(bean.getOfr_type().toUpperCase())) {
 						if (flag == 1)
-							error_msg = error_msg + ",Invalid child basepack";
+							error_msg = error_msg + ",Invalid Offer Type";
 						else {
-							error_msg = error_msg + "Invalid child baseback";
+							error_msg = error_msg + "Invalid Offer Type";
 							flag = 1;
 						}
 					}
-				}
 
-				if (!validationmap.get("offer type").contains(bean.getOfr_type().toUpperCase())) {
-					if (flag == 1)
-						error_msg = error_msg + ",Invalid Offer Type";
-					else {
-						error_msg = error_msg + "Invalid Offer Type";
+					if (!validationmap.get("Offer modality").contains(bean.getOffer_mod().toUpperCase())) {
+						if (flag == 1)
+							error_msg = error_msg + ",Invalid Offer Modality";
+						else {
+							error_msg = error_msg + "Invalid Offer Modality";
+							flag = 1;
+						}
+					}
+
+					String new_moc = bean.getMoc();
+
+					if (bean.getPromo_time_period().isEmpty() // || bean.getPromo_time_period().isBlank()
+							|| bean.getPromo_time_period() == "") {
+						if (!isMocInFormat(new_moc) // || !validationmap.get("AB
+													// creation").contains(bean.getAb_creation())
+								|| bean.getPpm_account().contains(",")) {
+							query.setString(18, ""); // start date
+							query.setString(19, ""); // end date
+						} else {
+							List<Object[]> se_date = getStartEndDate(
+									new_moc.substring(4, 6).concat(new_moc.substring(0, 4)), bean.getPpm_account());
+							if (!se_date.isEmpty()) {
+								query.setString(18, se_date.get(0)[0].toString()); // start date
+								query.setString(19, se_date.get(0)[1].toString()); // end date
+							} else {
+								if (flag == 1) {
+									error_msg = error_msg + ",Can not obtain start/end date";
+									flag = 1;
+								}
+
+								query.setString(18, ""); // start date
+								query.setString(19, ""); // end date
+								flag = 1;
+							}
+						}
+
+					} else {
+
+						try {
+
+							if (isPromoTimeisValid(bean.getPromo_time_period())) {
+								SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+								SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+								String new_date = sdf2.format(sdf.parse(bean.getPromo_time_period().replace("/", "-")));
+								if (!isMocInFormat(new_moc)
+										// || !validationmap.get("AB creation").contains(bean.getAb_creation())
+										|| bean.getPpm_account().contains(",")) {
+									query.setString(18, "");
+									query.setString(19, "");
+									if (flag == 1) {
+										error_msg = error_msg + ",Can't obtain Start date";
+										flag = 1;
+									} else {
+										error_msg = error_msg + "Can't obtain Start date";
+										flag = 1;
+									}
+								} else {
+									String startDate = getStartDate(
+											new_moc.substring(4, 6).concat(new_moc.substring(0, 4)),
+											bean.getPpm_account(), new_date);
+									if (startDate.isEmpty() || startDate.equals("")) {
+										error_msg = error_msg + "Can't obtain Start date for ppm account/moc";
+										query.setString(18, "");
+										query.setString(19, "");
+										flag = 1;
+									} else {
+
+										SimpleDateFormat sdf_1 = new SimpleDateFormat("dd/MM/yyyy");
+										SimpleDateFormat sdf_2 = new SimpleDateFormat("yyyy/MM/dd");
+										query.setString(18, sdf_1.format(sdf_2.parse(startDate.replace("-", "/"))));
+										query.setString(19, bean.getPromo_time_period());
+									}
+								}
+							} else {
+								if (flag == 1) {
+									error_msg = error_msg + ",Invalid promo time period";
+									flag = 1;
+								} else {
+									error_msg = error_msg + "Invalid promo time period";
+									flag = 1;
+								}
+
+								query.setString(18, "");
+								query.setString(19, "");
+							}
+						} catch (Exception e) {
+							logger.debug("Exception: ", e);
+						}
+
+					}
+
+					String price_off = bean.getPrice_off();
+
+					if (bean.getOfr_type().equalsIgnoreCase("STPR")
+							|| bean.getOfr_type().equalsIgnoreCase("STPR Liquidation")) {
+						if (price_off.isEmpty()) {
+							if (flag == 1) {
+								error_msg = error_msg + ",Invalid Price Off";
+								flag = 1;
+							} else {
+								error_msg = error_msg + "Invalid Price Off";
+								flag = 1;
+							}
+
+							query.setString(12, "");
+
+						} else {
+							if (price_off.endsWith("%") && isStringNumber(price_off.split("%")[0])) {
+								query.setString(12, bean.getPrice_off().isEmpty() ? ""
+										: String.valueOf(
+												(double) Math.round(Double.parseDouble(price_off.split("%")[0]) * 100)
+														/ 100)
+												+ "%");
+							} else if (isStringNumber(price_off)) {
+								query.setString(12, bean.getPrice_off().isEmpty() ? ""
+										: String.valueOf(
+												(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100)
+														/ 100));
+
+							} else {
+								if (flag == 1) {
+									error_msg = error_msg + ",Price off invalid for STPR/STPR Liquidation";
+									query.setString(12, bean.getPrice_off().isEmpty() ? ""
+											: String.valueOf(
+													(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100)
+															/ 100));
+									flag = 1;
+								} else {
+									error_msg = error_msg + " Price off invalid for STPR/STPR Liquidation";
+									query.setString(12, bean.getPrice_off().isEmpty() ? ""
+											: String.valueOf(
+													(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100)
+															/ 100));
+									flag = 1;
+								}
+
+							}
+
+						}
+
+					} else {
+						query.setString(12, bean.getPrice_off().isEmpty() ? ""
+								: String.valueOf(
+										(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100) / 100));
+						if (bean.getBudget().isEmpty() || !isStringNumber(String
+								.valueOf((double) Math.round(Double.parseDouble(bean.getBudget()) * 100) / 100))) {
+							if (flag == 1) {
+								error_msg = error_msg + ",Empty Budget/not number";
+								flag = 1;
+							} else {
+								error_msg = error_msg + "Empty Budget/not number";
+								flag = 1;
+							}
+						}
+
+					}
+				} else if (template.equalsIgnoreCase("cr")) {
+					if (!validationmap.get("SOL TYPE").contains(bean.getSol_type().toUpperCase())) {
+						error_msg = error_msg + "Invalid SOL";
 						flag = 1;
 					}
-				}
 
-				if (!validationmap.get("Offer modality").contains(bean.getOffer_mod().toUpperCase())) {
-					if (flag == 1)
-						error_msg = error_msg + ",Invalid Offer Modality";
-					else {
-						error_msg = error_msg + "Invalid Offer Modality";
-						flag = 1;
-					}
-				}
+					// start
+					if (bean.getSol_type().equalsIgnoreCase("_DE_")) {
 
-				String new_moc = bean.getMoc();
+						if (bean.getEnd_date().isEmpty()) {
+							if (flag == 1) {
+								error_msg = error_msg + ",for _DE_ SOL, End date empty";
+								flag = 1;
+							} else {
+								error_msg = error_msg + "for _DE_ SOL, End date empty";
+								flag = 1;
+							}
+							query.setString(18, "");
+							query.setString(19, "");
+						} else {
+							if (isPromoTimeisValid(bean.getEnd_date())) { // checking end date in format
+								try {
 
-				if (bean.getPromo_time_period().isEmpty() // || bean.getPromo_time_period().isBlank()
-						|| bean.getPromo_time_period() == "") {
-					if (!isMocInFormat(new_moc) // || !validationmap.get("AB creation").contains(bean.getAb_creation())
-							|| bean.getPpm_account().contains(",")) {
-						query.setString(18, ""); // start date
-						query.setString(19, ""); // end date
+									SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+									SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+									String new_date = sdf2.format(sdf.parse(bean.getEnd_date().replace("/", "-")));
+									if (!isMocInFormat(bean.getMoc())
+											// || !validationmap.get("AB creation").contains(bean.getAb_creation())
+											|| bean.getPpm_account().contains(",")) {
+										query.setString(18, "");
+										query.setString(19, "");
+										if (flag == 1) {
+											error_msg = error_msg + ",Invalid Date extension DATE should with in moc ";
+											flag = 1;
+										} else {
+											error_msg = error_msg + "Invalid Date extension DATE should with in moc ";
+											flag = 1;
+										}
+									} else {
+										String startDate = getStartDate(
+												bean.getMoc().substring(4, 6).concat(bean.getMoc().substring(0, 4)),
+												bean.getPpm_account(), new_date);
+										if (startDate.isEmpty() || startDate.equals("")) {
+											error_msg = error_msg + "Invalid Date extension DATE should with in moc";
+											query.setString(18, "");
+											query.setString(19, "");
+											flag = 1;
+										} else {
+
+											SimpleDateFormat sdf_1 = new SimpleDateFormat("dd/MM/yyyy");
+											SimpleDateFormat sdf_2 = new SimpleDateFormat("yyyy/MM/dd");
+											query.setString(18, sdf_1.format(sdf_2.parse(startDate.replace("-", "/"))));
+											query.setString(19, bean.getEnd_date());
+										}
+									}
+								} catch (Exception e) {
+									// TODO: handle exception
+									logger.error(e);
+								}
+							} else {
+
+								if (flag == 1) {
+									error_msg = error_msg + ",Invalid END date";
+									flag = 1;
+								} else {
+									error_msg = error_msg + "Invalid END date";
+									flag = 1;
+								}
+								query.setString(18, "");
+								query.setString(19, "");
+							}
+						}
+
+						// end
+
 					} else {
 						List<Object[]> se_date = getStartEndDate(
-								new_moc.substring(4, 6).concat(new_moc.substring(0, 4)), bean.getPpm_account());
+								bean.getMoc().substring(4, 6).concat(bean.getMoc().substring(0, 4)),
+								bean.getPpm_account());
 						if (!se_date.isEmpty()) {
 							query.setString(18, se_date.get(0)[0].toString()); // start date
 							query.setString(19, se_date.get(0)[1].toString()); // end date
 						} else {
 							if (flag == 1) {
-								error_msg = error_msg + ",Can not obtain start/end date";
+								error_msg = error_msg + "Invalid Date extension DATE should with in moc";
 								flag = 1;
 							}
 
@@ -150,394 +386,199 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 					}
 
-				} else {
+					if (bean.getSol_type().equalsIgnoreCase("_BE_") && bean.getAddition_budget().isEmpty()
+							|| (bean.getSol_type().equalsIgnoreCase("_BE_")
+									&& !isStringNumber(bean.getAddition_budget()))) {
 
-					try {
-
-						if (isPromoTimeisValid(bean.getPromo_time_period())) {
-							SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-							SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-							String new_date = sdf2.format(sdf.parse(bean.getPromo_time_period().replace("/", "-")));
-							if (!isMocInFormat(new_moc)
-									// || !validationmap.get("AB creation").contains(bean.getAb_creation())
-									|| bean.getPpm_account().contains(",")) {
-								query.setString(18, "");
-								query.setString(19, "");
-								if (flag == 1) {
-									error_msg = error_msg + ",Can't obtain Start date";
-									flag = 1;
-								} else {
-									error_msg = error_msg + "Can't obtain Start date";
-									flag = 1;
-								}
-							} else {
-								String startDate = getStartDate(new_moc.substring(4, 6).concat(new_moc.substring(0, 4)),
-										bean.getPpm_account(), new_date);
-								if (startDate.isEmpty() || startDate.equals("")) {
-									error_msg = error_msg + "Can't obtain Start date for ppm account/moc";
-									query.setString(18, "");
-									query.setString(19, "");
-									flag = 1;
-								} else {
-
-									SimpleDateFormat sdf_1 = new SimpleDateFormat("dd/MM/yyyy");
-									SimpleDateFormat sdf_2 = new SimpleDateFormat("yyyy/MM/dd");
-									query.setString(18, sdf_1.format(sdf_2.parse(startDate.replace("-", "/"))));
-									query.setString(19, bean.getPromo_time_period());
-								}
-							}
-						} else {
-							if (flag == 1) {
-								error_msg = error_msg + ",Invalid promo time period";
-								flag = 1;
-							} else {
-								error_msg = error_msg + "Invalid promo time period";
-								flag = 1;
-							}
-
-							query.setString(18, "");
-							query.setString(19, "");
-						}
-					} catch (Exception e) {
-						logger.debug("Exception: ", e);
-					}
-
-				}
-
-				String price_off = bean.getPrice_off();
-
-				if (bean.getOfr_type().equalsIgnoreCase("STPR")
-						|| bean.getOfr_type().equalsIgnoreCase("STPR Liquidation")) {
-					if (price_off.isEmpty()) {
 						if (flag == 1) {
-							error_msg = error_msg + ",Invalid Price Off";
+							error_msg = error_msg + ",for _BE_ SOL,Additional Budget empty/not number";
 							flag = 1;
 						} else {
-							error_msg = error_msg + "Invalid Price Off";
+							error_msg = error_msg + "for _BE_ SOL,Additional Budget empty/not number";
 							flag = 1;
 						}
-
-						query.setString(12, "");
-
-					} else {
-						if (price_off.endsWith("%") && isStringNumber(price_off.split("%")[0])) {
-							query.setString(12, bean.getPrice_off().isEmpty() ? ""
-									: String.valueOf(
-											(double) Math.round(Double.parseDouble(price_off.split("%")[0]) * 100)
-													/ 100)
-											+ "%");
-						} else if (isStringNumber(price_off)) {
-							query.setString(12, bean.getPrice_off().isEmpty() ? ""
-									: String.valueOf(
-											(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100) / 100));
-
-						} else {
-							if (flag == 1) {
-								error_msg = error_msg + ",Price off invalid for STPR/STPR Liquidation";
-								query.setString(12, bean.getPrice_off().isEmpty() ? ""
-										: String.valueOf(
-												(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100)
-														/ 100));
-								flag = 1;
-							} else {
-								error_msg = error_msg + " Price off invalid for STPR/STPR Liquidation";
-								query.setString(12, bean.getPrice_off().isEmpty() ? ""
-										: String.valueOf(
-												(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100)
-														/ 100));
-								flag = 1;
-							}
-
-						}
-
 					}
 
-				} else {
+					if (bean.getSol_type().equalsIgnoreCase("_AQ_") && bean.getAdditional_QTY().isEmpty()) {
+
+						if (flag == 1) {
+							error_msg = error_msg + ", for _AQ_ SOL, Additional QTY empty";
+							flag = 1;
+						} else {
+							error_msg = error_msg + "for _AQ_ SOL, Additional QTY empty";
+							flag = 1;
+						}
+					}
+
+					if (bean.getSol_type().equalsIgnoreCase("_MG_") && bean.getCluster_selection().isEmpty()) {
+
+						if (flag == 1) {
+							error_msg = error_msg + ", for _MG_ SOL, Cluster selection empty";
+							flag = 1;
+						} else {
+							error_msg = error_msg + "for _MG_ SOL, Cluster selection  empty";
+							flag = 1;
+						}
+					}
+
+					if (bean.getSol_type().equalsIgnoreCase("_BPA_") && bean.getBasepack_addition().isEmpty()) {
+
+						if (flag == 1) {
+							error_msg = error_msg + ", for _BPA_ SOL, Basepack Addition empty";
+							flag = 1;
+						} else {
+							error_msg = error_msg + "for _BPA_ SOL, Basepack Addition  empty";
+							flag = 1;
+						}
+					}
+
+					if (bean.getSol_type().equalsIgnoreCase("_TOPUP_") && bean.getTopup().isEmpty()) {
+
+						if (flag == 1) {
+							error_msg = error_msg + ", for _TOPUP_ SOL, TOPUP empty";
+							flag = 1;
+						} else {
+							error_msg = error_msg + " for _TOPUP_ SOL, TOPUP empty";
+							flag = 1;
+						}
+					}
+
+					if (bean.getSol_type().equalsIgnoreCase("_TOPUP LC_") && bean.getTopup().isEmpty()) {
+
+						if (flag == 1) {
+							error_msg = error_msg + ", for _TOPUP LC_ SOL, TOPUP empty";
+							flag = 1;
+						} else {
+							error_msg = error_msg + " for _TOPUP LC_ SOL, TOPUP empty";
+							flag = 1;
+						}
+					}
+
+					if (bean.getSol_type().equalsIgnoreCase("_OM_") && bean.getAddition_budget().isEmpty()) {
+
+						if (flag == 1) {
+							error_msg = error_msg + ", for _OM_, Addition budget empty";
+							flag = 1;
+						} else {
+							error_msg = error_msg + "for _OM_ SOL, Addition budget empty";
+							flag = 1;
+						}
+					}
+					query.setString(2, bean.getSecondary_channel());
+					query.setString(5, bean.getAb_creation());
 					query.setString(12, bean.getPrice_off().isEmpty() ? ""
 							: String.valueOf((double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100) / 100));
-					if (bean.getBudget().isEmpty() || !isStringNumber(
-							String.valueOf((double) Math.round(Double.parseDouble(bean.getBudget()) * 100) / 100))) {
-						if (flag == 1) {
-							error_msg = error_msg + ",Empty Budget/not number";
-							flag = 1;
-						} else {
-							error_msg = error_msg + "Empty Budget/not number";
-							flag = 1;
-						}
-					}
-
+					query.setString(21, bean.getQuantity());
+					query.setString(22, bean.getSol_type());
+					query.setString(23, bean.getEnd_date());
+					query.setString(24, bean.getCluster_selection());
+					query.setString(25, bean.getBasepack_addition());
+					query.setString(26, bean.getTopup());
+					query.setString(27, bean.getAdditional_QTY());
+					query.setString(28, bean.getAddition_budget());
+					query.setString(29, bean.getSol_release_on());
+					query.setString(30, bean.getExisting_sol_code());
 				}
-			} else if (template.equalsIgnoreCase("cr")) {
-				if (!validationmap.get("SOL TYPE").contains(bean.getSol_type().toUpperCase())) {
-					error_msg = error_msg + "Invalid SOL";
+
+				if (!validationmap.get("Channel name").contains(bean.getChannel().toUpperCase())) {
+					error_msg = error_msg + "Invalid Channel";
 					flag = 1;
 				}
+				if (!validationmap.get("PPM Account").contains(bean.getPpm_account().toUpperCase())
+						|| bean.getPpm_account().contains(",")) {
 
-				// start
-				if (bean.getSol_type().equalsIgnoreCase("_DE_")) {
-
-					if (bean.getEnd_date().isEmpty()) {
-						if (flag == 1) {
-							error_msg = error_msg + ",for _DE_ SOL, End date empty";
-							flag = 1;
-						} else {
-							error_msg = error_msg + "for _DE_ SOL, End date empty";
-							flag = 1;
-						}
-						query.setString(18, "");
-						query.setString(19, "");
-					} else {
-						if (isPromoTimeisValid(bean.getEnd_date())) { // checking end date in format
-							try {
-
-								SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-								SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-								String new_date = sdf2.format(sdf.parse(bean.getEnd_date().replace("/", "-")));
-								if (!isMocInFormat(bean.getMoc())
-										// || !validationmap.get("AB creation").contains(bean.getAb_creation())
-										|| bean.getPpm_account().contains(",")) {
-									query.setString(18, "");
-									query.setString(19, "");
-									if (flag == 1) {
-										error_msg = error_msg + ",Invalid Date extension DATE should with in moc ";
-										flag = 1;
-									} else {
-										error_msg = error_msg + "Invalid Date extension DATE should with in moc ";
-										flag = 1;
-									}
-								} else {
-									String startDate = getStartDate(
-											bean.getMoc().substring(4, 6).concat(bean.getMoc().substring(0, 4)),
-											bean.getPpm_account(), new_date);
-									if (startDate.isEmpty() || startDate.equals("")) {
-										error_msg = error_msg + "Invalid Date extension DATE should with in moc";
-										query.setString(18, "");
-										query.setString(19, "");
-										flag = 1;
-									} else {
-
-										SimpleDateFormat sdf_1 = new SimpleDateFormat("dd/MM/yyyy");
-										SimpleDateFormat sdf_2 = new SimpleDateFormat("yyyy/MM/dd");
-										query.setString(18, sdf_1.format(sdf_2.parse(startDate.replace("-", "/"))));
-										query.setString(19, bean.getEnd_date());
-									}
-								}
-							} catch (Exception e) {
-								// TODO: handle exception
-								logger.error(e);
-							}
-						} else {
-
-							if (flag == 1) {
-								error_msg = error_msg + ",Invalid END date";
-								flag = 1;
-							} else {
-								error_msg = error_msg + "Invalid END date";
-								flag = 1;
-							}
-							query.setString(18, "");
-							query.setString(19, "");
-						}
-					}
-
-					// end
-
-				} else {
-					List<Object[]> se_date = getStartEndDate(
-							bean.getMoc().substring(4, 6).concat(bean.getMoc().substring(0, 4)), bean.getPpm_account());
-					if (!se_date.isEmpty()) {
-						query.setString(18, se_date.get(0)[0].toString()); // start date
-						query.setString(19, se_date.get(0)[1].toString()); // end date
-					} else {
-						if (flag == 1) {
-							error_msg = error_msg + "Invalid Date extension DATE should with in moc";
-							flag = 1;
-						}
-
-						query.setString(18, ""); // start date
-						query.setString(19, ""); // end date
-						flag = 1;
-					}
-				}
-
-				if (bean.getSol_type().equalsIgnoreCase("_BE_") && bean.getAddition_budget().isEmpty()
-						|| (bean.getSol_type().equalsIgnoreCase("_BE_")
-								&& !isStringNumber(bean.getAddition_budget()))) {
-
-					if (flag == 1) {
-						error_msg = error_msg + ",for _BE_ SOL,Additional Budget empty/not number";
-						flag = 1;
-					} else {
-						error_msg = error_msg + "for _BE_ SOL,Additional Budget empty/not number";
-						flag = 1;
-					}
-				}
-
-				if (bean.getSol_type().equalsIgnoreCase("_AQ_") && bean.getAdditional_QTY().isEmpty()) {
-
-					if (flag == 1) {
-						error_msg = error_msg + ", for _AQ_ SOL, Additional QTY empty";
-						flag = 1;
-					} else {
-						error_msg = error_msg + "for _AQ_ SOL, Additional QTY empty";
-						flag = 1;
-					}
-				}
-
-				if (bean.getSol_type().equalsIgnoreCase("_MG_") && bean.getCluster_selection().isEmpty()) {
-
-					if (flag == 1) {
-						error_msg = error_msg + ", for _MG_ SOL, Cluster selection empty";
-						flag = 1;
-					} else {
-						error_msg = error_msg + "for _MG_ SOL, Cluster selection  empty";
-						flag = 1;
-					}
-				}
-
-				if (bean.getSol_type().equalsIgnoreCase("_BPA_") && bean.getBasepack_addition().isEmpty()) {
-
-					if (flag == 1) {
-						error_msg = error_msg + ", for _BPA_ SOL, Basepack Addition empty";
-						flag = 1;
-					} else {
-						error_msg = error_msg + "for _BPA_ SOL, Basepack Addition  empty";
-						flag = 1;
-					}
-				}
-
-				if (bean.getSol_type().equalsIgnoreCase("_TOPUP_") && bean.getTopup().isEmpty()) {
-
-					if (flag == 1) {
-						error_msg = error_msg + ", for _TOPUP_ SOL, TOPUP empty";
-						flag = 1;
-					} else {
-						error_msg = error_msg + " for _TOPUP_ SOL, TOPUP empty";
-						flag = 1;
-					}
-				}
-
-				if (bean.getSol_type().equalsIgnoreCase("_TOPUP LC_") && bean.getTopup().isEmpty()) {
-
-					if (flag == 1) {
-						error_msg = error_msg + ", for _TOPUP LC_ SOL, TOPUP empty";
-						flag = 1;
-					} else {
-						error_msg = error_msg + " for _TOPUP LC_ SOL, TOPUP empty";
-						flag = 1;
-					}
-				}
-
-				if (bean.getSol_type().equalsIgnoreCase("_OM_") && bean.getAddition_budget().isEmpty()) {
-
-					if (flag == 1) {
-						error_msg = error_msg + ", for _OM_, Addition budget empty";
-						flag = 1;
-					} else {
-						error_msg = error_msg + "for _OM_ SOL, Addition budget empty";
-						flag = 1;
-					}
-				}
-				query.setString(2, bean.getSecondary_channel());
-				query.setString(5, bean.getAb_creation());
-				query.setString(12, bean.getPrice_off().isEmpty() ? ""
-						: String.valueOf((double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100) / 100));
-				query.setString(21, bean.getQuantity());
-				query.setString(22, bean.getSol_type());
-				query.setString(23, bean.getEnd_date());
-				query.setString(24, bean.getCluster_selection());
-				query.setString(25, bean.getBasepack_addition());
-				query.setString(26, bean.getTopup());
-				query.setString(27, bean.getAdditional_QTY());
-				query.setString(28, bean.getAddition_budget());
-				query.setString(29, bean.getSol_release_on());
-				query.setString(30, bean.getExisting_sol_code());
-			}
-
-			if (!validationmap.get("Channel name").contains(bean.getChannel().toUpperCase())) {
-				error_msg = error_msg + "Invalid Channel";
-				flag = 1;
-			}
-			if (!validationmap.get("PPM Account").contains(bean.getPpm_account().toUpperCase())
-					|| bean.getPpm_account().contains(",")) {
-
-				if (flag == 1)
-					error_msg = error_msg + ",Invalid Account";
-				else {
-					error_msg = error_msg + "Invalid Account";
-					flag = 1;
-				}
-			}
-
-			if (!validationmap.get("baseback").contains(bean.getBasepack_code())) {
-				if (flag == 1)
-					error_msg = error_msg + ",Invalid Parent basepack";
-				else {
-					error_msg = error_msg + "Invalid parent baseback";
-					flag = 1;
-				}
-			}
-
-			if (!validationmap.get("cluster").contains(bean.getCluster().toUpperCase())
-					|| bean.getCluster().contains(",")) {
-				if (flag == 1)
-					error_msg = error_msg + ",Invalid Cluster";
-				else {
-					error_msg = error_msg + "Invalid Cluster";
-					flag = 1;
-				}
-			}
-
-			if (!bean.getMoc().isEmpty()) {
-				if (bean.getMoc().length() != 6 || !isMocInFormat(bean.getMoc())) {
 					if (flag == 1)
-						error_msg = error_msg + ",Invalid MOC format";
+						error_msg = error_msg + ",Invalid Account";
 					else {
-						error_msg = error_msg + "Invalid MOC format";
+						error_msg = error_msg + "Invalid Account";
 						flag = 1;
 					}
 				}
-			} else {
-				error_msg = error_msg + "Error MOC";
-				flag = 1;
-			}
 
-			if (bean.getOffer_desc().isEmpty() || bean.getOffer_desc().equals("")) {
-				if (flag == 1) {
-					error_msg = error_msg + ",Offer description should not be empty";
-					flag = 1;
+				if (!validationmap.get("baseback").contains(bean.getBasepack_code())) {
+					if (flag == 1)
+						error_msg = error_msg + ",Invalid Parent basepack";
+					else {
+						error_msg = error_msg + "Invalid parent baseback";
+						flag = 1;
+					}
+				}
+
+				if (!basepackmap.containsKey(bean.getBasepack_code())) {
+					if (flag == 1)
+						error_msg = error_msg + ",basepack doesn't belong to TME's category";
+					else {
+						error_msg = error_msg + "basepack doesn't belong to TME's category";
+						flag = 1;
+					}
+				}
+
+				if (!validationmap.get("cluster").contains(bean.getCluster().toUpperCase())
+						|| bean.getCluster().contains(",")) {
+					if (flag == 1)
+						error_msg = error_msg + ",Invalid Cluster";
+					else {
+						error_msg = error_msg + "Invalid Cluster";
+						flag = 1;
+					}
+				}
+
+				if (!bean.getMoc().isEmpty()) {
+					if (bean.getMoc().length() != 6 || !isMocInFormat(bean.getMoc())) {
+						if (flag == 1)
+							error_msg = error_msg + ",Invalid MOC format";
+						else {
+							error_msg = error_msg + "Invalid MOC format";
+							flag = 1;
+						}
+					}
 				} else {
-					error_msg = error_msg + "Offer description should not be empty";
+					error_msg = error_msg + "Error MOC";
 					flag = 1;
 				}
 
+				if (bean.getOffer_desc().isEmpty() || bean.getOffer_desc().equals("")) {
+					if (flag == 1) {
+						error_msg = error_msg + ",Offer description should not be empty";
+						flag = 1;
+					} else {
+						error_msg = error_msg + "Offer description should not be empty";
+						flag = 1;
+					}
+
+				}
+
+				if (flag == 1)
+					globle_flag = 1;
+
+				query.setString(17, error_msg);
+				query.executeUpdate();
+				error_msg = "";
+				flag = 0;
+				
+			duplicateMap.put(bean.getPpm_account() + bean.getBasepack_code() + bean.getCluster()
+				+ bean.getMoc() + bean.getOffer_desc(),"");
+				
+			}
+		}
+
+		if (globle_flag == 0) {
+			String up_query = "UPDATE TBL_PROCO_PROMOTION_MASTER_TEMP_V2 A INNER JOIN TBL_PROCO_PROMOTION_MASTER_V2  B"
+					+ " ON A.MOC=B.MOC AND A.CUSTOMER_CHAIN_L2=B.CUSTOMER_CHAIN_L2 AND A.BASEPACK_CODE=B.BASEPACK_CODE"
+					+ " AND A.CLUSTER=B.CLUSTER AND A.OFFER_DESC=B.OFFER_DESC "
+					+ " SET A.ERROR_MSG=CONCAT(CONCAT('Duplicate promo entry uploaded by ',B.CREATED_BY),CONCAT(' at ',SUBSTRING(B.CREATED_DATE,1,10)))"
+					+ " WHERE A.USER_ID='" + uid + "'";
+
+			// sessionFactory.getCurrentSession().createNativeQuery(up_query).executeUpdate();
+
+			String count_check = "SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE ERROR_MSG LIKE 'Duplicate Promo entry uploaded by%' AND USER_ID='"
+					+ uid + "'";
+			sessionFactory.getCurrentSession().createNativeQuery(up_query).executeUpdate();
+			if (excuteValidationQuery(count_check) > 0) {
+
+				globle_flag = 1;
 			}
 
-			if (flag == 1)
-				globle_flag = 1;
-
-			query.setString(17, error_msg);
-			query.executeUpdate();
-			error_msg = "";
-			flag = 0;
-		}
-
-		if(globle_flag==0)
-		{
-		String up_query = "UPDATE TBL_PROCO_PROMOTION_MASTER_TEMP_V2 A INNER JOIN TBL_PROCO_PROMOTION_MASTER_V2  B"
-				+ " ON A.MOC=B.MOC AND A.CUSTOMER_CHAIN_L2=B.CUSTOMER_CHAIN_L2 AND A.BASEPACK_CODE=B.BASEPACK_CODE"
-				+ " AND A.CLUSTER=B.CLUSTER AND A.OFFER_DESC=B.OFFER_DESC "
-				+ " SET A.ERROR_MSG=CONCAT(CONCAT('Duplicate promo entry uploaded by ',B.CREATED_BY),CONCAT(' at ',SUBSTRING(B.CREATED_DATE,1,10)))"
-				+ " WHERE A.USER_ID='" + uid + "'";
-
-		sessionFactory.getCurrentSession().createNativeQuery(up_query).executeUpdate();
-
-		String count_check = "SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE ERROR_MSG IS NOT NULL AND USER_ID='"
-				+ uid + "'";
-
-		if (excuteValidationQuery(count_check) > 0) {
-			globle_flag = 1;
-		}
 		}
 		if (globle_flag == 0) {
 
@@ -550,6 +591,26 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			return "EXCEL_NOT_UPLOADED";
 		}
 
+	}
+
+	private Map<String, String> getAllCategory(List<String> listofcategory) {
+
+		String query = "SELECT BASEPACK,CATEGORY_DESC  FROM TBL_VAT_PRODUCT_MASTER WHERE CATEGORY_DESC in(";
+		for (String s1 : listofcategory) {
+			if (s1.contains("'")) {
+				query += s1 + ",";
+			} else {
+				query += "\"" + s1 + "\",";
+			}
+		}
+
+		List<Object[]> basepacklist = sessionFactory.getCurrentSession()
+				.createNativeQuery(query.substring(0, query.length() - 1).concat(")")).list();
+		Map<String, String> map = new HashMap<String, String>();
+		for (Object obj[] : basepacklist) {
+			map.put(obj[0].toString(), obj[1].toString());
+		}
+		return map;
 	}
 
 	private Map<String, ArrayList<String>> getAllValidationRecords() {
@@ -645,12 +706,14 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			if (bean.getPrice_off().isEmpty()) {
 				query.setString(12, "");
 			} else {
-				query.setString(12, bean.getPrice_off().endsWith("%")
-						? String.valueOf((Long) Math.round(Double.parseDouble(bean.getPrice_off().split("%")[0]) * 100) / 100) + "%"
-						: String.valueOf((Long) Math.round(Double.parseDouble(bean.getPrice_off()) * 100) / 100));
+				query.setString(12,
+						bean.getPrice_off().endsWith("%") ? String.valueOf(
+								(Long) Math.round(Double.parseDouble(bean.getPrice_off().split("%")[0]) * 100) / 100)
+								+ "%"
+								: String.valueOf(
+										(Long) Math.round(Double.parseDouble(bean.getPrice_off()) * 100) / 100));
 			}
-			
-			
+
 			query.setString(13, bean.getBudget().isEmpty() ? ""
 					: String.valueOf((double) Math.round(Double.parseDouble(bean.getBudget()) * 100) / 100));
 			query.setString(14, branchmap.get(bean.getCluster().toUpperCase()));
@@ -899,7 +962,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	}
 
 	private ArrayList<String> getValidBasepack() {
-		String basepack = "SELECT DISTINCT BASEPACK FROM TBL_PROCO_PRODUCT_MASTER WHERE ACTIVE='1'";
+		String basepack = "SELECT DISTINCT BASEPACK FROM TBL_VAT_PRODUCT_MASTER WHERE STATUS='Y'";
 		return (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(basepack).list();
 	}
 

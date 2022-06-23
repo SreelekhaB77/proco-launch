@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface CreatePromoRegular  {
 	
-	public String createPromotion(CreateBeanRegular bean[],String uid,String template);
+	public String createPromotion(CreateBeanRegular bean[],String uid,String template,String listofcategory);
 
 	//Added by Kavitha D for Promo templates starts-SPRINT 9
 	public Map<String, List<List<String>>> getMastersForRegularTemplate();

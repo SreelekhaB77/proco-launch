@@ -125,18 +125,18 @@ public class DPVolumeUploadDAO implements DPVolumeUpload {
 		} else {
 			flag = 0;
 			gloabal=0;
-			updateQuantity();
+			updateQuantity(userId);
 			return "EXCEL_UPLOADED";
 		}
 		
 	}
 
-	private int updateQuantity() {
+	private int updateQuantity(String userId) {
 
 		String updateQuantity = "UPDATE TBL_PROCO_PROMOTION_MASTER_V2  T1 "
 				+ "INNER JOIN TBL_PROCO_PROMOTION_MASTER_TEMP_V2 T2 ON T1.PROMO_ID=T2.PROMO_ID AND T1.MOC=T2.MOC AND T1.BASEPACK_CODE=T2.BASEPACK_CODE "
-				+ "AND T1.BRANCH=T2.BRANCH AND T1.CLUSTER=T2.CLUSTER " + "SET T1.QUANTITY=T2.QUANTITY, " + "STATUS='3' "
-				+ "WHERE T1.STATUS='1' AND T1.ACTIVE=1";
+				+ " T1.OFFER_DESC=T2.OFFER_DESC AND T1.CUSTOMER_CHAIN_L2=T2.CUSTOMER_CHAIN_L2 AND T1.BRANCH=T2.BRANCH AND T1.CLUSTER=T2.CLUSTER " + "SET T1.QUANTITY=T2.QUANTITY, " + "STATUS='3' "
+				+ "WHERE T1.STATUS='1' AND T1.ACTIVE=1 AND USER_ID='"+userId+"'";
 
 		return sessionFactory.getCurrentSession().createNativeQuery(updateQuantity).executeUpdate();
 	}

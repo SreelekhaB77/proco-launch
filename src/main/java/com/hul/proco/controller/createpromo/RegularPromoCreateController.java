@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +50,9 @@ public class RegularPromoCreateController {
 			@RequestParam(name = "template") String template, Model model, HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse) {
 		String save_data = null;
-
+		String categories=(String) httpServletRequest.getSession().getAttribute("categoryName");
+		
+		
 		CommonPropUtils commUtils = CommonPropUtils.getInstance();
 		String userId = (String) httpServletRequest.getSession().getAttribute("UserID");
 		MultipartFile file = createCRBean.getFile();
@@ -88,7 +91,7 @@ public class RegularPromoCreateController {
 						beanArray = (CreateBeanRegular[]) datafromexcel
 								.toArray(new CreateBeanRegular[datafromexcel.size()]);
 
-						save_data = createCRPromo.createCRPromo(beanArray, userId, template);
+						save_data = createCRPromo.createCRPromo(beanArray, userId, template,categories);
 
 					}
 
