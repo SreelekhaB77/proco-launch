@@ -555,10 +555,10 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				query.executeUpdate();
 				error_msg = "";
 				flag = 0;
-				
-			duplicateMap.put(bean.getPpm_account() + bean.getBasepack_code() + bean.getCluster()
-				+ bean.getMoc() + bean.getOffer_desc(),"");
-				
+
+				duplicateMap.put(bean.getPpm_account() + bean.getBasepack_code() + bean.getCluster() + bean.getMoc()
+						+ bean.getOffer_desc(), "");
+
 			}
 		}
 
@@ -691,178 +691,181 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			e1.printStackTrace();
 		} // "STR_TO_DATE("+new SimpleDateFormat("dd/MM/yyyy").format(new
 			// Date()).toString()+",'%d/%m/%Y')");
+		Map<String, String> dupmap = new HashMap<String, String>();
 		for (CreateBeanRegular bean : beans) {
-			query.setString(0, bean.getChannel());
-			query.setString(1, bean.getMoc());
+			if (!dupmap.containsKey(bean.getPpm_account() + bean.getBasepack_code() + bean.getCluster() + bean.getMoc()
+					+ bean.getOffer_desc())) {
+				query.setString(0, bean.getChannel());
+				query.setString(1, bean.getMoc());
 
-			query.setString(3, bean.getPpm_account());
-			query.setString(4, bean.getPromo_time_period());
-			query.setString(6, bean.getBasepack_code());
-			query.setString(7, bean.getBaseback_desc());
-			query.setString(8, bean.getC_pack_code());
-			query.setString(9, bean.getOffer_desc());
-			query.setString(10, bean.getOfr_type());
-			query.setString(11, bean.getOffer_mod());
-			if (bean.getPrice_off().isEmpty()) {
-				query.setString(12, "");
-			} else {
-				query.setString(12,
-						bean.getPrice_off().endsWith("%") ? String.valueOf(
-								(Long) Math.round(Double.parseDouble(bean.getPrice_off().split("%")[0]) * 100) / 100)
-								+ "%"
-								: String.valueOf(
-										(Long) Math.round(Double.parseDouble(bean.getPrice_off()) * 100) / 100));
-			}
+				query.setString(3, bean.getPpm_account());
+				query.setString(4, bean.getPromo_time_period());
+				query.setString(6, bean.getBasepack_code());
+				query.setString(7, bean.getBaseback_desc());
+				query.setString(8, bean.getC_pack_code());
+				query.setString(9, bean.getOffer_desc());
+				query.setString(10, bean.getOfr_type());
+				query.setString(11, bean.getOffer_mod());
+				if (bean.getPrice_off().isEmpty()) {
+					query.setString(12, "");
+				} else {
+					query.setString(12, bean.getPrice_off().endsWith("%") ? String.valueOf(
+							(Long) Math.round(Double.parseDouble(bean.getPrice_off().split("%")[0]) * 100) / 100) + "%"
+							: String.valueOf((Long) Math.round(Double.parseDouble(bean.getPrice_off()) * 100) / 100));
+				}
 
-			query.setString(13, bean.getBudget().isEmpty() ? ""
-					: String.valueOf((double) Math.round(Double.parseDouble(bean.getBudget()) * 100) / 100));
-			query.setString(14, branchmap.get(bean.getCluster().toUpperCase()));
-			query.setString(15, bean.getCluster());
-			query.setString(16, uid);
-			query.setString(21, template);
-			query.setString(23, "1");
-			query.setString(24, "1");
+				query.setString(13, bean.getBudget().isEmpty() ? ""
+						: String.valueOf((double) Math.round(Double.parseDouble(bean.getBudget()) * 100) / 100));
+				query.setString(14, branchmap.get(bean.getCluster().toUpperCase()));
+				query.setString(15, bean.getCluster());
+				query.setString(16, uid);
+				query.setString(21, template);
+				query.setString(23, "1");
+				query.setString(24, "1");
 
-			if (template.equalsIgnoreCase("new") || template.equalsIgnoreCase("regular")) {
-				if (template.equalsIgnoreCase("new"))
+				if (template.equalsIgnoreCase("new") || template.equalsIgnoreCase("regular")) {
+					if (template.equalsIgnoreCase("new"))
+						query.setString(22, bean.getQuantity());
+					else
+						query.setString(22, "");
+
+					query.setString(2, secondary.get(bean.getPpm_account().toUpperCase()));
+					query.setString(5, ab.get(bean.getPpm_account().toUpperCase()));
+					query.setString(25, "");
+					query.setString(26, "");
+					query.setString(27, "");
+					query.setString(28, "");
+					query.setString(29, "");
+					query.setString(30, "");
+					query.setString(31, "");
+					query.setString(32, "");
+
+					if (bean.getPromo_time_period().isEmpty() // || bean.getPromo_time_period().isBlank()
+							|| bean.getPromo_time_period() == "") {
+
+						String new_moc = bean.getMoc();
+
+						List<Object[]> se_date = getStartEndDate(
+								new_moc.substring(4, 6).concat(new_moc.substring(0, 4)), bean.getPpm_account());
+
+						query.setString(19, se_date.get(0)[0].toString()); // start date
+						query.setString(20, se_date.get(0)[1].toString()); // end date
+
+					} else {
+
+						try {
+
+							if (isPromoTimeisValid(bean.getPromo_time_period())) {
+								SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+								SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+								String new_date = sdf2.format(sdf.parse(bean.getPromo_time_period().replace("/", "-")));
+								String startDate = getStartDate(
+										bean.getMoc().substring(4, 6).concat(bean.getMoc().substring(0, 4)),
+										bean.getPpm_account(), new_date);
+								if (startDate.isEmpty() || startDate.equals("")) {
+									query.setString(19, "");
+									query.setString(20, "");
+								}
+
+								SimpleDateFormat sdf_1 = new SimpleDateFormat("dd/MM/yyyy");
+								SimpleDateFormat sdf_2 = new SimpleDateFormat("yyyy/MM/dd");
+								query.setString(19, sdf_1.format(sdf_2.parse(startDate.replace("-", "/"))));
+								query.setString(20, bean.getPromo_time_period());
+							} else {
+								query.setString(19, "");
+
+								query.setString(20, "");
+							}
+
+						} catch (Exception e) {
+							logger.debug("Exception: ", e);
+
+						}
+
+					}
+
+				} else if (template.equalsIgnoreCase("cr")) {
 					query.setString(22, bean.getQuantity());
-				else
-					query.setString(22, "");
 
-				query.setString(2, secondary.get(bean.getPpm_account().toUpperCase()));
-				query.setString(5, ab.get(bean.getPpm_account().toUpperCase()));
-				query.setString(25, "");
-				query.setString(26, "");
-				query.setString(27, "");
-				query.setString(28, "");
-				query.setString(29, "");
-				query.setString(30, "");
-				query.setString(31, "");
-				query.setString(32, "");
+					if (bean.getSol_type().equalsIgnoreCase("_DE_")) {
+						try {
 
-				if (bean.getPromo_time_period().isEmpty() // || bean.getPromo_time_period().isBlank()
-						|| bean.getPromo_time_period() == "") {
+							if (isPromoTimeisValid(bean.getEnd_date())) {
+								SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+								SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+								String new_date = sdf2.format(sdf.parse(bean.getEnd_date().replace("/", "-")));
+								String startDate = getStartDate(
+										bean.getMoc().substring(4, 6).concat(bean.getMoc().substring(0, 4)),
+										bean.getPpm_account(), new_date);
+								if (startDate.isEmpty() || startDate.equals("")) {
+									query.setString(19, "");
+									query.setString(20, "");
+								}
 
-					String new_moc = bean.getMoc();
-
-					List<Object[]> se_date = getStartEndDate(new_moc.substring(4, 6).concat(new_moc.substring(0, 4)),
-							bean.getPpm_account());
-
-					query.setString(19, se_date.get(0)[0].toString()); // start date
-					query.setString(20, se_date.get(0)[1].toString()); // end date
-
-				} else {
-
-					try {
-
-						if (isPromoTimeisValid(bean.getPromo_time_period())) {
-							SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-							SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-							String new_date = sdf2.format(sdf.parse(bean.getPromo_time_period().replace("/", "-")));
-							String startDate = getStartDate(
-									bean.getMoc().substring(4, 6).concat(bean.getMoc().substring(0, 4)),
-									bean.getPpm_account(), new_date);
-							if (startDate.isEmpty() || startDate.equals("")) {
+								SimpleDateFormat sdf_1 = new SimpleDateFormat("dd/MM/yyyy");
+								SimpleDateFormat sdf_2 = new SimpleDateFormat("yyyy/MM/dd");
+								query.setString(19, sdf_1.format(sdf_2.parse(startDate.replace("-", "/"))));
+								query.setString(20, bean.getEnd_date());
+							} else {
 								query.setString(19, "");
+
 								query.setString(20, "");
 							}
 
-							SimpleDateFormat sdf_1 = new SimpleDateFormat("dd/MM/yyyy");
-							SimpleDateFormat sdf_2 = new SimpleDateFormat("yyyy/MM/dd");
-							query.setString(19, sdf_1.format(sdf_2.parse(startDate.replace("-", "/"))));
-							query.setString(20, bean.getPromo_time_period());
-						} else {
-							query.setString(19, "");
+						} catch (Exception e) {
+							logger.debug("Exception: ", e);
 
-							query.setString(20, "");
 						}
+					} else {
+						String new_moc = bean.getMoc();
 
-					} catch (Exception e) {
-						logger.debug("Exception: ", e);
+						List<Object[]> se_date = getStartEndDate(
+								new_moc.substring(4, 6).concat(new_moc.substring(0, 4)), bean.getPpm_account());
 
+						query.setString(19, se_date.get(0)[0].toString()); // start date
+						query.setString(20, se_date.get(0)[1].toString()); // end date
 					}
+					query.setString(2, bean.getSecondary_channel());
+					query.setString(5, bean.getAb_creation());
+					query.setString(25, bean.getSol_type());
+					query.setString(26, bean.getEnd_date());
+					query.setString(27, bean.getCluster_selection());
+					query.setString(28, bean.getBasepack_addition());
+					query.setString(29, bean.getTopup());
+					query.setString(30, bean.getAdditional_QTY());
+					query.setString(31, bean.getAddition_budget());
+					query.setString(32, bean.getExisting_sol_code());
 
 				}
 
-			} else if (template.equalsIgnoreCase("cr")) {
-				query.setString(22, bean.getQuantity());
-
-				if (bean.getSol_type().equalsIgnoreCase("_DE_")) {
-					try {
-
-						if (isPromoTimeisValid(bean.getEnd_date())) {
-							SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-							SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-							String new_date = sdf2.format(sdf.parse(bean.getEnd_date().replace("/", "-")));
-							String startDate = getStartDate(
-									bean.getMoc().substring(4, 6).concat(bean.getMoc().substring(0, 4)),
-									bean.getPpm_account(), new_date);
-							if (startDate.isEmpty() || startDate.equals("")) {
-								query.setString(19, "");
-								query.setString(20, "");
-							}
-
-							SimpleDateFormat sdf_1 = new SimpleDateFormat("dd/MM/yyyy");
-							SimpleDateFormat sdf_2 = new SimpleDateFormat("yyyy/MM/dd");
-							query.setString(19, sdf_1.format(sdf_2.parse(startDate.replace("-", "/"))));
-							query.setString(20, bean.getEnd_date());
-						} else {
-							query.setString(19, "");
-
-							query.setString(20, "");
-						}
-
-					} catch (Exception e) {
-						logger.debug("Exception: ", e);
-
-					}
+				if (promo_map.containsKey(bean.getMoc() + bean.getPpm_account() + bean.getOffer_desc()) && promo_map
+						.containsKey("Pid_max_" + bean.getMoc() + bean.getPpm_account() + bean.getOffer_desc())) {
+					query.setString(17, promo_map.get(bean.getMoc() + bean.getPpm_account() + bean.getOffer_desc()));
+					query.setString(18,
+							promo_map.get("Pid_max_" + bean.getMoc() + bean.getPpm_account() + bean.getOffer_desc()));
 				} else {
-					String new_moc = bean.getMoc();
 
-					List<Object[]> se_date = getStartEndDate(new_moc.substring(4, 6).concat(new_moc.substring(0, 4)),
-							bean.getPpm_account());
-
-					query.setString(19, se_date.get(0)[0].toString()); // start date
-					query.setString(20, se_date.get(0)[1].toString()); // end date
+					String new_pid = getPID(bean.getMoc());
+					String new_promo_id = createNewPromoId(bean.getMoc()) + new_pid;
+					promo_map.put(bean.getMoc() + bean.getPpm_account() + bean.getOffer_desc(), new_promo_id);
+					promo_map.put("Pid_max_" + bean.getMoc() + bean.getPpm_account() + bean.getOffer_desc(), new_pid);
+					query.setString(17, new_promo_id);
+					query.setString(18, new_pid);
 				}
-				query.setString(2, bean.getSecondary_channel());
-				query.setString(5, bean.getAb_creation());
-				query.setString(25, bean.getSol_type());
-				query.setString(26, bean.getEnd_date());
-				query.setString(27, bean.getCluster_selection());
-				query.setString(28, bean.getBasepack_addition());
-				query.setString(29, bean.getTopup());
-				query.setString(30, bean.getAdditional_QTY());
-				query.setString(31, bean.getAddition_budget());
-				query.setString(32, bean.getExisting_sol_code());
-
+				/*
+				 * List<Object[]> promo_list = getPromoId(bean.getMoc(), bean.getPpm_account(),
+				 * bean.getOffer_desc());
+				 * 
+				 * if (promo_list == null || promo_list.size() == 0) { query.setString(17,
+				 * createNewPromoId(bean.getMoc())); query.setString(18, getPID(bean.getMoc()));
+				 * } else { for (int i = 0; i < promo_list.size(); i++) { query.setString(17,
+				 * promo_list.get(i)[0].toString()); query.setString(18,
+				 * promo_list.get(i)[1].toString()); // getting same PID } }
+				 */
+				query.executeUpdate();
+				dupmap.put(bean.getPpm_account() + bean.getBasepack_code() + bean.getCluster() + bean.getMoc()
+					+ bean.getOffer_desc(), "");
 			}
-
-			if (promo_map.containsKey(bean.getMoc() + bean.getPpm_account() + bean.getOffer_desc()) && promo_map
-					.containsKey("Pid_max_" + bean.getMoc() + bean.getPpm_account() + bean.getOffer_desc())) {
-				query.setString(17, promo_map.get(bean.getMoc() + bean.getPpm_account() + bean.getOffer_desc()));
-				query.setString(18,
-						promo_map.get("Pid_max_" + bean.getMoc() + bean.getPpm_account() + bean.getOffer_desc()));
-			} else {
-
-				String new_pid = getPID(bean.getMoc());
-				String new_promo_id = createNewPromoId(bean.getMoc()) + new_pid;
-				promo_map.put(bean.getMoc() + bean.getPpm_account() + bean.getOffer_desc(), new_promo_id);
-				promo_map.put("Pid_max_" + bean.getMoc() + bean.getPpm_account() + bean.getOffer_desc(), new_pid);
-				query.setString(17, new_promo_id);
-				query.setString(18, new_pid);
-			}
-			/*
-			 * List<Object[]> promo_list = getPromoId(bean.getMoc(), bean.getPpm_account(),
-			 * bean.getOffer_desc());
-			 * 
-			 * if (promo_list == null || promo_list.size() == 0) { query.setString(17,
-			 * createNewPromoId(bean.getMoc())); query.setString(18, getPID(bean.getMoc()));
-			 * } else { for (int i = 0; i < promo_list.size(); i++) { query.setString(17,
-			 * promo_list.get(i)[0].toString()); query.setString(18,
-			 * promo_list.get(i)[1].toString()); // getting same PID } }
-			 */
-			query.executeUpdate();
 		}
 	}
 
