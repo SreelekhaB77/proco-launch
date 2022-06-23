@@ -244,8 +244,8 @@ public class PromoListingServiceImpl implements PromoListingService {
 
 	@Override
 	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId,String roleId,
-			String moc,String searchParameter) {
-		return promoListingDAO.getPromoTableListGrid(pageDisplayStart,pageDisplayLength,userId,roleId,moc,searchParameter);
+			String moc,String searchParameter, String[] kamAccounts) {
+		return promoListingDAO.getPromoTableListGrid(pageDisplayStart,pageDisplayLength,userId,roleId,moc,searchParameter, kamAccounts);
 	}
 
 

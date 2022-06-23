@@ -55,7 +55,7 @@ public interface PromoListingService {
 
 	public int getPromoListRowCountGrid(String userId, String roleId,String moc);
 
-	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId, String roleId,String moc, String searchParameter);
+	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId, String roleId,String moc, String searchParameter, String[] kamAccounts);
 
 	public List<String> getPromoMoc();
 
