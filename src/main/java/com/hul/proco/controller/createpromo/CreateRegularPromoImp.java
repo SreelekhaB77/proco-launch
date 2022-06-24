@@ -602,8 +602,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 	private Map<String, String> getAllTDPTimeperiod() {
 		String year = new SimpleDateFormat("yyyy").format(new Date());
-		String stringQuery = "SELECT MOC,TDP,START_DATE,END_DATE FROM TBL_VAT_MOC_TDP_MASTER WHERE MOC LIKE '%" + year
-				+ "'";
+		String next_year=String.valueOf(Integer.parseInt(year)+1);
+		String stringQuery = "SELECT MOC,TDP,START_DATE,END_DATE FROM TBL_VAT_MOC_TDP_MASTER WHERE MOC_YEAR in ('" + year
+				+ "', '"+next_year+"')";
 		List<Object[]> promolist = sessionFactory.getCurrentSession().createNativeQuery(stringQuery).list();
 		Map<String, String> promomap = new HashMap<String, String>();
 		for (Object obj[] : promolist) {
