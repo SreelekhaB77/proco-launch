@@ -86,20 +86,18 @@ public class DPVolumeUploadDAO implements DPVolumeUpload {
 		Query query = sessionFactory.getCurrentSession().createNativeQuery(SQL_QUERY_INSERT_INTO_PROMOTION_MASTER_TEMP);
 
 		for (CreateBeanRegular bean : beanArray) {
-			
-			if (bean.getQuantity().isEmpty() || !bean.getQuantity().matches("\\d+") ) {
-				error_msg = "Quantity empty/not number";
-				
+
+			if (bean.getQuantity().isEmpty() || !bean.getQuantity().matches("\\d+")) {
+				error_msg = "Quantity should be a numeric value";
 				flag = 1;
 			}
-			if(flag==0)
-			{
-			Integer quantity=Integer.parseInt(bean.getQuantity());
-			if(quantity >=10)
-			{
-				error_msg = "Quantity greater than 10";
-				flag=1;
-			}
+			
+			if (!bean.getQuantity().isEmpty()) {
+				Integer quantity = Integer.parseInt(bean.getQuantity());
+				if (quantity < 10) {
+					error_msg =error_msg+ "Quantity less than 10";
+					flag = 1;
+				}
 			}
 			query.setString(0, bean.getChannel());
 			query.setString(1, bean.getMoc());
@@ -152,8 +150,7 @@ public class DPVolumeUploadDAO implements DPVolumeUpload {
 				+ "INNER JOIN TBL_PROCO_PROMOTION_MASTER_TEMP_V2 T2 ON T1.PROMO_ID=T2.PROMO_ID AND T1.MOC=T2.MOC AND T1.BASEPACK_CODE=T2.BASEPACK_CODE "
 				+ " AND T1.OFFER_DESC=T2.OFFER_DESC AND T1.CUSTOMER_CHAIN_L2=T2.CUSTOMER_CHAIN_L2 AND T1.BRANCH=T2.BRANCH AND T1.CLUSTER=T2.CLUSTER "
 				+ "SET T1.QUANTITY=T2.QUANTITY, " + "STATUS='3', T1.USER_ID='" + userId + "',T2.UPDATE_STAMP='"
-				+ dateFormat.format(date) + "'"
-				+ "WHERE T1.STATUS='1' AND T1.ACTIVE=1 AND T2.USER_ID='" + userId + "'";
+				+ dateFormat.format(date) + "'" + "WHERE T1.STATUS='1' AND T1.ACTIVE=1 AND T2.USER_ID='" + userId + "'";
 
 		return sessionFactory.getCurrentSession().createNativeQuery(updateQuantity).executeUpdate();
 	}
