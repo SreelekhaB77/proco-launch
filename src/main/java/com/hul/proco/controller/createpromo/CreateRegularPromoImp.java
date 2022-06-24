@@ -1038,13 +1038,17 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		List<List<String>> modalityList = new ArrayList<>();
 		List<List<String>> offertypeList = new ArrayList<>();
 		List<List<String>> channelList = new ArrayList<>();
+		List<List<String>> tdpList = new ArrayList<>();
 
+		
 		List<String> clusterHeaders = new ArrayList<String>();
 		List<String> customerHeaders = new ArrayList<String>();
 		// List<String> abcreationHeaders = new ArrayList<String>();
 		List<String> modalityHeaders = new ArrayList<String>();
 		List<String> offertypeHeaders = new ArrayList<String>();
 		List<String> channelHeaders = new ArrayList<String>();
+		List<String> tdpHeaders = new ArrayList<String>();
+
 
 		try {
 			clusterHeaders.add("BRANCH CODE");
@@ -1052,11 +1056,12 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			clusterHeaders.add("CLUSTER CODE");
 			clusterHeaders.add("CLUSTER");
 			// customerHeaders.add("SECONDARY CHANNEL");
-			customerHeaders.add("PPM ACCOUNT");
+			customerHeaders.add("PPM ACCOUNT (Strictly as per Com rule)");
 			// abcreationHeaders.add("AB CREATION NAME");
 			modalityHeaders.add("OFFER MODALITY");
 			offertypeHeaders.add("OFFER TYPE");
 			channelHeaders.add("CHANNEL");
+			tdpHeaders.add("TDP");
 
 			String clusterQry = "SELECT DISTINCT BRANCH_CODE, BRANCH, CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER";
 			String customerQry = "SELECT DISTINCT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y'ORDER BY PPM_ACCOUNT";
@@ -1065,6 +1070,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			String modalityQry = "SELECT MODALITY_NAME FROM TBL_PROCO_OFFER_MODALITY_MASTER WHERE ACTIVE=1";
 			String offertypeQry = " SELECT DISTINCT OFFER_TYPE FROM TBL_PROCO_OFFER_TYPE_V2 WHERE ACTIVE=1";
 			String channelQry = " SELECT CHANNEL_NAME FROM TBL_PROCO_CHANNEL_MASTER WHERE ACTIVE=1";
+			String tdpQry=" SELECT DISTINCT TDP FROM TBL_VAT_MOC_TDP_MASTER";
 
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(clusterQry);
 
@@ -1161,6 +1167,39 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			}
 
 			downloadDataMap.put("CHANNEL", channelList);
+			
+			
+			
+			query = sessionFactory.getCurrentSession().createNativeQuery(tdpQry);
+			
+			tdpList.add(tdpHeaders);
+			
+			ArrayList<String> addTdpMoc = new ArrayList<String>();
+			addTdpMoc.add("MOC"); 
+			tdpList.add(addTdpMoc);
+			
+			ArrayList<String> addTdpBm = new ArrayList<String>();
+			addTdpBm.add("BM"); 
+			tdpList.add(addTdpBm);
+			
+			ArrayList<String> addTdp = new ArrayList<String>();
+			addTdp.add("26 to 25"); 
+			tdpList.add(addTdp);
+
+			itr = query.list().iterator();
+			while (itr.hasNext()) {
+				String obj = (String) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				String value = "";
+				value = (obj == null) ? "" : obj.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
+				obj = null;
+				tdpList.add(dataObj);
+			}
+
+			downloadDataMap.put("TDP", tdpList);
+			
+			
 		} catch (Exception e) {
 			logger.debug("Exception: ", e);
 		}
@@ -1180,6 +1219,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		List<List<String>> modalityList = new ArrayList<>();
 		List<List<String>> offertypeList = new ArrayList<>();
 		List<List<String>> channelList = new ArrayList<>();
+		List<List<String>> tdpList = new ArrayList<>();
+		
 
 		List<String> clusterHeaders = new ArrayList<String>();
 		List<String> customerHeaders = new ArrayList<String>();
@@ -1187,6 +1228,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		List<String> modalityHeaders = new ArrayList<String>();
 		List<String> offertypeHeaders = new ArrayList<String>();
 		List<String> channelHeaders = new ArrayList<String>();
+		List<String> tdpHeaders =new ArrayList<String>();
 
 		try {
 			clusterHeaders.add("BRANCH CODE");
@@ -1194,11 +1236,12 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			clusterHeaders.add("CLUSTER CODE");
 			clusterHeaders.add("CLUSTER");
 			// customerHeaders.add("SECONDARY CHANNEL");
-			customerHeaders.add("PPM ACCOUNT");
+			customerHeaders.add("PPM ACCOUNT (Strictly as per Com rule)");
 			// abcreationHeaders.add("AB CREATION NAME");
 			modalityHeaders.add("OFFER MODALITY");
 			offertypeHeaders.add("OFFER TYPE");
 			channelHeaders.add("CHANNEL");
+			tdpHeaders.add("TDP");
 
 			String clusterQry = "SELECT DISTINCT BRANCH_CODE, BRANCH, CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER";
 			String customerQry = "SELECT DISTINCT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y'ORDER BY PPM_ACCOUNT";
@@ -1207,6 +1250,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			String modalityQry = "SELECT MODALITY_NAME FROM TBL_PROCO_OFFER_MODALITY_MASTER WHERE ACTIVE=1";
 			String offertypeQry = " SELECT DISTINCT OFFER_TYPE FROM TBL_PROCO_OFFER_TYPE_V2 WHERE ACTIVE=1";
 			String channelQry = " SELECT CHANNEL_NAME FROM TBL_PROCO_CHANNEL_MASTER WHERE ACTIVE=1";
+			String tdpQry=" SELECT DISTINCT TDP FROM TBL_VAT_MOC_TDP_MASTER";
 
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(clusterQry);
 
@@ -1304,6 +1348,36 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			}
 
 			downloadDataMap.put("CHANNEL", channelList);
+			
+			query = sessionFactory.getCurrentSession().createNativeQuery(tdpQry);
+			
+			tdpList.add(tdpHeaders);
+			
+			ArrayList<String> addTdpMoc = new ArrayList<String>();
+			addTdpMoc.add("MOC"); 
+			tdpList.add(addTdpMoc);
+			
+			ArrayList<String> addTdpBm = new ArrayList<String>();
+			addTdpBm.add("BM"); 
+			tdpList.add(addTdpBm);
+			
+			ArrayList<String> addTdp = new ArrayList<String>();
+			addTdp.add("26 to 25"); 
+			tdpList.add(addTdp);
+
+			itr = query.list().iterator();
+			while (itr.hasNext()) {
+				String obj = (String) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				String value = "";
+				value = (obj == null) ? "" : obj.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
+				obj = null;
+				tdpList.add(dataObj);
+			}
+
+			downloadDataMap.put("TDP", tdpList);
+			
 		} catch (Exception e) {
 			logger.debug("Exception: ", e);
 		}
@@ -1360,6 +1434,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		List<List<String>> offertypeList = new ArrayList<>();
 		List<List<String>> channelList = new ArrayList<>();
 		List<List<String>> solList = new ArrayList<>();
+		List<List<String>> tdpList = new ArrayList<>();
+
+		
 
 		List<String> clusterHeaders = new ArrayList<String>();
 		List<String> customerHeaders = new ArrayList<String>();
@@ -1368,6 +1445,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		List<String> offertypeHeaders = new ArrayList<String>();
 		List<String> channelHeaders = new ArrayList<String>();
 		List<String> solHeaders = new ArrayList<String>();
+		List<String> tdpHeaders = new ArrayList<String>();
+
 
 		try {
 			clusterHeaders.add("BRANCH CODE");
@@ -1375,13 +1454,14 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			clusterHeaders.add("CLUSTER CODE");
 			clusterHeaders.add("CLUSTER");
 			customerHeaders.add("SECONDARY CHANNEL");
-			customerHeaders.add("PPM ACCOUNT");
+			customerHeaders.add("PPM ACCOUNT (Strictly as per Com rule)");
 			abcreationHeaders.add("AB CREATION NAME");
 			modalityHeaders.add("OFFER MODALITY");
 			offertypeHeaders.add("OFFER TYPE");
 			channelHeaders.add("CHANNEL");
 			solHeaders.add("SOL TYPE");
 			solHeaders.add("SOL REMARK");
+			tdpHeaders.add("TDP");
 
 			String clusterQry = "SELECT DISTINCT BRANCH_CODE, BRANCH, CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER";
 			String customerQry = "SELECT DISTINCT SECONDARY_CHANNEL,PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y' ORDER BY SECONDARY_CHANNEL";
@@ -1390,6 +1470,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			String offertypeQry = " SELECT DISTINCT OFFER_TYPE FROM TBL_PROCO_OFFER_TYPE_V2 WHERE ACTIVE=1";
 			String channelQry = " SELECT CHANNEL_NAME FROM TBL_PROCO_CHANNEL_MASTER WHERE ACTIVE=1";
 			String solQry = " SELECT SOL_TYPE,SOL_REMARK FROM TBL_PROCO_SOL_TYPE WHERE IS_ACTIVE=1";
+			String tdpQry=" SELECT DISTINCT TDP FROM TBL_VAT_MOC_TDP_MASTER";
+
 
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(clusterQry);
 
@@ -1509,6 +1591,36 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				solList.add(dataObj);
 			}
 			downloadDataMap.put("SOLTYPE", solList);
+			
+query = sessionFactory.getCurrentSession().createNativeQuery(tdpQry);
+			
+			tdpList.add(tdpHeaders);
+			
+			ArrayList<String> addTdpMoc = new ArrayList<String>();
+			addTdpMoc.add("MOC"); 
+			tdpList.add(addTdpMoc);
+			
+			ArrayList<String> addTdpBm = new ArrayList<String>();
+			addTdpBm.add("BM"); 
+			tdpList.add(addTdpBm);
+			
+			ArrayList<String> addTdp = new ArrayList<String>();
+			addTdp.add("26 to 25"); 
+			tdpList.add(addTdp);
+
+			itr = query.list().iterator();
+			while (itr.hasNext()) {
+				String obj = (String) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				String value = "";
+				value = (obj == null) ? "" : obj.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
+				obj = null;
+				tdpList.add(dataObj);
+			}
+
+			downloadDataMap.put("TDP", tdpList);
+			
 
 		} catch (Exception e) {
 			logger.debug("Exception: ", e);

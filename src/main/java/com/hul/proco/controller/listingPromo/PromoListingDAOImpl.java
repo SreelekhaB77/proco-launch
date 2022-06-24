@@ -1303,7 +1303,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			
 			if (roleId.equalsIgnoreCase("TME")) {
 				
-				promoQuery +=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.USER_ID= '"+userId+"' AND PM.MOC='"+moc+"' ";
+				promoQuery +=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.CREATED_BY= '"+userId+"' AND PM.MOC='"+moc+"' ";
 			}
 
 			
