@@ -77,7 +77,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		}
 		Map<String, String> basepackmap = getAllCategory(listofcategory);
 		Map<String, String> promotimemap = getAllTDPTimeperiod();
-		
+
 		for (CreateBeanRegular bean : beans) {
 			if (!duplicateMap.containsKey(bean.getPpm_account() + bean.getBasepack_code() + bean.getCluster()
 					+ bean.getMoc() + bean.getOffer_desc())) {
@@ -147,77 +147,90 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					}
 					// Mayur Added changes for promo time period
 					String promotime = bean.getPromo_time_period();
+					if (promotime.isEmpty()) {
+						if (flag == 1)
+							error_msg = error_msg + ",Invalid Promo Timeperiod";
+						else {
+							error_msg = error_msg + "Invalid Promo Timeperiod";
+							flag = 1;
+						}
+						query.setString(18, "");
+						query.setString(19, "");
+					} else {
+						if (promotime.equalsIgnoreCase("bm") || promotime.equalsIgnoreCase("moc")
+								|| promotime.equalsIgnoreCase("26 to 25")) {
 
-					if (promotime.equalsIgnoreCase("bm") || promotime.equalsIgnoreCase("moc")
-							|| promotime.equalsIgnoreCase("26 to 25")) {
+							if (!promotimemap.containsKey(bean.getMoc() + bean.getPromo_time_period() + "start_date")
+									&& !promotimemap
+											.containsKey(bean.getMoc() + bean.getPromo_time_period() + "end_date")) {
+								String new_moc = bean.getMoc().length() == 6
+										? bean.getMoc().substring(4, bean.getMoc().length())
+												+ bean.getMoc().substring(0, 4)
+										: bean.getMoc();
+								String promString = "";
+								if (promotime.equalsIgnoreCase("bm")) {
+									promString = "SELECT START_DATE,END_DATE FROM TBL_VAT_MOC_MASTER WHERE MOC='"
+											+ new_moc + "' AND MOC_GROUP='GROUP_THREE'";
+								} else if (promotime.equalsIgnoreCase("moc")) {
+									promString = "SELECT START_DATE,END_DATE FROM TBL_VAT_MOC_MASTER WHERE MOC='"
+											+ new_moc + "' AND MOC_GROUP='GROUP_ONE'";
+								} else if (promotime.equalsIgnoreCase("26 to 25")) {
+									promString = "SELECT START_DATE,END_DATE FROM TBL_VAT_MOC_MASTER WHERE MOC='"
+											+ new_moc + "' AND MOC_GROUP='GROUP_TWO'";
+								}
 
-						if (!promotimemap.containsKey(bean.getMoc() + bean.getPromo_time_period() + "start_date")
-								&& !promotimemap
-										.containsKey(bean.getMoc() + bean.getPromo_time_period() + "end_date")) {
-							String new_moc =  bean.getMoc().length() == 6
-									?   bean.getMoc().substring(4, bean.getMoc().length())+bean.getMoc().substring(0, 4)
-											: bean.getMoc();
-							String promString = "";
-							if (promotime.equalsIgnoreCase("bm")) {
-								promString = "SELECT START_DATE,END_DATE FROM TBL_VAT_MOC_MASTER WHERE MOC='" + new_moc
-										+ "' AND MOC_GROUP='GROUP_THREE'";
-							} else if (promotime.equalsIgnoreCase("moc")) {
-								promString = "SELECT START_DATE,END_DATE FROM TBL_VAT_MOC_MASTER WHERE MOC='" + new_moc
-										+ "' AND MOC_GROUP='GROUP_ONE'";
-							} else if (promotime.equalsIgnoreCase("26 to 25")) {
-								promString = "SELECT START_DATE,END_DATE FROM TBL_VAT_MOC_MASTER WHERE MOC='" + new_moc
-										+ "' AND MOC_GROUP='GROUP_TWO'";
+								List<Object[]> promolist = sessionFactory.getCurrentSession()
+										.createNativeQuery(promString).list();
+								if (promolist.size() == 0) {
+									error_msg = error_msg + "Start date and end date doesn't exists for " + promotime
+											+ " AND " + bean.getMoc() + "";
+									flag = 1;
+									query.setString(18, "");
+									query.setString(19, "");
+
+								} else {
+									for (Object[] a : promolist) {
+										promotimemap.put(bean.getMoc() + bean.getPromo_time_period() + "start_date",
+												a[0].toString());
+										promotimemap.put(bean.getMoc() + bean.getPromo_time_period() + "end_date",
+												a[1].toString());
+										query.setString(18, a[0].toString());
+										query.setString(19, a[1].toString());
+									}
+
+								}
+
+							} else {
+								query.setString(18,
+										promotimemap.get(bean.getMoc() + bean.getPromo_time_period() + "start_date"));
+								query.setString(19,
+										promotimemap.get(bean.getMoc() + bean.getPromo_time_period() + "end_date"));
 							}
-							
-							List<Object[]> promolist = sessionFactory.getCurrentSession().createNativeQuery(promString)
-									.list();
-							if (promolist.size() == 0) {
-								error_msg=error_msg+"Start date and end date doesn't exists for "+promotime+" AND "+bean.getMoc()+"";
-								flag=1;
+
+						} else {
+							String converted_moc = bean.getMoc().length() == 6
+									? bean.getMoc().substring(4, bean.getMoc().length()) + bean.getMoc().substring(0, 4)
+									: bean.getMoc();
+							if (!promotimemap.containsKey(
+									converted_moc + bean.getPromo_time_period().toUpperCase() + "start_date")
+									&& !promotimemap.containsKey(
+											converted_moc + bean.getPromo_time_period().toUpperCase() + "end_date")) {
+								if (flag == 1)
+									error_msg = error_msg + "," + promotime + " is not part of moc:" + bean.getMoc()
+											+ ", please enter proper TDP";
+								else {
+									error_msg = error_msg + "" + promotime + " is not part of moc:" + bean.getMoc()
+											+ ", please enter proper TDP";
+									flag = 1;
+								}
 								query.setString(18, "");
 								query.setString(19, "");
-								
 							} else {
-								for(Object[] a: promolist)
-								{
-									promotimemap.put(bean.getMoc() + bean.getPromo_time_period() + "start_date", a[0].toString());
-									promotimemap.put(bean.getMoc() + bean.getPromo_time_period() + "end_date", a[1].toString());
-									query.setString(18,
-											a[0].toString());
-									query.setString(19,
-											a[1].toString());
-								}
-								
+								query.setString(18, promotimemap
+										.get(converted_moc + bean.getPromo_time_period().toUpperCase() + "start_date"));
+								query.setString(19, promotimemap
+										.get(converted_moc + bean.getPromo_time_period().toUpperCase() + "end_date"));
 							}
-
-						} else {
-							query.setString(18,
-									promotimemap.get(bean.getMoc() + bean.getPromo_time_period() + "start_date"));
-							query.setString(19,
-									promotimemap.get(bean.getMoc() + bean.getPromo_time_period() + "end_date"));
-						}
-
-					} else {
-						String converted_moc = bean.getMoc().length() == 6
-								?   bean.getMoc().substring(4, bean.getMoc().length())+bean.getMoc().substring(0, 4)
-								: bean.getMoc();
-						if (!promotimemap
-								.containsKey(converted_moc + bean.getPromo_time_period().toUpperCase() + "start_date")
-								&& !promotimemap.containsKey(
-										converted_moc + bean.getPromo_time_period().toUpperCase() + "end_date")) {
-							if (flag == 1)
-								error_msg = error_msg + ","+promotime+" is not part of moc:"+bean.getMoc()+", please enter proper TDP";
-							else {
-								error_msg = error_msg + ""+promotime+" is not part of moc:"+bean.getMoc()+", please enter proper TDP";
-								flag = 1;
-							}
-							query.setString(18, "");
-							query.setString(19, "");
-						} else {
-							query.setString(18, promotimemap
-									.get(converted_moc + bean.getPromo_time_period().toUpperCase() + "start_date"));
-							query.setString(19, promotimemap
-									.get(converted_moc + bean.getPromo_time_period().toUpperCase() + "end_date"));
 						}
 					}
 					// change end
@@ -576,7 +589,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		}
 		if (globle_flag == 0) {
 
-			saveTomainTable(beans, uid, template,promotimemap);
+			saveTomainTable(beans, uid, template, promotimemap);
 			globle_flag = 0;
 			return "EXCEL_UPLOADED";
 
@@ -683,7 +696,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		return sessionFactory.getCurrentSession().createNativeQuery(se_query).list();
 	}
 
-	private void saveTomainTable(CreateBeanRegular[] beans, String uid, String template,Map<String, String> promotimemap) {
+	private void saveTomainTable(CreateBeanRegular[] beans, String uid, String template,
+			Map<String, String> promotimemap) {
 
 		Query query = sessionFactory.getCurrentSession().createNativeQuery(SQL_QUERY_INSERT_INTO_PROMO_TABLE);
 		Map<String, String> branchmap = getValidBranch();
@@ -699,7 +713,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		} // "STR_TO_DATE("+new SimpleDateFormat("dd/MM/yyyy").format(new
 			// Date()).toString()+",'%d/%m/%Y')");
 		Map<String, String> dupmap = new HashMap<String, String>();
-		
+
 		for (CreateBeanRegular bean : beans) {
 			if (!dupmap.containsKey(bean.getPpm_account() + bean.getBasepack_code() + bean.getCluster() + bean.getMoc()
 					+ bean.getOffer_desc())) {
@@ -752,21 +766,20 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					if (bean.getPromo_time_period().equalsIgnoreCase("bm")
 							|| bean.getPromo_time_period().equalsIgnoreCase("moc")
 							|| bean.getPromo_time_period().equalsIgnoreCase("26 to 25")) {
-					
-						query.setString(19, promotimemap
-								.get(bean.getMoc() + bean.getPromo_time_period() + "start_date"));
-						query.setString(20, promotimemap
-								.get(bean.getMoc() + bean.getPromo_time_period() + "end_date"));
+
+						query.setString(19,
+								promotimemap.get(bean.getMoc() + bean.getPromo_time_period() + "start_date"));
+						query.setString(20, promotimemap.get(bean.getMoc() + bean.getPromo_time_period() + "end_date"));
 
 					} else {
 						String converted_moc = bean.getMoc().length() == 6
-								?   bean.getMoc().substring(4, bean.getMoc().length())+bean.getMoc().substring(0, 4)
+								? bean.getMoc().substring(4, bean.getMoc().length()) + bean.getMoc().substring(0, 4)
 								: bean.getMoc();
-							query.setString(19, promotimemap
-									.get(converted_moc + bean.getPromo_time_period().toUpperCase() + "start_date"));
-							query.setString(20, promotimemap
-									.get(converted_moc + bean.getPromo_time_period().toUpperCase() + "end_date"));
-						
+						query.setString(19, promotimemap
+								.get(converted_moc + bean.getPromo_time_period().toUpperCase() + "start_date"));
+						query.setString(20, promotimemap
+								.get(converted_moc + bean.getPromo_time_period().toUpperCase() + "end_date"));
+
 					}
 					// mayur End
 
