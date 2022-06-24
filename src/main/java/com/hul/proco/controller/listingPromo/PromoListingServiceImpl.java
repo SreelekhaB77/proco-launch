@@ -230,8 +230,8 @@ public class PromoListingServiceImpl implements PromoListingService {
 		return headerList;
 	}
 	
-	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleid){
-		return promoListingDAO.getPromotionListingDownload(headerList,userId,moc,roleid);
+	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleid, String[] kamAccounts){
+		return promoListingDAO.getPromotionListingDownload(headerList,userId,moc,roleid, kamAccounts);
 	}
 	//Added by Kavitha D for promo listing download ends-SPRINT 9
 
@@ -244,8 +244,8 @@ public class PromoListingServiceImpl implements PromoListingService {
 
 	@Override
 	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId,String roleId,
-			String moc,String searchParameter) {
-		return promoListingDAO.getPromoTableListGrid(pageDisplayStart,pageDisplayLength,userId,roleId,moc,searchParameter);
+			String moc,String searchParameter, String[] kamAccounts) {
+		return promoListingDAO.getPromoTableListGrid(pageDisplayStart,pageDisplayLength,userId,roleId,moc,searchParameter, kamAccounts);
 	}
 
 

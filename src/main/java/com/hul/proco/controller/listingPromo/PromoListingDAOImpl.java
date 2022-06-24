@@ -1129,7 +1129,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			
 			if (roleId.equalsIgnoreCase("TME")) {
 				
-				promoQuery +=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.USER_ID= '"+userId+"' AND PM.MOC='"+moc+"' ";
+				promoQuery +=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.CREATED_BY= '"+userId+"' AND PM.MOC='"+moc+"' ";
 			}
 			
 			
@@ -1425,7 +1425,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ " PM.PROMO_TIMEPERIOD, CM.AB_CREATION, CM.SOL_RELEASE_ON,"
 					+ "PM.START_DATE, PM.END_DATE, PM.OFFER_DESC, PR.PROMOTION_NAME, PM.BASEPACK_CODE, PM.CHILD_BASEPACK_CODE, PM.OFFER_TYPE, PM.OFFER_MODALITY, "
 					+ "PM.PRICE_OFF, PM.QUANTITY, PM.BUDGET, PM.BRANCH, PM.CLUSTER, CASE WHEN PM.CR_SOL_TYPE IS NULL THEN 'Regular' ELSE PM.CR_SOL_TYPE END AS SOL_TYPE, "
-					+ "CASE WHEN ST.SOL_REMARK IS NULL THEN 'Regular' ELSE ST.SOL_REMARK END AS REMARK, '' AS CMM_NAME, PM.USER_ID AS TME_NAME, "
+					+ "CASE WHEN ST.SOL_REMARK IS NULL THEN 'Regular' ELSE ST.SOL_REMARK END AS REMARK, '' AS CMM_NAME, PM.CREATED_BY AS TME_NAME, "
 					+ "PRM.CATEGORY AS SALES_CATEGORY, PRM.CATEGORY AS PSA_CATEGORY FROM TBL_PROCO_PROMOTION_MASTER_V2 PM "
 					+ "INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.CUSTOMER_CHAIN_L2 "
 					+ "LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID,PROMOTION_STATUS FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID,PROMOTION_STATUS) PR ON PR.PROMO_ID = PM.PROMO_ID "
@@ -1434,7 +1434,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			
 			if(roleId.equals("TME")) {
 				
-				promoQuery +=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.USER_ID='"+ userId + "'AND PM.MOC='"+ moc + "' " ;
+				promoQuery +=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.CREATED_BY='"+ userId + "'AND PM.MOC='"+ moc + "' " ;
 			}
 			 //mayur's changes for sprint 9
 			if(roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE"))
@@ -1563,7 +1563,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 	//Added by Kavitha D for promo listing download starts-SPRINT 9
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleid){
+	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleid, String[] kamAccounts){
 		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
 		try {
 		String qry=" SELECT PM.CHANNEL_NAME, PM.MOC, CM.ACCOUNT_TYPE, CM.POS_ONINVOICE, CM.SECONDARY_CHANNEL, CM.PPM_ACCOUNT, PM.PROMO_ID,"
@@ -1571,7 +1571,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				+ " PM.PROMO_TIMEPERIOD, CM.AB_CREATION, CM.SOL_RELEASE_ON,"
 				+ " PM.START_DATE, PM.END_DATE, PM.OFFER_DESC, PR.PROMOTION_NAME, PM.BASEPACK_CODE, PM.CHILD_BASEPACK_CODE, PM.OFFER_TYPE, PM.OFFER_MODALITY, "
 				+ " PM.PRICE_OFF, PM.QUANTITY, PM.BUDGET, PM.BRANCH, PM.CLUSTER, CASE WHEN PM.CR_SOL_TYPE IS NULL THEN 'Regular' ELSE PM.CR_SOL_TYPE END AS SOL_TYPE, "
-				+ " CASE WHEN ST.SOL_REMARK IS NULL THEN 'Regular' ELSE ST.SOL_REMARK END AS REMARK, '' AS CMM_NAME, PM.USER_ID AS TME_NAME, "
+				+ " CASE WHEN ST.SOL_REMARK IS NULL THEN 'Regular' ELSE ST.SOL_REMARK END AS REMARK, '' AS CMM_NAME, PM.CREATED_BY AS TME_NAME, "
 				+ " PRM.CATEGORY AS SALES_CATEGORY, PRM.CATEGORY AS PSA_CATEGORY FROM TBL_PROCO_PROMOTION_MASTER_V2 PM "
 				+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.CUSTOMER_CHAIN_L2 "
 				+ " LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID) PR ON PR.PROMO_ID = PM.PROMO_ID "
@@ -1580,20 +1580,21 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 		
 		if(roleid.equalsIgnoreCase("KAM"))
 		{
-			qry+=" WHERE PM.MOC='"+moc+"'";
+			qry+=" WHERE PM.MOC='"+moc+"' AND PM.CUSTOMER_CHAIN_L2 IN (:kamAccount) ";
 		}else
 		{
-			qry+=" WHERE PM.USER_ID=:userId AND PM.MOC=:moc";		
+			qry+=" WHERE PM.CREATED_BY=:userId AND PM.MOC=:moc";		
 		}
 		
 		
 		Query query  =sessionFactory.getCurrentSession().createNativeQuery(qry);
 		
-		if(!roleid.equalsIgnoreCase("KAM"))
-		{
+		if(roleid.equalsIgnoreCase("KAM")) {
+			query.setParameterList("kamAccount", kamAccounts);
+			
+		} else {
 			query.setString("moc", moc);
 			query.setString("userId", userId);
-			
 		}
 
 
@@ -1633,16 +1634,17 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";	
 			
 			if (roleId.equalsIgnoreCase("TME")) {
-				promoQueryCount += "WHERE PM.USER_ID='"+ userId +"'AND PM.MOC='"+moc+"'";
+				promoQueryCount += "WHERE PM.CREATED_BY='"+ userId +"'AND PM.MOC='"+moc+"'";
 			}
+			/*
 			if (roleId.equalsIgnoreCase("DP") && (moc== null || moc.isEmpty())) {
 				promoQueryCount += " WHERE PM.STATUS = 1 ";
-			}
+			} */
 			if (roleId.equalsIgnoreCase("DP")&& (moc!= null || !moc.isEmpty())) {
 				if(moc.equalsIgnoreCase("all"))
-					promoQueryCount += " WHERE PM.STATUS = 1";
+					promoQueryCount += " WHERE PM.STATUS = 3";
 				else
-				promoQueryCount += " WHERE PM.STATUS = 1 AND PM.MOC='"+moc+ "' ";
+				promoQueryCount += " WHERE PM.STATUS IN (1, 3) AND PM.MOC='"+moc+ "' ";
 			}
 			if (roleId.equalsIgnoreCase("KAM")) {
 				promoQueryCount += " WHERE PM.MOC='"+moc+ "' ";
@@ -1658,14 +1660,14 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId,
-			String roleId,String moc,String searchParameter) {
+			String roleId,String moc,String searchParameter, String[] kamAccounts) {
 		List<PromoListingBean> promoListDisplay = new ArrayList<>();
 		try {
 			
 			String promoQueryGrid=" SELECT * FROM (SELECT PM.PROMO_ID AS UNIQUE_ID,PM.PROMO_ID AS ORIGINAL_ID,PM.START_DATE,PM.END_DATE,"
 					+ " PM.MOC,PM.CUSTOMER_CHAIN_L2,PM.BASEPACK_CODE AS BASEPACK,PM.OFFER_DESC,PM.OFFER_TYPE,PM.OFFER_MODALITY,"
-					+ " PM.CLUSTER AS GEOGRAPHY,PM.QUANTITY,PM.PRICE_OFF AS OFFER_VALUE,PSM.STATUS,PR.INVESTMENT_TYPE,"
-					+ " PR.PROMOTION_ID AS SOL_CODE,PR.PROMOTION_MECHANICS,PR.PROMOTION_STATUS AS SOL_CODE_STATUS,ROW_NUMBER() OVER (ORDER BY PM.UPDATE_STAMP DESC) AS ROW_NEXT "
+					+ " PM.CLUSTER AS GEOGRAPHY,PM.QUANTITY,PM.PRICE_OFF AS OFFER_VALUE,PSM.STATUS, PM.CREATED_BY, PM.CREATED_DATE, PM.TEMPLATE_TYPE AS REMARKS,"
+					+ " PR.INVESTMENT_TYPE, PR.PROMOTION_ID AS SOL_CODE,PR.PROMOTION_MECHANICS,PR.PROMOTION_STATUS AS SOL_CODE_STATUS,ROW_NUMBER() OVER (ORDER BY PM.UPDATE_STAMP DESC) AS ROW_NEXT "
 					+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 PM "
 					+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.CUSTOMER_CHAIN_L2 "
 					+ " INNER JOIN TBL_PROCO_STATUS_MASTER PSM ON PSM.STATUS_ID = PM.STATUS "
@@ -1674,20 +1676,22 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";
 		
 			if (roleId.equalsIgnoreCase("TME")) {
-				promoQueryGrid += "WHERE PM.USER_ID='"+ userId +"' AND PM.MOC='"+moc+"'";
+				promoQueryGrid += "WHERE PM.CREATED_BY='"+ userId +"' AND PM.MOC='"+moc+"'";
 			}
+			/*
 			if (roleId.equalsIgnoreCase("DP") && (moc== null || moc.isEmpty())) {
 				promoQueryGrid += "WHERE PM.STATUS = 1 ";
-			}
+			} */
 			
 			if (roleId.equalsIgnoreCase("DP") && (moc!= null || !moc.isEmpty())) {
 				if(moc.equalsIgnoreCase("all"))
-					promoQueryGrid += " WHERE PM.STATUS = 1";
+					promoQueryGrid += " WHERE PM.STATUS = 1";  //For DP Volume Upload
 				else
-				promoQueryGrid += " WHERE PM.STATUS = 1 AND PM.MOC='"+moc+ "' ";
+					promoQueryGrid += " WHERE PM.STATUS IN (1, 3) AND PM.MOC='"+moc+ "' ";  //For DP Promo Listing
 			}
+			
 			if (roleId.equalsIgnoreCase("KAM")) {
-				promoQueryGrid += " WHERE PM.MOC='"+moc+ "' ";
+				promoQueryGrid += " WHERE PM.MOC='"+moc+ "' AND PM.CUSTOMER_CHAIN_L2 IN (:kamAccount) ";
 			}
 			if(searchParameter!=null && searchParameter.length()>0){
 				promoQueryGrid +="AND UCASE(PM.PROMO_ID) LIKE UCASE('%"+searchParameter+"%')";
@@ -1701,6 +1705,9 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			
 			//System.out.println("Volume upload promo:"+ promoQueryGrid);
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQueryGrid);
+			if (roleId.equalsIgnoreCase("KAM")) {
+				query.setParameterList("kamAccount", kamAccounts);
+			}
 			List<Object[]> list = query.list();
 			for (Object[] obj : list) {
 				PromoListingBean promoBean = new PromoListingBean();
@@ -1719,10 +1726,13 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				promoBean.setQuantity((obj[11] == null || obj[11].toString().equals("")) ? "" : obj[11].toString());
 				promoBean.setOffer_value(obj[12]== null ? "" :obj[12].toString());
 				promoBean.setStatus(obj[13]== null ? "" :obj[13].toString());
-				promoBean.setInvestmentType(obj[14]== null ? "" :obj[14].toString());
-				promoBean.setSolCode(obj[15]== null ? "" :obj[15].toString());
-				promoBean.setPromotionMechanics(obj[16]== null ? "" :obj[16].toString());
-				promoBean.setSolCodeStatus(obj[17]== null ? "" :obj[17].toString());			
+				promoBean.setUserId(obj[14]== null ? "" :obj[14].toString());
+				promoBean.setChangeDate(obj[15]== null ? "" :obj[15].toString());
+				promoBean.setRemark(obj[16]== null ? "" :obj[16].toString());
+				promoBean.setInvestmentType(obj[17]== null ? "" :obj[17].toString());
+				promoBean.setSolCode(obj[18]== null ? "" :obj[18].toString());
+				promoBean.setPromotionMechanics(obj[19]== null ? "" :obj[19].toString());
+				promoBean.setSolCodeStatus(obj[20]== null ? "" :obj[20].toString());			
 				promoListDisplay.add(promoBean);
 			}
 		} catch (Exception ex) {

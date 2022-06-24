@@ -16,8 +16,8 @@ public class RegularPromoService {
 	
 	
 	@Transactional(rollbackFor = { Exception.class })
-	public String createCRPromo(CreateBeanRegular[] bean, String uid, String template) throws Exception {
-		return createCRPromo.createPromotion(bean, uid, template);
+	public String createCRPromo(CreateBeanRegular[] bean, String uid, String template,String listofcategory) throws Exception {
+		return createCRPromo.createPromotion(bean, uid, template,listofcategory);
 	}
 
 	
@@ -124,7 +124,7 @@ public class RegularPromoService {
 	}
 	// Added by Kavitha D for downloading promo CR template ends-SPRINT 9
 
-	public ArrayList<String> getHeaderListForPromotionErrorDownload(String error_template) {
+	public ArrayList<String> getHeaderListForPromotionErrorDownload(String error_template,String roleid) {
 		ArrayList<String> headerList = new ArrayList<String>();
 		if(error_template.equalsIgnoreCase("cr"))
 		{
@@ -175,7 +175,7 @@ public class RegularPromoService {
 			headerList.add("BUDGET");
 			//headerList.add("BRANCH");
 			headerList.add("CLUSTER");
-			if(error_template.equalsIgnoreCase("new"))
+			if(error_template.equalsIgnoreCase("new") || roleid.equalsIgnoreCase("dp"))
 			headerList.add("QUANTITY");
 			headerList.add("TEMPLATE_TYPE");
 			headerList.add("USER_ID");
@@ -187,9 +187,9 @@ public class RegularPromoService {
 	}
 
 	@Transactional(rollbackFor = { Exception.class })
-	public List<ArrayList<String>> getPromotionErrorDetails(ArrayList<String> headerDetail, String userId,String error_template) {
+	public List<ArrayList<String>> getPromotionErrorDetails(ArrayList<String> headerDetail, String userId,String error_template,String roleID) {
 
-		return createCRPromo.getPromotionErrorDetails(headerDetail, userId,error_template);
+		return createCRPromo.getPromotionErrorDetails(headerDetail, userId,error_template, roleID);
 	}
 
 	public Map<String, List<List<String>>> getMastersForTemplate() {

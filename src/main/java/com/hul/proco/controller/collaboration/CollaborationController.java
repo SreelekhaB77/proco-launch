@@ -74,6 +74,10 @@ public class CollaborationController {
 		Integer pageDisplayStart = Integer.valueOf(request.getParameter("iDisplayStart"));
 		Integer pageDisplayLength = Integer.valueOf(request.getParameter("iDisplayLength"));
 		Integer pageNumber = (pageDisplayStart / pageDisplayLength) + 1;
+		//Added Proco Sprint9 Changes - Starts
+		String accountNames = (String) request.getSession().getAttribute("accountName");
+		String[] kamAccountsArr = accountNames.split(",");
+		//Added Proco Sprint9 Changes - Ends
 
 		/*
 		 * String cagetory = "", brand = "", basepack = "", custChainL1 = "",
@@ -125,7 +129,7 @@ public class CollaborationController {
 		 */
 
 		List<DisplayCollaborationBean> promoList = collaborationService
-				.getCollaborationTableList((pageDisplayStart + 1), (pageNumber * pageDisplayLength), moc, userId);
+				.getCollaborationTableList((pageDisplayStart + 1), (pageNumber * pageDisplayLength), moc, userId, kamAccountsArr);
 
 		CollaborationJsonObject jsonObj = new CollaborationJsonObject();
 		jsonObj.setAaData(promoList);

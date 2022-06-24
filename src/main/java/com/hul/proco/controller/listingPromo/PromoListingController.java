@@ -62,6 +62,10 @@ public class PromoListingController {
 		Integer pageDisplayStart = Integer.valueOf(request.getParameter("iDisplayStart"));
 		Integer pageDisplayLength = Integer.valueOf(request.getParameter("iDisplayLength"));
 		String searchParameter = request.getParameter("sSearch");
+		//Added Proco Sprint9 Changes - Starts
+		String accountNames = (String) request.getSession().getAttribute("accountName");
+		String[] kamAccountsArr = accountNames.split(",");
+		//Added Proco Sprint9 Changes - Ends
 		Integer pageNumber = (pageDisplayStart / pageDisplayLength) + 1;
 		String cagetory = "", brand = "", basepack = "", custChainL1 = "", custChainL2 = "", geography = "";
 		String offerType = "", modality = "", year = "", moc = "";
@@ -135,7 +139,7 @@ public class PromoListingController {
 		
 		int rowCount = promoListingService.getPromoListRowCountGrid(userId,roleId,moc);
 		List<PromoListingBean> promoList = promoListingService.getPromoTableListGrid((pageDisplayStart + 1),
-				(pageNumber * pageDisplayLength),userId,roleId,moc,searchParameter);
+				(pageNumber * pageDisplayLength),userId,roleId,moc,searchParameter, kamAccountsArr);
 
 
 		PromoListingJsonObject jsonObj = new PromoListingJsonObject();
@@ -810,6 +814,10 @@ public class PromoListingController {
 		try {
 			InputStream is;
 			String roleId = (String) request.getSession().getAttribute("roleId");
+			//Added Proco Sprint9 Changes - Starts
+			String accountNames = (String) request.getSession().getAttribute("accountName");
+			String[] kamAccountsArr = accountNames.split(",");
+			//Added Proco Sprint9 Changes - Ends
 			
 			String downloadLink = "", absoluteFilePath = "";
 			List<ArrayList<String>> downloadedData = null;
@@ -820,7 +828,7 @@ public class PromoListingController {
 			String userId = (String) request.getSession().getAttribute("UserID");
 			
 			ArrayList<String> headerList = promoListingService.getHeaderListForPromoDownloadListing();
-			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc,roleId);
+			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc,roleId, kamAccountsArr);
 			if (downloadedData != null) {
 				UploadUtil.writeXLSFile(downloadFileName, downloadedData, null,".xls");
 				downloadLink = downloadFileName + ".xls";

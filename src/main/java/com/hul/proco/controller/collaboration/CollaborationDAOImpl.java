@@ -149,7 +149,7 @@ public class CollaborationDAOImpl implements CollaborationDAO {
 			/*
 			 * String cagetory, String brand, String basepack, String custChainL1, String
 			 * custChainL2, String offerType, String modality, String year,
-			 */ String moc, String userId) {
+			 */ String moc, String userId, String[] kamAccounts) {
 		List<DisplayCollaborationBean> promoList = new ArrayList<>();
 		/*
 		 * List<String> custL1 = new
@@ -235,6 +235,9 @@ public class CollaborationDAOImpl implements CollaborationDAO {
 					+ "LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE " + "WHERE PM.MOC='"
 					+ moc + "'";
 
+			if (kamAccounts != null) {
+				promoQuery = promoQuery + " AND PM.CUSTOMER_CHAIN_L2 IN (:kamAccount) ";
+			}
 			if (pageDisplayLength == 0) {
 				promoQuery += " ORDER BY PM.UPDATE_STAMP DESC) AS PROMO_TEMP";
 			} else {
@@ -243,6 +246,10 @@ public class CollaborationDAOImpl implements CollaborationDAO {
 			}
 
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQuery);
+			if (kamAccounts != null) {
+				query.setParameterList("kamAccount", kamAccounts);
+			}
+			
 			// query.setParameter("userId", userId);
 			List<Object[]> list = query.list();
 			

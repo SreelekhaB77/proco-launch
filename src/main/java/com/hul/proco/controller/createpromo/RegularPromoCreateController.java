@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +50,9 @@ public class RegularPromoCreateController {
 			@RequestParam(name = "template") String template, Model model, HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse) {
 		String save_data = null;
-
+		String categories=(String) httpServletRequest.getSession().getAttribute("categoryName");
+		
+		
 		CommonPropUtils commUtils = CommonPropUtils.getInstance();
 		String userId = (String) httpServletRequest.getSession().getAttribute("UserID");
 		MultipartFile file = createCRBean.getFile();
@@ -88,7 +91,7 @@ public class RegularPromoCreateController {
 						beanArray = (CreateBeanRegular[]) datafromexcel
 								.toArray(new CreateBeanRegular[datafromexcel.size()]);
 
-						save_data = createCRPromo.createCRPromo(beanArray, userId, template);
+						save_data = createCRPromo.createCRPromo(beanArray, userId, template,categories);
 
 					}
 
@@ -235,14 +238,14 @@ public class RegularPromoCreateController {
 		List<ArrayList<String>> downloadedData = null;
 		String userID = (String) request.getSession().getAttribute("UserID");
 		String error_template=createCRPromo.getTemplateType(userID);
-		
-		ArrayList<String> headerDetail = createCRPromo.getHeaderListForPromotionErrorDownload(error_template);
+		String roleID=(String)request.getSession().getAttribute("roleId");
+		ArrayList<String> headerDetail = createCRPromo.getHeaderListForPromotionErrorDownload(error_template,roleID);
 		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
 		String fileName = UploadUtil.getFileName("Promotion.Error.file", "",
 				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 		String downloadFileName = absoluteFilePath + fileName;
 
-		downloadedData = createCRPromo.getPromotionErrorDetails(headerDetail, userID,error_template);
+		downloadedData = createCRPromo.getPromotionErrorDetails(headerDetail, userID,error_template,roleID);
 		
 		Map<String, List<List<String>>> mastersForNewTemplate = createCRPromo.getMastersForNewTemplate();
 		try {
