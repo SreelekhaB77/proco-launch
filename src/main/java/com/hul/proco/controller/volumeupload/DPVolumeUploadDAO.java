@@ -95,7 +95,7 @@ public class DPVolumeUploadDAO implements DPVolumeUpload {
 			if (!bean.getQuantity().isEmpty()) {
 				Integer quantity = Integer.parseInt(bean.getQuantity());
 				if (quantity < 10) {
-					error_msg =error_msg+ "Quantity should be greater than 10";
+					error_msg =error_msg+ "Quantity should be greater than equal to 10";
 					flag = 1;
 				}
 			}
