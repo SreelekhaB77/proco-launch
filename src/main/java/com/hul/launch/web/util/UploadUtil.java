@@ -910,7 +910,7 @@ public class UploadUtil {
 					}
 				}
 				
-				sheet = wb.createSheet("Masters-Tdp");
+				sheet = wb.createSheet("Masters-Promo Timeperiod");
 				List<List<String>> tdpList = masters.get("TDP");
 				if (tdpList != null) {
 					rowCount = 0;
@@ -1150,7 +1150,7 @@ public class UploadUtil {
 					}
 				}
 
-				sheet = wb.createSheet("Masters-Tdp");
+				sheet = wb.createSheet("Masters-Promo Timeperiod");
 				List<List<String>> tdpList = masters.get("TDP");
 				if (tdpList != null) {
 					rowCount = 0;
