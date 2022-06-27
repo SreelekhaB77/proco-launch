@@ -93,8 +93,11 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				query.setString(10, bean.getOfr_type());
 				query.setString(11, bean.getOffer_mod());
 				// query.setString(12, bean.getPrice_off());
-				query.setString(13, bean.getBudget().isEmpty() ? ""
-						: String.valueOf((double) Math.round(Double.parseDouble(bean.getBudget()) * 100) / 100));
+				if (isStringNumber(bean.getBudget()))
+					query.setString(13, bean.getBudget().isEmpty() ? ""
+							: String.valueOf((double) Math.round(Double.parseDouble(bean.getBudget()) * 100) / 100));
+				else
+					query.setString(13, bean.getBudget());
 				query.setString(14, branchmap.get(bean.getCluster().toUpperCase()));
 				query.setString(15, bean.getCluster());
 				query.setString(16, uid);
@@ -102,7 +105,15 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 				if (template.equalsIgnoreCase("new") || template.equalsIgnoreCase("regular")) {
 					if (template.equalsIgnoreCase("new"))
-						query.setString(21, bean.getQuantity());
+					{
+						if (isStringNumber(bean.getQuantity()))
+							query.setString(21, bean.getQuantity().isEmpty() ? ""
+									: String.valueOf(
+											(double) Math.round(Double.parseDouble(bean.getQuantity()) * 100) / 100));
+						else {
+							query.setString(21, bean.getQuantity());
+						}
+					}
 					else
 						query.setString(21, "");
 					query.setString(2, secmap.get(bean.getPpm_account().toUpperCase()));
@@ -284,20 +295,24 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 
 					} else {
+						if(isStringNumber(bean.getPrice_off()))
+						{
 						query.setString(12, bean.getPrice_off().isEmpty() ? ""
 								: String.valueOf(
 										(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100) / 100));
-						if (bean.getBudget().isEmpty() || !isStringNumber(String
-								.valueOf((double) Math.round(Double.parseDouble(bean.getBudget()) * 100) / 100))) {
-							if (flag == 1) {
-								error_msg = error_msg + ",Empty Budget/not number";
-								flag = 1;
-							} else {
-								error_msg = error_msg + "Empty Budget/not number";
-								flag = 1;
-							}
+						}else
+						{
+							query.setString(12,bean.getPrice_off());
 						}
-
+					}
+					if (bean.getBudget().isEmpty() || !isStringNumber(bean.getBudget())) {
+						if (flag == 1) {
+							error_msg = error_msg + ",Empty Budget/not number";
+							flag = 1;
+						} else {
+							error_msg = error_msg + "Empty Budget/not number";
+							flag = 1;
+						}
 					}
 				} else if (template.equalsIgnoreCase("cr")) {
 					if (!validationmap.get("SOL TYPE").contains(bean.getSol_type().toUpperCase())) {
@@ -475,7 +490,12 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					query.setString(5, bean.getAb_creation());
 					query.setString(12, bean.getPrice_off().isEmpty() ? ""
 							: String.valueOf((double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100) / 100));
-					query.setString(21, bean.getQuantity());
+					if (isStringNumber(bean.getQuantity())) {
+						query.setString(21, bean.getQuantity().isEmpty() ? ""
+								: String.valueOf(
+										(double) Math.round(Double.parseDouble(bean.getQuantity()) * 100) / 100));
+					} else
+						query.setString(21, bean.getQuantity());
 					query.setString(22, bean.getSol_type());
 					query.setString(23, bean.getEnd_date());
 					query.setString(24, bean.getCluster_selection());
