@@ -1057,7 +1057,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			clusterHeaders.add("CLUSTER CODE");
 			clusterHeaders.add("CLUSTER");
 			// customerHeaders.add("SECONDARY CHANNEL");
-			customerHeaders.add("PPM ACCOUNT (Strictly as per Com rule)");
+			customerHeaders.add("PPM ACCOUNT (Strictly as per comm rule)");
 			// abcreationHeaders.add("AB CREATION NAME");
 			modalityHeaders.add("OFFER MODALITY");
 			offertypeHeaders.add("OFFER TYPE");
@@ -1237,7 +1237,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			clusterHeaders.add("CLUSTER CODE");
 			clusterHeaders.add("CLUSTER");
 			// customerHeaders.add("SECONDARY CHANNEL");
-			customerHeaders.add("PPM ACCOUNT (Strictly as per Com rule)");
+			customerHeaders.add("PPM ACCOUNT (Strictly as per comm rule)");
 			// abcreationHeaders.add("AB CREATION NAME");
 			modalityHeaders.add("OFFER MODALITY");
 			offertypeHeaders.add("OFFER TYPE");
@@ -1455,7 +1455,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			clusterHeaders.add("CLUSTER CODE");
 			clusterHeaders.add("CLUSTER");
 			customerHeaders.add("SECONDARY CHANNEL");
-			customerHeaders.add("PPM ACCOUNT (Strictly as per Com rule)");
+			customerHeaders.add("PPM ACCOUNT (Strictly as per comm rule)");
 			abcreationHeaders.add("AB CREATION NAME");
 			modalityHeaders.add("OFFER MODALITY");
 			offertypeHeaders.add("OFFER TYPE");
