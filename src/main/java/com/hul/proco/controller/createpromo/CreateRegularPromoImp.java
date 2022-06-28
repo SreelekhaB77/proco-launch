@@ -304,16 +304,17 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						{
 							query.setString(12,bean.getPrice_off());
 						}
-					}
-					if (bean.getBudget().isEmpty() || !isStringNumber(bean.getBudget())) {
-						if (flag == 1) {
-							error_msg = error_msg + ",Empty Budget/not number";
-							flag = 1;
-						} else {
-							error_msg = error_msg + "Empty Budget/not number";
-							flag = 1;
+						if (bean.getBudget().isEmpty() || !isStringNumber(bean.getBudget())) {
+							if (flag == 1) {
+								error_msg = error_msg + ",Empty Budget/not number";
+								flag = 1;
+							} else {
+								error_msg = error_msg + "Empty Budget/not number";
+								flag = 1;
+							}
 						}
 					}
+
 				} else if (template.equalsIgnoreCase("cr")) {
 					if (!validationmap.get("SOL TYPE").contains(bean.getSol_type().toUpperCase())) {
 						error_msg = error_msg + "Invalid SOL";
