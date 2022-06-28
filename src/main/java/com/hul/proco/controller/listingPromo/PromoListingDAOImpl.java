@@ -1624,7 +1624,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 	//Added by Kavitha D for promo display grid download starts-SPRINT 9
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public int getPromoListRowCountGrid(String userId,String roleId,String moc) {
+	public int getPromoListRowCountGrid(String userId,String roleId,String moc, String[] kamAccounts) {
 		List<BigInteger> list = null;
 		try {
 			String promoQueryCount =" SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM "
@@ -1647,7 +1647,13 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				promoQueryCount += " WHERE PM.STATUS IN (1, 3) AND PM.MOC='"+moc+ "' ";
 			}
 			if (roleId.equalsIgnoreCase("KAM")) {
-				promoQueryCount += " WHERE PM.MOC='"+moc+ "' ";
+						
+				promoQueryCount += " WHERE PM.MOC='"+moc+ "' AND PM.CUSTOMER_CHAIN_L2 IN ( ";
+				
+				for(String kamAccount:kamAccounts)
+					promoQueryCount+="'"+kamAccount+"',";
+					
+				 promoQueryCount = promoQueryCount.substring(0, promoQueryCount.length()-1)+")";
 				}
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQueryCount);
 			list = query.list();

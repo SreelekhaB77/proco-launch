@@ -48,7 +48,7 @@ public interface PromoListingDAO {
 	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleid, String[] kamAccounts); //Added by Kavitha D for promo listing download-SPRINT 9
 
 	//Added by Kavitha D for promo listing Grid dispaly starts-SPRINT 9
-	public int getPromoListRowCountGrid(String userId, String roleId,String moc);
+	public int getPromoListRowCountGrid(String userId, String roleId,String moc,String[] kamaccount);
 
 	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId,String roleId,String moc,String searchParameter, String[] kamAccounts);
 

@@ -238,8 +238,8 @@ public class PromoListingServiceImpl implements PromoListingService {
 	//Added by Kavitha D for promo listing Grid dispaly starts-SPRINT 9
 
 	@Override
-	public int getPromoListRowCountGrid(String userId,String roleId,String moc) {
-		return promoListingDAO.getPromoListRowCountGrid(userId,roleId,moc);
+	public int getPromoListRowCountGrid(String userId,String roleId,String moc,String[] kamAccountsArr) {
+		return promoListingDAO.getPromoListRowCountGrid(userId,roleId,moc,kamAccountsArr);
 	}
 
 	@Override

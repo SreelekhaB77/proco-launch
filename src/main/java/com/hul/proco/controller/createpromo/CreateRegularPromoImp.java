@@ -304,16 +304,17 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						{
 							query.setString(12,bean.getPrice_off());
 						}
-					}
-					if (bean.getBudget().isEmpty() || !isStringNumber(bean.getBudget())) {
-						if (flag == 1) {
-							error_msg = error_msg + ",Empty Budget/not number";
-							flag = 1;
-						} else {
-							error_msg = error_msg + "Empty Budget/not number";
-							flag = 1;
+						if (bean.getBudget().isEmpty() || !isStringNumber(bean.getBudget())) {
+							if (flag == 1) {
+								error_msg = error_msg + ",Empty Budget/not number";
+								flag = 1;
+							} else {
+								error_msg = error_msg + "Empty Budget/not number";
+								flag = 1;
+							}
 						}
 					}
+
 				} else if (template.equalsIgnoreCase("cr")) {
 					if (!validationmap.get("SOL TYPE").contains(bean.getSol_type().toUpperCase())) {
 						error_msg = error_msg + "Invalid SOL";
@@ -1082,7 +1083,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			modalityHeaders.add("OFFER MODALITY");
 			offertypeHeaders.add("OFFER TYPE");
 			channelHeaders.add("CHANNEL");
-			tdpHeaders.add("TDP");
+			tdpHeaders.add("PROMO TIMEPERIOD");
 
 			String clusterQry = "SELECT DISTINCT BRANCH_CODE, BRANCH, CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER";
 			String customerQry = "SELECT DISTINCT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y'ORDER BY PPM_ACCOUNT";
@@ -1262,7 +1263,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			modalityHeaders.add("OFFER MODALITY");
 			offertypeHeaders.add("OFFER TYPE");
 			channelHeaders.add("CHANNEL");
-			tdpHeaders.add("TDP");
+			tdpHeaders.add("PROMO TIMEPERIOD");
 
 			String clusterQry = "SELECT DISTINCT BRANCH_CODE, BRANCH, CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER";
 			String customerQry = "SELECT DISTINCT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y'ORDER BY PPM_ACCOUNT";
@@ -1482,7 +1483,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			channelHeaders.add("CHANNEL");
 			solHeaders.add("SOL TYPE");
 			solHeaders.add("SOL REMARK");
-			tdpHeaders.add("TDP");
+			tdpHeaders.add("PROMO TIMEPERIOD");
 
 			String clusterQry = "SELECT DISTINCT BRANCH_CODE, BRANCH, CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER";
 			String customerQry = "SELECT DISTINCT SECONDARY_CHANNEL,PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y' ORDER BY SECONDARY_CHANNEL";

@@ -137,7 +137,7 @@ public class PromoListingController {
 				(pageNumber * pageDisplayLength), cagetory, brand, basepack, custChainL1, custChainL2, geography,
 				offerType, modality, year, moc, userId, 1,roleId ,searchParameter);*/
 		
-		int rowCount = promoListingService.getPromoListRowCountGrid(userId,roleId,moc);
+		int rowCount = promoListingService.getPromoListRowCountGrid(userId,roleId,moc,kamAccountsArr);
 		List<PromoListingBean> promoList = promoListingService.getPromoTableListGrid((pageDisplayStart + 1),
 				(pageNumber * pageDisplayLength),userId,roleId,moc,searchParameter, kamAccountsArr);
 
