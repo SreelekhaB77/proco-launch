@@ -121,7 +121,7 @@ public class CollaborationController {
 		 * cagetory, brand, basepack, custChainL1, custChainL2, offerType, modality,
 		 * year, #Value removed from getCollaborationRowCount
 		 */
-		int rowCount = collaborationService.getCollaborationRowCount(moc, userId);
+		int rowCount = collaborationService.getCollaborationRowCount(moc, userId,kamAccountsArr);
 
 		/*
 		 * cagetory, brand, basepack, custChainL1, custChainL2, offerType, modality,

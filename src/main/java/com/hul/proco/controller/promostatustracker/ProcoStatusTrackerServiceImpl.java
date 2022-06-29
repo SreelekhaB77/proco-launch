@@ -100,6 +100,8 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 			headerList.add("OFFER TYPE");
 			headerList.add("OFFER MODALITY");
 			headerList.add("GEOGRAPHY");
+			headerList.add("PROMO TEMPLATE");
+			headerList.add("CREATED DATE");	
 			headerList.add("QUANTITY");
 			headerList.add("OFFER VALUE");
 			headerList.add("STATUS");
