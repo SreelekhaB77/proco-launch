@@ -276,17 +276,11 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							} else {
 								if (flag == 1) {
 									error_msg = error_msg + ",Price off invalid for STPR/STPR Liquidation";
-									query.setString(12, bean.getPrice_off().isEmpty() ? ""
-											: String.valueOf(
-													(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100)
-															/ 100));
+									query.setString(12, bean.getPrice_off());
 									flag = 1;
 								} else {
 									error_msg = error_msg + " Price off invalid for STPR/STPR Liquidation";
-									query.setString(12, bean.getPrice_off().isEmpty() ? ""
-											: String.valueOf(
-													(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100)
-															/ 100));
+									query.setString(12, bean.getPrice_off());
 									flag = 1;
 								}
 
@@ -581,6 +575,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 				query.setString(17, error_msg);
 				query.executeUpdate();
+				
 				error_msg = "";
 				flag = 0;
 
@@ -750,16 +745,38 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				query.setString(9, bean.getOffer_desc());
 				query.setString(10, bean.getOfr_type());
 				query.setString(11, bean.getOffer_mod());
+				//Mayur changes for handling round off value for price off
 				if (bean.getPrice_off().isEmpty()) {
 					query.setString(12, "");
 				} else {
-					query.setString(12, bean.getPrice_off().endsWith("%") ? String.valueOf(
-							(Long) Math.round(Double.parseDouble(bean.getPrice_off().split("%")[0]) * 100) / 100) + "%"
-							: String.valueOf((Long) Math.round(Double.parseDouble(bean.getPrice_off()) * 100) / 100));
+					if(bean.getPrice_off().endsWith("%") && !isStringNumber(bean.getPrice_off().split("%")[0]))
+					{
+						query.setString(12,bean.getPrice_off());
+					}else
+					{
+						if(isStringNumber(bean.getPrice_off()) && !bean.getPrice_off().endsWith("%") )
+						{
+							query.setString(12,String.valueOf((Long) Math.round(Double.parseDouble(bean.getPrice_off()) * 100) / 100));
+						}else
+						{
+							if(isStringNumber(bean.getPrice_off().split("%")[0]))
+							{
+								query.setString(12,String.valueOf((Long) Math.round(Double.parseDouble(bean.getPrice_off().split("%")[0]) * 100) / 100)+"%");
+							}else
+							{
+							query.setString(12,bean.getPrice_off());
+							}
+						}
+					}
+//					query.setString(12, bean.getPrice_off().endsWith("%") ? String.valueOf(
+//							(Long) Math.round(Double.parseDouble(bean.getPrice_off().split("%")[0]) * 100) / 100) + "%"
+//							: String.valueOf((Long) Math.round(Double.parseDouble(bean.getPrice_off()) * 100) / 100));
 				}
-
+				if(isStringNumber(bean.getBudget()))
 				query.setString(13, bean.getBudget().isEmpty() ? ""
 						: String.valueOf((double) Math.round(Double.parseDouble(bean.getBudget()) * 100) / 100));
+				else
+					query.setString(13,bean.getBudget());
 				query.setString(14, branchmap.get(bean.getCluster().toUpperCase()));
 				query.setString(15, bean.getCluster());
 				query.setString(16, uid);
