@@ -37,8 +37,6 @@ public class DPVolumeUploadService {
 		 headerList.add("QUANTITY");
 		 headerList.add("Branch");
 		 headerList.add("CLUSTER");
-		 headerList.add("PROMO TEMPLATE");
-		 headerList.add("CREATED DATE");
 		 headerList.add("Remark");
 		return headerList;
 	}
