@@ -1563,14 +1563,14 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 	//Added by Kavitha D for promo listing download starts-SPRINT 9
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleid, String[] kamAccounts){
+	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleId, String[] kamAccounts){
 		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
 		try {
 		String qry=" SELECT PM.CHANNEL_NAME, PM.MOC, CM.ACCOUNT_TYPE, CM.POS_ONINVOICE, CM.SECONDARY_CHANNEL, CM.PPM_ACCOUNT, PM.PROMO_ID,"
 				+ " PR.PROMOTION_ID AS SOL_CODE, CASE WHEN MOC_GROUP = 'GROUP_ONE' THEN 'MOC' ELSE CASE WHEN MOC_GROUP = 'GROUP_THREE' THEN 'BM' ELSE '26 to 25' END END AS MOC_BM_CYCLE,"
 				+ " PM.PROMO_TIMEPERIOD, CM.AB_CREATION, CM.SOL_RELEASE_ON,"
 				+ " PM.START_DATE, PM.END_DATE, PM.OFFER_DESC, PR.PROMOTION_NAME, PM.BASEPACK_CODE, PM.CHILD_BASEPACK_CODE, PM.OFFER_TYPE, PM.OFFER_MODALITY, "
-				+ " PM.PRICE_OFF, PM.QUANTITY, PM.BUDGET, PM.BRANCH, PM.CLUSTER, CASE WHEN PM.CR_SOL_TYPE IS NULL THEN 'Regular' ELSE PM.CR_SOL_TYPE END AS SOL_TYPE, "
+				+ " PM.PRICE_OFF, PM.QUANTITY, PM.BUDGET, PM.BRANCH, PM.CLUSTER ,PM.TEMPLATE_TYPE AS PROMO_TEMPLATE, SUBSTRING(PM.CREATED_DATE,1,10) AS CREATED_DATE ,CASE WHEN PM.CR_SOL_TYPE IS NULL THEN 'Regular' ELSE PM.CR_SOL_TYPE END AS SOL_TYPE, "
 				+ " CASE WHEN ST.SOL_REMARK IS NULL THEN 'Regular' ELSE ST.SOL_REMARK END AS REMARK, '' AS CMM_NAME, PM.CREATED_BY AS TME_NAME, "
 				+ " PRM.CATEGORY AS SALES_CATEGORY, PRM.CATEGORY AS PSA_CATEGORY FROM TBL_PROCO_PROMOTION_MASTER_V2 PM "
 				+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.CUSTOMER_CHAIN_L2 "
@@ -1578,7 +1578,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				+ " LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
 				+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";
 		
-		if(roleid.equalsIgnoreCase("KAM"))
+		if(roleId.equalsIgnoreCase("KAM"))
 		{
 			qry+=" WHERE PM.MOC='"+moc+"' AND PM.CUSTOMER_CHAIN_L2 IN (:kamAccount) ";
 		}else
@@ -1589,7 +1589,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 		
 		Query query  =sessionFactory.getCurrentSession().createNativeQuery(qry);
 		
-		if(roleid.equalsIgnoreCase("KAM")) {
+		if(roleId.equalsIgnoreCase("KAM")) {
 			query.setParameterList("kamAccount", kamAccounts);
 			
 		} else {

@@ -220,6 +220,8 @@ public class PromoListingServiceImpl implements PromoListingService {
 		headerList.add("BUDGET");
 		headerList.add("BRANCH");
 		headerList.add("CLUSTER");
+		headerList.add("PROMO TEMPLATE");
+		headerList.add("CREATED DATE");
 		headerList.add("SOL TYPE");
 		headerList.add("REMARK");
 		headerList.add("CMM NAME");
@@ -230,8 +232,8 @@ public class PromoListingServiceImpl implements PromoListingService {
 		return headerList;
 	}
 	
-	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleid, String[] kamAccounts){
-		return promoListingDAO.getPromotionListingDownload(headerList,userId,moc,roleid, kamAccounts);
+	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleId, String[] kamAccounts){
+		return promoListingDAO.getPromotionListingDownload(headerList,userId,moc,roleId, kamAccounts);
 	}
 	//Added by Kavitha D for promo listing download ends-SPRINT 9
 
