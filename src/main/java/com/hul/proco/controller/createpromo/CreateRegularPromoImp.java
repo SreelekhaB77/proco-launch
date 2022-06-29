@@ -193,6 +193,10 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								List<Object[]> promolist = sessionFactory.getCurrentSession()
 										.createNativeQuery(promString).list();
 								if (promolist.size() == 0) {
+									if(flag==1)
+										error_msg = error_msg + ",Start date and end date doesn't exists for " + promotime
+										+ " AND " + bean.getMoc() + "";
+									else
 									error_msg = error_msg + "Start date and end date doesn't exists for " + promotime
 											+ " AND " + bean.getMoc() + "";
 									flag = 1;
@@ -503,8 +507,13 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				}
 
 				if (!validationmap.get("Channel name").contains(bean.getChannel().toUpperCase())) {
-					error_msg = error_msg + "Invalid Channel";
-					flag = 1;
+
+					if (flag == 1)
+						error_msg = error_msg + ",Invalid Channel";
+					else {
+						error_msg = error_msg + "Invalid Channel";
+						flag = 1;
+					}
 				}
 				if (!validationmap.get("PPM Account").contains(bean.getPpm_account().toUpperCase())
 						|| bean.getPpm_account().contains(",")) {
