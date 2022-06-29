@@ -1629,6 +1629,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 		try {
 			String promoQueryCount =" SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM "
 					+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.CUSTOMER_CHAIN_L2 "
+					+ " INNER JOIN TBL_PROCO_STATUS_MASTER PSM ON PSM.STATUS_ID = PM.STATUS "
 					+ " LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR ON PR.PROMO_ID = PM.PROMO_ID "
 					+ " LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE"
 					+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";	
@@ -1642,7 +1643,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			} */
 			if (roleId.equalsIgnoreCase("DP")&& (moc!= null || !moc.isEmpty())) {
 				if(moc.equalsIgnoreCase("all"))
-					promoQueryCount += " WHERE PM.STATUS = 3";
+					promoQueryCount += " WHERE PM.STATUS = 1";
 				else
 				promoQueryCount += " WHERE PM.STATUS IN (1, 3) AND PM.MOC='"+moc+ "' ";
 			}
@@ -1691,7 +1692,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				promoQueryGrid += "WHERE PM.STATUS = 1 ";
 			} */
 			
-			if (roleId.equalsIgnoreCase("DP") && (moc!= null || !moc.isEmpty())) {
+			if (roleId.equalsIgnoreCase("DP") /*&& (moc!= null || !moc.isEmpty())*/) {
 				if(moc.equalsIgnoreCase("all"))
 					promoQueryGrid += " WHERE PM.STATUS = 1";  //For DP Volume Upload
 				else
