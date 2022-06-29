@@ -49,7 +49,7 @@ public class CollaborationDAOImpl implements CollaborationDAO {
 	public int getCollaborationRowCount(/*
 										 * String cagetory, String brand, String basepack, String custChainL1, String
 										 * custChainL2, String offerType, String modality, String year,
-										 */ String moc, String userId) {
+										 */ String moc, String userId,String [] kamAccountsArr) {
 		// kiran - big int to int changes
 		// List<Integer> list = null;
 		List<BigInteger> list = null;
@@ -128,8 +128,14 @@ public class CollaborationDAOImpl implements CollaborationDAO {
 					+ "FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR ON PR.PROMO_ID = PM.PROMO_ID "
 					+ "LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
 					+ "LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE WHERE PM.MOC='" + moc
-					+ "'";
-
+					+ "' AND PM.CUSTOMER_CHAIN_L2 IN (";
+			   for(String kam:kamAccountsArr)
+			   {
+				   rowCount+="'"+kam+"',";
+			   }
+			   rowCount = rowCount.substring(0, rowCount.length()-1)+")";
+			   
+			   
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(rowCount);
 			// query.setParameter("userId", userId);//Mayur's Change end
 
