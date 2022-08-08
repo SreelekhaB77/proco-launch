@@ -69,9 +69,9 @@ public class RegularPromoCreateController {
 				} else if (UploadUtil.movefile(file, fileName)) {
 					Map<String, List<Object>> map = null;
 					if (template.equalsIgnoreCase("regular")) {
-						map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(13, false, null);
-					} else if (template.equalsIgnoreCase("new")) {
 						map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(14, false, null);
+					} else if (template.equalsIgnoreCase("new")) {
+						map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(15, false, null);
 					} else if (template.equalsIgnoreCase("cr")) {
 
 						map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(21, false, null);

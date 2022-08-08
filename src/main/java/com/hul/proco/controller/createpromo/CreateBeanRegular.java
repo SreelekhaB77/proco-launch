@@ -64,36 +64,58 @@ public class CreateBeanRegular {
 
 	@Column(name = "END DATE")
 	private String end_date;
-	
+
 	@Column(name = "CLUSTER SELECTION")
 	private String cluster_selection;
-	
+
 	@Column(name = "BASEPACK ADDITION")
 	private String basepack_addition;
-	
+
 	@Column(name = "TOPUP")
 	private String topup;
-	
-	@Column(name="ADDITIONAL QUANTITY")
+
+	@Column(name = "ADDITIONAL QUANTITY")
 	private String additional_QTY;
-	
-	
-	@Column(name="PROMO ID")
+
+	@Column(name = "PROMO ID")
 	private String promo_id;
-	
+
 	@Column(name = "Remark")
 	private String Remark;
-	
+
 	@Column(name = "SOL WILL RELEASE ON")
 	private String sol_release_on;
-	
+
 	@Column(name = "ADDITIONAL BUDGET")
 	private String addition_budget;
-	
+
 	@Column(name = "EXISTING SOL CODE")
 	private String existing_sol_code;
+
+	@Column(name = "YEAR")
+	private String year;
+
+	@Column(name = "MOC_NAME")
+	private String moc_name;
+
 	
 	
+	public String getYear() {
+		return year;
+	}
+
+	public String getMoc_name() {
+		return moc_name;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
+	public void setMoc_name(String moc_name) {
+		this.moc_name = moc_name;
+	}
+
 	public String getExisting_sol_code() {
 		return existing_sol_code;
 	}
@@ -127,9 +149,7 @@ public class CreateBeanRegular {
 	private String solCode;
 	private String originalId;
 	private String start_Date;
-	
-	
-	
+
 	public String getStart_Date() {
 		return start_Date;
 	}
