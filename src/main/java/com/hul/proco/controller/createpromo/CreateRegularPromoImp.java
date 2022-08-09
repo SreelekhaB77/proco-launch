@@ -3,6 +3,8 @@ package com.hul.proco.controller.createpromo;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -10,11 +12,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.hibernate.query.Query;
 
@@ -29,41 +33,68 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	Map<String, String> promo_map = new HashMap<String, String>();
 	@Autowired
 	private SessionFactory sessionFactory;
-
+	
+	private String moc_from_db;
+	@Autowired
+	DataFromTable datafromtable;
+	
+	/*
 	private static String SQL_QUERY_INSERT_INTO_PROMOTION_MASTER_TEMP = "INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2"
 			+ "(CHANNEL_NAME, MOC, CUSTOMER_CHAIN_L1, CUSTOMER_CHAIN_L2, PROMO_TIMEPERIOD, AB_CREATION, BASEPACK_CODE, BASEPACK_DESC, CHILD_BASEPACK_CODE, OFFER_DESC, OFFER_TYPE, OFFER_MODALITY, PRICE_OFF, BUDGET, BRANCH, CLUSTER,USER_ID,ERROR_MSG,START_DATE,END_DATE,TEMPLATE_TYPE,QUANTITY"
 			+ ",CR_SOL_TYPE,CR_END_DATE,CR_CLUSTER,CR_BASEPACK_ADDITION,CR_TOPUP,CR_ADDITIONAL_QTY,CR_BUDGET,SOL_RELEASE_ON,PROMOTION_ID)"
 			+ "VALUES"
 			+ "(?0, ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15,?16,?17,?18,?19,?20,?21,"
 			+ "?22,?23,?24,?25,?26,?27,?28,?29,?30)";
-
-	private static String SQL_QUERY_INSERT_INTO_PROMO_TABLE = "INSERT INTO TBL_PROCO_PROMOTION_MASTER_V2 (CHANNEL_NAME, MOC, CUSTOMER_CHAIN_L1, CUSTOMER_CHAIN_L2, PROMO_TIMEPERIOD, AB_CREATION, BASEPACK_CODE, BASEPACK_DESC, CHILD_BASEPACK_CODE, OFFER_DESC, OFFER_TYPE, OFFER_MODALITY, PRICE_OFF, BUDGET, BRANCH, CLUSTER,USER_ID,PROMO_ID,PID,START_DATE,END_DATE,TEMPLATE_TYPE,QUANTITY,STATUS,ACTIVE"
+	
+	*/
+	private static String SQL_QUERY_INSERT_INTO_PROMOTION_MASTER_TEMP="INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2 "
+			+ "(CHANNEL_NAME,MOC_NAME,PPM_ACCOUNT,PROMO_TIMEPERIOD,BASEPACK_CODE,BASEPACK_DESC,CHILD_BASEPACK_CODE,OFFER_DESC,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,BUDGET,CLUSTER,MOC_YEAR,"
+			+ "BRANCH,USER_ID,TEMPLATE_TYPE,QUANTITY,AB_CREATION,START_DATE,END_DATE,ERROR_MSG,MOC) "
+			+ "VALUES "
+			+ "(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14,?15,?16,?17,?18,?19,?20,?21,?22,?23)";
+		
+	/*private static String SQL_QUERY_INSERT_INTO_PROMO_TABLE = "INSERT INTO TBL_PROCO_PROMOTION_MASTER_V2 (CHANNEL_NAME, MOC, CUSTOMER_CHAIN_L1, CUSTOMER_CHAIN_L2, PROMO_TIMEPERIOD, AB_CREATION, BASEPACK_CODE, BASEPACK_DESC, CHILD_BASEPACK_CODE, OFFER_DESC, OFFER_TYPE, OFFER_MODALITY, PRICE_OFF, BUDGET, BRANCH, CLUSTER,USER_ID,PROMO_ID,PID,START_DATE,END_DATE,TEMPLATE_TYPE,QUANTITY,STATUS,ACTIVE"
 			+ ",CR_SOL_TYPE,CR_END_DATE,CR_CLUSTER,CR_BASEPACK_ADDITION,CR_TOPUP,CR_ADDITIONAL_QTY,CR_BUDGET,PROMOTION_ID,CREATED_BY,CREATED_DATE)"
 			+ " VALUES (?0,?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16,?17,?18,?19,?20,?21,?22,?23,?24"
-			+ ",?25,?26,?27,?28,?29,?30,?31,?32,?33,?34)";
-
-	private static String Pid = "SELECT (CASE WHEN MAX(PID) IS NULL THEN '000001' ELSE LPAD(CAST(MAX(CAST(PID AS UNSIGNED)) + 1 AS CHAR),6,0) END) AS PID FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE MOC=?0 ";
-
+			+ ",?25,?26,?27,?28,?29,?30,?31,?32,?33,?34)";*/
+	private static String SQL_QUERY_INSERT_INTO_PROMO_TABLE = "INSERT INTO TBL_PROCO_PROMOTION_MASTER_V2 "
+			+ "(CHANNEL_NAME,MOC_NAME,PPM_ACCOUNT,PROMO_TIMEPERIOD,BASEPACK_CODE,BASEPACK_DESC,CHILD_BASEPACK_CODE,OFFER_DESC,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,BUDGET,CLUSTER,MOC_YEAR,BRANCH,USER_ID,TEMPLATE_TYPE,QUANTITY,AB_CREATION,START_DATE,END_DATE,MOC"
+			+ ",CREATED_BY,CREATED_DATE,STATUS,ACTIVE) "
+			+ "VALUES ( ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22,?23,?24,?25,?26)";
+			
+	private static String Pid = "SELECT (CASE WHEN MAX(PID) IS NULL THEN '000001' ELSE LPAD(CAST(MAX(CAST(PID AS UNSIGNED)) + 1 AS CHAR),6,0) END) AS PID FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE MOC_NAME=?0 AND MOC_YEAR=?1"; // ONLY NEED MOC NAME AND YEAR
+	
+	Map<String, String> commanmap=new HashMap<String, String>();
+	
+	
+	
 	public String createPromotion(CreateBeanRegular[] beans, String uid, String template, String categories) {
 		// TODO Auto-generated method stub
-
+		
 		Query queryToDelete = sessionFactory.getCurrentSession()
 				.createNativeQuery("DELETE from TBL_PROCO_PROMOTION_MASTER_TEMP_V2 where USER_ID=:userId");
 		queryToDelete.setString("userId", uid);
 		queryToDelete.executeUpdate();
-
+		
+		Map<String,String> datehandle=datafromtable.handleDates();
+		
+		ArrayList<String> ppm_account=new ArrayList<String>();
+		ArrayList<String> cluster=new ArrayList<String>();
+		
+		datafromtable.getAllClusterBasedOnPPM(ppm_account, cluster);
+		
 		Query query = (Query) sessionFactory.getCurrentSession()
 				.createNativeQuery(SQL_QUERY_INSERT_INTO_PROMOTION_MASTER_TEMP);
 		Map<String, String> branchmap = getValidBranch();
 		Map<String, String> abmap = getValidAbcreation();
 		Map<String, String> secmap = getValidSecondaryChannel();
-		Map<String, ArrayList<String>> validationmap = getAllValidationRecords();
+		Map<String, ArrayList<String>> validationmap = datafromtable.getAllValidationRecords();
 
 		// Mayur Adding changes for mapping of TME user for category
 		Map<String, String> duplicateMap = new HashMap<String, String>();
 		List<String> listofcategory = Arrays.asList(categories.split(",")).stream().map(String::trim)
 				.collect(Collectors.toList());
-
+		
 		if (categories.contains("'")) {
 			int i = 0;
 			for (String category : listofcategory) {
@@ -77,48 +108,97 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		}
 		Map<String, String> basepackmap = getAllCategory(listofcategory);
 		Map<String, String> promotimemap = getAllTDPTimeperiod();
-
+		datafromtable.getPresentPromo(commanmap);
 		for (CreateBeanRegular bean : beans) {
-			if (!duplicateMap.containsKey(bean.getPpm_account() + bean.getBasepack_code() + bean.getCluster()
-					+ bean.getMoc() + bean.getOffer_desc())) {
-				query.setString(0, bean.getChannel());
-				query.setString(1, bean.getMoc());
+		/*	if (!duplicateMap.containsKey(bean.getPpm_account() + bean.getBasepack_code() + bean.getCluster()
+					+ moc_from_db + bean.getOffer_desc())) {*/
 
+			    query.setString(1, bean.getChannel());
+				query.setString(2, bean.getMoc_name());
 				query.setString(3, bean.getPpm_account());
 				query.setString(4, bean.getPromo_time_period());
-				query.setString(6, bean.getBasepack_code());
-				query.setString(7, bean.getBaseback_desc());
-				query.setString(8, bean.getC_pack_code());
-				query.setString(9, bean.getOffer_desc());
-				query.setString(10, bean.getOfr_type());
-				query.setString(11, bean.getOffer_mod());
-				// query.setString(12, bean.getPrice_off());
+				query.setString(5, bean.getBasepack_code());
+				query.setString(6, bean.getBaseback_desc());
+				query.setString(7, bean.getC_pack_code());
+				query.setString(8, bean.getOffer_desc());
+				query.setString(9, bean.getOfr_type());
+				query.setString(10, bean.getOffer_mod());
+				query.setString(11, bean.getPrice_off());
+				query.setString(12, bean.getBudget());
+				query.setString(13, bean.getCluster());
+				query.setString(14, bean.getYear());	
+				
+				if (datafromtable.validateYear(bean.getYear(),bean.getMoc_name())) {
+					query.setString(23, bean.getYear());
+				
+				}else
+				{
+					error_msg += "Invalid Year";
+					flag = 1;
+					query.setString(23, "");
+				}
+				try {
+				if (flag == 0) {
+					if (commanmap.containsKey(bean.getMoc_name() + bean.getYear())) {
+						query.setString(23, commanmap.get(bean.getMoc_name() + bean.getYear()));
+					} else {
+						 moc_from_db = datafromtable.getMOC(bean.getMoc_name(), bean.getYear());
+						query.setString(23, moc_from_db);
+						commanmap.put(bean.getMoc_name() + bean.getYear(), moc_from_db);
+					}
+
+				}
+				}catch (Exception e)
+				{
+					logger.error(e);
+				}
+					
+				
 				if (isStringNumber(bean.getBudget()))
-					query.setString(13, bean.getBudget().isEmpty() ? ""
+					query.setString(12, bean.getBudget().isEmpty() ? ""
 							: String.valueOf((double) Math.round(Double.parseDouble(bean.getBudget()) * 100) / 100));
 				else
-					query.setString(13, bean.getBudget());
-				query.setString(14, branchmap.get(bean.getCluster().toUpperCase()));
-				query.setString(15, bean.getCluster());
+					query.setString(12, bean.getBudget());
+				query.setString(15, branchmap.get(bean.getCluster().toUpperCase()));
+				query.setString(13, bean.getCluster());
 				query.setString(16, uid);
-				query.setString(20, template);
-
+				
+				query.setString(18, "");
+				
 				if (template.equalsIgnoreCase("new") || template.equalsIgnoreCase("regular")) {
+					//MOC_NAME,PPM_ACCOUNT,BASEPACK_CODE
 					if (template.equalsIgnoreCase("new"))
 					{
+						String mapid=bean.getMoc_name()+bean.getPpm_account()+bean.getBasepack_code()+bean.getCluster();
+						if(commanmap.containsKey(mapid))
+						{
+							if(flag==1)
+							{
+								error_msg=error_msg+",promo entry already exists against promo ID, created by "+commanmap.get(mapid);
+							}
+							else
+							{
+								error_msg=error_msg+"promo entry already exists against promo ID, created by "+commanmap.get(mapid);
+							}
+						
+							flag=1;
+							
+						}
+						query.setString(17, "NE");
 						if (isStringNumber(bean.getQuantity()))
-							query.setString(21, bean.getQuantity().isEmpty() ? ""
+							query.setString(18, bean.getQuantity().isEmpty() ? ""
 									: String.valueOf(
 											(double) Math.round(Double.parseDouble(bean.getQuantity()) * 100) / 100));
 						else {
-							query.setString(21, bean.getQuantity());
+							query.setString(18, bean.getQuantity());
 						}
 					}
 					else
 						query.setString(21, "");
-					query.setString(2, secmap.get(bean.getPpm_account().toUpperCase()));
-					query.setString(5, abmap.get(bean.getPpm_account().toUpperCase()));
-					query.setString(22, "");
+					query.setString(17, "R");
+					//query.setString(2, secmap.get(bean.getPpm_account().toUpperCase()));
+					query.setString(19, abmap.get(bean.getPpm_account().toUpperCase()));
+				/*	query.setString(22, "");
 					query.setString(23, "");
 					query.setString(24, "");
 					query.setString(25, "");
@@ -127,7 +207,45 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					query.setString(28, "");
 					query.setString(29, "");
 					query.setString(30, "");
-
+					
+					
+*/
+					
+					if(!cluster.get(ppm_account.indexOf(bean.getPpm_account())).equalsIgnoreCase(bean.getCluster()))
+					{
+						if(flag==1)
+						{
+							error_msg = error_msg+",Invalid "+bean.getPpm_account()+" for "+ bean.getCluster();
+						}else
+							error_msg = error_msg+",Invalid "+bean.getPpm_account()+" for "+ bean.getCluster();
+						
+						flag=1;
+							
+					}
+					
+					if(commanmap.containsKey(bean.getMoc_name()+bean.getPpm_account()+bean.getBasepack_code()))
+					{
+						if(flag==1)
+						{
+							if(template.equalsIgnoreCase("regular"))
+							error_msg=error_msg+",Promo entry already exist against promo ID, created by "+commanmap.get(bean.getMoc_name()+bean.getPpm_account()+bean.getBasepack_code())+" "
+									+ " ,Request to give entry as CR";
+							else
+								error_msg=error_msg+",promo ID against other clusters exist, give entry as CR";
+						}
+						else
+						{
+							if(template.equalsIgnoreCase("regular"))
+								error_msg=error_msg+",Promo entry already exist against promo ID, created by "+commanmap.get(bean.getMoc_name()+bean.getPpm_account()+bean.getBasepack_code())+" "
+										+ " ,Request to give entry as CR";
+								else
+									error_msg=error_msg+"promo ID against other clusters exist, give entry as CR";
+						}
+					
+						flag=1;
+						
+					}
+					
 					if (!validationmap.get("baseback").contains(bean.getC_pack_code())) {
 						if (!bean.getC_pack_code().isEmpty()) {
 							if (flag == 1)
@@ -156,94 +274,131 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							flag = 1;
 						}
 					}
+					
+					//Adding new changes for start date and end date
+					String moc_group = datehandle.get(bean.getChannel()+ "_" + bean.getPpm_account());
+					String moc_name = bean.getMoc_name(), moc_year = bean.getYear();
+					String start_key = moc_name + moc_year + moc_group + "_start_date";
+					String end_key = moc_name + moc_year + moc_group + "_end_date";
+					if(flag==0)
+					if (!datehandle.containsKey(start_key) && !datehandle.containsKey(end_key)) {
+						if(flag==1)
+							error_msg += ",Invalid Back Dated MOC";
+							else
+								error_msg += "Invalid Back Dated MOC";
+								
+							flag = 1;
+					} 
+					
+					//change end
+					
 					// Mayur Added changes for promo time period
+					
 					String promotime = bean.getPromo_time_period();
 					if (promotime.isEmpty()) {
 						if (flag == 1)
-							error_msg = error_msg + ",Invalid Promo Timeperiod";
+							error_msg = error_msg + ",Invalid promo timeperiod entry";
 						else {
-							error_msg = error_msg + "Invalid Promo Timeperiod";
+							error_msg = error_msg + "Invalid promo timeperiod entry";
 							flag = 1;
 						}
-						query.setString(18, "");
-						query.setString(19, "");
+						query.setString(20, "");
+						query.setString(21, "");
 					} else {
 						if (promotime.equalsIgnoreCase("bm") || promotime.equalsIgnoreCase("moc")
 								|| promotime.equalsIgnoreCase("26 to 25")) {
 
-							if (!promotimemap.containsKey(bean.getMoc() + bean.getPromo_time_period() + "start_date")
+							if (!promotimemap.containsKey(moc_from_db + bean.getPromo_time_period() + "start_date")
 									&& !promotimemap
-											.containsKey(bean.getMoc() + bean.getPromo_time_period() + "end_date")) {
-								String new_moc = bean.getMoc().length() == 6
-										? bean.getMoc().substring(4, bean.getMoc().length())
-												+ bean.getMoc().substring(0, 4)
-										: bean.getMoc();
+											.containsKey(moc_from_db + bean.getPromo_time_period() + "end_date")) {
+						/*	String new_moc = moc_from_db.length() == 6
+								
+										? moc_from_db.substring(4, moc_from_db.length())
+												+ moc_from_db.substring(0, 4)
+										: moc_from_db;*/
+								String new_moc=moc_from_db;
 								String promString = "";
 								if (promotime.equalsIgnoreCase("bm")) {
 									promString = "SELECT START_DATE,END_DATE FROM TBL_VAT_MOC_MASTER WHERE MOC='"
-											+ new_moc + "' AND MOC_GROUP='GROUP_THREE'";
+											+ new_moc + "' AND MOC_GROUP='GROUP_THREE' AND MOC_YEAR="+moc_year;
 								} else if (promotime.equalsIgnoreCase("moc")) {
 									promString = "SELECT START_DATE,END_DATE FROM TBL_VAT_MOC_MASTER WHERE MOC='"
-											+ new_moc + "' AND MOC_GROUP='GROUP_ONE'";
+											+ new_moc + "' AND MOC_GROUP='GROUP_ONE' AND MOC_YEAR="+moc_year;
 								} else if (promotime.equalsIgnoreCase("26 to 25")) {
 									promString = "SELECT START_DATE,END_DATE FROM TBL_VAT_MOC_MASTER WHERE MOC='"
-											+ new_moc + "' AND MOC_GROUP='GROUP_TWO'";
+											+ new_moc + "' AND MOC_GROUP='GROUP_TWO' AND MOC_YEAR="+moc_year;
 								}
-
+								
 								List<Object[]> promolist = sessionFactory.getCurrentSession()
 										.createNativeQuery(promString).list();
 								if (promolist.size() == 0) {
-									if(flag==1)
-										error_msg = error_msg + ",Start date and end date doesn't exists for " + promotime
-										+ " AND " + bean.getMoc() + "";
-									else
-									error_msg = error_msg + "Start date and end date doesn't exists for " + promotime
-											+ " AND " + bean.getMoc() + "";
-									flag = 1;
-									query.setString(18, "");
-									query.setString(19, "");
+									if (flag == 0) {
+										if (flag == 1)
+											error_msg = error_msg + ",Invalid promo timeperiod entry";
+										else
+											error_msg = error_msg + "Invalid promo timeperiod entry";
+										flag = 1;
+									}
+									query.setString(20, "");
+									query.setString(21, "");
 
 								} else {
 									for (Object[] a : promolist) {
-										promotimemap.put(bean.getMoc() + bean.getPromo_time_period() + "start_date",
+										promotimemap.put(moc_from_db + bean.getPromo_time_period() + "start_date",
 												a[0].toString());
-										promotimemap.put(bean.getMoc() + bean.getPromo_time_period() + "end_date",
+										promotimemap.put(moc_from_db + bean.getPromo_time_period() + "end_date",
 												a[1].toString());
-										query.setString(18, a[0].toString());
-										query.setString(19, a[1].toString());
+										if(datehandle.containsKey(moc_name + moc_year + "Y"))
+										{
+											query.setString(20,datehandle.get(moc_name + moc_year + "Y"));
+										}else
+										{
+											query.setString(20, a[0].toString());
+										}
+										
+										query.setString(21, a[1].toString());
 									}
 
 								}
 
 							} else {
-								query.setString(18,
-										promotimemap.get(bean.getMoc() + bean.getPromo_time_period() + "start_date"));
-								query.setString(19,
-										promotimemap.get(bean.getMoc() + bean.getPromo_time_period() + "end_date"));
+								query.setString(20,
+										promotimemap.get(moc_from_db + bean.getPromo_time_period() + "start_date"));
+								query.setString(21,
+										promotimemap.get(moc_from_db + bean.getPromo_time_period() + "end_date"));
 							}
 
 						} else {
-							String converted_moc = bean.getMoc().length() == 6
-									? bean.getMoc().substring(4, bean.getMoc().length()) + bean.getMoc().substring(0, 4)
-									: bean.getMoc();
+					    /*	String converted_moc = moc_from_db.length() == 6
+									  ? moc_from_db.substring(4, moc_from_db.length()) + moc_from_db.substring(0, 4)
+									: moc_from_db; */
+							String converted_moc=moc_from_db;
 							if (!promotimemap.containsKey(
 									converted_moc + bean.getPromo_time_period().toUpperCase() + "start_date")
 									&& !promotimemap.containsKey(
 											converted_moc + bean.getPromo_time_period().toUpperCase() + "end_date")) {
-								if (flag == 1)
-									error_msg = error_msg + "," + promotime + " is not part of moc:" + bean.getMoc()
-											+ ", please enter proper TDP";
-								else {
-									error_msg = error_msg + "" + promotime + " is not part of moc:" + bean.getMoc()
-											+ ", please enter proper TDP";
-									flag = 1;
+								if (flag == 0) {
+									if (flag == 1)
+										error_msg = error_msg + ",Invalid promo timeperiod entry";
+									else {
+										error_msg = error_msg + "Invalid promo timeperiod entry";
+										flag = 1;
+									}
 								}
-								query.setString(18, "");
-								query.setString(19, "");
+								query.setString(20, "");
+								query.setString(21, "");
 							} else {
-								query.setString(18, promotimemap
-										.get(converted_moc + bean.getPromo_time_period().toUpperCase() + "start_date"));
-								query.setString(19, promotimemap
+								
+								if(datehandle.containsKey(moc_name + moc_year + "Y"))
+								{
+									query.setString(20,datehandle.get(moc_name + moc_year + "Y"));
+								}else
+								{
+									query.setString(20, promotimemap
+											.get(converted_moc + bean.getPromo_time_period().toUpperCase() + "start_date"));
+								}
+								
+								query.setString(21, promotimemap
 										.get(converted_moc + bean.getPromo_time_period().toUpperCase() + "end_date"));
 							}
 						}
@@ -255,36 +410,36 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							|| bean.getOfr_type().equalsIgnoreCase("STPR Liquidation")) {
 						if (price_off.isEmpty()) {
 							if (flag == 1) {
-								error_msg = error_msg + ",Invalid Price Off";
+								error_msg = error_msg + ",Price off mismatch with description";
 								flag = 1;
 							} else {
-								error_msg = error_msg + "Invalid Price Off";
+								error_msg = error_msg + "Price off mismatch with description";
 								flag = 1;
 							}
 
-							query.setString(12, "");
+							query.setString(11, "");
 
 						} else {
 							if (price_off.endsWith("%") && isStringNumber(price_off.split("%")[0])) {
-								query.setString(12, bean.getPrice_off().isEmpty() ? ""
+								query.setString(11, bean.getPrice_off().isEmpty() ? ""
 										: String.valueOf(
 												(double) Math.round(Double.parseDouble(price_off.split("%")[0]) * 100)
 														/ 100)
 												+ "%");
 							} else if (isStringNumber(price_off)) {
-								query.setString(12, bean.getPrice_off().isEmpty() ? ""
+								query.setString(11, bean.getPrice_off().isEmpty() ? ""
 										: String.valueOf(
 												(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100)
 														/ 100));
 
 							} else {
 								if (flag == 1) {
-									error_msg = error_msg + ",Price off invalid for STPR/STPR Liquidation";
-									query.setString(12, bean.getPrice_off());
+									error_msg = error_msg + ",Price off mismatch with description";
+									query.setString(11, bean.getPrice_off());
 									flag = 1;
 								} else {
-									error_msg = error_msg + " Price off invalid for STPR/STPR Liquidation";
-									query.setString(12, bean.getPrice_off());
+									error_msg = error_msg + "Price off mismatch with description";
+									query.setString(11, bean.getPrice_off());
 									flag = 1;
 								}
 
@@ -295,12 +450,12 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					} else {
 						if(isStringNumber(bean.getPrice_off()))
 						{
-						query.setString(12, bean.getPrice_off().isEmpty() ? ""
+						query.setString(11, bean.getPrice_off().isEmpty() ? ""
 								: String.valueOf(
 										(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100) / 100));
 						}else
 						{
-							query.setString(12,bean.getPrice_off());
+							query.setString(11,bean.getPrice_off());
 						}
 						if (bean.getBudget().isEmpty() || !isStringNumber(bean.getBudget())) {
 							if (flag == 1) {
@@ -339,7 +494,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 									SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 									SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
 									String new_date = sdf2.format(sdf.parse(bean.getEnd_date().replace("/", "-")));
-									if (!isMocInFormat(bean.getMoc())
+									if (!isMocInFormat(moc_from_db)
 											// || !validationmap.get("AB creation").contains(bean.getAb_creation())
 											|| bean.getPpm_account().contains(",")) {
 										query.setString(18, "");
@@ -353,7 +508,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 										}
 									} else {
 										String startDate = getStartDate(
-												bean.getMoc().substring(4, 6).concat(bean.getMoc().substring(0, 4)),
+												moc_from_db.substring(4, 6).concat(moc_from_db.substring(0, 4)),
 												bean.getPpm_account(), new_date);
 										if (startDate.isEmpty() || startDate.equals("")) {
 											error_msg = error_msg + "Invalid Date extension DATE should with in moc";
@@ -390,7 +545,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 					} else {
 						List<Object[]> se_date = getStartEndDate(
-								bean.getMoc().substring(4, 6).concat(bean.getMoc().substring(0, 4)),
+								moc_from_db.substring(4, 6).concat(moc_from_db.substring(0, 4)),
 								bean.getPpm_account());
 						if (!se_date.isEmpty()) {
 							query.setString(18, se_date.get(0)[0].toString()); // start date
@@ -508,20 +663,23 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 				if (!validationmap.get("Channel name").contains(bean.getChannel().toUpperCase())) {
 
-					if (flag == 1)
+					if (flag == 1) {
 						error_msg = error_msg + ",Invalid Channel";
+						flag = 1;
+					}
 					else {
 						error_msg = error_msg + "Invalid Channel";
 						flag = 1;
 					}
 				}
+				
 				if (!validationmap.get("PPM Account").contains(bean.getPpm_account().toUpperCase())
 						|| bean.getPpm_account().contains(",")) {
 
 					if (flag == 1)
-						error_msg = error_msg + ",Invalid Account";
+						error_msg = error_msg + ",Invalid Account/Inactive";
 					else {
-						error_msg = error_msg + "Invalid Account";
+						error_msg = error_msg + "Invalid Account/Inactive";
 						flag = 1;
 					}
 				}
@@ -553,9 +711,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						flag = 1;
 					}
 				}
-
-				if (!bean.getMoc().isEmpty()) {
-					if (bean.getMoc().length() != 6 || !isMocInFormat(bean.getMoc())) {
+				/*
+				if (!moc_from_db.isEmpty()) {
+					if (moc_from_db.length() != 6 || !isMocInFormat(moc_from_db)) {
 						if (flag == 1)
 							error_msg = error_msg + ",Invalid MOC format";
 						else {
@@ -567,7 +725,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					error_msg = error_msg + "Error MOC";
 					flag = 1;
 				}
-
+				*/
 				if (bean.getOffer_desc().isEmpty() || bean.getOffer_desc().equals("")) {
 					if (flag == 1) {
 						error_msg = error_msg + ",Offer description should not be empty";
@@ -582,19 +740,20 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				if (flag == 1)
 					globle_flag = 1;
 
-				query.setString(17, error_msg);
+				query.setString(22, error_msg);
 				query.executeUpdate();
 				
 				error_msg = "";
 				flag = 0;
 
-				duplicateMap.put(bean.getPpm_account() + bean.getBasepack_code() + bean.getCluster() + bean.getMoc()
+				/*
+				duplicateMap.put(bean.getPpm_account() + bean.getBasepack_code() + bean.getCluster() + moc_from_db
 						+ bean.getOffer_desc(), "");
 
-			}
+			}*/
 		}
 
-		if (globle_flag == 0) {
+		/*if (globle_flag == 0) {
 			String up_query = "UPDATE TBL_PROCO_PROMOTION_MASTER_TEMP_V2 A INNER JOIN TBL_PROCO_PROMOTION_MASTER_V2  B"
 					+ " ON A.MOC=B.MOC AND A.CUSTOMER_CHAIN_L2=B.CUSTOMER_CHAIN_L2 AND A.BASEPACK_CODE=B.BASEPACK_CODE"
 					+ " AND A.CLUSTER=B.CLUSTER AND A.OFFER_DESC=B.OFFER_DESC "
@@ -611,10 +770,59 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				globle_flag = 1;
 			}
 
+		}*/
+		
+		
+		
+		datafromtable.updatePPMDescStage(uid);
+
+		String getPPM_DESC_STAGE = "select CHANNEL_NAME,MOC_NAME,PPM_ACCOUNT,BASEPACK_CODE,PPM_DESC_STAGE from TBL_PROCO_PROMOTION_MASTER_TEMP_V2 where USER_ID='"
+				+ uid + "' ";
+		List<Object[]> listofstage = sessionFactory.getCurrentSession().createNativeQuery(getPPM_DESC_STAGE).list();
+
+		for (Object[] obj : listofstage) {
+			commanmap.put(
+					String.valueOf(obj[0]) + String.valueOf(obj[1]) + String.valueOf(obj[2]) + String.valueOf(obj[3]),
+					String.valueOf(obj[4]));
 		}
+
+		//Set<String> existingRecords=datafromtable.updateExistingPromoId(uid);//REMOVE
+		
+        LocalDate l=LocalDate.now();
+        
+        Month currentMonth=l.getMonth();
+        int month =currentMonth.getValue();
+        int day=l.getDayOfMonth();
+        
+        String sMonth="";
+        String sDay="";
+       if(month<10 )
+       {
+    	   sMonth="0"+month;
+       }
+       if(day<10)
+       {
+    	   sDay="0"+day;
+       }
+        
+		for (CreateBeanRegular bean : beans) {
+		 /*  if(!existingRecords.contains(bean.getBasepack_code()+bean.getMoc_name()+bean.getPpm_account()))
+		   {*/
+			   String ppm_desc_stage=commanmap.get(bean.getChannel()+bean.getMoc_name()+bean.getPpm_account()+bean.getBasepack_code());
+			   String pid=getPID(bean.getMoc_name(),bean.getYear(),bean.getPpm_account(),bean.getBasepack_code(),ppm_desc_stage); 
+			  
+			   String moc=commanmap.get(bean.getMoc_name() + bean.getYear());
+			   String mocinddyy=moc.substring(0,2)+moc.substring(moc.length()-2,moc.length());
+			   String pomoid=createNewPromoId(template,sDay+sMonth,mocinddyy,pid);
+			   //String promoid, String moc_name, String ppm_account, String basepack_code
+			   datafromtable.updatePromoIdInTemp(pomoid, bean.getMoc_name(), bean.getPpm_account(), bean.getBasepack_code(),pid);
+		   //}
+		}
+		
 		if (globle_flag == 0) {
 
-			saveTomainTable(beans, uid, template, promotimemap);
+			//saveTomainTable(beans, uid, template, promotimemap,branchmap,abmap,datehandle);
+			saveToMain(uid);
 			globle_flag = 0;
 			return "EXCEL_UPLOADED";
 
@@ -623,6 +831,15 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			return "EXCEL_NOT_UPLOADED";
 		}
 
+	}
+	
+	public void saveToMain(String uid)
+	{
+		String insertString="INSERT INTO TBL_PROCO_PROMOTION_MASTER_V2 (CHANNEL_NAME, MOC, MOC_NAME, MOC_YEAR, PPM_ACCOUNT, PROMO_TIMEPERIOD, AB_CREATION, BASEPACK_CODE, BASEPACK_DESC, CHILD_BASEPACK_CODE, OFFER_DESC, OFFER_TYPE, OFFER_MODALITY, PRICE_OFF, BUDGET, BRANCH, CLUSTER, PROMO_ID,  PID,START_DATE, END_DATE, TEMPLATE_TYPE, USER_ID, PPM_DESC_STAGE, PPM_DESC,STATUS,ACTIVE,CREATED_BY)\r\n"
+				+ "SELECT CHANNEL_NAME, MOC, MOC_NAME, MOC_YEAR, PPM_ACCOUNT, PROMO_TIMEPERIOD, AB_CREATION, BASEPACK_CODE, BASEPACK_DESC, CHILD_BASEPACK_CODE, OFFER_DESC, OFFER_TYPE, OFFER_MODALITY, PRICE_OFF, BUDGET, BRANCH, CLUSTER, PROMO_ID,  PID,START_DATE, END_DATE, TEMPLATE_TYPE, USER_ID, PPM_DESC_STAGE, PPM_DESC,'1','1','"+uid+"'\r\n"
+				+ "FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE USER_ID='"+uid+"'";
+		sessionFactory.getCurrentSession().createNativeQuery(insertString).executeUpdate();
+		
 	}
 
 	private Map<String, String> getAllTDPTimeperiod() {
@@ -659,26 +876,6 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		return map;
 	}
 
-	private Map<String, ArrayList<String>> getAllValidationRecords() {
-		Map<String, ArrayList<String>> validationmap = new HashMap<String, ArrayList<String>>();
-		validationmap.put("SOL TYPE", getSOLType());
-		validationmap.put("Channel name", getValidChannels());
-		validationmap.put("PPM Account", getValidPPMAccount());
-		// validationmap.put("AB creation", getABCreation());
-		validationmap.put("baseback", getValidBasepack());
-		validationmap.put("offer type", getValidOfferType());
-		validationmap.put("Offer modality", getValidOfferModality());
-		// validationmap.put("branch", getValidBranch());
-		// validationmap.put("Secondary", getValidSec());
-		validationmap.put("cluster", getValidCluster());
-		return validationmap;
-	}
-
-	private ArrayList<String> getSOLType() {
-		String SOLType = "SELECT DISTINCT SOL_TYPE FROM TBL_PROCO_SOL_TYPE";
-
-		return (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(SOLType).list();
-	}
 
 	private String getStartDate(String concat, String ppm_account, String promo_time_period) {
 		String start_date_c = "SELECT count(START_DATE) FROM TBL_PROCO_CUSTOMER_MASTER_V2 A"
@@ -722,207 +919,20 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		return sessionFactory.getCurrentSession().createNativeQuery(se_query).list();
 	}
 
-	private void saveTomainTable(CreateBeanRegular[] beans, String uid, String template,
-			Map<String, String> promotimemap) {
-
-		Query query = sessionFactory.getCurrentSession().createNativeQuery(SQL_QUERY_INSERT_INTO_PROMO_TABLE);
-		Map<String, String> branchmap = getValidBranch();
-		Map<String, String> secondary = getValidSecondaryChannel();
-		Map<String, String> ab = getValidAbcreation();
-		query.setString(33, uid);
-		String cur_date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-		try {
-			query.setParameter(34, new SimpleDateFormat("dd/MM/yyyy").parse(cur_date));
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} // "STR_TO_DATE("+new SimpleDateFormat("dd/MM/yyyy").format(new
-			// Date()).toString()+",'%d/%m/%Y')");
-		Map<String, String> dupmap = new HashMap<String, String>();
-
-		for (CreateBeanRegular bean : beans) {
-			if (!dupmap.containsKey(bean.getPpm_account() + bean.getBasepack_code() + bean.getCluster() + bean.getMoc()
-					+ bean.getOffer_desc())) {
-				query.setString(0, bean.getChannel());
-				query.setString(1, bean.getMoc());
-
-				query.setString(3, bean.getPpm_account());
-				query.setString(4, bean.getPromo_time_period());
-				query.setString(6, bean.getBasepack_code());
-				query.setString(7, bean.getBaseback_desc());
-				query.setString(8, bean.getC_pack_code());
-				query.setString(9, bean.getOffer_desc());
-				query.setString(10, bean.getOfr_type());
-				query.setString(11, bean.getOffer_mod());
-				//Mayur changes for handling round off value for price off
-				if (bean.getPrice_off().isEmpty()) {
-					query.setString(12, "");
-				} else {
-					if(bean.getPrice_off().endsWith("%") && !isStringNumber(bean.getPrice_off().split("%")[0]))
-					{
-						query.setString(12,bean.getPrice_off());
-					}else
-					{
-						if(isStringNumber(bean.getPrice_off()) && !bean.getPrice_off().endsWith("%") )
-						{
-							query.setString(12,String.valueOf((Long) Math.round(Double.parseDouble(bean.getPrice_off()) * 100) / 100));
-						}else
-						{
-							if(isStringNumber(bean.getPrice_off().split("%")[0]))
-							{
-								query.setString(12,String.valueOf((Long) Math.round(Double.parseDouble(bean.getPrice_off().split("%")[0]) * 100) / 100)+"%");
-							}else
-							{
-							query.setString(12,bean.getPrice_off());
-							}
-						}
-					}
-//					query.setString(12, bean.getPrice_off().endsWith("%") ? String.valueOf(
-//							(Long) Math.round(Double.parseDouble(bean.getPrice_off().split("%")[0]) * 100) / 100) + "%"
-//							: String.valueOf((Long) Math.round(Double.parseDouble(bean.getPrice_off()) * 100) / 100));
-				}
-				if(isStringNumber(bean.getBudget()))
-				query.setString(13, bean.getBudget().isEmpty() ? ""
-						: String.valueOf((double) Math.round(Double.parseDouble(bean.getBudget()) * 100) / 100));
-				else
-					query.setString(13,bean.getBudget());
-				query.setString(14, branchmap.get(bean.getCluster().toUpperCase()));
-				query.setString(15, bean.getCluster());
-				query.setString(16, uid);
-				query.setString(21, template);
-				query.setString(23, "1");
-				query.setString(24, "1");
-
-				if (template.equalsIgnoreCase("new") || template.equalsIgnoreCase("regular")) {
-					if (template.equalsIgnoreCase("new"))
-						query.setString(22, bean.getQuantity());
-					else
-						query.setString(22, "");
-
-					query.setString(2, secondary.get(bean.getPpm_account().toUpperCase()));
-					query.setString(5, ab.get(bean.getPpm_account().toUpperCase()));
-					query.setString(25, "");
-					query.setString(26, "");
-					query.setString(27, "");
-					query.setString(28, "");
-					query.setString(29, "");
-					query.setString(30, "");
-					query.setString(31, "");
-					query.setString(32, "");
-					// mayur changes for promo time period
-
-					if (bean.getPromo_time_period().equalsIgnoreCase("bm")
-							|| bean.getPromo_time_period().equalsIgnoreCase("moc")
-							|| bean.getPromo_time_period().equalsIgnoreCase("26 to 25")) {
-
-						query.setString(19,
-								promotimemap.get(bean.getMoc() + bean.getPromo_time_period() + "start_date"));
-						query.setString(20, promotimemap.get(bean.getMoc() + bean.getPromo_time_period() + "end_date"));
-
-					} else {
-						String converted_moc = bean.getMoc().length() == 6
-								? bean.getMoc().substring(4, bean.getMoc().length()) + bean.getMoc().substring(0, 4)
-								: bean.getMoc();
-						query.setString(19, promotimemap
-								.get(converted_moc + bean.getPromo_time_period().toUpperCase() + "start_date"));
-						query.setString(20, promotimemap
-								.get(converted_moc + bean.getPromo_time_period().toUpperCase() + "end_date"));
-
-					}
-					// mayur End
-
-				} else if (template.equalsIgnoreCase("cr")) {
-					query.setString(22, bean.getQuantity());
-
-					if (bean.getSol_type().equalsIgnoreCase("_DE_")) {
-						try {
-
-							if (isPromoTimeisValid(bean.getEnd_date())) {
-								SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-								SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-								String new_date = sdf2.format(sdf.parse(bean.getEnd_date().replace("/", "-")));
-								String startDate = getStartDate(
-										bean.getMoc().substring(4, 6).concat(bean.getMoc().substring(0, 4)),
-										bean.getPpm_account(), new_date);
-								if (startDate.isEmpty() || startDate.equals("")) {
-									query.setString(19, "");
-									query.setString(20, "");
-								}
-
-								SimpleDateFormat sdf_1 = new SimpleDateFormat("dd/MM/yyyy");
-								SimpleDateFormat sdf_2 = new SimpleDateFormat("yyyy/MM/dd");
-								query.setString(19, sdf_1.format(sdf_2.parse(startDate.replace("-", "/"))));
-								query.setString(20, bean.getEnd_date());
-							} else {
-								query.setString(19, "");
-
-								query.setString(20, "");
-							}
-
-						} catch (Exception e) {
-							logger.debug("Exception: ", e);
-
-						}
-					} else {
-						String new_moc = bean.getMoc();
-
-						List<Object[]> se_date = getStartEndDate(
-								new_moc.substring(4, 6).concat(new_moc.substring(0, 4)), bean.getPpm_account());
-
-						query.setString(19, se_date.get(0)[0].toString()); // start date
-						query.setString(20, se_date.get(0)[1].toString()); // end date
-					}
-					query.setString(2, bean.getSecondary_channel());
-					query.setString(5, bean.getAb_creation());
-					query.setString(25, bean.getSol_type());
-					query.setString(26, bean.getEnd_date());
-					query.setString(27, bean.getCluster_selection());
-					query.setString(28, bean.getBasepack_addition());
-					query.setString(29, bean.getTopup());
-					query.setString(30, bean.getAdditional_QTY());
-					query.setString(31, bean.getAddition_budget());
-					query.setString(32, bean.getExisting_sol_code());
-
-				}
-
-				if (promo_map.containsKey(bean.getMoc() + bean.getPpm_account() + bean.getOffer_desc()) && promo_map
-						.containsKey("Pid_max_" + bean.getMoc() + bean.getPpm_account() + bean.getOffer_desc())) {
-					query.setString(17, promo_map.get(bean.getMoc() + bean.getPpm_account() + bean.getOffer_desc()));
-					query.setString(18,
-							promo_map.get("Pid_max_" + bean.getMoc() + bean.getPpm_account() + bean.getOffer_desc()));
-				} else {
-
-					String new_pid = getPID(bean.getMoc());
-					String new_promo_id = createNewPromoId(bean.getMoc()) + new_pid;
-					promo_map.put(bean.getMoc() + bean.getPpm_account() + bean.getOffer_desc(), new_promo_id);
-					promo_map.put("Pid_max_" + bean.getMoc() + bean.getPpm_account() + bean.getOffer_desc(), new_pid);
-					query.setString(17, new_promo_id);
-					query.setString(18, new_pid);
-				}
-				/*
-				 * List<Object[]> promo_list = getPromoId(bean.getMoc(), bean.getPpm_account(),
-				 * bean.getOffer_desc());
-				 * 
-				 * if (promo_list == null || promo_list.size() == 0) { query.setString(17,
-				 * createNewPromoId(bean.getMoc())); query.setString(18, getPID(bean.getMoc()));
-				 * } else { for (int i = 0; i < promo_list.size(); i++) { query.setString(17,
-				 * promo_list.get(i)[0].toString()); query.setString(18,
-				 * promo_list.get(i)[1].toString()); // getting same PID } }
-				 */
-				query.executeUpdate();
-				dupmap.put(bean.getPpm_account() + bean.getBasepack_code() + bean.getCluster() + bean.getMoc()
-						+ bean.getOffer_desc(), "");
-			}
-		}
+	private String createNewPromoId(String template,String creation_date,String mocandyear,String pid) {
+		if(template.equalsIgnoreCase("regular"))
+			return "R"+creation_date+"P"+mocandyear+pid;
+		else if(template.equalsIgnoreCase("new"))
+			return "N"+creation_date+"P"+mocandyear+pid;
+		else
+			return "CR"+creation_date+"P"+mocandyear+pid;
 	}
 
-	private String createNewPromoId(String moc) {
-
-		return "PID_" + moc + "_";
-	}
-
-	private String getPID(String moc) {
-		String pid = sessionFactory.getCurrentSession().createNativeQuery(Pid).setString(0, moc).uniqueResult()
+	private String getPID(String moc,String year,String ppm_account,String basepack,String ppmdesc) {
+		Query q=sessionFactory.getCurrentSession().createNativeQuery(Pid);
+		q.setString(0, moc);
+		q.setString(1,year);
+		String pid = q.uniqueResult()
 				.toString();
 
 		return pid;
@@ -972,17 +982,12 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		return date != null;
 	}
 
-	private ArrayList<String> getValidCluster() {
-		String cluster_query = "SELECT DISTINCT CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER WHERE ACTIVE='1'";
-		ArrayList<String> ar = (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(cluster_query)
-				.list();
-		return (ArrayList<String>) ar.stream().map(String::toUpperCase).collect(Collectors.toList());
-	}
+
 
 	private Map<String, String> getValidBranch() {
 
 		Map<String, String> map = new HashMap<String, String>();
-		ArrayList<String> clusters = getValidCluster();
+		ArrayList<String> clusters = datafromtable.getValidCluster();
 		for (String cluster : clusters) {
 			String branch_query = "SELECT DISTINCT BRANCH FROM TBL_PROCO_CUSTOMER_MASTER WHERE ACTIVE='1' AND CLUSTER"
 					+ "= '" + cluster + "'";
@@ -997,30 +1002,15 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 	}
 
-	private ArrayList<String> getValidOfferModality() {
-		String mod_query = "SELECT DISTINCT MODALITY_NAME FROM TBL_PROCO_OFFER_MODALITY_MASTER WHERE ACTIVE='1'";
-		ArrayList<String> ar = (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(mod_query)
-				.list();
-		return (ArrayList<String>) ar.stream().map(String::toUpperCase).collect(Collectors.toList());
-	}
 
-	private ArrayList<String> getValidOfferType() {
-		String str_query = "SELECT DISTINCT OFFER_TYPE FROM TBL_PROCO_OFFER_TYPE_V2 WHERE ACTIVE='1'";
-		ArrayList<String> ar = (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(str_query)
-				.list();
-		return (ArrayList<String>) ar.stream().map(String::toUpperCase).collect(Collectors.toList());
-	}
 
-	private ArrayList<String> getValidBasepack() {
-		String basepack = "SELECT DISTINCT BASEPACK FROM TBL_VAT_PRODUCT_MASTER WHERE STATUS='Y'";
-		return (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(basepack).list();
-	}
+
 
 	private Map<String, String> getValidAbcreation() {
 
 		Map<String, String> map = new HashMap<String, String>();
 
-		ArrayList<String> ppmaccounts = getValidPPMAccount();
+		ArrayList<String> ppmaccounts = datafromtable.getValidPPMAccount();
 
 		for (String ppmac : ppmaccounts) {
 			String ab_query = "SELECT DISTINCT AB_CREATION FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y' AND"
@@ -1039,7 +1029,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 		Map<String, String> map = new HashMap<String, String>();
 
-		ArrayList<String> ppmaccounts = getValidPPMAccount();
+		ArrayList<String> ppmaccounts = datafromtable.getValidPPMAccount();
 		for (String ppmac : ppmaccounts) {
 			String ab_query = "SELECT DISTINCT SECONDARY_CHANNEL FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y' AND"
 					+ " PPM_ACCOUNT='" + ppmac + "'";
@@ -1053,20 +1043,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		return map;
 	}
 
-	private ArrayList<String> getValidPPMAccount() {
-		String ppm_qury = "SELECT DISTINCT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE  IS_ACTIVE='Y'";
-		ArrayList<String> ar = (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(ppm_qury)
-				.list();
-		return (ArrayList<String>) ar.stream().map(String::toUpperCase).collect(Collectors.toList());
 
-	}
 
-	private ArrayList<String> getValidChannels() {
-
-		String query = "SELECT DISTINCT CHANNEL_NAME FROM TBL_PROCO_CHANNEL_MASTER";
-		ArrayList<String> ar = (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(query).list();
-		return (ArrayList<String>) ar.stream().map(String::toUpperCase).collect(Collectors.toList());
-	}
 
 	private int excuteValidationQuery(String query) {
 		Query inner_query = (Query) sessionFactory.getCurrentSession().createNativeQuery(query);
