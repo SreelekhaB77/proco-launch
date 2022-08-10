@@ -75,7 +75,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 																																																									// AND
 																																																									// YEAR
 
-	Map<String, String> commanmap = new HashMap<String, String>();
+	
 
 	public String createPromotion(CreateBeanRegular[] beans, String uid, String template, String categories) {
 		// TODO Auto-generated method stub
@@ -117,6 +117,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		}
 		Map<String, String> basepackmap = getAllCategory(listofcategory);
 		Map<String, String> promotimemap = getAllTDPTimeperiod();
+		Map<String, String> commanmap = new HashMap<String, String>();
 		datafromtable.getPresentPromo(commanmap);
 		for (CreateBeanRegular bean : beans) {
 			if (!duplicateMap.containsKey(bean.getMoc_name() + bean.getYear() + bean.getPpm_account()+bean.getBasepack_code())) {
@@ -684,37 +685,37 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				flag = 0;
 			}
 		}
-		datafromtable.updatePPMDescStage(uid);
+		if (flag == 0) {
+			datafromtable.updatePPMDescStage(uid);
 
-		String getPPM_DESC_STAGE = "select CHANNEL_NAME,MOC_NAME,PPM_ACCOUNT,BASEPACK_CODE,PPM_DESC_STAGE from TBL_PROCO_PROMOTION_MASTER_TEMP_V2 where USER_ID='"
-				+ uid + "' ";
-		List<Object[]> listofstage = sessionFactory.getCurrentSession().createNativeQuery(getPPM_DESC_STAGE).list();
+			String getPPM_DESC_STAGE = "select CHANNEL_NAME,MOC_NAME,PPM_ACCOUNT,BASEPACK_CODE,PPM_DESC_STAGE from TBL_PROCO_PROMOTION_MASTER_TEMP_V2 where USER_ID='"
+					+ uid + "' ";
+			List<Object[]> listofstage = sessionFactory.getCurrentSession().createNativeQuery(getPPM_DESC_STAGE).list();
 
-		for (Object[] obj : listofstage) {
-			commanmap.put(
-					String.valueOf(obj[0]) + String.valueOf(obj[1]) + String.valueOf(obj[2]) + String.valueOf(obj[3]),
-					String.valueOf(obj[4]));
+			for (Object[] obj : listofstage) {
+				commanmap.put(String.valueOf(obj[0]) + String.valueOf(obj[1]) + String.valueOf(obj[2])
+						+ String.valueOf(obj[3]), String.valueOf(obj[4]));
+			}
+			LocalDate l = LocalDate.now();
+
+			Month currentMonth = l.getMonth();
+			int month = currentMonth.getValue();
+			int day = l.getDayOfMonth();
+
+			String sMonth = month < 10 ? "0" + month : String.valueOf(month);
+			String sDay = day < 10 ? "0" + day : String.valueOf(day);
+
+			for (CreateBeanRegular bean : beans) {
+				String ppm_desc_stage = commanmap
+						.get(bean.getChannel() + bean.getMoc_name() + bean.getPpm_account() + bean.getBasepack_code());
+				String pid = getPID(bean.getMoc_name(), bean.getYear(), bean.getPpm_account(), bean.getBasepack_code(),
+						ppm_desc_stage);
+				String last2digit = bean.getYear().substring(bean.getYear().length() - 2, bean.getYear().length());
+				String pomoid = createNewPromoId(template, sDay + sMonth, last2digit + bean.getMoc_name(), pid);
+				datafromtable.updatePromoIdInTemp(pomoid, bean.getMoc_name(), bean.getPpm_account(),
+						bean.getBasepack_code(), pid);
+			}
 		}
-		LocalDate l = LocalDate.now();
-
-		Month currentMonth = l.getMonth();
-		int month = currentMonth.getValue();
-		int day = l.getDayOfMonth();
-
-		String sMonth = month < 10 ? "0" + month : String.valueOf(month);
-		String sDay = day < 10 ? "0" + day : String.valueOf(day);
-
-		for (CreateBeanRegular bean : beans) {
-			String ppm_desc_stage = commanmap
-					.get(bean.getChannel() + bean.getMoc_name() + bean.getPpm_account() + bean.getBasepack_code());
-			String pid = getPID(bean.getMoc_name(), bean.getYear(), bean.getPpm_account(), bean.getBasepack_code(),
-					ppm_desc_stage);
-			String moc = commanmap.get(bean.getMoc_name() + bean.getYear());
-			String pomoid = createNewPromoId(template, sDay + sMonth, bean.getMoc_name(), pid);
-			datafromtable.updatePromoIdInTemp(pomoid, bean.getMoc_name(), bean.getPpm_account(),
-					bean.getBasepack_code(), pid);
-		}
-
 		if (globle_flag == 0) {
 
 			// saveTomainTable(beans, uid, template,
