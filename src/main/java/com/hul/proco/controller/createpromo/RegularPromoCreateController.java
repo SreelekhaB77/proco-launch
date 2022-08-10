@@ -172,7 +172,7 @@ public class RegularPromoCreateController {
 				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 		String downloadFileName = absoluteFilePath + fileName;
 		downloadedData.add(headerDetail);
-		Map<String, List<List<String>>> mastersForNewTemplate = createCRPromo.getMastersForNewTemplate();
+		Map<String, List<List<String>>> mastersForNewTemplate = createCRPromo.getMastersForRegularTemplate();
 		try {
 			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForNewTemplate, ".xls");
 			downloadLink = downloadFileName + ".xls";
@@ -244,10 +244,10 @@ public class RegularPromoCreateController {
 		String fileName = UploadUtil.getFileName("Promotion.Error.file", "",
 				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 		String downloadFileName = absoluteFilePath + fileName;
-
 		downloadedData = createCRPromo.getPromotionErrorDetails(headerDetail, userID,error_template,roleID);
 		
 		Map<String, List<List<String>>> mastersForNewTemplate = createCRPromo.getMastersForNewTemplate();
+		System.out.println(mastersForNewTemplate);
 		try {
 			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForNewTemplate, ".xls");
 			downloadLink = downloadFileName + ".xls";

@@ -57,11 +57,10 @@ public class DataFromTable {
 	
 	public void getPresentPromo(Map<String,String> h)
 	{
-		String q_String="SELECT MOC_NAME,PPM_ACCOUNT,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER FROM TBL_PROCO_PROMOTION_MASTER_V2 ";
+		String q_String="SELECT MOC_NAME,PPM_ACCOUNT,MOC_YEAR,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER FROM TBL_PROCO_PROMOTION_MASTER_V2 ";
 		List<Object[]> mapdata_list = sessionFactory.getCurrentSession().createNativeQuery(q_String).list();
 		for (Object[] data : mapdata_list) {
-			h.put(String.valueOf(data[0])+String.valueOf(data[1])+String.valueOf(data[2]),String.valueOf(data[3])+" "+String.valueOf(data[4]) );
-			h.put(String.valueOf(data[0])+String.valueOf(data[1])+String.valueOf(data[2])+String.valueOf(data[5]), String.valueOf(data[3])+" "+String.valueOf(data[4]));
+			h.put(String.valueOf(data[0])+String.valueOf(data[1])+String.valueOf(data[2]), String.valueOf(data[4])+" "+String.valueOf(data[5]) );
 		}
 		
 	}
@@ -72,8 +71,8 @@ public class DataFromTable {
 		List<Object[]> mapdata_list = sessionFactory.getCurrentSession().createNativeQuery(cluster_ppm).list();
 		for(Object[] obj: mapdata_list)
 		{
-			ppm_account.add(String.valueOf(obj[0]));
-			clusters.add(String.valueOf(obj[1]));
+			ppm_account.add(String.valueOf(obj[0]).toUpperCase());
+			clusters.add(String.valueOf(obj[1]).toUpperCase());
 		}
 	}
 
@@ -127,7 +126,7 @@ public class DataFromTable {
 					String.valueOf(tbl_proco_customer_master[2])); // adding moc group base on CHANNEL_NAME and
 																	// ppm_account
 		}
-
+		
 		for (Object[] tbl_vat_moc_master : tbl_vat_moc_master_list) {
 			master_map.put(
 					String.valueOf(tbl_vat_moc_master[3]) + String.valueOf(tbl_vat_moc_master[4])
@@ -148,7 +147,7 @@ public class DataFromTable {
 																											// current
 			}
 		}
-
+		
 		return master_map;
 	}
 
@@ -159,14 +158,12 @@ public class DataFromTable {
 	 * @return boolean
 	 */
 	public boolean validateYear(String yearfromexcel, String moc) {
-
-		int lastchar = Integer.parseInt(moc.substring(moc.length() - 1, moc.length()));
-
+	
+		String s=moc.replaceAll("[^0-9]", "");
+		int lastchar = Integer.parseInt(s);
 		if (yearfromexcel.length() == 4) {
 			int year = Integer.parseInt(yearfromexcel);
-
 			if (year == getCurrentYear() && lastchar < 6) {
-
 				return true;
 			} else if (year == (getCurrentYear() + 1) && lastchar >= 6 || year == getCurrentYear() && lastchar >= 6) {
 				return true;

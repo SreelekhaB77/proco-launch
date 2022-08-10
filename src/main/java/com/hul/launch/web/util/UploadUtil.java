@@ -876,7 +876,7 @@ public class UploadUtil {
 				}
 			}
 				
-				sheet = wb.createSheet("Masters-Cluster");
+				sheet = wb.createSheet("Masters-Cluster-Cutomer");
 				List<List<String>> clusterList = masters.get("CLUSTER");
 				if (clusterList != null) {
 					rowCount = 0;
@@ -892,7 +892,7 @@ public class UploadUtil {
 						}
 					}
 				}
-
+				/*
 				sheet = wb.createSheet("Masters-Customer");
 				List<List<String>> customerList = masters.get("CUSTOMER");
 				if (customerList != null) {
@@ -909,6 +909,7 @@ public class UploadUtil {
 						}
 					}
 				}
+				*/
 				
 				sheet = wb.createSheet("Masters-Promo Timeperiod");
 				List<List<String>> tdpList = masters.get("TDP");
@@ -947,7 +948,8 @@ public class UploadUtil {
 					}
 				}
 */
-				sheet = wb.createSheet("Masters-OFFERTYPE");
+				
+				sheet = wb.createSheet("Masters-OFFERTYPE-MODILITY");
 				List<List<String>> changeList = masters.get("OFFER TYPE");
 				if (changeList != null) {
 					rowCount = 0;
@@ -963,7 +965,7 @@ public class UploadUtil {
 						}
 					}
 				}
-
+/*
 				sheet = wb.createSheet("Masters-Modality");
 				List<List<String>> modalityList = masters.get("MODALITY");
 				if (modalityList != null) {
@@ -980,7 +982,7 @@ public class UploadUtil {
 						}
 					}
 				}
-
+				
 				sheet = wb.createSheet("Masters-Channel");
 				List<List<String>> channelList = masters.get("CHANNEL");
 				if (channelList != null) {
@@ -996,7 +998,7 @@ public class UploadUtil {
 							cell.setCellValue(al.get(c));
 						}
 					}
-				}
+				}*/
 			fileOut = new FileOutputStream(filePath + extension);
 			// write this workbook to an Outputstream.
 			wb.write(fileOut);
