@@ -49,9 +49,9 @@ public class DataFromTable {
 
 	}
 
-	public void updatePromoIdInTemp(String promoid, String moc_name, String ppm_account, String basepack_code,String pid) {
+	public void updatePromoIdInTemp(String promoid, String moc_name, String ppm_account, String basepack_code,String pid,String year) {
 	String updateintemp="UPDATE TBL_PROCO_PROMOTION_MASTER_TEMP_V2 SET PROMO_ID='"+promoid+"',PID='"+pid+"',PPM_DESC=CONCAT('"+promoid+"',':',PPM_DESC_STAGE) WHERE MOC_NAME='"+moc_name+"' AND PPM_ACCOUNT='"+ppm_account+"'"+
-				" AND BASEPACK_CODE='"+basepack_code+"'";
+				" AND BASEPACK_CODE='"+basepack_code+"' AND MOC_YEAR='"+year+"'";
 	sessionFactory.getCurrentSession().createNativeQuery(updateintemp).executeUpdate();
 	}
 	
@@ -65,14 +65,23 @@ public class DataFromTable {
 		
 	}
 	
-	public void getAllClusterBasedOnPPM(ArrayList<String> ppm_account,ArrayList<String> clusters)
+	public void getAllClusterBasedOnPPM(Map<String,ArrayList<String>> clusterandppm)
 	{
-		String cluster_ppm="SELECT DISTINCT PPM_ACCOUNT,CLUSTER FROM TBL_PROCO_CLUSTER_MASTER_V2";
+		String cluster_ppm="SELECT DISTINCT PPM_ACCOUNT,CLUSTER FROM TBL_PROCO_CLUSTER_MASTER_V2 WHERE IS_ACTIVE=1";
 		List<Object[]> mapdata_list = sessionFactory.getCurrentSession().createNativeQuery(cluster_ppm).list();
 		for(Object[] obj: mapdata_list)
 		{
-			ppm_account.add(String.valueOf(obj[0]).toUpperCase());
-			clusters.add(String.valueOf(obj[1]).toUpperCase());
+			if(clusterandppm.containsKey(String.valueOf(obj[0]).toUpperCase()))
+			{
+				ArrayList<String> arr=clusterandppm.get(String.valueOf(obj[0]).toUpperCase());
+				arr.add(String.valueOf(obj[1]).toUpperCase());
+				clusterandppm.put(String.valueOf(obj[0]).toUpperCase(), arr);
+			}else
+			{
+				ArrayList<String> arr =new ArrayList<String>();
+				arr.add(String.valueOf(obj[1]).toUpperCase());
+			   clusterandppm.put(String.valueOf(obj[0]).toUpperCase(), arr);
+			}
 		}
 	}
 
@@ -122,26 +131,26 @@ public class DataFromTable {
 
 		for (Object[] tbl_proco_customer_master : tbl_proco_customer_master_v2_list) {
 			master_map.put(
-					String.valueOf(tbl_proco_customer_master[0]) + "_" + String.valueOf(tbl_proco_customer_master[1]),
-					String.valueOf(tbl_proco_customer_master[2])); // adding moc group base on CHANNEL_NAME and
+					String.valueOf(tbl_proco_customer_master[0]).toUpperCase() + "_" + String.valueOf(tbl_proco_customer_master[1]).toUpperCase(),
+					String.valueOf(tbl_proco_customer_master[2]).toUpperCase()); // adding moc group base on CHANNEL_NAME and
 																	// ppm_account
 		}
-		
+		System.out.println("master_map:"+master_map);
 		for (Object[] tbl_vat_moc_master : tbl_vat_moc_master_list) {
 			master_map.put(
-					String.valueOf(tbl_vat_moc_master[3]) + String.valueOf(tbl_vat_moc_master[4])
-							+ String.valueOf(tbl_vat_moc_master[5]) + "_start_date",
-					String.valueOf(tbl_vat_moc_master[1]));// adding start_date based on
+					String.valueOf(tbl_vat_moc_master[3]).toUpperCase() + String.valueOf(tbl_vat_moc_master[4]).toUpperCase()
+							+ String.valueOf(tbl_vat_moc_master[5]).toUpperCase() + "_start_date",
+					String.valueOf(tbl_vat_moc_master[1]).toUpperCase());// adding start_date based on
 															// MOC_NAME+MOC_YEAR+MOC_GROUP_"start_date"
 			master_map.put(
-					String.valueOf(tbl_vat_moc_master[3]) + String.valueOf(tbl_vat_moc_master[4])
-							+ String.valueOf(tbl_vat_moc_master[5]) + "_end_date",
-					String.valueOf(tbl_vat_moc_master[2]));// adding start_date based on
+					String.valueOf(tbl_vat_moc_master[3]).toUpperCase() + String.valueOf(tbl_vat_moc_master[4]).toUpperCase()
+							+ String.valueOf(tbl_vat_moc_master[5]).toUpperCase() + "_end_date",
+					String.valueOf(tbl_vat_moc_master[2]).toUpperCase());// adding start_date based on
 															// MOC_NAME+MOC_YEAR+MOC_GROUP_"end_date"
 
 			if (String.valueOf(tbl_vat_moc_master[6]).equalsIgnoreCase("Y")) {
-				master_map.put(String.valueOf(tbl_vat_moc_master[3]) + String.valueOf(tbl_vat_moc_master[4])
-						+ String.valueOf(tbl_vat_moc_master[6]), String.valueOf(tbl_vat_moc_master[8])); // adding if
+				master_map.put(String.valueOf(tbl_vat_moc_master[3]).toUpperCase() + String.valueOf(tbl_vat_moc_master[4]).toUpperCase()
+						+ String.valueOf(tbl_vat_moc_master[6]).toUpperCase(), String.valueOf(tbl_vat_moc_master[8]).toUpperCase()); // adding if
 																											// moc_name
 																											// is
 																											// current
@@ -165,7 +174,7 @@ public class DataFromTable {
 			int year = Integer.parseInt(yearfromexcel);
 			if (year == getCurrentYear() && lastchar < 6) {
 				return true;
-			} else if (year == (getCurrentYear() + 1) && lastchar >= 6 || year == getCurrentYear() && lastchar >= 6) {
+			} else if (year == (getCurrentYear() + 1) || (year == getCurrentYear() && lastchar >= 6)) {
 				return true;
 			} else {
 				return false;
@@ -241,5 +250,17 @@ public class DataFromTable {
 		ArrayList<String> ar = (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(cluster_query)
 				.list();
 		return (ArrayList<String>) ar.stream().map(String::toUpperCase).collect(Collectors.toList());
+	}
+
+	public void mapPPMandChannel(Map<String, String> commanmap) {
+		// TODO Auto-generated method stub
+		String strquery="SELECT DISTINCT PPM_ACCOUNT,CHANNEL_NAME FROM TBL_PROCO_CLUSTER_MASTER_V2 WHERE IS_ACTIVE=1";
+		List<Object[]> list=sessionFactory.getCurrentSession().createNativeQuery(strquery).list();
+		
+		for(Object[] obj:list)
+		{
+			commanmap.put(String.valueOf(obj[0]).toUpperCase(), String.valueOf(obj[1]).toUpperCase());
+		}
+		
 	}
 }
