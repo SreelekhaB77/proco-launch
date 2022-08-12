@@ -135,7 +135,7 @@ public class DataFromTable {
 					String.valueOf(tbl_proco_customer_master[2]).toUpperCase()); // adding moc group base on CHANNEL_NAME and
 																	// ppm_account
 		}
-		System.out.println("master_map:"+master_map);
+		
 		for (Object[] tbl_vat_moc_master : tbl_vat_moc_master_list) {
 			master_map.put(
 					String.valueOf(tbl_vat_moc_master[3]).toUpperCase() + String.valueOf(tbl_vat_moc_master[4]).toUpperCase()
@@ -227,7 +227,7 @@ public class DataFromTable {
 	}
 
 	private ArrayList<String> getValidBasepack() {
-		String basepack = "SELECT DISTINCT BASEPACK FROM TBL_PROCO_PRODUCT_MASTER_V2 WHERE IS_ACTIVE=1";
+		String basepack = "SELECT DISTINCT BASEPACK FROM TBL_PROCO_PRODUCT_MASTER_V2 WHERE IS_ACTIVE=1 AND PPM_STATUS='YES'";
 		return (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(basepack).list();
 	}
 

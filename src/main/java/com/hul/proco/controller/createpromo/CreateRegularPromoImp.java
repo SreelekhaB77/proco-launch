@@ -166,6 +166,14 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					if (template.equalsIgnoreCase("new")) {
 
 						query.setString(17, "NE");
+						if(bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity())<=9)
+						{
+							if(flag==1)
+								error_msg = error_msg + ",Mandatory input for Quantity, Min Qty criteria not met";
+							else
+								error_msg = error_msg + "Mandatory input for Quantity, Min Qty criteria not met";
+							flag=1;
+						}
 						if (isStringNumber(bean.getQuantity()))
 							query.setString(18, bean.getQuantity().isEmpty() ? ""
 									: String.valueOf(
@@ -245,6 +253,17 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							error_msg = error_msg + "Invalid Channel";
 							flag = 1;
 						}
+					}
+					
+					// If "Offer Modality" user input = "MT Kitting" then basepack code entry in the field is mandatory
+					if(bean.getOffer_mod().equalsIgnoreCase("MT Kitting") && bean.getC_pack_code().isEmpty())
+					{
+						if(flag==1)
+						{
+							error_msg = error_msg + ",Mandatory childpack code for kitting promo type, invalid basepack";
+						}else
+							error_msg = error_msg + "Mandatory childpack code for kitting promo type, invalid basepack";
+						flag=1;
 					}
 					
 					// Adding new changes for start date and end date
@@ -369,7 +388,13 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					}
 					// change end
 					String price_off = bean.getPrice_off();
-
+					if(price_off.isEmpty())
+					{
+						if(flag==1)
+						    error_msg = error_msg + ",Mandatory input for Price off";
+						else
+							error_msg = error_msg + "Mandatory input for Price off";
+					}
 					if (bean.getOfr_type().equalsIgnoreCase("STPR")
 							|| bean.getOfr_type().equalsIgnoreCase("STPR Liquidation")) {
 						if (price_off.isEmpty()) {
