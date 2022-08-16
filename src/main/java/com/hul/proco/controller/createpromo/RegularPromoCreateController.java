@@ -246,8 +246,7 @@ public class RegularPromoCreateController {
 		String downloadFileName = absoluteFilePath + fileName;
 		downloadedData = createCRPromo.getPromotionErrorDetails(headerDetail, userID,error_template,roleID);
 		
-		Map<String, List<List<String>>> mastersForNewTemplate = createCRPromo.getMastersForNewTemplate();
-		System.out.println(mastersForNewTemplate);
+		Map<String, List<List<String>>> mastersForNewTemplate = createCRPromo.getMastersForRegularTemplate();
 		try {
 			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForNewTemplate, ".xls");
 			downloadLink = downloadFileName + ".xls";
