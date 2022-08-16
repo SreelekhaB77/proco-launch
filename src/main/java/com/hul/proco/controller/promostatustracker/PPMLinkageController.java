@@ -66,9 +66,9 @@ public class PPMLinkageController {
 				} else {
 					if (UploadUtil.movefile(file, fileName)) {
 						int excelColumnCount = UploadUtil.readExcelCellCount(fileName);
-						if (excelColumnCount == 27) {
+						if (excelColumnCount == 63) {
 							Map<String, List<Object>> map = null;
-							map = ExOM.mapFromExcel(new File(fileName)).to(PPMLinkageBean.class).map(27, false, null);
+							map = ExOM.mapFromExcel(new File(fileName)).to(PPMLinkageBean.class).map(63, false, null);
 							
 							if (map.isEmpty()) {
 								model.addAttribute("ModRes", "FILE_EMPTY");
