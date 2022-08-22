@@ -204,7 +204,14 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 	public ArrayList<String> getPromoMeasureDownload(){
 		return procoStatusTrackerDao.getPromoMeasureDownload();	
 	}
-
+	public List<ArrayList<String>> ppmCoeRemarksDownload(ArrayList<String> headerList){
+		return procoStatusTrackerDao.ppmCoeRemarksDownload(headerList);
+	}
 	
+	@Override
+	public ArrayList<String> ppmCoeRemarksDownloadHeaderList(){
+		return procoStatusTrackerDao.ppmCoeRemarksDownloadHeaderList();
+		
+	}
 
 }

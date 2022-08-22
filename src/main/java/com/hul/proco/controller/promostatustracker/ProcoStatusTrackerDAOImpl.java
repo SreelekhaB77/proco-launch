@@ -2318,5 +2318,63 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 	}
 	//Added by Kavitha D for promo measure template ends-SPRINT 9
 
+	//Added by Kavitha D for PPM coe remarks download template-SPRINT 9
+	public List<ArrayList<String>> ppmCoeRemarksDownload(ArrayList<String> headerList){
+		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
+
+		try {
+		
+		
+		String ppmQuery=" SELECT DISTINCT PROMO_ID FROM TBL_PROCO_PROMOTION_MASTER_V2 M "
+				+ " WHERE NOT EXISTS (SELECT 1 FROM TBL_PROCO_PPM_COE_REMARKS C WHERE M.PROMO_ID = C.PROMO_ID) ";
+		
+		Query query = sessionFactory.getCurrentSession().createNativeQuery(ppmQuery);
+		downloadDataList.add(headerList);
+
+		Iterator itr = query.list().iterator();
+		//downloadDataList.add(headerList);
+		/*while (itr.hasNext()) {
+			Object[] obj = (Object[]) itr.next();
+			ArrayList<String> dataObj = new ArrayList<String>();
+			for (Object ob : obj) {
+				String value = "";
+				value = (ob == null) ? "" : ob.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
+			}
+			obj = null;
+			downloadDataList.add(dataObj);
+			//return downloadDataList;
+		}*/
+		
+		itr = query.list().iterator();
+		while (itr.hasNext()) {
+			String obj = (String) itr.next();
+			ArrayList<String> dataObj = new ArrayList<String>();
+			String value = "";
+			value = (obj == null) ? "" : obj.toString();
+			dataObj.add(value.replaceAll("\\^", ","));
+			obj = null;
+			downloadDataList.add(dataObj);
+		}
+		
+		/*List list = query.list();
+		for(String str:list.toString()) {
+			
+		}*/
+		//downloadDataList.addAll(query.list());
+		return downloadDataList;
+	} catch (Exception e) {
+		logger.error("Exception: ", e);
+	}
+	return downloadDataList;
+}
+	
+	@Override
+	public ArrayList<String> ppmCoeRemarksDownloadHeaderList() {
+		ArrayList<String> headerList=new ArrayList<String>();
+		headerList.add("PROMO_ID");	
+		headerList.add("COE_REMARKS");	
+		return headerList;
+	}
 
 }
