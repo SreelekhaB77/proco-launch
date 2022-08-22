@@ -2222,7 +2222,7 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 	//Added by Kavitha D for promo measure template starts-SPRINT 9
 	public ArrayList<String> getPromoMeasureDownload(){
 	ArrayList<String> headerList=new ArrayList<String>();
-	headerList.add("Versioned Promotion ID");	
+	/*headerList.add("Versioned Promotion ID");	
 	headerList.add("ChartByType");		
 	headerList.add("PromotionCreator");		
 	headerList.add("PromotionStatus");		
@@ -2248,7 +2248,72 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 	headerList.add("BudgetHolderName");		
 	headerList.add("FundType");		
 	headerList.add("MOC");	
-	headerList.add("InvestmentAmount");
+	headerList.add("InvestmentAmount");*/
+	//Sprint 9 update code changes-Kavitha D
+	headerList.add("PROMOTION ID");	
+	headerList.add("PROMOTION NAME");		
+	headerList.add("CREATED BY");		
+	headerList.add("CREATED ON");		
+	headerList.add("PROJECT ID");		
+	headerList.add("PROJECT NAME");		
+	headerList.add("BUNDLE ID");		
+	headerList.add("BUNDLE NAME");	   
+	headerList.add("PROMOTION QUALIFICATION");		
+	headerList.add("PROMOTION  OBJECTIVE");
+	headerList.add("MARKETING OBJECTIVE");		
+	headerList.add("PROMOTION MECHANICS");
+	headerList.add("PROMOTION STARTDATE");	
+	headerList.add("PROMOTION ENDDATE");		
+	headerList.add("PRE DIP STARTDATE");		
+	headerList.add("POST DIP ENDDATE");		
+	headerList.add("CUSTOMER");		
+	headerList.add("BUSINESS");		
+	headerList.add("DIVISION");		
+	headerList.add("PRODUCT");	
+	headerList.add("CATEGORY");		
+	headerList.add("BRAND");		
+	headerList.add("SUB BRAND");		
+	headerList.add("PROMOTION STATUS");
+	headerList.add("INVESTMENT TYPE");	
+	headerList.add("MOC");		
+	headerList.add("SUBMISSION DATE");		
+	headerList.add("APPROVED DATE");		
+	headerList.add("MODIFIED DATE");		
+	headerList.add("PROMOTION TYPE");	
+	headerList.add("DURATION");		
+	headerList.add("FREE PRODUCT NAME");	   
+	headerList.add("PRICE OFF");		
+	headerList.add("BASELINE QUANTITY");		
+	headerList.add("BASELINE GSV");		
+	headerList.add("BASELINE TURNOVER");
+	headerList.add("BASELINE GROSS PROFIT");	
+	headerList.add("PROMOTION VOLUME BEFORE");		
+	headerList.add("PROMOTION VOLUME DURING");		
+	headerList.add("PROMOTION VOLUME AFTER");	
+	headerList.add("PLANNED GSV");		
+	headerList.add("PLANNED TURNOVER");		
+	headerList.add("PLANNED INVESTMENT AMOUNT");		
+	headerList.add("PLANNED UPLIFT");	   
+	headerList.add("PLANNED INCREMENTAL GROSS PROFIT");		
+	headerList.add("PLANNED GROSS PROFIT");		
+	headerList.add("PLANNED INCREMENTAL TURNOVER");		
+	headerList.add("PLANNED CUSTOMER ROI");
+    headerList.add("PLANNED COST PRICE BASED ROI");	
+	headerList.add("PLANNED PROMOTION ROI");
+	headerList.add("ACTUAL QUANTITY");		
+	headerList.add("ACTUAL GSV");		
+	headerList.add("ACTUAL TURNOVER");		
+	headerList.add("ACTUAL INVESTMENT AMOUNT");		
+	headerList.add("ACTUAL UPLIFT");		
+	headerList.add("ACTUAL INCREMENTAL GROSS PROFIT");	   
+	headerList.add("ACTUAL GROSS PROFIT");		
+	headerList.add("ACTUAL INCREMENTAL TURNOVER");		
+	headerList.add("ACTUAL CUSTOMER ROI");		
+	headerList.add("ACTUAL COST PRICE BASED ROI");
+    headerList.add("ACTUAL PROMOTION ROI");	
+	headerList.add("UPLOAD REFERENCE NUMBER");		
+	headerList.add("IS DUPLICATE");		
+	
 	return headerList;
 	}
 	//Added by Kavitha D for promo measure template ends-SPRINT 9
