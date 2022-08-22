@@ -2,6 +2,9 @@ package com.hul.proco.controller.promostatustracker;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -66,9 +69,9 @@ public class PPMLinkageController {
 				} else {
 					if (UploadUtil.movefile(file, fileName)) {
 						int excelColumnCount = UploadUtil.readExcelCellCount(fileName);
-						if (excelColumnCount == 27) {
+						if (excelColumnCount == 63) {
 							Map<String, List<Object>> map = null;
-							map = ExOM.mapFromExcel(new File(fileName)).to(PPMLinkageBean.class).map(27, false, null);
+							map = ExOM.mapFromExcel(new File(fileName)).to(PPMLinkageBean.class).map(63, false, null);
 							
 							if (map.isEmpty()) {
 								model.addAttribute("ModRes", "FILE_EMPTY");
@@ -152,4 +155,128 @@ public class PPMLinkageController {
 		
 	}
 	
+	
+	//Added by Kavitha D for PPM COEREMARKS UPLOAD_SPRINT 9 Starts
+	@RequestMapping(value = "ppmcoeremarksupload.htm", method = RequestMethod.POST)
+	public @ResponseBody String uploadPPMCoeRemarksFile(@ModelAttribute("PPMLinkageBean") PPMLinkageBean ppmlinkageBean,
+			Model model, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+		String save_data = null;
+		CommonPropUtils commUtils = CommonPropUtils.getInstance();
+		//String userId = (String) httpServletRequest.getSession().getAttribute("UserID");
+		MultipartFile file = ppmlinkageBean.getFile();
+		String fileName = file.getOriginalFilename();
+		PPMLinkageBean[] beanArray = null;
+		String filepath = FilePaths.FILE_TEMPUPLOAD_PATH;
+		fileName = filepath + fileName;
+		try {
+			if (!CommonUtils.isFileEmpty(file)) {
+				if (CommonUtils.isMearsureReportFileSizeExceeds(file)) {
+					model.addAttribute("errorMsg", commUtils.getProperty("File.Size.Exceeds"));
+					model.addAttribute("ModRes", "File Size Exceeds");
+					return "File Size Exceeds";
+				} else {
+					if (UploadUtil.movefile(file, fileName)) {
+						int excelColumnCount = UploadUtil.readExcelCellCount(fileName);
+						if (excelColumnCount == 2) {
+							Map<String, List<Object>> map = null;
+							map = ExOM.mapFromExcel(new File(fileName)).to(PPMLinkageBean.class).map(2, false, null);
+							
+							if (map.isEmpty()) {
+								model.addAttribute("ModRes", "FILE_EMPTY");
+								return "FILE_EMPTY";
+							}
+							if (map.containsKey("ERROR")) {
+								model.addAttribute("ModRes", "CHECK_COL_MISMATCH");
+
+								return "CHECK_COL_MISMATCH";
+							} else if (map.containsKey("DATA")) {
+								List<?> datafromexcel = map.get("DATA");
+								beanArray = (PPMLinkageBean[]) datafromexcel
+										.toArray(new PPMLinkageBean[datafromexcel.size()]);
+								
+								//save_data = createCRPromo.createCRPromo(beanArray, userId, template);
+								save_data=linkageService.ppmCoeRemarks(beanArray);
+								
+							}
+							
+							if(save_data.equals("EXCEL_UPLOADED"))
+							{
+								model.addAttribute("ModRes", "EXCEL_UPLOADED");
+								return"EXCEL_UPLOADED";
+							}else
+							{
+								model.addAttribute("ModRes", "EXCEL_NOT_UPLOADED");
+								return"EXCEL_NOT_UPLOADED";
+							}
+							
+							
+						} else {
+							model.addAttribute("ModRes", "Column count is not match with expected");
+							return "Column count is not match with expected";
+						}
+					}
+				}
+			}
+		}catch (Exception e) {
+			logger.error(e);
+		}
+		catch (Throwable e) {
+			logger.error(e);
+		}
+		return save_data;
+	}
+	//Added by Kavitha D for PPM COEREARKS UPLOAD_SPRINT 9 ends
+
+	//Added by kavitha D-SPRINT 9
+	@GetMapping(value="ppmCoeRemarksDownloadTemplate.htm")
+	public @ResponseBody ModelAndView ppmCoeRemarksDownloadTemplateDownloadTemplate(
+			@ModelAttribute("PPMLinkageBean") PPMLinkageBean ppmLinkageBean, Model model,
+			HttpServletRequest request, HttpServletResponse response)  {
+		InputStream is;
+		String downloadLink = "", absoluteFilePath = "";
+		List<ArrayList<String>> downloadedData = null;
+		
+
+			
+			absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
+			String fileName = UploadUtil.getFileName("PPM.COE.REMARKS.file", "",
+					CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
+			String downloadFileName = absoluteFilePath + fileName;
+			ArrayList<String> headerDetails = procoStatusTrackerService.ppmCoeRemarksDownloadHeaderList();
+
+			 downloadedData = procoStatusTrackerService.ppmCoeRemarksDownload(headerDetails);
+
+		try {
+			 if (downloadedData != null) {
+				UploadUtil.writeXLSFile(downloadFileName, downloadedData, null,".xls");
+				downloadLink = downloadFileName + ".xls";
+				is = new FileInputStream(new File(downloadLink));
+				response.setContentType("application/force-download");
+				response.setHeader("Content-Disposition", "attachment; filename=PPMCOEREMARKSDOWNLOADFILE"
+						+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+				IOUtils.copy(is, response.getOutputStream());
+				response.flushBuffer();
+			}} catch (FileNotFoundException e) {
+				logger.error("Exception: ", e);
+				// e.printStackTrace();
+				return null;
+			} catch (IOException e) {
+				logger.error("Exception: ", e);
+				// e.printStackTrace();
+				return null;
+		
+			}
+		return null;
+		
+	}
+	
+	//Added by kavitha D-SPRINT 9
+	@RequestMapping(value = "ProcoPpmCoeRemarks.htm", method = RequestMethod.GET)
+	public ModelAndView getProcoMeasureReportUploadPage(HttpServletRequest request, Model model) {
+		String roleId = (String) request.getSession().getAttribute("roleId");
+		model.addAttribute("roleId", roleId);		
+		//model.addAttribute( "DownloadMocList", procoStatusTrackerService.getMocList());
+		
+		return new ModelAndView("proco/ppm_upload");
+	}
 }

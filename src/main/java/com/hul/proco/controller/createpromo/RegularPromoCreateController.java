@@ -74,7 +74,7 @@ public class RegularPromoCreateController {
 						map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(15, false, null);
 					} else if (template.equalsIgnoreCase("cr")) {
 
-						map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(21, false, null);
+						map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(18, false, null);
 
 					}
 
@@ -200,22 +200,21 @@ public class RegularPromoCreateController {
 			HttpServletRequest request, HttpServletResponse response) {
 		InputStream is;
 		String downloadLink = "", absoluteFilePath = "";
-		String userId = (String) request.getSession().getAttribute("UserID");
 		List<ArrayList<String>> downloadedData = new ArrayList<ArrayList<String>>();
 		ArrayList<String> headerDetail = createCRPromo.getHeaderListForPromotionCrTemplateDownload();
-		downloadedData = createCRPromo.getPromotionDownloadCR(headerDetail, userId);
 		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
 		String fileName = UploadUtil.getFileName("Promotion.RegularTemplate.file", "",
 				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 		String downloadFileName = absoluteFilePath + fileName;
-		Map<String, List<List<String>>> mastersForCrTemplate = createCRPromo.getMastersForCrTemplate();
+		downloadedData.add(headerDetail);
+		Map<String, List<List<String>>> mastersForNewTemplate = createCRPromo.getMastersForRegularTemplate();
 		try {
-			UploadUtil.writePromoCrXLSFile(downloadFileName, downloadedData, mastersForCrTemplate, ".xls");
+			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForNewTemplate, ".xls");
 			downloadLink = downloadFileName + ".xls";
 			is = new FileInputStream(new File(downloadLink));
 			// copy it to response's OutputStream
 			response.setContentType("application/force-download");
-			response.setHeader("Content-Disposition", "attachment; filename=PromotionCrFile_"
+			response.setHeader("Content-Disposition", "attachment; filename=PromotionNewFile_"
 					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
 			IOUtils.copy(is, response.getOutputStream());
 			response.flushBuffer();

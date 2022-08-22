@@ -44,6 +44,9 @@ margin-top: -75px!important;
 .ddd{
 	margin-bottom:5%!important;
 }
+.nav-pills>li+li {
+margin-left:0px!important;
+}
 @media only screen and (max-width: 767px) {
 	.promo-filter-div{
     width: 60%!important;
@@ -96,12 +99,18 @@ margin-top: -75px!important;
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
 						
-						  <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 promo-lib-bg">
-							<a href="http://34.120.128.205/VisibilityAssetTracker/ProcoMeasureReportUploadPage.htm" id="measHref" >
+						  <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 promo-lib-bg" style="margin-right: 15px;">
+							<a href="http://localhost:8083/VisibilityAssetTracker/ProcoMeasureReportUploadPage.htm" id="measHref" >
 								<div class="proco-Signops-icon"></div>
 								<div class="tab-label-proco-Signops-inactive OpenSans-font">Upload Measure Report</div>
 							</a>
-						</li>  
+						</li> 
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-ppm-inactive" style="width:23%">
+							<a href="http://localhost:8083/VisibilityAssetTracker/ProcoPpmCoeRemarks.htm">
+								<div class="proco-ppm-icon"></div>
+								<div class="tab-label-proco-ppm-inactive OpenSans-font">PPM Upload</div>
+							</a>
+						</li> 
 					
 
 					</ul>

@@ -59,7 +59,7 @@ public class CreateBeanRegular {
 	@Column(name = "QUANTITY")
 	private String quantity;
 
-	@Column(name = "SOL TYPE")
+	@Column(name = "CR TYPE")
 	private String sol_type;
 
 	@Column(name = "END DATE")
@@ -89,13 +89,13 @@ public class CreateBeanRegular {
 	@Column(name = "ADDITIONAL BUDGET")
 	private String addition_budget;
 
-	@Column(name = "EXISTING SOL CODE")
-	private String existing_sol_code;
+	@Column(name = "PPM SOL Code Reference")
+	private String sol_code_ref;
 
 	@Column(name = "YEAR")
 	private String year;
 
-	@Column(name = "MOC_NAME")
+	@Column(name = "MOC")
 	private String moc_name;
 
 	
@@ -116,12 +116,12 @@ public class CreateBeanRegular {
 		this.moc_name = moc_name;
 	}
 
-	public String getExisting_sol_code() {
-		return existing_sol_code;
+	public String getSol_code_ref() {
+		return sol_code_ref;
 	}
 
-	public void setExisting_sol_code(String existing_sol_code) {
-		this.existing_sol_code = existing_sol_code;
+	public void setSol_code_ref(String sol_code_ref) {
+		this.sol_code_ref = sol_code_ref;
 	}
 
 	public String getAddition_budget() {

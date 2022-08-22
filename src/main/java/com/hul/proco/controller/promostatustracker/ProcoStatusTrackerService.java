@@ -45,6 +45,8 @@ public interface ProcoStatusTrackerService {
 	
 	public ArrayList<String> getPromoMeasureDownload(); //Added by Kavitha D for promo measure template-SPRINT 9
 
+	public List<ArrayList<String>> ppmCoeRemarksDownload(ArrayList<String> headerList); //Added by Kavitha D for PPM coe remarks download-SPRINT 9
 
+	public ArrayList<String> ppmCoeRemarksDownloadHeaderList();
 
 }

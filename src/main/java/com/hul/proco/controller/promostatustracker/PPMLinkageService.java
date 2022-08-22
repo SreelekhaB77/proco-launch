@@ -29,5 +29,13 @@ public class PPMLinkageService {
 		// TODO Auto-generated method stub
 		return dao.getDownloadData(headers,moc);
 	}
+	
+	//Added by KAvitha D-SPRINT 9
+	@Transactional(rollbackFor = { Exception.class })
+	public String ppmCoeRemarks(PPMLinkageBean[] beanArray) {
+		// TODO Auto-generated method stub
+		return dao.ppmCoeRemarks(beanArray);
+	}
 
+	
 }
