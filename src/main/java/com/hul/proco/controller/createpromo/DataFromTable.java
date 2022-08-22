@@ -36,15 +36,26 @@ public class DataFromTable {
 	 * @param uid
 	 * @return void
 	 */
-	public void updatePPMDescStage(String uid)// String template_type)
+	public void updatePPMDescStage(String uid, String template_type)
 	{
-		String update_ppm_desc = "UPDATE TBL_PROCO_PROMOTION_MASTER_TEMP_V2 T "
-				+ "INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 A ON A.PPM_ACCOUNT=T.PPM_ACCOUNT AND A.CHANNEL_NAME=T.CHANNEL_NAME "
-				+ "INNER JOIN TBL_PROCO_INVESTMENT_TYPE_MASTER_V2 B ON B.OFFER_MODALITY = T.OFFER_MODALITY AND B.OFFER_TYPE = T.OFFER_TYPE "
-				+ "INNER JOIN  TBL_PROCO_PRODUCT_MASTER_V2 C ON C.BASEPACK=T.BASEPACK_CODE "
-				+ "INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 D ON D.PPM_ACCOUNT=T.PPM_ACCOUNT " + "SET "
-				+ "PPM_DESC_STAGE=CONCAT(A.ACCOUNT_TYPE ,':',  B.MODALITY_KEY,':',T.PPM_ACCOUNT,':',C.SALES_CATEGORY,':',T.OFFER_DESC,IF (D.NON_UNIFY <> '', concat(':', D.NON_UNIFY), ''))  WHERE USER_ID='"
-				+ uid + "'  " + "";
+		String update_ppm_desc = "";
+		if (template_type.equalsIgnoreCase("cr")) {
+			update_ppm_desc = "UPDATE TBL_PROCO_PROMOTION_MASTER_TEMP_V2 T "
+					+ "INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 A ON A.PPM_ACCOUNT=T.PPM_ACCOUNT AND A.CHANNEL_NAME=T.CHANNEL_NAME "
+					+ "INNER JOIN TBL_PROCO_INVESTMENT_TYPE_MASTER_V2 B ON B.OFFER_MODALITY = T.OFFER_MODALITY AND B.OFFER_TYPE = T.OFFER_TYPE "
+					+ "INNER JOIN  TBL_PROCO_PRODUCT_MASTER_V2 C ON C.BASEPACK=T.BASEPACK_CODE "
+					+ "INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 D ON D.PPM_ACCOUNT=T.PPM_ACCOUNT " + "SET "
+					+ "PPM_DESC_STAGE=CONCAT(A.ACCOUNT_TYPE ,':',  B.MODALITY_KEY,':',T.PPM_ACCOUNT,':',C.SALES_CATEGORY,':',T.OFFER_DESC,':',T.CR_SOL_TYPE,IF (D.NON_UNIFY <> '', concat(':', D.NON_UNIFY), ''))  WHERE USER_ID='"
+					+ uid + "'  " + "";
+		} else {
+			update_ppm_desc = "UPDATE TBL_PROCO_PROMOTION_MASTER_TEMP_V2 T "
+					+ "INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 A ON A.PPM_ACCOUNT=T.PPM_ACCOUNT AND A.CHANNEL_NAME=T.CHANNEL_NAME "
+					+ "INNER JOIN TBL_PROCO_INVESTMENT_TYPE_MASTER_V2 B ON B.OFFER_MODALITY = T.OFFER_MODALITY AND B.OFFER_TYPE = T.OFFER_TYPE "
+					+ "INNER JOIN  TBL_PROCO_PRODUCT_MASTER_V2 C ON C.BASEPACK=T.BASEPACK_CODE "
+					+ "INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 D ON D.PPM_ACCOUNT=T.PPM_ACCOUNT " + "SET "
+					+ "PPM_DESC_STAGE=CONCAT(A.ACCOUNT_TYPE ,':',  B.MODALITY_KEY,':',T.PPM_ACCOUNT,':',C.SALES_CATEGORY,':',T.OFFER_DESC,IF (D.NON_UNIFY <> '', concat(':', D.NON_UNIFY), ''))  WHERE USER_ID='"
+					+ uid + "'  " + "";
+		}
 		sessionFactory.getCurrentSession().createNativeQuery(update_ppm_desc).executeUpdate();
 
 	}
@@ -54,7 +65,18 @@ public class DataFromTable {
 				" AND BASEPACK_CODE='"+basepack_code+"' AND MOC_YEAR='"+year+"'";
 	sessionFactory.getCurrentSession().createNativeQuery(updateintemp).executeUpdate();
 	}
-	
+	/**
+	 * 
+	 * @param pid
+	 * @param ppm_account
+	 * @param year
+	 * @param moc
+	 */
+	public void updatePIdInTemp(String pid, String ppm_account,String year,String moc)
+	{
+		String pid_update="UPDATE TBL_PROCO_PROMOTION_MASTER_TEMP_V2 SET pid='"+pid+"' WHERE MOC_NAME='"+moc+"' AND MOC_YEAR='"+year+"' AND PPM_ACCOUNT='"+ppm_account+"'"; 
+		sessionFactory.getCurrentSession().createNativeQuery(pid_update).executeUpdate();
+	}
 	public void getPresentPromo(Map<String,String> h)
 	{
 		String q_String="SELECT MOC_NAME,PPM_ACCOUNT,MOC_YEAR,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER FROM TBL_PROCO_PROMOTION_MASTER_V2 ";
@@ -117,7 +139,10 @@ public class DataFromTable {
 		Query session_query = sessionFactory.getCurrentSession().createNativeQuery(query);
 		return session_query.uniqueResult().toString();
 	}
-
+    /**
+     * 
+     * @return map to send the dates by to controller implementation
+     */
 	public Map<String, String> handleDates() {
 		String TBL_VAT_MOC_MASTER_STRING = "select MOC, START_DATE, END_DATE, MOC_NAME, MOC_YEAR, MOC_GROUP, STATUS,SUBSTRING(MOC_NAME,4,4) AS VALUE ,CURDATE() AS CURDATE  from TBL_VAT_MOC_MASTER where status='Y' UNION ALL "
 				+ "select MOC, START_DATE, END_DATE, MOC_NAME, MOC_YEAR, MOC_GROUP, status,SUBSTRING(MOC_NAME,4,4),CURDATE() AS CURDATE from TBL_VAT_MOC_MASTER where MOC_YEAR IN ("
@@ -167,7 +192,7 @@ public class DataFromTable {
 	 * @return boolean
 	 */
 	public boolean validateYear(String yearfromexcel, String moc) {
-	
+	    
 		String s=moc.replaceAll("[^0-9]", "");
 		int lastchar = Integer.parseInt(s);
 		if (yearfromexcel.length() == 4) {
@@ -182,14 +207,21 @@ public class DataFromTable {
 		} else
 			return false;
 	}
-
+    /**
+     * 
+     * @return current year
+     */
 	private int getCurrentYear() {
 		Date d = new Date();
 		int year = d.getYear();
 		int currentYear = year + 1900;
 		return currentYear;
 	}
-
+	
+	/**
+	 * 
+	 * @return Map<String, ArrayList<String>>
+	 */
 	public Map<String, ArrayList<String>> getAllValidationRecords() {
 		Map<String, ArrayList<String>> validationmap = new HashMap<String, ArrayList<String>>();
 		validationmap.put("SOL TYPE", getSOLType());
@@ -260,6 +292,88 @@ public class DataFromTable {
 		for(Object[] obj:list)
 		{
 			commanmap.put(String.valueOf(obj[0]).toUpperCase(), String.valueOf(obj[1]).toUpperCase());
+		}
+		
+	}
+	/**
+	 * 
+	 * @param crEntries
+	 */
+	public void getCREntries(Map<String, String> crEntries) {
+		// TODO Auto-generated method stub
+		String stringquesry="SELECT DISTINCT MOC_NAME,BASEPACK_CODE,PPM_ACCOUNT,CR_SOL_TYPE FROM TBL_PROCO_PROMOTION_MASTER_V2";
+		List<Object[]> list=sessionFactory.getCurrentSession().createNativeQuery(stringquesry).list();
+		for(Object[] obj:list)
+		{
+			crEntries.put(String.valueOf(obj[0]).toUpperCase()+String.valueOf(obj[1]).toUpperCase()+
+					String.valueOf(obj[2]).toUpperCase()+String.valueOf(obj[3]).toUpperCase(), String.valueOf(obj[3]).toUpperCase());
+		}
+		
+		
+	}
+
+	public void getAllSOLtype(Map<String, String> crEntries) {
+		// TODO Auto-generated method stub
+		String str="SELECT DISTINCT SOL_REMARK,SOL_TYPE FROM TBL_PROCO_SOL_TYPE";
+		List<Object[]> list=sessionFactory.getCurrentSession().createNativeQuery(str).list();
+		for(Object[] obj:list)
+		{
+			crEntries.put(String.valueOf(obj[0]).toUpperCase(),"");
+		}
+	}
+	/**
+	 * To handle all CR template 
+	 * @param crEntries
+	 */
+	public void getAllSOLCodeAndPromoId(Map<String,String> crEntries) {
+		// TODO Auto-generated method stub
+		String query="SELECT a.PROMOTION_ID,a.PROMO_ID,a.MOC_NAME,a.PPM_ACCOUNT,a.BASEPACK_CODE,a.CLUSTER,a.PRICE_OFF,a.START_DATE,a.END_DATE,a.PROMO_TIMEPERIOD,a.MOC_YEAR"
+				+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 a INNER JOIN TBL_PROCO_MEASURE_MASTER_V2 b"
+				+ " ON "
+				+ "a.PROMOTION_ID=b.PROMOTION_ID "
+				+ "WHERE b.PROMOTION_STATUS IN ('APPROVED','AMEND APPROVED','SUBMITTED','AMEND SUBMITTED')";
+		List<Object[]> list=sessionFactory.getCurrentSession().createNativeQuery(query	).list();
+		
+		for(Object[] obj: list)
+		{
+			crEntries.put(String.valueOf(obj[0]).toUpperCase(), String.valueOf(obj[0])); // getting SOL ID for check
+
+			crEntries.put(String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
+					+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[5]).toUpperCase()
+					+ String.valueOf(obj[6]).toUpperCase(), "");
+			
+			crEntries.put(String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
+					+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[5]).toUpperCase()
+					+ String.valueOf(obj[6]).toUpperCase() + String.valueOf(obj[9]).toUpperCase()
+					+ String.valueOf(obj[10]).toUpperCase(), "");
+			// Date extension
+
+			crEntries.put(String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
+					+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[5]).toUpperCase()
+					+ String.valueOf(obj[6]).toUpperCase() + String.valueOf(obj[7]).toUpperCase(), "");
+			crEntries.put(String.valueOf(obj[0]).toUpperCase() + String.valueOf(obj[2]).toUpperCase()
+					+ String.valueOf(obj[3]).toUpperCase() + String.valueOf(obj[4]).toUpperCase() + "_start_date",
+					String.valueOf(obj[7]).toUpperCase()); // to get the start date from existing
+
+			crEntries.put(String.valueOf(obj[0]) + String.valueOf(obj[2]).toUpperCase()
+					+ String.valueOf(obj[3]).toUpperCase() + String.valueOf(obj[4]).toUpperCase() + "_end_date",
+					String.valueOf(obj[8]).toUpperCase());
+
+			crEntries.put(
+					String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
+							+ String.valueOf(obj[5]).toUpperCase() + String.valueOf(obj[6]).toUpperCase(),
+					String.valueOf(obj[4]).toUpperCase()); // for Basepack Addition
+
+			crEntries.put(
+					String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
+							+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[5]).toUpperCase(),
+					String.valueOf(obj[4]).toUpperCase()); // for TOP UP
+
+			crEntries.put(
+					String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
+							+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[6]).toUpperCase(),
+					String.valueOf(obj[5]).toUpperCase()); // for Missing geo
+			
 		}
 		
 	}

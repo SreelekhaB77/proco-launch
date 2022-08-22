@@ -26,7 +26,8 @@ public class RegularPromoService {
 	public ArrayList<String> getHeaderListForPromotionRegularTemplateDownload() {
 		ArrayList<String> headerList = new ArrayList<String>();
 		headerList.add("CHANNEL");
-		headerList.add("MOC_NAME");
+		headerList.add("YEAR");
+		headerList.add("MOC");
 		//headerList.add("SECONDARY CHANNEL");
 		headerList.add("PPM ACCOUNT");
 		headerList.add("PROMO TIMEPERIOD");
@@ -42,7 +43,7 @@ public class RegularPromoService {
 		headerList.add("BUDGET");
 		//headerList.add("BRANCH");
 		headerList.add("CLUSTER");
-		headerList.add("YEAR");
+		
 
 		return headerList;
 	}
@@ -59,7 +60,8 @@ public class RegularPromoService {
 	public ArrayList<String> getHeaderListForPromotionNewTemplateDownload() {
 		ArrayList<String> headerList = new ArrayList<String>();
 		headerList.add("CHANNEL");
-		headerList.add("MOC_NAME");
+		headerList.add("YEAR");
+		headerList.add("MOC");
 		//headerList.add("SECONDARY CHANNEL");
 		headerList.add("PPM ACCOUNT");
 		headerList.add("PROMO TIMEPERIOD");
@@ -96,27 +98,23 @@ public class RegularPromoService {
 	public ArrayList<String> getHeaderListForPromotionCrTemplateDownload() {
 		ArrayList<String> headerList = new ArrayList<String>();
 		headerList.add("CHANNEL");
+		headerList.add("YEAR");
 		headerList.add("MOC");
-		headerList.add("SECONDARY CHANNEL");
+		headerList.add("Promo Timeperiod");
+		headerList.add("PPM SOL Code Reference");
 		headerList.add("PPM ACCOUNT");
-		headerList.add("EXISTING SOL CODE");
-		headerList.add("AB CREATION (ONLY FOR KA Accounts)");
-		headerList.add("SOL WILL RELEASE ON");
-		headerList.add("BASEPACK CODE");
 		headerList.add("OFFER DESCRIPTION");
+		headerList.add("BASEPACK CODE");
+		headerList.add("BASEPACK DESCRIPTION");
+		headerList.add("CHILDPACK CODE");
+		headerList.add("OFFER TYPE");
+		headerList.add("OFFER MODALITY");
+		headerList.add("QUANTITY");
 		headerList.add("PRICE OFF");
+		headerList.add("BUDGET");
 		headerList.add("BRANCH");
 		headerList.add("CLUSTER");
-		headerList.add("QUANTITY");
-		headerList.add("BUDGET");
-		headerList.add("SOL TYPE");
-		headerList.add("END DATE");
-		headerList.add("CLUSTER SELECTION");
-		headerList.add("BASEPACK ADDITION");
-		headerList.add("TOPUP");
-		headerList.add("ADDITIONAL QUANTITY");
-		headerList.add("ADDITIONAL BUDGET");
-
+		headerList.add("CR TYPE");
 		return headerList;
 	}
 	
@@ -130,40 +128,34 @@ public class RegularPromoService {
 		ArrayList<String> headerList = new ArrayList<String>();
 		if(error_template.equalsIgnoreCase("cr"))
 		{
-		headerList.add("CHANNEL NAME");
-		headerList.add("MOC");
-		headerList.add("SECONDARY CHANNEL");
-		headerList.add("PPM ACCOUNT");
-		headerList.add("PROMO TIMEPERIOD");
-		headerList.add("AB CREATION (ONLY FOR KA Accounts)");
-		headerList.add("BASEPACK CODE");
-		headerList.add("BASEPACK DESCRIPTION");
-		headerList.add("CHILDPACK CODE");
-		headerList.add("OFFER DESCRIPTION");
-		headerList.add("OFFER TYPE");
-		headerList.add("OFFER MODALITY");
-		headerList.add("PRICE OFF");
-		headerList.add("BUDGET");
-		headerList.add("BRANCH");
-		headerList.add("CLUSTER");
-		headerList.add("QUANTITY");
-		headerList.add("SOL TYPE");
-		headerList.add("END DATE");
-		headerList.add("Cluster Selection");
-		headerList.add("Basepack Addition");
-		headerList.add("TOPUP");
-		headerList.add("Additional Quantity");
-		headerList.add("ADDITIONAL BUDGET");
-		headerList.add("ERROR_MSG");
-		headerList.add("TEMPLATE_TYPE");
-		headerList.add("USER_ID");
+			headerList.add("CHANNEL");
+			headerList.add("YEAR");
+			headerList.add("MOC");
+			headerList.add("Promo Timeperiod");
+			headerList.add("PPM SOL Code Reference");
+			headerList.add("PPM ACCOUNT");
+			headerList.add("OFFER DESCRIPTION");
+			headerList.add("BASEPACK CODE");
+			headerList.add("BASEPACK DESCRIPTION");
+			headerList.add("CHILDPACK CODE");
+			headerList.add("OFFER TYPE");
+			headerList.add("OFFER MODALITY");
+			headerList.add("QUANTITY");
+			headerList.add("PRICE OFF");
+			headerList.add("BUDGET");
+			headerList.add("BRANCH");
+			headerList.add("CLUSTER");
+			headerList.add("CR TYPE");
+			headerList.add("TEMPLATE_TYPE");
+			headerList.add("USER_ID");
+			headerList.add("ERROR_MSG");
 		
 		}else if(error_template.equalsIgnoreCase("r") ||
 				error_template.equalsIgnoreCase("ne"))
 		{
 			headerList.add("CHANNEL NAME");
-			headerList.add("MOC_NAME");
-			headerList.add("MOC_YEAR");
+			headerList.add("YEAR");
+			headerList.add("MOC");			
 			//headerList.add("SECONDARY CHANNEL");
 			headerList.add("PPM ACCOUNT");
 			headerList.add("PROMO TIMEPERIOD");
