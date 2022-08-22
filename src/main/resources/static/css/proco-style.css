@@ -398,10 +398,13 @@ img#libimg {
 .promo-lib-bg {
     background-color: #fff;
 }
+.promo-ppm-inactive {
+    background-color: #fff;
+}
 /*bharati changes font size in sprint-9*/
 .tab-label-proco-Signops-inactive {
     padding-left: 17%;
-    line-height: 2.5;
+    line-height: 2.7em;
     font-size: 1.5em; 
     color: #3F3F3F;
 }
@@ -1047,6 +1050,17 @@ span.comboTreeItemTitle {
     background-color: #035597;
     margin-left: -13px;
 }
+/*bharati added style in sprint-9 for ppm upload tab*/
+.proco-ppm-icon {
+    width: 55px;
+    height: 60px;
+    float: left;
+    padding-right: 10px;
+    background: url(../images/proco/signop.png) no-repeat center center;
+    background-size: 46px;
+    background-color: #035597;
+    margin-left: -13px;
+}
 
 .launchupload-parent{
 	border: 2px dashed gray;
@@ -1246,6 +1260,27 @@ img#delimg {
     top: 6px;
     color: #3F3F3F;
 }
+/*bharati added style for ppm uplaod tab in coe in sprint-9*/
+.tab-label-proco-ppm-inactive { 
+    font-size: 1.6em;
+    line-height:2em;
+    float: left;
+    height: 40px;
+    position: absolute;
+    left: 100px;
+    top: 6px;
+    color: #3F3F3F;
+}
+.tab-label-proco-ppm-active {
+    font-size: 0.8em;
+    line-height:2.4em;
+    float: left;
+    height: 40px;
+    position: absolute;
+    left: 100px;
+    top: 6px;
+    color: #fff;
+}
 .tab-label-proco-listing-active {
 	font-size: 1.750em;
     float: left;
@@ -1278,6 +1313,17 @@ img#delimg {
     font-size: 1.7em;
     
 }
+/*bharati added style in sprint-9 for ppm upload tab*/
+.promo-ppm-active a{
+	background-color: #035597 !important;
+    position: relative;
+    height: 60px;
+    padding: 0 !important;
+    color: #fff;
+    line-height: 2.5;
+    font-size: 1.7em;
+    
+}
 /*bharati chnaged below style left,fontsize,line height in spint-9*/ 
 .tab-label-proco-status-inactive {
     background-color: #fff;
@@ -1299,7 +1345,7 @@ img#delimg {
     color: #3F3F3F;
 }
 
-.dashboard a, .listing a,.collaboration a,.disaggregation a,.upload a, .create a, .promo-lib-bg a, .edit a, .track a, .coe-moc a, .coe-asset-management a, .coe-profile a, .coe-track a, .catman-pending a, .coe-hfs a{
+.dashboard a, .listing a,.collaboration a,.disaggregation a,.upload a, .create a, .promo-lib-bg a, .edit a, .track a, .coe-moc a, .coe-asset-management a, .coe-profile a, .coe-track a, .catman-pending a, .coe-hfs a ,.promo-ppm-inactive a{
         padding: 0 !important;
     position: relative;
     height: 60px;

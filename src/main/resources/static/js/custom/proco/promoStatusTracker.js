@@ -1096,3 +1096,106 @@ function downloadMeasureReport(e){
 	
 }
 					//bharati code end here for sprint-9
+					
+//bharati added sprint-9 ppm coe remark upload changes	
+function downloadPpmReport(){
+	//$("#download").submit();  //bharati commented this line for sprint-9 moc filter value pass to download promo file
+	var SelectedppmMoc = $("#ppmMocvalue").val();
+	                 if(SelectedppmMoc == 'SELECT'){
+							$('#selectppmMsgMoc').show();
+						     
+						}else{
+							$('#selectppmMsgMoc').hide();
+							window.location.assign("dpMesureDownloadBasedOnMoc.htm?moc="+SelectedppmMoc);
+						}
+	
+}
+
+
+$("#btnSubmitPpmCoeRemark").click(function (event) {
+						event.preventDefault();
+						
+						var fileName = $('#uploadppmCoeRemark').val();
+						if (fileName == '') {
+							$('#uploadppmErrorMeaMsg').show().html("Please select a file to upload");
+							return false;
+						} else {
+							$('#uploadppmErrorMeaMsg').hide();
+							var FileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+							if (FileExt != "xlsx") {
+								if (FileExt != "xls") {
+									$('#uploadppmErrorMeaMsg').show().html("Please upload .xls or .xlsx file");
+									$("#ppmCoeRemarkUpload").submit(function(e) {
+										e.preventDefault();
+									});
+									return false;
+								}
+
+							}
+						}
+						
+				        // Get form
+				        var form = $('#ppmCoeRemarkUpload')[0];
+                           var data = new FormData(form);
+                        $.ajax({
+				            type: "POST",
+				            enctype: 'multipart/form-data',
+				            url: 'ppmcoeremarksupload.htm' ,
+				            data: data,
+				            processData: false,
+				            contentType: false,
+				            cache: false,
+				            timeout: 600000,
+				            beforeSend: function() {
+                                ajaxLoader(spinnerWidth, spinnerHeight);
+                            },
+							
+				            success: function (ModRes) {
+				            	//console.log(resdata);
+				            	
+				            	 $('.loader').hide();
+				            	 if(ModRes.includes('EXCEL_UPLOADED')) {
+				                    $('#ppmcoeerrorblockUpload').hide();
+				                	$('#ppmcoesuccessblock').show().find('span').html(' File Uploaded Successfully !!!');
+				                	 
+				                }
+				                
+				                else if(ModRes.includes('EXCEL_NOT_UPLOADED')){
+				               $('#ppmcoesuccessblock').hide();
+				                $('#ppmcoeerrorblockUpload').show().find('span').html(' File Contains Error ');
+				                }
+								 else if(ModRes.includes('File Size Exceeds')){
+									 $('#ppmcoeerrorblockUpload').show().find('span').html('File Size Limit Exceeded');
+                                     $('#ppmcoesuccessblock').hide();
+								 }
+				                else if(ModRes.includes('FILE_EMPTY')){
+									$('#ppmcoeerrorblockUpload').show().find('span').html('Error While Uploading Empty File');
+									$('#ppmcoesuccessblock').hide();
+								}
+								else if(ModRes.includes('CHECK_COL_MISMATCH')){
+									$('#ppmcoeerrorblockUpload').show().find('span').html('Please Check Uploaded File');
+									$('#ppmcoesuccessblock').hide();
+								}else if(ModRes.includes('Column count is not match with expected')){
+									$('#ppmcoeerrorblockUpload').show().find('span').html('Please Upload correct File');
+									$('#ppmcoesuccessblock').hide();
+								}
+								else{
+									
+				                	$('#ppmcoeerrorblockUpload').show().find('span').html('Error While Uploading File');
+				                	$('#ppmcoesuccessblock').hide();
+				                	
+				                	 
+				              	 }
+				                    
+				                 $('#ppmCoeRemarkUpload')[0].reset();
+								 //$('.file-name').html("No file chosen");
+				            },
+				            error: function (e) {
+				            $('#ppmcoesuccessblock').hide();
+				                 
+				            }
+				        });
+				       
+					    
+					    	
+				    });
