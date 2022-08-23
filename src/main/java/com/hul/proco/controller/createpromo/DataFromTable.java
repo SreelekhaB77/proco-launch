@@ -289,13 +289,14 @@ public class DataFromTable {
 	}
 	public void basePackAndSaleCategory(Map<String, String> commanmap)
 	{
-		String sale_cat="SELECT BASEPACK,SALES_CATEGORY FROM TBL_PROCO_PRODUCT_MASTER_V2 WHERE IS_ACTIVE=1";
+		String sale_cat="SELECT BASEPACK,SALES_CATEGORY,BP_MRP FROM TBL_PROCO_PRODUCT_MASTER_V2 WHERE IS_ACTIVE=1";
 		
 		List<Object[]> list=sessionFactory.getCurrentSession().createNativeQuery(sale_cat).list();
 		
 		for(Object[] obj:list)
 		{
 			commanmap.put(String.valueOf(obj[0]).toUpperCase(), String.valueOf(obj[1]).toUpperCase());
+			commanmap.put(String.valueOf(obj[0]).toUpperCase()+"_MRP", String.valueOf(obj[2]).toUpperCase());
 		}
 	}
 	public void mapPPMandChannel(Map<String, String> commanmap) {
@@ -339,7 +340,7 @@ public class DataFromTable {
 	
 	public boolean specialChar(String ofr_desc)
 	{
-		String specialCharacters="!#$%&'()*+,-./:;<=>?@[]^_`{|}";
+		String specialCharacters="!#$+;<=>?[]^_`{|}";
 		boolean found = false;
 		for(int i=0; i<specialCharacters.length(); i++){
 		    
@@ -352,6 +353,30 @@ public class DataFromTable {
 		}
 		return found;
 				  
+	}
+	
+	public String calculateBudget(String channel,String quantity,String price_off,String budget,String basepack,Map<String,String> map)
+	{
+		if(channel.equalsIgnoreCase("CNC") ||channel.equalsIgnoreCase("HUL3") )
+		{
+			return budget;
+		}
+		else
+		{
+
+			if(!price_off.contains("%"))
+			{
+				Double price=Double.valueOf(price_off);
+				Double quanti=Double.valueOf(quantity);
+				return String.valueOf(price*quanti);
+			}else
+			{
+				Double price=Double.valueOf(price_off.substring(0,price_off.length()-1));
+				Double quanti=Double.valueOf(quantity);
+				return  String.valueOf(price*quanti*Integer.valueOf(map.get(basepack+"_MRP")));
+			}
+		}
+		
 	}
 	
 	/**

@@ -53,7 +53,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	private static String SQL_QUERY_INSERT_INTO_PROMOTION_MASTER_TEMP = "INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2 "
 			+ "(CHANNEL_NAME,MOC_NAME,PPM_ACCOUNT,PROMO_TIMEPERIOD,BASEPACK_CODE,BASEPACK_DESC,CHILD_BASEPACK_CODE,OFFER_DESC,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,BUDGET,CLUSTER,MOC_YEAR,"
 			+ "BRANCH,USER_ID,TEMPLATE_TYPE,QUANTITY,AB_CREATION,START_DATE,END_DATE,ERROR_MSG,MOC,CR_SOL_TYPE,PROMOTION_ID,SALES_CATEGORY) " + "VALUES "
-			+ "(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26)";
+			+ "(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14,"
+			+ "?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26)";
 
 	/*
 	 * private static String SQL_QUERY_INSERT_INTO_PROMO_TABLE =
@@ -122,7 +123,14 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					duplicateMap.put(
 							bean.getMoc_name() + bean.getYear() + bean.getPpm_account() + bean.getBasepack_code(), "");
 					if (template.equalsIgnoreCase("new")) {
-
+						String budget=bean.getBudget().isEmpty() ? ""
+								: String.valueOf(
+										(double) Math.round(Double.parseDouble(bean.getBudget()) * 100) / 100);
+						String quantity=bean.getQuantity().isEmpty() ? ""
+								: String.valueOf(
+										(double) Math.round(Double.parseDouble(bean.getQuantity()) * 100) / 100);
+						query.setString(12,datafromtable.calculateBudget(bean.getChannel(), quantity, bean.getPrice_off(), budget, bean.getBasepack_code(), commanmap));
+						
 						query.setString(17, "NE");
 						if (bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity()) <= 9) {
 							if (flag == 1)
@@ -172,7 +180,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					query.setString(9, bean.getOfr_type());
 					query.setString(10, bean.getOffer_mod());
 					query.setString(11, bean.getPrice_off());
-					query.setString(12, bean.getBudget());
+					if(template.equalsIgnoreCase("regular"))
+					   query.setString(12, bean.getBudget());
 					query.setString(13, bean.getCluster());
 					query.setString(14, bean.getYear());
 					query.setString(24, "");
@@ -199,7 +208,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					} catch (Exception e) {
 						logger.error(e);
 					}
-
+					if(template.equalsIgnoreCase("regular"))
 					if (isStringNumber(bean.getBudget()))
 						query.setString(12,
 								bean.getBudget().isEmpty() ? ""
@@ -210,9 +219,10 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					query.setString(15, branchmap.get(bean.getCluster().toUpperCase()));
 					query.setString(13, bean.getCluster());
 					query.setString(16, uid);
-
-					query.setString(18, "");
-					query.setString(17, "R");
+					if(template.equalsIgnoreCase("regular"))
+					      query.setString(18, "");
+					if(template.equalsIgnoreCase("regular"))
+					   query.setString(17, "R");
 					
 					if (!validationmap.get("baseback").contains(bean.getBasepack_code())) {
 						if (flag == 1)
@@ -568,6 +578,15 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				datafromtable.getAllSOLtype(crEntries);
 				datafromtable.getAllSOLCodeAndPromoId(crEntries);
 				
+				String budget=bean.getBudget().isEmpty() ? ""
+						: String.valueOf(
+								(double) Math.round(Double.parseDouble(bean.getBudget()) * 100) / 100);
+				String quantity=bean.getQuantity().isEmpty() ? ""
+						: String.valueOf(
+								(double) Math.round(Double.parseDouble(bean.getQuantity()) * 100) / 100);
+				query.setString(12,datafromtable.calculateBudget(bean.getChannel(), quantity, bean.getPrice_off(), budget, bean.getBasepack_code(), commanmap));
+				
+				query.setString(26, commanmap.get(bean.getBasepack_code().toUpperCase()));
 				if (!duplicateMap.containsKey(bean.getMoc_name().toUpperCase() + bean.getBasepack_code().toUpperCase()
 						+ bean.getPpm_account().toUpperCase() + bean.getSol_type().toUpperCase())) {
 
@@ -768,7 +787,6 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							: String.valueOf(
 									(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100)
 											/ 100));
-					query.setString(12, bean.getBudget());
 					query.setString(13, bean.getCluster());
 					query.setString(14, bean.getYear());
 					query.setString(15, bean.getBranch());
