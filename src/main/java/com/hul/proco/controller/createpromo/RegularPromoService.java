@@ -77,7 +77,6 @@ public class RegularPromoService {
 		//headerList.add("BRANCH");
 		headerList.add("CLUSTER");
 		headerList.add("QUANTITY");
-		headerList.add("YEAR");
 		return headerList;
 	}
 
