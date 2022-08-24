@@ -168,7 +168,7 @@ public class RegularPromoCreateController {
 		List<ArrayList<String>> downloadedData = new ArrayList<ArrayList<String>>();
 		ArrayList<String> headerDetail = createCRPromo.getHeaderListForPromotionNewTemplateDownload();
 		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
-		String fileName = UploadUtil.getFileName("Promotion.RegularTemplate.file", "",
+		String fileName = UploadUtil.getFileName("Promotion.New.file", "",
 				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 		String downloadFileName = absoluteFilePath + fileName;
 		downloadedData.add(headerDetail);
@@ -203,7 +203,7 @@ public class RegularPromoCreateController {
 		List<ArrayList<String>> downloadedData = new ArrayList<ArrayList<String>>();
 		ArrayList<String> headerDetail = createCRPromo.getHeaderListForPromotionCrTemplateDownload();
 		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
-		String fileName = UploadUtil.getFileName("Promotion.RegularTemplate.file", "",
+		String fileName = UploadUtil.getFileName("Promotion.CR.file", "",
 				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 		String downloadFileName = absoluteFilePath + fileName;
 		downloadedData.add(headerDetail);

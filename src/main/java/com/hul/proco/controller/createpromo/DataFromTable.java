@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.hibernate.SessionFactory;
@@ -79,10 +81,11 @@ public class DataFromTable {
 	}
 	public void getPresentPromo(Map<String,String> h)
 	{
-		String q_String="SELECT MOC_NAME,PPM_ACCOUNT,MOC_YEAR,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER FROM TBL_PROCO_PROMOTION_MASTER_V2 ";
+		//bean.getMoc_name() + bean.getPpm_account() + bean.getYear() + sale_cate
+		String q_String="SELECT MOC_NAME,PPM_ACCOUNT,MOC_YEAR,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER,SALES_CATEGORY FROM TBL_PROCO_PROMOTION_MASTER_V2 ";
 		List<Object[]> mapdata_list = sessionFactory.getCurrentSession().createNativeQuery(q_String).list();
 		for (Object[] data : mapdata_list) {
-			h.put(String.valueOf(data[0])+String.valueOf(data[1])+String.valueOf(data[2]), String.valueOf(data[4])+" "+String.valueOf(data[5]) );
+			h.put(String.valueOf(data[0]).toUpperCase()+String.valueOf(data[1]).toUpperCase()+String.valueOf(data[2]).toUpperCase()+String.valueOf(data[7]).toUpperCase(), String.valueOf(data[4])+" "+String.valueOf(data[5]) );
 		}
 		
 	}
@@ -159,6 +162,7 @@ public class DataFromTable {
 					String.valueOf(tbl_proco_customer_master[0]).toUpperCase() + "_" + String.valueOf(tbl_proco_customer_master[1]).toUpperCase(),
 					String.valueOf(tbl_proco_customer_master[2]).toUpperCase()); // adding moc group base on CHANNEL_NAME and
 																	// ppm_account
+			master_map.put(String.valueOf(tbl_proco_customer_master[0]).toUpperCase() + String.valueOf(tbl_proco_customer_master[1]).toUpperCase(), ""); // for matching ppm and channel
 		}
 		
 		for (Object[] tbl_vat_moc_master : tbl_vat_moc_master_list) {
@@ -283,10 +287,22 @@ public class DataFromTable {
 				.list();
 		return (ArrayList<String>) ar.stream().map(String::toUpperCase).collect(Collectors.toList());
 	}
-
+	public void basePackAndSaleCategory(Map<String, String> commanmap)
+	{
+		String sale_cat="SELECT BASEPACK,SALES_CATEGORY,BP_MRP FROM TBL_PROCO_PRODUCT_MASTER_V2 WHERE IS_ACTIVE=1";
+		
+		List<Object[]> list=sessionFactory.getCurrentSession().createNativeQuery(sale_cat).list();
+		
+		for(Object[] obj:list)
+		{
+			commanmap.put(String.valueOf(obj[0]).toUpperCase(), String.valueOf(obj[1]).toUpperCase());
+			commanmap.put(String.valueOf(obj[0]).toUpperCase()+"_MRP", String.valueOf(obj[2]).toUpperCase());
+		}
+	}
 	public void mapPPMandChannel(Map<String, String> commanmap) {
 		// TODO Auto-generated method stub
 		String strquery="SELECT DISTINCT PPM_ACCOUNT,CHANNEL_NAME FROM TBL_PROCO_CLUSTER_MASTER_V2 WHERE IS_ACTIVE=1";
+		
 		List<Object[]> list=sessionFactory.getCurrentSession().createNativeQuery(strquery).list();
 		
 		for(Object[] obj:list)
@@ -321,6 +337,48 @@ public class DataFromTable {
 			crEntries.put(String.valueOf(obj[0]).toUpperCase(),"");
 		}
 	}
+	
+	public boolean specialChar(String ofr_desc)
+	{
+		String specialCharacters="!#$+;<=>?[]^_`{|}";
+		boolean found = false;
+		for(int i=0; i<specialCharacters.length(); i++){
+		    
+		    //Checking if the input string contain any of the specified Characters
+		    if(ofr_desc.contains(Character.toString(specialCharacters.charAt(i)))){
+		        found = true;
+		        System.out.println("String contains Special Characters");
+		        break;
+		    }
+		}
+		return found;
+				  
+	}
+	
+	public String calculateBudget(String channel,String quantity,String price_off,String budget,String basepack,Map<String,String> map)
+	{
+		if(channel.equalsIgnoreCase("CNC") ||channel.equalsIgnoreCase("HUL3") )
+		{
+			return budget;
+		}
+		else
+		{
+
+			if(!price_off.contains("%"))
+			{
+				Double price=Double.valueOf(price_off);
+				Double quanti=Double.valueOf(quantity);
+				return String.valueOf(price*quanti);
+			}else
+			{
+				Double price=Double.valueOf(price_off.substring(0,price_off.length()-1));
+				Double quanti=Double.valueOf(quantity);
+				return  String.valueOf(price*quanti*Integer.valueOf(map.get(basepack+"_MRP")));
+			}
+		}
+		
+	}
+	
 	/**
 	 * To handle all CR template 
 	 * @param crEntries
@@ -330,7 +388,7 @@ public class DataFromTable {
 		String query="SELECT a.PROMOTION_ID,a.PROMO_ID,a.MOC_NAME,a.PPM_ACCOUNT,a.BASEPACK_CODE,a.CLUSTER,a.PRICE_OFF,a.START_DATE,a.END_DATE,a.PROMO_TIMEPERIOD,a.MOC_YEAR"
 				+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 a INNER JOIN TBL_PROCO_MEASURE_MASTER_V2 b"
 				+ " ON "
-				+ "a.PROMOTION_ID=b.PROMOTION_ID "
+				+ "a.PROMO_ID=b.PROMO_ID "
 				+ "WHERE b.PROMOTION_STATUS IN ('APPROVED','AMEND APPROVED','SUBMITTED','AMEND SUBMITTED')";
 		List<Object[]> list=sessionFactory.getCurrentSession().createNativeQuery(query	).list();
 		
