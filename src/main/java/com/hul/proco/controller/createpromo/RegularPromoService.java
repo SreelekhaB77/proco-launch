@@ -66,10 +66,11 @@ public class RegularPromoService {
 		headerList.add("PPM ACCOUNT");
 		headerList.add("PROMO TIMEPERIOD");
 		//headerList.add("AB CREATION (ONLY FOR KA Accounts)");
+		headerList.add("OFFER DESCRIPTION");
 		headerList.add("BASEPACK CODE");
 		headerList.add("BASEPACK DESCRIPTION");
 		headerList.add("CHILDPACK CODE");
-		headerList.add("OFFER DESCRIPTION");
+		
 		headerList.add("OFFER TYPE");
 		headerList.add("OFFER MODALITY");
 		headerList.add("PRICE OFF");
