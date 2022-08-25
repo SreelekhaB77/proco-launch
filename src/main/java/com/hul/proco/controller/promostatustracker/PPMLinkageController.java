@@ -279,4 +279,56 @@ public class PPMLinkageController {
 		
 		return new ModelAndView("proco/ppm_upload");
 	}
+	
+	//Added by kavitha D-SPRINT 9
+	@RequestMapping(value = "getMOCforCoedownload.htm", method = RequestMethod.GET)
+	public @ResponseBody String getMOCforCoedownload(  HttpServletResponse response,
+			Model model)
+	{
+		List<String> moctypes=procoStatusTrackerService.getMOCforCoedownload();
+		model.addAttribute("mocListCoe",moctypes);
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		String json = gson.toJson(moctypes);
+		return json;
+	}
+	
+	//Added by kavitha D for downloading ppm upload file-SPRINT 9
+
+	@GetMapping(value="ppmCoeUploadableDownload.htm")
+	public @ResponseBody ModelAndView ppmCoeUploadableDownload(
+			@ModelAttribute("PPMLinkageBean") PPMLinkageBean ppmLinkageBean, Model model, @RequestParam("selMOC") String selMOC,
+			HttpServletRequest request, HttpServletResponse response)  {
+		InputStream is;
+		String downloadLink = "", absoluteFilePath = "";
+		List<ArrayList<String>> downloadData = null;			
+		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
+			String fileName = UploadUtil.getFileName("PPM.COE.REMARKS.file", "",
+					CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
+			String downloadFileName = absoluteFilePath + fileName;
+		try {	
+			ArrayList<String> headers = procoStatusTrackerService.getPpmDownloadHeaders();
+			 downloadData=procoStatusTrackerService.getPpmDownloadData(headers,selMOC);
+		if (headers != null) {
+			UploadUtil.writeXLSFile(downloadFileName, downloadData, null,".xls");
+			downloadLink = downloadFileName + ".xls";
+			is = new FileInputStream(new File(downloadLink));
+			response.setContentType("application/force-download");
+			response.setHeader("Content-Disposition", "attachment; filename=PPMUploadableDownloadFile"
+					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+			IOUtils.copy(is, response.getOutputStream());
+			response.flushBuffer();
+		}} catch (FileNotFoundException e) {
+			logger.error("Exception: ", e);
+			// e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			logger.error("Exception: ", e);
+			// e.printStackTrace();
+			return null;
+	
+		}
+	return null;
+	
+}
+	
 }

@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureQuery;
 import javax.transaction.Transactional;
 
 import org.apache.log4j.Logger;
@@ -23,6 +25,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.internal.SessionImpl;
@@ -2377,4 +2380,61 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 		return headerList;
 	}
 
+	public ArrayList<String> getPpmDownloadHeaders(){
+		ArrayList<String> headerList=new ArrayList<String>();
+		
+		headerList.add("UPLOAD_REFERENCE_NUMBER");		
+		headerList.add("PROMOTION_NAME");		
+		headerList.add("PROMOTION_PERIOD");		
+		headerList.add("SELL_IN_START_DATE");	   
+		headerList.add("SELL_IN_END_DATE");		
+		headerList.add("CUSTOMER_CODE");		
+		headerList.add("PRODUCT_CODE");		
+		headerList.add("PROMOTION_MECHANICS");
+	    headerList.add("INVESTMENT_TYPE");	
+		headerList.add("UoM");
+		headerList.add("DISCOUNT");		
+		headerList.add("PERCENT_PROMOTED_VOLUME");		
+		headerList.add("PLANNED_QUANTITY");		
+		headerList.add("INVESTMENT_AMOUNT");		
+		return headerList;		
+	}
+	//Added by kavitha D-SPRINT 9
+	public List<String> getMOCforCoedownload() {
+		String q=" SELECT DISTINCT MOC FROM TBL_PROCO_PROMOTION_MASTER_V2 M WHERE NOT EXISTS (SELECT 1 FROM TBL_PROCO_PPM_COE_REMARKS C WHERE M.PROMO_ID = C.PROMO_ID AND C.COE_REMARKS <> 'PPM Submitted') "
+				+ "ORDER BY concat(SUBSTRING(MOC, 3, 4), SUBSTRING(MOC, 1, 2))";
+		
+		return sessionFactory.getCurrentSession().createNativeQuery(q).list();
+	}
+
+	//Added by kavitha D for downloading ppm upload file-SPRINT 9
+
+	@SuppressWarnings({ "rawtypes" })
+	public List<ArrayList<String>> getPpmDownloadData(ArrayList<String> headers, String selMOC) {
+		List<ArrayList<String>> downloadList = new ArrayList<ArrayList<String>>();
+		try {
+		NativeQuery query = sessionFactory.getCurrentSession().createNativeQuery("CALL PROC_POPULATE_PPM_UPLOADABLE(:selMOC)");
+		query.setParameter("selMOC", selMOC);
+		query.executeUpdate();
+		Iterator itr = query.list().iterator();
+		downloadList.add(headers);
+		while (itr.hasNext()) {
+			Object[] obj = (Object[]) itr.next();
+			ArrayList<String> dataObj = new ArrayList<String>();
+			for (Object ob : obj) {
+				String value = "";
+				value = (ob == null) ? "" : ob.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
+			}
+			obj = null;
+			downloadList.add(dataObj);
+		}
+		return downloadList;	
+	} catch (Exception e) {
+		logger.debug("Exception: ", e);
+	}
+		return downloadList;
+	}
+		
+	
 }
