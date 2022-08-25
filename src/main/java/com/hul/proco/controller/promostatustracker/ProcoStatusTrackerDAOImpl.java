@@ -2329,7 +2329,7 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 		
 		
 		String ppmQuery=" SELECT DISTINCT PROMO_ID FROM TBL_PROCO_PROMOTION_MASTER_V2 M "
-				+ " WHERE NOT EXISTS (SELECT 1 FROM TBL_PROCO_PPM_COE_REMARKS C WHERE M.PROMO_ID = C.PROMO_ID) ";
+				+ " WHERE NOT EXISTS (SELECT 1 FROM TBL_PROCO_PPM_COE_REMARKS C WHERE M.PROMO_ID = C.PROMO_ID AND C.COE_REMARKS <> 'PPM Submitted') ";
 		
 		Query query = sessionFactory.getCurrentSession().createNativeQuery(ppmQuery);
 		downloadDataList.add(headerList);
