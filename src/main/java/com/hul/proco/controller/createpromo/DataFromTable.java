@@ -50,6 +50,7 @@ public class DataFromTable {
 					+ "PPM_DESC_STAGE=CONCAT(A.ACCOUNT_TYPE ,':',  B.MODALITY_KEY,':',T.PPM_ACCOUNT,':',C.SALES_CATEGORY,':',T.OFFER_DESC,':',T.CR_SOL_TYPE,IF (D.NON_UNIFY <> '', concat(':', D.NON_UNIFY), ''))  WHERE USER_ID='"
 					+ uid + "'  " + "";
 		} else {
+			
 			update_ppm_desc = "UPDATE TBL_PROCO_PROMOTION_MASTER_TEMP_V2 T "
 					+ "INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 A ON A.PPM_ACCOUNT=T.PPM_ACCOUNT AND A.CHANNEL_NAME=T.CHANNEL_NAME "
 					+ "INNER JOIN TBL_PROCO_INVESTMENT_TYPE_MASTER_V2 B ON B.OFFER_MODALITY = T.OFFER_MODALITY AND B.OFFER_TYPE = T.OFFER_TYPE "
@@ -61,7 +62,21 @@ public class DataFromTable {
 		sessionFactory.getCurrentSession().createNativeQuery(update_ppm_desc).executeUpdate();
 
 	}
-
+	
+	public Map<String,String> getAllOffetTypeAndOfferMod()
+	{
+		Map<String,String> mod_map = new HashMap<String, String>();
+		String offer_mod="SELECT DISTINCT OFFER_MODALITY,OFFER_TYPE FROM TBL_PROCO_INVESTMENT_TYPE_MASTER_V2 WHERE IS_ACTIVE=1";
+		List<Object[]> mapdata_list = sessionFactory.getCurrentSession().createNativeQuery(offer_mod).list();
+		for(Object[] obj: mapdata_list)
+		{
+			mod_map.put(String.valueOf(obj[0]).toUpperCase(), String.valueOf(obj[1]).toUpperCase());
+		}
+		
+		return mod_map;
+		
+	}
+	
 	public void updatePromoIdInTemp(String promoid, String moc_name, String ppm_account, String basepack_code,String pid,String year) {
 	String updateintemp="UPDATE TBL_PROCO_PROMOTION_MASTER_TEMP_V2 SET PROMO_ID='"+promoid+"',PID='"+pid+"',PPM_DESC=CONCAT('"+promoid+"',':',PPM_DESC_STAGE) WHERE MOC_NAME='"+moc_name+"' AND PPM_ACCOUNT='"+ppm_account+"'"+
 				" AND BASEPACK_CODE='"+basepack_code+"' AND MOC_YEAR='"+year+"'";
@@ -340,14 +355,13 @@ public class DataFromTable {
 	
 	public boolean specialChar(String ofr_desc)
 	{
-		String specialCharacters="!#$+;<=>?[]^_`{|}";
+		String specialCharacters="(‘@’.^$*!/&)";
 		boolean found = false;
 		for(int i=0; i<specialCharacters.length(); i++){
 		    
 		    //Checking if the input string contain any of the specified Characters
 		    if(ofr_desc.contains(Character.toString(specialCharacters.charAt(i)))){
 		        found = true;
-		        System.out.println("String contains Special Characters");
 		        break;
 		    }
 		}
@@ -435,4 +449,18 @@ public class DataFromTable {
 		}
 		
 	}
+
+	
+	
+	public void getppmDescStage(Map<String, String> commanmap,String uid) {
+		String ppmdesc="SELECT PPM_DESC_STAGE,CHANNEL_NAME,MOC_NAME,PPM_ACCOUNT,BASEPACK_CODE,SALES_CATEGORY FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE USER_ID='"+uid+"'";
+		List<Object[]> list=sessionFactory.getCurrentSession().createNativeQuery(ppmdesc).list();
+		for(Object[] obj: list)
+		{
+			commanmap.put(String.valueOf(obj[1])+String.valueOf(obj[2])+String.valueOf(obj[3])+String.valueOf(obj[4]), String.valueOf(obj[0])); 
+			commanmap.put(String.valueOf(obj[1])+String.valueOf(obj[2])+String.valueOf(obj[3])+String.valueOf(obj[4])+"sale", String.valueOf(obj[5])); 
+		}
+	}
+	
+	
 }

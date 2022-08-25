@@ -214,7 +214,7 @@ public class RegularPromoCreateController {
 			is = new FileInputStream(new File(downloadLink));
 			// copy it to response's OutputStream
 			response.setContentType("application/force-download");
-			response.setHeader("Content-Disposition", "attachment; filename=PromotionNewFile_"
+			response.setHeader("Content-Disposition", "attachment; filename=PromotionCRFile_"
 					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
 			IOUtils.copy(is, response.getOutputStream());
 			response.flushBuffer();

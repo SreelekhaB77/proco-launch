@@ -2259,7 +2259,7 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 	headerList.add("BUNDLE ID");		
 	headerList.add("BUNDLE NAME");	   
 	headerList.add("PROMOTION QUALIFICATION");		
-	headerList.add("PROMOTION  OBJECTIVE");
+	headerList.add("PROMOTION OBJECTIVE");
 	headerList.add("MARKETING OBJECTIVE");		
 	headerList.add("PROMOTION MECHANICS");
 	headerList.add("PROMOTION STARTDATE");	

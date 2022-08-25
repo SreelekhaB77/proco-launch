@@ -65,7 +65,7 @@ public class PPMLinkageBean {
 	@Column(name="BRAND")
 	private String brand;
 	
-	@Column(name="SUB_BRAND")
+	@Column(name="SUB BRAND")
 	private String sub_brand;
 	
 	@Column(name="UOM")
@@ -121,7 +121,7 @@ public class PPMLinkageBean {
 	@Column(name="PROMOTION QUALIFICATION")
 	private String PROMOTION_QUALIFICATION;
 	
-	@Column(name="PROMOTION OBJECTIVE")
+	@Column(name="PROMOTION  OBJECTIVE")
 	private String PROMOTION_OBJECTIVE;
 	
 	@Column(name="MARKETING OBJECTIVE")
@@ -142,10 +142,10 @@ public class PPMLinkageBean {
 	@Column(name="InvestmentAmount")
 	private String investment_amount;
 
-	@Column(name="PRE DIP_STARTDATE")
+	@Column(name="PRE DIP STARTDATE")
 	private String PRE_DIP_START_DATE;
 	
-	@Column(name="POST DIP_ENDDATE")
+	@Column(name="POST DIP ENDDATE")
 	private String POST_DIP_END_DATE;
 	
 	@Column(name="CUSTOMER")
@@ -175,7 +175,7 @@ public class PPMLinkageBean {
 	@Column(name="SUBMISSION DATE")
 	private String SUBMISSION_DATE;
 	
-	@Column(name="APPROVED DATE ")
+	@Column(name="APPROVED DATE")
 	private String APPROVED_DATE;
 	
 	@Column(name="MODIFIED DATE")
@@ -202,7 +202,7 @@ public class PPMLinkageBean {
 	@Column(name="BASELINE TURNOVER")
 	private String BASELINE_TURNOVER;
 	
-	@Column(name="BASELINE GROSSPROFIT")
+	@Column(name="BASELINE GROSS PROFIT")
 	private String BASELINE_GROSS_PROFIT;
 	
 	@Column(name="PROMOTION VOLUME BEFORE")
