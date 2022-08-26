@@ -22,11 +22,11 @@ public class DPVolumeUploadService {
 		 
 		 headerList.add("CHANNEL");
 		 headerList.add("MOC");
+		 headerList.add("YEAR");
+		 headerList.add("MOC NAME");
 		 headerList.add("PROMO ID");
-		 headerList.add("Scondary channel");
 		 headerList.add("PPM Account");
 		 headerList.add("Promo Timeperiod");
-		 headerList.add("AB CREATION (ONLY FOR KA Accounts)");
 		 headerList.add("Basepack Code");
 		 headerList.add("Basepack Description");
 		 headerList.add("Child Pack Code");
@@ -34,6 +34,7 @@ public class DPVolumeUploadService {
 		 headerList.add("Offer Type");
 		 headerList.add("Offer Modality");
 		 headerList.add("Price off");
+		 headerList.add("BUDGET");
 		 headerList.add("QUANTITY");
 		 headerList.add("Branch");
 		 headerList.add("CLUSTER");

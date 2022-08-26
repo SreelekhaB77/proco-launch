@@ -98,8 +98,18 @@ public class CreateBeanRegular {
 	@Column(name = "MOC")
 	private String moc_name;
 
+	@Column(name = "MOC NAME")
+	private String moc_name_dp;
 	
 	
+	public String getMoc_name_dp() {
+		return moc_name_dp;
+	}
+
+	public void setMoc_name_dp(String moc_name_dp) {
+		this.moc_name_dp = moc_name_dp;
+	}
+
 	public String getYear() {
 		return year;
 	}

@@ -153,30 +153,54 @@ public class RegularPromoService {
 		}else if(error_template.equalsIgnoreCase("r") ||
 				error_template.equalsIgnoreCase("ne"))
 		{
-			headerList.add("CHANNEL NAME");
-			headerList.add("YEAR");
-			headerList.add("MOC");			
-			//headerList.add("SECONDARY CHANNEL");
-			headerList.add("PPM ACCOUNT");
-			headerList.add("PROMO TIMEPERIOD");
-			//headerList.add("AB CREATION (ONLY FOR KA Accounts)");
-			headerList.add("BASEPACK CODE");
-			headerList.add("BASEPACK DESCRIPTION");
-			headerList.add("CHILDPACK CODE");
-			headerList.add("OFFER DESCRIPTION");
-			headerList.add("OFFER TYPE");
-			headerList.add("OFFER MODALITY");
-			headerList.add("PRICE OFF");
-			headerList.add("BUDGET");
-			//headerList.add("BRANCH");
-			headerList.add("CLUSTER");
-			if(error_template.equalsIgnoreCase("ne") || roleid.equalsIgnoreCase("dp"))
-			headerList.add("QUANTITY");
-			headerList.add("TEMPLATE_TYPE");
-			headerList.add("USER_ID");
-			headerList.add("ERROR_MSG");
-			
+			if (roleid.equalsIgnoreCase("dp")) {
+				headerList.add("CHANNEL NAME");
+				headerList.add("MOC");
+				headerList.add("MOC YEAR");
+				headerList.add("MOC NAME");
+				headerList.add("PROMO ID");
+				headerList.add("PPM ACCOUNT");
+				headerList.add("PROMO TIMEPERIOD");
+				headerList.add("BASEPACK CODE");
+				headerList.add("BASEPACK DESC");
+				headerList.add("CHILD BASEPACK CODE");
+				headerList.add("OFFER DESC");
+				headerList.add("OFFER TYPE");
+				headerList.add("OFFER MODALITY");
+				headerList.add("PRICE OFF");
+				headerList.add("BUDGET");
+				headerList.add("QUANTITY");
+				headerList.add("BRANCH");
+				headerList.add("CLUSTER");
+				headerList.add("TEMPLATE TYPE");
+				headerList.add("USER ID");
+				headerList.add("ERROR MSG");
+			} else {
+				headerList.add("CHANNEL NAME");
+				headerList.add("YEAR");
+				headerList.add("MOC");
+				// headerList.add("SECONDARY CHANNEL");
+				headerList.add("PPM ACCOUNT");
+				headerList.add("PROMO TIMEPERIOD");
+				headerList.add("OFFER DESCRIPTION");
+				// headerList.add("AB CREATION (ONLY FOR KA Accounts)");
+				headerList.add("BASEPACK CODE");
+				headerList.add("BASEPACK DESCRIPTION");
+				headerList.add("CHILDPACK CODE");
+				headerList.add("OFFER TYPE");
+				headerList.add("OFFER MODALITY");
+				headerList.add("PRICE OFF");
+				headerList.add("BUDGET");
+				// headerList.add("BRANCH");
+				headerList.add("CLUSTER");
+				if (error_template.equalsIgnoreCase("ne"))
+					headerList.add("QUANTITY");
+				headerList.add("TEMPLATE_TYPE");
+				headerList.add("USER_ID");
+				headerList.add("ERROR_MSG");
+			}
 		}
+		
 		return headerList;
 	}
 
