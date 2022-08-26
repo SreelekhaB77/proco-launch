@@ -63,7 +63,7 @@ public class PromoListingServiceImpl implements PromoListingService {
 		headerList.add("MOC");
 		headerList.add("ACCOUNT_TYPE");
 		headerList.add("POS_ONINVOICE");
-		headerList.add("SECONDARY_CHANNEL");
+		//headerList.add("SECONDARY_CHANNEL");
 		headerList.add("PPM_ACCOUNT");
 		headerList.add("PROMO_ID");
 		headerList.add("EXISTING SOL CODE");
@@ -199,7 +199,7 @@ public class PromoListingServiceImpl implements PromoListingService {
 		headerList.add("MOC");
 		headerList.add("ACCOUNT_TYPE");
 		headerList.add("POS_ONINVOICE");
-		headerList.add("SECONDARY_CHANNEL");
+		//headerList.add("SECONDARY_CHANNEL");
 		headerList.add("PPM_ACCOUNT");
 		headerList.add("PROMO_ID");
 		headerList.add("EXISTING SOL CODE");

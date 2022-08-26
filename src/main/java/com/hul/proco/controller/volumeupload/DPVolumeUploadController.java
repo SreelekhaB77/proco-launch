@@ -112,7 +112,7 @@ public class DPVolumeUploadController {
 					return "FILE_SIZE_EXCEED";
 				} else if (UploadUtil.movefile(file, fileName)) {
 					Map<String, List<Object>> map = null;
-					map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(18, false, null);
+					map = ExOM.mapFromExcel(new File(fileName)).to(CreateBeanRegular.class).map(19, false, null);
 
 					if (map.isEmpty()) {
 						model.addAttribute("FILE_STAUS", "FILE_EMPTY");
@@ -146,8 +146,10 @@ public class DPVolumeUploadController {
 			}
 		} catch (Exception e) {
 			logger.error(e);
+			e.printStackTrace();
 		} catch (Throwable t) {
 			logger.error(t);
+			t.printStackTrace();
 		}
 		return save_data;
 	}

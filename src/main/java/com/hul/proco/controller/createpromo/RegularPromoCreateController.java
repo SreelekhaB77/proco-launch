@@ -244,7 +244,6 @@ public class RegularPromoCreateController {
 				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 		String downloadFileName = absoluteFilePath + fileName;
 		downloadedData = createCRPromo.getPromotionErrorDetails(headerDetail, userID,error_template,roleID);
-		
 		Map<String, List<List<String>>> mastersForNewTemplate = createCRPromo.getMastersForRegularTemplate();
 		try {
 			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForNewTemplate, ".xls");
