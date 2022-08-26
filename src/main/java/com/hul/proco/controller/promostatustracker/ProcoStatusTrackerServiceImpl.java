@@ -213,5 +213,22 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 		return procoStatusTrackerDao.ppmCoeRemarksDownloadHeaderList();
 		
 	}
+	
+	public ArrayList<String> getPpmDownloadHeaders(){
+		return procoStatusTrackerDao.getPpmDownloadHeaders();
+
+	}
+	//Added by kavitha D for downloading ppm upload file starts-SPRINT 9
+
+	public List<ArrayList<String>> getPpmDownloadData(ArrayList<String> headers, String selMOC){
+		return procoStatusTrackerDao.getPpmDownloadData(headers,selMOC);
+	}
+
+	public List<String> getMOCforCoedownload(){
+		return procoStatusTrackerDao.getMOCforCoedownload();
+	}
+	//Added by kavitha D for downloading ppm upload file ends-SPRINT 9
+
+
 
 }

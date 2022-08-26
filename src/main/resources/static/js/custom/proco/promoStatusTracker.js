@@ -1098,6 +1098,27 @@ function downloadMeasureReport(e){
 					//bharati code end here for sprint-9
 					
 //bharati added sprint-9 ppm coe remark upload changes	
+$.ajax({
+		type : "GET",
+		contentType : "application/json; charset=utf-8",
+		cache : false,
+		url : "getMOCforCoedownload.htm",
+		success : function(data) {
+			var ppmMocvalue = $.parseJSON(data);
+			//console.log(branch);
+			$('#ppmMocvalue').empty();
+			$('#ppmMocvalue').append("<option value=SELECT>SELECT MOC</option>");
+			$.each(ppmMocvalue,
+					function(key, value) {
+						$('#ppmMocvalue').append(
+								"<option value='" + value + "'>" + value
+										+ "</option>");
+					});
+		},
+		error : function(error) {
+			console.log(error)
+		}
+	});
 function downloadPpmReport(){
 	//$("#download").submit();  //bharati commented this line for sprint-9 moc filter value pass to download promo file
 	var SelectedppmMoc = $("#ppmMocvalue").val();
@@ -1106,7 +1127,7 @@ function downloadPpmReport(){
 						     
 						}else{
 							$('#selectppmMsgMoc').hide();
-							window.location.assign("dpMesureDownloadBasedOnMoc.htm?moc="+SelectedppmMoc);
+							window.location.assign("ppmCoeUploadableDownload.htm?selMOC="+SelectedppmMoc);
 						}
 	
 }

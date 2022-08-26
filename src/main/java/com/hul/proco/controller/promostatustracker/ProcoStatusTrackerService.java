@@ -49,4 +49,10 @@ public interface ProcoStatusTrackerService {
 
 	public ArrayList<String> ppmCoeRemarksDownloadHeaderList();
 
+	public ArrayList<String> getPpmDownloadHeaders();
+
+	public List<ArrayList<String>> getPpmDownloadData(ArrayList<String> headers, String selMOC);
+
+	public List<String> getMOCforCoedownload();
+
 }
