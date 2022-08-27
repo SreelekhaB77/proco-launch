@@ -70,14 +70,13 @@ public class RegularPromoService {
 		headerList.add("BASEPACK CODE");
 		headerList.add("BASEPACK DESCRIPTION");
 		headerList.add("CHILDPACK CODE");
-		
 		headerList.add("OFFER TYPE");
 		headerList.add("OFFER MODALITY");
 		headerList.add("PRICE OFF");
+		headerList.add("QUANTITY");
 		headerList.add("BUDGET");
 		//headerList.add("BRANCH");
 		headerList.add("CLUSTER");
-		headerList.add("QUANTITY");
 		return headerList;
 	}
 

@@ -15,7 +15,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureQuery;
+
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -54,9 +58,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	 */
 	private static String SQL_QUERY_INSERT_INTO_PROMOTION_MASTER_TEMP = "INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2 "
 			+ "(CHANNEL_NAME,MOC_NAME,PPM_ACCOUNT,PROMO_TIMEPERIOD,BASEPACK_CODE,BASEPACK_DESC,CHILD_BASEPACK_CODE,OFFER_DESC,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,BUDGET,CLUSTER,MOC_YEAR,"
-			+ "BRANCH,USER_ID,TEMPLATE_TYPE,QUANTITY,AB_CREATION,START_DATE,END_DATE,ERROR_MSG,MOC,CR_SOL_TYPE,PROMOTION_ID,SALES_CATEGORY) " + "VALUES "
+			+ "BRANCH,USER_ID,TEMPLATE_TYPE,QUANTITY,AB_CREATION,START_DATE,END_DATE,ERROR_MSG,MOC,CR_SOL_TYPE,PROMOTION_ID) " + "VALUES "
 			+ "(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14,"
-			+ "?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26)";
+			+ "?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25)";
 
 	/*
 	 * private static String SQL_QUERY_INSERT_INTO_PROMO_TABLE =
@@ -329,8 +333,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 
 					}
-					query.setString(26, sale_cate.equals("")?"":sale_cate);
-					
+										
 					if (!validationmap.get("offer type").contains(bean.getOfr_type().toUpperCase())) {
 						if (flag == 1)
 							error_msg = error_msg + ",Invalid Offer Type";
@@ -379,12 +382,13 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					String moc_name = bean.getMoc_name().toUpperCase(), moc_year = bean.getYear().toUpperCase();
 					String start_key = moc_name + moc_year + moc_group + "_start_date";
 					String end_key = moc_name + moc_year + moc_group + "_end_date";
+					
 					if (flag == 0) {
 						if (!datehandle.containsKey(start_key) && !datehandle.containsKey(end_key)) {
 							if (flag == 1)
-								error_msg += ",Invalid Back Dated MOC";
+								error_msg += ",Can not obtain start date and end date,Invalid moc or year";
 							else
-								error_msg += "Invalid Back Dated MOC";
+								error_msg += "Can not obtain start date and end date,Invalid moc or year";
 
 							flag = 1;
 						}
@@ -886,7 +890,13 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		if (flag == 0) {
 			datafromtable.updatePPMDescStage(uid,template);
 			
-			LocalDate l = LocalDate.now();
+			Session session = sessionFactory.getCurrentSession();
+			StoredProcedureQuery proc = session.createStoredProcedureQuery("PROC_PROCO_GENERATE_PROMO_ID");
+			proc.registerStoredProcedureParameter(0, String.class, ParameterMode.IN);
+			proc.setParameter(0, uid);
+			proc.execute();
+			
+			/*LocalDate l = LocalDate.now();
 
 			Month currentMonth = l.getMonth();
 			int month = currentMonth.getValue();
@@ -945,7 +955,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								bean.getBasepack_code(), pidtmp, bean.getYear());
 					}
 				}
-			}
+			}*/
 		}
 		
 		
