@@ -113,8 +113,10 @@ public class RegularPromoCreateController {
 
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
+			System.out.println("Exception :"+e);
 		} catch (Throwable e) {
 			logger.error("Exception: ", e);
+			System.out.println("Exception :"+e);
 			e.printStackTrace();
 		}
 
