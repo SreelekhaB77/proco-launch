@@ -15,11 +15,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureQuery;
+
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.dao.DataAccessException;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 import org.hibernate.query.Query;
 
@@ -74,7 +79,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 	private static String Pid = "SELECT (CASE WHEN MAX(PID) IS NULL THEN '000001' ELSE LPAD(CAST(MAX(CAST(PID AS UNSIGNED))+1 AS CHAR),6,0) END) AS PID FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE MOC_NAME=?0 AND MOC_YEAR=?1"; // ONLY
 	private static String PidTemp = "SELECT (CASE WHEN MAX(PID) IS NULL THEN '000001' ELSE LPAD(CAST(MAX(CAST(PID AS UNSIGNED)) + 1 AS CHAR),6,0) END) AS PID FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE MOC_NAME=?0 AND MOC_YEAR=?1 AND USER_ID=?2"; // ONLY
-
+	
+	@Async
 	public String createPromotion(CreateBeanRegular[] beans, String uid, String template, String categories) {
 		// TODO Auto-generated method stub
 		
@@ -144,7 +150,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								else
 									error_msg = error_msg + "Invalid price off";
 								flag=1;
-								query.setString(12,"");
+								query.setString(12,bean.getBudget());
 							}
 						}
 						else if(!isStringNumber(bean.getPrice_off()))
@@ -154,7 +160,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							else
 								error_msg = error_msg + "Invalid price off";
 							flag=1;
-							query.setString(12,"");
+							query.setString(12,bean.getBudget());
 						}else
 						    query.setString(12,datafromtable.calculateBudget(bean.getChannel(), quantity, bean.getPrice_off(), budget, bean.getBasepack_code(), commanmap));
 						
@@ -213,7 +219,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					query.setString(14, bean.getYear());
 					query.setString(24, "");
 					query.setString(25, "");
-
+					query.setString(26, commanmap.get(bean.getBasepack_code()));
 					if (datafromtable.validateYear(bean.getYear(), bean.getMoc_name())) {
 						query.setString(23, bean.getYear());
 					} else {
@@ -305,22 +311,19 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 					}
 					
-					String sale_cate ="";
-					
 					if (flag == 0) {
-						sale_cate= commanmap.get(bean.getBasepack_code().toUpperCase());
-						
+											
 						
 						if (commanmap
-								.containsKey(bean.getMoc_name().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getYear().toUpperCase() + sale_cate.toUpperCase())) {
+								.containsKey(bean.getMoc_name().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getYear().toUpperCase())) {
 							if (flag == 1) {
 
 								error_msg = error_msg + ",Promo entry already exist against promo ID, created by "
-										+ commanmap.get(bean.getMoc_name().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getYear().toUpperCase() + sale_cate.toUpperCase())
+										+ commanmap.get(bean.getMoc_name().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getYear().toUpperCase())
 										+ " " + " ,Request to give entry as CR";
 							} else {
 								error_msg = error_msg + "Promo entry already exist against promo ID, created by "
-										+ commanmap.get(bean.getMoc_name().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getYear().toUpperCase() + sale_cate.toUpperCase())
+										+ commanmap.get(bean.getMoc_name().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getYear().toUpperCase())
 										+ " " + " ,Request to give entry as CR";
 							}
 
@@ -329,8 +332,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 
 					}
-					query.setString(26, sale_cate.equals("")?"":sale_cate);
-					
+										
 					if (!validationmap.get("offer type").contains(bean.getOfr_type().toUpperCase())) {
 						if (flag == 1)
 							error_msg = error_msg + ",Invalid Offer Type";
@@ -379,12 +381,13 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					String moc_name = bean.getMoc_name().toUpperCase(), moc_year = bean.getYear().toUpperCase();
 					String start_key = moc_name + moc_year + moc_group + "_start_date";
 					String end_key = moc_name + moc_year + moc_group + "_end_date";
+					
 					if (flag == 0) {
 						if (!datehandle.containsKey(start_key) && !datehandle.containsKey(end_key)) {
 							if (flag == 1)
-								error_msg += ",Invalid Back Dated MOC";
+								error_msg += ",Can not obtain start date and end date,Invalid moc or year";
 							else
-								error_msg += "Invalid Back Dated MOC";
+								error_msg += "Can not obtain start date and end date,Invalid moc or year";
 
 							flag = 1;
 						}
@@ -886,7 +889,13 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		if (flag == 0) {
 			datafromtable.updatePPMDescStage(uid,template);
 			
-			LocalDate l = LocalDate.now();
+			Session session = sessionFactory.getCurrentSession();
+			StoredProcedureQuery proc = session.createStoredProcedureQuery("PROC_PROCO_GENERATE_PROMO_ID");
+			proc.registerStoredProcedureParameter(0, String.class, ParameterMode.IN);
+			proc.setParameter(0, uid);
+			proc.execute();
+			
+			/*LocalDate l = LocalDate.now();
 
 			Month currentMonth = l.getMonth();
 			int month = currentMonth.getValue();
@@ -945,7 +954,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								bean.getBasepack_code(), pidtmp, bean.getYear());
 					}
 				}
-			}
+			}*/
 		}
 		
 		
@@ -1558,7 +1567,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 PM "
 					+ " INNER JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID) PR ON PR.PROMO_ID = PM.PROMO_ID "
 					+ " INNER JOIN (SELECT MOC FROM TBL_VAT_MOC_MASTER WHERE STATUS = 'Y' LIMIT 1) MM ON PM.MOC >= concat(substr(MM.MOC, 3, 4), substr(MM.MOC, 1, 2)) "
-					+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.CUSTOMER_CHAIN_L2 WHERE PM.USER_ID=:userId ";
+					+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.PPM_ACCOUNT AND CM.CHANNEL_NAME = PM.CHANNEL_NAME WHERE PM.USER_ID=:userId ";
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(qry);
 
 			query.setString("userId", userId);
