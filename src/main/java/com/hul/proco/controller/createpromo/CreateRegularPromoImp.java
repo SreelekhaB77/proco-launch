@@ -887,13 +887,13 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		
 		if (flag == 0) {
 			datafromtable.updatePPMDescStage(uid,template);
-			/*
+			
 			Session session = sessionFactory.getCurrentSession();
 			StoredProcedureQuery proc = session.createStoredProcedureQuery("PROC_PROCO_GENERATE_PROMO_ID");
 			proc.registerStoredProcedureParameter(0, String.class, ParameterMode.IN);
 			proc.setParameter(0, uid);
 			proc.execute();
-			*/
+			/*
 			LocalDate l = LocalDate.now();
 
 			Month currentMonth = l.getMonth();
@@ -953,7 +953,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								bean.getBasepack_code(), pidtmp, bean.getYear());
 					}
 				}
-			}
+			}*/
 		}
 		
 		
@@ -988,6 +988,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		String insertString= "INSERT INTO TBL_PROCO_PROMOTION_MASTER_V2 (CHANNEL_NAME, MOC, MOC_NAME, MOC_YEAR, PPM_ACCOUNT, PROMO_TIMEPERIOD, AB_CREATION, BASEPACK_CODE, BASEPACK_DESC, CHILD_BASEPACK_CODE, OFFER_DESC, OFFER_TYPE, OFFER_MODALITY, PRICE_OFF, BUDGET, BRANCH, CLUSTER, PROMO_ID,  PID,START_DATE, END_DATE, TEMPLATE_TYPE, USER_ID, PPM_DESC_STAGE, PPM_DESC,STATUS,ACTIVE,CREATED_BY,PROMOTION_ID,CR_SOL_TYPE,SALES_CATEGORY,QUANTITY)\r\n"
 				+ "SELECT CHANNEL_NAME, MOC, MOC_NAME, MOC_YEAR, PPM_ACCOUNT, PROMO_TIMEPERIOD, AB_CREATION, BASEPACK_CODE, BASEPACK_DESC, CHILD_BASEPACK_CODE, OFFER_DESC, OFFER_TYPE, OFFER_MODALITY, PRICE_OFF, BUDGET, BRANCH, CLUSTER, PROMO_ID,  PID,START_DATE, END_DATE, TEMPLATE_TYPE, USER_ID, PPM_DESC_STAGE, PPM_DESC,'1','1','"
 				+ uid + "',PROMOTION_ID,CR_SOL_TYPE,SALES_CATEGORY,QUANTITY\r\n" + "FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE USER_ID='" + uid + "'";
+		
 		sessionFactory.getCurrentSession().createNativeQuery(insertString).executeUpdate();
 
 	}
