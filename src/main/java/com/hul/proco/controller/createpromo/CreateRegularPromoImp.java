@@ -886,15 +886,15 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		}
 		
 		if (flag == 0) {
-			//datafromtable.updatePPMDescStage(uid,template);
-			
+			datafromtable.updatePPMDescStage(uid,template);
+			/*
 			Session session = sessionFactory.getCurrentSession();
 			StoredProcedureQuery proc = session.createStoredProcedureQuery("PROC_PROCO_GENERATE_PROMO_ID");
 			proc.registerStoredProcedureParameter(0, String.class, ParameterMode.IN);
 			proc.setParameter(0, uid);
 			proc.execute();
-			
-			/*LocalDate l = LocalDate.now();
+			*/
+			LocalDate l = LocalDate.now();
 
 			Month currentMonth = l.getMonth();
 			int month = currentMonth.getValue();
@@ -953,7 +953,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								bean.getBasepack_code(), pidtmp, bean.getYear());
 					}
 				}
-			}*/
+			}
 		}
 		
 		
