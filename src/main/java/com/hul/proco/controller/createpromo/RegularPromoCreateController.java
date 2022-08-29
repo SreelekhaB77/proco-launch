@@ -90,9 +90,8 @@ public class RegularPromoCreateController {
 						List<?> datafromexcel = map.get("DATA");
 						beanArray = (CreateBeanRegular[]) datafromexcel
 								.toArray(new CreateBeanRegular[datafromexcel.size()]);
-
+						
 						save_data = createCRPromo.createCRPromo(beanArray, userId, template,categories);
-
 					}
 
 				} else {
@@ -113,11 +112,12 @@ public class RegularPromoCreateController {
 
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
-			System.out.println("Exception :"+e);
+			return e.toString();
 		} catch (Throwable e) {
 			logger.error("Exception: ", e);
-			System.out.println("Exception :"+e);
+			model.addAttribute("FILE_STAUS",  e.toString());
 			e.printStackTrace();
+			return e.toString();
 		}
 
 		return save_data;

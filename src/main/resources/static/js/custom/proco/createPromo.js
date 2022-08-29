@@ -1032,6 +1032,7 @@ $("#ProcoRegularFileUpload").click(function (event) {
 				            	
 				            	 $('.loader').hide();
 				            	if(resdata.includes('EXCEL_UPLOADED')) {
+					console.log(resdata);// Mayur added the changes
 				                    $('#errorblockUpload').hide();
 				                	$('#ProcoRegularerrorblockUpload').hide();
 				                	$('#Procosuccessblock').show().find('span').html(' File Uploaded Successfully !!!');
@@ -1039,6 +1040,7 @@ $("#ProcoRegularFileUpload").click(function (event) {
 				                }
 				                
 				                else if(resdata.includes('EXCEL_NOT_UPLOADED')){
+					console.log(resdata);// Mayur added the changes
 				                $('#ProcoRegularerrorblockUpload').show();
 				                $('#Procosuccessblock').hide();
 				                $('#errorblockUpload').hide();
@@ -1054,7 +1056,7 @@ $("#ProcoRegularFileUpload").click(function (event) {
 									$('#Procosuccessblock').hide();
 								}
 								else{
-									//console.log("Error");
+									console.log(resdata);// Mayur added the changes
 				                	$('#errorblockUpload').show().find('span').html('Error While Uploading File');
 				                	$('#Procosuccessblock').hide();
 				                	$('#ProcoRegularerrorblockUpload').hide();
