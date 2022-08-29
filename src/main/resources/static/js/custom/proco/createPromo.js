@@ -1055,8 +1055,7 @@ $("#ProcoRegularFileUpload").click(function (event) {
 								}
 								else{
 									//console.log("Error");
-				                	//$('#errorblockUpload').show().find('span').html('Error While Uploading File');
-									$('#errorblockUpload').show().find('span').html(resdata); // Sarin changes 29Aug22
+				                	$('#errorblockUpload').show().find('span').html('Error While Uploading File');
 				                	$('#Procosuccessblock').hide();
 				                	$('#ProcoRegularerrorblockUpload').hide();
 				                	 
