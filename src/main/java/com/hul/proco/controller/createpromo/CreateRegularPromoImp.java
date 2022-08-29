@@ -24,6 +24,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.dao.DataAccessException;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 import org.hibernate.query.Query;
 
@@ -58,9 +59,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	 */
 	private static String SQL_QUERY_INSERT_INTO_PROMOTION_MASTER_TEMP = "INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2 "
 			+ "(CHANNEL_NAME,MOC_NAME,PPM_ACCOUNT,PROMO_TIMEPERIOD,BASEPACK_CODE,BASEPACK_DESC,CHILD_BASEPACK_CODE,OFFER_DESC,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,BUDGET,CLUSTER,MOC_YEAR,"
-			+ "BRANCH,USER_ID,TEMPLATE_TYPE,QUANTITY,AB_CREATION,START_DATE,END_DATE,ERROR_MSG,MOC,CR_SOL_TYPE,PROMOTION_ID) " + "VALUES "
+			+ "BRANCH,USER_ID,TEMPLATE_TYPE,QUANTITY,AB_CREATION,START_DATE,END_DATE,ERROR_MSG,MOC,CR_SOL_TYPE,PROMOTION_ID,SALES_CATEGORY) " + "VALUES "
 			+ "(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14,"
-			+ "?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25)";
+			+ "?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26)";
 
 	/*
 	 * private static String SQL_QUERY_INSERT_INTO_PROMO_TABLE =
@@ -78,7 +79,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 	private static String Pid = "SELECT (CASE WHEN MAX(PID) IS NULL THEN '000001' ELSE LPAD(CAST(MAX(CAST(PID AS UNSIGNED))+1 AS CHAR),6,0) END) AS PID FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE MOC_NAME=?0 AND MOC_YEAR=?1"; // ONLY
 	private static String PidTemp = "SELECT (CASE WHEN MAX(PID) IS NULL THEN '000001' ELSE LPAD(CAST(MAX(CAST(PID AS UNSIGNED)) + 1 AS CHAR),6,0) END) AS PID FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE MOC_NAME=?0 AND MOC_YEAR=?1 AND USER_ID=?2"; // ONLY
-
+	
+	@Async
 	public String createPromotion(CreateBeanRegular[] beans, String uid, String template, String categories) {
 		// TODO Auto-generated method stub
 		
@@ -148,7 +150,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								else
 									error_msg = error_msg + "Invalid price off";
 								flag=1;
-								query.setString(12,"");
+								query.setString(12,bean.getBudget());
 							}
 						}
 						else if(!isStringNumber(bean.getPrice_off()))
@@ -158,7 +160,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							else
 								error_msg = error_msg + "Invalid price off";
 							flag=1;
-							query.setString(12,"");
+							query.setString(12,bean.getBudget());
 						}else
 						    query.setString(12,datafromtable.calculateBudget(bean.getChannel(), quantity, bean.getPrice_off(), budget, bean.getBasepack_code(), commanmap));
 						
@@ -217,7 +219,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					query.setString(14, bean.getYear());
 					query.setString(24, "");
 					query.setString(25, "");
-
+					query.setString(26, commanmap.get(bean.getBasepack_code()));
 					if (datafromtable.validateYear(bean.getYear(), bean.getMoc_name())) {
 						query.setString(23, bean.getYear());
 					} else {
@@ -309,22 +311,19 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 					}
 					
-					String sale_cate ="";
-					
 					if (flag == 0) {
-						sale_cate= commanmap.get(bean.getBasepack_code().toUpperCase());
-						
+											
 						
 						if (commanmap
-								.containsKey(bean.getMoc_name().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getYear().toUpperCase() + sale_cate.toUpperCase())) {
+								.containsKey(bean.getMoc_name().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getYear().toUpperCase())) {
 							if (flag == 1) {
 
 								error_msg = error_msg + ",Promo entry already exist against promo ID, created by "
-										+ commanmap.get(bean.getMoc_name().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getYear().toUpperCase() + sale_cate.toUpperCase())
+										+ commanmap.get(bean.getMoc_name().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getYear().toUpperCase())
 										+ " " + " ,Request to give entry as CR";
 							} else {
 								error_msg = error_msg + "Promo entry already exist against promo ID, created by "
-										+ commanmap.get(bean.getMoc_name().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getYear().toUpperCase() + sale_cate.toUpperCase())
+										+ commanmap.get(bean.getMoc_name().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getYear().toUpperCase())
 										+ " " + " ,Request to give entry as CR";
 							}
 
