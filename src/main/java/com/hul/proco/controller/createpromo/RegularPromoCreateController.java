@@ -100,7 +100,10 @@ public class RegularPromoCreateController {
 					model.addAttribute("FILE_STAUS", "FILE_EMPTY");
 					return "FILE_EMPTY";
 				}
-			} else {
+			} 
+			//Commented By Sarin - 29Aug22
+			/*
+			else {
 				model.addAttribute("FILE_STAUS", "FILE_EMPTY");
 				return "FILE_EMPTY";
 			}
@@ -110,12 +113,14 @@ public class RegularPromoCreateController {
 				model.addAttribute("FILE_STAUS", "EXCEL_NOT_UPLOADED");
 				save_data = "EXCEL_NOT_UPLOADED";
 			}
-
+			*/
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
+			model.addAttribute("FILE_STAUS", e.toString());  //Commented By Sarin - 29Aug22
 			System.out.println("Exception :"+e);
 		} catch (Throwable e) {
 			logger.error("Exception: ", e);
+			model.addAttribute("FILE_STAUS", e.toString());  //Commented By Sarin - 29Aug22
 			System.out.println("Exception :"+e);
 			e.printStackTrace();
 		}
