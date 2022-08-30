@@ -166,9 +166,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								|| bean.getBudget() == null))
 						{
 							if (flag == 1)
-								error_msg = error_msg + ",Buget entry mandatory for HUL3 and CNC channel";
+								error_msg = error_msg + ",Budget entry mandatory for HUL3 and CNC channel";
 							else
-								error_msg = error_msg + "Buget entry mandatory for HUL3 and CNC channel";
+								error_msg = error_msg + "Budget entry mandatory for HUL3 and CNC channel";
 							flag=1;
 						}
 						
