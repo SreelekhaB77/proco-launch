@@ -47,7 +47,7 @@ public class DataFromTable {
 					+ "INNER JOIN TBL_PROCO_INVESTMENT_TYPE_MASTER_V2 B ON B.OFFER_MODALITY = T.OFFER_MODALITY AND B.OFFER_TYPE = T.OFFER_TYPE "
 					+ "INNER JOIN  (SELECT BASEPACK,SALES_CATEGORY FROM (SELECT ROW_NUMBER() OVER (PARTITION BY BASEPACK ORDER BY BASEPACK,SALES_CATEGORY) AS ROW_NUM,BASEPACK,SALES_CATEGORY FROM TBL_PROCO_PRODUCT_MASTER_V2 A WHERE IS_ACTIVE=1 GROUP BY BASEPACK,SALES_CATEGORY) A WHERE ROW_NUM=1) C ON C.BASEPACK=T.BASEPACK_CODE "
 					+ " " + "SET "
-					+ "PPM_DESC_STAGE=CONCAT(A.ACCOUNT_TYPE ,':',  B.MODALITY_KEY,':',T.PPM_ACCOUNT,':',C.SALES_CATEGORY,':',T.OFFER_DESC,':',T.CR_SOL_TYPE,IF (A.NON_UNIFY <> '', concat(':', A.NON_UNIFY), ''))  WHERE USER_ID='"
+					+ "PPM_DESC_STAGE=CONCAT(A.ACCOUNT_TYPE ,':',  B.MODALITY_KEY,':',T.PPM_ACCOUNT,':',C.SALES_CATEGORY,':',T.OFFER_DESC,':',T.PROMOTION_ID,IF (A.NON_UNIFY <> '', concat(':', A.NON_UNIFY), ''))  WHERE USER_ID='"
 					+ uid + "'  " + "";
 		} else {
 			
@@ -97,7 +97,7 @@ public class DataFromTable {
 	public void getConbination(Map<String,String> h)
 	{
 		//bean.getMoc_name() + bean.getPpm_account() + bean.getYear() + sale_cate
-		String q_String="SELECT MOC_NAME,MOC_YEAR,PPM_ACCOUNT,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER FROM TBL_PROCO_PROMOTION_MASTER_V2 ";
+		String q_String="SELECT MOC_NAME,MOC_YEAR,PPM_ACCOUNT,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER,CR_SOL_TYPE FROM TBL_PROCO_PROMOTION_MASTER_V2 ";
 		List<Object[]> mapdata_list = sessionFactory.getCurrentSession().createNativeQuery(q_String).list();
 		for (Object[] data : mapdata_list) {
 			h.put(String.valueOf(data[0]).toUpperCase() + String.valueOf(data[1]).toUpperCase()
@@ -107,6 +107,10 @@ public class DataFromTable {
 			h.put(String.valueOf(data[0]).toUpperCase() + String.valueOf(data[1]).toUpperCase()
 					+ String.valueOf(data[2]).toUpperCase() + String.valueOf(data[3]).toUpperCase()+String.valueOf(data[6]).toUpperCase(),
 					String.valueOf(data[4]) + " " + String.valueOf(data[5]));
+			
+			h.put(String.valueOf(data[0]).toUpperCase() + String.valueOf(data[1]).toUpperCase()
+					+ String.valueOf(data[2]).toUpperCase() + String.valueOf(data[3]).toUpperCase()+String.valueOf(data[6]).toUpperCase()+String.valueOf(data[7]),
+					String.valueOf(data[4]) + " " + String.valueOf(data[5])); 
 			
 		}
 		
@@ -406,17 +410,18 @@ public class DataFromTable {
 	 */
 	public void getAllSOLCodeAndPromoId(Map<String,String> crEntries) {
 		// TODO Auto-generated method stub
-		String query="SELECT a.PROMOTION_ID,a.PROMO_ID,a.MOC_NAME,a.PPM_ACCOUNT,a.BASEPACK_CODE,a.CLUSTER,a.PRICE_OFF,a.START_DATE,a.END_DATE,a.PROMO_TIMEPERIOD,a.MOC_YEAR"
-				+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 a INNER JOIN TBL_PROCO_MEASURE_MASTER_V2 b"
-				+ " ON "
-				+ "a.PROMO_ID=b.PROMO_ID "
-				+ "WHERE b.PROMOTION_STATUS IN ('APPROVED','AMEND APPROVED','SUBMITTED','AMEND SUBMITTED')";
+		String query="SELECT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,CASE WHEN LOCATE('%', a.PRICE_OFF) > 0 THEN a.PRICE_OFF ELSE ROUND(a.PRICE_OFF, 0) END AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR "
+				+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 A INNER JOIN TBL_PROCO_MEASURE_MASTER_V2 B "
+				+ "	ON "
+				+ "	A.PROMO_ID=B.PROMO_ID "
+				+ "	WHERE B.PROMOTION_STATUS IN ('APPROVED','AMEND APPROVED','SUBMITTED','AMEND SUBMITTED')";
+		
 		List<Object[]> list=sessionFactory.getCurrentSession().createNativeQuery(query	).list();
 		
 		for(Object[] obj: list)
 		{
-			crEntries.put(String.valueOf(obj[0]).toUpperCase(), String.valueOf(obj[0])); // getting SOL ID for check
-
+			crEntries.put(String.valueOf(obj[0]).toUpperCase(), String.valueOf(obj[0]));
+			
 			crEntries.put(String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
 					+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[5]).toUpperCase()
 					+ String.valueOf(obj[6]).toUpperCase(), "");
@@ -437,21 +442,39 @@ public class DataFromTable {
 			crEntries.put(String.valueOf(obj[0]) + String.valueOf(obj[2]).toUpperCase()
 					+ String.valueOf(obj[3]).toUpperCase() + String.valueOf(obj[4]).toUpperCase() + "_end_date",
 					String.valueOf(obj[8]).toUpperCase());
-
+ /*
 			crEntries.put(
 					String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
 							+ String.valueOf(obj[5]).toUpperCase() + String.valueOf(obj[6]).toUpperCase(),
-					String.valueOf(obj[4]).toUpperCase()); // for Basepack Addition
+					String.valueOf(obj[4]).toUpperCase()); */// for Basepack Addition
 
 			crEntries.put(
 					String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
 							+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[5]).toUpperCase(),
 					String.valueOf(obj[4]).toUpperCase()); // for TOP UP
-
+			//B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,A.PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR
 			crEntries.put(
-					String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
+					String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[10]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
+							+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[6]).toUpperCase() + String.valueOf(obj[5]).toUpperCase(),
+					String.valueOf(obj[5]).toUpperCase()); // for Missing geo and basepack addition if present
+			
+			crEntries.put(
+					String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[10]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
 							+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[6]).toUpperCase(),
-					String.valueOf(obj[5]).toUpperCase()); // for Missing geo
+					String.valueOf(obj[5]).toUpperCase());  // for Missing geo
+			
+			//B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,A.PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR
+			crEntries.put(
+					String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[10]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
+						+ String.valueOf(obj[5]).toUpperCase()+String.valueOf(obj[6]).toUpperCase(),
+					String.valueOf(obj[4]).toUpperCase()); // Addition basepack 
+			
+			//PROMOTION_ID-0, PROMO_ID-1, MOC_NAME-2, PPM_ACCOUNT-3, BASEPACK_CODE-4, CLUSTER-5,PRICE_OFF-6, START_DATE-7, END_DATE-8, PROMO_TIMEPERIOD-9, MOC_YEAR -10
+			
+			crEntries.put(
+					String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[10]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
+						+ String.valueOf(obj[4]).toUpperCase()+String.valueOf(obj[5]).toUpperCase(),
+					String.valueOf(obj[6]).toUpperCase()); // top up where Price off will not be checked 
 			
 		}
 		

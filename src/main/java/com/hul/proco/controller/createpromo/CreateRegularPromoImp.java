@@ -129,9 +129,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 			if (template.equalsIgnoreCase("new") || template.equalsIgnoreCase("regular")) {
 				if (!duplicateMap.containsKey(
-						bean.getMoc_name() + bean.getYear() + bean.getPpm_account() + bean.getBasepack_code())) {
+						bean.getMoc_name() + bean.getYear() + bean.getPpm_account() + bean.getBasepack_code()+bean.getCluster())) {
 					duplicateMap.put(
-							bean.getMoc_name() + bean.getYear() + bean.getPpm_account() + bean.getBasepack_code(), "");
+							bean.getMoc_name() + bean.getYear() + bean.getPpm_account() + bean.getBasepack_code()+bean.getCluster(), "");
 					if (template.equalsIgnoreCase("new")) {
 						// MOC_NAME-YEAR – Basepack – Account – Cluster
 						if (commanmap.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
@@ -161,6 +161,17 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						String quantity=bean.getQuantity().isEmpty() ? ""
 								: String.valueOf(
 										(double) Math.round(Double.parseDouble(bean.getQuantity()) * 100) / 100);
+						if ((bean.getChannel().equalsIgnoreCase("CNC")
+								|| bean.getChannel().equalsIgnoreCase("HUL3")) && (bean.getBudget().isEmpty()
+								|| bean.getBudget() == null))
+						{
+							if (flag == 1)
+								error_msg = error_msg + ",Buget entry mandatory for HUL3 and CNC channel";
+							else
+								error_msg = error_msg + "Buget entry mandatory for HUL3 and CNC channel";
+							flag=1;
+						}
+						
 						
 						if(bean.getPrice_off().contains("%"))
 						{
@@ -184,6 +195,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							query.setString(12,bean.getBudget());
 						}else
 						    query.setString(12,datafromtable.calculateBudget(bean.getChannel(), quantity, bean.getPrice_off(), budget, bean.getBasepack_code(), commanmap));
+						
+						
 						
 						query.setString(17, "NE");
 						if (bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity()) <= 9) {
@@ -674,28 +687,37 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				datafromtable.getAllSOLtype(crEntries);
 				datafromtable.getAllSOLCodeAndPromoId(crEntries);
 				
+				//, Account-Bp-MOC_NAME-YEAR-Cluster- SOL
+				//MOC_NAME,MOC_YEAR,PPM_ACCOUNT,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER,CR_SOL_TYPE
+
+				if (commanmap.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
+						+ bean.getBasepack_code().toUpperCase() + bean.getCluster()
+						+ bean.getSol_type().toUpperCase()) && !bean.getSol_type().equalsIgnoreCase("Top Up"))
+				{
+					if (flag == 1)
+						error_msg = error_msg + ",promo entry already exists";
+					else
+						error_msg = error_msg + "promo entry already exists";
+					flag = 1;
+				}
+				
 				String budget=bean.getBudget().isEmpty() ? ""
 						: String.valueOf(
 								(double) Math.round(Double.parseDouble(bean.getBudget()) * 100) / 100);
 				String quantity=bean.getQuantity().isEmpty() ? ""
 						: String.valueOf(
 								(double) Math.round(Double.parseDouble(bean.getQuantity()) * 100) / 100);
+				
 				query.setString(12,datafromtable.calculateBudget(bean.getChannel(), quantity, bean.getPrice_off(), budget, bean.getBasepack_code(), commanmap));
 				
 				query.setString(26, commanmap.get(bean.getBasepack_code().toUpperCase()));
-				if (!duplicateMap.containsKey(bean.getMoc_name().toUpperCase() + bean.getBasepack_code().toUpperCase()
-						+ bean.getPpm_account().toUpperCase() + bean.getSol_type().toUpperCase())) {
+				
+				if (!duplicateMap.containsKey(bean.getMoc_name().toUpperCase() +bean.getYear().toUpperCase()+ bean.getBasepack_code().toUpperCase()
+						+ bean.getPpm_account().toUpperCase() + bean.getCluster().toUpperCase() + bean.getSol_type().toUpperCase())) {
 
-					duplicateMap.put(bean.getMoc_name().toUpperCase() + bean.getBasepack_code().toUpperCase()
-							+ bean.getPpm_account().toUpperCase() + bean.getSol_type().toUpperCase(), "");
+					duplicateMap.put(bean.getMoc_name().toUpperCase() +bean.getYear().toUpperCase()+ bean.getBasepack_code().toUpperCase()
+							+ bean.getPpm_account().toUpperCase() + bean.getCluster().toUpperCase() + bean.getSol_type().toUpperCase(), "");
 
-					if (crEntries
-							.containsKey(bean.getMoc_name().toUpperCase() + bean.getBasepack_code().toUpperCase()
-									+ bean.getPpm_account().toUpperCase() + bean.getSol_type().toUpperCase())
-							&& !bean.getSol_type().equalsIgnoreCase("Top Up")) {
-						error_msg = "promo entry already exists";
-					}
-					
 					if (bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity()) <= 9) {
 						if (flag == 1)
 							error_msg = error_msg + ",Mandatory input for Quantity, Min Qty criteria not met";
@@ -718,14 +740,23 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 					}
 					String price_off="";
-					if(flag==0)
+					if(flag==0 && isStringNumber(bean.getPrice_off()))
 					{
 						price_off=bean.getPrice_off().isEmpty() ? ""
 								: String.valueOf(
 										(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100)
 												/ 100);
+					}else
+					{
+						if(bean.getPrice_off().contains("%"))
+						{
+							price_off= bean.getPrice_off().split("%")[0].isEmpty()? "": String.valueOf(
+									(double) Math.round(Double.parseDouble(bean.getPrice_off().split("%")[0]) * 100)
+									/ 100);
+						}
 					}
-					if(crEntries.containsKey(bean.getSol_type().toUpperCase()))
+					
+					if(!crEntries.containsKey(bean.getSol_type().toUpperCase()))
 					{
 						if (flag == 1)
 							error_msg = error_msg + ",SOL type does not exist";
@@ -745,21 +776,30 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 					if(bean.getSol_type().equalsIgnoreCase("Basepack Addition"))
 					{
-						if(bean.getBasepack_code().toUpperCase().equalsIgnoreCase(crEntries.get(bean.getMoc_name().toUpperCase() + bean.getPpm_account().toUpperCase()
-							+ bean.getCluster().toUpperCase() + price_off)))
-						{
-							
+						if(crEntries.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toString() + bean.getPpm_account().toUpperCase()+bean.getBasepack_code().toUpperCase()+bean.getPrice_off().toUpperCase() + bean.getCluster().toUpperCase() )) {
 							if (flag == 1)
-								error_msg = error_msg + ",Basepack shoud be different";
+								error_msg = error_msg + ",Promo entry exists for basepack " + bean.getBasepack_code() + ", provide different basepack";
 							else
-								error_msg = error_msg + "Basepack shoud be different";
+								error_msg = error_msg + ",Promo entry exists for basepack " + bean.getBasepack_code() + ", provide different basepack";
 							flag = 1;
+						} else {
+							
+							//MOC_NAME-2,MOC_YEAR-10,PPM_ACCOUNT-3,CLUSTER-5,PRICE_OFF-6
+							if(!crEntries.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toString() + bean.getPpm_account().toUpperCase()+bean.getCluster().toUpperCase()+bean.getPrice_off().toUpperCase())) {
+								if (flag == 1)
+									error_msg = error_msg + ",Promo entry does not exists for moc, ppm account, cluster, price off ";
+								else
+									error_msg = error_msg + ",Promo entry does not exists for moc, ppm account, cluster, price off";
+								flag = 1;
+							}
 						}
 					}
-					
+					//moc_name,year,PPM_ACCOUNT,BASEPACK_CODE,CLUSTER
 					if(bean.getSol_type().equalsIgnoreCase("TOP UP"))
 					{
-						if(!crEntries.containsKey(bean.getMoc_name().toUpperCase()+bean.getPpm_account().toUpperCase()+bean.getBasepack_code().toUpperCase()+bean.getCluster().toUpperCase())) {
+						if (!crEntries.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
+								+ bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()
+								+ bean.getCluster())) {
 							if (flag == 1)
 								error_msg = error_msg + ",Promo entry does not exists for moc, ppm account, basepack and cluster for TOP UP";
 							else
@@ -770,18 +810,30 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 					if(bean.getSol_type().equalsIgnoreCase("Missing Geo"))
 					{
-						if(!crEntries.containsKey(bean.getMoc_name().toUpperCase()+bean.getPpm_account().toUpperCase()+bean.getBasepack_code().toUpperCase()+price_off)) {
+						//System.out.println("key:"+bean.getMoc_name().toUpperCase() + bean.getYear().toString() + bean.getPpm_account().toUpperCase()+bean.getBasepack_code().toUpperCase()+bean.getPrice_off().toUpperCase() + bean.getCluster().toUpperCase());
+						//System.out.println("map:"+crEntries);
+						if(crEntries.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toString() + bean.getPpm_account().toUpperCase()+bean.getBasepack_code().toUpperCase()+bean.getPrice_off().toUpperCase() + bean.getCluster().toUpperCase() )) {
 							if (flag == 1)
-								error_msg = error_msg + ",Promo entry does not exists for moc, ppm account, basepack and price off for Missing Geo";
+								error_msg = error_msg + ",Promo entry exists for Cluster " + bean.getCluster() + ", provide different cluster";
 							else
-								error_msg = error_msg + "Promo entry does not exists for moc, ppm account, basepack and price off for Missing Geo";
+								error_msg = error_msg + ",Promo entry exists for Cluster " + bean.getCluster() + ", provide different cluster";
 							flag = 1;
+						} else {
+							
+							if(!crEntries.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toString() + bean.getPpm_account().toUpperCase()+bean.getBasepack_code().toUpperCase()+bean.getPrice_off().toUpperCase() )) {
+								if (flag == 1)
+									error_msg = error_msg + ",Promo entry does not exists for moc, ppm account, basepack";
+								else
+									error_msg = error_msg + ",Promo entry does not exists for moc, ppm account, basepack";
+								flag = 1;
+							}
+							
 						}
 					}
-					
-					if(!bean.getPrice_off().contains("%"))
+
+					if(bean.getPrice_off().contains("%"))
 					{
-						if(isStringNumber(bean.getPrice_off()) && ( !bean.getOffer_mod().equalsIgnoreCase("Ground ops in %")|| !bean.getOffer_mod().equalsIgnoreCase("Ground ops in Rs")))
+						if(!isStringNumber(bean.getPrice_off().split("%")[0]) &&  bean.getOffer_mod().equalsIgnoreCase("Ground ops in %")|| !bean.getOffer_mod().equalsIgnoreCase("Ground ops in Rs"))
 						{
 						
 							if (flag == 1)
@@ -792,13 +844,17 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 					}
 					
-					if(bean.getSol_type().equalsIgnoreCase("Budget Extension"))
+					
+					
+					if (bean.getSol_type().equalsIgnoreCase("Budget Extension")
+							|| bean.getSol_type().equalsIgnoreCase("Additional Quantity")
+							|| bean.getSol_type().equalsIgnoreCase("Liquidation"))
 					{
-						if(!crEntries.containsKey(bean.getMoc().toUpperCase()+bean.getPpm_account().toUpperCase()+bean.getBasepack_code().toUpperCase()+bean.getCluster().toUpperCase()+price_off)) {
+						if(!crEntries.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toString() + bean.getPpm_account().toUpperCase()+bean.getBasepack_code().toUpperCase()+bean.getPrice_off().toUpperCase() + bean.getCluster().toUpperCase() )) {
 							if (flag == 1)
-								error_msg = error_msg + ",Promo entry does not exists for moc, ppm account, basepack and price off for Budget Extension";
+								error_msg = error_msg + ",Promo entry does not exists for moc, ppm account, basepack and price off";
 							else
-								error_msg = error_msg + "Promo entry does not exists for moc, ppm account, basepack and price off for Budget Extension";
+								error_msg = error_msg + "Promo entry does not exists for moc, ppm account, basepack and price off";
 							flag = 1;
 						}
 					}
@@ -815,13 +871,13 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							|| bean.getSol_type().equalsIgnoreCase("Old Month")
 							|| bean.getSol_type().equalsIgnoreCase("Specific Date"))
 					{
-
-						if(crEntries.containsKey(bean.getMoc().toUpperCase()+bean.getPpm_account().toUpperCase()+bean.getBasepack_code().toUpperCase()+bean.getCluster().toUpperCase()+price_off+bean.getPromo_time_period().toUpperCase()+bean.getYear().toUpperCase())) {
+						//A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,A.PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR
+						if(!crEntries.containsKey(bean.getMoc_name().toUpperCase()+bean.getPpm_account().toUpperCase()+bean.getBasepack_code().toUpperCase()+bean.getCluster().toUpperCase()+bean.getPrice_off().toUpperCase()+bean.getPromo_time_period().toUpperCase()+bean.getYear().toUpperCase())) {
 							
 							if (flag == 1)
-								error_msg = error_msg + ",Promo entry exists for MOC,ppm account, basepack, price off,cluster, promotime and year for Date Extension,OLD Month,Specific Date";
+								error_msg = error_msg + ",Promo entry does not exists for MOC,ppm account, basepack, price off,cluster";
 							else
-								error_msg = error_msg + "Promo entry exists for MOC,ppm account, basepack, price off,cluster, promotime and year for Date Extension,OLD Month,Specific Date";
+								error_msg = error_msg + "Promo entry does not exists for MOC,ppm account, basepack, price off,cluster";
 							flag = 1;
 						}else
 						{
@@ -892,10 +948,16 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					query.setString(8, bean.getOffer_desc());
 					query.setString(9, bean.getOfr_type());
 					query.setString(10, bean.getOffer_mod());
+					if(!bean.getPrice_off().contains("%"))
 					query.setString(11, bean.getPrice_off().isEmpty() ? ""
 							: String.valueOf(
 									(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100)
 											/ 100));
+					else
+						query.setString(11, bean.getPrice_off().split("%")[0].isEmpty() ? ""
+								: String.valueOf(
+										(double) Math.round(Double.parseDouble(bean.getPrice_off().split("%")[0]) * 100)
+												/ 100)+"%");
 					query.setString(13, bean.getCluster());
 					query.setString(14, bean.getYear());
 					query.setString(15, bean.getBranch());
