@@ -435,12 +435,13 @@ public class DataFromTable {
 			crEntries.put(String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
 					+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[5]).toUpperCase()
 					+ String.valueOf(obj[6]).toUpperCase() + String.valueOf(obj[7]).toUpperCase(), "");
+			
 			crEntries.put(String.valueOf(obj[0]).toUpperCase() + String.valueOf(obj[2]).toUpperCase()
-					+ String.valueOf(obj[3]).toUpperCase() + String.valueOf(obj[4]).toUpperCase() + "_start_date",
+					+ String.valueOf(obj[3]).toUpperCase() + "_start_date",
 					String.valueOf(obj[7]).toUpperCase()); // to get the start date from existing
 
 			crEntries.put(String.valueOf(obj[0]) + String.valueOf(obj[2]).toUpperCase()
-					+ String.valueOf(obj[3]).toUpperCase() + String.valueOf(obj[4]).toUpperCase() + "_end_date",
+					+ String.valueOf(obj[3]).toUpperCase() + "_end_date",
 					String.valueOf(obj[8]).toUpperCase());
  /*
 			crEntries.put(

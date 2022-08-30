@@ -862,12 +862,15 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 					}
 					
+					//System.out.println("Key:"+bean.getSol_code_ref().toUpperCase() + bean.getMoc_name().toUpperCase()
+						//			+ bean.getPpm_account().toUpperCase()  + "_start_date");
+					//System.out.println("Map:"+crEntries);
 					query.setString(20,
 							crEntries.get(bean.getSol_code_ref().toUpperCase() + bean.getMoc_name().toUpperCase()
-									+ bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase() + "_start_date")); // setting start date and end date
+									+ bean.getPpm_account().toUpperCase()  + "_start_date")); // setting start date and end date
 					query.setString(21,
 							crEntries.get(bean.getSol_code_ref().toUpperCase() + bean.getMoc_name().toUpperCase()
-									+ bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase() + "_end_date"));
+									+ bean.getPpm_account().toUpperCase() + "_end_date"));
 					
 					String moc = datafromtable.getMOC(bean.getMoc_name(), bean.getYear());
 					if (bean.getSol_type().equalsIgnoreCase("Date Extension")
