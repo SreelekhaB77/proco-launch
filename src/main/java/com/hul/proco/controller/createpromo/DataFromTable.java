@@ -410,7 +410,7 @@ public class DataFromTable {
 	 */
 	public void getAllSOLCodeAndPromoId(Map<String,String> crEntries) {
 		// TODO Auto-generated method stub
-		String query="SELECT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,CASE WHEN LOCATE('%', a.PRICE_OFF) > 0 THEN a.PRICE_OFF ELSE ROUND(a.PRICE_OFF, 0) END AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR "
+		String query="SELECT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,CASE WHEN LOCATE('%', A.PRICE_OFF) > 0 THEN A.PRICE_OFF ELSE ROUND(A.PRICE_OFF, 0) END AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR "
 				+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 A INNER JOIN TBL_PROCO_MEASURE_MASTER_V2 B "
 				+ "	ON "
 				+ "	A.PROMO_ID=B.PROMO_ID "
@@ -421,10 +421,10 @@ public class DataFromTable {
 		for(Object[] obj: list)
 		{
 			crEntries.put(String.valueOf(obj[0]).toUpperCase(), String.valueOf(obj[0]));
-			
+			//PROMOTION_ID-0, PROMO_ID-1, MOC_NAME-2, PPM_ACCOUNT-3, BASEPACK_CODE-4, CLUSTER-5,PRICE_OFF-6, START_DATE-7, END_DATE-8, PROMO_TIMEPERIOD-9, MOC_YEAR -10
 			crEntries.put(String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
 					+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[5]).toUpperCase()
-					+ String.valueOf(obj[6]).toUpperCase(), "");
+					+ String.valueOf(obj[6]).toUpperCase()+String.valueOf(obj[10]).toUpperCase(), ""); // Budget Extension,Additional Quantity,Liquidation
 			
 			crEntries.put(String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
 					+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[5]).toUpperCase()
