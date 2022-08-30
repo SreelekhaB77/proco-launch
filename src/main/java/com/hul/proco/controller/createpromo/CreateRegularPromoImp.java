@@ -845,12 +845,15 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					}
 					
 					
-					
+					//MOC_NAME-2, PPM_ACCOUNT-3, BASEPACK_CODE-4, CLUSTER-5,PRICE_OFF-6, year-10
 					if (bean.getSol_type().equalsIgnoreCase("Budget Extension")
 							|| bean.getSol_type().equalsIgnoreCase("Additional Quantity")
 							|| bean.getSol_type().equalsIgnoreCase("Liquidation"))
 					{
-						if(!crEntries.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toString() + bean.getPpm_account().toUpperCase()+bean.getBasepack_code().toUpperCase()+bean.getPrice_off().toUpperCase() + bean.getCluster().toUpperCase() )) {
+						if (!crEntries
+								.containsKey(bean.getMoc_name().toUpperCase() + bean.getPpm_account().toUpperCase()
+										+ bean.getBasepack_code().toUpperCase() + bean.getCluster().toUpperCase()
+										+ bean.getPrice_off().toUpperCase() + bean.getYear())) {
 							if (flag == 1)
 								error_msg = error_msg + ",Promo entry does not exists for moc, ppm account, basepack and price off";
 							else

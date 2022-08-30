@@ -421,10 +421,10 @@ public class DataFromTable {
 		for(Object[] obj: list)
 		{
 			crEntries.put(String.valueOf(obj[0]).toUpperCase(), String.valueOf(obj[0]));
-			
+			//PROMOTION_ID-0, PROMO_ID-1, MOC_NAME-2, PPM_ACCOUNT-3, BASEPACK_CODE-4, CLUSTER-5,PRICE_OFF-6, START_DATE-7, END_DATE-8, PROMO_TIMEPERIOD-9, MOC_YEAR -10
 			crEntries.put(String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
 					+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[5]).toUpperCase()
-					+ String.valueOf(obj[6]).toUpperCase(), "");
+					+ String.valueOf(obj[6]).toUpperCase()+String.valueOf(obj[10]).toUpperCase(), ""); // Budget Extension,Additional Quantity,Liquidation
 			
 			crEntries.put(String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
 					+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[5]).toUpperCase()
