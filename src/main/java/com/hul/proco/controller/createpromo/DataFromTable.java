@@ -94,13 +94,20 @@ public class DataFromTable {
 		String pid_update="UPDATE TBL_PROCO_PROMOTION_MASTER_TEMP_V2 SET pid='"+pid+"' WHERE MOC_NAME='"+moc+"' AND MOC_YEAR='"+year+"' AND PPM_ACCOUNT='"+ppm_account+"'"; 
 		sessionFactory.getCurrentSession().createNativeQuery(pid_update).executeUpdate();
 	}
-	public void getPresentPromo(Map<String,String> h)
+	public void getConbination(Map<String,String> h)
 	{
 		//bean.getMoc_name() + bean.getPpm_account() + bean.getYear() + sale_cate
-		String q_String="SELECT MOC_NAME,PPM_ACCOUNT,MOC_YEAR,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER FROM TBL_PROCO_PROMOTION_MASTER_V2 ";
+		String q_String="SELECT MOC_NAME,MOC_YEAR,PPM_ACCOUNT,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER FROM TBL_PROCO_PROMOTION_MASTER_V2 ";
 		List<Object[]> mapdata_list = sessionFactory.getCurrentSession().createNativeQuery(q_String).list();
 		for (Object[] data : mapdata_list) {
-			h.put(String.valueOf(data[0]).toUpperCase()+String.valueOf(data[1]).toUpperCase()+String.valueOf(data[2]).toUpperCase(), String.valueOf(data[4])+" "+String.valueOf(data[5]) );
+			h.put(String.valueOf(data[0]).toUpperCase() + String.valueOf(data[1]).toUpperCase()
+					+ String.valueOf(data[2]).toUpperCase() + String.valueOf(data[3]).toUpperCase(),
+					String.valueOf(data[4]) + " " + String.valueOf(data[5]));
+			
+			h.put(String.valueOf(data[0]).toUpperCase() + String.valueOf(data[1]).toUpperCase()
+					+ String.valueOf(data[2]).toUpperCase() + String.valueOf(data[3]).toUpperCase()+String.valueOf(data[6]).toUpperCase(),
+					String.valueOf(data[4]) + " " + String.valueOf(data[5]));
+			
 		}
 		
 	}

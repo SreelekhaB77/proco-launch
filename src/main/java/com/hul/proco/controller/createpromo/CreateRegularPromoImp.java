@@ -122,7 +122,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		Map<String, String> basepackmap = getAllCategory(listofcategory);
 		Map<String, String> promotimemap = getAllTDPTimeperiod();
 		Map<String, String> commanmap = new HashMap<String, String>();
-		datafromtable.getPresentPromo(commanmap);
+		datafromtable.getConbination(commanmap);
 		datafromtable.mapPPMandChannel(commanmap);
 		datafromtable.basePackAndSaleCategory(commanmap);
 		for (CreateBeanRegular bean : beans) {
@@ -133,6 +133,28 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					duplicateMap.put(
 							bean.getMoc_name() + bean.getYear() + bean.getPpm_account() + bean.getBasepack_code(), "");
 					if (template.equalsIgnoreCase("new")) {
+						// MOC_NAME-YEAR – Basepack – Account – Cluster
+						if (commanmap.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
+								+ bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()
+								+ bean.getCluster().toUpperCase())) {
+							
+							if (flag == 1)
+								error_msg = error_msg + ",promo entry already exists against promo ID, created by "
+										+ commanmap.get(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
+												+ bean.getPpm_account().toUpperCase()
+												+ bean.getBasepack_code().toUpperCase()
+												+ bean.getCluster().toUpperCase())
+										+ " ";
+							else
+								error_msg = error_msg + "promo entry already exists against promo ID, created by "
+										+ commanmap.get(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
+												+ bean.getPpm_account().toUpperCase()
+												+ bean.getBasepack_code().toUpperCase()
+												+ bean.getCluster().toUpperCase())
+										+ " ";
+							flag=1;
+						}
+					
 						String budget=bean.getBudget().isEmpty() ? ""
 								: String.valueOf(
 										(double) Math.round(Double.parseDouble(bean.getBudget()) * 100) / 100);
@@ -280,7 +302,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							}
 					}
 					  
-					
+					System.out.println("basepack"+validationmap.get("baseback"));
 					if (!validationmap.get("baseback").contains(bean.getBasepack_code())) {
 						if (flag == 1)
 							error_msg = error_msg + ",Invalid Parent basepack";
@@ -314,19 +336,34 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 											
 						
 						if (commanmap
-								.containsKey(bean.getMoc_name().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getYear().toUpperCase())) {
-							if (flag == 1) {
+								.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase())) {
+							if (!template.equalsIgnoreCase("regular")) {
+								if (flag == 1) {
 
-								error_msg = error_msg + ",Promo entry already exist against promo ID, created by "
-										+ commanmap.get(bean.getMoc_name().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getYear().toUpperCase())
-										+ " " + " ,Request to give entry as CR";
+									error_msg = error_msg + ",promo ID against other clusters exist, give entry as CR";
+								} else {
+									error_msg = error_msg + "promo ID against other clusters exist, give entry as CR";
+								}
+
+								flag = 1;
 							} else {
-								error_msg = error_msg + "Promo entry already exist against promo ID, created by "
-										+ commanmap.get(bean.getMoc_name().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getYear().toUpperCase())
-										+ " " + " ,Request to give entry as CR";
-							}
+								if (flag == 1) {
 
-							flag = 1;
+									error_msg = error_msg + ",Promo entry already exist against promo ID, created by "
+											+ commanmap.get(bean.getMoc_name().toUpperCase()
+													+ bean.getYear().toUpperCase() + bean.getPpm_account().toUpperCase()
+													+ bean.getBasepack_code().toUpperCase())
+											+ " " + " ,Request to give entry as CR";
+								} else {
+									error_msg = error_msg + "Promo entry already exist against promo ID, created by "
+											+ commanmap.get(bean.getMoc_name().toUpperCase()
+													+ bean.getYear().toUpperCase() + bean.getPpm_account().toUpperCase()
+													+ bean.getBasepack_code().toUpperCase())
+											+ " " + " ,Request to give entry as CR";
+								}
+
+								flag = 1;
+							}
 
 						}
 
@@ -688,7 +725,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 										(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100)
 												/ 100);
 					}
-					if(!crEntries.containsKey(bean.getSol_type().toUpperCase()))
+					if(crEntries.containsKey(bean.getSol_type().toUpperCase()))
 					{
 						if (flag == 1)
 							error_msg = error_msg + ",SOL type does not exist";
