@@ -189,11 +189,11 @@ public class RegularPromoService {
 				headerList.add("OFFER TYPE");
 				headerList.add("OFFER MODALITY");
 				headerList.add("PRICE OFF");
+				if (error_template.equalsIgnoreCase("ne"))
+					headerList.add("QUANTITY");
 				headerList.add("BUDGET");
 				// headerList.add("BRANCH");
 				headerList.add("CLUSTER");
-				if (error_template.equalsIgnoreCase("ne"))
-					headerList.add("QUANTITY");
 				headerList.add("TEMPLATE_TYPE");
 				headerList.add("USER_ID");
 				headerList.add("ERROR_MSG");
