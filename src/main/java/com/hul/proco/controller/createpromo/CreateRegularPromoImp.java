@@ -161,17 +161,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						String quantity=bean.getQuantity().isEmpty() ? ""
 								: String.valueOf(
 										(double) Math.round(Double.parseDouble(bean.getQuantity()) * 100) / 100);
-						if ((bean.getChannel().equalsIgnoreCase("CNC")
-								|| bean.getChannel().equalsIgnoreCase("HUL3")) && (bean.getBudget().isEmpty()
-								|| bean.getBudget() == null))
-						{
-							if (flag == 1)
-								error_msg = error_msg + ",Budget entry mandatory for HUL3 and CNC channel";
-							else
-								error_msg = error_msg + "Budget entry mandatory for HUL3 and CNC channel";
-							flag=1;
-						}
-						
+					
 						
 						if(bean.getPrice_off().contains("%"))
 						{
@@ -236,6 +226,18 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 						flag = 1;
 					}
+					
+					if ((bean.getChannel().equalsIgnoreCase("CNC")
+							|| bean.getChannel().equalsIgnoreCase("HUL3")) && (bean.getBudget().isEmpty()
+							|| bean.getBudget() == null))
+					{
+						if (flag == 1)
+							error_msg = error_msg + ",Budget entry mandatory for HUL3 and CNC channel";
+						else
+							error_msg = error_msg + "Budget entry mandatory for HUL3 and CNC channel";
+						flag=1;
+					}
+					
 					query.setString(1, bean.getChannel());
 					query.setString(2, bean.getMoc_name());
 					query.setString(3, bean.getPpm_account());
@@ -275,6 +277,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					} catch (Exception e) {
 						logger.error(e);
 					}
+					
+					
 					if(template.equalsIgnoreCase("regular"))
 					if (isStringNumber(bean.getBudget()))
 						query.setString(12,
@@ -315,7 +319,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							}
 					}
 					  
-					System.out.println("basepack"+validationmap.get("baseback"));
+					
 					if (!validationmap.get("baseback").contains(bean.getBasepack_code())) {
 						if (flag == 1)
 							error_msg = error_msg + ",Invalid Parent basepack";
@@ -328,9 +332,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					if(bean.getOffer_desc().length()>121)
 					{
 						if (flag == 1)
-							error_msg = error_msg + ",Price off mismatch with description";
+							error_msg = error_msg + ",Length should not greater than 121";
 						else {
-							error_msg = error_msg + "Price off mismatch with description";
+							error_msg = error_msg + "Length should not greater than 121";
 							flag = 1;
 						}
 					}
@@ -683,16 +687,16 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			if(template.equalsIgnoreCase("cr"))
 			{
 				Map<String, String> crEntries = new HashMap<String, String>();
+				Map<String, String> date_extensionMap = new HashMap<String, String>();
 				datafromtable.getCREntries(crEntries);
 				datafromtable.getAllSOLtype(crEntries);
-				datafromtable.getAllSOLCodeAndPromoId(crEntries);
-				
-				//, Account-Bp-MOC_NAME-YEAR-Cluster- SOL
-				//MOC_NAME,MOC_YEAR,PPM_ACCOUNT,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER,CR_SOL_TYPE
-
-				if (commanmap.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
-						+ bean.getBasepack_code().toUpperCase() + bean.getCluster()
-						+ bean.getSol_type().toUpperCase()) && !bean.getSol_type().equalsIgnoreCase("Top Up"))
+				datafromtable.getAllSOLCodeAndPromoId(crEntries,date_extensionMap);
+			
+				if (commanmap
+						.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
+								+ bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()
+								+ bean.getCluster().toUpperCase() + bean.getSol_type().toUpperCase())
+						&& !bean.getSol_type().trim().equalsIgnoreCase("Top Up"))
 				{
 					if (flag == 1)
 						error_msg = error_msg + ",promo entry already exists";
@@ -713,10 +717,10 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				query.setString(26, commanmap.get(bean.getBasepack_code().toUpperCase()));
 				
 				if (!duplicateMap.containsKey(bean.getMoc_name().toUpperCase() +bean.getYear().toUpperCase()+ bean.getBasepack_code().toUpperCase()
-						+ bean.getPpm_account().toUpperCase() + bean.getCluster().toUpperCase() + bean.getSol_type().toUpperCase())) {
+						+ bean.getPpm_account().toUpperCase() + bean.getCluster().toUpperCase() + bean.getSol_type().trim().toUpperCase())) {
 
 					duplicateMap.put(bean.getMoc_name().toUpperCase() +bean.getYear().toUpperCase()+ bean.getBasepack_code().toUpperCase()
-							+ bean.getPpm_account().toUpperCase() + bean.getCluster().toUpperCase() + bean.getSol_type().toUpperCase(), "");
+							+ bean.getPpm_account().toUpperCase() + bean.getCluster().toUpperCase() + bean.getSol_type().trim().toUpperCase(), "");
 
 					if (bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity()) <= 9) {
 						if (flag == 1)
@@ -726,11 +730,42 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						flag = 1;
 					}
 					
+					if (bean.getOffer_mod().equalsIgnoreCase("MT Kitting") && bean.getC_pack_code().isEmpty()) {
+						if (flag == 1) {
+							error_msg = error_msg
+									+ ",Mandatory childpack code for kitting promo type, invalid Child basepack";
+						} else
+							error_msg = error_msg + "Mandatory childpack code for kitting promo type, invalid Child basepack";
+						flag = 1;
+					}
+					
+					if ((bean.getChannel().equalsIgnoreCase("CNC")
+							|| bean.getChannel().equalsIgnoreCase("HUL3")) && (bean.getBudget().isEmpty()
+							|| bean.getBudget() == null))
+					{
+						if (flag == 1)
+							error_msg = error_msg + ",Budget entry mandatory for HUL3 and CNC channel";
+						else
+							error_msg = error_msg + "Budget entry mandatory for HUL3 and CNC channel";
+						flag=1;
+					}
+					
+					if(!offer_mod_map.get(bean.getOffer_mod().toUpperCase()).equalsIgnoreCase(bean.getOfr_type()))
+					{
+						if (flag == 1) {
+							error_msg = error_msg + ",Mismatch in OFFER TYPE and OFFER MODALITY ";
+							flag = 1;
+						} else {
+							error_msg = error_msg + "Mismatch in OFFER TYPE and OFFER MODALITY";
+							flag = 1;
+						}
+					}
+					
 					if (bean.getOffer_mod().equalsIgnoreCase("Ground ops in %")
 							|| bean.getOffer_mod().equalsIgnoreCase("Ground ops in rs")
 							|| bean.getOffer_mod().equalsIgnoreCase("Ground ops in rs.")
-									&& bean.getSol_type().equalsIgnoreCase("topup")
-							|| bean.getSol_type().equalsIgnoreCase("top up")) {
+									&& bean.getSol_type().trim().equalsIgnoreCase("topup")
+							|| bean.getSol_type().trim().equalsIgnoreCase("top up")) {
 						if (bean.getPrice_off().isEmpty()) {
 							if (flag == 1)
 								error_msg = error_msg + ",Mandatory input for Price off";
@@ -756,7 +791,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 					}
 					
-					if(!crEntries.containsKey(bean.getSol_type().toUpperCase()))
+					if(!crEntries.containsKey(bean.getSol_type().trim().toUpperCase()))
 					{
 						if (flag == 1)
 							error_msg = error_msg + ",SOL type does not exist";
@@ -774,7 +809,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						flag = 1;
 					}
 
-					if(bean.getSol_type().equalsIgnoreCase("Basepack Addition"))
+					if(bean.getSol_type().trim().equalsIgnoreCase("Basepack Addition"))
 					{
 						if(crEntries.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toString() + bean.getPpm_account().toUpperCase()+bean.getBasepack_code().toUpperCase()+bean.getPrice_off().toUpperCase() + bean.getCluster().toUpperCase() )) {
 							if (flag == 1)
@@ -795,7 +830,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 					}
 					//moc_name,year,PPM_ACCOUNT,BASEPACK_CODE,CLUSTER
-					if(bean.getSol_type().equalsIgnoreCase("TOP UP"))
+					if(bean.getSol_type().trim().equalsIgnoreCase("TOP UP"))
 					{
 						if (!crEntries.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
 								+ bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()
@@ -808,7 +843,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 					}
 
-					if(bean.getSol_type().equalsIgnoreCase("Missing Geo"))
+					if(bean.getSol_type().trim().equalsIgnoreCase("Missing Geo"))
 					{
 						//System.out.println("key:"+bean.getMoc_name().toUpperCase() + bean.getYear().toString() + bean.getPpm_account().toUpperCase()+bean.getBasepack_code().toUpperCase()+bean.getPrice_off().toUpperCase() + bean.getCluster().toUpperCase());
 						//System.out.println("map:"+crEntries);
@@ -846,9 +881,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					
 					
 					//MOC_NAME-2, PPM_ACCOUNT-3, BASEPACK_CODE-4, CLUSTER-5,PRICE_OFF-6, year-10
-					if (bean.getSol_type().equalsIgnoreCase("Budget Extension")
-							|| bean.getSol_type().equalsIgnoreCase("Additional Quantity")
-							|| bean.getSol_type().equalsIgnoreCase("Liquidation"))
+					if (bean.getSol_type().trim().equalsIgnoreCase("Budget Extension")
+							|| bean.getSol_type().trim().equalsIgnoreCase("Additional Quantity")
+							|| bean.getSol_type().trim().equalsIgnoreCase("Liquidation"))
 					{
 						if (!crEntries
 								.containsKey(bean.getMoc_name().toUpperCase() + bean.getPpm_account().toUpperCase()
@@ -862,6 +897,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 					}
 					
+					
+					
 					//System.out.println("Key:"+bean.getSol_code_ref().toUpperCase() + bean.getMoc_name().toUpperCase()
 						//			+ bean.getPpm_account().toUpperCase()  + "_start_date");
 					//System.out.println("Map:"+crEntries);
@@ -873,74 +910,273 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 									+ bean.getPpm_account().toUpperCase() + "_end_date"));
 					
 					String moc = datafromtable.getMOC(bean.getMoc_name(), bean.getYear());
-					if (bean.getSol_type().equalsIgnoreCase("Date Extension")
-							|| bean.getSol_type().equalsIgnoreCase("Old Month")
-							|| bean.getSol_type().equalsIgnoreCase("Specific Date"))
-					{
-						//A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,A.PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR
-						if(!crEntries.containsKey(bean.getMoc_name().toUpperCase()+bean.getPpm_account().toUpperCase()+bean.getBasepack_code().toUpperCase()+bean.getCluster().toUpperCase()+bean.getPrice_off().toUpperCase()+bean.getPromo_time_period().toUpperCase()+bean.getYear().toUpperCase())) {
-							
-							if (flag == 1)
-								error_msg = error_msg + ",Promo entry does not exists for MOC,ppm account, basepack, price off,cluster";
-							else
-								error_msg = error_msg + "Promo entry does not exists for MOC,ppm account, basepack, price off,cluster";
-							flag = 1;
-						}else
-						{
-						  
-							if(crEntries.containsKey(bean.getMoc_name()+bean.getYear()))
-							{
-								if (promotimemap.containsKey(crEntries.get(bean.getMoc_name() + bean.getYear())
-										+ bean.getPromo_time_period() + "start_date") || promotimemap.containsKey(crEntries.get(bean.getMoc_name() + bean.getYear())
-												+ bean.getPromo_time_period() + "end_date") ) {
-									query.setString(20,
-											promotimemap.get(crEntries.get(bean.getMoc_name() + bean.getYear())
-													+ bean.getPromo_time_period() + "start_date"));
-									query.setString(21,
-											promotimemap.get(crEntries.get(bean.getMoc_name() + bean.getYear())
-													+ bean.getPromo_time_period() + "end_date"));
+					
+					if (bean.getSol_type().trim().equalsIgnoreCase("Date Extension")
+							|| bean.getSol_type().trim().equalsIgnoreCase("Old Month")
+					/* || bean.getSol_type().trim().equalsIgnoreCase("Specific Date") */) {
+						
+						// for tdp check
+						String tdp_key = bean.getYear().toUpperCase() + bean.getMoc_name()
+								+ bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()
+								+ bean.getCluster().toUpperCase();
+						
+						if (date_extensionMap.containsKey(tdp_key)) {
+							if (bean.getPromo_time_period().toUpperCase().trim()
+									.equalsIgnoreCase(date_extensionMap.get(tdp_key))) {
+
+								if (flag == 1)
+									error_msg = error_msg + ",Promo entry already does exists";
+								else
+									error_msg = error_msg + "Promo entry already does exists";
+								flag = 1;
+
+							} else {
+								String promo_time = bean.getPromo_time_period().toUpperCase();
+								String map_promo_time = date_extensionMap.get(tdp_key);
+								// to check future tdp or not
+								if (promo_time.contains("TDP") && map_promo_time.contains("TDP")) {
 									
-								}else
-								{
-									if (flag == 1)
-										error_msg = error_msg + ",invalid Promotime period";
-									else
-										error_msg = error_msg + "invalid Promotime period";
-									flag = 1;
-								}
-							} else
-							{
-								if (bean.getYear().length() == 4) {
+									int numberpromo_time_int = Integer.parseInt(promo_time.replaceAll("[^0-9]", "")); // 37 enter in excel
+									int mappromo_time_int = Integer.parseInt(map_promo_time.replaceAll("[^0-9]", "")); // 31 map
 									
-									crEntries.put(bean.getMoc_name() + bean.getYear(), moc);									
-									if(promotimemap.containsKey(moc
-											+ bean.getPromo_time_period() + "start_date") || promotimemap.containsKey(moc
-													+ bean.getPromo_time_period() + "end_date"))
-									{
-										query.setString(20,
-												promotimemap.get(moc
-														+ bean.getPromo_time_period() + "start_date"));
-										query.setString(21,
-												promotimemap.get(moc
-														+ bean.getPromo_time_period() + "end_date"));
-									}else
-									{
+									if (numberpromo_time_int < mappromo_time_int) {
 										if (flag == 1)
-											error_msg = error_msg + ",invalid Promotime period";
+											error_msg = error_msg + ",Back dated Promotime period";
 										else
-											error_msg = error_msg + "invalid Promotime period";
+											error_msg = error_msg +"Back dated Promotime period";
 										flag = 1;
+									} else {
+										String moc_group = datehandle.get(bean.getChannel().toUpperCase() + "_"
+												+ bean.getPpm_account().toUpperCase());
+										
+										String moc_name = bean.getMoc_name().toUpperCase(),
+												moc_year = bean.getYear().toUpperCase();
+										String start_key = moc_name + moc_year + moc_group + "_start_date";
+										String end_key = moc_name + moc_year + moc_group + "_end_date";
+										
+										// check if tdp mapped with moc and year
+										if (!datehandle.containsKey(start_key) && !datehandle.containsKey(end_key)) {
+											if (flag == 1)
+												error_msg += ",Invalid " + bean.getPromo_time_period() + "for"
+														+ bean.getMoc_name() + " and " + bean.getYear();
+											else
+												error_msg += "Invalid " + bean.getPromo_time_period() + "for"
+														+ bean.getMoc_name() + " and " + bean.getYear();
+
+											flag = 1;
+										} else {
+
+											query.setString(20, promotimemap.get(moc+bean.getPromo_time_period()+"start_date" ));
+											query.setString(21, promotimemap.get(moc+bean.getPromo_time_period()+"end_date" ));
+
+										}
+
 									}
 
-								}else
+								} else // for checking other promotime period other than TDP
 								{
-									if (flag == 1)
-										error_msg = error_msg + ",invalid year ";
+									String moc_group = datehandle.get(bean.getChannel().toUpperCase() + "_"
+											+ bean.getPpm_account().toUpperCase());
+									String moc_name = bean.getMoc_name().toUpperCase(),
+											moc_year = bean.getYear().toUpperCase();
+									String start_key = moc_name + moc_year + moc_group + "_start_date";
+									String end_key = moc_name + moc_year + moc_group + "_end_date";
+									// check if tdp mapped with moc and year
+									if (!datehandle.containsKey(start_key) && !datehandle.containsKey(end_key)) {
+										if (flag == 1)
+											error_msg += ",Invalid " + bean.getPromo_time_period() + "for"
+													+ bean.getMoc_name() + " and " + bean.getYear();
+										else
+											error_msg += "Invalid " + bean.getPromo_time_period() + "for"
+													+ bean.getMoc_name() + " and " + bean.getYear();
+
+										flag = 1;
+									} else {
+
+										query.setString(20, promotimemap.get(moc+bean.getPromo_time_period()+"start_date" ));
+										query.setString(21, promotimemap.get(moc+bean.getPromo_time_period()+"end_date" ));
+
+									}
+								}
+							}
+						}else
+						{
+							
+						   	String key_from_map=date_extensionMap.get(bean.getSol_code_ref().toUpperCase().trim()) ;
+						   	//PPM_ACCOUNT,BASEPACK_CODE,CLUSTER
+						   	String keywithexcel=bean.getPpm_account().toUpperCase().trim()+bean.getBasepack_code().toUpperCase().trim()+bean.getCluster().toUpperCase().trim();
+						   	if(!key_from_map.equalsIgnoreCase(keywithexcel))
+						   	{
+						   		if (flag == 1)
+									error_msg += ",Promo entry does not exists";
+								else
+									error_msg += "Promo entry does not exists";
+
+								flag = 1;
+						   	}else
+						   	{
+						   		int moc_frommap_cr=Integer.parseInt(date_extensionMap.get(keywithexcel+"_MOC_NAME").replaceAll("[^0-9]", "")) ; // MOC9 --> 9
+						   		
+						   		int year_frommap_cr=Integer.parseInt(date_extensionMap.get(keywithexcel+"_MOC_YEAR")) ; // 2022
+						   		
+						   		String moc_in_number=bean.getMoc_name().replaceAll("[^0-9]", ""); // excel moc10 --> String 10
+						   		
+						   		int moc_name_fromexcel=Integer.parseInt(moc_in_number); //int 10
+						   		
+						   		int yearfromexcel=Integer.parseInt(bean.getYear().toUpperCase().trim()); // 2022
+
+						   		//if year is equal and check if moc is back dated
+						   		if(year_frommap_cr == yearfromexcel)
+						   		{
+						   			if(datafromtable.getFutureDatedMOC(moc_frommap_cr, moc_name_fromexcel))
+						   			{
+						   				if (flag == 1)
+											error_msg += ",MOC  must be future dated.";
+										else
+											error_msg += "MOC must be future dated.";
+
+										flag = 1;
+						   			}else
+						   			{
+						   				String moc_group = datehandle.get(bean.getChannel().toUpperCase() + "_"
+												+ bean.getPpm_account().toUpperCase());
+										String moc_name = bean.getMoc_name().toUpperCase(),
+												moc_year = bean.getYear().toUpperCase();
+										String start_key = moc_name + moc_year + moc_group + "_start_date";
+										String end_key = moc_name + moc_year + moc_group + "_end_date";
+										// check if tdp mapped with moc and year
+										if (!datehandle.containsKey(start_key) && !datehandle.containsKey(end_key)) {
+											if (flag == 1)
+												error_msg += ",Invalid " + bean.getPromo_time_period() + "for"
+														+ bean.getMoc_name() + " and " + bean.getYear();
+											else
+												error_msg += "Invalid " + bean.getPromo_time_period() + "for"
+														+ bean.getMoc_name() + " and " + bean.getYear();
+
+											flag = 1;
+										} else {
+											//moc_from_db + bean.getPromo_time_period() + "start_date"
+											query.setString(20, promotimemap.get(moc+bean.getPromo_time_period()+"start_date" ));
+											query.setString(21, promotimemap.get(moc+bean.getPromo_time_period()+"end_date" ));
+
+										}
+						   			}
+						   		}else if(yearfromexcel>year_frommap_cr)
+						   		{
+
+						   			String moc_group = datehandle.get(bean.getChannel().toUpperCase() + "_"
+											+ bean.getPpm_account().toUpperCase());
+									String moc_name = bean.getMoc_name().toUpperCase(),
+											moc_year = bean.getYear().toUpperCase();
+									String start_key = moc_name + moc_year + moc_group + "_start_date";
+									String end_key = moc_name + moc_year + moc_group + "_end_date";
+									// check if tdp mapped with moc and year
+									if (!datehandle.containsKey(start_key) && !datehandle.containsKey(end_key)) {
+										if (flag == 1)
+											error_msg += ",Invalid " + bean.getPromo_time_period() + "for"
+													+ bean.getMoc_name() + " and " + bean.getYear();
+										else
+											error_msg += "Invalid " + bean.getPromo_time_period() + "for"
+													+ bean.getMoc_name() + " and " + bean.getYear();
+
+										flag = 1;
+									} else {
+
+										query.setString(20, promotimemap.get(moc+bean.getPromo_time_period()+"start_date" ));
+										query.setString(21, promotimemap.get(moc+bean.getPromo_time_period()+"end_date" ));
+
+									}
+						   		}else
+						   		{
+						   			if (flag == 1)
+										error_msg += ",Invalid year for Date extension";
 									else
-										error_msg = error_msg + "invalid  year";
+										error_msg += "Invalid year for Date extension";
+
+									flag = 1;
+						   		}
+						   		
+						   	}
+						}
+						//tdp check end here
+						
+					}
+					
+					if(bean.getSol_type().trim().equalsIgnoreCase("Specific Date"))
+					{
+						if (datafromtable.isPromoTimeisValid(bean.getPromo_time_period().trim())) {
+							
+							
+							String promo_time_sd = bean.getYear().toUpperCase() + bean.getMoc_name()
+									+ bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()
+									+ bean.getCluster().toUpperCase();
+
+							if (!date_extensionMap.containsKey(promo_time_sd)) {
+								if (flag == 1)
+									error_msg += ",Promo entry does not exists for Specific Date";
+								else
+									error_msg += "Promo entry does not exists for Specific Date";
+
+								flag = 1;
+							} else {
+								
+								SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+								Date date = new Date();
+								String currentdate = formatter.format(date);
+								if (datafromtable.compareDates(bean.getPromo_time_period().trim(), currentdate)) {
+									
+									String moc_group = datehandle.get(bean.getChannel().toUpperCase() + "_"
+											+ bean.getPpm_account().toUpperCase());
+									String moc_name = bean.getMoc_name().toUpperCase(),
+											moc_year = bean.getYear().toUpperCase();
+									String start_key = moc_name + moc_year + moc_group + "_start_date";
+									
+									// check if tdp mapped with moc and year
+									if (!datehandle.containsKey(start_key)) {
+										if (flag == 1)
+											error_msg += ",Can't obtain start date";
+										else
+											error_msg += "Can't obtain start date";
+
+										flag = 1;
+									} else {
+																														
+										if (datafromtable.compareDates(bean.getPromo_time_period().trim(),
+											datehandle.get(start_key).replace('-', '/'))) {
+											//query.setString(20, datehandle.get(start_key));
+											////PROMOTION_ID-0, PROMO_ID-1, MOC_NAME-2, PPM_ACCOUNT-3 _start_date
+											query.setString(20, crEntries.get(bean.getSol_code_ref().toUpperCase()+ bean.getMoc_name().toUpperCase()+bean.getPpm_account()+"_start_date"));
+											query.setString(21, 
+													bean.getPromo_time_period().trim().replace('/', '-'));
+										} else {
+											
+											if (flag == 1)
+												error_msg += ",Enter Future date";
+											else
+												error_msg += "Enter Future date";
+
+											flag = 1;
+										}
+									}
+								   
+									
+								} else {
+									if (flag == 1)
+										error_msg += ",Enter Future date";
+									else
+										error_msg += "Enter Future date";
+
 									flag = 1;
 								}
 							}
+						}else
+						{
+							if (flag == 1)
+								error_msg += ",Invalid Promotime period";
+							else
+								error_msg += "Invalid Promotime period";
+
+							flag = 1;
 						}
 					}
 					
@@ -973,7 +1209,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					query.setString(19, abmap.get(bean.getPpm_account().toUpperCase()));
 									
 					query.setString(23, moc);
-					query.setString(24, bean.getSol_type());
+					query.setString(24, bean.getSol_type().trim());
 					query.setString(25, bean.getSol_code_ref());
 					
 					if (flag == 1)
@@ -1213,21 +1449,6 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			SimpleDateFormat sdf = new SimpleDateFormat(format);
 			date = sdf.parse(moc);
 			if (!moc.equals(sdf.format(date))) {
-				date = null;
-			}
-		} catch (ParseException ex) {
-			ex.printStackTrace();
-		}
-		return date != null;
-	}
-
-	private boolean isPromoTimeisValid(String promotime) {
-		Date date = null;
-		String format = "dd/MM/yyyy";
-		try {
-			SimpleDateFormat sdf = new SimpleDateFormat(format);
-			date = sdf.parse(promotime);
-			if (!promotime.equals(sdf.format(date))) {
 				date = null;
 			}
 		} catch (ParseException ex) {

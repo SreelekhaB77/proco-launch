@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.hibernate.query.Query;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -109,7 +111,7 @@ public class DataFromTable {
 					String.valueOf(data[4]) + " " + String.valueOf(data[5]));
 			
 			h.put(String.valueOf(data[0]).toUpperCase() + String.valueOf(data[1]).toUpperCase()
-					+ String.valueOf(data[2]).toUpperCase() + String.valueOf(data[3]).toUpperCase()+String.valueOf(data[6]).toUpperCase()+String.valueOf(data[7]),
+					+ String.valueOf(data[2]).toUpperCase() + String.valueOf(data[3]).toUpperCase()+String.valueOf(data[6]).toUpperCase()+String.valueOf(data[7]).toUpperCase(),
 					String.valueOf(data[4]) + " " + String.valueOf(data[5])); 
 			
 		}
@@ -408,9 +410,9 @@ public class DataFromTable {
 	 * To handle all CR template 
 	 * @param crEntries
 	 */
-	public void getAllSOLCodeAndPromoId(Map<String,String> crEntries) {
+	public void getAllSOLCodeAndPromoId(Map<String,String> crEntries,Map<String,String> date_extension) {
 		// TODO Auto-generated method stub
-		String query="SELECT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,CASE WHEN LOCATE('%', A.PRICE_OFF) > 0 THEN A.PRICE_OFF ELSE ROUND(A.PRICE_OFF, 0) END AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR "
+		String query="SELECT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,CASE WHEN LOCATE('%', A.PRICE_OFF) > 0 THEN A.PRICE_OFF ELSE ROUND(A.PRICE_OFF, 0) END AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR"
 				+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 A INNER JOIN TBL_PROCO_MEASURE_MASTER_V2 B "
 				+ "	ON "
 				+ "	A.PROMO_ID=B.PROMO_ID "
@@ -422,20 +424,38 @@ public class DataFromTable {
 		{
 			crEntries.put(String.valueOf(obj[0]).toUpperCase(), String.valueOf(obj[0]));
 			//PROMOTION_ID-0, PROMO_ID-1, MOC_NAME-2, PPM_ACCOUNT-3, BASEPACK_CODE-4, CLUSTER-5,PRICE_OFF-6, START_DATE-7, END_DATE-8, PROMO_TIMEPERIOD-9, MOC_YEAR -10
+			
+			//KEY: YEAR,MOC_NAME,PPM_ACCOUNT,BASEPACK_CODE,CLUSTER VALUE:PROMOTIME PERIOD
+			date_extension.put(String.valueOf(obj[10]).toUpperCase() + String.valueOf(obj[2]).toUpperCase()
+					+ String.valueOf(obj[3]).toUpperCase() + String.valueOf(obj[4]).toUpperCase()
+					+ String.valueOf(obj[5]).toUpperCase(), String.valueOf(obj[9]).toUpperCase()); // CHECK FOR TPD  
+			
+			//KEY : PROMOTION_ID VALUE : PPM_ACCOUNT,BASEPACK_CODE,CLUSTER
+			date_extension.put(String.valueOf(obj[0]).toUpperCase(), String.valueOf(obj[3]).toUpperCase()
+					+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[5]).toUpperCase()); //check if moc and year change for date extension 
+			
+			//KEY : PROMOTION_ID VALUE : PPM_ACCOUNT,BASEPACK_CODE,CLUSTER_MOC_NAME
+			date_extension.put(String.valueOf(obj[3]).toUpperCase()
+					+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[5]).toUpperCase()+"_MOC_NAME",String.valueOf(obj[2]).toUpperCase()); //check if moc and year change for date extension 
+			
+			//KEY : PROMOTION_ID VALUE : PPM_ACCOUNT,BASEPACK_CODE,CLUSTER_MOC_YEAR
+			date_extension.put(String.valueOf(obj[3]).toUpperCase()
+					+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[5]).toUpperCase()+"_MOC_YEAR",String.valueOf(obj[10]).toUpperCase());
+			
 			crEntries.put(String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
 					+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[5]).toUpperCase()
 					+ String.valueOf(obj[6]).toUpperCase()+String.valueOf(obj[10]).toUpperCase(), ""); // Budget Extension,Additional Quantity,Liquidation
 			
-			crEntries.put(String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
+		/*	crEntries.put(String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
 					+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[5]).toUpperCase()
 					+ String.valueOf(obj[6]).toUpperCase() + String.valueOf(obj[9]).toUpperCase()
-					+ String.valueOf(obj[10]).toUpperCase(), "");
+					+ String.valueOf(obj[10]).toUpperCase(), "");*/
 			// Date extension
 
 			crEntries.put(String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
 					+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[5]).toUpperCase()
 					+ String.valueOf(obj[6]).toUpperCase() + String.valueOf(obj[7]).toUpperCase(), "");
-			
+			//PROMOTION_ID-0, PROMO_ID-1, MOC_NAME-2, PPM_ACCOUNT-3
 			crEntries.put(String.valueOf(obj[0]).toUpperCase() + String.valueOf(obj[2]).toUpperCase()
 					+ String.valueOf(obj[3]).toUpperCase() + "_start_date",
 					String.valueOf(obj[7]).toUpperCase()); // to get the start date from existing
@@ -480,8 +500,64 @@ public class DataFromTable {
 		}
 		
 	}
-
 	
+	protected boolean isPromoTimeisValid(String promotime) {
+		Date date = null;
+		String format = "dd/MM/yyyy";
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat(format);
+			date = sdf.parse(promotime);
+			if (!promotime.equals(sdf.format(date))) {
+				date = null;
+			}
+		} catch (ParseException ex) {
+			ex.printStackTrace();
+		}
+		return date != null;
+	}
+	/**
+	 * 
+	 * @param d1 = entered by user
+	 * @param d2 = from db
+	 * @return boolean
+	 */
+	public boolean compareDates(String d1,String d2)
+    {
+        try{
+        	
+        	d2=d2.replaceAll("-", "-");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date date1 = sdf.parse(d1);
+            Date date2 = sdf.parse(d2);
+            
+            if(date1.after(date2)){
+                return true;
+            }
+            
+            if(date1.before(date2)){
+                return false;
+            }
+
+            return false;
+
+        }
+        catch(ParseException ex){
+            ex.printStackTrace();
+            return false;
+        }
+    }
+	
+
+	public boolean getFutureDatedMOC(int mocfrom_map,int moc_fromexcel)
+	{
+		if(mocfrom_map>moc_fromexcel)
+		{
+			return true;
+		}
+		return false;
+	}
+	
+
 	
 	public void getppmDescStage(Map<String, String> commanmap,String uid) {
 		String ppmdesc="SELECT PPM_DESC_STAGE,CHANNEL_NAME,MOC_NAME,PPM_ACCOUNT,BASEPACK_CODE,SALES_CATEGORY FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE USER_ID='"+uid+"'";
