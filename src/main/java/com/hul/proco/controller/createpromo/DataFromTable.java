@@ -65,6 +65,18 @@ public class DataFromTable {
 
 	}
 	
+	public Map<String,String> handlingASMLAc()
+	{
+		String asmlString="SELECT DISTINCT OFFER_MODALITY,OFFER_TYPE FROM TBL_PROCO_INVESTMENT_TYPE_MASTER_V2 WHERE PPM_ACCOUNT ='ASML' AND IS_ACTIVE=1";
+		List<Object[]> mapdata_list = sessionFactory.getCurrentSession().createNativeQuery(asmlString).list();
+		Map<String,String> asmlMap= new HashMap<String, String>();
+		for(Object[] obj: mapdata_list)
+		{
+			asmlMap.put(String.valueOf(obj[0]).toUpperCase(), String.valueOf(obj[1]).toUpperCase());
+		}
+		return asmlMap;
+	}
+	
 	public Map<String,String> getAllOffetTypeAndOfferMod()
 	{
 		Map<String,String> mod_map = new HashMap<String, String>();

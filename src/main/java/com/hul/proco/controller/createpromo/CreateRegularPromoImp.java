@@ -100,7 +100,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		Map<String, String> branchmap = getValidBranch();
 		Map<String, String> abmap = getValidAbcreation();
 		Map<String, String> offer_mod_map = datafromtable.getAllOffetTypeAndOfferMod();
-		
+		Map<String, String> asmlMap=datafromtable.handlingASMLAc();
 		Map<String, ArrayList<String>> validationmap = datafromtable.getAllValidationRecords();
 
 		// Mayur Adding changes for mapping of TME user for category
@@ -236,6 +236,18 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						else
 							error_msg = error_msg + "Budget entry mandatory for HUL3 and CNC channel";
 						flag=1;
+					}
+					
+					if(bean.getPpm_account().equalsIgnoreCase("ASML"))
+					{
+						if(!asmlMap.containsKey(bean.getOffer_mod().toUpperCase()+bean.getOfr_type().toUpperCase()))
+						{
+							if (flag == 1)
+								error_msg = error_msg + ",Invalid offer modality and offer type for AMSL";
+							else
+								error_msg = error_msg + "Invalid offer modality and offer type for AMSL";
+							flag=1;
+						}
 					}
 					
 					query.setString(1, bean.getChannel());
@@ -764,7 +776,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					if (bean.getOffer_mod().equalsIgnoreCase("Ground ops in %")
 							|| bean.getOffer_mod().equalsIgnoreCase("Ground ops in rs")
 							|| bean.getOffer_mod().equalsIgnoreCase("Ground ops in rs.")
-									&& bean.getSol_type().trim().equalsIgnoreCase("topup")
+									&& bean.getSol_type().trim().equalsIgnoreCase("top up")
 							|| bean.getSol_type().trim().equalsIgnoreCase("top up")) {
 						if (bean.getPrice_off().isEmpty()) {
 							if (flag == 1)
@@ -774,7 +786,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							flag = 1;
 						}
 					}
+					
 					String price_off="";
+					
 					if(flag==0 && isStringNumber(bean.getPrice_off()))
 					{
 						price_off=bean.getPrice_off().isEmpty() ? ""
@@ -842,6 +856,16 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							flag = 1;
 						}
 					}
+					
+					if(!datehandle.containsKey(bean.getChannel().toUpperCase()+bean.getPpm_account().toUpperCase()))
+					{
+						if (flag == 1) {
+							error_msg = error_msg
+									+ ",Channel name and ppm account not matching";
+						} else
+							error_msg = error_msg + "Channel name and ppm account not matching";
+						flag = 1;
+					}
 
 					if(bean.getSol_type().trim().equalsIgnoreCase("Missing Geo"))
 					{
@@ -897,7 +921,17 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 					}
 					
-					
+					if(bean.getPpm_account().equalsIgnoreCase("ASML"))
+					{
+						if(!asmlMap.containsKey(bean.getOffer_mod().toUpperCase()+bean.getOfr_type().toUpperCase()))
+						{
+							if (flag == 1)
+								error_msg = error_msg + ",Invalid offer modality and offer type for AMSL";
+							else
+								error_msg = error_msg + "Invalid offer modality and offer type for AMSL";
+							flag=1;
+						}
+					}
 					
 					//System.out.println("Key:"+bean.getSol_code_ref().toUpperCase() + bean.getMoc_name().toUpperCase()
 						//			+ bean.getPpm_account().toUpperCase()  + "_start_date");
