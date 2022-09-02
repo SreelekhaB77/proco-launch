@@ -723,9 +723,12 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				String quantity=bean.getQuantity().isEmpty() ? ""
 						: String.valueOf(
 								(double) Math.round(Double.parseDouble(bean.getQuantity()) * 100) / 100);
-				
-				query.setString(12,datafromtable.calculateBudget(bean.getChannel(), quantity, bean.getPrice_off(), budget, bean.getBasepack_code(), commanmap));
-				
+				if (!bean.getPrice_off().isEmpty()) {
+					query.setString(12, datafromtable.calculateBudget(bean.getChannel(), quantity, bean.getPrice_off(),
+							budget, bean.getBasepack_code(), commanmap));
+				} else {
+					query.setString(12, bean.getBudget());
+				}
 				query.setString(26, commanmap.get(bean.getBasepack_code().toUpperCase()));
 				
 				if (!duplicateMap.containsKey(bean.getMoc_name().toUpperCase() +bean.getYear().toUpperCase()+ bean.getBasepack_code().toUpperCase()
@@ -733,7 +736,15 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 					duplicateMap.put(bean.getMoc_name().toUpperCase() +bean.getYear().toUpperCase()+ bean.getBasepack_code().toUpperCase()
 							+ bean.getPpm_account().toUpperCase() + bean.getCluster().toUpperCase() + bean.getSol_type().trim().toUpperCase(), "");
-
+					
+					
+					if (bean.getPrice_off().isEmpty()) {
+						if (flag == 1)
+							error_msg = error_msg + ",Mandatory input for Price off";
+						else
+							error_msg = error_msg + "Mandatory input for Price off";
+					}
+					
 					if (bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity()) <= 9) {
 						if (flag == 1)
 							error_msg = error_msg + ",Mandatory input for Quantity, Min Qty criteria not met";
