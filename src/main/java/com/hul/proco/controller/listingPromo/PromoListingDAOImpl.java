@@ -1643,7 +1643,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			} */
 			if (roleId.equalsIgnoreCase("DP")&& (moc!= null || !moc.isEmpty())) {
 				if(moc.equalsIgnoreCase("all"))
-					promoQueryCount += " WHERE PM.STATUS = 1";
+					promoQueryCount += " WHERE PM.TEMPLATE_TYPE = 'R' AND PM.STATUS = 1";//Added by kavitha D-Sprint 9
 				else
 				promoQueryCount += " WHERE PM.STATUS IN (1, 3) AND PM.MOC='"+moc+ "' ";
 			}
