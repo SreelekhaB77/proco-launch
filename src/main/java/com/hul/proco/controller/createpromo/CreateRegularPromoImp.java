@@ -1027,8 +1027,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 										flag = 1;
 									} else {
 
-										query.setString(20, promotimemap.get(moc+bean.getPromo_time_period()+"start_date" ));
-										query.setString(21, promotimemap.get(moc+bean.getPromo_time_period()+"end_date" ));
+										query.setString(20, datehandle.get(start_key));// need to implement for other promo time period
+										query.setString(21, datehandle.get(end_key));
 
 									}
 								}
