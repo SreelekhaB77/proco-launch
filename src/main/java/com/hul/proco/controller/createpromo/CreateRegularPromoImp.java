@@ -240,6 +240,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					
 					if(bean.getPpm_account().equalsIgnoreCase("ASML"))
 					{
+						
 						if(!asmlMap.containsKey(bean.getOffer_mod().toUpperCase()+bean.getOfr_type().toUpperCase()))
 						{
 							if (flag == 1)
@@ -268,6 +269,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					query.setString(24, "");
 					query.setString(25, "");
 					query.setString(26, commanmap.get(bean.getBasepack_code()));
+					
 					if (datafromtable.validateYear(bean.getYear(), bean.getMoc_name())) {
 						query.setString(23, bean.getYear());
 					} else {
@@ -631,7 +633,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							}
 						}*/
 					}
-
+					
 					if (!validationmap.get("PPM Account").contains(bean.getPpm_account().toUpperCase())
 							|| bean.getPpm_account().contains(",")) {
 
@@ -723,9 +725,12 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				String quantity=bean.getQuantity().isEmpty() ? ""
 						: String.valueOf(
 								(double) Math.round(Double.parseDouble(bean.getQuantity()) * 100) / 100);
-				
-				query.setString(12,datafromtable.calculateBudget(bean.getChannel(), quantity, bean.getPrice_off(), budget, bean.getBasepack_code(), commanmap));
-				
+				if (!bean.getPrice_off().isEmpty()) {
+					query.setString(12, datafromtable.calculateBudget(bean.getChannel(), quantity, bean.getPrice_off(),
+							budget, bean.getBasepack_code(), commanmap));
+				} else {
+					query.setString(12, bean.getBudget());
+				}
 				query.setString(26, commanmap.get(bean.getBasepack_code().toUpperCase()));
 				
 				if (!duplicateMap.containsKey(bean.getMoc_name().toUpperCase() +bean.getYear().toUpperCase()+ bean.getBasepack_code().toUpperCase()
@@ -733,7 +738,15 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 					duplicateMap.put(bean.getMoc_name().toUpperCase() +bean.getYear().toUpperCase()+ bean.getBasepack_code().toUpperCase()
 							+ bean.getPpm_account().toUpperCase() + bean.getCluster().toUpperCase() + bean.getSol_type().trim().toUpperCase(), "");
-
+					
+					
+					if (bean.getPrice_off().isEmpty()) {
+						if (flag == 1)
+							error_msg = error_msg + ",Mandatory input for Price off";
+						else
+							error_msg = error_msg + "Mandatory input for Price off";
+					}
+					
 					if (bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity()) <= 9) {
 						if (flag == 1)
 							error_msg = error_msg + ",Mandatory input for Quantity, Min Qty criteria not met";
@@ -1027,8 +1040,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 										flag = 1;
 									} else {
 
-										query.setString(20, promotimemap.get(moc+bean.getPromo_time_period()+"start_date" ));
-										query.setString(21, promotimemap.get(moc+bean.getPromo_time_period()+"end_date" ));
+										query.setString(20, datehandle.get(start_key));// need to implement for other promo time period
+										query.setString(21, datehandle.get(end_key));
 
 									}
 								}
