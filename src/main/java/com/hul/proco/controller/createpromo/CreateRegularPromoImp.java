@@ -240,6 +240,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					
 					if(bean.getPpm_account().equalsIgnoreCase("ASML"))
 					{
+						
 						if(!asmlMap.containsKey(bean.getOffer_mod().toUpperCase()+bean.getOfr_type().toUpperCase()))
 						{
 							if (flag == 1)
@@ -268,6 +269,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					query.setString(24, "");
 					query.setString(25, "");
 					query.setString(26, commanmap.get(bean.getBasepack_code()));
+					
 					if (datafromtable.validateYear(bean.getYear(), bean.getMoc_name())) {
 						query.setString(23, bean.getYear());
 					} else {
@@ -631,7 +633,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							}
 						}*/
 					}
-
+					
 					if (!validationmap.get("PPM Account").contains(bean.getPpm_account().toUpperCase())
 							|| bean.getPpm_account().contains(",")) {
 

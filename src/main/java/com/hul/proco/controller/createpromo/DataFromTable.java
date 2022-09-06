@@ -72,7 +72,7 @@ public class DataFromTable {
 		Map<String,String> asmlMap= new HashMap<String, String>();
 		for(Object[] obj: mapdata_list)
 		{
-			asmlMap.put(String.valueOf(obj[0]).toUpperCase(), String.valueOf(obj[1]).toUpperCase());
+			asmlMap.put(String.valueOf(obj[0]).toUpperCase()+String.valueOf(obj[1]).toUpperCase(),"");
 		}
 		return asmlMap;
 	}
