@@ -920,7 +920,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								error_msg = error_msg + "Offer modality must be either Ground ops in % or Rs";
 							flag = 1;
 							
-							System.out.println("error_msg:"+error_msg);
+							//System.out.println("error_msg:"+error_msg);
 						}
 					}
 					
