@@ -226,7 +226,6 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 						flag = 1;
 					}
-					
 					if ((bean.getChannel().equalsIgnoreCase("CNC")
 							|| bean.getChannel().equalsIgnoreCase("HUL3")) && (bean.getBudget().isEmpty()
 							|| bean.getBudget() == null))
@@ -725,7 +724,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				String quantity=bean.getQuantity().isEmpty() ? ""
 						: String.valueOf(
 								(double) Math.round(Double.parseDouble(bean.getQuantity()) * 100) / 100);
-				if (!bean.getPrice_off().isEmpty()) {
+				if (!bean.getPrice_off().isEmpty() && isStringNumber(bean.getPrice_off())) {
 					query.setString(12, datafromtable.calculateBudget(bean.getChannel(), quantity, bean.getPrice_off(),
 							budget, bean.getBasepack_code(), commanmap));
 				} else {
@@ -747,6 +746,13 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							error_msg = error_msg + "Mandatory input for Price off";
 					}
 					
+					if (!isStringNumber(bean.getPrice_off())) {
+						if (flag == 1)
+							error_msg = error_msg + ",Invalid input for Price off";
+						else
+							error_msg = error_msg + "Invalid input for Price off";
+					}
+
 					if (bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity()) <= 9) {
 						if (flag == 1)
 							error_msg = error_msg + ",Mandatory input for Quantity, Min Qty criteria not met";
@@ -903,16 +909,18 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 					}
 
-					if(bean.getPrice_off().contains("%"))
+					if(!bean.getPrice_off().contains("%") && !bean.getPrice_off().contains("."))
 					{
-						if(!isStringNumber(bean.getPrice_off().split("%")[0]) &&  bean.getOffer_mod().equalsIgnoreCase("Ground ops in %")|| !bean.getOffer_mod().equalsIgnoreCase("Ground ops in Rs"))
-						{
 						
+						if(!datafromtable.validateMod(bean.getOffer_mod()) )
+						{
 							if (flag == 1)
 								error_msg = error_msg + ",Offer modality must be either Ground ops in % or Rs";
 							else
 								error_msg = error_msg + "Offer modality must be either Ground ops in % or Rs";
 							flag = 1;
+							
+							System.out.println("error_msg:"+error_msg);
 						}
 					}
 					
@@ -1237,8 +1245,12 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					query.setString(8, bean.getOffer_desc());
 					query.setString(9, bean.getOfr_type());
 					query.setString(10, bean.getOffer_mod());
+					if (!isStringNumber(bean.getPrice_off())) {
+						query.setString(11,bean.getPrice_off());
+					}
+					else {
 					if(!bean.getPrice_off().contains("%"))
-					query.setString(11, bean.getPrice_off().isEmpty() ? ""
+					query.setString(11, bean.getPrice_off().isEmpty()  ? ""
 							: String.valueOf(
 									(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100)
 											/ 100));
@@ -1247,6 +1259,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								: String.valueOf(
 										(double) Math.round(Double.parseDouble(bean.getPrice_off().split("%")[0]) * 100)
 												/ 100)+"%");
+					}
 					query.setString(13, bean.getCluster());
 					query.setString(14, bean.getYear());
 					query.setString(15, bean.getBranch());

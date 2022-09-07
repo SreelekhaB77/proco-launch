@@ -581,5 +581,18 @@ public class DataFromTable {
 		}
 	}
 	
+	public boolean validateMod(String mod)
+	{
+		if(mod.equalsIgnoreCase("Ground ops in %"))
+		{
+			return true;
+		}
+		if(mod.equalsIgnoreCase("Ground Ops in Rs."))
+		{
+			return true;
+		}
+		
+		return false;
+	}
 	
 }
