@@ -1273,7 +1273,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			
 		}
 		
-		if (flag == 0) {
+	/*	if (flag == 0) {
 			datafromtable.updatePPMDescStage(uid,template);
 			
 			Session session = sessionFactory.getCurrentSession();
@@ -1281,7 +1281,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			proc.registerStoredProcedureParameter(0, String.class, ParameterMode.IN);
 			proc.setParameter(0, uid);
 			proc.execute();
-			/*
+			
 			LocalDate l = LocalDate.now();
 
 			Month currentMonth = l.getMonth();
@@ -1341,14 +1341,23 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								bean.getBasepack_code(), pidtmp, bean.getYear());
 					}
 				}
-			}*/
-		}
+			}
+		}*/
 		
 		
 		if (globle_flag == 0) {
 
 			// saveTomainTable(beans, uid, template,
 			// promotimemap,branchmap,abmap,datehandle);
+			
+			datafromtable.updatePPMDescStage(uid,template);
+			
+			Session session = sessionFactory.getCurrentSession();
+			StoredProcedureQuery proc = session.createStoredProcedureQuery("PROC_PROCO_GENERATE_PROMO_ID");
+			proc.registerStoredProcedureParameter(0, String.class, ParameterMode.IN);
+			proc.setParameter(0, uid);
+			proc.execute();
+			
 			saveToMain(uid,template);
 			globle_flag = 0;
 			return "EXCEL_UPLOADED";
