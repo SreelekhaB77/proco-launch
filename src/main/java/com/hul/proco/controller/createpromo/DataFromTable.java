@@ -422,7 +422,7 @@ public class DataFromTable {
 	 * To handle all CR template 
 	 * @param crEntries
 	 */
-	public void getAllSOLCodeAndPromoId(Map<String,String> crEntries,Map<String,String> date_extension) {
+	public void getAllSOLCodeAndPromoId(Map<String,String> crEntries,Map<String,String> date_extension,Map<String,ArrayList<String>> check_existing_sol) {
 		// TODO Auto-generated method stub
 		String query="SELECT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,CASE WHEN LOCATE('%', A.PRICE_OFF) > 0 THEN A.PRICE_OFF ELSE ROUND(A.PRICE_OFF, 0) END AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR"
 				+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 A INNER JOIN TBL_PROCO_MEASURE_MASTER_V2 B "
@@ -431,6 +431,8 @@ public class DataFromTable {
 				+ "	WHERE B.PROMOTION_STATUS IN ('APPROVED','AMEND APPROVED','SUBMITTED','AMEND SUBMITTED')";
 		
 		List<Object[]> list=sessionFactory.getCurrentSession().createNativeQuery(query	).list();
+		
+		ArrayList<String> list_of_sol=new ArrayList<String>();
 		
 		for(Object[] obj: list)
 		{
@@ -443,8 +445,9 @@ public class DataFromTable {
 					+ String.valueOf(obj[5]).toUpperCase(), String.valueOf(obj[9]).toUpperCase()); // CHECK FOR TPD  
 			
 			//KEY : PROMOTION_ID VALUE : PPM_ACCOUNT,BASEPACK_CODE,CLUSTER
-			date_extension.put(String.valueOf(obj[0]).toUpperCase(), String.valueOf(obj[3]).toUpperCase()
-					+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[5]).toUpperCase()); //check if moc and year change for date extension 
+			list_of_sol.add(String.valueOf(obj[3]).toUpperCase()
+					+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[5]).toUpperCase());
+			check_existing_sol.put(String.valueOf(obj[0]).toUpperCase(), list_of_sol); //check if moc and year change for date extension 
 			
 			//KEY : PROMOTION_ID VALUE : PPM_ACCOUNT,BASEPACK_CODE,CLUSTER_MOC_NAME
 			date_extension.put(String.valueOf(obj[3]).toUpperCase()

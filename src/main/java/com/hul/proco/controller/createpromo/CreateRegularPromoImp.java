@@ -416,6 +416,18 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							error_msg = error_msg + "Invalid Offer Modality";
 							flag = 1;
 						}
+					}else
+					{
+						if (!offer_mod_map.get(bean.getOffer_mod().toUpperCase())
+								.equalsIgnoreCase(bean.getOfr_type())) {
+							if (flag == 1) {
+								error_msg = error_msg + ",Mismatch in OFFER TYPE and OFFER MODALITY ";
+								flag = 1;
+							} else {
+								error_msg = error_msg + "Mismatch in OFFER TYPE and OFFER MODALITY";
+								flag = 1;
+							}
+						}
 					}
 					
 
@@ -673,18 +685,6 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 					}
 					
-					if(!offer_mod_map.get(bean.getOffer_mod().toUpperCase()).equalsIgnoreCase(bean.getOfr_type()))
-					{
-						if (flag == 1) {
-							error_msg = error_msg + ",Mismatch in OFFER TYPE and OFFER MODALITY ";
-							flag = 1;
-						} else {
-							error_msg = error_msg + "Mismatch in OFFER TYPE and OFFER MODALITY";
-							flag = 1;
-						}
-					}
-					
-					
 					if (flag == 1)
 						globle_flag = 1;
 
@@ -701,9 +701,10 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			{
 				Map<String, String> crEntries = new HashMap<String, String>();
 				Map<String, String> date_extensionMap = new HashMap<String, String>();
+				Map<String, ArrayList<String>> check_existing_sol = new HashMap<String,ArrayList<String>>();
 				datafromtable.getCREntries(crEntries);
 				datafromtable.getAllSOLtype(crEntries);
-				datafromtable.getAllSOLCodeAndPromoId(crEntries,date_extensionMap);
+				datafromtable.getAllSOLCodeAndPromoId(crEntries,date_extensionMap,check_existing_sol);
 			
 				if (commanmap
 						.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
@@ -738,19 +739,22 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					duplicateMap.put(bean.getMoc_name().toUpperCase() +bean.getYear().toUpperCase()+ bean.getBasepack_code().toUpperCase()
 							+ bean.getPpm_account().toUpperCase() + bean.getCluster().toUpperCase() + bean.getSol_type().trim().toUpperCase(), "");
 					
-					
-					if (bean.getPrice_off().isEmpty()) {
+					if(!bean.getPrice_off().contains("%")) {
+					if (bean.getPrice_off().isEmpty() || !isStringNumber(bean.getPrice_off())) {
 						if (flag == 1)
 							error_msg = error_msg + ",Mandatory input for Price off";
 						else
 							error_msg = error_msg + "Mandatory input for Price off";
 					}
-					
-					if (!isStringNumber(bean.getPrice_off()) ) {
-						if (flag == 1)
-							error_msg = error_msg + ",Invalid input for Price off";
-						else
-							error_msg = error_msg + "Invalid input for Price off";
+					}else
+					{
+						if(!isStringNumber(bean.getPrice_off().split("%")[0]))
+						{
+							if (flag == 1)
+								error_msg = error_msg + ",Mandatory input for Price off";
+							else
+								error_msg = error_msg + "Mandatory input for Price off";
+						}
 					}
 
 					if (bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity()) <= 9) {
@@ -799,9 +803,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							|| bean.getSol_type().trim().equalsIgnoreCase("top up")) {
 						if (bean.getPrice_off().isEmpty()) {
 							if (flag == 1)
-								error_msg = error_msg + ",Mandatory input for Price off";
+								error_msg = error_msg + ",Mandatory input for Price off for topup";
 							else
-								error_msg = error_msg + "Mandatory input for Price off"; 
+								error_msg = error_msg + "Mandatory input for Price off for topup"; 
 							flag = 1;
 						}
 					}
@@ -983,7 +987,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						String tdp_key = bean.getYear().toUpperCase() + bean.getMoc_name()
 								+ bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()
 								+ bean.getCluster().toUpperCase();
-						
+						//System.out.println("date_extensionMap:"+date_extensionMap);
+						//System.out.println("tdp_key:"+tdp_key);
 						if (date_extensionMap.containsKey(tdp_key)) {
 							if (bean.getPromo_time_period().toUpperCase().trim()
 									.equalsIgnoreCase(date_extensionMap.get(tdp_key))) {
@@ -1066,10 +1071,13 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}else
 						{
 							
-						   	String key_from_map=date_extensionMap.get(bean.getSol_code_ref().toUpperCase().trim()) ;
-						   	//PPM_ACCOUNT,BASEPACK_CODE,CLUSTER
+						   	ArrayList<String> key_from_map=check_existing_sol.get(bean.getSol_code_ref().toUpperCase().trim()) ;
+						   	//PPM_ACCOUNT,BASEPACK_CODE,CLUSTER Map<sol,arrayList<String>)
+						   //	System.out.println("key_from_map:"+key_from_map);
+						   	
 						   	String keywithexcel=bean.getPpm_account().toUpperCase().trim()+bean.getBasepack_code().toUpperCase().trim()+bean.getCluster().toUpperCase().trim();
-						   	if(!key_from_map.equalsIgnoreCase(keywithexcel))
+						 //  	System.out.println("keywithexcel:"+keywithexcel);
+						   	if(!key_from_map.contains(keywithexcel))
 						   	{
 						   		if (flag == 1)
 									error_msg += ",Promo entry does not exists";
@@ -1120,8 +1128,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 											flag = 1;
 										} else {
 											//moc_from_db + bean.getPromo_time_period() + "start_date"
-											query.setString(20, promotimemap.get(moc+bean.getPromo_time_period()+"start_date" ));
-											query.setString(21, promotimemap.get(moc+bean.getPromo_time_period()+"end_date" ));
+
+											query.setString(20, datehandle.get(start_key));
+											query.setString(21, datehandle.get(end_key));
 
 										}
 						   			}
