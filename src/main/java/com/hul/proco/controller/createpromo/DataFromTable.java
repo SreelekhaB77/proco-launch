@@ -412,7 +412,7 @@ public class DataFromTable {
 			{
 				Double price=Double.valueOf(price_off.substring(0,price_off.length()-1));
 				Double quanti=Double.valueOf(quantity);
-				return  String.valueOf(price*quanti*Integer.valueOf(map.get(basepack+"_MRP")));
+				return  String.valueOf(price*quanti*Double.parseDouble(map.get(basepack+"_MRP")));
 			}
 		}
 		
