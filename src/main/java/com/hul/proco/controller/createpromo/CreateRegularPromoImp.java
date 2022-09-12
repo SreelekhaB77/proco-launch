@@ -1076,7 +1076,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						   //	System.out.println("key_from_map:"+key_from_map);
 						   	
 						   	String keywithexcel=bean.getPpm_account().toUpperCase().trim()+bean.getBasepack_code().toUpperCase().trim()+bean.getCluster().toUpperCase().trim();
-						 //  	System.out.println("keywithexcel:"+keywithexcel);
+						  // 	System.out.println("keywithexcel:"+keywithexcel);
 						   	if(!key_from_map.contains(keywithexcel))
 						   	{
 						   		if (flag == 1)
@@ -1128,7 +1128,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 											flag = 1;
 										} else {
 											//moc_from_db + bean.getPromo_time_period() + "start_date"
-
+											//System.out.println("datehandle:"+datehandle);
+											//System.out.println("start_key:"+start_key);
 											query.setString(20, datehandle.get(start_key));
 											query.setString(21, datehandle.get(end_key));
 
@@ -1154,9 +1155,10 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 										flag = 1;
 									} else {
-
-										query.setString(20, promotimemap.get(moc+bean.getPromo_time_period()+"start_date" ));
-										query.setString(21, promotimemap.get(moc+bean.getPromo_time_period()+"end_date" ));
+										query.setString(20, datehandle.get(start_key));
+										query.setString(21, datehandle.get(end_key));
+									//	query.setString(20, promotimemap.get(moc+bean.getPromo_time_period()+"start_date" ));
+									//	query.setString(21, promotimemap.get(moc+bean.getPromo_time_period()+"end_date" ));
 
 									}
 						   		}else
