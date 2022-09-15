@@ -977,11 +977,29 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							crEntries.get(bean.getSol_code_ref().toUpperCase() + bean.getMoc_name().toUpperCase()
 									+ bean.getPpm_account().toUpperCase() + "_end_date"));
 					
-					String moc = datafromtable.getMOC(bean.getMoc_name(), bean.getYear());
+					
+					
+					
+					if(bean.getMoc_name().isEmpty() || bean.getYear().isEmpty() || bean.getPromo_time_period().isEmpty())
+					{
+						if (flag == 1)
+							error_msg = error_msg + ",Empty moc name or year or promotime timeperiod";
+						else
+							error_msg = error_msg + "Empty moc name or year or promotime timeperiod";
+						flag = 1;
+					}
+					
+					String moc = "";
+					if(flag==0)
+					{
+						moc=datafromtable.getMOC(bean.getMoc_name(), bean.getYear());
+					}
 					
 					if (bean.getSol_type().trim().equalsIgnoreCase("Date Extension")
 							|| bean.getSol_type().trim().equalsIgnoreCase("Old Month")
 					/* || bean.getSol_type().trim().equalsIgnoreCase("Specific Date") */) {
+						
+						if(flag==0) {
 						
 						// for tdp check
 						String tdp_key = bean.getYear().toUpperCase() + bean.getMoc_name()
@@ -1176,9 +1194,10 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 								}
 							}
+						  
 						}
+						}	
 						//tdp check end here
-						
 					}
 					
 					if(bean.getSol_type().trim().equalsIgnoreCase("Specific Date"))
