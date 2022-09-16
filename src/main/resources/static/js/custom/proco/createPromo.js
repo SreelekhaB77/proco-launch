@@ -1057,7 +1057,7 @@ $("#ProcoRegularFileUpload").click(function (event) {
 								}
 								else{
 									console.log(resdata);// Mayur added the changes
-				                	$('#errorblockUpload').show().find('span').html('Error While Uploading File');
+				                	$('#errorblockUpload').show().find('span').html('Error - Please contact support team');// Mayur's changes for updating the message
 				                	$('#Procosuccessblock').hide();
 				                	$('#ProcoRegularerrorblockUpload').hide();
 				                	 
@@ -1142,7 +1142,7 @@ $("#ProcoRegularFileUpload").click(function (event) {
 								}
 								else{
 									//console.log("Error");
-				                	$('#errorblockUpload').show().find('span').html('Error While Uploading File');
+				                	$('#errorblockUpload').show().find('span').html('Error - Please contact support team');
 				                	$('#Procosuccessblock').hide();
 				                	$('#ProcoRegularerrorblockUpload').hide();
 				                	 
@@ -1229,7 +1229,7 @@ $("#ProcoRegularFileUpload").click(function (event) {
 								}
 								else{
 									//console.log("Error");
-				                	$('#errorblockUpload').show().find('span').html('Error While Uploading File');
+				                	$('#errorblockUpload').show().find('span').html('Error - Please contact support team');
 				                	$('#Procosuccessblock').hide();
 				                	$('#ProcoRegularerrorblockUpload').hide();
 				                	 
