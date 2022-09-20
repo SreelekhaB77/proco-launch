@@ -1,10 +1,14 @@
 package com.hul.proco.controller.createpromo;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +52,7 @@ public class RegularPromoCreateController {
 	@RequestMapping(value = "createCRBean.htm", method = RequestMethod.POST)
 	public @ResponseBody String uploadCRFile(@ModelAttribute("CreateBeanRegular") CreateBeanRegular createCRBean,
 			@RequestParam(name = "template") String template, Model model, HttpServletRequest httpServletRequest,
-			HttpServletResponse httpServletResponse) {
+			HttpServletResponse httpServletResponse) throws IOException {
 		String save_data = null;
 		String categories=(String) httpServletRequest.getSession().getAttribute("categoryName");
 		
@@ -60,6 +64,7 @@ public class RegularPromoCreateController {
 		CreateBeanRegular[] beanArray = null;
 		String filepath = FilePaths.FILE_TEMPUPLOAD_PATH;
 		fileName = filepath + fileName;
+		// for logging
 		
 		try {
 			if (!CommonUtils.isFileEmpty(file)) {
@@ -112,11 +117,17 @@ public class RegularPromoCreateController {
 
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
+			model.addAttribute("FILE_STAUS",  e);
+			// PrintStream printStream = new PrintStream(new File("C:\\logs\\log.text"));
+			PrintStream printStream = new PrintStream(new File("/home/appuser/logs/exception.txt"));
+			e.printStackTrace(printStream);
 			return e.toString();
 		} catch (Throwable e) {
 			logger.error("Exception: ", e);
-			model.addAttribute("FILE_STAUS",  e.toString());
-			e.printStackTrace();
+			model.addAttribute("FILE_STAUS",  e);
+			//PrintStream printStream = new PrintStream(new File("C:\\logs\\log.text"));
+		    PrintStream printStream = new PrintStream(new File("/home/appuser/logs/exception.txt"));	
+			e.printStackTrace(printStream);
 			return e.toString();
 		}
 
