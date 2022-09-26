@@ -20,6 +20,71 @@ public class DisplayCollaborationBean {
 	private String national;
 	private String kitting_value;
 	
+	private String start_date;
+	private String end_date;
+	private String quantity;
+	private String investment_type;
+	private String sol_code;
+	private String promotion_mechanics;
+	private String sol_code_status;
+	
+	
+	public String getStart_date() {
+		return start_date;
+	}
+
+	public String getEnd_date() {
+		return end_date;
+	}
+
+	public String getQuantity() {
+		return quantity;
+	}
+
+	public String getInvestment_type() {
+		return investment_type;
+	}
+
+	public String getSol_code() {
+		return sol_code;
+	}
+
+	public String getPromotion_mechanics() {
+		return promotion_mechanics;
+	}
+
+	public String getSol_code_status() {
+		return sol_code_status;
+	}
+
+	public void setStart_date(String start_date) {
+		this.start_date = start_date;
+	}
+
+	public void setEnd_date(String end_date) {
+		this.end_date = end_date;
+	}
+
+	public void setQuantity(String quantity) {
+		this.quantity = quantity;
+	}
+
+	public void setInvestment_type(String investment_type) {
+		this.investment_type = investment_type;
+	}
+
+	public void setSol_code(String sol_code) {
+		this.sol_code = sol_code;
+	}
+
+	public void setPromotion_mechanics(String promotion_mechanics) {
+		this.promotion_mechanics = promotion_mechanics;
+	}
+
+	public void setSol_code_status(String sol_code_status) {
+		this.sol_code_status = sol_code_status;
+	}
+
 	private String status;
 
 	public String getStatus() {

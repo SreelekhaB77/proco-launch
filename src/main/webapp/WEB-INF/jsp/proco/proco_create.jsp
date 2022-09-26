@@ -27,11 +27,42 @@
 		history.pushState(null, null, '');
 	});
 </script>
+
+</script>
+<style>
+/*bharati added below changes in sprint-9 US-1*/
+.sample-upload-file {
+	background: #3B5999;
+	padding: 7px!important;
+	font-size: 14px!important;
+	margin-top: 20px;
+	color: #fff;
+	border-radius: 3px;
+	border:1px solid #000!important;
+	
+}
+.upload-file {
+    height: 290px;
+    padding: 10px!important;
+}
+.upload-group {
+    
+	margin:20px 0px!important;
+}
+.upload-div{
+	color: #fff; text-align: center;margin-top:5px;
+}
+</style>
 </head>
 <body>
 
 	<jsp:include page="../proco/proco-header.jsp" />
-
+<div class="loader">
+	<center>
+		<img class="loading-image" src="assets/images/spinner.gif"
+			alt="loading..." style="height: 150px; width: auto;">
+	</center>
+</div>
 	<nav class="navbar navbar-inverse navbar-fixed-top container-bg"
 		style="position:relative;top: 115px;z-index: 2;background-image: none! important;
     border: none! important;background: #F6F3F3;
@@ -86,7 +117,7 @@
 	<!-- Main jumbotron for a primary marketing message or call to action -->
 	<div class="container-fluid container-bg middle-section">
 		<input type="hidden" id="roleId" value="${roleId}" />
-		<c:if test="${FILE_STATUS=='SUCCESS_FILE'}">
+		<c:if test="${FILE_STAUS=='SUCCESS_FILE'}">
 			<div class="alert succ-alert-success sucess-msg" id="successblock"
 				style="display: block;margin-top:35px;">
 				<button type="button" class="close" data-hide="alert">&times;</button>
@@ -104,6 +135,29 @@
 				</c:if>
 			</div>
 		</c:if>
+		
+		<!--bharati added code for errorblock with download error file for sprint-9 US-1-->
+	                 				<div class="alert alert-success sucess-msg" style="display: none;margin-top:35px;margin-bottom: -23px" id="Procosuccessblock">
+		                                 <button type="button" class="close" data-hide="alert">&times;</button>
+		                                 <span></span>
+	                                </div>
+                                    <div class="alert alert-danger" style="display: none;margin-top:35px;margin-bottom: -23px" id="ProcoRegularerrorblockUpload">
+                                        <button type="button" class="close" data-hide="alert">&times;</button>
+                                       
+                                            <span>File contains error...</span>
+                                            <a href="https://vat.hulcd.com/VisibilityAssetTracker/downloadPromotionErrorFilensp.htm" id="downloadTempFileLink">Click here to Download Error File</a>
+                                    </div>
+									<div class="alert alert-danger" style="display: none;margin-top:35px;margin-bottom: -23px" id="errorblockUpload">
+		                            <button type="button" class="close" data-hide="alert">&times;</button>
+		
+		                           <!-- <span>Error while uploading file.</span>-->
+								   <span></span>
+		
+	                               </div>
+								  
+		
+		<!--bharati code end here for sprint-9-->							
+									
 		<%-- <c:if test="${FILE_STATUS=='ERROR_FILE'}">
 			<div class="alert alert-danger sucess-msg" id="errorblock">
 				<button type="button" class="close" data-hide="alert">&times;</button>
@@ -121,7 +175,8 @@
 					class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promotion
 				Creation
 			</div> -->
-			<form:form action="https://vat.hulcd.com/VisibilityAssetTracker/createPromotion.htm"
+			<!--bharati commented below create form for sprint-9 -->
+			<!--<form:form action="https://vat.hulcd.com/VisibilityAssetTracker/createPromotion.htm"
 				modelAttribute="CreatePromotionBean" enctype="multipart/form-data"
 				method="POST" id="createPromoForm">
 				
@@ -157,12 +212,12 @@
 								<%-- <form:input type="text" class="form-control" id="mocCrdate"
 									value="Select MOC" readonly="true" path="customerChainL2" /> --%>
 							
-							</div>
+							<!--</div>
 							<%-- <div class="col-md-4">
 								<form:input type='text' name="end_date" path="endDate" id="enddate" readonly="true" placeholder="END DATE"
 									 class="form-control tme-datepickerend" style="background-color:#fff!important;" />
 							</div> --%>
-						</div>
+						<!--</div>
 						
 						<div class="form-group">
 							<label for="unique-id" class="control-label col-md-4">OFFER VALUE</label>
@@ -208,18 +263,18 @@
 								<%-- <form:input type="text" class="form-control" id="moc" readonly="true"
 									path="moc" name="moc" /> --%>
 								<form:select id="moc" name="moc" path="moc" class="form-control" multiple="multiple">
-								</form:select>
+								</form:select>--%>
 								<!-- <select class="form-control" id="">
 								<option>Q1</option>
 							</select> -->
-							</div>
+						<!--	</div>
 						</div>
 						<div class="form-group">
 							<label class="control-label col-md-4" for="uom">MODALITY</label>
 							<div class="col-md-8">
 								<!-- <input type="text" class="form-control" value="ALL MODALITY" id="modality"> -->
-								<form:select class="form-control" id="modality" path="modality">
-									<option>SELECT</option>
+								<%--<form:select class="form-control" id="modality" path="modality">
+								<!--	<option>SELECT</option>
 									<c:forEach var="item" items="${modality}">
 									<c:choose>
 									<c:when test="${CreatePromotionBean.modality == item.value}">
@@ -233,29 +288,29 @@
 								</form:select>
 							</div>
 						</div>
-						<div class="form-group">
+						<!--<div class="form-group">
 							<label class="control-label col-md-4" for="uom">GEOGRAPHY</label>
 							<div class="col-md-8">
 								<!-- <select class="form-control" id="geography">
 						
 						</select> -->
-							<c:choose>
+						<%--	<c:choose>
 							<c:when test="${duplicate eq true }">
 						<%-- 	<form:input type="text" class="form-control" value="ALL INDIA" disabled="true"
 									id="editGeography" path="geography" /> --%>
-							<form:input type="text" class="form-control" 
+						<%--	<form:input type="text" class="form-control" 
 									id="editGeography" path="geography" readonly="true" />
 							</c:when>
 							<c:otherwise>
 							<form:input type="text" class="form-control" value="ALL INDIA" 
 									id="geography" path="geography" />
 							</c:otherwise>
-							</c:choose>
+							</c:choose>--%>
 
 								<!-- <select class="form-control" id="">
 								<option>ALL INDIA</option>
 							</select> -->
-							</div>
+							<!--</div>
 						</div>
 
 					</div>
@@ -583,11 +638,13 @@
 				<form:textarea class="form-control" rows="3" placeholder="PROMO DESCRIPTION HERE..." path="promoDesc" id="promoDesc"></form:textarea>
 				<div class="promo-create-btn">
 					<!-- <button class="btn btn-primary" id="createPromo">CREATE PROMO</button> -->
-					<input class="btn new-btn-primary" type="button" id="createBtn" value="CREATE PROMO" onClick="javascript: validateForm();"></input>
+					<!--bharati disable below btn in sprint-9 -->
+					<!--<input class="btn new-btn-primary" type="button" id="createBtn" value="CREATE PROMO" onClick="javascript: validateForm();" disabled></input>
 				</div>
-			</form:form>
-
-			<form:form action="https://vat.hulcd.com/VisibilityAssetTracker/uploadPromoCreation.htm" id="promoCreateUpload"
+			</form:form>-->
+			<!--bharati commented part end here for sprint-9-->
+			<!--bharati commented below code for sprint-9-->
+			<!--<form:form action="https://vat.hulcd.com/VisibilityAssetTracker/uploadPromoCreation.htm" id="promoCreateUpload"
 				method="POST" modelAttribute="CreatePromotionBean"
 				enctype="multipart/form-data" >
 				<div class="promo-upload">PROMO UPLOAD</div>
@@ -624,12 +681,136 @@
 						class="SEGOEUIL-font">Click here to download the Template file</b></a>
 				</span>
 			</div> -->
-			<form:form action="https://vat.hulcd.com/VisibilityAssetTracker/downloadPromotionTemplateFile.htm" id="getPromoTemplate"
+			<!--<form:form action="https://vat.hulcd.com/VisibilityAssetTracker/downloadPromotionTemplateFile.htm" id="getPromoTemplate"
 				method="GET" modelAttribute="CreatePromotionBean"
 				enctype="multipart/form-data">
 				<button class="sample-upload-file" style="color: #ffffff; width: 552px;">Click here to download the Template file</button>
 			</form:form>
 			
+		</div>-->
+		<!--bharati added below uploads and downloads code for sprint-9 US-1-->
+		<div class="col-lg-12">
+		<div class="promo-upload" style="margin-bottom:20px;">PROMO UPLOAD</div>
+			<div class="col-lg-4 col-xs-12 col-sm-4">
+				
+				<div class="upload-file">
+				<form:form action="#" id="promoCreateRegularUpload" modelAttribute="CreatePromotionBean" enctype="multipart/form-data">
+					
+						<div class="upload-label">
+							<span><i class="glyphicon glyphicon-cloud-upload"></i></span> <span>
+								<b class="SEGOEUIL-font">Upload Regular File</b>
+							</span>
+						</div>
+						
+						<div class="upload-group">
+                        
+							<div class="cust-file">
+								<span class="btn btn-upload " id="choose-file">Choose
+									File</span>
+							</div>
+                                  
+							<input type="file" class="form-control" value="" name="file"
+								id="upload-file">
+
+							<div class="file-name" style="line-height: 2.3">No file
+								chosen</div>
+							
+						</div>
+                         <span id="uploadErrorMsg" style="display: none; color: red">Please upload .xls or .xlsx file</span>
+						<div class="upload-div">
+							<button id="ProcoRegularFileUpload" class="btn new-btn-primary">UPLOAD</button>
+
+						</div>
+						
+			</form:form>
+			
+			<form:form action="https://vat.hulcd.com/VisibilityAssetTracker/downloadPromotionRegularTemplateFile.htm" id="getPromoRegularTemplate"
+				method="GET" modelAttribute="CreatePromotionBean"
+				enctype="multipart/form-data" style="text-align:center">
+				<button class="sample-upload-file" style="color: #ffffff;width:330px;">Download the Regular Template file</button>
+			</form:form>
+			
+		</div>
+		</div>
+		
+			<div class="col-lg-4 col-xs-12 col-sm-4">
+				
+				<div class="upload-file">
+				<form:form action="#" id="promoCreateCrUpload" modelAttribute="CreatePromotionBean" enctype="multipart/form-data" >
+					
+						<div class="upload-label">
+							<span><i class="glyphicon glyphicon-cloud-upload"></i></span> <span>
+								<b class="SEGOEUIL-font">Upload CR File</b>
+							</span>
+						</div>
+						<div class="upload-group">
+
+							<div class="cust-file">
+							
+								<span class="btn btn-upload " id="choose-file1">Choose
+									File</span>
+							</div>
+
+							<input type="file" class="form-control" value="" name="file"
+								id="upload-file1">
+
+							<div class="file-name1" style="line-height: 2.3">No file
+								chosen</div>
+						</div>
+                       <span id="uploadcrErrorMsg" style="display: none; color: red">Please upload .xls or .xlsx file</span>
+						<div class="upload-div">
+							<button id="procoCRUploadBtn" class="btn new-btn-primary">UPLOAD</button>
+
+						</div>
+						
+			</form:form>
+			
+			<form:form action="https://vat.hulcd.com/VisibilityAssetTracker/downloadPromotionCrTemplateFile.htm" id="getPromoCrTemplate"
+				method="GET" modelAttribute="CreatePromotionBean"
+				enctype="multipart/form-data" style="text-align:center">
+				<button class="sample-upload-file" style="color: #ffffff;width:330px;">Download the CR Template file</button>
+			</form:form>
+			</div>
+		</div>
+		<div class="col-lg-4 col-xs-12 col-sm-4">
+				
+				<div class="upload-file">
+				<form:form action="#" id="promoCreateNewEntriesUpload" modelAttribute="CreatePromotionBean" enctype="multipart/form-data" >
+					
+						<div class="upload-label">
+							<span><i class="glyphicon glyphicon-cloud-upload"></i></span> <span>
+								<b class="SEGOEUIL-font">Upload New Entries File</b>
+							</span>
+						</div>
+						<div class="upload-group">
+
+							<div class="cust-file">
+								<span class="btn btn-upload " id="choose-file2">Choose
+									File</span>
+							</div>
+
+							<input type="file" class="form-control" value="" name="file"
+								id="upload-file2">
+
+							<div class="file-name2" style="line-height: 2.3">No file
+								chosen</div>
+						</div>
+                       <span id="uploadNewErrorMsg" style="display: none; color: red">Please upload .xls or .xlsx file</span>
+						<div class="upload-div">
+							<button id="uploadnewEntriesBtn" class="btn new-btn-primary">UPLOAD</button>
+
+						</div>
+						
+			</form:form>
+			
+			<form:form action="https://vat.hulcd.com/VisibilityAssetTracker/downloadPromotionNewTemplateFile.htm" id="getPromoNewEntriesTemplate"
+				method="GET" modelAttribute="CreatePromotionBean"
+				enctype="multipart/form-data" style="text-align:center">
+				<button class="sample-upload-file" style="color: #ffffff;width:330px;">Download the New Entries Template file</button>
+			</form:form>
+			</div>
+		</div>
+		<!--bharati code end here-->
 		</div>
 		<div class="clearfix"></div>
 		<div id="add-depot" class="modal fade" role="dialog">
@@ -817,7 +998,6 @@
 			$('#cust-chain').multiselect('select',arrChainL2[i]);
 			}
 			}
-			
 		});
 	</script>
 </body>

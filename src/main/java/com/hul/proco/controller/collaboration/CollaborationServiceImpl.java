@@ -16,17 +16,17 @@ public class CollaborationServiceImpl implements CollaborationService {
 	
 	@Transactional
 	@Override
-	public int getCollaborationRowCount(String cagetory, String brand, String basepack, String custChainL1,
-			String custChainL2, String offerType, String modality, String year, String moc, String userId) {
-		return collaborationDao.getCollaborationRowCount(cagetory, brand, basepack, custChainL1, custChainL2, offerType, modality, year, moc, userId);
+	public int getCollaborationRowCount(/*String cagetory, String brand, String basepack, String custChainL1,
+			String custChainL2, String offerType, String modality, String year, */String moc, String userId,String [] kamAccountsArr) {
+		return collaborationDao.getCollaborationRowCount(/*cagetory, brand, basepack, custChainL1, custChainL2, offerType, modality, year,*/ moc, userId,kamAccountsArr);
 	}
 
 	@Transactional
 	@Override
 	public List<DisplayCollaborationBean> getCollaborationTableList(int pageDisplayStart, int pageDisplayLength,
-			String cagetory, String brand, String basepack, String custChainL1, String custChainL2, String offerType,
-			String modality, String year, String moc, String userId) {
-		return collaborationDao.getCollaborationTableList(pageDisplayStart, pageDisplayLength, cagetory, brand, basepack, custChainL1, custChainL2, offerType, modality, year, moc, userId);
+			/*String cagetory, String brand, String basepack, String custChainL1, String custChainL2, String offerType,
+			String modality, String year, */ String moc, String userId, String[] kamAccounts) {
+		return collaborationDao.getCollaborationTableList(pageDisplayStart, pageDisplayLength, /*cagetory, brand, basepack, custChainL1, custChainL2, offerType, modality, year, */moc, userId, kamAccounts);
 	}
 
 	/*@Override

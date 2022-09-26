@@ -168,7 +168,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 				 * //		"SELECT DISTINCT (ACCOUNT_NAME || ':' || DP_CHAIN) FROM TBL_VAT_COMM_OUTLET_MASTER WHERE ACCOUNT_NAME != ''");
 				 */ //commented by harsha
 				Query allCustL1 = sessionFactory.getCurrentSession().createNativeQuery( // Added by harsha as part of sprint 8
-						"SELECT DISTINCT CONCAT(ACCOUNT_NAME , ':' , DP_CHAIN) AS ACCOUNTCHAIN FROM TBL_VAT_COMM_OUTLET_MASTER WHERE ACCOUNT_NAME != '' AND KAM_MAIL_ID NOT IN ('', 'NA@UNILEVER.COM') AND DP_CHAIN !='' AND ACTIVE_STATUS = 'ACTIVE' ");
+						"SELECT DISTINCT CONCAT(ACCOUNT_NAME , ':' , DP_CHAIN) AS ACCOUNTCHAIN FROM TBL_VAT_COMM_OUTLET_MASTER WHERE ACCOUNT_NAME != '' AND KAM_MAIL_ID NOT IN ('', 'NA@UNILEVER.COM') AND PLAN_VISI = 'Y' AND DP_CHAIN !='' AND ACTIVE_STATUS = 'ACTIVE' ");
 				
 				
 				List<String> allL1 = allCustL1.list();
@@ -214,7 +214,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 						 */ // Commented by Harsha
 						
 						String finalQuery = "SELECT DISTINCT UPPER(CURRENT_STORE_FORMAT) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm  WHERE ACCOUNT_NAME = :account AND ACTIVE_STATUS = 'ACTIVE' AND DP_CHAIN = :accountL2 and ACCOUNT_NAME != '' "
-								+ " AND KAM_MAIL_ID NOT IN ('', 'NA@UNILEVER.COM') and UPPER(CURRENT_STORE_FORMAT) IN (:storeFormat)";// Added by Harsha as part of sprint 8
+								+ " AND KAM_MAIL_ID NOT IN ('', 'NA@UNILEVER.COM') AND PLAN_VISI = 'Y' and UPPER(CURRENT_STORE_FORMAT) IN (:storeFormat)";// Added by Harsha as part of sprint 8
 						//Added by Harsha as part of sprint 8
 						formatListQ = sessionFactory.getCurrentSession().createNativeQuery(finalQuery);
 						formatListQ.setParameter("account", account.get(i));
@@ -306,7 +306,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 						 * ;
 						 */ // commented by Harsha
 						String finalQuery = "SELECT DISTINCT UPPER(CURRENT_STORE_FORMAT) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm "
-								+ " WHERE ACCOUNT_NAME = :account AND DP_CHAIN !='' AND ACTIVE_STATUS = 'ACTIVE' AND DP_CHAIN = :accountL2 AND KAM_MAIL_ID NOT IN ('', 'NA@UNILEVER.COM') and "
+								+ " WHERE ACCOUNT_NAME = :account AND DP_CHAIN !='' AND ACTIVE_STATUS = 'ACTIVE' AND DP_CHAIN = :accountL2 AND KAM_MAIL_ID NOT IN ('', 'NA@UNILEVER.COM') AND PLAN_VISI = 'Y' and "
 								+ "ACCOUNT_NAME != '' and CUSTOMER_STORE_FORMAT IN (:custStoreFormat)"; // Added By harsha as part of sprint 8
 
 						formatListQ = sessionFactory.getCurrentSession().createNativeQuery(finalQuery);
@@ -376,7 +376,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 						 * ;
 						 */ // Commented by Harsha
 						
-						String finalQuery = "SELECT DISTINCT UPPER(CURRENT_STORE_FORMAT) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm  WHERE ACCOUNT_NAME = :account AND DP_CHAIN !='' AND ACTIVE_STATUS = 'ACTIVE' AND DP_CHAIN = :accountL2 and ACCOUNT_NAME != '' AND KAM_MAIL_ID NOT IN ('', 'NA@UNILEVER.COM')";
+						String finalQuery = "SELECT DISTINCT UPPER(CURRENT_STORE_FORMAT) FROM TBL_VAT_COMM_OUTLET_MASTER tlsm  WHERE ACCOUNT_NAME = :account AND DP_CHAIN !='' AND ACTIVE_STATUS = 'ACTIVE' AND DP_CHAIN = :accountL2 and ACCOUNT_NAME != '' AND KAM_MAIL_ID NOT IN ('', 'NA@UNILEVER.COM') AND PLAN_VISI = 'Y' ";
 
 						// Added by harsha as part of sprint 8
 						formatListQ = sessionFactory.getCurrentSession().createNativeQuery(finalQuery);
@@ -1251,7 +1251,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 								+ " INNER JOIN TBL_LAUNCH_SELLIN S ON A.ACCOUNT_NAME = S.SELLIN_L2_CHAIN AND A.DP_CHAIN = S.SELLIN_L1_CHAIN "
 								+ " AND UPPER(A.CURRENT_STORE_FORMAT) = S.SELLIN_STORE_FORMAT "
 								+ " WHERE A.ACTIVE_STATUS = 'ACTIVE' "
-								+" AND A.KAM_MAIL_ID not in ('', 'NA@UNILEVER.COM')" // Added by Harsha as part of sprint 8
+								+" AND A.KAM_MAIL_ID not in ('', 'NA@UNILEVER.COM') AND PLAN_VISI = 'Y' " // Added by Harsha as part of sprint 8
 										+ " AND FINAL_CLUSTER IN(:liClusterName) AND S.SELLIN_LAUNCH_ID = " + launchId);
 				query.setParameterList("liClusterName", liClusterName);
 			} else {
@@ -1278,7 +1278,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 								+ " INNER JOIN TBL_LAUNCH_SELLIN S ON A.ACCOUNT_NAME = S.SELLIN_L2_CHAIN AND A.DP_CHAIN = S.SELLIN_L1_CHAIN "
 								+ " AND UPPER(A.CURRENT_STORE_FORMAT) = S.SELLIN_STORE_FORMAT "
 								+ " WHERE A.ACTIVE_STATUS = 'ACTIVE' "
-								+" AND A.KAM_MAIL_ID not in ('', 'NA@UNILEVER.COM')"
+								+" AND A.KAM_MAIL_ID not in ('', 'NA@UNILEVER.COM') AND PLAN_VISI = 'Y' "
 										+ " AND S.SELLIN_LAUNCH_ID = " + launchId);
 			// Added by Harsha as part of sprint 8
 			
@@ -1644,7 +1644,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 								+ launchSellIn.getL1_CHAIN() + "' AND UPPER(CURRENT_STORE_FORMAT) = '"
 								+ launchSellIn.getSTORE_FORMAT()
 								+ "' AND FINAL_CLUSTER IN(:liClusterName) "
-								+" AND KAM_MAIL_ID NOT IN ('', 'NA@UNILEVER.COM')"
+								+" AND KAM_MAIL_ID NOT IN ('', 'NA@UNILEVER.COM') AND PLAN_VISI = 'Y' "
 								+ " AND UPPER(KAM_MAIL_ID) LIKE '%" + upperKam + "%'"); // Added By Harsha as part Sprint 8 changes
 			
 				query.setParameterList("liClusterName", liClusterName);
@@ -1679,7 +1679,7 @@ public class LaunchSellInDaoImpl implements LaunchSellInDao {
 								+ " WHERE ACTIVE_STATUS = 'ACTIVE' AND ACCOUNT_NAME = '" + launchSellIn.getL2_CHAIN() + "' AND DP_CHAIN = '"
 								+ launchSellIn.getL1_CHAIN() + "' AND UPPER(CURRENT_STORE_FORMAT) = '"
 								+ launchSellIn.getSTORE_FORMAT() + "' "
-								+" AND KAM_MAIL_ID not in ('', 'NA@UNILEVER.COM')" // Added By harsha as part of sprint 8
+								+" AND KAM_MAIL_ID not in ('', 'NA@UNILEVER.COM') AND PLAN_VISI = 'Y' " // Added By harsha as part of sprint 8
 								+ " AND UPPER(KAM_MAIL_ID) LIKE '%" + upperKam + "%'");
 			}
 

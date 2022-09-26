@@ -9,12 +9,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import org.hibernate.query.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.hul.proco.controller.createpromo.CreateBeanRegular;
 import com.hul.proco.controller.createpromo.CreatePromoDAOImpl;
 import com.hul.proco.controller.createpromo.CreatePromotionBean;
 
@@ -28,6 +30,8 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 
 	@Autowired
 	private CreatePromoDAOImpl createPromoDAO;
+
+	private NativeQuery qry;
 
 	private static String SQL_QUERY_INSERT_INTO_PROMOTION_MASTER_TEMP = "INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP(START_DATE,MOC,CUSTOMER_CHAIN_L1,CUSTOMER_CHAIN_L2,OFFER_DESC,P1_BASEPACK,P1_BASEPACK_RATIO,P2_BASEPACK,P2_BASEPACK_RATIO,P3_BASEPACK,P3_BASEPACK_RATIO,P4_BASEPACK,P4_BASEPACK_RATIO,P5_BASEPACK,P5_BASEPACK_RATIO,P6_BASEPACK,P6_BASEPACK_RATIO,C1_CHILD_PACK,C1_CHILD_PACK_RATIO,C2_CHILD_PACK,C2_CHILD_PACK_RATIO,C3_CHILD_PACK,C3_CHILD_PACK_RATIO,C4_CHILD_PACK,C4_CHILD_PACK_RATIO,C5_CHILD_PACK,C5_CHILD_PACK_RATIO,C6_CHILD_PACK,C6_CHILD_PACK_RATIO,THIRD_PARTY_DESC,THIRD_PARTY_PACK_RATIO,OFFER_TYPE,OFFER_MODALITY,OFFER_VALUE,KITTING_VALUE,GEOGRAPHY,UOM,USER_ID,ROW_NO,PROMO_ID,END_DATE,REASON,REMARK,CHANGES_MADE) VALUES(?0,?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43)";  //Sarin - Added Parameters position
 
@@ -1087,12 +1091,10 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public List<PromoListingBean> getDeletePromoTableList(int pageDisplayStart, int pageDisplayLength, String cagetory,
-			String brand, String basepack, String custChainL1, String custChainL2, String geography, String offerType,
-			String modality, String year, String moc, String userId, int active, String roleId, String searchParameter) {
+	public List<PromoListingBean> getDeletePromoTableList(int pageDisplayStart, int pageDisplayLength, String moc, String userId, String roleId, String searchParameter) {
 		List<PromoListingBean> promoList = new ArrayList<>();
-		List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
-		List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
+		//List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
+		//List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
 		String promoQuery = "";
 		try {
 			//kiran - rownumber changes
@@ -1100,21 +1102,43 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ "ROWNUMBER() OVER (ORDER BY A.UPDATE_STAMP DESC) AS ROW_NEXT FROM TBL_PROCO_PROMOTION_MASTER AS A "
 					+ " INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK=C.BASEPACK INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON A.STATUS=E.STATUS_ID ";*/
 			//Garima - changes for VARCHAR_FORMAT
-			promoQuery = "SELECT * FROM (SELECT A.PROMO_ID, A.P1_BASEPACK, A.OFFER_DESC, A.OFFER_TYPE, A.OFFER_MODALITY, A.GEOGRAPHY, A.QUANTITY, A.UOM, A.OFFER_VALUE, A.MOC, A.CUSTOMER_CHAIN_L1, A.KITTING_VALUE, E.STATUS, DATE_FORMAT(A.START_DATE,'%d/%m/%Y'), DATE_FORMAT(A.END_DATE,'%d/%m/%Y'),A.ORIGINAL_ID,A.REASON,A.DELETE_REMARKS,A.UPDATE_STAMP, "
+			/*promoQuery = "SELECT * FROM (SELECT A.PROMO_ID, A.P1_BASEPACK, A.OFFER_DESC, A.OFFER_TYPE, A.OFFER_MODALITY, A.GEOGRAPHY, A.QUANTITY, A.UOM, A.OFFER_VALUE, A.MOC, A.CUSTOMER_CHAIN_L1, A.KITTING_VALUE, E.STATUS, DATE_FORMAT(A.START_DATE,'%d/%m/%Y'), DATE_FORMAT(A.END_DATE,'%d/%m/%Y'),A.ORIGINAL_ID,A.REASON,A.DELETE_REMARKS,A.UPDATE_STAMP, "
 					+ "ROW_NUMBER() OVER (ORDER BY A.UPDATE_STAMP DESC) AS ROW_NEXT FROM TBL_PROCO_PROMOTION_MASTER AS A "
-					+ " INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK=C.BASEPACK INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON A.STATUS=E.STATUS_ID ";
+					+ " INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK=C.BASEPACK INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON A.STATUS=E.STATUS_ID "; */
+			//Added by kavitha D -SPRINT 9
+			promoQuery="  SELECT * FROM (SELECT PM.PROMO_ID AS UNIQUE_ID,PM.PROMO_ID AS ORIGINAL_ID,PM.START_DATE,PM.END_DATE,"
+					+ "  PM.MOC,PM.PPM_ACCOUNT,PM.BASEPACK_CODE AS BASEPACK,PM.OFFER_DESC,"
+					+ "  PM.OFFER_TYPE,PM.OFFER_MODALITY, PM.CLUSTER AS GEOGRAPHY,PM.QUANTITY,PM.PRICE_OFF AS OFFER_VALUE,"
+					+ "  PSM.STATUS,PR.INVESTMENT_TYPE, PR.PROMOTION_ID AS SOL_CODE,PR.PROMOTION_MECHANICS,"
+					+ "  PR.PROMOTION_STATUS AS SOL_CODE_STATUS,ROW_NUMBER() OVER (ORDER BY PM.UPDATE_STAMP DESC) AS ROW_NEXT "
+					+ "  FROM TBL_PROCO_PROMOTION_MASTER_V2 PM "
+					+ "  INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.PPM_ACCOUNT AND CM.CHANNEL_NAME = PM.CHANNEL_NAME "
+					+ "  INNER JOIN TBL_PROCO_STATUS_MASTER PSM ON PSM.STATUS_ID = PM.STATUS "
+					+ "  LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS "
+					+ "  FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR  ON PR.PROMO_ID = PM.PROMO_ID "
+					+ "  LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
+					+ "  LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";
 			
-			if (roleId.equalsIgnoreCase("KAM")) {
-				promoQuery += " INNER JOIN TBL_PROCO_KAM_MAPPING AS F ON A.CUSTOMER_CHAIN_L1=F.CUSTOMER_CHAIN_L1 WHERE F.USER_ID='"
-						+ userId + "' ";
+			if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE")) {
+				//promoQuery += " INNER JOIN TBL_PROCO_KAM_MAPPING AS F ON A.CUSTOMER_CHAIN_L1=F.CUSTOMER_CHAIN_L1 WHERE F.USER_ID='"
+				//		+ userId + "' ";
+				promoQuery+=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.MOC='"+moc+"'";
 			}
 
-			if (roleId.equalsIgnoreCase("TME") || roleId.equalsIgnoreCase("DP")) {
+			/*if (roleId.equalsIgnoreCase("TME") || roleId.equalsIgnoreCase("DP")) {
 				promoQuery += " INNER JOIN TBL_PROCO_TME_MAPPING AS D ON C.CATEGORY=D.CATEGORY AND C.PRICE_LIST=D.PRICE_LIST WHERE D.USER_ID='"
 						+ userId + "' ";
+			} */
+			
+			if (roleId.equalsIgnoreCase("TME")) {
+				
+				promoQuery +=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.CREATED_BY= '"+userId+"' AND PM.MOC='"+moc+"' ";
 			}
+			
+			
+			
 
-			if (!custChainL1.equalsIgnoreCase("All")) {
+			/*if (!custChainL1.equalsIgnoreCase("All")) {
 				if (custL1.size() == 1) {
 					promoQuery += "AND (A.CUSTOMER_CHAIN_L1 = '" + custL1.get(0) + "' )";
 				} else if (custL1.size() > 1) {
@@ -1203,40 +1227,41 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				}
 			}
 			//promoQuery += " AND A.START_DATE>=CURRENT_DATE AND A.ACTIVE=1 ";
-			promoQuery += " AND A.ACTIVE = 1 AND A.STATUS IN('6') ";
+			promoQuery += " AND A.ACTIVE = 1 AND A.STATUS IN('6') ";*/
+			
+			
 			if(searchParameter!=null && searchParameter.length()>0){
-				promoQuery +=" AND UCASE(A.PROMO_ID) LIKE UCASE('%"+searchParameter+"%')";
+				promoQuery +=" AND UCASE(PM.PROMO_ID) LIKE UCASE('%"+searchParameter+"%')";
 			}
 			
 			if (pageDisplayLength == 0) {
-				promoQuery += " ORDER BY A.UPDATE_STAMP DESC) AS PROMO_TEMP ORDER BY PROMO_TEMP.UPDATE_STAMP DESC";
+				promoQuery += " ORDER BY PM.UPDATE_STAMP DESC) AS PROMO_TEMP ";
 			} else {
-				promoQuery += " ORDER BY A.UPDATE_STAMP DESC) AS PROMO_TEMP WHERE ROW_NEXT BETWEEN " + pageDisplayStart
-						+ " AND " + pageDisplayLength + " ORDER BY PROMO_TEMP.UPDATE_STAMP DESC ";
+				promoQuery += " ORDER BY PM.UPDATE_STAMP DESC) AS PROMO_TEMP WHERE ROW_NEXT BETWEEN " + pageDisplayStart
+						+ " AND " + pageDisplayLength +  " ";
 			}
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQuery);
 			List<Object[]> list = query.list();
 			for (Object[] obj : list) {
-				PromoListingBean promoBean = new PromoListingBean();
-				promoBean.setPromo_id(obj[0].toString());
-				promoBean.setBasepack(obj[1].toString());
-				promoBean.setOffer_desc(obj[2].toString());
-				promoBean.setOffer_type(obj[3].toString());
-				promoBean.setOffer_modality(obj[4].toString());
-				promoBean.setGeography(obj[5].toString());
-				promoBean.setQuantity((obj[6] == null || obj[6].toString().equals("")) ? "" : obj[6].toString());
-				promoBean.setUom(obj[7].toString());
-				promoBean.setOffer_value(obj[8].toString());
-				promoBean.setMoc(obj[9].toString());
-				promoBean.setCustomer_chain_l1(obj[10].toString());
-				promoBean
-						.setKitting_value((obj[11] == null || obj[11].toString().equals("")) ? "" : obj[11].toString());
-				promoBean.setStatus(obj[12] == null ? "" : obj[12].toString());
-				promoBean.setStartDate(obj[13] == null ? "" : obj[13].toString());
-				promoBean.setEndDate(obj[14] == null ? "" : obj[14].toString());
-				promoBean.setOriginalId(obj[15] == null ? "" : obj[15].toString());
-				promoBean.setReason(obj[16] == null ? "" : obj[16].toString());
-				promoBean.setRemark(obj[17] == null ? "" : obj[17].toString());
+				PromoListingBean promoBean = new PromoListingBean();				
+				promoBean.setPromo_id(obj[0]== null ? "" :obj[0].toString());
+				promoBean.setOriginalId(obj[1]== null ? "" :obj[1].toString());
+				promoBean.setStartDate(obj[2]== null ? "" : obj[2].toString());
+				promoBean.setEndDate(obj[3]== null ? "" : obj[3].toString());
+				promoBean.setMoc(obj[4]== null ? "" : obj[4].toString());
+				promoBean.setCustomer_chain_l1(obj[5]== null ? "" :obj[5].toString());
+				promoBean.setBasepack(obj[6]== null ? "" :obj[6].toString());
+				promoBean.setOffer_desc(obj[7]== null ? "" :obj[7].toString());
+				promoBean.setOffer_type(obj[8]== null ? "" :obj[8].toString());
+				promoBean.setOffer_modality(obj[9]== null ? "" :obj[9].toString());
+				promoBean.setGeography(obj[10]== null ? "" :obj[10].toString());
+				promoBean.setQuantity((obj[11] == null || obj[11].toString().equals("")) ? "" : obj[11].toString());
+				promoBean.setOffer_value(obj[12]== null ? "" :obj[12].toString());
+				promoBean.setStatus(obj[13]== null ? "" :obj[13].toString());
+				promoBean.setInvestmentType(obj[14]== null ? "" :obj[14].toString());
+				promoBean.setSolCode(obj[15]== null ? "" :obj[15].toString());
+				promoBean.setPromotionMechanics(obj[16]== null ? "" :obj[16].toString());
+				promoBean.setSolCodeStatus(obj[17]== null ? "" :obj[17].toString());
 				promoList.add(promoBean);
 			}
 		} catch (Exception ex) {
@@ -1249,27 +1274,43 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public int getDeletePromoListRowCount(String cagetory, String brand, String basepack, String custChainL1,
-			String custChainL2, String geography, String offerType, String modality, String year, String moc,
-			String userId, int active, String roleId) {
+	public int getDeletePromoListRowCount(String moc,String userId, String roleId) {
 		//kiran - bigint to int changes
 		//List<Integer> list = null;
 		List<BigInteger> list = null;
-		List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
-		List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
+		//List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
+		//List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
 		try {
-			String promoQuery = "SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_MASTER AS A "
-					+ "INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK = C.BASEPACK INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON A.STATUS=E.STATUS_ID ";
-			if (roleId.equalsIgnoreCase("KAM")) {
-				promoQuery += " INNER JOIN TBL_PROCO_KAM_MAPPING AS F ON A.CUSTOMER_CHAIN_L1=F.CUSTOMER_CHAIN_L1 WHERE F.USER_ID='"
-						+ userId + "' ";
+			/*String promoQuery = "SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_MASTER AS A "
+					+ "INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK = C.BASEPACK INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON A.STATUS=E.STATUS_ID "; */
+			//Added by kavitha D-SPRINT 9
+			
+			String promoQuery =" SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM  "
+					+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.PPM_ACCOUNT AND CM.CHANNEL_NAME = PM.CHANNEL_NAME  "
+					+ " LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS "
+					+ " FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR ON PR.PROMO_ID = PM.PROMO_ID "
+					+ " LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
+					+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE";
+			
+			if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE")) {
+				//promoQuery += " INNER JOIN TBL_PROCO_KAM_MAPPING AS F ON A.CUSTOMER_CHAIN_L1=F.CUSTOMER_CHAIN_L1 WHERE F.USER_ID='"
+					//	+ userId + "' "; Mayur commented for sprint 9
+				
+				promoQuery+=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.MOC='"+moc+"'";
+				
 			}
 
-			if (roleId.equalsIgnoreCase("TME") || roleId.equalsIgnoreCase("DP")) {
+			/*if (roleId.equalsIgnoreCase("TME") || roleId.equalsIgnoreCase("DP")) {
 				promoQuery += " INNER JOIN TBL_PROCO_TME_MAPPING AS D ON C.CATEGORY=D.CATEGORY AND C.PRICE_LIST=D.PRICE_LIST WHERE D.USER_ID='"+ userId + "' ";
+			}*/
+			
+			if (roleId.equalsIgnoreCase("TME")) {
+				
+				promoQuery +=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.CREATED_BY= '"+userId+"' AND PM.MOC='"+moc+"' ";
 			}
 
-			if (!custChainL1.equalsIgnoreCase("All")) {
+			
+			/*if (!custChainL1.equalsIgnoreCase("All")) {
 				if (custL1.size() == 1) {
 					promoQuery += "AND (A.CUSTOMER_CHAIN_L1 = '" + custL1.get(0) + "' )";
 				} else if (custL1.size() > 1) {
@@ -1357,7 +1398,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				}
 			}
 			//promoQuery += " AND A.START_DATE>=CURRENT_DATE AND A.ACTIVE=1 ";
-			promoQuery += " AND A.ACTIVE = 1 AND A.STATUS IN('6') ";
+			promoQuery += " AND A.ACTIVE = 1 AND A.STATUS IN('6') ";*/
 			//A.ACTIVE = 0 AND A.STATUS IN('6','16','26','36') 
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQuery);
 			list = query.list();
@@ -1371,24 +1412,39 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public List<ArrayList<String>> getDeletePromotionDump(ArrayList<String> headerList, String cagetory, String brand,
-			String basepack, String custChainL1, String custChainL2, String geography, String offerType,
-			String modality, String year, String moc, String userId, int active, String role) {
+	public List<ArrayList<String>> getDeletePromotionDump(ArrayList<String> headerList, String moc, String userId,String roleId) {
 		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
-		List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
-		List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
+		//List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
+		//List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
 		String promoQuery = "";
 		try {
 			//Garima - changes for VARCHAR_FORMAT
 			//promoQuery = "SELECT DISTINCT PROMO_ID, VARCHAR_FORMAT(START_DATE,'DD/MM/YYYY'),VARCHAR_FORMAT(END_DATE,'DD/MM/YYYY'), MOC, CUSTOMER_CHAIN_L1, CUSTOMER_CHAIN_L2, OFFER_DESC, P1_BASEPACK, P1_BASEPACK_RATIO, P2_BASEPACK, P2_BASEPACK_RATIO, P3_BASEPACK, P3_BASEPACK_RATIO, P4_BASEPACK, P4_BASEPACK_RATIO, P5_BASEPACK, P5_BASEPACK_RATIO, P6_BASEPACK, P6_BASEPACK_RATIO, C1_CHILD_PACK, C1_CHILD_PACK_RATIO, C2_CHILD_PACK, C2_CHILD_PACK_RATIO, C3_CHILD_PACK, C3_CHILD_PACK_RATIO, C4_CHILD_PACK, C4_CHILD_PACK_RATIO, C5_CHILD_PACK, C5_CHILD_PACK_RATIO, C6_CHILD_PACK, C6_CHILD_PACK_RATIO, THIRD_PARTY_DESC, THIRD_PARTY_PACK_RATIO, OFFER_TYPE, C.MODALITY_NO, OFFER_VALUE, KITTING_VALUE, GEOGRAPHY, UOM, REASON, DELETE_REMARKS  from TBL_PROCO_PROMOTION_MASTER AS A INNER JOIN TBL_PROCO_PRODUCT_MASTER AS B ON A.P1_BASEPACK=B.BASEPACK INNER JOIN TBL_PROCO_MODALITY_MASTER AS C ON A.OFFER_MODALITY=C.MODALITY ";
-			promoQuery = "SELECT DISTINCT PROMO_ID, DATE_FORMAT(START_DATE,'%d/%m/%Y'),DATE_FORMAT(END_DATE,'%d/%m/%Y'), MOC, CUSTOMER_CHAIN_L1, CUSTOMER_CHAIN_L2, OFFER_DESC, P1_BASEPACK, P1_BASEPACK_RATIO, P2_BASEPACK, P2_BASEPACK_RATIO, P3_BASEPACK, P3_BASEPACK_RATIO, P4_BASEPACK, P4_BASEPACK_RATIO, P5_BASEPACK, P5_BASEPACK_RATIO, P6_BASEPACK, P6_BASEPACK_RATIO, C1_CHILD_PACK, C1_CHILD_PACK_RATIO, C2_CHILD_PACK, C2_CHILD_PACK_RATIO, C3_CHILD_PACK, C3_CHILD_PACK_RATIO, C4_CHILD_PACK, C4_CHILD_PACK_RATIO, C5_CHILD_PACK, C5_CHILD_PACK_RATIO, C6_CHILD_PACK, C6_CHILD_PACK_RATIO, THIRD_PARTY_DESC, THIRD_PARTY_PACK_RATIO, OFFER_TYPE, C.MODALITY_NO, OFFER_VALUE, KITTING_VALUE, GEOGRAPHY, UOM, REASON, DELETE_REMARKS  from TBL_PROCO_PROMOTION_MASTER AS A INNER JOIN TBL_PROCO_PRODUCT_MASTER AS B ON A.P1_BASEPACK=B.BASEPACK INNER JOIN TBL_PROCO_MODALITY_MASTER AS C ON A.OFFER_MODALITY=C.MODALITY ";
-			promoQuery += " INNER JOIN TBL_PROCO_TME_MAPPING AS D ON B.CATEGORY=D.CATEGORY AND B.PRICE_LIST=D.PRICE_LIST WHERE  A.ACTIVE=1 AND A.STATUS IN('6') ";
-
-			if(role.equals("TME")) {
-				promoQuery +=" AND D.USER_ID='"	+ userId + "'" ;
-			}
+			//promoQuery = "SELECT DISTINCT PROMO_ID, DATE_FORMAT(START_DATE,'%d/%m/%Y'),DATE_FORMAT(END_DATE,'%d/%m/%Y'), MOC, CUSTOMER_CHAIN_L1, CUSTOMER_CHAIN_L2, OFFER_DESC, P1_BASEPACK, P1_BASEPACK_RATIO, P2_BASEPACK, P2_BASEPACK_RATIO, P3_BASEPACK, P3_BASEPACK_RATIO, P4_BASEPACK, P4_BASEPACK_RATIO, P5_BASEPACK, P5_BASEPACK_RATIO, P6_BASEPACK, P6_BASEPACK_RATIO, C1_CHILD_PACK, C1_CHILD_PACK_RATIO, C2_CHILD_PACK, C2_CHILD_PACK_RATIO, C3_CHILD_PACK, C3_CHILD_PACK_RATIO, C4_CHILD_PACK, C4_CHILD_PACK_RATIO, C5_CHILD_PACK, C5_CHILD_PACK_RATIO, C6_CHILD_PACK, C6_CHILD_PACK_RATIO, THIRD_PARTY_DESC, THIRD_PARTY_PACK_RATIO, OFFER_TYPE, C.MODALITY_NO, OFFER_VALUE, KITTING_VALUE, GEOGRAPHY, UOM, REASON, DELETE_REMARKS  from TBL_PROCO_PROMOTION_MASTER AS A INNER JOIN TBL_PROCO_PRODUCT_MASTER AS B ON A.P1_BASEPACK=B.BASEPACK INNER JOIN TBL_PROCO_MODALITY_MASTER AS C ON A.OFFER_MODALITY=C.MODALITY ";
+			//promoQuery += " INNER JOIN TBL_PROCO_TME_MAPPING AS D ON B.CATEGORY=D.CATEGORY AND B.PRICE_LIST=D.PRICE_LIST WHERE  A.ACTIVE=1 AND A.STATUS IN('6') ";
+			//Added by Kavitha D -Sprint 9
+			promoQuery=" SELECT PM.CHANNEL_NAME, PM.MOC, CM.ACCOUNT_TYPE, CM.POS_ONINVOICE, CM.PPM_ACCOUNT, PM.PROMO_ID,"
+					+ "PR.PROMOTION_ID AS SOL_CODE, CASE WHEN MOC_GROUP = 'GROUP_ONE' THEN 'MOC' ELSE CASE WHEN MOC_GROUP = 'GROUP_THREE' THEN 'BM' ELSE '26 to 25' END END AS MOC_BM_CYCLE,"
+					+ " PM.PROMO_TIMEPERIOD, CM.AB_CREATION, CM.SOL_RELEASE_ON,"
+					+ "PM.START_DATE, PM.END_DATE, PM.OFFER_DESC, PR.PROMOTION_NAME, PM.BASEPACK_CODE, PM.CHILD_BASEPACK_CODE, PM.OFFER_TYPE, PM.OFFER_MODALITY, "
+					+ "PM.PRICE_OFF, PM.QUANTITY, PM.BUDGET, PM.BRANCH, PM.CLUSTER, CASE WHEN PM.CR_SOL_TYPE IS NULL THEN 'Regular' ELSE PM.CR_SOL_TYPE END AS SOL_TYPE, "
+					+ "CASE WHEN ST.SOL_REMARK IS NULL THEN 'Regular' ELSE ST.SOL_REMARK END AS REMARK, '' AS CMM_NAME, PM.CREATED_BY AS TME_NAME, "
+					+ "PRM.CATEGORY AS SALES_CATEGORY, PRM.CATEGORY AS PSA_CATEGORY FROM TBL_PROCO_PROMOTION_MASTER_V2 PM "
+					+ "INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.PPM_ACCOUNT AND CM.CHANNEL_NAME = PM.CHANNEL_NAME "
+					+ "LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID,PROMOTION_STATUS FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID,PROMOTION_STATUS) PR ON PR.PROMO_ID = PM.PROMO_ID "
+					+ "LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
+					+ "LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";
 			
-			if (!cagetory.equalsIgnoreCase("All")) {
+			if(roleId.equals("TME")) {
+				
+				promoQuery +=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.CREATED_BY='"+ userId + "'AND PM.MOC='"+ moc + "' " ;
+			}
+			 //mayur's changes for sprint 9
+			if(roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE"))
+			{
+				promoQuery+=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.MOC='"+moc+"'";
+			}
+			/*if (!cagetory.equalsIgnoreCase("All")) {
 				promoQuery += "AND C.CATEGORY = '" + cagetory + "' ";
 			}
 			if (!brand.equalsIgnoreCase("All")) {
@@ -1472,7 +1528,8 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					promoQuery += "AND A.MOC = '" + moc + "' ";
 				}
 			}
-			//promoQuery += " AND A.START_DATE>=CURRENT_DATE ";
+			//promoQuery += " AND A.START_DATE>=CURRENT_DATE "; */
+			
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQuery);
 			Iterator itr = query.list().iterator();
 			downloadDataList.add(headerList);
@@ -1505,4 +1562,233 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 		return (String) ((list != null && list.size() > 0) ? list.get(0) : "");
 	
 	}
+	
+	//Added by Kavitha D for promo listing download starts-SPRINT 9
+	@SuppressWarnings({ "rawtypes" })
+	@Override
+	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleId, String[] kamAccounts){
+		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
+		try {
+		/*String qry=" SELECT PM.CHANNEL_NAME, PM.MOC, CM.ACCOUNT_TYPE, CM.POS_ONINVOICE, CM.PPM_ACCOUNT, PM.PROMO_ID,"
+				+ " PR.PROMOTION_ID AS SOL_CODE, CASE WHEN MOC_GROUP = 'GROUP_ONE' THEN 'MOC' ELSE CASE WHEN MOC_GROUP = 'GROUP_THREE' THEN 'BM' ELSE '26 to 25' END END AS MOC_BM_CYCLE,"
+				+ " PM.PROMO_TIMEPERIOD, CM.AB_CREATION, CM.SOL_RELEASE_ON,"
+				+ " PM.START_DATE, PM.END_DATE, PM.OFFER_DESC, PR.PROMOTION_NAME, PM.BASEPACK_CODE, PM.CHILD_BASEPACK_CODE, PM.OFFER_TYPE, PM.OFFER_MODALITY, "
+				+ " PM.PRICE_OFF, PM.QUANTITY, PM.BUDGET, PM.BRANCH, PM.CLUSTER ,PM.TEMPLATE_TYPE AS PROMO_TEMPLATE, SUBSTRING(PM.CREATED_DATE,1,10) AS CREATED_DATE ,CASE WHEN PM.CR_SOL_TYPE IS NULL THEN 'Regular' ELSE PM.CR_SOL_TYPE END AS SOL_TYPE, "
+				+ " CASE WHEN ST.SOL_REMARK IS NULL THEN 'Regular' ELSE ST.SOL_REMARK END AS REMARK, '' AS CMM_NAME, PM.CREATED_BY AS TME_NAME, "
+				+ " PRM.SALES_CATEGORY AS SALES_CATEGORY, PRM.PPM_SALES_CATEGORY AS PSA_CATEGORY FROM TBL_PROCO_PROMOTION_MASTER_V2 PM "
+				+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.PPM_ACCOUNT AND CM.CHANNEL_NAME = PM.CHANNEL_NAME "
+				+ " LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID) PR ON PR.PROMO_ID = PM.PROMO_ID "
+				+ " LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
+				+ " LEFT JOIN (SELECT DISTINCT BASEPACK,SALES_CATEGORY,PPM_SALES_CATEGORY FROM TBL_PROCO_PRODUCT_MASTER_V2) PRM ON PRM.BASEPACK = PM.BASEPACK_CODE "; */
+			//Added by Kavitha D-changes SPRINT 9
+		   qry = sessionFactory.getCurrentSession().createNativeQuery("CALL PROMO_LISTING_DOWNLOAD(:moc)");
+			qry.setParameter("moc", moc);
+			qry.executeUpdate();
+			
+			String query= " SELECT CHANNEL,YEAR,MOC ,ACCOUNT_TYPE,CLAIM_SETTLEMENT_TYPE,SECONDARY_CHANNEL,PPM_ACCOUNT,PROMO_ID,SOLCODE,MOC_CYCLE,PROMO_TIMEPERIOD,SOL_RELEASE_ON,"
+					+ " START_DATE,END_DATE,OFFER_DESC,PPM_DESC,BASEPACK_CODE,BASEPACK_DESC,CHILDPACK,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,QUANTITY,FIXED_BUDGET ,BRANCH,"
+					+ " SALES_CLUSTER ,PPM_CUSTOMER,CMM_NAME,TME_NAME,SALES_CATEGORY,PSA_CATEGORY,PROMOTION_STATUS,PPM_PROMOTION_CREATOR ,PROMOTION_MECHANICS,INVESTMENT_TYPE,"
+					+ " SALES_CLUSTER_CODE ,BRAND,SUB_BRAND,PPM_BUDGET_HOLDER_NAME ,FUND_TYPE,INVESTMENT_AMOUNT ,PROMO_ENTRY_TYPE ,PROMO_USER_NAME ,PROMO_USER_TIME ,"
+					+ " PPM_APPROVED_DATE ,PPM_CREATION_DATE ,NON_UNIFY,PPM_SUBMISSION_DATE ,PPM_MODIFIED_DATE ,COE_REMARKS,MRP ,AB_CREATION ,BUDGET "
+					+ " FROM TBL_PROCO_PROMO_LISTING_REPORT  LR";
+		
+		
+		
+		if(roleId.equalsIgnoreCase("KAM"))
+		{
+			query+=" WHERE LR.MOC='"+moc+"' AND LR.PPM_ACCOUNT IN (:kamAccount) ";
+		}else
+		{
+			query+=" WHERE LR.TME_NAME=:userId AND LR.MOC=:moc";		
+		}
+		
+		
+		Query query1  =sessionFactory.getCurrentSession().createNativeQuery(query);
+		
+		if(roleId.equalsIgnoreCase("KAM")) {
+			query1.setParameterList("kamAccount", kamAccounts);
+			
+		} else {
+			query1.setString("moc", moc);
+			query1.setString("userId", userId);
+		}
+
+
+		Iterator itr = query1.list().iterator();
+		downloadDataList.add(headerList);
+		while (itr.hasNext()) {
+			Object[] obj = (Object[]) itr.next();
+			ArrayList<String> dataObj = new ArrayList<String>();
+			for (Object ob : obj) {
+				String value = "";
+				value = (ob == null) ? "" : ob.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
+			}
+			obj = null;
+			downloadDataList.add(dataObj);
+		}
+		return downloadDataList;
+	} catch (Exception e) {
+		logger.debug("Exception: ", e);
+	}
+	return downloadDataList;
+		
+	}
+	//Added by Kavitha D for promo listing download ends-SPRINT 9
+
+	//Added by Kavitha D for promo display grid download starts-SPRINT 9
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public int getPromoListRowCountGrid(String userId,String roleId,String moc, String[] kamAccounts) {
+		List<BigInteger> list = null;
+		try {
+			String promoQueryCount =" SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM "
+					+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.PPM_ACCOUNT AND CM.CHANNEL_NAME = PM.CHANNEL_NAME "
+					+ " INNER JOIN TBL_PROCO_STATUS_MASTER PSM ON PSM.STATUS_ID = PM.STATUS "
+					+ " LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR ON PR.PROMO_ID = PM.PROMO_ID "
+					+ " LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE"
+					+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";	
+			
+			if (roleId.equalsIgnoreCase("TME")) {
+				promoQueryCount += "WHERE PM.CREATED_BY='"+ userId +"'AND PM.MOC='"+moc+"'";
+			}
+			/*
+			if (roleId.equalsIgnoreCase("DP") && (moc== null || moc.isEmpty())) {
+				promoQueryCount += " WHERE PM.STATUS = 1 ";
+			} */
+			if (roleId.equalsIgnoreCase("DP")&& (moc!= null || !moc.isEmpty())) {
+				if(moc.equalsIgnoreCase("all"))
+					promoQueryCount += " WHERE PM.TEMPLATE_TYPE = 'R' AND PM.STATUS = 1";//Added by kavitha D-Sprint 9
+				else
+				promoQueryCount += " WHERE PM.STATUS IN (1, 3) AND PM.MOC='"+moc+ "' ";
+			}
+			if (roleId.equalsIgnoreCase("KAM")) {
+						
+				promoQueryCount += " WHERE PM.MOC='"+moc+ "' AND PM.PPM_ACCOUNT IN ( ";
+				
+				for(String kamAccount:kamAccounts)
+					promoQueryCount+="'"+kamAccount+"',";
+					
+				 promoQueryCount = promoQueryCount.substring(0, promoQueryCount.length()-1)+")";
+				}
+			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQueryCount);
+			list = query.list();
+		} catch (Exception ex) {
+			logger.debug("Exception: ", ex);
+		}
+		return (list != null && list.size() > 0) ? list.get(0).intValue() : 0;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId,
+			String roleId,String moc,String searchParameter, String[] kamAccounts) {
+		List<PromoListingBean> promoListDisplay = new ArrayList<>();
+		try {
+			
+			//Mayur changes for SUBSTRING(PM.CREATED_DATE,1,10) AS CREATED_DATE to get the date only
+			
+			String promoQueryGrid=" SELECT * FROM (SELECT PM.PROMO_ID AS UNIQUE_ID,PM.PROMO_ID AS ORIGINAL_ID,PM.START_DATE,PM.END_DATE,"
+					+ " PM.MOC,PM.PPM_ACCOUNT,PM.BASEPACK_CODE AS BASEPACK,PM.OFFER_DESC,PM.OFFER_TYPE,PM.OFFER_MODALITY,"
+					+ " PM.CLUSTER AS GEOGRAPHY,PM.QUANTITY,PM.PRICE_OFF AS OFFER_VALUE,PSM.STATUS, PM.CREATED_BY, SUBSTRING(PM.CREATED_DATE,1,10) AS CREATED_DATE, PM.TEMPLATE_TYPE AS REMARKS,"
+					+ " PR.INVESTMENT_TYPE, PR.PROMOTION_ID AS SOL_CODE,PR.PROMOTION_MECHANICS,PR.PROMOTION_STATUS AS SOL_CODE_STATUS,ROW_NUMBER() OVER (ORDER BY PM.UPDATE_STAMP DESC) AS ROW_NEXT "
+					+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 PM "
+					+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.PPM_ACCOUNT AND CM.CHANNEL_NAME = PM.CHANNEL_NAME "
+					+ " INNER JOIN TBL_PROCO_STATUS_MASTER PSM ON PSM.STATUS_ID = PM.STATUS "
+					+ " LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR ON PR.PROMO_ID = PM.PROMO_ID "
+					+ " LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
+					+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";
+		
+			if (roleId.equalsIgnoreCase("TME")) {
+				promoQueryGrid += "WHERE PM.CREATED_BY='"+ userId +"' AND PM.MOC='"+moc+"'";
+			}
+			/*
+			if (roleId.equalsIgnoreCase("DP") && (moc== null || moc.isEmpty())) {
+				promoQueryGrid += "WHERE PM.STATUS = 1 ";
+			} */
+			
+			if (roleId.equalsIgnoreCase("DP") /*&& (moc!= null || !moc.isEmpty())*/) {
+				if(moc.equalsIgnoreCase("all"))
+					promoQueryGrid += " WHERE PM.TEMPLATE_TYPE = 'R' AND PM.STATUS = 1";  //For DP Volume Upload
+				else
+					promoQueryGrid += " WHERE PM.STATUS IN (1, 3) AND PM.MOC='"+moc+ "' ";  //For DP Promo Listing
+			}
+			
+			if (roleId.equalsIgnoreCase("KAM")) {
+				promoQueryGrid += " WHERE PM.MOC='"+moc+ "' AND PM.PPM_ACCOUNT IN (:kamAccount) ";
+			}
+			if(searchParameter!=null && searchParameter.length()>0){
+				promoQueryGrid +="AND UCASE(PM.PROMO_ID) LIKE UCASE('%"+searchParameter+"%')";
+			}
+			if (pageDisplayLength == 0) {
+				promoQueryGrid += " ORDER BY PM.PROMO_ID,PM.PPM_ACCOUNT) AS PROMO_TEMP";
+			} else {
+				promoQueryGrid += " ORDER BY PM.PROMO_ID,PM.PPM_ACCOUNT) AS PROMO_TEMP WHERE ROW_NEXT BETWEEN " + pageDisplayStart
+						+ " AND " + pageDisplayLength + "";
+			}
+			
+			//System.out.println("Volume upload promo:"+ promoQueryGrid);
+			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQueryGrid);
+			if (roleId.equalsIgnoreCase("KAM")) {
+				query.setParameterList("kamAccount", kamAccounts);
+			}
+			List<Object[]> list = query.list();
+			for (Object[] obj : list) {
+				PromoListingBean promoBean = new PromoListingBean();
+				
+				promoBean.setPromo_id(obj[0]== null ? "" :obj[0].toString());
+				promoBean.setOriginalId(obj[1]== null ? "" :obj[1].toString());
+				promoBean.setStartDate(obj[2]== null ? "" : obj[2].toString());
+				promoBean.setEndDate(obj[3]== null ? "" : obj[3].toString());
+				promoBean.setMoc(obj[4]== null ? "" : obj[4].toString());
+				promoBean.setCustomer_chain_l1(obj[5]== null ? "" :obj[5].toString());
+				promoBean.setBasepack(obj[6]== null ? "" :obj[6].toString());
+				promoBean.setOffer_desc(obj[7]== null ? "" :obj[7].toString());
+				promoBean.setOffer_type(obj[8]== null ? "" :obj[8].toString());
+				promoBean.setOffer_modality(obj[9]== null ? "" :obj[9].toString());
+				promoBean.setGeography(obj[10]== null ? "" :obj[10].toString());
+				promoBean.setQuantity((obj[11] == null || obj[11].toString().equals("")) ? "" : obj[11].toString());
+				promoBean.setOffer_value(obj[12]== null ? "" :obj[12].toString());
+				promoBean.setStatus(obj[13]== null ? "" :obj[13].toString());
+				promoBean.setUserId(obj[14]== null ? "" :obj[14].toString());
+				promoBean.setChangeDate(obj[15]== null ? "" :obj[15].toString());
+				promoBean.setRemark(obj[16]== null ? "" :obj[16].toString());
+				promoBean.setInvestmentType(obj[17]== null ? "" :obj[17].toString());
+				promoBean.setSolCode(obj[18]== null ? "" :obj[18].toString());
+				promoBean.setPromotionMechanics(obj[19]== null ? "" :obj[19].toString());
+				promoBean.setSolCodeStatus(obj[20]== null ? "" :obj[20].toString());			
+				promoListDisplay.add(promoBean);
+			}
+		} catch (Exception ex) {
+			logger.debug("Exception :", ex);
+			return null;
+		}
+
+		return promoListDisplay;
+	}
+	//Added by Kavitha D for promo display grid download ends-SPRINT 9
+	
+	
+	//Added by Kavitha D for promo listing MOC filter-SPRINT 9
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getPromoMoc() {
+		List<String> promoMOC = new ArrayList<String>();
+		try {
+			Query qryPromoMoc = sessionFactory.getCurrentSession().createNativeQuery(
+					//"SELECT DISTINCT PM.MOC FROM TBL_PROCO_PROMOTION_MASTER_V2 PM INNER JOIN TBL_VAT_MOC_MASTER MM ON CONCAT(SUBSTR(MM.MOC, 1, 2), SUBSTR(MM.MOC, 3, 4)) = PM.MOC ORDER BY PM.MOC DESC"
+					//" SELECT DISTINCT PM.MOC FROM TBL_PROCO_PROMOTION_MASTER_V2 PM INNER JOIN TBL_VAT_MOC_MASTER MM ON MM.MOC = PM.MOC ORDER BY PM.MOC DESC ");
+					" SELECT DISTINCT PM.MOC FROM TBL_PROCO_PROMOTION_MASTER_V2 PM INNER JOIN TBL_VAT_MOC_MASTER MM ON MM.MOC = PM.MOC ORDER BY CONCAT(SUBSTRING(PM.MOC, 3, 4), SUBSTRING(PM.MOC, 1, 2)) DESC ");
+					promoMOC = qryPromoMoc.list();
+		} catch (Exception ex) {
+			logger.debug("Exception: ", ex);
+			return null;
+		}
+		return promoMOC;
+	
+		
+	}
+
+
 }

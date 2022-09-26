@@ -30,6 +30,31 @@
 <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
 
 </head>
+<!--bharati added below style for sprint-9 moc filter changes -->
+<style>
+.promo-filter-div{
+float: right!important;
+width: 30%!important;
+margin-top: -75px!important;
+}
+
+#Mocvalue{
+	height:30px!important;
+}
+.ddd{
+	margin-bottom:5%!important;
+}
+.nav-pills>li+li {
+margin-left:0px!important;
+}
+@media only screen and (max-width: 767px) {
+	.promo-filter-div{
+    width: 60%!important;
+    margin-top: -85px!important;	
+}
+}
+
+</style>
 <body class="Verdana-font">
 	<jsp:include page="../proco/proco-header.jsp" />
 <div class="loader">
@@ -74,12 +99,18 @@
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
 						
-						  <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 promo-lib-bg">
+						  <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 promo-lib-bg" style="margin-right: 15px;">
 							<a href="https://vat.hulcd.com/VisibilityAssetTracker/ProcoMeasureReportUploadPage.htm" id="measHref" >
 								<div class="proco-Signops-icon"></div>
 								<div class="tab-label-proco-Signops-inactive OpenSans-font">Upload Measure Report</div>
 							</a>
-						</li>  
+						</li> 
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-ppm-inactive" style="width:23%">
+							<a href="https://vat.hulcd.com/VisibilityAssetTracker/ProcoPpmCoeRemarks.htm">
+								<div class="proco-ppm-icon"></div>
+								<div class="tab-label-proco-ppm-inactive OpenSans-font">PPM Upload</div>
+							</a>
+						</li> 
 					
 
 					</ul>
@@ -141,7 +172,7 @@
 		<div class="proco-creation form-horizontal">
 			<input type="hidden" id="roleId" value="${roleId}" />
 			<!-- <div class="promo-back"><a href="https://vat.hulcd.com/VisibilityAssetTracker/procoHome.htm"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Listing</div> -->
-			<div class="promo-details" style="padding:10px;"><span style="color:#fff;font-weight:700;">PROMO STATUS TRACKER</span>
+			<!--<div class="promo-details" style="padding:10px;"><span style="color:#fff;font-weight:700;">PROMO STATUS TRACKER</span>--><!--bharati commented in sprint-9-->
 				<!-- <span class="promo-detail-txt"><b>SELECT PROMO LISTING</b></span> <span
 					class="pull-right promo-uom">
 					<div class="col-md-12">
@@ -160,7 +191,8 @@
 				</span>
 				<div class="clearfix"></div> -->
 			</div>
-		<form action="https://vat.hulcd.com/VisibilityAssetTracker/downloadPromoStatusTracker.htm" method="POST" enctype="multipart/form-data" id="download">
+			<!--bharati comment this below form in sprint-9-->
+		<!--<form action="https://vat.hulcd.com/VisibilityAssetTracker/downloadPromoStatusTracker.htm" method="POST" enctype="multipart/form-data" id="download">
 			<div class="promo-form-details proco-tracker-form">
 				<div class="col-md-4">
 					<div class="form-group">
@@ -269,7 +301,7 @@
 							<!-- <select class="form-control" id="">
 								<option>ALL INDIA</option>
 							</select> -->
-							<input type="text" class="form-control" value="ALL INDIA" name="geography"
+						<!--	<input type="text" class="form-control" value="ALL INDIA" name="geography"
 								id="geography" />
 						</div>
 					</div>
@@ -294,34 +326,49 @@
 
 				<div class="clearfix"></div>
 			</div>
-		</form>
+		</form>-->
 			<div class="promo-list table-header-tracker">PROMO LIST</div>
+			<!--bharati added this below form for moc filter-->
+			<form action="https://vat.hulcd.com/VisibilityAssetTracker/downloadPromoStatusTracker.htm" method="POST" enctype="multipart/form-data" id="download">
+			<div class="form-group col-sm-4" style="margin-top: 20px;">
+						<label for="unique-id" class="control-label col-md-2">MOC</label>
+						<div class="col-md-5">
+						<select class="form-control" id="Mocvalue" name="Mocvalue">
+								 <c:forEach items="${mocList}" var="mocValue">
+                                   <option value="${mocValue}"><c:out value="${mocValue}"></c:out></option>
+                                 </c:forEach>
+                                 </select>
+								 </div>
+
+					</div>
+			</form>
 			<form>
-			<table class="table table-striped table-bordered promo-list-table"
-				cellspacing="0" style="width: 100%;overflow-x: scroll;display: block;">
+			<!--bharati removed below columns form table in sprint-9-->
+			<table class="table table-striped table-bordered promo-list-table table-responsive" cellspacing="0"  style="width: 100%;">
 				<thead>
 					<tr>
 						<th>PROMO ID</th>
-						<th>ORIGINAL ID</th>
+						<!--<th>ORIGINAL ID</th>-->
 						<th>START DATE</th>
 						<th>END DATE</th>
 						<th>MOC</th>
-						<th>CUSTOMER CHAIN L1</th>
-						<th>CUSTOMER CHAIN L2</th>
+						<!--<th>CUSTOMER CHAIN L1</th>--> <!--bharati rename this to ppm account in sprint-9-->
+						<th>PPM ACCOUNT</th>
+						<!--<th>CUSTOMER CHAIN L2</th>-->
 						<th>BASEPACK</th>
 						<th>OFFER DESCRIPTION</th>
 						<th>OFFER TYPE</th>
 						<th>OFFER MODALITY</th>
 						<th>GEOGRAPHY</th>
 						<th>QUANTITY</th>
-						<th>UOM</th>
+						<!--<th>UOM</th>-->
 						<th>OFFER VALUE</th>
-						<th>KITTING VALUE</th>
+						<!--<th>KITTING VALUE</th>-->
 						<th>STATUS</th>
-						<th>REASON FOR EDIT</th>
+						<!--<th>REASON FOR EDIT</th>-->
 						<th>REMARK</th>
-						<th>CHANGE DATE</th>
-						<th>CHANGES MADE</th>
+						<!--<th>CHANGE DATE</th>
+						<th>CHANGES MADE</th>-->
 						<th>USER ID</th>
 						<th>INVESTMENT TYPES</th>
 						<th>SOL CODE</th>
@@ -434,6 +481,7 @@
 		src="assets/js/custom/proco/alert-modal.js"></script>
 		<script type="text/javascript">
 		var moc = '${mocJson}';
+		var Mocvalue = $('#Mocvalue').val(); //bharati added in sprint-9 for moc filter
 		var geographyData = '${geographyJson}';
 		var basepacks = '${basepacks}';
 		var newBasepacks = null;

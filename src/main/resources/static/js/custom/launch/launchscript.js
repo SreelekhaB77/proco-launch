@@ -3911,7 +3911,7 @@ function getfinalPlan() {
             ajaxLoader(spinnerWidth, spinnerHeight);
         },
 	    success: function( finaldata, textStatus, jQxhr ){
-	    	// console.log(finaldata);
+	    	//console.log(finaldata);
 	    	 $('.loader').hide();
 	    		
 				/*
@@ -3928,8 +3928,7 @@ function getfinalPlan() {
 							// console.log('hello');
 						});
 						return false;
-
-		    	 }
+				}
 				else{
 					var len = finaldata.listOfFinalPlans.length;
 		    		finaldata = finaldata.listOfFinalPlans;
@@ -4124,6 +4123,7 @@ function saveFinalBuildUpData() {
     
     var listOfFinalBuildUps = [];
     var launchId = $("#dynamicLaunchId").val();
+	var countTd = 0;
     var rowCount = $('#finalTable tbody').find('tr');
     for (var i = 0; i < rowCount.length; i++) {
         var skuname = rowCount[i].children[0].children[0].value;
@@ -4137,7 +4137,21 @@ function saveFinalBuildUpData() {
         var lnchsellinunit = rowCount[i].children[8].children[0].value;
         var n1sellinunit = rowCount[i].children[9].children[0].value;
         var n2sellinunit = rowCount[i].children[10].children[0].value;
-      
+		
+		
+		//bharati added this in sprint-9 issues in launch calculation
+		
+		     if(lnchsellinval=='' && n1sellinval=='' && n2sellinval=='' && lnchsellcld=='' && n1sellincld=='' && n2sellincld=='' && lnchsellinunit ==''&& n1sellinunit=='' && n2sellinunit=='' ){
+				countTd++;
+			 
+			 }else if(lnchsellinval=='0.0' && n1sellinval=='0.0' && n2sellinval=='0.0' && lnchsellcld=='0.0' && n1sellincld=='0.0' && n2sellincld=='0.0' && lnchsellinunit=='0.0'&& n1sellinunit=='0.0' && n2sellinunit=='0.0' ){
+				countTd++;
+				
+			}else if(lnchsellinval=='0' && n1sellinval=='0' && n2sellinval=='0' && lnchsellcld=='0' && n1sellincld=='0' && n2sellincld=='0' && lnchsellinunit=='0'&& n1sellinunit=='0' && n2sellinunit=='0' ){
+				countTd++;
+		}
+		
+      //bharati code end here
     var jsonData = {
             "skuName" : skuname,
             "basepackCode" : baspckcd,
@@ -4152,7 +4166,19 @@ function saveFinalBuildUpData() {
             "launchSellInUnitsN2" : n2sellinunit
         }
     listOfFinalBuildUps.push(jsonData);
-    }
+}
+//bharati added this condition for launch issue in sprint-9
+ if(countTd == rowCount.length ){
+				ezBSAlert({
+					messageText : "Error while calculating Final buildup, Please contact support team",
+					alertType : "info"
+				}).done(function(e) {
+					
+				});
+				return false;
+
+             }
+			   //bharati code end here
      
     $.ajax({
         url: 'saveLaunchFinal.htm',

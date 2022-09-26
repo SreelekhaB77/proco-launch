@@ -843,9 +843,420 @@ public class UploadUtil {
 		return cellNo;
 	}
 	
+	//Added by Kavitha D for promo templates starts -SPRINT 9
+	@SuppressWarnings("resource")
+	public static boolean writePromoXLSFile(String filePath, List<ArrayList<String>> dataList,
+			Map<String, List<List<String>>> masters, String extension) throws IOException {
+		String sheetName = "Sheet";// name of sheet
+		FileOutputStream fileOut = null;
+		int sheetCount = 1;
+		boolean res = false;
+		try {
+			HSSFWorkbook wb = new HSSFWorkbook();
+			HSSFSheet sheet = wb.createSheet(sheetName + String.valueOf(sheetCount));
+			// iterating r number of rows
+			HSSFDataFormat fmt = wb.createDataFormat();
+			HSSFCellStyle textStyle = wb.createCellStyle();
+			textStyle.setDataFormat(fmt.getFormat("@"));
+			int rowCount = 0;
+			for (int r = 0; r < dataList.size(); r++) {
+				// iterating c number of columns
+				List<String> al = dataList.get(r);
+				if (rowCount > 0 && rowCount % 65535 == 0) {
+					sheetCount++;
+					sheet = wb.createSheet(sheetName + String.valueOf(sheetCount));
+					rowCount = 0;
+				}
+				HSSFRow row = sheet.createRow(rowCount);
+				rowCount++;
+				for (int c = 0; c < al.size(); c++) {
+					sheet.setDefaultColumnStyle(c, textStyle);
+					HSSFCell cell = row.createCell(c);
+					cell.setCellValue(al.get(c));
+				}
+			}
+				
+				sheet = wb.createSheet("Masters-Cluster-Cutomer");
+				List<List<String>> clusterList = masters.get("CLUSTER");
+				if (clusterList != null) {
+					rowCount = 0;
+					for (int r = 0; r < clusterList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = clusterList.get(r);
+						HSSFRow row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							HSSFCell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
+				}
+				/*
+				sheet = wb.createSheet("Masters-Customer");
+				List<List<String>> customerList = masters.get("CUSTOMER");
+				if (customerList != null) {
+					rowCount = 0;
+					for (int r = 0; r < customerList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = customerList.get(r);
+						HSSFRow row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							HSSFCell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
+				}
+				*/
+				
+				sheet = wb.createSheet("Masters-Promo Timeperiod");
+				List<List<String>> tdpList = masters.get("TDP");
+				if (tdpList != null) {
+					rowCount = 0;
+					for (int r = 0; r < tdpList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = tdpList.get(r);
+						HSSFRow row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							HSSFCell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
+				}
+				
+				
+				
 
+				/*sheet = wb.createSheet("Masters-ABCREATION");
+				List<List<String>> reasonList = masters.get("AB CREATION");
+				if (reasonList != null) {
+					rowCount = 0;
+					for (int r = 0; r < reasonList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = reasonList.get(r);
+						HSSFRow row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							HSSFCell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
+				}
+*/
+				
+				sheet = wb.createSheet("Masters-OFFERTYPE-MODILITY");
+				List<List<String>> changeList = masters.get("OFFER TYPE");
+				if (changeList != null) {
+					rowCount = 0;
+					for (int r = 0; r < changeList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = changeList.get(r);
+						HSSFRow row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							HSSFCell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
+				}
+/*
+				sheet = wb.createSheet("Masters-Modality");
+				List<List<String>> modalityList = masters.get("MODALITY");
+				if (modalityList != null) {
+					rowCount = 0;
+					for (int r = 0; r < modalityList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = modalityList.get(r);
+						HSSFRow row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							HSSFCell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
+				}
+				
+				sheet = wb.createSheet("Masters-Channel");
+				List<List<String>> channelList = masters.get("CHANNEL");
+				if (channelList != null) {
+					rowCount = 0;
+					for (int r = 0; r < channelList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = channelList.get(r);
+						HSSFRow row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							HSSFCell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
+				}*/
+			fileOut = new FileOutputStream(filePath + extension);
+			// write this workbook to an Outputstream.
+			wb.write(fileOut);
+			fileOut.flush();
+			fileOut.close();
+			res = true;
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
+			// e.printStackTrace();
+		} finally {
+			if (fileOut != null) {
+				fileOut.close();
+			}
+		}
+		return res;
+	}
+	//Added by Kavitha D for promo templates ends -SPRINT 9
 	
+	//Added by Kavitha D for promo measure template starts -SPRINT 9
+	@SuppressWarnings("resource")
+	public static void writeXLSFilePromo(String downloadFileName, List<String> downloadedData, Object masters,
+			String extension) throws IOException {
+		String sheetName = "Sheet";// name of sheet
+		FileOutputStream fileOut = null;
+		int sheetCount = 1;
+		boolean res = false;
+		try {
+			HSSFWorkbook wb = new HSSFWorkbook();
+			HSSFSheet sheet = wb.createSheet(sheetName + String.valueOf(sheetCount));
+			// iterating r number of rows
+			HSSFDataFormat fmt = wb.createDataFormat();
+			HSSFCellStyle textStyle = wb.createCellStyle();
+			textStyle.setDataFormat(fmt.getFormat("@"));
+			int rowCount = 0;
+					if (rowCount > 0 && rowCount % 65535 == 0) {
+					sheetCount++;
+					sheet = wb.createSheet(sheetName + String.valueOf(sheetCount));
+					rowCount = 0;
+				}
+				HSSFRow row = sheet.createRow(rowCount);
+				rowCount++;
+				for (int c = 0; c < downloadedData.size(); c++) {
+					sheet.setDefaultColumnStyle(c, textStyle);
+					HSSFCell cell = row.createCell(c);
+					cell.setCellValue(downloadedData.get(c));
+				}
+			
+		
+			fileOut = new FileOutputStream(downloadFileName + extension);
+			// write this workbook to an Outputstream.
+			wb.write(fileOut);
+			fileOut.flush();
+			fileOut.close();
+			res = true;
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
+			// e.printStackTrace();
+		} finally {
+			if (fileOut != null) {
+				fileOut.close();
+			}
+		}
+		return;
+	}
 	
+
+	//Added by Kavitha D for promo measure template ends-SPRINT 9
 	
+	//Added by Kavitha D for promo cr template starts-SPRINT 9
+	
+	@SuppressWarnings("resource")
+	public static boolean writePromoCrXLSFile(String filePath, List<ArrayList<String>> dataList,
+			Map<String, List<List<String>>> masters, String extension) throws IOException {
+		String sheetName = "Sheet";// name of sheet
+		FileOutputStream fileOut = null;
+		int sheetCount = 1;
+		boolean res = false;
+		try {
+			HSSFWorkbook wb = new HSSFWorkbook();
+			HSSFSheet sheet = wb.createSheet(sheetName + String.valueOf(sheetCount));
+			// iterating r number of rows
+			HSSFDataFormat fmt = wb.createDataFormat();
+			HSSFCellStyle textStyle = wb.createCellStyle();
+			textStyle.setDataFormat(fmt.getFormat("@"));
+			int rowCount = 0;
+			for (int r = 0; r < dataList.size(); r++) {
+				// iterating c number of columns
+				List<String> al = dataList.get(r);
+				if (rowCount > 0 && rowCount % 65535 == 0) {
+					sheetCount++;
+					sheet = wb.createSheet(sheetName + String.valueOf(sheetCount));
+					rowCount = 0;
+				}
+				HSSFRow row = sheet.createRow(rowCount);
+				rowCount++;
+				for (int c = 0; c < al.size(); c++) {
+					sheet.setDefaultColumnStyle(c, textStyle);
+					HSSFCell cell = row.createCell(c);
+					cell.setCellValue(al.get(c));
+				}
+			}
+				
+				sheet = wb.createSheet("Masters-Cluster");
+				List<List<String>> clusterList = masters.get("CLUSTER");
+				if (clusterList != null) {
+					rowCount = 0;
+					for (int r = 0; r < clusterList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = clusterList.get(r);
+						HSSFRow row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							HSSFCell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
+				}
+
+				sheet = wb.createSheet("Masters-Customer");
+				List<List<String>> customerList = masters.get("CUSTOMER");
+				if (customerList != null) {
+					rowCount = 0;
+					for (int r = 0; r < customerList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = customerList.get(r);
+						HSSFRow row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							HSSFCell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
+				}
+
+				sheet = wb.createSheet("Masters-ABCREATION");
+				List<List<String>> reasonList = masters.get("AB CREATION");
+				if (reasonList != null) {
+					rowCount = 0;
+					for (int r = 0; r < reasonList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = reasonList.get(r);
+						HSSFRow row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							HSSFCell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
+				}
+
+				sheet = wb.createSheet("Masters-Promo Timeperiod");
+				List<List<String>> tdpList = masters.get("TDP");
+				if (tdpList != null) {
+					rowCount = 0;
+					for (int r = 0; r < tdpList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = tdpList.get(r);
+						HSSFRow row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							HSSFCell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
+				}
+				sheet = wb.createSheet("Masters-OFFERTYPE");
+				List<List<String>> changeList = masters.get("OFFER TYPE");
+				if (changeList != null) {
+					rowCount = 0;
+					for (int r = 0; r < changeList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = changeList.get(r);
+						HSSFRow row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							HSSFCell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
+				}
+
+				sheet = wb.createSheet("Masters-Modality");
+				List<List<String>> modalityList = masters.get("MODALITY");
+				if (modalityList != null) {
+					rowCount = 0;
+					for (int r = 0; r < modalityList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = modalityList.get(r);
+						HSSFRow row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							HSSFCell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
+				}
+
+				sheet = wb.createSheet("Masters-Channel");
+				List<List<String>> channelList = masters.get("CHANNEL");
+				if (channelList != null) {
+					rowCount = 0;
+					for (int r = 0; r < channelList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = channelList.get(r);
+						HSSFRow row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							HSSFCell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
+				}
+				
+				sheet = wb.createSheet("Masters-SOLTYPES");
+				List<List<String>> solList = masters.get("SOLTYPE");
+				if (solList != null) {
+					rowCount = 0;
+					for (int r = 0; r < solList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = solList.get(r);
+						HSSFRow row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							HSSFCell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
+				}
+			
+
+			fileOut = new FileOutputStream(filePath + extension);
+			// write this workbook to an Outputstream.
+			wb.write(fileOut);
+			fileOut.flush();
+			fileOut.close();
+			res = true;
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
+			// e.printStackTrace();
+		} finally {
+			if (fileOut != null) {
+				fileOut.close();
+			}
+		}
+		return res;
+	}
+	//Added by Kavitha D for promo cr template ends-SPRINT 9
 
 }
+
+
+		
+

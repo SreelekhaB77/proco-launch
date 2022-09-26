@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureQuery;
 import javax.transaction.Transactional;
 
 import org.apache.log4j.Logger;
@@ -23,6 +25,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.internal.SessionImpl;
@@ -39,16 +42,15 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 
 	@Autowired
 	private SessionFactory sessionFactory;
+	private NativeQuery qry;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public List<PromoListingBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String cagetory,
-			String brand, String basepack, String custChainL1, String custChainL2, String geography, String offerType,
-			String modality, String year, String moc, String userId, int actives, String promoId,
+	public List<PromoListingBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String moc,
 			String searchParameter) {
 		List<PromoListingBean> promoList = new ArrayList<>();
-		List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
-		List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
+		//List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
+		//List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
 		String promoQuery = "";
 		try {
 			// kiran - row number changes
@@ -66,9 +68,25 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 			// TBL_PROCO_STATUS_MASTER AS E ON E.STATUS_ID = D.STATUS_ID WHERE
 			// A.START_DATE>=CURRENT_DATE ";
 			// Garima - changes for VARCHAR_FORMAT
-			promoQuery = "SELECT * FROM ( SELECT A.PROMO_ID ,A.P1_BASEPACK ,A.OFFER_DESC ,A.OFFER_TYPE ,A.OFFER_MODALITY ,A.GEOGRAPHY ,A.QUANTITY ,A.UOM ,A.OFFER_VALUE ,A.MOC ,A.CUSTOMER_CHAIN_L1 ,A.KITTING_VALUE ,E.STATUS ,DATE_FORMAT(A.START_DATE,'%d/%m/%Y') ,DATE_FORMAT(A.END_DATE,'%d/%m/%Y') ,A.CUSTOMER_CHAIN_L2, D.REMARK AS REM,A.REASON ,A.REMARK ,DATE_FORMAT(D.CHANGE_DATE,'%d/%m/%Y') AS CHANGE_DATE,A.ORIGINAL_ID,A.CHANGES_MADE,D.USER_ID,A.UPDATE_STAMP,A.INVESTMENT_TYPE,A.SOL_CODE,A.SOL_CODE_DESC ,A.PROMOTION_MECHANICS,A.SOL_CODE_STATUS,ROW_NUMBER() OVER ( ORDER BY A.UPDATE_STAMP ASC ) AS ROW_NEXT FROM TBL_PROCO_PROMOTION_MASTER AS A INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK = C.BASEPACK INNER JOIN TBL_PROCO_STATUS_TRACKER AS D ON A.PROMO_ID = D.PROMO_ID INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON E.STATUS_ID = D.STATUS_ID WHERE A.START_DATE>=CURRENT_DATE ";
+			//promoQuery = "SELECT * FROM ( SELECT A.PROMO_ID ,A.P1_BASEPACK ,A.OFFER_DESC ,A.OFFER_TYPE ,A.OFFER_MODALITY ,A.GEOGRAPHY ,A.QUANTITY ,A.UOM ,A.OFFER_VALUE ,A.MOC ,A.CUSTOMER_CHAIN_L1 ,A.KITTING_VALUE ,E.STATUS ,DATE_FORMAT(A.START_DATE,'%d/%m/%Y') ,DATE_FORMAT(A.END_DATE,'%d/%m/%Y') ,A.CUSTOMER_CHAIN_L2, D.REMARK AS REM,A.REASON ,A.REMARK ,DATE_FORMAT(D.CHANGE_DATE,'%d/%m/%Y') AS CHANGE_DATE,A.ORIGINAL_ID,A.CHANGES_MADE,D.USER_ID,A.UPDATE_STAMP,A.INVESTMENT_TYPE,A.SOL_CODE,A.SOL_CODE_DESC ,A.PROMOTION_MECHANICS,A.SOL_CODE_STATUS,ROW_NUMBER() OVER ( ORDER BY A.UPDATE_STAMP ASC ) AS ROW_NEXT FROM TBL_PROCO_PROMOTION_MASTER AS A INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK = C.BASEPACK INNER JOIN TBL_PROCO_STATUS_TRACKER AS D ON A.PROMO_ID = D.PROMO_ID INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON E.STATUS_ID = D.STATUS_ID WHERE A.START_DATE>=CURRENT_DATE ";
 
-			if (!cagetory.equalsIgnoreCase("All")) {
+			//Added by kavitha D for SPRINT 9 changes
+			
+			promoQuery =" SELECT * FROM (SELECT PM.PROMO_ID AS UNIQUE_ID,PM.START_DATE,PM.END_DATE,"
+					+ "  PM.MOC,PM.PPM_ACCOUNT,PM.BASEPACK_CODE AS BASEPACK,PM.OFFER_DESC, "
+					+ "  PM.OFFER_TYPE,PM.OFFER_MODALITY, PM.CLUSTER AS GEOGRAPHY,PM.QUANTITY,PM.PRICE_OFF AS OFFER_VALUE, "
+					//+ "  PSM.STATUS,CASE WHEN ST.SOL_REMARK IS NULL THEN 'Regular' ELSE ST.SOL_REMARK END AS REMARK,PM.CREATED_BY AS USER_ID,PR.INVESTMENT_TYPE, PR.PROMOTION_ID AS SOL_CODE,"
+					+ "  PSM.STATUS, PM.TEMPLATE_TYPE AS REMARK,PM.CREATED_BY AS USER_ID,PR.INVESTMENT_TYPE, PR.PROMOTION_ID AS SOL_CODE,"
+					+ "  PR.PROMOTION_NAME AS SOL_CODE_DESCRIPTION,PR.PROMOTION_MECHANICS,  PR.PROMOTION_STATUS AS SOL_CODE_STATUS,ROW_NUMBER() OVER (ORDER BY PM.UPDATE_STAMP DESC) AS ROW_NEXT "
+					+ "  FROM TBL_PROCO_PROMOTION_MASTER_V2 PM "
+					+ "  INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.PPM_ACCOUNT AND CM.CHANNEL_NAME = PM.CHANNEL_NAME "
+					+ "  INNER JOIN TBL_PROCO_STATUS_MASTER PSM ON PSM.STATUS_ID = PM.STATUS "
+					+ "  LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS "
+					+ "  FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR  ON PR.PROMO_ID = PM.PROMO_ID "
+					//+ "  LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
+					+ "  LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE  WHERE PM.MOC='"+moc+"'";
+			
+			/*if (!cagetory.equalsIgnoreCase("All")) {
 				promoQuery += "AND C.CATEGORY = '" + cagetory + "' ";
 			}
 			if (!brand.equalsIgnoreCase("All")) {
@@ -160,25 +178,35 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 				} else {
 					promoQuery += "AND A.MOC = '" + moc + "' ";
 				}
-			}
+			} */
+			
 			if (searchParameter != null && searchParameter.length() > 0) {
-				promoQuery += " AND UCASE(A.PROMO_ID) LIKE UCASE('%" + searchParameter + "%')";
+				promoQuery += " AND UCASE(PM.PROMO_ID) LIKE UCASE('%" + searchParameter + "%')";
 			}
 			//Sarin Changes Performances
-			promoQuery += " GROUP BY A.PROMO_ID,A.P1_BASEPACK,A.OFFER_DESC,A.OFFER_TYPE,A.OFFER_MODALITY,A.GEOGRAPHY,A.QUANTITY,A.UOM,A.OFFER_VALUE,A.MOC,A.CUSTOMER_CHAIN_L1,A.KITTING_VALUE,E.STATUS,DATE_FORMAT(A.START_DATE,'%d/%m/%Y'),DATE_FORMAT(A.END_DATE,'%d/%m/%Y'),A.CUSTOMER_CHAIN_L2, D.REMARK,A.REASON,A.REMARK,DATE_FORMAT(D.CHANGE_DATE,'%d/%m/%Y'),A.ORIGINAL_ID,A.CHANGES_MADE,D.USER_ID,A.UPDATE_STAMP,A.INVESTMENT_TYPE,A.SOL_CODE,A.SOL_CODE_DESC,A.PROMOTION_MECHANICS,A.SOL_CODE_STATUS ";
+			//promoQuery += " GROUP BY A.PROMO_ID,A.P1_BASEPACK,A.OFFER_DESC,A.OFFER_TYPE,A.OFFER_MODALITY,A.GEOGRAPHY,A.QUANTITY,A.UOM,A.OFFER_VALUE,A.MOC,A.CUSTOMER_CHAIN_L1,A.KITTING_VALUE,E.STATUS,DATE_FORMAT(A.START_DATE,'%d/%m/%Y'),DATE_FORMAT(A.END_DATE,'%d/%m/%Y'),A.CUSTOMER_CHAIN_L2, D.REMARK,A.REASON,A.REMARK,DATE_FORMAT(D.CHANGE_DATE,'%d/%m/%Y'),A.ORIGINAL_ID,A.CHANGES_MADE,D.USER_ID,A.UPDATE_STAMP,A.INVESTMENT_TYPE,A.SOL_CODE,A.SOL_CODE_DESC,A.PROMOTION_MECHANICS,A.SOL_CODE_STATUS ";
 			if (pageDisplayLength == 0) {
 				//promoQuery += " ) AS PROMO_TEMP ORDER BY PROMO_TEMP.UPDATE_STAMP ASC";
-				promoQuery += " ) AS PROMO_TEMP ";
+				//promoQuery += " ) AS PROMO_TEMP ";
+				
+				promoQuery += " ORDER BY PM.UPDATE_STAMP DESC) AS PROMO_TEMP ";
 			} else {
-				promoQuery += " ) AS PROMO_TEMP WHERE ROW_NEXT BETWEEN " + pageDisplayStart + " AND "
+				/*promoQuery += " ) AS PROMO_TEMP WHERE ROW_NEXT BETWEEN " + pageDisplayStart + " AND "
+						//+ pageDisplayLength + "" + " ORDER BY PROMO_TEMP.UPDATE_STAMP ASC";
+						+ pageDisplayLength + "";*/
+				
+				promoQuery += "ORDER BY PM.UPDATE_STAMP DESC) AS PROMO_TEMP WHERE ROW_NEXT BETWEEN " + pageDisplayStart + " AND "
 						//+ pageDisplayLength + "" + " ORDER BY PROMO_TEMP.UPDATE_STAMP ASC";
 						+ pageDisplayLength + "";
+				
+				
 			}
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQuery);
+			//System.out.println(promoQuery);
 			List<Object[]> list = query.list();
 			for (Object[] obj : list) {
 				PromoListingBean promoBean = new PromoListingBean();
-				promoBean.setPromo_id(obj[0].toString());
+				/*promoBean.setPromo_id(obj[0].toString());
 				promoBean.setBasepack(obj[1].toString());
 				promoBean.setOffer_desc(obj[2].toString());
 				promoBean.setOffer_type(obj[3].toString());
@@ -210,7 +238,28 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 				promoBean.setSolCode(obj[25] == null ? "" : obj[25].toString());
 				promoBean.setSolCodeDescription(obj[26] == null ? "" : obj[26].toString());
 				promoBean.setPromotionMechanics(obj[27] == null ? "" : obj[27].toString());
-				promoBean.setSolCodeStatus(obj[28] == null ? "" : obj[28].toString());
+				promoBean.setSolCodeStatus(obj[28] == null ? "" : obj[28].toString());*/
+				//Added by Kavitha D-SPRINT 9
+				promoBean.setPromo_id(obj[0]== null ? "" :obj[0].toString());
+				promoBean.setStartDate(obj[1]== null ? "" : obj[1].toString());
+				promoBean.setEndDate(obj[2]== null ? "" : obj[2].toString());
+				promoBean.setMoc(obj[3]== null ? "" : obj[3].toString());
+				promoBean.setCustomerChainL2(obj[4]== null ? "" :obj[4].toString());
+				promoBean.setBasepack(obj[5]== null ? "" :obj[5].toString());
+				promoBean.setOffer_desc(obj[6]== null ? "" :obj[6].toString());
+				promoBean.setOffer_type(obj[7]== null ? "" :obj[7].toString());
+				promoBean.setOffer_modality(obj[8]== null ? "" :obj[8].toString());
+				promoBean.setGeography(obj[9]== null ? "" :obj[9].toString());
+				promoBean.setQuantity((obj[10] == null || obj[10].toString().equals("")) ? "" : obj[10].toString());
+				promoBean.setOffer_value(obj[11]== null ? "" :obj[11].toString());
+				promoBean.setStatus(obj[12]== null ? "" :obj[12].toString());
+				promoBean.setRemark(obj[13]== null ? "" :obj[13].toString());
+				promoBean.setUserId(obj[14]== null ? "" :obj[14].toString());
+				promoBean.setInvestmentType(obj[15]== null ? "" :obj[15].toString());
+				promoBean.setSolCode(obj[16]== null ? "" :obj[16].toString());
+				promoBean.setSolCodeDescription(obj[17]== null ? "" :obj[17].toString());
+				promoBean.setPromotionMechanics(obj[18]== null ? "" :obj[18].toString());
+				promoBean.setSolCodeStatus(obj[19]== null ? "" :obj[19].toString());
 				promoList.add(promoBean);
 			}
 		} catch (Exception ex) {
@@ -268,19 +317,23 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public int getPromoListRowCount(String cagetory, String brand, String basepack, String custChainL1,
-			String custChainL2, String geography, String offerType, String modality, String year, String moc,
-			String userId, int active, String promoId) {
+	public int getPromoListRowCount(String moc) {
 		// kiran - bigint to int changes
 		// List<Integer> list = null;
 		List<BigInteger> list = null;
-		List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
-		List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
+		//List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
+		//List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
 		try {
+			//Commented by Kavitha D for SPRINT 9 changes
+			//String rowCount = "SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_MASTER AS A INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK = C.BASEPACK INNER JOIN TBL_PROCO_STATUS_TRACKER AS D ON A.PROMO_ID = D.PROMO_ID INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON E.STATUS_ID = D.STATUS_ID WHERE A.START_DATE > CURRENT_DATE ";
 
-			String rowCount = "SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_MASTER AS A INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK = C.BASEPACK INNER JOIN TBL_PROCO_STATUS_TRACKER AS D ON A.PROMO_ID = D.PROMO_ID INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON E.STATUS_ID = D.STATUS_ID WHERE A.START_DATE > CURRENT_DATE ";
-
-			if (!cagetory.equalsIgnoreCase("All")) {
+			String rowCount = " SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM "
+					+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.PPM_ACCOUNT AND CM.CHANNEL_NAME = PM.CHANNEL_NAME  "
+					+ " LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS "
+					+ " FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR ON PR.PROMO_ID = PM.PROMO_ID "
+					+ " LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
+					+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE WHERE PM.MOC= '"+moc+"'";
+			/*if (!cagetory.equalsIgnoreCase("All")) {
 				rowCount += "AND C.CATEGORY = '" + cagetory + "' ";
 			}
 			if (!brand.equalsIgnoreCase("All")) {
@@ -337,7 +390,7 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 								rowCount += "OR A.GEOGRAPHY like '%" + clusterList.get(i).toString() + "%') ";
 							}
 						}
-					}
+					} */
 
 					/*
 					 * Query queryToGetState = sessionFactory.getCurrentSession().createNativeQuery(
@@ -349,15 +402,15 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 					 * stateList.size() - 1) { rowCount += "OR A.GEOGRAPHY like '%" +
 					 * stateList.get(i).toString() + "%') "; } } }
 					 */
-				} else if (geography.startsWith("CL")) {
-					String cluster = geography.substring(0, geography.indexOf(':'));
+				/*} else if (geography.startsWith("CL")) {
+					String cluster = geography.substring(0, geography.indexOf(':')); */
 					/*
 					 * Query queryToGetState = sessionFactory.getCurrentSession().createNativeQuery(
 					 * "SELECT DISTINCT STATE_CODE FROM TBL_PROCO_CUSTOMER_MASTER WHERE CLUSTER_CODE=:cluster"
 					 * ); queryToGetState.setString("cluster", cluster); List stateList =
 					 * queryToGetState.list();
 					 */
-					rowCount += "AND (A.GEOGRAPHY like '%" + cluster + "%') ";
+					//rowCount += "AND (A.GEOGRAPHY like '%" + cluster + "%') ";
 					/*
 					 * if (stateList != null) { for (int i = 0; i < stateList.size(); i++) { if (i <
 					 * stateList.size() - 1) { rowCount += "OR A.GEOGRAPHY like '%" +
@@ -365,7 +418,8 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 					 * rowCount += "OR A.GEOGRAPHY like '%" + stateList.get(i).toString() + "%') ";
 					 * } } }
 					 */
-				} else {
+				
+				/*} else {
 					geography = geography.substring(0, geography.indexOf(':'));
 					rowCount += "AND A.GEOGRAPHY like '%" + geography + "%' ";
 				}
@@ -378,8 +432,8 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 			}
 			if (!year.equalsIgnoreCase("All")) {
 				rowCount += "AND A.YEAR = '" + year + "' ";
-			}
-			if (!promoId.equalsIgnoreCase("All")) {
+			} */
+			/*if (!promoId.equalsIgnoreCase("All")) {
 				rowCount += "AND A.PROMO_ID = '" + promoId + "' ";
 			}
 			if (!moc.equalsIgnoreCase("All")) {
@@ -394,8 +448,9 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 				} else {
 					rowCount += "AND A.MOC = '" + moc + "' ";
 				}
-			}
+			}*/
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(rowCount);
+			//System.out.println(query);
 			list = query.list();
 		} catch (Exception ex) {
 			logger.debug("Exception: ", ex);
@@ -420,19 +475,45 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public List<ArrayList<String>> getPromotionStatusTracker(ArrayList<String> headerList, String cagetory,
-			String brand, String basepack, String custChainL1, String custChainL2, String geography, String offerType,
-			String modality, String year, String moc, String userId, int active, String promoId) {
-		List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
-		List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
+	public List<ArrayList<String>> getPromotionStatusTracker(ArrayList<String> headerList,String moc, String userId) {
+		//List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
+		//List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
 		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
 		String promoQuery = "";
+		String query = "";
 		try {
 			
 			  int userRole = getUserRoleId(userId); 
 			  if(userRole == 2) { 
 				  //Garima - changes //for VARCHAR_FORMAT //promoQuery = "SELECT A.PROMO_ID, A.ORIGINAL_ID,VARCHAR_FORMAT(A.START_DATE, 'DD/MM/YYYY') as start_date1,VARCHAR_FORMAT(A.END_DATE, 'DD/MM/YYYY'),A.MOC,A.CUSTOMER_CHAIN_L1 ,A.CUSTOMER_CHAIN_L2,A.P1_BASEPACK ,c.BASEPACK_DESC,replace(A.USER_ID,'','') as Created_By,replace(c.CATEGORY,'','') as SALES_CATEGORY,replace(c.BRAND,'','') as Sales_Brand,A.OFFER_DESC ,A.OFFER_TYPE ,A.OFFER_MODALITY ,A.GEOGRAPHY,A.QUANTITY ,A.UOM ,A.OFFER_VALUE , A.KITTING_VALUE ,replace(A.quantity,'','') as Sales_value,'' as estimated_spend,(CASE WHEN D.REMARK<>'' THEN CONCAT(CONCAT(CONCAT(E.STATUS,' ('),D.REMARK),')') ELSE E.STATUS END) ,A.REASON,A.REMARK ,VARCHAR_FORMAT(D.CHANGE_DATE,'DD/MM/YYYY'),A.INVESTMENT_TYPE, A.SOL_CODE, A.SOL_CODE_DESC,A.PROMOTION_MECHANICS,A.SOL_CODE_STATUS FROM TBL_PROCO_PROMOTION_MASTER AS A INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK = C.BASEPACK INNER JOIN TBL_PROCO_STATUS_TRACKER AS D ON A.PROMO_ID = D.PROMO_ID INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON E.STATUS_ID = D.STATUS_ID INNER JOIN TBL_PROCO_MODALITY_MASTER AS F ON A.OFFER_MODALITY=F.MODALITY WHERE (A.ACTIVE=1 OR A.ACTIVE=0) "; 
-				  promoQuery = "SELECT A.PROMO_ID, A.ORIGINAL_ID,DATE_FORMAT(A.START_DATE,'%d/%m/%Y') as start_date1,DATE_FORMAT(A.END_DATE,'%d/%m/%Y'),A.MOC,A.CUSTOMER_CHAIN_L1 ,A.CUSTOMER_CHAIN_L2,A.P1_BASEPACK ,C.BASEPACK_DESC,replace(A.USER_ID,'','') as Created_By,replace(C.CATEGORY,'','') as SALES_CATEGORY,replace(C.BRAND,'','') as Sales_Brand,A.OFFER_DESC ,A.OFFER_TYPE ,A.OFFER_MODALITY ,A.GEOGRAPHY,A.QUANTITY ,A.UOM ,A.OFFER_VALUE , A.KITTING_VALUE ,replace(A.quantity,'','') as Sales_value,'' as estimated_spend,(CASE WHEN D.REMARK<>'' THEN CONCAT(CONCAT(CONCAT(E.STATUS,' ('),D.REMARK),')') ELSE E.STATUS END) ,A.REASON,A.REMARK ,DATE_FORMAT(D.CHANGE_DATE,'%d/%m/%Y'),A.INVESTMENT_TYPE, A.SOL_CODE, A.SOL_CODE_DESC,A.PROMOTION_MECHANICS,A.SOL_CODE_STATUS FROM TBL_PROCO_PROMOTION_MASTER AS A INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK = C.BASEPACK INNER JOIN TBL_PROCO_STATUS_TRACKER AS D ON A.PROMO_ID = D.PROMO_ID INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON E.STATUS_ID = D.STATUS_ID INNER JOIN TBL_PROCO_MODALITY_MASTER AS F ON A.OFFER_MODALITY=F.MODALITY WHERE (A.ACTIVE=1 OR A.ACTIVE=0) ";
+				 // promoQuery = "SELECT A.PROMO_ID, A.ORIGINAL_ID,DATE_FORMAT(A.START_DATE,'%d/%m/%Y') as start_date1,DATE_FORMAT(A.END_DATE,'%d/%m/%Y'),A.MOC,A.CUSTOMER_CHAIN_L1 ,A.CUSTOMER_CHAIN_L2,A.P1_BASEPACK ,C.BASEPACK_DESC,replace(A.USER_ID,'','') as Created_By,replace(C.CATEGORY,'','') as SALES_CATEGORY,replace(C.BRAND,'','') as Sales_Brand,A.OFFER_DESC ,A.OFFER_TYPE ,A.OFFER_MODALITY ,A.GEOGRAPHY,A.QUANTITY ,A.UOM ,A.OFFER_VALUE , A.KITTING_VALUE ,replace(A.quantity,'','') as Sales_value,'' as estimated_spend,(CASE WHEN D.REMARK<>'' THEN CONCAT(CONCAT(CONCAT(E.STATUS,' ('),D.REMARK),')') ELSE E.STATUS END) ,A.REASON,A.REMARK ,DATE_FORMAT(D.CHANGE_DATE,'%d/%m/%Y'),A.INVESTMENT_TYPE, A.SOL_CODE, A.SOL_CODE_DESC,A.PROMOTION_MECHANICS,A.SOL_CODE_STATUS FROM TBL_PROCO_PROMOTION_MASTER AS A INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK = C.BASEPACK INNER JOIN TBL_PROCO_STATUS_TRACKER AS D ON A.PROMO_ID = D.PROMO_ID INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON E.STATUS_ID = D.STATUS_ID INNER JOIN TBL_PROCO_MODALITY_MASTER AS F ON A.OFFER_MODALITY=F.MODALITY WHERE (A.ACTIVE=1 OR A.ACTIVE=0) ";
+				  /*promoQuery =" SELECT PM.PROMO_ID AS UNIQUE_ID,PM.START_DATE,PM.END_DATE,"
+				  		+ "  PM.MOC,PM.PPM_ACCOUNT,PM.BASEPACK_CODE AS BASEPACK,PM.OFFER_DESC,"
+				  		+ "  PM.OFFER_TYPE,PM.OFFER_MODALITY, PM.CLUSTER AS GEOGRAPHY,PM.TEMPLATE_TYPE AS PROMO_TEMPLATE, SUBSTRING(PM.CREATED_DATE,1,10) AS CREATED_DATE,PM.QUANTITY,PM.PRICE_OFF AS OFFER_VALUE,"
+				  		+ "  PSM.STATUS,CASE WHEN ST.SOL_REMARK IS NULL THEN 'Regular' ELSE ST.SOL_REMARK END AS REMARK,PM.CREATED_BY,PR.INVESTMENT_TYPE, PR.PROMOTION_ID AS SOL_CODE,"
+				  		+ "  PR.PROMOTION_NAME AS SOL_CODE_DESCRIPTION,PR.PROMOTION_MECHANICS, PR.PROMOTION_STATUS AS SOL_CODE_STATUS "
+				  		+ "  FROM TBL_PROCO_PROMOTION_MASTER_V2 PM "
+				  		+ "  INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.PPM_ACCOUNT AND CM.CHANNEL_NAME = PM.CHANNEL_NAME  "
+				  		+ "  INNER JOIN TBL_PROCO_STATUS_MASTER PSM ON PSM.STATUS_ID = PM.STATUS "
+				  		+ "  LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS "
+				  		+ "  FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR  ON PR.PROMO_ID = PM.PROMO_ID "
+				  		+ "  LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
+				  		+ "  LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE WHERE PM.MOC='"+moc+"'"; */
+				  //Added by Kavitha D -SPRINT 9
+				    qry = sessionFactory.getCurrentSession().createNativeQuery("CALL PROMO_LISTING_DOWNLOAD(:moc)");
+					qry.setParameter("moc", moc);
+					qry.executeUpdate();
+					
+					query= " SELECT CHANNEL,YEAR,MOC ,ACCOUNT_TYPE,CLAIM_SETTLEMENT_TYPE,SECONDARY_CHANNEL,PPM_ACCOUNT,PROMO_ID,SOLCODE,MOC_CYCLE,PROMO_TIMEPERIOD,SOL_RELEASE_ON,"
+							+ " START_DATE,END_DATE,OFFER_DESC,PPM_DESC,BASEPACK_CODE,BASEPACK_DESC,CHILDPACK,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,QUANTITY,FIXED_BUDGET ,BRANCH,"
+							+ " SALES_CLUSTER ,PPM_CUSTOMER,CMM_NAME,TME_NAME,SALES_CATEGORY,PSA_CATEGORY,PROMOTION_STATUS,PPM_PROMOTION_CREATOR ,PROMOTION_MECHANICS,INVESTMENT_TYPE,"
+							+ " SALES_CLUSTER_CODE ,BRAND,SUB_BRAND,PPM_BUDGET_HOLDER_NAME ,FUND_TYPE,INVESTMENT_AMOUNT ,PROMO_ENTRY_TYPE ,PROMO_USER_NAME ,PROMO_USER_TIME ,"
+							+ " PPM_APPROVED_DATE ,PPM_CREATION_DATE ,NON_UNIFY,PPM_SUBMISSION_DATE ,PPM_MODIFIED_DATE ,COE_REMARKS,MRP ,AB_CREATION ,BUDGET "
+							+ " FROM TBL_PROCO_PROMO_LISTING_REPORT  LR "
+							+ " WHERE LR.MOC=:moc " ;
+
+					
+			  
 			  } else {
 			 
 			// Garima - changes for VARCHAR_FORMAT
@@ -453,7 +534,8 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 			promoQuery = "SELECT A.PROMO_ID, A.ORIGINAL_ID,DATE_FORMAT(A.START_DATE,'%d/%m/%Y'),DATE_FORMAT(A.END_DATE,'%d/%m/%Y'),A.MOC,A.CUSTOMER_CHAIN_L1 ,A.CUSTOMER_CHAIN_L2,A.P1_BASEPACK ,A.OFFER_DESC ,A.OFFER_TYPE ,A.OFFER_MODALITY ,A.GEOGRAPHY ,A.QUANTITY ,A.UOM ,A.OFFER_VALUE , A.KITTING_VALUE ,(CASE WHEN D.REMARK<>'' THEN CONCAT(CONCAT(CONCAT(E.STATUS,' ('),D.REMARK),')') ELSE E.STATUS END) ,A.REASON,A.REMARK ,DATE_FORMAT(D.CHANGE_DATE,'%d/%m/%Y'),A.INVESTMENT_TYPE, A.SOL_CODE, A.PROMOTION_MECHANICS, A.SOL_CODE_STATUS FROM TBL_PROCO_PROMOTION_MASTER AS A INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK = C.BASEPACK INNER JOIN TBL_PROCO_STATUS_TRACKER AS D ON A.PROMO_ID = D.PROMO_ID INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON E.STATUS_ID = D.STATUS_ID INNER JOIN TBL_PROCO_MODALITY_MASTER AS F ON A.OFFER_MODALITY=F.MODALITY WHERE (A.ACTIVE=1 OR A.ACTIVE=0) ";
 			}
 
-			if (!cagetory.equalsIgnoreCase("All")) {
+			
+			/*if (!cagetory.equalsIgnoreCase("All")) {
 				promoQuery += "AND C.CATEGORY = '" + cagetory + "' ";
 			}
 			if (!brand.equalsIgnoreCase("All")) {
@@ -545,9 +627,10 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 				} else {
 					promoQuery += "AND A.MOC = '" + moc + "' ";
 				}
-			}
-			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQuery);
-			Iterator itr = query.list().iterator();
+			}*/
+			Query query1 = sessionFactory.getCurrentSession().createNativeQuery(query);
+			query1.setString("moc", moc);
+			Iterator itr = query1.list().iterator();
 			downloadDataList.add(headerList);
 			while (itr.hasNext()) {
 				Object[] obj = (Object[]) itr.next();
@@ -560,7 +643,7 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 				}
 
 				
-				  if( userRole == 2 && !dataObj.get(16).trim().equals("")) {
+				  /*if( userRole == 2 && !dataObj.get(16).trim().equals("")) {
 					  try {
 						  	//get Basepack
 						  	String BasePack = dataObj.get(7).trim(); 
@@ -621,10 +704,10 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 						  } catch (Exception ex) {
 							  logger.debug("Exception :", ex); 
 						  } 
-				  }
-				  downloadDataList.add(dataObj);
+				  }*/
 				
 				obj = null;
+				downloadDataList.add(dataObj);		
 			}
 			return downloadDataList;
 		} catch (Exception ex) {
@@ -2156,5 +2239,220 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	//Added by Kavitha D for promo measure template starts-SPRINT 9
+	public ArrayList<String> getPromoMeasureDownload(){
+	ArrayList<String> headerList=new ArrayList<String>();
+	/*headerList.add("Versioned Promotion ID");	
+	headerList.add("ChartByType");		
+	headerList.add("PromotionCreator");		
+	headerList.add("PromotionStatus");		
+	headerList.add("Promotion ID");		
+	headerList.add("PromotionName");		
+	headerList.add("Sell-in Start Date");		
+	headerList.add("Sell-in End Date");	   
+	headerList.add("Promotion Mechanics");		
+	headerList.add("Investment Type");		
+	headerList.add("Cluster Code");		
+	headerList.add("Cluster Name");		
+	headerList.add("Basepack Code");		
+	headerList.add("Basepack Name");		
+	headerList.add("Category");		
+	headerList.add("Brand");	
+	headerList.add("Sub-Brand");
+	headerList.add("UOM");	   
+	headerList.add("Tax");		
+	headerList.add("Discount");		
+	headerList.add("List Price");		
+	headerList.add("Percent Promoted Volume");		
+	headerList.add("Quantity");		
+	headerList.add("BudgetHolderName");		
+	headerList.add("FundType");		
+	headerList.add("MOC");	
+	headerList.add("InvestmentAmount");*/
+	//Sprint 9 update code changes-Kavitha D
+	headerList.add("PROMOTION ID");	
+	headerList.add("PROMOTION NAME");		
+	headerList.add("CREATED BY");		
+	headerList.add("CREATED ON");		
+	headerList.add("PROJECT ID");		
+	headerList.add("PROJECT NAME");		
+	headerList.add("BUNDLE ID");		
+	headerList.add("BUNDLE NAME");	   
+	headerList.add("PROMOTION QUALIFICATION");		
+	headerList.add("PROMOTION OBJECTIVE");
+	headerList.add("MARKETING OBJECTIVE");		
+	headerList.add("PROMOTION MECHANICS");
+	headerList.add("PROMOTION STARTDATE");	
+	headerList.add("PROMOTION ENDDATE");		
+	headerList.add("PRE DIP STARTDATE");		
+	headerList.add("POST DIP ENDDATE");		
+	headerList.add("CUSTOMER");		
+	headerList.add("BUSINESS");		
+	headerList.add("DIVISION");		
+	headerList.add("PRODUCT");	
+	headerList.add("CATEGORY");		
+	headerList.add("BRAND");		
+	headerList.add("SUB BRAND");		
+	headerList.add("PROMOTION STATUS");
+	headerList.add("INVESTMENT TYPE");	
+	headerList.add("MOC");		
+	headerList.add("SUBMISSION DATE");		
+	headerList.add("APPROVED DATE");		
+	headerList.add("MODIFIED DATE");		
+	headerList.add("PROMOTION TYPE");	
+	headerList.add("DURATION");		
+	headerList.add("FREE PRODUCT NAME");	   
+	headerList.add("PRICE OFF");		
+	headerList.add("BASELINE QUANTITY");		
+	headerList.add("BASELINE GSV");		
+	headerList.add("BASELINE TURNOVER");
+	headerList.add("BASELINE GROSS PROFIT");	
+	headerList.add("PROMOTION VOLUME BEFORE");		
+	headerList.add("PROMOTION VOLUME DURING");		
+	headerList.add("PROMOTION VOLUME AFTER");	
+	headerList.add("PLANNED GSV");		
+	headerList.add("PLANNED TURNOVER");		
+	headerList.add("PLANNED INVESTMENT AMOUNT");		
+	headerList.add("PLANNED UPLIFT");	   
+	headerList.add("PLANNED INCREMENTAL GROSS PROFIT");		
+	headerList.add("PLANNED GROSS PROFIT");		
+	headerList.add("PLANNED INCREMENTAL TURNOVER");		
+	headerList.add("PLANNED CUSTOMER ROI");
+    headerList.add("PLANNED COST PRICE BASED ROI");	
+	headerList.add("PLANNED PROMOTION ROI");
+	headerList.add("ACTUAL QUANTITY");		
+	headerList.add("ACTUAL GSV");		
+	headerList.add("ACTUAL TURNOVER");		
+	headerList.add("ACTUAL INVESTMENT AMOUNT");		
+	headerList.add("ACTUAL UPLIFT");		
+	headerList.add("ACTUAL INCREMENTAL GROSS PROFIT");	   
+	headerList.add("ACTUAL GROSS PROFIT");		
+	headerList.add("ACTUAL INCREMENTAL TURNOVER");		
+	headerList.add("ACTUAL CUSTOMER ROI");		
+	headerList.add("ACTUAL COST PRICE BASED ROI");
+    headerList.add("ACTUAL PROMOTION ROI");	
+	headerList.add("UPLOAD REFERENCE NUMBER");		
+	headerList.add("IS DUPLICATE");		
+	
+	return headerList;
+	}
+	//Added by Kavitha D for promo measure template ends-SPRINT 9
 
+	//Added by Kavitha D for PPM coe remarks download template-SPRINT 9
+	public List<ArrayList<String>> ppmCoeRemarksDownload(ArrayList<String> headerList){
+		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
+
+		try {
+		
+		
+		String ppmQuery=" SELECT DISTINCT PROMO_ID FROM TBL_PROCO_PROMOTION_MASTER_V2 M "
+				+ " WHERE NOT EXISTS (SELECT 1 FROM TBL_PROCO_PPM_COE_REMARKS C WHERE M.PROMO_ID = C.PROMO_ID AND C.COE_REMARKS = 'PPM Submitted') ";
+		
+		Query query = sessionFactory.getCurrentSession().createNativeQuery(ppmQuery);
+		downloadDataList.add(headerList);
+
+		Iterator itr = query.list().iterator();
+		//downloadDataList.add(headerList);
+		/*while (itr.hasNext()) {
+			Object[] obj = (Object[]) itr.next();
+			ArrayList<String> dataObj = new ArrayList<String>();
+			for (Object ob : obj) {
+				String value = "";
+				value = (ob == null) ? "" : ob.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
+			}
+			obj = null;
+			downloadDataList.add(dataObj);
+			//return downloadDataList;
+		}*/
+		
+		itr = query.list().iterator();
+		while (itr.hasNext()) {
+			String obj = (String) itr.next();
+			ArrayList<String> dataObj = new ArrayList<String>();
+			String value = "";
+			value = (obj == null) ? "" : obj.toString();
+			dataObj.add(value.replaceAll("\\^", ","));
+			obj = null;
+			downloadDataList.add(dataObj);
+		}
+		
+		/*List list = query.list();
+		for(String str:list.toString()) {
+			
+		}*/
+		//downloadDataList.addAll(query.list());
+		return downloadDataList;
+	} catch (Exception e) {
+		logger.error("Exception: ", e);
+	}
+	return downloadDataList;
+}
+	
+	@Override
+	public ArrayList<String> ppmCoeRemarksDownloadHeaderList() {
+		ArrayList<String> headerList=new ArrayList<String>();
+		headerList.add("PROMO_ID");	
+		headerList.add("COE_REMARKS");	
+		return headerList;
+	}
+
+	public ArrayList<String> getPpmDownloadHeaders(){
+		ArrayList<String> headerList=new ArrayList<String>();
+		
+		headerList.add("UPLOAD_REFERENCE_NUMBER");		
+		headerList.add("PROMOTION_NAME");		
+		headerList.add("PROMOTION_PERIOD");		
+		headerList.add("SELL_IN_START_DATE");	   
+		headerList.add("SELL_IN_END_DATE");		
+		headerList.add("CUSTOMER_CODE");		
+		headerList.add("PRODUCT_CODE");		
+		headerList.add("PROMOTION_MECHANICS");
+	    headerList.add("INVESTMENT_TYPE");	
+		headerList.add("UoM");
+		headerList.add("DISCOUNT");		
+		headerList.add("PERCENT_PROMOTED_VOLUME");		
+		headerList.add("PLANNED_QUANTITY");		
+		headerList.add("INVESTMENT_AMOUNT");		
+		return headerList;		
+	}
+	//Added by kavitha D-SPRINT 9
+	public List<String> getMOCforCoedownload() {
+		String q=" SELECT DISTINCT MOC FROM TBL_PROCO_PROMOTION_MASTER_V2 M WHERE NOT EXISTS (SELECT 1 FROM TBL_PROCO_PPM_COE_REMARKS C WHERE M.PROMO_ID = C.PROMO_ID AND C.COE_REMARKS = 'PPM Submitted') "
+				+ "ORDER BY concat(SUBSTRING(MOC, 3, 4), SUBSTRING(MOC, 1, 2))";
+		
+		return sessionFactory.getCurrentSession().createNativeQuery(q).list();
+	}
+
+	//Added by kavitha D for downloading ppm upload file-SPRINT 9
+
+	@SuppressWarnings({ "rawtypes" })
+	public List<ArrayList<String>> getPpmDownloadData(ArrayList<String> headers, String selMOC) {
+		List<ArrayList<String>> downloadList = new ArrayList<ArrayList<String>>();
+		try {
+		NativeQuery query = sessionFactory.getCurrentSession().createNativeQuery("CALL PROC_POPULATE_PPM_UPLOADABLE(:selMOC)");
+		query.setParameter("selMOC", selMOC);
+		query.executeUpdate();
+		Iterator itr = query.list().iterator();
+		downloadList.add(headers);
+		while (itr.hasNext()) {
+			Object[] obj = (Object[]) itr.next();
+			ArrayList<String> dataObj = new ArrayList<String>();
+			for (Object ob : obj) {
+				String value = "";
+				value = (ob == null) ? "" : ob.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
+			}
+			obj = null;
+			downloadList.add(dataObj);
+		}
+		return downloadList;	
+	} catch (Exception e) {
+		logger.debug("Exception: ", e);
+	}
+		return downloadList;
+	}
+		
+	
 }

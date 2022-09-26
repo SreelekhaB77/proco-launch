@@ -28,6 +28,13 @@
 </head>
 <body>
 	<jsp:include page="../proco/proco-header.jsp" />
+	
+	<div class="loader">
+	<center>
+		<img class="loading-image" src="assets/images/spinner.gif"
+			alt="loading..." style="height: 150px; width: auto;">
+	</center>
+</div>
 	<nav class="navbar navbar-inverse navbar-fixed-top container-bg"
 		style="position:relative;top: 115px;z-index: 2;background-image: none! important;
     border: none! important;background: #F6F3F3;
@@ -57,13 +64,13 @@
 								<div class="proco-volume-icon"></div>
 								<div class="tab-label-proco-volume-active">Volume Upload</div>
 						</a></li>
-						
-						<li role="presentation"
+						<!--bharati commented disaggregation tab in sprint-9-->
+						<!--<li role="presentation"
 								class="col-md-3 col-sm-6 col-xs-12 disaggregation"><a
 								href="https://vat.hulcd.com/VisibilityAssetTracker/promoDisaggregation.htm">
 									<div class="proco-disaggregation-icon"></div>
 									<div class="tab-label-proco-disaggregation-inactive">Disaggregation</div>
-							</a></li>
+							</a></li>-->
 						
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 listing"><a
@@ -111,7 +118,27 @@
 				</c:if>
 			</div>
 		</c:if>
-	
+	<!--bharati added code for errorblock with download error file for volume upload sprint-9-->
+	                 				<div class="alert alert-success sucess-msg" style="display: none;margin-top:35px;margin-bottom: -23px" id="ProcoVolumesuccessblock">
+		                                 <button type="button" class="close" data-hide="alert">&times;</button>
+		                                 <span></span>
+	                                </div>
+                                    <div class="alert alert-danger" style="display: none;margin-top:35px;margin-bottom: -23px" id="ProcoVolumeerrorblockUpload">
+                                        <button type="button" class="close" data-hide="alert">&times;</button>
+                                       
+                                            <span>File contains error...</span>
+                                            <a href="https://vat.hulcd.com/VisibilityAssetTracker/downloadPromotionErrorFilensp.htm" id="downloadTempFileLink">Click here to Download Error File</a>
+                                    </div>
+									<div class="alert alert-danger" style="display: none;margin-top:35px;margin-bottom: -23px" id="errorblockVolumeUpload">
+		                            <button type="button" class="close" data-hide="alert">&times;</button>
+		
+		                           <!-- <span>Error while uploading file.</span>-->
+								   <span></span>
+		
+	                               </div>
+								  
+		
+		<!--bharati code end here for sprint-9-->	
 	
 		<div class="proco-creation form-horizontal">
 			<!--   <div class="promo-back"><a href="Home.html"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Volume Upload</div> -->
@@ -120,8 +147,8 @@
 
 			</div>
 			<form action="https://vat.hulcd.com/VisibilityAssetTracker/downloadPromosForVolumeUpload.htm" method="POST" enctype="multipart/form-data">
-			
-			<div class="promo-form-details proco-volume-form">
+			<!--bharati commented below div for sprint-9-->
+			<!--<div class="promo-form-details proco-volume-form">
 				<div class="col-md-4">
 					<div class="form-group">
 						<label for="unique-id" class="control-label col-md-4">CATEGORY</label>
@@ -217,7 +244,7 @@
 							<!-- <select class="form-control" id="">
 								<option>ALL INDIA</option>
 							</select> -->
-							<input type="text" class="form-control" value="ALL INDIA" name="geography"
+							<!--<input type="text" class="form-control" value="ALL INDIA" name="geography"
 								id="geography" />
 						</div>
 					</div>
@@ -241,47 +268,70 @@
 				</div>
 
 				<div class="clearfix"></div>
-			</div>
-			<div class="download-btn">
+			</div>-->
+			<!--bharati commented this btn in sprint-9-->
+			<!--<div class="download-btn">
 				<input type="submit" class="btn new-btn-download" value="PROMO DOWNLOAD"></input>
-			</div>
+			</div>-->
 			</form>
-			
-			<!-- Listing table -->
+			<!--bharati added this below btn for dp volumn download in sprint-9-->
 			<div class="promo-list table-header-volume">PROMO LIST</div>
+				<form:form action="https://vat.hulcd.com/VisibilityAssetTracker/downloadDpVolume.htm" id="getPromoVolumnUploadTemplate"
+				method="GET" modelAttribute="VolumeUploadBean"
+				enctype="multipart/form-data" style="text-align:center">
+				<button class="btn new-btn-download" style="margin: 10px;float: right;color:#fff;">PROMO DOWNLOAD</button>
+			</form:form>
+			<div class="clearfix"></div>
+			<!--bharati changes end for sprint-9-->
+			<!-- Listing table -->
+			
 			
 			<table class="table table-striped table-bordered promo-list-table"
 				style="width: 100%;overflow-x: scroll;display: block;">
 				<thead>
+				<!--bharati commented this below columns for dp volumn listing in sprint-9-->
 					<tr>
 						<th>ACTION</th>
-						<th>UNIQUE ID</th>
-						<th>ORIGINAL ID</th>
+						<th>PROMO ID</th>
+						<!--<th>ORIGINAL ID</th>-->
 						<th>START DATE</th>
 						<th>END DATE</th>
 						<th>MOC</th>
-						<th>CUSTOMER CHAIN L1</th>
-						<th>SALES CATEGORY</th>
+						<!--<th>CUSTOMER CHAIN L1</th>--> <!--bharati rename this to ppm account in sprint-9-->
+						<th>PPM ACCOUNT</th>
+						<!--<th>SALES CATEGORY</th>-->
 						<th>BASEPACK</th>
 						<th>OFFER DESCRIPTION</th>
 						<th>OFFER TYPE</th>
 						<th>OFFER MODALITY</th>
 						<th>GEOGRAPHY</th>
 						<th>QUANTITY</th>
-						<th>UOM</th>
+						<!--<th>UOM</th>-->
 						<th>OFFER VALUE</th>
-						<th>KITTING VALUE</th>
+						<!--<th>KITTING VALUE</th>-->
 						<th name="stat">STATUS</th>
-						<th>REASON</th>
-						<th>REMARK</th>
+						<!--<th>REASON</th>
+						<th>REMARK</th>-->
+						<!--bharati addedbelow columns in sprint-9-->
+						<th>INVESTMENT TYPES</th>
+						<th>SOL CODE</th>
+						<th>PROMOTION MECHANICS</th>
+						<th>SOL CODE STATUS</th>
 					</tr>
 				</thead>
 			</table>
-			<form:form action="https://vat.hulcd.com/VisibilityAssetTracker/uploadPromoVolume.htm" id="promoVolumeUpload"
+			<!--Bharati change below url for dp volumn upload in sprint-9-->
+			<%--<form:form action="https://vat.hulcd.com/VisibilityAssetTracker/uploadPromoVolume.htm" id="promoVolumeUpload"
 				method="POST" modelAttribute="VolumeUploadBean"
+				enctype="multipart/form-data" onsubmit="return uploadValidation()">--%>
+				
+			<form:form action="#" id="promoVolumeUpload" modelAttribute="VolumeUploadBean" 
 				enctype="multipart/form-data" onsubmit="return uploadValidation()">
+				
 			<div class="promo-upload">PROMO UPLOAD</div>
 			<div class="upload-file">
+			
+			
 				<div class="col-md-4 col-md-offset-4" style="padding: 30px 0px;">
 					<div class="upload-label">
 						<span><i class="glyphicon glyphicon-cloud-upload"></i></span> <span>
@@ -302,9 +352,9 @@
 						<div class="file-name" style="line-height: 2.3">No file
 							chosen</div>
 					</div>
-
+                    <span id="uploadErrorMsg" style="display: none; color: red">Please upload .xls or .xlsx file</span>
 					<div class="" style="color: #fff; text-align: center">
-						<button class="btn new-btn-primary">UPLOAD</button>
+						<button id="PromoVolumeUpload" class="btn new-btn-primary">UPLOAD</button>
 
 					</div>
 				</div>
@@ -312,8 +362,9 @@
 				<div class="clearfix"></div>
 			</div>
 		</form:form>
-
+              
 		</div>
+		
 	</div>
 	<jsp:include page="../proco/proco-footer.jsp" />
 	<!-- Bootstrap core JavaScript

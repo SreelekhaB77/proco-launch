@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.hul.proco.controller.createpromo.CreateBeanRegular;
 import com.hul.proco.controller.createpromo.CreatePromotionBean;
 
 public interface PromoListingService {
@@ -39,17 +40,24 @@ public interface PromoListingService {
 	
 	public Map<String,List<List<String>>> getMastersForTemplate();
 	
-	public List<PromoListingBean> getDeletePromoTableList(int pageDisplayStart, int pageDisplayLength, String cagetory, String brand,
-			String basepack, String custChainL1, String custChainL2, String geography, String offerType, String modality, 
-			String year, String moc, String userId, int active,String roleId,String searchParameter);
+	public List<PromoListingBean> getDeletePromoTableList(int pageDisplayStart, int pageDisplayLength, String moc, String userId,String roleId,String searchParameter);
 	
-	public int getDeletePromoListRowCount(String cagetory, String brand, String basepack, String custChainL1, String custChainL2, 
-			String geography, String offerType, String modality, String year, String moc, String userId, int active,String roleId);
+	public int getDeletePromoListRowCount( String moc, String userId,String roleId);
 	
-	public List<ArrayList<String>> getDeletePromotionDump(ArrayList<String> headerList,String cagetory, String brand,
-			String basepack, String custChainL1, String custChainL2, String geography, String offerType, String modality, 
-			String year, String moc, String userId, int active,String role);
+	public List<ArrayList<String>> getDeletePromotionDump(ArrayList<String> headerList, String moc, String userId,String roleId);
 	
 	public String promoDeleteDate(String Id);
+	
+	//Added by Kavitha D for promo listing download starts-SPRINT 9
+	public ArrayList<String> getHeaderListForPromoDownloadListing();
+	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleId, String[] kamAccounts);
+	//Added by Kavitha D for promo listing download ends-SPRINT 9
+
+	public int getPromoListRowCountGrid(String userId, String roleId,String moc,String[] kamAccountsArr);
+
+	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId, String roleId,String moc, String searchParameter, String[] kamAccounts);
+
+	public List<String> getPromoMoc();
+
 	
 }

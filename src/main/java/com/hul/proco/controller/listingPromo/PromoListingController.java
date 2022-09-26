@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,10 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,6 +34,7 @@ import com.hul.launch.web.util.CommonPropUtils;
 import com.hul.launch.web.util.CommonUtils;
 import com.hul.launch.web.util.FilePaths;
 import com.hul.launch.web.util.UploadUtil;
+import com.hul.proco.controller.createpromo.CreateBeanRegular;
 import com.hul.proco.controller.createpromo.CreatePromoService;
 import com.hul.proco.controller.createpromo.CreatePromotionBean;
 import com.hul.proco.excelreader.exom.ExOM;
@@ -58,6 +62,10 @@ public class PromoListingController {
 		Integer pageDisplayStart = Integer.valueOf(request.getParameter("iDisplayStart"));
 		Integer pageDisplayLength = Integer.valueOf(request.getParameter("iDisplayLength"));
 		String searchParameter = request.getParameter("sSearch");
+		//Added Proco Sprint9 Changes - Starts
+		String accountNames = (String) request.getSession().getAttribute("accountName");
+		String[] kamAccountsArr = accountNames.split(",");
+		//Added Proco Sprint9 Changes - Ends
 		Integer pageNumber = (pageDisplayStart / pageDisplayLength) + 1;
 		String cagetory = "", brand = "", basepack = "", custChainL1 = "", custChainL2 = "", geography = "";
 		String offerType = "", modality = "", year = "", moc = "";
@@ -116,18 +124,23 @@ public class PromoListingController {
 		} else {
 			year = yearValue;
 		}
-		if (mocValue == null || mocValue.isEmpty() || (mocValue.equalsIgnoreCase("undefined"))
-				|| (mocValue.equalsIgnoreCase("FULL YEAR"))) {
+		if (mocValue == null || mocValue.isEmpty() || (mocValue.equalsIgnoreCase("undefined"))) {
 			moc = "all";
 		} else {
 			moc = mocValue;
 		}
 
-		int rowCount = promoListingService.getPromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2,
+		//Added by kavitha D for promolisting changes-SPRINT 9
+		/*int rowCount = promoListingService.getPromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2,
 				geography, offerType, modality, year, moc, userId, 1,roleId);
 		List<PromoListingBean> promoList = promoListingService.getPromoTableList((pageDisplayStart + 1),
 				(pageNumber * pageDisplayLength), cagetory, brand, basepack, custChainL1, custChainL2, geography,
-				offerType, modality, year, moc, userId, 1,roleId ,searchParameter);
+				offerType, modality, year, moc, userId, 1,roleId ,searchParameter);*/
+		
+		int rowCount = promoListingService.getPromoListRowCountGrid(userId,roleId,moc,kamAccountsArr);
+		List<PromoListingBean> promoList = promoListingService.getPromoTableListGrid((pageDisplayStart + 1),
+				(pageNumber * pageDisplayLength),userId,roleId,moc,searchParameter, kamAccountsArr);
+
 
 		PromoListingJsonObject jsonObj = new PromoListingJsonObject();
 		jsonObj.setJsonBean(promoList);
@@ -286,6 +299,8 @@ public class PromoListingController {
 		List<String> basepacks = createPromoService.getAllBasepacks(userId);
 		List<String> changesMadeListForEdit = promoListingService.getChangesMadeListForEdit();
 		List<String> reasonListForEdit = promoListingService.getReasonListForEdit();
+		List<String> mocValue = promoListingService.getPromoMoc();
+				
 		model.addAttribute("mocJson", mocJson);
 		model.addAttribute("years", yearList);
 		model.addAttribute("customerChainL1", customerChainL1);
@@ -297,6 +312,8 @@ public class PromoListingController {
 		model.addAttribute("basepacks", basepacks);
 		model.addAttribute("changesMadeList", changesMadeListForEdit);
 		model.addAttribute("reasonList", reasonListForEdit);
+		model.addAttribute("mocList", mocValue);
+
 	}
 
 	@RequestMapping(value = "downloadPromoFromListing.htm", method = RequestMethod.POST)
@@ -628,11 +645,17 @@ public class PromoListingController {
 			moc = mocValue;
 		}
 
-		int rowCount = promoListingService.getDeletePromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2,
+		/*int rowCount = promoListingService.getDeletePromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2,
 				geography, offerType, modality, year, moc, userId, 1,roleId);
 		List<PromoListingBean> promoList = promoListingService.getDeletePromoTableList((pageDisplayStart + 1),
 				(pageNumber * pageDisplayLength), cagetory, brand, basepack, custChainL1, custChainL2, geography,
-				offerType, modality, year, moc, userId, 1,roleId,searchParameter);
+				offerType, modality, year, moc, userId, 1,roleId,searchParameter); */
+		
+		//Added by kavitha D-SPRINT 9
+
+		int rowCount = promoListingService.getDeletePromoListRowCount(moc, userId,roleId);
+		List<PromoListingBean> promoList = promoListingService.getDeletePromoTableList((pageDisplayStart + 1),
+				(pageNumber * pageDisplayLength), moc,userId,roleId,searchParameter);
 
 		PromoListingJsonObject jsonObj = new PromoListingJsonObject();
 		jsonObj.setJsonBean(promoList);
@@ -644,12 +667,12 @@ public class PromoListingController {
 		return json;
 	}
 	
-	@RequestMapping(value = "downloadDeletedPromo.htm", method = RequestMethod.POST)
-	public ModelAndView downloadDeletedPromo(HttpServletRequest request, HttpServletResponse response,
-			Model model) {
-		logger.info("START downloadPromosForVolumeUpload():");
+	@RequestMapping(value = "{moc}/downloadDeletedPromo.htm", method = RequestMethod.GET)
+	public ModelAndView downloadDeletedPromo(@PathVariable("moc") String moc,
+			Model model,HttpServletRequest request, HttpServletResponse response) {
+		logger.info("START downloadPromos for Dropped Offer:");
 		try {
-			String categoryValue = (String) request.getParameter("category");
+			 /*String categoryValue = (String) request.getParameter("category");
 			String brandValue = (String) request.getParameter("brand");
 			String custChainL1Value = "";
 			String custChainL2Value = "";
@@ -683,18 +706,18 @@ public class PromoListingController {
 			String modalityValue = (String) request.getParameter("modality");
 			String geographyValue = (String) request.getParameter("geography");
 			String yearValue = (String) request.getParameter("year");
-			String mocValue = (String) request.getParameter("moc");
+			String mocValue = (String) request.getParameter("moc"); */
 
 			InputStream is;
 			String downloadLink = "", absoluteFilePath = "";
 			List<ArrayList<String>> downloadedData = null;
 			absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
-			String fileName = UploadUtil.getFileName("Promotion.Error.file", "",
+			String fileName = UploadUtil.getFileName("Promotion.Download.Dropped.file", "",
 					CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 			String downloadFileName = absoluteFilePath + fileName;
 			String userId = (String) request.getSession().getAttribute("UserID");
-			String cagetory = "", brand = "", basepack = "", custChainL1 = "", custChainL2 = "", geography = "";
-			String offerType = "", modality = "", year = "", moc = "";
+			/*String cagetory = "", brand = "", basepack = "", custChainL1 = "", custChainL2 = "", geography = "";
+			String offerType = "", modality = "", year = "", ;
 			if (categoryValue == null || categoryValue.isEmpty() || (categoryValue.equalsIgnoreCase("undefined"))
 					|| (categoryValue.equalsIgnoreCase("ALL CATEGORIES"))) {
 				cagetory = "all";
@@ -756,11 +779,13 @@ public class PromoListingController {
 				moc = "all";
 			} else {
 				moc = mocValue;
-			}
+			} */
 			String roleId = (String) request.getSession().getAttribute("roleId");
 			ArrayList<String> headerList = promoListingService.getHeaderListForPromoDumpDownload();
-			downloadedData = promoListingService.getDeletePromotionDump(headerList, cagetory, brand, basepack, custChainL1,
-					custChainL2, geography, offerType, modality, year, moc, userId, 1, roleId);
+			
+			//downloadedData = promoListingService.getDeletePromotionDump(headerList, cagetory, brand, basepack, custChainL1,custChainL2, geography, offerType, modality, year, moc, userId, 1, roleId);
+			//Added by kavitha D-Sprint 9
+			downloadedData = promoListingService.getDeletePromotionDump(headerList, moc, userId,roleId);
 			//Map<String, List<List<String>>> mastersForTemplate = promoListingService.getMastersForTemplate();
 			if (downloadedData != null) {
 				UploadUtil.writeDeletePromoXLSFile(downloadFileName, downloadedData, null,".xls");
@@ -768,7 +793,49 @@ public class PromoListingController {
 				is = new FileInputStream(new File(downloadLink));
 				// copy it to response's OutputStream
 				response.setContentType("application/force-download");
-				response.setHeader("Content-Disposition", "attachment; filename=DroppedPromotionDumpFile"
+				response.setHeader("Content-Disposition", "attachment; filename=DroppedPromotionFile"
+						+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+				IOUtils.copy(is, response.getOutputStream());
+				response.flushBuffer();
+			}
+		} catch (Exception e) {
+			logger.debug("Exception: ", e);
+			return null;
+		}
+		return null;
+	}
+
+	//Added by Kavitha D for promo listing download starts-SPRINT 9
+
+	@RequestMapping(value = "{moc}/downloadPromoListing.htm", method = RequestMethod.GET)
+	public @ResponseBody String downloadPromosForListing(@ModelAttribute("CreateBeanRegular") CreateBeanRegular createBeanRegular,@PathVariable("moc") String moc,
+			Model model,HttpServletRequest request, HttpServletResponse response) {
+		logger.info("START downloadPromos for listing():");
+		try {
+			InputStream is;
+			String roleId = (String) request.getSession().getAttribute("roleId");
+			//Added Proco Sprint9 Changes - Starts
+			String accountNames = (String) request.getSession().getAttribute("accountName");
+			String[] kamAccounts = accountNames.split(",");
+			//Added Proco Sprint9 Changes - Ends
+			
+			String downloadLink = "", absoluteFilePath = "";
+			List<ArrayList<String>> downloadedData = null;
+			absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
+			String fileName = UploadUtil.getFileName("Promotion.Download.Template.file", "",
+					CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
+			String downloadFileName = absoluteFilePath + fileName;
+			String userId = (String) request.getSession().getAttribute("UserID");
+			
+			ArrayList<String> headerList = promoListingService.getHeaderListForPromoDownloadListing();
+			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc,roleId, kamAccounts);
+			if (downloadedData != null) {
+				UploadUtil.writeXLSFile(downloadFileName, downloadedData, null,".xls");
+				downloadLink = downloadFileName + ".xls";
+				is = new FileInputStream(new File(downloadLink));
+				// copy it to response's OutputStream
+				response.setContentType("application/force-download");
+				response.setHeader("Content-Disposition", "attachment; filename=PromotionListingDownloadFile"
 						+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
 				IOUtils.copy(is, response.getOutputStream());
 				response.flushBuffer();
@@ -780,4 +847,46 @@ public class PromoListingController {
 		return null;
 	}
 	
+	//Added by Kavitha D for Moc  
+	/*
+	 * @RequestMapping(value = "getMocPromo.htm", method = RequestMethod.GET)
+	 * public @ResponseBody String getMocPromo(HttpServletRequest request, Model
+	 * model, HttpServletResponse response) { ArrayList<String> mocValue = new
+	 * ArrayList(); mocValue = promoListingService.getMoc();
+	 * //System.out.println("mocValue:" + mocValue.toString()); Gson gson = new
+	 * GsonBuilder().setPrettyPrinting().create(); String json =
+	 * gson.toJson(mocValue); model.addAttribute("mocList", json); return json;
+	 * 
+	 * }
+	 */
+	
+	
+	
+	//Added by Kavitha D for promo listing download ends-SPRINT 9
+	
+	
+	//@RequestMapping(value = "promoListingPaginationGrid.htm", method = RequestMethod.GET, produces = "application/json", headers = "Accept=*/*")
+	/*public @ResponseBody String promoListingPaginationGrid( HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("UserID");
+		Integer pageDisplayStart = Integer.valueOf(request.getParameter("iDisplayStart"));
+		Integer pageDisplayLength = Integer.valueOf(request.getParameter("iDisplayLength"));
+		String searchParameter = request.getParameter("sSearch");
+		Integer pageNumber = (pageDisplayStart / pageDisplayLength) + 1;
+
+		int rowCount = promoListingService.getPromoListRowCountGrid(userId);
+		List<CreateBeanRegular> promoList = promoListingService.getPromoTableListGrid((pageDisplayStart + 1),
+				(pageNumber * pageDisplayLength),userId ,searchParameter);
+
+		PromoListingJsonObject jsonObj = new PromoListingJsonObject();
+		jsonObj.setJsonBean1(promoList);
+		jsonObj.setiTotalDisplayRecords(rowCount);
+		jsonObj.setiTotalRecords(rowCount);
+
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		String json = gson.toJson(jsonObj);
+		System.out.println(json);
+		return json;
+	} 
+	*/
+
 }

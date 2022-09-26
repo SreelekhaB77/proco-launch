@@ -1,5 +1,27 @@
+
+//bharati added for sprint-9 US-1
+
+
+var spinnerWidth = "100";
+ var spinnerHeight = "100";
+function ajaxLoader(w, h) {
+
+    var left = (window.innerWidth / 2) - (w / 2);
+    var top = (window.innerHeight / 2) - (h / 2);
+    $('.loader').css('display', 'block');
+
+    $('.loading-image').css({
+        "left": left,
+        "top": top,
+        
+    });
+}
+
+//bharati code end here
+
 $(document).ready(function() {
-			
+
+ 		
 	var today = new Date(),
     yy = today.getFullYear(),
     m = today.getMonth(),
@@ -73,8 +95,8 @@ $(document).ready(function() {
 					
 				}
 			});
-			
-			precheck($('#geography').val());
+			//bharati commented below line in sprint-9
+			//precheck($('#geography').val());
 			
 			/*$('.ComboTreeItemParent').first().find('span input').on('change',function(e){
 				if( $(this).is(':checked') == true ){
@@ -778,8 +800,8 @@ function uploadValidation() {
 	}
 }
 
-
-function precheck( _string ){
+//bharati commented below code for sprint-9
+/*function precheck( _string ){
 	var spans = $( ".comboTreeDropDownContainer .comboTreeItemTitle" )
 	readyString  = _string.split( "," );
 	for( var i = 0; i < spans.length; i++  ){
@@ -788,7 +810,8 @@ function precheck( _string ){
 			$( spans[i] ).find( "input:first" ).trigger( "change" );
 	  }
 	}
-}
+}*/
+
 
 
 function getCustChainValues(selVal) {
@@ -929,5 +952,300 @@ function enableRemark(){
 	}
 }
 
+//bharati added code for sprint-9 Us-1
 
 
+			$('#choose-file1').click(function() {
+				$("#upload-file1").trigger('click');
+			});
+
+			$('#upload-file1').change(function(event) {
+				
+				var files = event.target.files;
+				if (files.length > 0) {
+					var fileName = files[0].name;
+					$('.file-name1').html(fileName);
+				} else {
+					$('.file-name1').html("No file chosen");
+				}
+
+			});
+			
+			$('#choose-file2').click(function() {
+				$("#upload-file2").trigger('click');
+			});
+
+			$('#upload-file2').change(function(event) {
+				
+				var files = event.target.files;
+				if (files.length > 0) {
+					var fileName = files[0].name;
+					$('.file-name2').html(fileName);
+				} else {
+					$('.file-name2').html("No file chosen");
+				}
+
+			});
+
+//upload code start for regular template
+
+$("#ProcoRegularFileUpload").click(function (event) {
+						event.preventDefault();
+						var templateType = 'Regular';
+						var fileName = $('#upload-file').val();
+						if (fileName == '') {
+							$('#uploadErrorMsg').show().html("Please select a file to upload");
+							return false;
+						} else {
+							$('#uploadErrorMsg').hide();
+							var FileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+							if (FileExt != "xlsx") {
+								if (FileExt != "xls") {
+									$('#uploadErrorMsg').show().html("Please upload .xls or .xlsx file");
+									$("#promoCreateRegularUpload").submit(function(e) {
+										e.preventDefault();
+									});
+									return false;
+								}
+
+							}
+						}
+						
+				        // Get form
+				        var form = $('#promoCreateRegularUpload')[0];
+                           var data = new FormData(form);
+                        $.ajax({
+				            type: "POST",
+				            enctype: 'multipart/form-data',
+				            url: 'createCRBean.htm?template=' +templateType ,
+				            data: data,
+				            processData: false,
+				            contentType: false,
+				            cache: false,
+				            timeout: 600000,
+				            beforeSend: function() {
+                                ajaxLoader(spinnerWidth, spinnerHeight);
+                            },
+							
+				            success: function (resdata) {
+				            	//console.log(resdata);
+				            	
+				            	 $('.loader').hide();
+				            	if(resdata.includes('EXCEL_UPLOADED')) {
+					console.log(resdata);// Mayur added the changes
+				                    $('#errorblockUpload').hide();
+				                	$('#ProcoRegularerrorblockUpload').hide();
+				                	$('#Procosuccessblock').show().find('span').html(' File Uploaded Successfully !!!');
+				                	 
+				                }
+				                
+				                else if(resdata.includes('EXCEL_NOT_UPLOADED')){
+					console.log(resdata);// Mayur added the changes
+				                $('#ProcoRegularerrorblockUpload').show();
+				                $('#Procosuccessblock').hide();
+				                $('#errorblockUpload').hide();
+				                }
+				                else if(resdata.includes('FILE_EMPTY')){
+									$('#errorblockUpload').show().find('span').html('Error While Uploading Empty File');
+									$('#ProcoRegularerrorblockUpload').hide();
+									$('#Procosuccessblock').hide();
+								}
+								else if(resdata.includes('CHECK_COL_MISMATCH')){
+									$('#errorblockUpload').show().find('span').html('Please Check Uploaded File');
+									$('#ProcoRegularerrorblockUpload').hide();
+									$('#Procosuccessblock').hide();
+								}
+								else{
+									console.log(resdata);// Mayur added the changes
+				                	$('#errorblockUpload').show().find('span').html('Error - Please contact support team');// Mayur's changes for updating the message
+				                	$('#Procosuccessblock').hide();
+				                	$('#ProcoRegularerrorblockUpload').hide();
+				                	 
+				              	 }
+				              //  window.location.href = storepageURL;
+							    $('#promoCreateRegularUpload')[0].reset();
+								$('.file-name').html("No file chosen");
+				            },
+				            error: function (e) {
+				            $('#Procosuccessblock').hide();
+				             // console.log("Error");        
+				            }
+				        });
+				       
+					     //var storepageURL = $(location).attr("href");
+					    	
+				    });
+					
+					
+					//code start for cr upload
+					$("#procoCRUploadBtn").click(function (event) {
+						event.preventDefault();
+						var templateType = 'CR';
+						var fileName = $('#upload-file1').val();
+						if (fileName == '') {
+							$('#uploadcrErrorMsg').show().html("Please select a file to upload");
+							return false;
+						} else {
+							$('#uploadcrErrorMsg').hide();
+							var FileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+							if (FileExt != "xlsx") {
+								if (FileExt != "xls") {
+									$('#uploadcrErrorMsg').show().html("Please upload .xls or .xlsx file");
+									$("#promoCreateCrUpload").submit(function(e) {
+										e.preventDefault();
+									});
+									return false;
+								}
+
+							}
+						}
+						
+				        // Get form
+				        var form = $('#promoCreateCrUpload')[0];
+                           var data = new FormData(form);
+                        $.ajax({
+				            type: "POST",
+				            enctype: 'multipart/form-data',
+				            url: 'createCRBean.htm?template=' +templateType ,
+				            data: data,
+				            processData: false,
+				            contentType: false,
+				            cache: false,
+				            timeout: 600000,
+				            beforeSend: function() {
+                                ajaxLoader(spinnerWidth, spinnerHeight);
+                            },
+							
+				            success: function (resdata) {
+				            	 $('.loader').hide();
+				            if(resdata.includes('EXCEL_UPLOADED')) {
+				                    $('#errorblockUpload').hide();
+				                	$('#ProcoRegularerrorblockUpload').hide();
+				                	$('#Procosuccessblock').show().find('span').html(' File Uploaded Successfully !!!');
+				                	 
+				                }
+				                
+				                else if(resdata.includes('EXCEL_NOT_UPLOADED')){
+				                $('#ProcoRegularerrorblockUpload').show();
+				                $('#Procosuccessblock').hide();
+				                $('#errorblockUpload').hide();
+				                }
+				                else if(resdata.includes('FILE_EMPTY')){
+									$('#errorblockUpload').show().find('span').html('Error While Uploading Empty File');
+									$('#ProcoRegularerrorblockUpload').hide();
+									$('#Procosuccessblock').hide();
+								}
+								else if(resdata.includes('CHECK_COL_MISMATCH')){
+									$('#errorblockUpload').show().find('span').html('Please Check Uploaded File');
+									$('#ProcoRegularerrorblockUpload').hide();
+									$('#Procosuccessblock').hide();
+								}
+								else{
+									//console.log("Error");
+				                	$('#errorblockUpload').show().find('span').html('Error - Please contact support team');
+				                	$('#Procosuccessblock').hide();
+				                	$('#ProcoRegularerrorblockUpload').hide();
+				                	 
+				              	 }
+				                
+				                // window.location.href = storepageURL;    
+				                 $('#promoCreateCrUpload')[0].reset();
+								 $('.file-name1').html("No file chosen");
+				            },
+				            error: function (e) {
+				            $('#Procosuccessblock').hide();
+				             // console.log("Error");        
+				            }
+				        });
+				       
+					     // var storepageURL = $(location).attr("href");
+					    	
+				    });
+					
+					//code start for new entries upload
+					$("#uploadnewEntriesBtn").click(function (event) {
+						event.preventDefault();
+						var templateType = 'new';
+						var fileName = $('#upload-file2').val();
+						if (fileName == '') {
+							$('#uploadNewErrorMsg').show().html("Please select a file to upload");
+							return false;
+						} else {
+							$('#uploadNewErrorMsg').hide();
+							var FileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+							if (FileExt != "xlsx") {
+								if (FileExt != "xls") {
+									$('#uploadNewErrorMsg').show().html("Please upload .xls or .xlsx file");
+									$("#promoCreateNewEntriesUpload").submit(function(e) {
+										e.preventDefault();
+									});
+									return false;
+								}
+
+							}
+						}
+						
+				        // Get form
+				        var form = $('#promoCreateNewEntriesUpload')[0];
+                           var data = new FormData(form);
+                        $.ajax({
+				            type: "POST",
+				            enctype: 'multipart/form-data',
+				            url: 'createCRBean.htm?template=' +templateType ,
+				            data: data,
+				            processData: false,
+				            contentType: false,
+				            cache: false,
+				            timeout: 600000,
+				            beforeSend: function() {
+                                ajaxLoader(spinnerWidth, spinnerHeight);
+                            },
+							
+				            success: function (resdata) {
+				            	//console.log(resdata);
+				            	
+				            	 $('.loader').hide();
+				            	 if(resdata.includes('EXCEL_UPLOADED')) {
+				                    $('#errorblockUpload').hide();
+				                	$('#ProcoRegularerrorblockUpload').hide();
+				                	$('#Procosuccessblock').show().find('span').html(' File Uploaded Successfully !!!');
+				                	 
+				                }
+				                
+				                else if(resdata.includes('EXCEL_NOT_UPLOADED')){
+				                $('#ProcoRegularerrorblockUpload').show();
+				                $('#Procosuccessblock').hide();
+				                $('#errorblockUpload').hide();
+				                }
+				                else if(resdata.includes('FILE_EMPTY')){
+									$('#errorblockUpload').show().find('span').html('Error While Uploading Empty File');
+									$('#ProcoRegularerrorblockUpload').hide();
+									$('#Procosuccessblock').hide();
+								}
+								else if(resdata.includes('CHECK_COL_MISMATCH')){
+									$('#errorblockUpload').show().find('span').html('Please Check Uploaded File');
+									$('#ProcoRegularerrorblockUpload').hide();
+									$('#Procosuccessblock').hide();
+								}
+								else{
+									//console.log("Error");
+				                	$('#errorblockUpload').show().find('span').html('Error - Please contact support team');
+				                	$('#Procosuccessblock').hide();
+				                	$('#ProcoRegularerrorblockUpload').hide();
+				                	 
+				              	 }
+				                 //window.location.href = storepageURL;    
+				                 $('#promoCreateNewEntriesUpload')[0].reset();
+								 $('.file-name2').html("No file chosen");
+				            },
+				            error: function (e) {
+				            $('#Procosuccessblock').hide();
+				             // console.log("Error");        
+				            }
+				        });
+				       
+					     // var storepageURL = $(location).attr("href");
+					    	
+				    });
+
+//bharati code end here for sprint-9 US_1

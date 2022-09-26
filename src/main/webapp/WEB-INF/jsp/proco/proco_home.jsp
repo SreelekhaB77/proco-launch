@@ -65,7 +65,8 @@
           </div>
           </c:if>
  <c:if test="${roleId eq 'DP'}">
-  <div class="col-md-12 col-md-offset-1">
+ <!--bharati changed in below div col-md-offset-1 to col-md-offset-2 in sprint-9-->
+  <div class="col-md-12 col-md-offset-2">
            <div class="col-md-2 col-sm-6 col-xs-6 " >
               <a href="https://vat.hulcd.com/VisibilityAssetTracker/promoVolumeUpload.htm">
                  <div class="promo-create promo-volume-bg">
@@ -78,16 +79,15 @@
                  </div>
               </a>
            </div>
-             
-          <div class="col-md-2 col-sm-6 col-xs-6 ">
-         
-             <a href="https://vat.hulcd.com/VisibilityAssetTracker/promoDisaggregation.htm">
+         <!--bharati commented disaggregation tab in sprint-9-->
+         <!--<div class="col-md-2 col-sm-6 col-xs-6 ">
+         <a href="https://vat.hulcd.com/VisibilityAssetTracker/promoDisaggregation.htm">
            <div class="promo-create promo-disagg-bg">
               <img src="assets/images/proco/icon-3.png"  class="img-responsive" alt="">
                  <div class="promo-craete-txt promo-disagg-txt-bg"><div>Promo Disaggregation</div></div>
             </div>
               </a>
-              </div>
+              </div>-->
         
            <div class="col-md-2 col-sm-6 col-xs-6 ">
                 <a href="https://vat.hulcd.com/VisibilityAssetTracker/promoListing.htm">

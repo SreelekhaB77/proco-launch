@@ -120,6 +120,7 @@ $(document)
 						$("#upload-file").trigger('click');
 					});
 					
+					
 					$('#upload-file').change(function(e) {
 						//console.log(e);
 						var files = event.target.files;
@@ -181,6 +182,11 @@ $(document)
 								promoTable1.draw();
 							}
 							});
+						//bharati added for sprint-9 moc filter US
+						$('#Mocvalue').change(function(){
+						Mocvalue = $(this).val();
+						promoTable1.draw();
+						});
 						
 						/*PromoListing table pagination promoTable1 = */
 						promoTable1 = $('.promo-collaboration-table').DataTable({
@@ -204,11 +210,12 @@ $(document)
 					    	                {"name": "offerType", "value": offerType}, 
 					    	                {"name": "modality", "value": modality}, 
 					    	                {"name": "year","value": year},
-					    	                {"name": "moc","value": mocVal}
+					    	                 {"name": "moc","value": Mocvalue} //bharati changes this mocVal to MocValue in sprint-9
 					    	                );
 					               }, 
 					              "fnDrawCallback": function(oSettings){
-					            	  $('table.promo-collaboration-table input[type="checkbox"]').change(function() {
+									  //commented by bharati for sprint 9
+					            /*	  $('table.promo-collaboration-table input[type="checkbox"]').change(function() {
 					            		  disAggregationCount = $('table.promo-collaboration-table input[type="checkbox"]:checked').length;  
 										   if(disAggregationCount>0){
 											   document.getElementById("download").disabled = false;
@@ -216,18 +223,19 @@ $(document)
 											   document.getElementById("download").disabled = true;
 										   }
 					            	  });
-										   
+										   */ 
 					              },
 					              'initComplete': function(settings){
 					            	  if($('#promo_id')!=null){
 					            		  //$('#promo_id').get(0).checked=true;  
 					            	  }
-					            	  disAggregationCount = $('table.promo-collaboration-table input[type="checkbox"]:checked').length;  
+									  //commented by bharati for sprint 9
+					            	 /* disAggregationCount = $('table.promo-collaboration-table input[type="checkbox"]:checked').length;  
 									   if(disAggregationCount>0){
 										   document.getElementById("download").disabled = false;
 									   }else{
 										   document.getElementById("download").disabled = true;
-									   }
+									   }*/ //commented by bharati for sprint 9
 					               },
 					              "aoColumns": [{
 					                  "mData": "promo_id",
@@ -236,46 +244,67 @@ $(document)
 					                  } 
 					                  },{
 					                    "mData": "promo_id"
-					                  }, {
+					                  },
+                                        {
+										"mData" : "start_date"
+										},
+										{
+										"mData" : "end_date"
+										}, {
 					                    "mData": "moc"
 					                  }, {
-					                    "mData": "customerChainL1"
+					                    "mData": "customerChainL2"
 					                  },/* {
 					                    "mData": "customerChainL2"
-					                  },*/ {
+					                  },*//* {
 					                    "mData": "salesCategory"
 					                  }, {
 					                    "mData": "brand"
-					                  }, {
+					                  },*/ {
 					                    "mData": "basepack"
-					                  }, {
+					                  }, /*{
 					                    "mData": "basepackDesc"
-					                  }, {
+					                  },*/ {
+					                    "mData": "offer_desc"
+					                  },{
 					                    "mData": "offer_type"
 					                  }, {
 					                    "mData": "offer_modality"
 					                  }, {
-					                    "mData": "offer_desc"
+					                    "mData": "geography",
 					                  }, {
+					                    "mData": "quantity",
+					                  },{
 					                    "mData": "offer_value",
-					                  }, {
+					                  },/* {
 					                    "mData": "kitting_value",
 					                  }, {
 					                    "mData": "uom",
 					                  }, {
-					                    "mData": "geography",
-					                  }, {
-					                    "mData": "plannedQty",
-					                  }, {
 					                    "mData": "national",
-					                  },{
+					                  },*/{
 					                    "mData": "status",
-					                  }
+					                  },{
+						                 "mData": "investment_type",
+						              } ,{
+						                 "mData": "sol_code",
+						              } ,{
+						                 "mData": "promotion_mechanics",
+						              } ,{
+						                 "mData": "sol_code_status",
+						              }
 					                ]
 					                 /*added for second tab end */
 					        });
 						
 				});
+//bharati added below function in sprint-9	for download file			
+function downloadPromotionFile(){
+	//$("#download").submit();  //bharati commented this line for sprint-9 moc filter value pass to download promo file
+	var SelectedMoc = $("#Mocvalue").val();
+	window.location.assign(SelectedMoc+"/downloadPromoListing.htm");
+
+}
 
 function getCustChainValues(selVal) {
 	$.ajax({

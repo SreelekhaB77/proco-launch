@@ -1,3 +1,23 @@
+//bharati added for volumn upload file sprint-9 US-1
+
+
+var spinnerWidth = "100";
+ var spinnerHeight = "100";
+function ajaxLoader(w, h) {
+
+    var left = (window.innerWidth / 2) - (w / 2);
+    var top = (window.innerHeight / 2) - (h / 2);
+    $('.loader').css('display', 'block');
+
+    $('.loading-image').css({
+        "left": left,
+        "top": top,
+        
+    });
+}
+
+//bharati code end here
+
 $(document).ready(function() {
 
 					$("[data-hide]").on("click",function() {
@@ -123,8 +143,7 @@ $(document).ready(function() {
 
 					promoTable = $('.promo-list-table').DataTable(
 									{
-
-										/* added for second tab start */
+                                       /* added for second tab start */
 										"bProcessing" : true,
 										"bServerSide" : true,
 										"lengthChange" : false,
@@ -174,6 +193,7 @@ $(document).ready(function() {
 												});
 
 										},
+										//bharati done changes below columns in sprint-9
 										"aoColumns" : [
 												/*{
 													"mData" : "promo_id",
@@ -194,9 +214,9 @@ $(document).ready(function() {
 												{
 													"mData" : "promo_id"
 												},
-												{
+												/*{
 													"mData" : "originalId"
-												},
+												},*/
 												{
 													"mData" : "startDate"
 												},
@@ -208,9 +228,11 @@ $(document).ready(function() {
 												},
 												{
 													"mData" : "customer_chain_l1"
-												}, {
+												}, 
+												/*{
 													"mData" : "category"
-												}, {
+												},*/ 
+												{
 													"mData" : "basepack"
 												}, {
 													"mData" : "offer_desc"
@@ -222,19 +244,34 @@ $(document).ready(function() {
 													"mData" : "geography",
 												}, {
 													"mData" : "quantity",
-												}, {
+												}, 
+												/*{
 													"mData" : "uom",
-												}, {
+												},*/
+												{
 													"mData" : "offer_value",
-												}, {
+												}, 
+												/*{
 													"mData" : "kitting_value",
-												}, {
+												},*/
+												{
 													"mData" : "status",
-												}, {
+												},
+												/*{
 													"mData" : "reason",
 												}, {
 													"mData" : "remark",
-												} ]
+												}*/
+                                       {
+						                 "mData": "investmentType",
+						              } ,{
+						                 "mData": "solCode",
+						              } ,{
+						                 "mData": "promotionMechanics",
+						              } ,{
+						                 "mData": "solCodeStatus",
+						              }
+												]
 									/* added for second tab end */
 
 									});
@@ -515,3 +552,88 @@ function uploadValidation() {
 		}
 	}
 }
+
+//bharati added upload code for volumn Upload for sprint-9
+
+$("#PromoVolumeUpload").click(function (event) {
+						event.preventDefault();
+						
+						var fileName = $('#upload-file').val();
+						if (fileName == '') {
+							$('#uploadErrorMsg').show().html("Please select a file to upload");
+							return false;
+						} else {
+							$('#uploadErrorMsg').hide();
+							var FileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+							if (FileExt != "xlsx") {
+								if (FileExt != "xls") {
+									$('#uploadErrorMsg').show().html("Please upload .xls or .xlsx file");
+									$("#promoVolumeUpload").submit(function(e) {
+										e.preventDefault();
+									});
+									return false;
+								}
+
+							}
+						}
+						
+				        // Get form
+				        var form = $('#promoVolumeUpload')[0];
+                           var data = new FormData(form);
+                        $.ajax({
+				            type: "POST",
+				            enctype: 'multipart/form-data',
+				            url: 'dpVolumeUpload.htm',
+				            data: data,
+				            processData: false,
+				            contentType: false,
+				            cache: false,
+				            timeout: 600000,
+				            beforeSend: function() {
+                                ajaxLoader(spinnerWidth, spinnerHeight);
+                            },
+							
+				            success: function (resdata) {
+				            	
+				            	
+				            	 $('.loader').hide();
+				            	if(resdata.includes('EXCEL_UPLOADED')) {
+				                    $('#errorblockVolumeUpload').hide();
+				                	$('#ProcoVolumeerrorblockUpload').hide();
+				                	$('#ProcoVolumesuccessblock').show().find('span').html(' File Uploaded Successfully !!!');
+				                	 
+				                }
+				                
+				                else if(resdata.includes('EXCEL_NOT_UPLOADED')){
+				                $('#ProcoVolumeerrorblockUpload').show();
+				                $('#ProcoVolumesuccessblock').hide();
+				                $('#errorblockVolumeUpload').hide();
+				                }
+				                else if(resdata.includes('FILE_EMPTY')){
+									$('#errorblockVolumeUpload').show().find('span').html('Error While Uploading Empty File');
+									$('#ProcoVolumeerrorblockUpload').hide();
+									$('#ProcoVolumesuccessblock').hide();
+								}
+								else if(resdata.includes('CHECK_COL_MISMATCH')){
+									$('#errorblockVolumeUpload').show().find('span').html('Please Check Uploaded File');
+									$('#ProcoVolumeerrorblockUpload').hide();
+									$('#ProcoVolumesuccessblock').hide();
+								}else {
+									
+				                	$('#errorblockVolumeUpload').show().find('span').html('Error While Uploading File');
+				                	$('#ProcoVolumesuccessblock').hide();
+				                	$('#ProcoVolumeerrorblockUpload').hide();
+				                	 
+				              	 }
+				              
+							    $('#promoVolumeUpload')[0].reset();
+								$('.file-name').html("No file chosen");
+				            },
+				            error: function (e) {
+				            $('#ProcoVolumesuccessblock').hide();
+				                     
+				            }
+				        });
+				       
+					    	
+				    });

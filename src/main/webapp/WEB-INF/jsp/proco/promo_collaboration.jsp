@@ -25,6 +25,24 @@
 <link rel="stylesheet" type="text/css"	href="assets/css/proco-style.css">
 
 </head>
+<style>
+.promo-filter-div{
+float: right!important;
+width: 30%!important;
+margin-top: -75px!important;
+}
+
+#Mocvalue{
+	height:30px!important;
+}
+
+@media only screen and (max-width: 767px) {
+	.promo-filter-div{
+    width: 60%!important;
+    margin-top: -85px!important;	
+}
+}
+</style>
 <body class="Verdana-font">
 	<jsp:include page="../proco/proco-header.jsp" />
 	<nav class="navbar navbar-inverse navbar-fixed-top container-bg"
@@ -104,8 +122,8 @@
 
 
 		<div class="proco-creation form-horizontal">
-
-			<div class="promo-details" style="padding: 10px;">
+               <!--bharati commented below filters in sprint-9-->
+			<!--<div class="promo-details" style="padding: 10px;">
 				<span class="" style="color: #fff;font-weight:600;">DETAILS OF THE PROMO KAM COLLABORATION</span>
 				<!--  <span class="pull-right promo-uom">
                 <div class="col-md-12">
@@ -120,12 +138,12 @@
                 </div>
             </span> -->
 				<!--     <div class="clearfix"></div> -->
-			</div>
+			<!--</div>-->
 
 			<form action="https://vat.hulcd.com/VisibilityAssetTracker/downloadPromosForKamUpload.htm" method="POST"
 				enctype="multipart/form-data">
 
-				<div class="promo-form-details proco-collab-form" style="margin-bottom: 10px;">
+				<!--<div class="promo-form-details proco-collab-form" style="margin-bottom: 10px;">
 					<div class="row">
 						<div class="col-md-12">
 							<div class="col-md-2">
@@ -209,7 +227,7 @@
 										<!--   <select class="form-control" id="cust_chainL2" multiple="multiple">
                     <option>ALL CUSTOMERS</option>
                     </select> -->
-										<input type="text" class="form-control proco-collab-input" value="ALL CUSTOMERS"
+										<!--<input type="text" class="form-control proco-collab-input" value="ALL CUSTOMERS"
 											id="cust_chainL2" disabled="true" placeholder="ALL CUSTOMERS">
 									</div>
 
@@ -290,7 +308,7 @@
 										<!--  <select class="form-control" id="moc">
                  					   <option>FULL YEAR</option>
                   				  </select> -->
-										<input type="text" class="form-control" value="FULL YEAR"
+										<!--<input type="text" class="form-control" value="FULL YEAR"
 											id="moc" placeholder="FULL YEAR">
 									</div>
 								</div>
@@ -302,8 +320,20 @@
 
 					<div class="clearfix"></div>
 
-				</div>
+				</div>-->
 
+			<div class="form-group col-sm-4" style="margin-top: 20px;">
+						<label for="unique-id" class="control-label col-md-2">MOC</label>
+						<div class="col-md-5">
+						<select class="form-control" id="Mocvalue" name="Mocvalue">
+								 <c:forEach items="${mocList}" var="mocValue">
+                                   <option value="${mocValue}"><c:out value="${mocValue}"></c:out></option>
+                                 </c:forEach>
+                                 </select>
+								 </div>
+
+					</div>
+			<!--BHARATI COMMENTED BELOW COLUMNS FOR SPRINT-9-->
 				<table id="promoTable"
 					class="table table-striped table-bordered promo-collaboration-table"
 					style="width: 100%; overflow-x: scroll; display: block;">
@@ -312,40 +342,52 @@
 							<th>
 								<!-- <input name="select_all" class="userCheck" value="1" id="example-select-all" type="checkbox" /> -->
 							</th>
-							<th>UNIQUE ID</th>
+							<th>PROMO ID</th>
+							<th>START DATE</th>
+						    <th>END DATE</th>
 							<th>MOC</th>
-							<th>CUSTOMER CHAIN L1</th>
+							<!--<th>CUSTOMER CHAIN L1</th>--> <!--bharati rename this to ppm account in sprint-9-->
+						    <th>PPM ACCOUNT</th>
 							<!-- <th>CUSTOMER CHAIN L2</th> -->
-							<th>SALES CATEGORY</th>
-							<th>BRAND</th>
+							<!--<th>SALES CATEGORY</th>
+							<th>BRAND</th>-->
 							<th>BASE PACK</th>
-							<th>BASEPACK DESCRIPTION</th>
+							<!--<th>BASEPACK DESCRIPTION</th>-->
+							<th>OFFER DISC</th>
 							<th>OFFER TYPE</th>
 							<th>OFFER MODALITY</th>
-							<th>OFFER DISC</th>
-							<th>OFFER VALUE</th>
-							<th>KITTING VALUE</th>
-							<th>UOM</th>
 							<th>GEOGRAPHY</th>
-							<th>PLANNED QTY</th>
-							<th>NATIONAL %</th>
+							<th>QUANTITY</th>
+							<th>OFFER VALUE</th>
+							<!--<th>KITTING VALUE</th>
+							<th>UOM</th>-->
+							<!--<th>NATIONAL %</th>-->
 							<th>STATUS</th>
+							<th>INVESTMENT TYPES</th>
+						<th>SOL CODE</th>
+						<th>PROMOTION MECHANICS</th>
+						<th>SOL CODE STATUS</th>
 						</tr>
 					</thead>
 				</table>
+				<!--bharati commented below part in sprint-9-->
 				<div class="download-btn">
-					<select id="level" class="btn btn-primary" name="level"
+					<!--<select id="level" class="btn btn-primary" name="level"
 						style="color: white; background-color: #3B5999;">
 						<option selected="selected">L1 Depot level</option>
 						<option>L2 Depot level</option>
-					</select> <input id="download" type="submit" class="btn btn-primary"
-						value="KAM DOWNLOAD" disabled="disabled"></input>
+					</select> -->
+					<!--<input id="download" type="submit" class="btn btn-primary"
+						value="KAM DOWNLOAD" disabled="disabled"></input>-->
+						<!--bharati added this btn for sprint-9-->
+						<input type="button" class="btn btn-primary"
+						value="KAM DOWNLOAD" onclick="javascript: downloadPromotionFile();"></input>
 				</div>
 			</form>
-			<form:form action="https://vat.hulcd.com/VisibilityAssetTracker/uploadKam.htm" id="kamUpload" method="POST"
+			<%--<form:form action="https://vat.hulcd.com/VisibilityAssetTracker/uploadKam.htm" id="kamUpload" method="POST"
 				modelAttribute="L1CollaborationBean" enctype="multipart/form-data"
-				onsubmit="return uploadValidation()">
-				<div class="promo-upload">KAM COLLABORATION</div>
+				onsubmit="return uploadValidation()">--%>
+				<!--<div class="promo-upload">KAM COLLABORATION</div>
 				<div class="upload-file">
 					<div class="col-md-4 col-md-offset-4" style="padding: 30px 0px;">
 						<div class="upload-label">
@@ -380,8 +422,8 @@
 					</div>
 
 					<div class="clearfix"></div>
-				</div>
-			</form:form>
+				</div>-->
+			<%--</form:form>--%>
 
 			<%-- <div class="col-md-12">
 				<div class="col-md-3">
@@ -532,7 +574,7 @@
 		<script type="text/javascript">
 			var moc = '${mocJson}';
 			var basepacks = '${basepacks}';
-
+            var Mocvalue = $('#Mocvalue').val(); //bharati added in sprint-9 for moc filter
 			var category = null;
 			var brand = null;
 			var basepack = null;

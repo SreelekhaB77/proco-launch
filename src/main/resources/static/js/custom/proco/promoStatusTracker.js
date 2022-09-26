@@ -4,7 +4,7 @@
  
 $(document).ready(function() {
 	
-	$(document).on("click", "#btnSubmitBasePack, #btnSubmitBasePack, .validate_dowload", function(){
+	$(document).on("click", "#btnSubmitBasePack1, #btnSubmitBasePack, .validate_dowload", function(){
         $("#successblock, #errorblock, #successblockUpload, #erorblockUpload").hide();
 	});
 	
@@ -31,7 +31,8 @@ $(document).ready(function() {
 	});
 	
 	/*** Convert db data into tree structure */
-	try {
+	//bharati commented this below part in sprint-9 for moc filter
+	/*try {
 		var mocRawList = JSON.parse(DownloadMocList);
 		var treeStruct = {};
 		for( var i = 0; i < mocRawList.length; i++){
@@ -101,7 +102,7 @@ $(document).ready(function() {
 		
 		
 		/** Intiate moc combotree */
-		$('#moc-filter').comboTree({
+		/*$('#moc-filter').comboTree({
 			id: 'moc-filter-selector',
 			source : treeStructMoc,
 			isMultiple : true
@@ -109,10 +110,36 @@ $(document).ready(function() {
 	
 	} catch (ex){
 		console.log(ex);
-	}
+	}*/
 	
 	
 	/***** */
+	//bharati added below code for moc bind options in sprint-9
+	
+	$.ajax({
+		type : "GET",
+		contentType : "application/json; charset=utf-8",
+		cache : false,
+		url : "downloadDPMOC.htm",
+		success : function(data) {
+			var Mocvalue1 = $.parseJSON(data);
+			//console.log(branch);
+			$('#Mocvalue1').empty();
+			$('#Mocvalue1').append("<option value=SELECT>SELECT MOC</option>");
+			$.each(Mocvalue1,
+					function(key, value) {
+						$('#Mocvalue1').append(
+								"<option value='" + value + "'>" + value
+										+ "</option>");
+					});
+		},
+		error : function(error) {
+			console.log(error)
+		}
+	});
+	
+	
+	//bharati code end here
 	
 	$( document ).on( "change", "#comboTreemoc-filterDropDownContainer input[type=checkbox]", function(e){
 				e.preventDefault();e.stopPropagation();
@@ -314,15 +341,24 @@ $(document).ready(function() {
 						year = $(this).val();
 						promoTable.draw();
 						});
+						
+						//bharati added for sprint-9 moc filter US
+						$('#Mocvalue').change(function(){
+						Mocvalue = $(this).val();
+						promoTable.draw();
+						});
+						
 					
+						//bharati code end here for sprint-9
+						
 					/*PromoListing table pagination */
 				       promoTable = $('.promo-list-table').DataTable({
 
 				              /* added for second tab start */
 				    	   "bProcessing": true,
 				             "bServerSide": true,
-				            /* "scrollY":       "300px",
-						        "scrollX":        true,*/
+				             "scrollY":       "200px",
+						        "scrollX":        true,
 						        "scrollCollapse": true,
 						        "paging":         true,
 						        "ordering": false,
@@ -341,7 +377,7 @@ $(document).ready(function() {
 					                  "sEmptyTable": "No Pending Promos."
 					
 					              },
-				             "iDisplayLength": 5,
+				             "iDisplayLength": 10,
 						     "iDisplayStart": 0,
 				              "sAjaxSource": "promoStatusPagination.htm",
 				               "fnServerParams": function(aoData) {
@@ -355,7 +391,7 @@ $(document).ready(function() {
 				    	                {"name": "offerType", "value": offerType}, 
 				    	                {"name": "modality", "value": modality}, 
 				    	                {"name": "year","value": year},
-				    	                {"name": "moc","value": mocVal},
+				    	                {"name": "moc","value": Mocvalue},//bharati changes this mocVal to MocValue in sprint-9
 				    	                {"name": "promoId","value": promoId}
 				    	                );
 				              }, 
@@ -366,17 +402,19 @@ $(document).ready(function() {
 				              },
 				              "aoColumns": [{
 				                    "mData": "promo_id"
-			                  },{
+			                  },/*{
 				                    "mData": "originalId"
-			                  },{
+			                  },*/
+							  {
 			                    "mData": "startDate"
 			                  },{
 			                    "mData": "endDate"
 			                  },{
 			                    "mData": "moc"
-			                  }, {
+			                  }, /*{
 			                    "mData": "customer_chain_l1"
-			                  },{
+			                  },*/
+							  {
 			                    "mData": "customerChainL2"
 			                  },{
 			                    "mData": "basepack"
@@ -390,23 +428,24 @@ $(document).ready(function() {
 			                    "mData": "geography",
 			                  }, {
 			                    "mData": "quantity",
-			                  }, {
+			                  }, /*{
 			                    "mData": "uom",
-			                  }, {
+			                  },*/ {
 			                    "mData": "offer_value",
-			                  },{
+			                  },/*{
 				                 "mData": "kitting_value",
-				              },{
+				              },*/{
 				                 "mData": "status",
-				              },{
+				              },/*{
 				                 "mData": "reason",
-				              },{
+				              },*/
+							  {
 				                 "mData": "remark",
-				              },{
+				              },/*{
 				                 "mData": "changeDate",
 				              },{
 				                 "mData": "changesMade",
-				              },{
+				              },*/{
 				                 "mData": "userId",
 				              },{
 				                 "mData": "investmentType",
@@ -610,7 +649,9 @@ function split(val){
 }
 
 function downloadPromotionFile(){
-	$("#download").submit();
+	//$("#download").submit();  //bharati commented this line for sprint-9 moc filter value pass to download promo file
+	var SelectedMoc = $("#Mocvalue").val();
+	window.location.assign(SelectedMoc+"/downloadPromoStatusTracker.htm");
 }
 
 function uploadValidation() {
@@ -952,3 +993,230 @@ function downloadMeasureReport(e){
 		
 	
 }
+//bharati added code for PPlinkage upload in sprint-9 US-15
+	
+					$("#btnSubmitBasePack1").click(function (event) {
+						event.preventDefault();
+						
+						var fileName = $('#uploadmeasscre').val();
+						if (fileName == '') {
+							$('#uploadErrorMeaMsg').show().html("Please select a file to upload");
+							return false;
+						} else {
+							$('#uploadErrorMeaMsg').hide();
+							var FileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+							if (FileExt != "xlsx") {
+								if (FileExt != "xls") {
+									$('#uploadErrorMeaMsg').show().html("Please upload .xls or .xlsx file");
+									$("#coeStatusMeasFileUpload").submit(function(e) {
+										e.preventDefault();
+									});
+									return false;
+								}
+
+							}
+						}
+						
+				        // Get form
+				        var form = $('#coeStatusMeasFileUpload')[0];
+                           var data = new FormData(form);
+                        $.ajax({
+				            type: "POST",
+				            enctype: 'multipart/form-data',
+				            url: 'ppminkageupload.htm' ,
+				            data: data,
+				            processData: false,
+				            contentType: false,
+				            cache: false,
+				            timeout: 600000,
+				            beforeSend: function() {
+                                ajaxLoader(spinnerWidth, spinnerHeight);
+                            },
+							
+				            success: function (resdata) {
+				            	//console.log(resdata);
+				            	
+				            	 $('.loader').hide();
+				            	 if(resdata.includes('EXCEL_UPLOADED')) {
+				                    $('#ppmerrorblockUpload').hide();
+				                	$('#ppmsuccessblock').show().find('span').html(' File Uploaded Successfully !!!');
+				                	 
+				                }
+				                
+				                else if(resdata.includes('EXCEL_NOT_UPLOADED')){
+				               $('#ppmsuccessblock').hide();
+				                $('#ppmerrorblockUpload').show().find('span').html(' File Contains Error ');
+				                }
+								 else if(resdata.includes('File Size Exceeds')){
+									 $('#ppmerrorblockUpload').show().find('span').html('File Size Limit Exceeded');
+                                     $('#ppmsuccessblock').hide();
+								 }
+				                else if(resdata.includes('FILE_EMPTY')){
+									$('#ppmerrorblockUpload').show().find('span').html('Error While Uploading Empty File');
+									$('#ppmsuccessblock').hide();
+								}
+								else if(resdata.includes('CHECK_COL_MISMATCH')){
+									$('#ppmerrorblockUpload').show().find('span').html('Please Check Uploaded File');
+									$('#ppmsuccessblock').hide();
+								}else if(resdata.includes('Column count is not match with expected')){
+									$('#ppmerrorblockUpload').show().find('span').html('Please Upload correct File');
+									$('#ppmsuccessblock').hide();
+								}
+								else{
+									
+				                	$('#ppmerrorblockUpload').show().find('span').html('Error While Uploading File');
+				                	$('#ppmsuccessblock').hide();
+				                	
+				                	 
+				              	 }
+				                    
+				                 $('#coeStatusMeasFileUpload')[0].reset();
+								 //$('.file-name').html("No file chosen");
+				            },
+				            error: function (e) {
+				            $('#ppmsuccessblock').hide();
+				                 
+				            }
+				        });
+				       
+					    
+					    	
+				    });
+		//bharati added below function for sprint-9
+	function downloadMeasureReport(){
+	//$("#download").submit();  //bharati commented this line for sprint-9 moc filter value pass to download promo file
+	var SelectedMoc = $("#Mocvalue1").val();
+	                 if(SelectedMoc == 'SELECT'){
+							$('#selectMsgMoc').show();
+						     
+						}else{
+							$('#selectMsgMoc').hide();
+							window.location.assign("dpMesureDownloadBasedOnMoc.htm?moc="+SelectedMoc);
+						}
+	
+}
+					//bharati code end here for sprint-9
+					
+//bharati added sprint-9 ppm coe remark upload changes	
+$.ajax({
+		type : "GET",
+		contentType : "application/json; charset=utf-8",
+		cache : false,
+		url : "getMOCforCoedownload.htm",
+		success : function(data) {
+			var ppmMocvalue = $.parseJSON(data);
+			//console.log(branch);
+			$('#ppmMocvalue').empty();
+			$('#ppmMocvalue').append("<option value=SELECT>SELECT MOC</option>");
+			$.each(ppmMocvalue,
+					function(key, value) {
+						$('#ppmMocvalue').append(
+								"<option value='" + value + "'>" + value
+										+ "</option>");
+					});
+		},
+		error : function(error) {
+			console.log(error)
+		}
+	});
+function downloadPpmReport(){
+	//$("#download").submit();  //bharati commented this line for sprint-9 moc filter value pass to download promo file
+	var SelectedppmMoc = $("#ppmMocvalue").val();
+	                 if(SelectedppmMoc == 'SELECT'){
+							$('#selectppmMsgMoc').show();
+						     
+						}else{
+							$('#selectppmMsgMoc').hide();
+							window.location.assign("ppmCoeUploadableDownload.htm?selMOC="+SelectedppmMoc);
+						}
+	
+}
+
+
+$("#btnSubmitPpmCoeRemark").click(function (event) {
+						event.preventDefault();
+						
+						var fileName = $('#uploadppmCoeRemark').val();
+						if (fileName == '') {
+							$('#uploadppmErrorMeaMsg').show().html("Please select a file to upload");
+							return false;
+						} else {
+							$('#uploadppmErrorMeaMsg').hide();
+							var FileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+							if (FileExt != "xlsx") {
+								if (FileExt != "xls") {
+									$('#uploadppmErrorMeaMsg').show().html("Please upload .xls or .xlsx file");
+									$("#ppmCoeRemarkUpload").submit(function(e) {
+										e.preventDefault();
+									});
+									return false;
+								}
+
+							}
+						}
+						
+				        // Get form
+				        var form = $('#ppmCoeRemarkUpload')[0];
+                           var data = new FormData(form);
+                        $.ajax({
+				            type: "POST",
+				            enctype: 'multipart/form-data',
+				            url: 'ppmcoeremarksupload.htm' ,
+				            data: data,
+				            processData: false,
+				            contentType: false,
+				            cache: false,
+				            timeout: 600000,
+				            beforeSend: function() {
+                                ajaxLoader(spinnerWidth, spinnerHeight);
+                            },
+							
+				            success: function (ModRes) {
+				            	//console.log(resdata);
+				            	
+				            	 $('.loader').hide();
+				            	 if(ModRes.includes('EXCEL_UPLOADED')) {
+				                    $('#ppmcoeerrorblockUpload').hide();
+				                	$('#ppmcoesuccessblock').show().find('span').html(' File Uploaded Successfully !!!');
+				                	 
+				                }
+				                
+				                else if(ModRes.includes('EXCEL_NOT_UPLOADED')){
+				               $('#ppmcoesuccessblock').hide();
+				                $('#ppmcoeerrorblockUpload').show().find('span').html(' File Contains Error ');
+				                }
+								 else if(ModRes.includes('File Size Exceeds')){
+									 $('#ppmcoeerrorblockUpload').show().find('span').html('File Size Limit Exceeded');
+                                     $('#ppmcoesuccessblock').hide();
+								 }
+				                else if(ModRes.includes('FILE_EMPTY')){
+									$('#ppmcoeerrorblockUpload').show().find('span').html('Error While Uploading Empty File');
+									$('#ppmcoesuccessblock').hide();
+								}
+								else if(ModRes.includes('CHECK_COL_MISMATCH')){
+									$('#ppmcoeerrorblockUpload').show().find('span').html('Please Check Uploaded File');
+									$('#ppmcoesuccessblock').hide();
+								}else if(ModRes.includes('Column count is not match with expected')){
+									$('#ppmcoeerrorblockUpload').show().find('span').html('Please Upload correct File');
+									$('#ppmcoesuccessblock').hide();
+								}
+								else{
+									
+				                	$('#ppmcoeerrorblockUpload').show().find('span').html('Error While Uploading File');
+				                	$('#ppmcoesuccessblock').hide();
+				                	
+				                	 
+				              	 }
+				                    
+				                 $('#ppmCoeRemarkUpload')[0].reset();
+								 //$('.file-name').html("No file chosen");
+				            },
+				            error: function (e) {
+				            $('#ppmcoesuccessblock').hide();
+				                 
+				            }
+				        });
+				       
+					    
+					    	
+				    });

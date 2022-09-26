@@ -9,16 +9,11 @@ import com.hul.proco.controller.listingPromo.PromoListingBean;
 import com.hul.proco.controller.listingPromo.PromoMeasureReportBean;
 
 public interface ProcoStatusTrackerDAO {
-	public List<PromoListingBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String cagetory, String brand,
-			String basepack, String custChainL1, String custChainL2, String geography, String offerType, String modality, 
-			String year, String moc, String userId, int actives,String promoId,String searchParameter);
+	public List<PromoListingBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String moc,String searchParameter);
 	
-	public int getPromoListRowCount(String cagetory, String brand, String basepack, String custChainL1, String custChainL2, 
-			String geography, String offerType, String modality, String year, String moc, String userId, int active,String promoId);
+	public int getPromoListRowCount(String moc);
 	
-	public List<ArrayList<String>> getPromotionStatusTracker(ArrayList<String> headerList,String cagetory, String brand,
-			String basepack, String custChainL1, String custChainL2, String geography, String offerType, String modality, 
-			String year, String moc, String userId, int active,String promoId);
+	public List<ArrayList<String>> getPromotionStatusTracker(ArrayList<String> headerList, String moc, String userId);
 	
 	public String getMocList();
 	
@@ -45,4 +40,17 @@ public interface ProcoStatusTrackerDAO {
 	public List<ArrayList<String>> getProcoMeasureReportErrorDetails(ArrayList<String> headerList, String userId);
 
 	public boolean batchCustomerStatusTrackerReport(List<ArrayList<String>> dataObj);
+
+	public ArrayList<String> getPromoMeasureDownload(); //Added by Kavitha D for promo measure template-SPRINT 9
+
+	public List<ArrayList<String>> ppmCoeRemarksDownload(ArrayList<String> headerList);//Added by kavitha D for PPM coe remarks download-SPRINT 9
+
+	public ArrayList<String> ppmCoeRemarksDownloadHeaderList();
+
+	public ArrayList<String> getPpmDownloadHeaders();
+
+	public List<ArrayList<String>> getPpmDownloadData(ArrayList<String> headers, String selMOC);
+
+	public List<String> getMOCforCoedownload();
+
 }

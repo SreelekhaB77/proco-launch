@@ -29,6 +29,28 @@
 <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
 
 </head>
+<!--bharati added below style for sprint-9 moc filter changes -->
+<style>
+.promo-filter-div{
+float: right!important;
+width: 30%!important;
+margin-top: -75px!important;
+}
+
+#Mocvalue{
+	height:30px!important;
+}
+.table-header-listing {
+    background: #035597 !important;
+}
+@media only screen and (max-width: 767px) {
+	.promo-filter-div{
+    width: 60%!important;
+    margin-top: -85px!important;	
+}
+}
+
+</style>
 <body class="Verdana-font">
 	<jsp:include page="../proco/proco-header.jsp" />
 
@@ -66,12 +88,12 @@
 								<div class="proco-volume-icon"></div>
 								<div class="tab-label-proco-volume-inactive">Volume Upload</div>
 						</a></li>
-						
-						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 disaggregation"><a
+						<!--bharati commented disaggregation tab in sprint-9--> 
+						<!--<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 disaggregation"><a
 							href="https://vat.hulcd.com/VisibilityAssetTracker/promoDisaggregation.htm">
 								<div class="proco-disaggregation-icon"></div>
 								<div class="tab-label-proco-disaggregation-inactive">Disaggregation</div>
-						</a></li>
+						</a></li>-->
 						
 					  </c:if>
 					   <c:if test="${roleId eq 'KAM'}">
@@ -159,8 +181,9 @@
          	</div> -->
 		<div class="proco-creation form-horizontal">
 			<input type="hidden" id="roleId" value="${roleId}" />
+			<!--bharati commented below div line for sprint-9-->
 			<!-- <div class="promo-back"><a href="https://vat.hulcd.com/VisibilityAssetTracker/procoHome.htm"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Listing</div> -->
-			<div class="promo-details" style="padding:10px 10px;"><span style="color:#fff;font-weight:600;">SELECT PROMO LISTING</span>
+			<!--<div class="promo-details" style="padding:10px 10px;"><span style="color:#fff;font-weight:600;">SELECT PROMO LISTING</span>
 				<!-- <span class="promo-detail-txt"><b>SELECT PROMO LISTING</b></span> <span
 					class="pull-right promo-uom">
 					<div class="col-md-12">
@@ -178,8 +201,10 @@
 					</div>
 				</span>
 				<div class="clearfix"></div> -->
-			</div>
-		<form action="https://vat.hulcd.com/VisibilityAssetTracker/downloadPromoFromListing.htm" method="POST" enctype="multipart/form-data" id="download">
+			<!--</div>-->
+			<!--bharati change below end point downloadPromoFromListing.htm to downloadPromoListing.htm for promo list download in sprint-9-->
+			<!--bharati commented below categories in form for sprint-9-->  
+		<!--<form action="https://vat.hulcd.com/VisibilityAssetTracker/downloadPromoListing.htm" method="POST" enctype="multipart/form-data" id="download">
 		<input type="hidden" name="remarkText" id="remarkText" value="" />
 			<div class="promo-form-details proco-listing-form">
 				<div class="col-md-4">
@@ -278,7 +303,7 @@
 							<!-- <select class="form-control" id="">
 								<option>ALL INDIA</option>
 							</select> -->
-							<input type="text" class="form-control" value="ALL INDIA" name="geography"
+							<!--<input type="text" class="form-control" value="ALL INDIA" name="geography"
 								id="geography" />
 						</div>
 					</div>
@@ -303,31 +328,46 @@
 
 				<div class="clearfix"></div>
 			</div>
-		</form>
+		</form>-->
 			<div class="promo-list table-header-listing">PROMO LIST</div>
+			<!--bharati added below form for sprint-9 moc changes-->
+			<form action="https://vat.hulcd.com/VisibilityAssetTracker/downloadPromoListing.htm" method="POST" enctype="multipart/form-data" id="download">
+			<div class="form-group col-sm-4" style="margin-top: 20px;">
+						<label for="unique-id" class="control-label col-md-2">MOC</label>
+						<div class="col-md-5">
+						<select class="form-control" id="Mocvalue" name="Mocvalue">
+								 <c:forEach items="${mocList}" var="mocValue">
+                                   <option value="${mocValue}"><c:out value="${mocValue}"></c:out></option>
+                                 </c:forEach>
+                                 </select>
+								 </div>
+
+					</div>
+			</form>
 			<form>
+			<!--bharati commented uom,kitting value, reason,remark and added last 4 columns in sprint-9 US-2-->
 			<table id="table-id-promo-list-table" class="table table-striped table-bordered promo-list-table table-responsive" style="width: 100%;">
 				<thead>
 					<tr>
 						<th><input name="select_all" class="userCheck" value="1" type="checkbox" /></th>
-						<th>UNIQUE ID</th>
-						<th>ORIGINAL ID</th>
+						<th>PROMO ID</th>
+						<!--<th>ORIGINAL ID</th>-->
 						<th>START DATE</th>
 						<th>END DATE</th>
 						<th>MOC</th>
-						<th>CUSTOMER CHAIN L1</th>
+						<!--<th>CUSTOMER CHAIN L1</th>--> <!--bharati rename this to ppm account in sprint-9-->
+						<th>PPM ACCOUNT</th>
 						<th>BASEPACK</th>
 						<th>OFFER DESCRIPTION</th>
 						<th>OFFER TYPE</th>
 						<th>OFFER MODALITY</th>
 						<th>GEOGRAPHY</th>
 						<th>QUANTITY</th>
-						<th>UOM</th>
 						<th>OFFER VALUE</th>
-						<th>KITTING VALUE</th>
 						<th name="stat">STATUS</th>
-						<th>REASON</th>
-						<th>REMARK</th>
+						<th>CREATED BY</th>
+						<th>CREATED DATE</th>
+						<th>REMARKS</th>
 						<th>INVESTMENT TYPES</th>
 						<th>SOL CODE</th>
 						<th>PROMOTION MECHANICS</th>
@@ -336,7 +376,8 @@
 				</thead>
 							</table>
 			</form>
-			<c:if test="${roleId eq 'TME'}">			
+			<!--bharati commented below 4 btns and upload part in sprint-9 US-2-->
+			<!--<c:if test="${roleId eq 'TME'}">			
 			<div class="promo-list-btns">
 				<div class="col-md-3 col-xs-12">
 					<a href="#" id="delete_promo"><button
@@ -355,7 +396,7 @@
 						class="btn promo-primary-btn col-md-10 col-md-offset-1 col-xs-12">CREATE
 						PROMO</button></a>
 				</div>
-				</c:if>	
+				</c:if>	-->
 				<div class="clearfix"></div>
 			</div>
 			<!-- <p>Choose file -> Submit Selected File -> Import</p>
@@ -390,7 +431,8 @@
 				<input type="button" class="btn new-btn-download" value="PROMO DOWNLOAD" onclick="javascript: downloadPromotionFile();"></input>
 			</div>
 			</c:if>
-			<c:if test="${roleId eq 'TME'}">
+			<!--bharati added comment for below code in sprint-9-->
+			<!--<c:if test="${roleId eq 'TME'}">
 			<form:form action="https://vat.hulcd.com/VisibilityAssetTracker/uploadPromoEdit.htm" id="promoEditUpload"
 				method="POST" modelAttribute="VolumeUploadBean"
 				enctype="multipart/form-data" onsubmit="return uploadValidation()">
@@ -423,7 +465,7 @@
 				<div class="clearfix"></div>
 			</div>
 		</form:form>
-		</c:if>
+		</c:if>-->
 			
 		</div>
 		
@@ -488,6 +530,7 @@
 		<script type="text/javascript" src="assets/js/custom/proco/alert-modal.js"></script>
 		<script type="text/javascript">
 		var moc = '${mocJson}';
+		var Mocvalue = $('#Mocvalue').val(); //bharati added in sprint-9 for moc filter
 		var geographyData = '${geographyJson}';
 		var basepacks = '${basepacks}';
 		var newBasepacks = null;

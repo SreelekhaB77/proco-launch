@@ -20,24 +20,18 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 	private ProcoStatusTrackerDAO procoStatusTrackerDao;
 	
 	@Override
-	public List<PromoListingBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String cagetory,
-			String brand, String basepack, String custChainL1, String custChainL2, String geography, String offerType,
-			String modality, String year, String moc, String userId, int actives,String promoId, String searchParameter) {
-		return procoStatusTrackerDao.getPromoTableList(pageDisplayStart, pageDisplayLength, cagetory, brand, basepack, custChainL1, custChainL2, geography, offerType, modality, year, moc, userId, actives,promoId,searchParameter);
+	public List<PromoListingBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String moc, String searchParameter) {
+		return procoStatusTrackerDao.getPromoTableList(pageDisplayStart, pageDisplayLength, moc,searchParameter);
 	}
 
 	@Override
-	public int getPromoListRowCount(String cagetory, String brand, String basepack, String custChainL1,
-			String custChainL2, String geography, String offerType, String modality, String year, String moc,
-			String userId, int active,String promoId) {
-		return procoStatusTrackerDao.getPromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2, geography, offerType, modality, year, moc, userId, active,promoId);
+	public int getPromoListRowCount(String moc) {
+		return procoStatusTrackerDao.getPromoListRowCount(moc);
 	}
 
 	@Override
-	public List<ArrayList<String>> getPromotionStatusTracker(ArrayList<String> headerList, String cagetory,
-			String brand, String basepack, String custChainL1, String custChainL2, String geography, String offerType,
-			String modality, String year, String moc, String userId, int active, String promoId) {
-		return procoStatusTrackerDao.getPromotionStatusTracker(headerList, cagetory, brand, basepack, custChainL1, custChainL2, geography, offerType, modality, year, moc, userId, active, promoId);
+	public List<ArrayList<String>> getPromotionStatusTracker(ArrayList<String> headerList, String moc, String userId) {
+		return procoStatusTrackerDao.getPromotionStatusTracker(headerList,moc,userId);
 	}
 	
 	@Override
@@ -96,37 +90,82 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 	public ArrayList<String> getHeaderListForPromoStatusTracker(String UserId, boolean isCron){
 		ArrayList<String> headerList = new ArrayList<String>();
 		if(procoStatusTrackerDao.getUserRoleId(UserId) == 2 || isCron) {
-			headerList.add("Promo Id");
-			headerList.add("Original Id");
-			headerList.add("Start Date");
-			headerList.add("End Date");
+			/*headerList.add("PROMO ID");
+			headerList.add("START DATE");
+			headerList.add("END DATE");
 			headerList.add("MOC");
-			headerList.add("Customer Chain L1");
-			headerList.add("Customer Chain L2");
-			headerList.add("Basepack");
-			headerList.add("Basepack Description");
-			headerList.add("Created By");
-			headerList.add("Sales Category");
-			headerList.add("Sales Brand");
-			headerList.add("Offer Description");
-			headerList.add("Offer Type");
-			headerList.add("Offer Modality");
-			headerList.add("Geography");
-			headerList.add("Quantity");
-			headerList.add("UOM");
-			headerList.add("Offer Value");
-			headerList.add("Kitting Value");
-			headerList.add("Sales Value");
-			headerList.add("Estimated Spend");
-			headerList.add("Status");
-			headerList.add("Reason");
-			headerList.add("Remarks");
-			headerList.add("Change Date");
-			headerList.add("Investment Type");
-			headerList.add("SolCode");
-			headerList.add("SolCode_Description");
-			headerList.add("Promotion Mechanics");
-			headerList.add("SolCode Status");
+			headerList.add("PPM ACCOUNT");
+			headerList.add("BASEPACK");
+			headerList.add("OFFER DESCRIPTION");
+			headerList.add("OFFER TYPE");
+			headerList.add("OFFER MODALITY");
+			headerList.add("GEOGRAPHY");
+			headerList.add("PROMO TEMPLATE");
+			headerList.add("CREATED DATE");	
+			headerList.add("QUANTITY");
+			headerList.add("OFFER VALUE");
+			headerList.add("STATUS");
+			headerList.add("REMARK");
+			headerList.add("USER ID");
+			headerList.add("INVESTMENT TYPES");
+			headerList.add("SOL CODE ");
+			headerList.add("SOL CODE DESCRIPTION");
+			headerList.add("PROMOTION MECHANICS");
+			headerList.add("SOL CODE STATUS");*/
+			//Added by Kavitha D-SPRINT 9
+			headerList.add("CHANNEL");
+			headerList.add("YEAR");
+			headerList.add("MOC");
+			headerList.add("ACCOUNT TYPE");
+			headerList.add("CLAIM SETTLEMENT TYPE");
+			headerList.add("SECONDARY_CHANNEL");
+			headerList.add("PPM ACCOUNT");
+			headerList.add("PROMO ID");
+			headerList.add("SOL CODE");
+			headerList.add("BM/MOC CYLCLE");
+			headerList.add("PROMO TIMEPERIOD");
+			headerList.add("SOL WILL RELEASE ON");
+			headerList.add("START DATE");
+			headerList.add("END DATE");
+			headerList.add("OFFER DESCRIPTION");
+			headerList.add("PPM DESCRIPTION");
+			headerList.add("BASEPACK CODE");
+			headerList.add("BASEPACK DESCRIPTION");
+			headerList.add("CHILDPACK");
+			headerList.add("OFFER TYPE");
+			headerList.add("OFFER MODALITY");
+			headerList.add("PRICE OFF");
+			headerList.add("QUANTITY");
+			headerList.add("FIXED BUDGET");
+			headerList.add("BRANCH");
+			headerList.add("SALES CLUSTER");
+			headerList.add("PPM CUSTOMER");
+			headerList.add("CMM NAME");
+			headerList.add("TME NAME");
+			headerList.add("SALES CATEGORY");
+			headerList.add("PSA CATEGORY");
+			headerList.add("PROMOTION STATUS");
+			headerList.add("PPM PROMOTION CREATOR");
+			headerList.add("PROMOTION MECHANICS");
+			headerList.add("INVESTMENT TYPE");
+			headerList.add("SALES CLUSTER CODE");
+			headerList.add("BRAND");
+			headerList.add("SUB BRAND");
+			headerList.add("PPM BUDGET HOLDER NAME");
+			headerList.add("FUND TYPE");
+			headerList.add("INVESTMENT AMOUNT");
+			headerList.add("PROMO ENTRY TYPE");
+			headerList.add("PROMO USER NAME");
+			headerList.add("PROMO USER TIME");
+			headerList.add("PPM APPROVED DATE");
+			headerList.add("PPM CREATION DATE");
+			headerList.add("NON UNIFY");
+			headerList.add("PPM SUBMISSION DATE");
+			headerList.add("PPM MODIFIED DATE");
+			headerList.add("COE REMARKS");
+			headerList.add("MRP");
+			headerList.add("AB CREATION");
+			headerList.add("BUDGET");
 		} else {
 			headerList = getHeaderListForPromoStatusTracker();
 		}
@@ -215,6 +254,35 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 		return procoStatusTrackerDao.getProcoMeasureReportErrorDetails(headerList, userId);
 	}
 	
+	//Added by Kavitha D for promo measure template-SPRINT 9
+	public ArrayList<String> getPromoMeasureDownload(){
+		return procoStatusTrackerDao.getPromoMeasureDownload();	
+	}
+	public List<ArrayList<String>> ppmCoeRemarksDownload(ArrayList<String> headerList){
+		return procoStatusTrackerDao.ppmCoeRemarksDownload(headerList);
+	}
 	
+	@Override
+	public ArrayList<String> ppmCoeRemarksDownloadHeaderList(){
+		return procoStatusTrackerDao.ppmCoeRemarksDownloadHeaderList();
+		
+	}
+	
+	public ArrayList<String> getPpmDownloadHeaders(){
+		return procoStatusTrackerDao.getPpmDownloadHeaders();
+
+	}
+	//Added by kavitha D for downloading ppm upload file starts-SPRINT 9
+
+	public List<ArrayList<String>> getPpmDownloadData(ArrayList<String> headers, String selMOC){
+		return procoStatusTrackerDao.getPpmDownloadData(headers,selMOC);
+	}
+
+	public List<String> getMOCforCoedownload(){
+		return procoStatusTrackerDao.getMOCforCoedownload();
+	}
+	//Added by kavitha D for downloading ppm upload file ends-SPRINT 9
+
+
 
 }

@@ -51,9 +51,6 @@ font-size: 22px!important;
    line-height: 2.9!important;
   font-size: 1.4em!important;
 }
-.nav-pills>li+li {
-margin-left:0px!important;
-}
 </style>
 </head>
 <body class="Verdana-font">
@@ -100,19 +97,20 @@ margin-left:0px!important;
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
 						
-						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-lib-bg-active">
-							<a href="https://vat.hulcd.com/VisibilityAssetTracker/ProcoMeasureReportUploadPage.htm" style="margin-top: 10px;">
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-lib-bg" style="margin-top: 10px; margin-right: 15px;">
+							<a href="https://vat.hulcd.com/VisibilityAssetTracker/ProcoMeasureReportUploadPage.htm" >
 								<div class="proco-Signops-icon"></div>
-								<div class="tab-label-proco-Signops-active OpenSans-font">Upload Measure Report</div>
+								<div class="tab-label-proco-Signops-inactive OpenSans-font">Upload Measure Report</div>
 							</a>
 						</li>
-						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-ppm-inactive" style="margin-top: 10px;width:23%">
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-ppm-active"  style="margin-top: 10px;width:23%">
 							<a href="https://vat.hulcd.com/VisibilityAssetTracker/ProcoPpmCoeRemarks.htm">
 								<div class="proco-ppm-icon"></div>
-								<div class="tab-label-proco-ppm-inactive OpenSans-font">PPM Upload</div>
+								<div class="tab-label-proco-ppm-active OpenSans-font">PPM Upload</div>
 							</a>
 						</li>
-			
+					
+
 					</ul>
 				</div>
 			</div>
@@ -145,16 +143,16 @@ margin-left:0px!important;
 			</div>
 		</c:if>
 		
-		<!--bharati added code for errorblock and successblock for sprint-9 US-15-->
-	                 				<div class="alert alert-success sucess-msg" style="display: none;margin-top:35px;" id="ppmsuccessblock">
+		
+	                 				<div class="alert alert-success sucess-msg" style="display: none;margin-top:35px;" id="ppmcoesuccessblock">
 		                                 <button type="button" class="close" data-hide="alert">&times;</button>
 		                                 <span></span>
 	                                </div>
                                    
-									<div class="alert alert-danger" style="display: none;margin-top:35px;" id="ppmerrorblockUpload">
+									<div class="alert alert-danger" style="display: none;margin-top:35px;" id="ppmcoeerrorblockUpload">
 		                            <button type="button" class="close" data-hide="alert">&times;</button>
 		
-		                           <!-- <span>Error while uploading file.</span>-->
+		                         
 								   <span></span>
 		
 	                               </div>
@@ -183,73 +181,54 @@ margin-left:0px!important;
 				
 		
 		
-		 <div class="promo-measure-upload">PROCO MEASURE REPORT UPLOAD</div>
+		 <div class="promo-measure-upload">PPM COE REMARKS UPLOAD</div>
 							<div class="row">
 								<div class="col-md-6 col-sm-6 ddd">
 								<!--bharati changes this below form for sprint-9 US-15 ppminkageupload-->
-									<form id="coeStatusMeasFileUpload" class="form-horizontal" action="#" enctype="multipart/form-data" name="coeStatusFileUpload">
+									<form id="ppmCoeRemarkUpload" class="form-horizontal" action="#" enctype="multipart/form-data" name="coeStatusFileUpload">
 		
 									<div class="launchupload-parent">
 										<div class="proco-measure-upload-wrapper">
 											<div style="text-align: center; color: #878787;">
 			
-												<h2 class="SEGOEUIL-font">Measure Report Upload File</h2>
+												<h2 class="SEGOEUIL-font">PPM COE Remarks Upload</h2>
 												<div class="upload-image">
 													<i class="fa fa-upload" aria-hidden="true"></i>
 												</div>
 			
 												<div class="upload-max-size">Maximum Upload File Size
 													:4MB</div>
-												<span id="uploadErrorMeaMsg" style="display: none; color: red"></span>
+												<span id="uploadppmErrorMeaMsg" style="display: none; color: red"></span>
 												
 												<div class="input-group upload-status-files">
-													<input id="uploadmeasscre" name="file" type="file" class="file">
+													<input id="uploadppmCoeRemark" name="file" type="file" class="file">
 												</div>
-												<input class="validate_upload btn marginT10 new-btn-primary" type="submit" id="btnSubmitBasePack1" value="Upload" />
-												<!--<a href="https://vat.hulcd.com/VisibilityAssetTracker/downloadSampleMeasureReport.htm" class="validate_upload btn marginT10 new-btn-download" id="btnSubmitBasePack">Promo Measure Template</a>-->
-												<!--bharati commented above line and added below line for measure report download in sprint-9-->
-											<a href="https://vat.hulcd.com/VisibilityAssetTracker/promoMeasureDownloadTemplate.htm" class="validate_upload btn marginT10 new-btn-download" id="btnSubmitBasePack">Promo Measure Template</a>
+												<input class="validate_upload btn marginT10 new-btn-primary" type="submit" id="btnSubmitPpmCoeRemark" value="Upload" />
+												
+											<a href="https://vat.hulcd.com/VisibilityAssetTracker/ppmCoeRemarksDownloadTemplate.htm" class="validate_upload btn marginT10 new-btn-download" id="btnSubmitBasePack">PPM COE Remarks Download Template</a>
 											</div>
 										</div>
 									</div>
 								</form> 
 							</div>
 							<div class="col-md-6 col-sm-6 ddd">
-							<!--bharati commented this form form sprint-9 moc changes-->
-							 	<!--<form style="margin-top:45px;" action="https://vat.hulcd.com/VisibilityAssetTracker/downloadMeasureReport.htm" id="download-measure-report" method="POST" onsubmit="downloadMeasureReport(event)">
+							<form style="margin-top:45px;" action="https://vat.hulcd.com/VisibilityAssetTracker/dpMesureDownloadBasedOnMoc.htm" id="download-measure-report" method="POST">
 							 		<div class="launchupload-parent">
 										<div class="proco-measure-download-wrapper">
-											<h2 class="SEGOEUIL-font">Measure Report Download File</h2>
+											<h2 class="SEGOEUIL-font">PPM Download</h2>
 											<div class="upload-image">
 												<i class="fa fa-download" aria-hidden="true"></i>
 											</div>
-											<div class="">
-												<input placeholder="Select MOC" autocomplete="off" id="moc-filter" name="moc-filter" class="form-control" />
-												<input id="MocYear" name="MocYear" type="hidden" class="form-control" />
-												<input id="MocMonth" name="MocMonth" type="hidden" class="form-control" />
-											</div>
-											<input class="validate_dowload btn marginT10 new-btn-download" type="submit" value="Download" />
-										</div>
-									</div>
-								</form>-->
-								
-								<form style="margin-top:45px;" action="https://vat.hulcd.com/VisibilityAssetTracker/dpMesureDownloadBasedOnMoc.htm" id="download-measure-report" method="POST">
-							 		<div class="launchupload-parent">
-										<div class="proco-measure-download-wrapper">
-											<h2 class="SEGOEUIL-font">Measure Report Download File</h2>
-											<div class="upload-image">
-												<i class="fa fa-download" aria-hidden="true"></i>
-											</div>
-											<p id="selectMsgMoc" style="display: none; color: red; margin-left: 17px;">Please Select the MOC.</p>
+											<p id="selectppmMsgMoc" style="display: none; color: red; margin-left: 17px;">Please Select the MOC.</p>
 											<div class="form-group col-sm-12" style="margin-top: 0px;">
 											
 						<label for="unique-id" class="control-label col-md-2" style="margin-top:9px;">MOC</label>
 						<div class="col-md-9">
-						<select class="form-control" id="Mocvalue1" name="Mocvalue1">
+						<select class="form-control" id="ppmMocvalue" name="ppmMocvalue">
 							</select>
 								 </div>
                          </div>
-					<input class="validate_dowload btn marginT10 new-btn-download" style="margin-top:0px;" onclick="javascript: downloadMeasureReport();" type="button"  value="Download" />
+					<input class="validate_dowload btn marginT10 new-btn-download" style="margin-top:0px;" onclick="javascript: downloadPpmReport();" type="button"  value="Download" />
 										</div>
 									</div>
 								</form>
@@ -259,7 +238,7 @@ margin-left:0px!important;
 					
 					
 					
-	<%-- <form:form action="https://vat.hulcd.com/VisibilityAssetTracker/uploadProcoMeasureReport.htm" id="coeStatusMeasFileUpload"
+	<%-- <form:form action="http://localhost:8083/VisibilityAssetTracker/uploadProcoMeasureReport.htm" id="coeStatusMeasFileUpload"
 				method="POST" modelAttribute="VolumeUploadBean"
 				enctype="multipart/form-data" onsubmit="return uploadMeasureValidation()">
 			<div class="promo-upload">PROMO MEASURE UPLOAD</div>
