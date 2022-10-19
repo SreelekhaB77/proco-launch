@@ -380,7 +380,7 @@ public class DataFromTable {
 	
 	public boolean specialChar(String ofr_desc)
 	{
-		String specialCharacters="(‘@’.^$*!/&)";
+		String specialCharacters="<>'\"`;@|,";
 		boolean found = false;
 		for(int i=0; i<specialCharacters.length(); i++){
 		    
