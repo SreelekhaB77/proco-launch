@@ -355,9 +355,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					if(datafromtable.specialChar(bean.getOffer_desc()))
 					{
 						if (flag == 1)
-							error_msg = error_msg + ",description contain special charactor";
+							error_msg = error_msg + ",Offer description contain special character";
 						else {
-							error_msg = error_msg + "description contain special charactor";
+							error_msg = error_msg + "Offer description contain special character";
 							flag = 1;
 						}
 					}
@@ -954,7 +954,17 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							flag = 1;
 						}
 					}
-					
+					//Kajal G changes start
+					if(datafromtable.specialChar(bean.getOffer_desc()))
+					{
+						if (flag == 1)
+							error_msg = error_msg + ",Offer description contain special character";
+						else {
+							error_msg = error_msg + "Offer description contain special character";
+							flag = 1;
+						}
+					}
+					//Kajal G changes end
 					if(bean.getPpm_account().equalsIgnoreCase("ASML"))
 					{
 						if(!asmlMap.containsKey(bean.getOffer_mod().toUpperCase()+bean.getOfr_type().toUpperCase()))
