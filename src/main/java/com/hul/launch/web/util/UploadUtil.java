@@ -34,10 +34,14 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -827,6 +831,54 @@ public class UploadUtil {
 		return res;
 	}
 
+	//Kajal G changes start
+	@SuppressWarnings("resource")
+	public static boolean writeDeletePromoXLSXFile(String filePath, List<ArrayList<String>> dataList,
+			Map<String, List<List<String>>> masters, String extension) throws IOException {
+		String sheetName = "PromoDownload";// name of sheet
+		FileOutputStream fileOut = null;
+		boolean res = false;
+		try {
+			
+			
+			SXSSFWorkbook wb = new SXSSFWorkbook();
+			SXSSFSheet sheet = wb.createSheet(sheetName);
+			// iterating r number of rows
+			DataFormat fmt = wb.createDataFormat();
+			CellStyle textStyle = wb.createCellStyle();
+			textStyle.setDataFormat(fmt.getFormat("@"));
+			
+			int rowCount = 0;
+			for (int r = 0; r < dataList.size(); r++) {
+				// iterating c number of columns
+				List<String> al = dataList.get(r);
+				Row row = sheet.createRow(rowCount);
+				rowCount++;
+				for (int c = 0; c < al.size(); c++) {
+					sheet.setDefaultColumnStyle(c, textStyle);
+					Cell cell = row.createCell(c);
+					cell.setCellValue(al.get(c));
+				}
+			}
+
+			fileOut = new FileOutputStream(filePath + extension);
+			// write this workbook to an Outputstream.
+			wb.write(fileOut);
+			fileOut.flush();
+			fileOut.close();
+			res = true;
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
+			// e.printStackTrace();
+		} finally {
+			if (fileOut != null) {
+				fileOut.close();
+			}
+		}
+		return res;
+	}
+	//Kajal G changes end
+	
 	public static int readExcelCellCount(String filePath) throws IOException{
 
 		FileInputStream inputStream = new FileInputStream(new File(filePath));
