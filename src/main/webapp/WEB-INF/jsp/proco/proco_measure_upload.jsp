@@ -199,7 +199,7 @@ margin-left:0px!important;
 												</div>
 			
 												<div class="upload-max-size">Maximum Upload File Size
-													:4MB</div>
+													:10MB</div>
 												<span id="uploadErrorMeaMsg" style="display: none; color: red"></span>
 												
 												<div class="input-group upload-status-files">
