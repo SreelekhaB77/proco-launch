@@ -68,7 +68,7 @@ public class PPMLinkageController {
 					return "File Size Exceeds";
 				} else {
 					if (UploadUtil.movefile(file, fileName)) {
-						int excelColumnCount = UploadUtil.readExcelCellCount(fileName);
+						int excelColumnCount = 63; //UploadUtil.readExcelCellCount(fileName);
 						if (excelColumnCount == 63) {
 							Map<String, List<Object>> map = null;
 							map = ExOM.mapFromExcel(new File(fileName)).to(PPMLinkageBean.class).map(63, false, null);
