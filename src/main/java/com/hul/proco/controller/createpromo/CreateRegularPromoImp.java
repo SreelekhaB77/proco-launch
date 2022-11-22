@@ -101,7 +101,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		Map<String, String> abmap = getValidAbcreation();
 		Map<String, String> offer_mod_map = datafromtable.getAllOffetTypeAndOfferMod();
 		Map<String, String> asmlMap=datafromtable.handlingASMLAc();
-		Map<String, ArrayList<String>> validationmap = datafromtable.getAllValidationRecords();
+		Map<String, ArrayList<String>> validationmap = datafromtable.getAllValidationRecords(template);
 
 		// Mayur Adding changes for mapping of TME user for category
 		Map<String, String> duplicateMap = new HashMap<String, String>();

@@ -266,11 +266,11 @@ public class DataFromTable {
 	 * 
 	 * @return Map<String, ArrayList<String>>
 	 */
-	public Map<String, ArrayList<String>> getAllValidationRecords() {
+	public Map<String, ArrayList<String>> getAllValidationRecords(String templateType) {
 		Map<String, ArrayList<String>> validationmap = new HashMap<String, ArrayList<String>>();
 		validationmap.put("SOL TYPE", getSOLType());
 		validationmap.put("Channel name", getValidChannels());
-		validationmap.put("PPM Account", getValidPPMAccount());
+		validationmap.put("PPM Account", getValidPPMAccount(templateType));		
 		// validationmap.put("AB creation", getABCreation());
 		validationmap.put("baseback", getValidBasepack());
 		validationmap.put("offer type", getValidOfferType());
@@ -301,6 +301,22 @@ public class DataFromTable {
 		return (ArrayList<String>) ar.stream().map(String::toUpperCase).collect(Collectors.toList());
 
 	}
+	
+	//Kajal G change's start
+	public ArrayList<String> getValidPPMAccount(String templateType) {
+		String ppm_qury;
+		if(templateType.equalsIgnoreCase("regular")) {
+			ppm_qury = "SELECT DISTINCT CASE WHEN SECONDARY_CHANNEL = '' THEN PPM_ACCOUNT ELSE SECONDARY_CHANNEL END AS PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y'ORDER BY PPM_ACCOUNT";
+		}
+		else{
+			ppm_qury = "SELECT DISTINCT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE  IS_ACTIVE='Y'";
+		}
+		ArrayList<String> ar = (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(ppm_qury)
+				.list();
+		return (ArrayList<String>) ar.stream().map(String::toUpperCase).collect(Collectors.toList());
+
+	}
+	//Kajal G change's end
 
 	private ArrayList<String> getValidBasepack() {
 		String basepack = "SELECT DISTINCT BASEPACK FROM TBL_PROCO_PRODUCT_MASTER_V2 WHERE IS_ACTIVE=1 AND PPM_STATUS='YES'";
