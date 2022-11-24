@@ -17,6 +17,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hul.proco.controller.createpromo.CreatePromoService;
+import com.hul.proco.controller.listingPromo.PromoListingBean;
+import com.hul.proco.controller.listingPromo.PromoListingService;
 
 @Controller
 public class PromoCrController {
@@ -26,6 +28,9 @@ public class PromoCrController {
 	
 	@Autowired
 	private CreatePromoService createPromoService;
+	
+	@Autowired 
+	public PromoListingService promoListingService;
 	
 	
 	@SuppressWarnings("unchecked")
@@ -44,6 +49,7 @@ public class PromoCrController {
 		String geographyJson = createPromoService.getGeography(false);
 		List<String> yearList = (List<String>) yearAndMoc.get("years");
 		String mocJson = (String) yearAndMoc.get("moc");
+		List<String> mocValueCr = promoListingService.getPromoMoc(); //Added by Kavitha D for promo approval MOC filter-SPRINT 10
 		List<String> category = promoCrService.getAllCategories();
 		List<String> brand = promoCrService.getAllBrands();
 		List<String> basepacks = promoCrService.getAllBasepacks();
@@ -56,6 +62,7 @@ public class PromoCrController {
 		model.addAttribute("categories", category);
 		model.addAttribute("brands", brand);
 		model.addAttribute("basepacks", basepacks);
+		model.addAttribute("mocListCr", mocValueCr);
 		return new ModelAndView("proco/proco_promo_cr");
 	}
 	
@@ -71,6 +78,8 @@ public class PromoCrController {
 		Integer pageDisplayStart = Integer.valueOf(request.getParameter("iDisplayStart"));
 		Integer pageDisplayLength = Integer.valueOf(request.getParameter("iDisplayLength"));
 		Integer pageNumber = (pageDisplayStart / pageDisplayLength) + 1;
+		String searchParameter = request.getParameter("sSearch");
+
 
 		String cagetory = "", brand = "", basepack = "", custChainL1 = "", custChainL2 = "", geography = "";
 		String offerType = "", modality = "", year = "", moc = "";
@@ -136,11 +145,22 @@ public class PromoCrController {
 			moc = mocValue;
 		}
 
-		int rowCount = promoCrService.getPromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2,
-				geography, offerType, modality, year, moc, userId, 1,roleId);
-		List<PromoCrBean> promoList = promoCrService.getPromoTableList((pageDisplayStart + 1),
-				(pageNumber * pageDisplayLength), cagetory, brand, basepack, custChainL1, custChainL2, geography,
-				offerType, modality, year, moc, userId, 1,roleId);
+		//Commented & Added by Kavitha D-SPRINT 10 changes
+		/*
+		 * int rowCount = promoCrService.getPromoListRowCount(cagetory, brand, basepack,
+		 * custChainL1, custChainL2, geography, offerType, modality, year, moc, userId,
+		 * 1,roleId); List<PromoCrBean> promoList =
+		 * promoCrService.getPromoTableList((pageDisplayStart + 1), (pageNumber *
+		 * pageDisplayLength), cagetory, brand, basepack, custChainL1, custChainL2,
+		 * geography, offerType, modality, year, moc, userId, 1,roleId);
+		 */
+		
+		//System.out.println("MOC VAlue:" + moc);
+		//System.out.println("MOC VAlue from UI:" + mocValue);
+
+		int rowCount = promoCrService.getPromoListRowCount(userId,roleId,moc);
+		List<PromoCrBean> promoList = promoCrService.getPromoTableList((pageDisplayStart + 1),(pageNumber * pageDisplayLength),userId,roleId,moc,searchParameter);
+		
 
 		PromoCrJsonObject jsonObj = new PromoCrJsonObject();
 		jsonObj.setJsonBean(promoList);
@@ -159,10 +179,10 @@ public class PromoCrController {
 		String userId = (String) request.getSession().getAttribute("UserID");
 		String res = promoCrService.approveCr(promoId, userId, roleId);
 		if(res!=null){
-			model.addAttribute("success", "CRs approved successfully.");
+			model.addAttribute("success", "Promo's Approved Successfully.");
 			model.addAttribute("FILE_STATUS", "SUCCESS_FILE");
 		}else{
-			model.addAttribute("errorMsg", "Failed to approve CRs.");
+			model.addAttribute("errorMsg", "Failed to Approve Promo's.");
 		}
 		model.addAttribute("roleId", roleId);
 		setModelAttributes(model);

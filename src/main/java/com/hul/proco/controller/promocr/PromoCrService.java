@@ -3,13 +3,10 @@ package com.hul.proco.controller.promocr;
 import java.util.List;
 
 public interface PromoCrService {
-	public List<PromoCrBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String cagetory,
-			String brand, String basepack, String custChainL1, String custChainL2, String geography, String offerType,
-			String modality, String year, String moc, String userId, int actives, String roleId);
+	public List<PromoCrBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String userId, String roleId,String moc, String searchParameter);
 
-	public int getPromoListRowCount(String cagetory, String brand, String basepack, String custChainL1,
-			String custChainL2, String geography, String offerType, String modality, String year, String moc,
-			String userId, int active, String roleId);
+	public int getPromoListRowCount(String userId, String roleId,String moc);
+
 
 	public String approveCr(String promoId, String userId, String roleId);
 

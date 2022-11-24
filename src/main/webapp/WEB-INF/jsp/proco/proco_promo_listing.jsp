@@ -113,7 +113,7 @@ margin-top: -75px!important;
 					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoCr.htm">
 								<div class="proco-create-icon"></div>
-								<div class="tab-label-proco-create-inactive">Promo CR</div>
+								<div class="tab-label-proco-create-inactive">Promo Approval</div>
 						</a></li>
 					 </c:if>
 					 
@@ -121,7 +121,7 @@ margin-top: -75px!important;
 					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoCr.htm">
 								<div class="proco-create-icon"></div>
-								<div class="tab-label-proco-create-inactive">Promo CR</div>
+								<div class="tab-label-proco-create-inactive">Promo Approval</div>
 						</a></li>
 					 </c:if>
 						

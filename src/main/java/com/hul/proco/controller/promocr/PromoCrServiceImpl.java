@@ -14,18 +14,14 @@ public class PromoCrServiceImpl implements PromoCrService {
 	private PromoCrDAO promoCrDAO;
 	
 	@Override
-	public List<PromoCrBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String cagetory, 
-			String brand, String basepack, String custChainL1, String custChainL2, String geography, String offerType,
-			String modality, String year, String moc, String userId, int active,String roleId) {
+	public List<PromoCrBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String userId, String roleId,String moc, String searchParameter) {
 
-		return promoCrDAO.getPromoTableList(pageDisplayStart, pageDisplayLength, cagetory, brand, 
-				basepack, custChainL1, custChainL2, geography, offerType, modality, year, moc, userId, active,roleId);
+		return promoCrDAO.getPromoTableList(pageDisplayStart, pageDisplayLength, userId,roleId,moc,searchParameter);
 	}
 
 	@Override
-	public int getPromoListRowCount(String cagetory, String brand, String basepack, String custChainL1, String custChainL2, 
-			String geography, String offerType, String modality, String year, String moc, String userId, int active,String roleId) {
-		return promoCrDAO.getPromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2, geography, offerType, modality, year, moc, userId, active,roleId);
+	public int getPromoListRowCount(String userId, String roleId,String moc) {
+		return promoCrDAO.getPromoListRowCount(userId,roleId,moc);
 	}
 
 	@Override

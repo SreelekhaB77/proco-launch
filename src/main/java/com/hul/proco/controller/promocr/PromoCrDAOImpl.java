@@ -1,10 +1,13 @@
 package com.hul.proco.controller.promocr;
 
 import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -28,13 +31,11 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public List<PromoCrBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String cagetory,
-			String brand, String basepack, String custChainL1, String custChainL2, String geography, String offerType,
-			String modality, String year, String moc, String userId, int active, String roleId) {
+	public List<PromoCrBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String userId, String roleId,String moc, String searchParameter) {
 
 		List<PromoCrBean> promoList = new ArrayList<>();
-		List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
-		List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
+		//List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
+		//List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
 		String promoQuery = "";
 		try {
 			//kiran - rownumber changes
@@ -42,7 +43,7 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 					+ "A.UPDATE_STAMP,ROWNUMBER() OVER (ORDER BY A.UPDATE_STAMP DESC) AS ROW_NEXT FROM TBL_PROCO_PROMOTION_MASTER AS A "
 					+ " INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK=C.BASEPACK INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON A.STATUS=E.STATUS_ID WHERE A.ACTIVE=1 ";*/
 			//Garima - changes for VARCHAR_FORMAT
-			promoQuery = "SELECT * FROM (SELECT A.PROMO_ID, A.P1_BASEPACK, A.OFFER_DESC, A.OFFER_TYPE, A.OFFER_MODALITY, A.GEOGRAPHY, A.QUANTITY, A.UOM, A.OFFER_VALUE, A.MOC, A.CUSTOMER_CHAIN_L1, A.KITTING_VALUE, E.STATUS, DATE_FORMAT(A.START_DATE,'%d/%m/%Y'), DATE_FORMAT(A.END_DATE,'%d/%m/%Y'),A.REASON,A.REMARK,A.CHANGES_MADE, "
+			/*promoQuery = "SELECT * FROM (SELECT A.PROMO_ID, A.P1_BASEPACK, A.OFFER_DESC, A.OFFER_TYPE, A.OFFER_MODALITY, A.GEOGRAPHY, A.QUANTITY, A.UOM, A.OFFER_VALUE, A.MOC, A.CUSTOMER_CHAIN_L1, A.KITTING_VALUE, E.STATUS, DATE_FORMAT(A.START_DATE,'%d/%m/%Y'), DATE_FORMAT(A.END_DATE,'%d/%m/%Y'),A.REASON,A.REMARK,A.CHANGES_MADE, "
 					+ "A.UPDATE_STAMP,ROW_NUMBER() OVER (ORDER BY A.UPDATE_STAMP DESC) AS ROW_NEXT FROM TBL_PROCO_PROMOTION_MASTER AS A "
 					+ " INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK=C.BASEPACK INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON A.STATUS=E.STATUS_ID WHERE A.ACTIVE=1 ";
 			
@@ -140,18 +141,38 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 			} else {
 				promoQuery += " A.STATUS IN(7,8,9,17,18,19,27,28,29) AND A.STATUS NOT IN(10,20,30) ";
 			}
+			*/
+			//Added by Kavitha D-SPRINT 10 changes
+			
+			promoQuery = " SELECT * FROM (SELECT PM.PROMO_ID AS UNIQUE_ID,PM.PROMO_ID AS ORIGINAL_ID,PM.START_DATE,PM.END_DATE,"
+					+ " PM.MOC,PM.PPM_ACCOUNT,PM.BASEPACK_CODE AS BASEPACK,PM.OFFER_DESC,PM.OFFER_TYPE,PM.OFFER_MODALITY, "
+					+ " PM.CLUSTER AS GEOGRAPHY,PM.QUANTITY,PM.PRICE_OFF AS OFFER_VALUE,PSM.STATUS, PM.CREATED_BY, SUBSTRING(PM.CREATED_DATE,1,10) AS CREATED_DATE, PM.TEMPLATE_TYPE AS REMARKS, "
+					+ " 'NA' AS INVESTMENT_TYPE, 'NA' AS SOL_CODE, 'NA' AS PROMOTION_MECHANICS, 'NA' AS SOL_CODE_STATUS,ROW_NUMBER() OVER (ORDER BY PM.UPDATE_STAMP DESC) AS ROW_NEXT "
+					+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 PM "
+					+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.PPM_ACCOUNT AND CM.CHANNEL_NAME = PM.CHANNEL_NAME "
+					+ " INNER JOIN TBL_PROCO_STATUS_MASTER PSM ON PSM.STATUS_ID = PM.STATUS ";
+			
+				if (roleId.equalsIgnoreCase("NCMM")) {
+				
+				promoQuery += " WHERE PM.STATUS = 3 AND PM.MOC='"+moc+"' ";
+							}
+			
+				if(searchParameter!=null && searchParameter.length()>0){
+					promoQuery +="AND UCASE(PM.PROMO_ID) LIKE UCASE('%"+searchParameter+"%')";
+				}
 			if (pageDisplayLength == 0) {
-				promoQuery += " ORDER BY A.UPDATE_STAMP DESC) AS PROMO_TEMP ORDER BY PROMO_TEMP.UPDATE_STAMP DESC";
+				promoQuery += " ORDER BY PM.PROMO_ID,PM.PPM_ACCOUNT) AS PROMO_TEMP";
 			} else {
-				promoQuery += " ORDER BY A.UPDATE_STAMP DESC) AS PROMO_TEMP WHERE ROW_NEXT BETWEEN " + pageDisplayStart
-						+ " AND " + pageDisplayLength + " ORDER BY PROMO_TEMP.UPDATE_STAMP DESC";
+				promoQuery += " ORDER BY PM.PROMO_ID,PM.PPM_ACCOUNT) AS PROMO_TEMP WHERE ROW_NEXT BETWEEN " + pageDisplayStart + " AND " + pageDisplayLength + " ";
 			}
+			//System.out.println(promoQuery);
+
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQuery);
 
 			List<Object[]> list = query.list();
 			for (Object[] obj : list) {
-				PromoCrBean promoBean = new PromoCrBean();
-				promoBean.setPromo_id(obj[0].toString());
+				PromoCrBean promocrBean = new PromoCrBean();
+				/*promoBean.setPromo_id(obj[0].toString());
 				promoBean.setBasepack(obj[1].toString());
 				promoBean.setOffer_desc(obj[2].toString());
 				promoBean.setOffer_type(obj[3].toString());
@@ -169,8 +190,30 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 				promoBean.setEndDate(obj[14] == null ? "" : obj[14].toString());
 				promoBean.setReason(obj[15] == null ? "" : obj[15].toString());
 				promoBean.setRemark(obj[16] == null ? "" : obj[16].toString());
-				promoBean.setChangesMade(obj[17] == null ? "" : obj[17].toString());
-				promoList.add(promoBean);
+				promoBean.setChangesMade(obj[17] == null ? "" : obj[17].toString());*/
+				
+				promocrBean.setPromo_id(obj[0]== null ? "" :obj[0].toString());
+				promocrBean.setOriginalId(obj[1]== null ? "" :obj[1].toString());
+				promocrBean.setStartDate(obj[2]== null ? "" : obj[2].toString());
+				promocrBean.setEndDate(obj[3]== null ? "" : obj[3].toString());
+				promocrBean.setMoc(obj[4]== null ? "" : obj[4].toString());
+				promocrBean.setCustomer_chain_l1(obj[5]== null ? "" :obj[5].toString());
+				promocrBean.setBasepack(obj[6]== null ? "" :obj[6].toString());
+				promocrBean.setOffer_desc(obj[7]== null ? "" :obj[7].toString());
+				promocrBean.setOffer_type(obj[8]== null ? "" :obj[8].toString());
+				promocrBean.setOffer_modality(obj[9]== null ? "" :obj[9].toString());
+				promocrBean.setGeography(obj[10]== null ? "" :obj[10].toString());
+				promocrBean.setQuantity((obj[11] == null || obj[11].toString().equals("")) ? "" : obj[11].toString());
+				promocrBean.setOffer_value(obj[12]== null ? "" :obj[12].toString());
+				promocrBean.setStatus(obj[13]== null ? "" :obj[13].toString());
+				promocrBean.setUserId(obj[14]== null ? "" :obj[14].toString());
+				promocrBean.setChangeDate(obj[15]== null ? "" :obj[15].toString());
+				promocrBean.setRemark(obj[16]== null ? "" :obj[16].toString());
+				promocrBean.setInvestmentType(obj[17]== null ? "" :obj[17].toString());
+				promocrBean.setSolCode(obj[18]== null ? "" :obj[18].toString());
+				promocrBean.setPromotionMechanics(obj[19]== null ? "" :obj[19].toString());
+				promocrBean.setSolCodeStatus(obj[20]== null ? "" :obj[20].toString());
+				promoList.add(promocrBean);
 			}
 		} catch (Exception ex) {
 			logger.debug("Exception :", ex);
@@ -182,14 +225,13 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public int getPromoListRowCount(String cagetory, String brand, String basepack, String custChainL1,
-			String custChainL2, String geography, String offerType, String modality, String year, String moc,
-			String userId, int active, String roleId) {
+	public int getPromoListRowCount(String userId, String roleId,String moc) {
 
 		//kiran - bigint to int changes
 		//List<Integer> list = null;
 		List<BigInteger> list = null;
-		List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
+		//Commented by Kavitha D-Sprint 10 changes
+		/*List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
 		List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
 		try {
 
@@ -291,7 +333,19 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 			} else {
 				rowCount += " (A.STATUS=7 OR A.STATUS=8 OR A.STATUS=9 OR A.STATUS=17 OR A.STATUS=18 OR A.STATUS=19 OR A.STATUS=27 OR A.STATUS=28 OR A.STATUS=29) AND (A.STATUS<>10 AND A.STATUS<>20 AND A.STATUS<>30) ";
 			}
+*/
+		//Added by Kavitha D-SPRINT 10 Changes
+		try {
 
+			String rowCount = " SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM "
+					+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.PPM_ACCOUNT AND CM.CHANNEL_NAME = PM.CHANNEL_NAME "
+					+ " INNER JOIN TBL_PROCO_STATUS_MASTER PSM ON PSM.STATUS_ID = PM.STATUS ";
+			
+			if (roleId.equalsIgnoreCase("NCMM")) {
+				
+				rowCount += " WHERE PM.STATUS = 3  AND PM.MOC='"+moc+"'";
+			}
+		
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(rowCount);
 			list = query.list();
 		} catch (Exception ex) {
@@ -304,27 +358,34 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 
 	@Override
 	public String approveCr(String promoId, String userId, String roleId) {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		
 		String res = "";
 		int status = 0;
 		try {
 			if (roleId.equalsIgnoreCase("NCMM")) {
-				status = 9;
-			} else {
-				status = 10;
-			}
 			String[] split = promoId.split(",");
 			for (int i = 0; i < split.length; i++) {
 				String promo = split[i];
-				createPromoDaoImpl.saveStatusInStatusTracker(promo, status, "", userId);
+				//createPromoDaoImpl.saveStatusInStatusTracker(promo, status, "", userId);
+				
+				String approvalCrStatus=" UPDATE TBL_PROCO_PROMOTION_MASTER_V2  T1 SET STATUS='38', T1.USER_ID='" + userId + "',T1.UPDATE_STAMP=' "+ dateFormat.format(date) + "'"
+						+ " WHERE T1.STATUS='3' AND T1.ACTIVE=1 AND T1.PROMO_ID='" + promoId + "' ";
+				
+				Query query = sessionFactory.getCurrentSession().createNativeQuery(approvalCrStatus);
+				query.executeUpdate();
+				
 			}
 			res = "SUCCESS";
-		} catch (Exception e) {
+		}} catch (Exception e) {
 			logger.debug("Exception: ", e);
 			return null;
 		}
 		return res;
 	}
-
+	
+	
 	@Override
 	public String rejectCr(String promoId, String userId, String roleId, String reason) {
 		String res = "";

@@ -1118,8 +1118,8 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ "  FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR  ON PR.PROMO_ID = PM.PROMO_ID "
 					+ "  LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
 					+ "  LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";
-			
-			if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE")) {
+			//if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE")) //Commented code and added moc condition for ncmm login-SPRINT 10
+			if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE") || roleId.equalsIgnoreCase("NCMM")) {
 				//promoQuery += " INNER JOIN TBL_PROCO_KAM_MAPPING AS F ON A.CUSTOMER_CHAIN_L1=F.CUSTOMER_CHAIN_L1 WHERE F.USER_ID='"
 				//		+ userId + "' ";
 				promoQuery+=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.MOC='"+moc+"'";
@@ -1291,8 +1291,8 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ " FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR ON PR.PROMO_ID = PM.PROMO_ID "
 					+ " LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
 					+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE";
-			
-			if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE")) {
+			//if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE")) //Commented code and added for ncmm login-SPRINT 10
+			if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE") || roleId.equalsIgnoreCase("NCMM")) {
 				//promoQuery += " INNER JOIN TBL_PROCO_KAM_MAPPING AS F ON A.CUSTOMER_CHAIN_L1=F.CUSTOMER_CHAIN_L1 WHERE F.USER_ID='"
 					//	+ userId + "' "; Mayur commented for sprint 9
 				
@@ -1440,7 +1440,9 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				promoQuery +=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.CREATED_BY='"+ userId + "'AND PM.MOC='"+ moc + "' " ;
 			}
 			 //mayur's changes for sprint 9
-			if(roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE"))
+			//if(roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE")) //Commented by Kavitha D-SPRINT 10
+
+			if(roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE") || roleId.equalsIgnoreCase("NCMM")) //Added for MOC condition to download promo in NCMM login-SPRINT 10
 			{
 				promoQuery+=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.MOC='"+moc+"'";
 			}
@@ -1656,6 +1658,13 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			if (roleId.equalsIgnoreCase("DP") && (moc== null || moc.isEmpty())) {
 				promoQueryCount += " WHERE PM.STATUS = 1 ";
 			} */
+			
+			//Added by Kavitha D NCMM PromoListing-SPRINT10 
+			if (roleId.equalsIgnoreCase("NCMM")) {
+				
+				promoQueryCount += " WHERE PM.STATUS = 3 AND PM.MOC='"+moc+"' ";
+				}
+			
 			if (roleId.equalsIgnoreCase("DP")&& (moc!= null || !moc.isEmpty())) {
 				if(moc.equalsIgnoreCase("all"))
 					promoQueryCount += " WHERE PM.TEMPLATE_TYPE = 'R' AND PM.STATUS = 1";//Added by kavitha D-Sprint 9
@@ -1708,6 +1717,11 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				promoQueryGrid += "WHERE PM.STATUS = 1 ";
 			} */
 			
+			//Added by Kavitha D NCMM PromoListing-SPRINT10 
+			if (roleId.equalsIgnoreCase("NCMM")) {
+				
+				promoQueryGrid += " WHERE PM.STATUS = 3 AND PM.MOC='"+moc+"' ";
+			}
 			if (roleId.equalsIgnoreCase("DP") /*&& (moc!= null || !moc.isEmpty())*/) {
 				if(moc.equalsIgnoreCase("all"))
 					promoQueryGrid += " WHERE PM.TEMPLATE_TYPE = 'R' AND PM.STATUS = 1";  //For DP Volume Upload
@@ -1760,7 +1774,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				promoBean.setSolCodeStatus(obj[20]== null ? "" :obj[20].toString());			
 				promoListDisplay.add(promoBean);
 			}
-		} catch (Exception ex) {
+		 }catch (Exception ex) {
 			logger.debug("Exception :", ex);
 			return null;
 		}

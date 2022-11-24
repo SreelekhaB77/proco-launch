@@ -36,6 +36,26 @@
 	</script>
 
 </head>
+<style>
+.promo-filter-div{
+float: right!important;
+width: 30%!important;
+margin-top: -75px!important;
+}
+
+#Mocvalue{
+	height:30px!important;
+}
+.table-header-listing {
+    background: #035597 !important;
+}
+@media only screen and (max-width: 767px) {
+	.promo-filter-div{
+    width: 60%!important;
+    margin-top: -85px!important;	
+}
+}
+</style>
 <body class="Verdana-font">
 	<jsp:include page="../proco/proco-header.jsp" />
 
@@ -65,7 +85,7 @@
 							class="col-md-3 col-sm-6 col-xs-12 proco-craetion-active"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoCr.htm">
 								<div class="proco-create-icon"></div>
-								<div class="tab-label-proco-create-active">Promo CR</div>
+								<div class="tab-label-proco-create-active">Promo Approval</div>
 						</a></li>
 						
 						<li role="presentation"
@@ -121,10 +141,23 @@
              	<button type="button" class="close" data-hide="alert">&times;</button>
                 <span>Promotion Uploaded Successfully</span>
          	</div> -->
-		<div class="proco-creation form-horizontal">
-			<input type="hidden" id="roleId" value="${roleId}" />
+	       <div class="proco-creation form-horizontal">
+			 	<input type="hidden" id="roleId" value="${roleId}" />
 			<!-- <div class="promo-back"><a href="http://localhost:8083/VisibilityAssetTracker/procoHome.htm"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Listing</div> -->
-			<div class="promo-details" style="padding:10px;"><span style="color:#fff;font-weight:600;">SELECT PROMOS FOR CR</span>
+			<div class="promo-details" style="padding:10px;"><span style="color:#fff;font-weight:600;">SELECT PROMOS FOR APPROVAL</span></div>
+			<form action="http://localhost:8083/VisibilityAssetTracker/downloadPromoListing.htm" method="POST" enctype="multipart/form-data" id="download"> 
+			<div class="form-group col-sm-4" style="margin-top: 20px;">
+						<label for="unique-id" class="control-label col-md-2">MOC</label>
+						<div class="col-md-5">
+						<select class="form-control" id="Mocvaluecr" name="Mocvaluecr">
+								 <c:forEach items="${mocListCr}" var="mocValueCr">
+                                   <option value="${mocValueCr}"><c:out value="${mocValueCr}"></c:out></option>
+                                 </c:forEach>
+                                 </select>
+								 </div>
+
+					</div>
+			</form>
 				<!-- <span class="promo-detail-txt"><b>SELECT PROMO LISTING</b></span> <span
 					class="pull-right promo-uom">
 					<div class="col-md-12">
@@ -141,7 +174,7 @@
 						</div>
 					</div>
 				</span>
-				<div class="clearfix"></div> -->
+				<div class="clearfix"></div> 
 			</div>
 		<form action="http://localhost:8083/VisibilityAssetTracker/rejectCr.htm" method="POST" enctype="multipart/form-data" id="download">
 		<input type="hidden" name="promoIdList" id="promoIdList" value="" />
@@ -242,7 +275,7 @@
 						<div class="col-md-8">
 							<!-- <select class="form-control" id="">
 								<option>ALL INDIA</option>
-							</select> -->
+							</select> 
 							<input type="text" class="form-control" value="ALL INDIA" name="geography"
 								id="geography" />
 						</div>
@@ -268,32 +301,34 @@
 
 				<div class="clearfix"></div>
 			</div>
-		</form>
-			<div class="promo-list table-header-cr">PROMO LIST</div>
+		</form> 
+			<div class="promo-list table-header-cr">PROMO LIST</div> -->
 			<form>
-			<table class="table table-striped table-bordered promo-list-table"
-				cellspacing="0" style="width: 100%;overflow-x: scroll;display: block;">
+			 <table id="table-id-promo-list-table" class="table table-striped table-bordered promo-list-table"
+				cellspacing="0" style="width: 100%;overflow-x: scroll;display: block;"> 
+					<!-- <table id="table-id-promo-list-table" 
+					class="table table-striped table-bordered promo-list-table table-responsive" style="width: 100%; ">-->
 				<thead>
 					<tr>
-						<th>ACTION</th>
-						<th>UNIQUE ID</th>
+					    <th><input name="select_all" class="userCheck" value="1" type="checkbox" /></th>
+					   <th>PROMO ID</th>
+						<!--<th>ORIGINAL ID</th>-->
 						<th>START DATE</th>
 						<th>END DATE</th>
 						<th>MOC</th>
-						<th>CUSTOMER CHAIN L1</th>
+						<th>PPM ACCOUNT</th>
 						<th>BASEPACK</th>
 						<th>OFFER DESCRIPTION</th>
 						<th>OFFER TYPE</th>
 						<th>OFFER MODALITY</th>
 						<th>GEOGRAPHY</th>
 						<th>QUANTITY</th>
-						<th>UOM</th>
 						<th>OFFER VALUE</th>
-						<th>KITTING VALUE</th>
-						<th>STATUS</th>
-						<th>REASON FOR CHANGE</th>
-						<th>REMARK </th>
-						<th>CHANGES MADE</th>
+						<th name="stat">STATUS</th>
+						<th>INVESTMENT TYPES</th>
+						<th>SOL CODE</th>
+						<th>PROMOTION MECHANICS</th>
+						<th>SOL CODE STATUS</th>
 					</tr>
 				</thead>
 							</table>
@@ -307,12 +342,12 @@
 				</div>
 				<div class="col-md-2 col-xs-6">
 					<a href="#" id="approveCr"><button id="approveCrBtn" 
-						class="btn promo-primary-btn col-md-10 col-md-offset-1 col-xs-12">APPROVE CR</button></a>
+						class="btn promo-primary-btn col-md-10 col-md-offset-1 col-xs-12">APPROVE</button></a>
 				</div>
-				<div class="col-md-2 col-xs-6">
+			<!-- 	<div class="col-md-2 col-xs-6">
 					<a href="#" id="rejectCr"><button id="rejectCrBtn" 
 						class="btn promo-delete-btn col-md-10 col-md-offset-1 col-xs-12">REJECT CR</button></a>
-				</div>
+				</div> -->	
 			</div>
 			
 			<!-- <div class="download-btn">
@@ -377,12 +412,14 @@
 		<script src="assets/js/dataTables.bootstrap.min.js"></script>
 		<script type="text/javascript" src="assets/js/comboTreePlugin.js"></script>
 		<script type="text/javascript" src="assets/js/bootstrap-multiselect.js"></script>
-		<script type="text/javascript" src="assets/js/jquery-ui.js"></script>
+		<script type="text/javascript" src="assets/js/jquery-ui.js"></script>		
 		<script type="text/javascript" src="assets/js/custom/proco/promoCr.js"></script>
+		
 		<script type="text/javascript"
 		src="assets/js/custom/proco/alert-modal.js"></script>
 		<script type="text/javascript">
 		var moc = '${mocJson}';
+		var Mocvaluecr = $('#Mocvaluecr').val(); //Moc filter in ncmm by Viswas-SPRINT 10
 		var geographyData = '${geographyJson}';
 		var basepacks = '${basepacks}';
 		var newBasepacks = null;

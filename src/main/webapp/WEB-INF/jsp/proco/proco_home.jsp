@@ -158,7 +158,7 @@
          <a href="http://localhost:8083/VisibilityAssetTracker/promoCr.htm">
           <div class="promo-create promo-create-bg">
               <img src="assets/images/proco/icon-1.png"  class="img-responsive" alt="">
-              <div class="promo-craete-txt promo-create-txt-bg"><div>Promo CR</div></div>  
+              <div class="promo-craete-txt promo-create-txt-bg"><div>Promo Approval</div></div>  
             </div>
              </a>
              
@@ -181,7 +181,7 @@
          <a href="http://localhost:8083/VisibilityAssetTracker/promoCr.htm">
           <div class="promo-create promo-create-bg">
               <img src="assets/images/proco/icon-1.png"  class="img-responsive" alt="">
-              <div class="promo-craete-txt promo-create-txt-bg"><div>Promo CR</div></div>  
+              <div class="promo-craete-txt promo-create-txt-bg"><div>Promo Approval</div></div>  
             </div>
              </a>
              

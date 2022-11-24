@@ -11,19 +11,25 @@ public class PromoCrBean {
 	private String geography;
 	private String quantity;
 	private String uom;
-
 	private String moc;
 	private String customer_chain_l1;
 	private String kitting_value;
-	
 	private String status;
-	
 	private String startDate;
 	private String endDate;
-	
 	private String reason;
 	private String remark;
 	private String changesMade;
+	//Added by Kavitha D-SPRINT 10 Changes
+	private String originalId;
+	private String userId;
+	private String changeDate;
+	private String investmentType;
+	private String solCode;
+	private String promotionMechanics;
+	private String solCodeStatus;
+	
+	
 	
 	public String getChangesMade() {
 		return changesMade;
@@ -169,5 +175,85 @@ public class PromoCrBean {
 	public void setUom(String uom) {
 		this.uom = uom;
 	}
+
+	public String getOriginalId() {
+		return originalId;
+	}
+
+	public void setOriginalId(String originalId) {
+		this.originalId = originalId;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getChangeDate() {
+		return changeDate;
+	}
+
+	public void setChangeDate(String changeDate) {
+		this.changeDate = changeDate;
+	}
+
+	public String getInvestmentType() {
+		return investmentType;
+	}
+
+	public void setInvestmentType(String investmentType) {
+		this.investmentType = investmentType;
+	}
+
+	public String getSolCode() {
+		return solCode;
+	}
+
+	public void setSolCode(String solCode) {
+		this.solCode = solCode;
+	}
+
+	public String getPromotionMechanics() {
+		return promotionMechanics;
+	}
+
+	public void setPromotionMechanics(String promotionMechanics) {
+		this.promotionMechanics = promotionMechanics;
+	}
+
+	public String getSolCodeStatus() {
+		return solCodeStatus;
+	}
+
+	public void setSolCodeStatus(String solCodeStatus) {
+		this.solCodeStatus = solCodeStatus;
+	}
+
+	@Override
+	public String toString() {
+		return "PromoCrBean [promo_id=" + promo_id + ", basepack=" + basepack + ", offer_desc=" + offer_desc
+				+ ", offer_type=" + offer_type + ", offer_modality=" + offer_modality + ", offer_value=" + offer_value
+				+ ", geography=" + geography + ", quantity=" + quantity + ", uom=" + uom + ", moc=" + moc
+				+ ", customer_chain_l1=" + customer_chain_l1 + ", kitting_value=" + kitting_value + ", status=" + status
+				+ ", startDate=" + startDate + ", endDate=" + endDate + ", reason=" + reason + ", remark=" + remark
+				+ ", changesMade=" + changesMade + ", originalId=" + originalId + ", userId=" + userId + ", changeDate="
+				+ changeDate + ", investmentType=" + investmentType + ", solCode=" + solCode + ", promotionMechanics="
+				+ promotionMechanics + ", solCodeStatus=" + solCodeStatus + ", getChangesMade()=" + getChangesMade()
+				+ ", getRemark()=" + getRemark() + ", getReason()=" + getReason() + ", getStartDate()=" + getStartDate()
+				+ ", getEndDate()=" + getEndDate() + ", getStatus()=" + getStatus() + ", getMoc()=" + getMoc()
+				+ ", getCustomer_chain_l1()=" + getCustomer_chain_l1() + ", getKitting_value()=" + getKitting_value()
+				+ ", getPromo_id()=" + getPromo_id() + ", getBasepack()=" + getBasepack() + ", getOffer_desc()="
+				+ getOffer_desc() + ", getOffer_type()=" + getOffer_type() + ", getOffer_modality()="
+				+ getOffer_modality() + ", getOffer_value()=" + getOffer_value() + ", getGeography()=" + getGeography()
+				+ ", getQuantity()=" + getQuantity() + ", getUom()=" + getUom() + ", getOriginalId()=" + getOriginalId()
+				+ ", getUserId()=" + getUserId() + ", getChangeDate()=" + getChangeDate() + ", getInvestmentType()="
+				+ getInvestmentType() + ", getSolCode()=" + getSolCode() + ", getPromotionMechanics()="
+				+ getPromotionMechanics() + ", getSolCodeStatus()=" + getSolCodeStatus() + ", getClass()=" + getClass()
+				+ ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
+	}
+	
 
 }
