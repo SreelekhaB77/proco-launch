@@ -573,6 +573,9 @@ select.promolistselect {
 	border: 1px solid;
 	padding-top: 15px;
 }
+
+
+
 .upload-status-file {
 	width: 60%;
 	margin: 0 auto;
@@ -1432,6 +1435,11 @@ i.icon-search {
 	color: #878787;
 }
 
+
+.download-block {
+	text-align: center;
+	color: #878787;
+}
 .proco-measure-upload-wrapper h2,
 .proco-measure-download-wrapper h2 {
 	font-size: 26px;
@@ -1827,7 +1835,12 @@ span.comboTreeItemTitle {
     width: 12% !important;
 }
 }
-
+.leftBtn{
+	    width: auto !important;
+	}
+.btnclass{
+	padding: 2% 0;
+} 
 
 .gotonewlaunch{float:left;margin-top:0;}
 .user-header-bg{height:120px;}

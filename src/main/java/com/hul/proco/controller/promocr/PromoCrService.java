@@ -1,5 +1,6 @@
 package com.hul.proco.controller.promocr;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface PromoCrService {
@@ -21,4 +22,10 @@ public interface PromoCrService {
 	public List<List<String>> getAllProductMaster();  //Sarin Changes Performance
 	// Harsha's Changes
 	public String insertToportalUsage(String userId, String roleID, String module);
+
+	public ArrayList<String> getHeaderListForPromoDownloadCrListing();
+
+	public List<ArrayList<String>> getPromotionListingCrDownload(ArrayList<String> headerList, String userId,String moc, String roleId);
+
+	public String uploadApprovalData(PromoCrBean[] beanArray, String userId) throws Exception;
 }

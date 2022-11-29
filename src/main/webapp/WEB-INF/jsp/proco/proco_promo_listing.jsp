@@ -431,6 +431,12 @@ margin-top: -75px!important;
 				<input type="button" class="btn new-btn-download" value="PROMO DOWNLOAD" onclick="javascript: downloadPromotionFile();"></input>
 			</div>
 			</c:if>
+			<!-- Added by Kavitha D SPRINT 10 -->
+			<c:if test="${roleId eq 'NCMM'}">
+			<div class="download-btn">
+				<input type="button" class="btn new-btn-download" value="PROMO DOWNLOAD" onclick="javascript: downloadPromotionFile();"></input>
+			</div>
+			</c:if>
 			<!--bharati added comment for below code in sprint-9-->
 			<!--<c:if test="${roleId eq 'TME'}">
 			<form:form action="http://localhost:8083/VisibilityAssetTracker/uploadPromoEdit.htm" id="promoEditUpload"

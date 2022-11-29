@@ -1,10 +1,20 @@
 package com.hul.proco.controller.promocr;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import com.hul.proco.excelreader.exom.annotation.Column;
+
 public class PromoCrBean {
 
+	private MultipartFile file;
+	
+	@Column(name = "PROMO_ID")
 	private String promo_id;
 	private String basepack;
+	
+	@Column(name = "OFFER_DESCRIPTION")
 	private String offer_desc;
+	
 	private String offer_type;
 	private String offer_modality;
 	private String offer_value;
@@ -12,13 +22,18 @@ public class PromoCrBean {
 	private String quantity;
 	private String uom;
 	private String moc;
+	
+	@Column(name = "PPM_ACCOUNT")
 	private String customer_chain_l1;
 	private String kitting_value;
 	private String status;
 	private String startDate;
 	private String endDate;
 	private String reason;
+	
+	@Column(name = "REMARKS")
 	private String remark;
+	
 	private String changesMade;
 	//Added by Kavitha D-SPRINT 10 Changes
 	private String originalId;
@@ -232,6 +247,15 @@ public class PromoCrBean {
 		this.solCodeStatus = solCodeStatus;
 	}
 
+	
+	public MultipartFile getFile() {
+		return file;
+	}
+
+	public void setFile(MultipartFile file) {
+		this.file = file;
+	}
+
 	@Override
 	public String toString() {
 		return "PromoCrBean [promo_id=" + promo_id + ", basepack=" + basepack + ", offer_desc=" + offer_desc
@@ -254,6 +278,8 @@ public class PromoCrBean {
 				+ getPromotionMechanics() + ", getSolCodeStatus()=" + getSolCodeStatus() + ", getClass()=" + getClass()
 				+ ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
 	}
+
+	
 	
 
 }

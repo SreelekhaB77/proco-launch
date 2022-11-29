@@ -27,6 +27,8 @@
 <link rel="stylesheet" type="text/css"	href="assets/css/custom-font.css">
 <link rel="stylesheet" type="text/css"	href="assets/css/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
+
+
 	
 	<script type="text/javascript">
 		history.pushState(null, null, '');
@@ -145,7 +147,7 @@ margin-top: -75px!important;
 			 	<input type="hidden" id="roleId" value="${roleId}" />
 			<!-- <div class="promo-back"><a href="http://localhost:8083/VisibilityAssetTracker/procoHome.htm"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Listing</div> -->
 			<div class="promo-details" style="padding:10px;"><span style="color:#fff;font-weight:600;">SELECT PROMOS FOR APPROVAL</span></div>
-			<form action="http://localhost:8083/VisibilityAssetTracker/downloadPromoListing.htm" method="POST" enctype="multipart/form-data" id="download"> 
+			<form action="http://localhost:8083/VisibilityAssetTracker/downloadCrPromoListing.htm" method="POST" enctype="multipart/form-data" id="download"> 
 			<div class="form-group col-sm-4" style="margin-top: 20px;">
 						<label for="unique-id" class="control-label col-md-2">MOC</label>
 						<div class="col-md-5">
@@ -303,6 +305,8 @@ margin-top: -75px!important;
 			</div>
 		</form> 
 			<div class="promo-list table-header-cr">PROMO LIST</div> -->
+			
+			
 			<form>
 			 <table id="table-id-promo-list-table" class="table table-striped table-bordered promo-list-table"
 				cellspacing="0" style="width: 100%;overflow-x: scroll;display: block;"> 
@@ -340,7 +344,10 @@ margin-top: -75px!important;
 				</div>
 				<div class="col-md-2 col-xs-6">
 				</div>
-				<div class="col-md-2 col-xs-6">
+				
+							
+			
+				  <div class="col-md-2 col-xs-6">
 					<a href="#" id="approveCr"><button id="approveCrBtn" 
 						class="btn promo-primary-btn col-md-10 col-md-offset-1 col-xs-12">APPROVE</button></a>
 				</div>
@@ -350,11 +357,44 @@ margin-top: -75px!important;
 				</div> -->	
 			</div>
 			
-			<!-- <div class="download-btn">
-				<input type="button" class="btn new-btn-download" value="PROMO DOWNLOAD" onclick="javascript: downloadPromotionFile();"></input>
-			</div> -->
+			<!-- Added by Kavitha D for promo download -SPRINT10 -->
 			
-		</div>
+			<c:if test="${roleId eq 'NCMM'}">
+			<div class="download-btn">
+				<input type="button" class="btn new-btn-download" value="PROMO DOWNLOAD" onclick="javascript: downloadPromotionFile();"></input>
+			</div> 
+			</c:if>
+			
+			<!-- Added by Kavitha D for promo upload -SPRINT10 -->
+			<form:form action="http://localhost:8083/VisibilityAssetTracker/promoApprovalUpload.htm" method="POST"
+			 id="promoApprovalUpload" modelAttribute="PromoCrBean"
+                enctype="multipart/form-data" onsubmit="return uploadValidation()">                
+            <div class="promo-upload">PROMO APPROVAL UPLOAD</div>
+            <div class="upload-file">        
+                <div class="col-md-4 col-md-offset-4" style="padding: 30px 0px;">
+                    <div class="upload-label">
+                        <span><i class="glyphicon glyphicon-cloud-upload"></i></span> <span>
+                            <b class="SEGOEUIL-font">Promo Approval Upload File</b>
+                        </span>
+                    </div>
+                    <div class="upload-group">
+                     <div class="cust-file" style="float: right;">
+                            <span class="btn btn-upload " id="choose-file">Choose
+                                    File</span>
+                        </div>
+                       <input type="file" class="form-control" value="" name="file"
+                            id="upload-file">
+                       <div class="file-name" style="line-height: 2.3">No file
+                            chosen</div>
+                    </div>
+                    <span id="uploadErrorMsg" style="display: none; color: red">Please upload .xlsx file</span>
+                    <div class="" style="color: #fff; text-align: center">
+                       <button id="KAMVolumeUpload" class="btn new-btn-primary">UPLOAD</button>
+                    </div>
+                </div>
+                <div class="clearfix"></div>                
+            </div>
+        </form:form>
 			
 	<div id="add-depot" class="modal fade" role="dialog">
 

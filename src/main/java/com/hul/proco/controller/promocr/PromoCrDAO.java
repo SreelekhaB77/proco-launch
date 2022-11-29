@@ -1,5 +1,6 @@
 package com.hul.proco.controller.promocr;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface PromoCrDAO {
@@ -21,4 +22,8 @@ public interface PromoCrDAO {
 	public List<List<String>> getAllProductMaster();
 	//Harsha's Implementation 
 	public String insertToportalUsage(String userId, String roleID, String module);
+
+	public List<ArrayList<String>> getPromotionListingCrDownload(ArrayList<String> headerList, String userId,String moc, String roleId);
+
+	public String uploadApprovalData(PromoCrBean[] beanArray, String userId) throws Exception;
 }

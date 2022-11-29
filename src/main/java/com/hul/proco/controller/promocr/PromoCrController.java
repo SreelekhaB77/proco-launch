@@ -1,24 +1,39 @@
 package com.hul.proco.controller.promocr;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hul.launch.web.util.CommonPropUtils;
+import com.hul.launch.web.util.CommonUtils;
+import com.hul.launch.web.util.FilePaths;
+import com.hul.launch.web.util.UploadUtil;
+import com.hul.proco.controller.createpromo.CreateBeanRegular;
 import com.hul.proco.controller.createpromo.CreatePromoService;
-import com.hul.proco.controller.listingPromo.PromoListingBean;
 import com.hul.proco.controller.listingPromo.PromoListingService;
+import com.hul.proco.excelreader.exom.ExOM;
 
 @Controller
 public class PromoCrController {
@@ -31,6 +46,9 @@ public class PromoCrController {
 	
 	@Autowired 
 	public PromoListingService promoListingService;
+	
+	private Logger logger = Logger.getLogger(PromoCrController.class);
+
 	
 	
 	@SuppressWarnings("unchecked")
@@ -229,5 +247,104 @@ public class PromoCrController {
 		model.addAttribute("brands", brand);
 		model.addAttribute("basepacks", basepacks);
 	}
+	//Added by kavitha D for promo approval download starts-SPRINT 10
+	@RequestMapping(value = "{moc}/downloadCrPromoListing.htm", method = RequestMethod.GET)
+	public @ResponseBody String downloadCrPromosForListing(@ModelAttribute("PromoCrBean") PromoCrBean promoCrBean,@PathVariable("moc") String moc,
+			Model model,HttpServletRequest request, HttpServletResponse response) {
+		logger.info("START downloadPromos for listing():");
+		try {
+			InputStream is;
+			String roleId = (String) request.getSession().getAttribute("roleId");
+			String downloadLink = "", absoluteFilePath = "";
+			List<ArrayList<String>> downloadedData = null;
+			absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
+			String fileName = UploadUtil.getFileName("Promotion.Download.Template.file", "",
+					CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
+			String downloadFileName = absoluteFilePath + fileName;
+			String userId = (String) request.getSession().getAttribute("UserID");
+			
+			ArrayList<String> headerList = promoCrService.getHeaderListForPromoDownloadCrListing();
+			downloadedData = promoCrService.getPromotionListingCrDownload(headerList, userId,moc,roleId);
+			if (downloadedData != null) {
+				UploadUtil.writeDeletePromoXLSXFile(downloadFileName, downloadedData, null,".xlsx");
+				downloadLink = downloadFileName + ".xlsx";
+				is = new FileInputStream(new File(downloadLink));
+				// copy it to response's OutputStream
+				response.setContentType("application/force-download");
+				response.setHeader("Content-Disposition", "attachment; filename=PromotionListingApprovalDownloadFile"
+						+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xlsx");
+				IOUtils.copy(is, response.getOutputStream());
+				response.flushBuffer();
+			}
+		} catch (Exception e) {
+			logger.debug("Exception: ", e);
+			return null;
+		}
+		return null;
+	}
+	//Added by kavitha D for promo approval download ends-SPRINT 10
+	
+	//Added by kavitha D for promo approval upload starts-SPRINT 10
+	@RequestMapping(value = "promoApprovalUpload.htm", method = RequestMethod.POST)
+	public @ResponseBody String promoApprovalUpload(@ModelAttribute("PromoCrBean") PromoCrBean promoCrBean,
+			Model model, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+		String save_data = null;
+
+		CommonPropUtils commUtils = CommonPropUtils.getInstance();
+		String userId = (String) httpServletRequest.getSession().getAttribute("UserID");
+		MultipartFile file = promoCrBean.getFile();
+		String fileName = file.getOriginalFilename();
+		PromoCrBean[] beanArray = null;
+		String filepath = FilePaths.FILE_TEMPUPLOAD_PATH;
+		fileName = filepath + fileName;
+		try {
+			if (!CommonUtils.isFileEmpty(file)) {
+				if (CommonUtils.isFileProcoSizeExceeds(file)) {
+					model.addAttribute("FILE_STATUS", "FILE_SIZE_EXCEED");
+					return "FILE_SIZE_EXCEED";
+				} else if (UploadUtil.movefile(file, fileName)) {
+					Map<String, List<Object>> map = ExOM.mapFromExcel(new File(fileName)).to(PromoCrBean.class).map(4, false, null);
+
+					if (map.isEmpty()) {
+						model.addAttribute("FILE_STAUS", "FILE_EMPTY");
+						return "FILE_EMPTY";
+					}
+					if (map.containsKey("ERROR")) {
+						model.addAttribute("FILE_STAUS", "CHECK_COL_MISMATCH");
+
+						return "CHECK_COL_MISMATCH";
+					} else if (map.containsKey("DATA")) {
+						List<?> datafromexcel = map.get("DATA");
+						beanArray = (PromoCrBean[]) datafromexcel.toArray(new PromoCrBean[datafromexcel.size()]);
+						save_data = promoCrService.uploadApprovalData(beanArray, userId);
+					}
+				} else {
+
+					model.addAttribute("FILE_STAUS", "FILE_EMPTY");
+					return "FILE_EMPTY";
+				}
+			} else {
+				model.addAttribute("FILE_STAUS", "FILE_EMPTY");
+				return "FILE_EMPTY";
+			}
+
+			if (save_data.equals("EXCEL_UPLOADED")) {
+				model.addAttribute("FILE_STAUS", "EXCEL_UPLOADED");
+			} else {
+				model.addAttribute("FILE_STAUS", "EXCEL_NOT_UPLOADED");
+				save_data = "EXCEL_NOT_UPLOADED";
+			}
+		} catch (Exception e) {
+			logger.error(e);
+			e.printStackTrace();
+		} catch (Throwable t) {
+			logger.error(t);
+			t.printStackTrace();
+		}
+		return save_data;
+	}
+	
+	//Added by kavitha D for promo approval upload starts-SPRINT 10
+
 
 }

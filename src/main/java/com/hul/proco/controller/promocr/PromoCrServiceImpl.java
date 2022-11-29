@@ -1,5 +1,6 @@
 package com.hul.proco.controller.promocr;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,25 @@ public class PromoCrServiceImpl implements PromoCrService {
 	public String insertToportalUsage(String userId, String roleID, String module) {
 		return promoCrDAO.insertToportalUsage( userId,  roleID,  module);
 	}
+	//Added by Kavitha D starts-SPRINT 10
+	@Override
+	public ArrayList<String> getHeaderListForPromoDownloadCrListing() {
+		ArrayList<String> headerList=new ArrayList<String>();
+		headerList.add("PROMO_ID");
+		headerList.add("PPM_ACCOUNT");
+		headerList.add("OFFER_DESCRIPTION");
+		headerList.add("REMARKS");
+		return headerList;
+	}
 	
+	public List<ArrayList<String>> getPromotionListingCrDownload(ArrayList<String> headerList, String userId,String moc, String roleId){
+		return promoCrDAO.getPromotionListingCrDownload(headerList,userId,moc,roleId);
+		
+	}
 	
-	
+	public String uploadApprovalData(PromoCrBean[] beanArray, String userId) throws Exception {
+		return promoCrDAO.uploadApprovalData(beanArray,userId);
+	}
+	//Added by Kavitha D ends-SPRINT 10
+
 }

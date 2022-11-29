@@ -8,10 +8,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import javax.transaction.Transactional;
 
 import org.apache.log4j.Logger;
 import org.hibernate.query.Query;
+import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -28,6 +34,8 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 
 	@Autowired
 	private CreatePromoDAOImpl createPromoDaoImpl;
+	
+
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -507,4 +515,170 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 		}
 		return res;
 	}
+	//Added by Kavitha D-SPRINT 10 changes
+	@SuppressWarnings("unchecked")
+	public List<ArrayList<String>> getPromotionListingCrDownload(ArrayList<String> headerList, String userId,String moc, String roleId)
+	{
+		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
+		try {
+			String downloadCrQuery= " SELECT PROMO_ID,PPM_ACCOUNT,OFFER_DESC,REMARK FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE PM.STATUS IN('3','39') AND PM.MOC= '"+moc+"'";
+			Query query1  =sessionFactory.getCurrentSession().createNativeQuery(downloadCrQuery);
+		
+			Iterator itr = query1.list().iterator();
+			downloadDataList.add(headerList);
+			while (itr.hasNext()) {
+				Object[] obj = (Object[]) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				for (Object ob : obj) {
+					String value = "";
+					value = (ob == null) ? "" : ob.toString();
+					dataObj.add(value.replaceAll("\\^", ","));
+				}
+				obj = null;
+				downloadDataList.add(dataObj);
+			}
+			return downloadDataList;
+		} catch (Exception ex) {
+			logger.debug("Exception :", ex);
+			return null;
+		
 }
+	}
+	//Added by Kavitha D for PromoApproval Upload starts-SPRINT 10
+	@Override
+	public String uploadApprovalData(PromoCrBean[] beanArray, String userId) throws Exception{
+		String response = null;
+		ArrayList<String> responseList = new ArrayList<String>();
+		try {
+			Query queryToCheck = sessionFactory.getCurrentSession()
+					.createNativeQuery("select count(1) from TBL_PROCO_PROMOTION_MASTER_TEMP_V2 where USER_ID=:user");
+			queryToCheck.setString("user", userId);
+			Integer recCount = ((BigInteger)queryToCheck.uniqueResult()).intValue();
+
+			if (recCount.intValue() > 0) {
+		
+		Query queryToDelete = sessionFactory.getCurrentSession()
+				.createNativeQuery("DELETE from TBL_PROCO_PROMOTION_MASTER_TEMP_V2 where USER_ID=:userId");
+		queryToDelete.setString("userId", userId);
+		queryToDelete.executeUpdate();
+			}
+		Query query = sessionFactory.getCurrentSession().createNativeQuery(" INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2 (PROMO_ID,PPM_ACCOUNT,OFFER_DESC,REMARK,STATUS,USER_ID) VALUES(?0,?1, ?2, ?3, ?4,?5)");
+		
+		for (int i = 0; i < beanArray.length; i++) {
+			query.setString(0, beanArray[i].getPromo_id());
+			query.setString(1, beanArray[i].getCustomer_chain_l1());
+			query.setString(2, beanArray[i].getOffer_desc());
+			query.setString(3, beanArray[i].getRemark());
+			
+			if(beanArray[i].getRemark().equalsIgnoreCase("ACCEPTED") || beanArray[i].getRemark().equalsIgnoreCase("APPROVED") ) {
+				query.setInteger(4,38);
+			}
+			else if(beanArray[i].getRemark().equalsIgnoreCase("REJECTED") || beanArray[i].getRemark().isEmpty()) {
+				query.setInteger(4,39);
+			}
+			
+			query.setString(5,userId);
+
+			int executeUpdate = query.executeUpdate();
+			
+	
+			if (executeUpdate > 0) {
+				response = validatePromo(beanArray[i], i);
+				if (response.equals("EXCEL_NOT_UPLOADED")) {
+					responseList.add(response);
+				}
+			}
+		}
+
+		if (!responseList.contains("EXCEL_NOT_UPLOADED")) {
+			if (!this.saveTotMainTable(userId)) {
+				response = "ERROR";
+			} else {
+				response = "EXCEL_UPLOADED";
+			}
+		} else {
+			response = "EXCEL_NOT_UPLOADED";
+		}
+
+
+	} catch (Exception e) {
+		logger.debug("Exception:", e);
+		throw new Exception();
+	}
+	if(responseList.contains("EXCEL_NOT_UPLOADED")) {
+		response = "EXCEL_NOT_UPLOADED";
+	}
+	return response;
+}
+	
+	private synchronized String validatePromo(PromoCrBean bean,  int row) throws Exception {
+		String res = "EXCEL_UPLOADED";
+		String errorMsg = "";
+		try {
+			Query queryToCheckvisiRefNo = sessionFactory.getCurrentSession().createNativeQuery(
+					"SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE PROMO_ID=:promoId");
+			queryToCheckvisiRefNo.setString("promoId", bean.getPromo_id());
+			Integer promoid = ((BigInteger) queryToCheckvisiRefNo.uniqueResult()).intValue();			
+
+			if(promoid!=null && promoid == 0){
+				res = "EXCEL_NOT_UPLOADED";
+				errorMsg = errorMsg + "Entered promoid is not exist..";
+				updateErrorMessageInTemp(errorMsg,  row);
+			}
+			
+		} catch (Exception e) {
+			logger.debug("Exception: ", e);
+			throw new Exception();
+		}
+		return res;
+	}
+	private synchronized int updateErrorMessageInTemp(String errorMsg,  int row) {
+		try {
+			String qry = "UPDATE TBL_PROCO_PROMOTION_MASTER_TEMP_V2 SET ERROR_MSG=:errorMsg WHERE ROW_ID=:row";
+			Query query = sessionFactory.getCurrentSession().createNativeQuery(qry);
+			query.setString("errorMsg", errorMsg);
+			query.setInteger("row", row);
+			int executeUpdate = query.executeUpdate();
+			return executeUpdate;
+		} catch (Exception e) {
+			logger.debug("Exception: ", e);
+			return 0;
+		}
+	}
+	
+
+	public synchronized boolean saveTotMainTable(String userId) {
+		try {
+			insertIntoMaster(userId);
+			return true;
+		}catch (HibernateException e) {
+			logger.error("Inside PROMOCRDAOImpl: saveToMainTable() : HibernateException : " + e.getMessage());
+			return false;
+
+		}
+	}
+
+	
+	@Transactional(rollbackOn = {Exception.class})
+	public void insertIntoMaster(String userId) {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		try {
+			String updateSql=" UPDATE TBL_PROCO_PROMOTION_MASTER_V2 A INNER JOIN TBL_PROCO_PROMOTION_MASTER_TEMP_V2 B ON A.PROMO_ID = B.PROMO_ID "
+					+ " SET A.STATUS=B.STATUS,A.USER_ID='" + userId + "',A.UPDATE_STAMP=' "+ dateFormat.format(date) + "' "
+					+ " WHERE B.USER_ID='" + userId + "' " ;
+			Query queryUpdateExisting = sessionFactory.getCurrentSession().createNativeQuery(updateSql);
+		queryUpdateExisting.executeUpdate();
+
+
+	} catch (Exception e) {
+		logger.error("Error in com.hul.proco.controller.promocrImpl.insertIntoTotMaster(String)", e);
+	}
+
+}
+	//Added by Kavitha D for PromoApproval Upload ends-SPRINT 10
+
+	
+
+
+	}

@@ -465,8 +465,8 @@ function split(val){
 
 function downloadPromotionFile(){
 	/*$("#download").submit();*/
-	var SelectedMoc = $("#Mocvalue").val();
-	window.location.assign(SelectedMoc+"/downloadPromoListing.htm");
+	var SelectedMoc = $("#Mocvaluecr").val();
+	window.location.assign(SelectedMoc+"/downloadCrPromoListing.htm"); //Added by Kavitha D-Promo approval download 
 	
 }
 
