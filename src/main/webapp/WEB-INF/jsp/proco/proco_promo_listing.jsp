@@ -117,6 +117,14 @@ margin-top: -75px!important;
 						</a></li>
 					 </c:if>
 					 
+					 	<c:if test="${roleId eq 'SC'}">
+					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
+							href="http://localhost:8083/VisibilityAssetTracker/promoApproveSc.htm">
+								<div class="proco-create-icon"></div>
+								<div class="tab-label-proco-create-inactive">Promo Approval</div>
+						</a></li>
+					 </c:if>
+					 
 					 <c:if test="${roleId eq 'NSCM'}">
 					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoCr.htm">
@@ -437,6 +445,14 @@ margin-top: -75px!important;
 				<input type="button" class="btn new-btn-download" value="PROMO DOWNLOAD" onclick="javascript: downloadPromotionFile();"></input>
 			</div>
 			</c:if>
+			
+			<!-- Added by Kavitha D SPRINT 10 -->
+			<c:if test="${roleId eq 'SC'}">
+			<div class="download-btn">
+				<input type="button" class="btn new-btn-download" value="PROMO DOWNLOAD" onclick="javascript: downloadPromotionFile();"></input>
+			</div>
+			</c:if>
+			
 			<!--bharati added comment for below code in sprint-9-->
 			<!--<c:if test="${roleId eq 'TME'}">
 			<form:form action="http://localhost:8083/VisibilityAssetTracker/uploadPromoEdit.htm" id="promoEditUpload"
