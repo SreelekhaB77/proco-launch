@@ -1659,12 +1659,17 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				promoQueryCount += " WHERE PM.STATUS = 1 ";
 			} */
 			
-			//Added by Kavitha D NCMM PromoListing-SPRINT10 
+			//Added by Kavitha D NCMM,SC PromoListing starts-SPRINT10 
 			if (roleId.equalsIgnoreCase("NCMM")) {
 				
-				promoQueryCount += " WHERE PM.STATUS = 3 AND PM.MOC='"+moc+"' ";
+				promoQueryCount += " WHERE PM.STATUS IN('3','39') AND PM.MOC='"+moc+"' ";
 				}
-			
+			if (roleId.equalsIgnoreCase("SC")) {
+				
+				promoQueryCount += " WHERE PM.STATUS IN('38','41') AND PM.MOC='"+moc+"' ";
+			}
+			//Added by Kavitha D NCMM,SC PromoListing ends-SPRINT10 
+
 			if (roleId.equalsIgnoreCase("DP")&& (moc!= null || !moc.isEmpty())) {
 				if(moc.equalsIgnoreCase("all"))
 					promoQueryCount += " WHERE PM.TEMPLATE_TYPE = 'R' AND PM.STATUS = 1";//Added by kavitha D-Sprint 9
@@ -1720,7 +1725,11 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			//Added by Kavitha D NCMM PromoListing-SPRINT10 
 			if (roleId.equalsIgnoreCase("NCMM")) {
 				
-				promoQueryGrid += " WHERE PM.STATUS = 3 AND PM.MOC='"+moc+"' ";
+				promoQueryGrid += " WHERE PM.STATUS IN('3','39') AND PM.MOC='"+moc+"' ";
+			}
+			if (roleId.equalsIgnoreCase("SC")) {
+				
+				promoQueryGrid += " WHERE PM.STATUS IN('38','41') AND PM.MOC='"+moc+"' ";
 			}
 			if (roleId.equalsIgnoreCase("DP") /*&& (moc!= null || !moc.isEmpty())*/) {
 				if(moc.equalsIgnoreCase("all"))
