@@ -1118,8 +1118,8 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ "  FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR  ON PR.PROMO_ID = PM.PROMO_ID "
 					+ "  LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
 					+ "  LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE ";
-			//if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE")) //Commented code and added moc condition for ncmm login-SPRINT 10
-			if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE") || roleId.equalsIgnoreCase("NCMM")) {
+			//if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE")) //Commented code and added moc condition for ncmm,sc login-SPRINT 10
+			if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE") || roleId.equalsIgnoreCase("NCMM") || roleId.equalsIgnoreCase("SC")) {
 				//promoQuery += " INNER JOIN TBL_PROCO_KAM_MAPPING AS F ON A.CUSTOMER_CHAIN_L1=F.CUSTOMER_CHAIN_L1 WHERE F.USER_ID='"
 				//		+ userId + "' ";
 				promoQuery+=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.MOC='"+moc+"'";
@@ -1291,8 +1291,8 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					+ " FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR ON PR.PROMO_ID = PM.PROMO_ID "
 					+ " LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
 					+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE";
-			//if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE")) //Commented code and added for ncmm login-SPRINT 10
-			if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE") || roleId.equalsIgnoreCase("NCMM")) {
+			//if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE")) //Commented code and added for ncmm,sc login-SPRINT 10
+			if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE") || roleId.equalsIgnoreCase("NCMM") || roleId.equalsIgnoreCase("SC")) {
 				//promoQuery += " INNER JOIN TBL_PROCO_KAM_MAPPING AS F ON A.CUSTOMER_CHAIN_L1=F.CUSTOMER_CHAIN_L1 WHERE F.USER_ID='"
 					//	+ userId + "' "; Mayur commented for sprint 9
 				
@@ -1442,7 +1442,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			 //mayur's changes for sprint 9
 			//if(roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE")) //Commented by Kavitha D-SPRINT 10
 
-			if(roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE") || roleId.equalsIgnoreCase("NCMM")) //Added for MOC condition to download promo in NCMM login-SPRINT 10
+			if(roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE") || roleId.equalsIgnoreCase("NCMM") || roleId.equalsIgnoreCase("SC")) //Added for MOC condition to download promo in NCMM,SC login-SPRINT 10
 			{
 				promoQuery+=" WHERE PR.PROMOTION_STATUS='Financial Close' AND PM.MOC='"+moc+"'";
 			}
