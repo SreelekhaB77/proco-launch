@@ -27,8 +27,6 @@
 <link rel="stylesheet" type="text/css"	href="assets/css/custom-font.css">
 <link rel="stylesheet" type="text/css"	href="assets/css/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
-
-
 	
 	<script type="text/javascript">
 		history.pushState(null, null, '');
@@ -85,21 +83,21 @@ margin-top: -75px!important;
 					<ul class="nav nav-pills">
 					<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 proco-craetion-active"><a
-							href="http://34.120.128.205/VisibilityAssetTracker/promoCr.htm">
+							href="http://localhost:8083/VisibilityAssetTracker/promoApproveSc.htm">
 								<div class="proco-create-icon"></div>
 								<div class="tab-label-proco-create-active">Promo Approval</div>
 						</a></li>
 						
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 listing"><a
-							href="http://34.120.128.205/VisibilityAssetTracker/promoListing.htm">
+							href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
 								<div class="proco-listing-icon"></div>
 								<div class="tab-label-proco-create-inactive OpenSans-font">Promo Listing</div>
 						</a></li>
 
 						
 						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="http://34.120.128.205/VisibilityAssetTracker/promoDeletion.htm">
+							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
@@ -128,7 +126,7 @@ margin-top: -75px!important;
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${errorMsg}"></c:out>
 				<c:if test="${FILE_STATUS=='ERROR_FILE'}">
-					<a href="http://34.120.128.205/VisibilityAssetTracker/downloadPromotionEditErrorFile.htm" id="downloadTempFileLink">Click
+					<a href="http://localhost:8083/VisibilityAssetTracker/downloadPromotionEditErrorFile.htm" id="downloadTempFileLink">Click
 						here to Download Error File: </a>
 
 				</c:if>
@@ -145,9 +143,8 @@ margin-top: -75px!important;
          	</div> -->
 	       <div class="proco-creation form-horizontal">
 			 	<input type="hidden" id="roleId" value="${roleId}" />
-			<!-- <div class="promo-back"><a href="http://localhost:8083/VisibilityAssetTracker/procoHome.htm"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Listing</div> -->
 			<div class="promo-details" style="padding:10px;"><span style="color:#fff;font-weight:600;">SELECT PROMOS FOR APPROVAL</span></div>
-			<form action="http://localhost:8083/VisibilityAssetTracker/downloadCrPromoListing.htm" method="POST" enctype="multipart/form-data" id="download"> 
+			<form action="http://localhost:8083/VisibilityAssetTracker/downloadPromoListing.htm" method="POST" enctype="multipart/form-data" id="download"> 
 			<div class="form-group col-sm-4" style="margin-top: 20px;">
 						<label for="unique-id" class="control-label col-md-2">MOC</label>
 						<div class="col-md-5">
@@ -160,153 +157,7 @@ margin-top: -75px!important;
 
 					</div>
 			</form>
-				<!-- <span class="promo-detail-txt"><b>SELECT PROMO LISTING</b></span> <span
-					class="pull-right promo-uom">
-					<div class="col-md-12">
-						<div class="form-group" style="margin-bottom: 1px;">
-							<label class="control-label col-md-5" for="uom">SEARCH</label>
-							<div class="col-md-7" style="padding: 0px;">
-								<input type="text" class="form-control" id=""
-									style="width: 70%;">
-								<div class="search-field">
-									<img src="assets/images/main-search.png" alt="">
-								</div>
-							</div>
-
-						</div>
-					</div>
-				</span>
-				<div class="clearfix"></div> 
-			</div>
-		<form action="http://34.120.128.205/VisibilityAssetTracker/rejectCr.htm" method="POST" enctype="multipart/form-data" id="download">
-		<input type="hidden" name="promoIdList" id="promoIdList" value="" />
-			<input type="hidden" name="remark" id="remark" value="" />
-			<div class="promo-form-details">
-				<div class="col-md-4">
-					<div class="form-group">
-						<label for="unique-id" class="control-label col-md-4">CATEGORY</label>
-						<div class="col-md-8">
-							<select class="form-control" id="category" name="category">
-								<option>ALL CATEGORIES</option>
-								<c:forEach var="category" items="${categories}">
-									<option value="${category}">${category}</option>
-								</c:forEach>
-							</select>
-						</div>
-
-					</div>
-					<div class="form-group">
-						<label class="control-label col-md-4" for="uom">CUST CHAIN
-							(L1)</label>
-						<div class="col-md-8">
-							<select class="form-control" id="customerChainL1" name="customerChainL1"
-								multiple="multiple">
-								<c:forEach var="item" items="${customerChainL1}">
-									<option value="${item}">${item}</option>
-								</c:forEach>
-							</select>
-						</div>
-					</div>
-
-					<div class="form-group">
-						<label class="control-label col-md-4" for="uom">OFFER TYPE</label>
-						<div class="col-md-8">
-							<select class="form-control" id="offerType" name="offerType">
-								<option>ALL TYPES</option>
-								<c:forEach var="item" items="${offerTypes}">
-									<option value="${item}">${item}</option>
-								</c:forEach>
-							</select>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-md-4">
-
-					<div class="form-group">
-						<label for="unique-id" class="control-label col-md-4">BRAND</label>
-						<div class="col-md-8">
-							<select class="form-control" id="brand" name="brand">
-								<option>ALL BRANDS </option>
-								<c:forEach var="brand" items="${brands}">
-									<option value="${brand}">${brand}</option>
-								</c:forEach>
-							</select>
-						</div>
-
-					</div>
-					<div class="form-group">
-						<label class="control-label col-md-4" for="uom">L2-CUST
-							CHAIN (s)</label>
-						<div class="col-md-8 switch-dynamic">
-							<input type="text" class="form-control proco-create-input" id="customerChainL2" name="customerChainL2"
-								value="ALL CUSTOMERS" readonly="true"></input>
-						</div>
-
-					</div>
-
-					<div class="form-group">
-						<label class="control-label col-md-4" for="uom">MODALITY </label>
-						<div class="col-md-8">
-							<select class="form-control" id="modality" name="modality">
-								<option>ALL MODALITIES</option>
-								<c:forEach var="item" items="${modality}">
-									<option value="${item.key}">${item.value}</option>
-								</c:forEach>
-							</select>
-						</div>
-					</div>
-
-
-				</div>
-
-				<div class="col-md-4">
-
-					<div class="form-group">
-						<label for="unique-id" class="control-label col-md-4">BASE
-							PACK</label>
-						<div class="col-md-8">
-							<input type="text" id="promo_basepack" class="form-control" name="promoBasepack"
-								placeholder="ALL PRODUCTS" />
-						</div>
-
-					</div>
-
-					<div class="form-group">
-						<label class="control-label col-md-4" for="uom">GEOGRAPHY</label>
-						<div class="col-md-8">
-							<!-- <select class="form-control" id="">
-								<option>ALL INDIA</option>
-							</select> 
-							<input type="text" class="form-control" value="ALL INDIA" name="geography"
-								id="geography" />
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="control-label col-md-4" for="uom">YEAR</label>
-						<div class="col-md-3">
-							<select class="form-control" id="year" name="year">
-								<option>ALL YEARS</option>
-								<c:forEach var="item" items="${years}">
-									<option value="${item}">${item}</option>
-								</c:forEach>
-							</select>
-						</div>
-
-						<label class="control-label col-md-2" for="uom">MOC</label>
-						<div class="col-md-3">
-							<input type="text" class="form-control" value="FULL YEAR" name="moc"
-								id="moc" />
-						</div>
-					</div>
-				</div>
-
-				<div class="clearfix"></div>
-			</div>
-		</form> 
-			<div class="promo-list table-header-cr">PROMO LIST</div> -->
-			
-			
+				
 			<form>
 			 <table id="table-id-promo-list-table" class="table table-striped table-bordered promo-list-table"
 				cellspacing="0" style="width: 100%;overflow-x: scroll;display: block;"> 
@@ -344,29 +195,18 @@ margin-top: -75px!important;
 				</div>
 				<div class="col-md-2 col-xs-6">
 				</div>
-				
-							
-			
-				  <div class="col-md-2 col-xs-6">
-					<a href="#" id="approveCr"><button id="approveCrBtn" 
+				<div class="col-md-2 col-xs-6">
+					<a href="#" id="approveSc"><button id="approveScBtn" 
 						class="btn promo-primary-btn col-md-10 col-md-offset-1 col-xs-12">APPROVE</button></a>
 				</div>
-			<!-- 	<div class="col-md-2 col-xs-6">
-					<a href="#" id="rejectCr"><button id="rejectCrBtn" 
-						class="btn promo-delete-btn col-md-10 col-md-offset-1 col-xs-12">REJECT CR</button></a>
-				</div> -->	
-			</div>
 			
-			<!-- Added by Kavitha D for promo download -SPRINT10 -->
 			
-			<c:if test="${roleId eq 'NCMM'}">
-			<div class="download-btn">
+			 <div class="download-btn">
 				<input type="button" class="btn new-btn-download" value="PROMO DOWNLOAD" onclick="javascript: downloadPromotionFile();"></input>
 			</div> 
-			</c:if>
 			
 			<!-- Added by Kavitha D for promo upload -SPRINT10 -->
-			<form:form action="http://localhost:8083/VisibilityAssetTracker/promoApprovalUpload.htm" method="POST"
+			<form:form action="http://localhost:8083/VisibilityAssetTracker/promoApprovalScUpload.htm" method="POST"
 			 id="promoApprovalUpload" modelAttribute="PromoCrBean"
                 enctype="multipart/form-data" onsubmit="return uploadValidation()">                
             <div class="promo-upload">PROMO APPROVAL UPLOAD</div>
@@ -395,6 +235,8 @@ margin-top: -75px!important;
                 <div class="clearfix"></div>                
             </div>
         </form:form>
+			
+		</div>
 			
 	<div id="add-depot" class="modal fade" role="dialog">
 
@@ -453,7 +295,7 @@ margin-top: -75px!important;
 		<script type="text/javascript" src="assets/js/comboTreePlugin.js"></script>
 		<script type="text/javascript" src="assets/js/bootstrap-multiselect.js"></script>
 		<script type="text/javascript" src="assets/js/jquery-ui.js"></script>		
-		<script type="text/javascript" src="assets/js/custom/proco/promoCr.js"></script>
+		<script type="text/javascript" src="assets/js/custom/proco/promoSc.js"></script>
 		
 		<script type="text/javascript"
 		src="assets/js/custom/proco/alert-modal.js"></script>
@@ -491,7 +333,7 @@ margin-top: -75px!important;
 
           $(document).ready(function(){
 
-    		  $('#approveCr').on('click',function(){
+    		  $('#approveSc').on('click',function(){
     			  $('#successblock').hide();
     				var promoIdList = [];
     				$.each($("table.promo-list-table tbody input[name='promoId']:checked"),
@@ -500,7 +342,7 @@ margin-top: -75px!important;
     						});
 
     				if(promoIdList.length>0){
-    				$("#approveCr").attr("href", "http://34.120.128.205/VisibilityAssetTracker/approveCr.htm?promoid="+promoIdList);
+    				$("#approveSc").attr("href", "http://localhost:8083/VisibilityAssetTracker/approvePromoSc.htm?promoid="+promoIdList);
     				} else{
         				$('#promoSelectErrorMsg').show().find('span').html('Please select Promotion.');
         				}

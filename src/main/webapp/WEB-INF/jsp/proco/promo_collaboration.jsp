@@ -15,6 +15,10 @@
 <meta name="author" content="">
 <!--  <link rel="icon" href="../../favicon.ico"> -->
 <title>MT PLANNING</title>
+<%
+	String errorMsg = (String) request.getAttribute("errorMsg");
+	String successMsg = (String) request.getAttribute("success");
+%>
 
 <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css"	href="assets/css/jquery-ui.css">
@@ -113,13 +117,33 @@ margin-top: -75px!important;
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${errorMsg}"></c:out>
 				<c:if test="${FILE_STATUS=='ERROR_FILE'}">
-					<a href="http://34.120.128.205/VisibilityAssetTracker/downloadKamErrorFile.htm?level=${level}" id="downloadTempFileLink">Click
+					<a href="http://localhost:8083/VisibilityAssetTracker/downloadKamUploadErrorFilensp.htm?level=${level}" id="downloadTempFileLink">Click
 						here to Download Error File:</a>
 
 				</c:if>
 			</div>
 		</c:if>
-
+		<!--Kajal added code for errorblock with download error file for KAM volume upload sprint-10-->
+	                 				<div class="alert alert-success sucess-msg" style="display: none;margin-top:35px;margin-bottom: -23px" id="KAMVolumesuccessblock">
+		                                 <button type="button" class="close" data-hide="alert">&times;</button>
+		                                 <span></span>
+	                                </div>
+                                    <div class="alert alert-danger" style="display: none;margin-top:35px;margin-bottom: -23px" id="KAMVolumeerrorblockUpload">
+                                        <button type="button" class="close" data-hide="alert">&times;</button>
+                                       
+                                            <span>File contains error...</span>
+                                            <a href="http://localhost:8083/VisibilityAssetTracker/downloadKamUploadErrorFilensp.htm" id="downloadTempFileLink">Click here to Download Error File</a>
+                                    </div>
+									<div class="alert alert-danger" style="display: none;margin-top:35px;margin-bottom: -23px" id="errorblockKamVolumeUpload">
+		                            <button type="button" class="close" data-hide="alert">&times;</button>
+		
+		                           <!-- <span>Error while uploading file.</span>-->
+								   <span></span>
+		
+	                               </div>
+								  
+		
+		<!--Kajal code end here for sprint-10-->	
 
 		<div class="proco-creation form-horizontal">
                <!--bharati commented below filters in sprint-9-->
@@ -384,7 +408,43 @@ margin-top: -75px!important;
 						value="KAM DOWNLOAD" onclick="javascript: downloadPromotionFile();"></input>
 				</div>
 			</form>
-			<%--<form:form action="http:///34.120.128.205/VisibilityAssetTracker/uploadKam.htm" id="kamUpload" method="POST"
+			
+			<form:form action="#" id="kamVolumeUpload" modelAttribute="createKAMVolumeBean" 
+				enctype="multipart/form-data" onsubmit="return uploadValidation()">
+				
+			<div class="promo-upload">KAM VOLUME UPLOAD</div>
+			<div class="upload-file">
+			
+			
+				<div class="col-md-4 col-md-offset-4" style="padding: 30px 0px;">
+					<div class="upload-label">
+						<span><i class="glyphicon glyphicon-cloud-upload"></i></span> <span>
+							<b class="SEGOEUIL-font">KAM Volume Upload File</b>
+						</span>
+					</div>
+					<div class="upload-group">
+
+						<div class="cust-file" style="float: right;">
+							<span class="btn btn-upload " id="choose-file">Choose
+									File</span>
+						</div>
+
+						<input type="file" class="form-control" value="" name="file"
+							id="upload-file">
+
+						<div class="file-name" style="line-height: 2.3">No file
+							chosen</div>
+					</div>
+                    <span id="uploadErrorMsg" style="display: none; color: red">Please upload .xls or .xlsx file</span>
+					<div class="" style="color: #fff; text-align: center">
+
+						<button id="KAMVolumeUpload" class="btn new-btn-primary">UPLOAD</button>
+					</div>
+				</div>
+				<div class="clearfix"></div>				
+			</div>
+		</form:form>
+			<%--<form:form action="http://localhost:8083/VisibilityAssetTracker/uploadKam.htm" id="kamUpload" method="POST"
 				modelAttribute="L1CollaborationBean" enctype="multipart/form-data"
 				onsubmit="return uploadValidation()">--%>
 				<!--<div class="promo-upload">KAM COLLABORATION</div>

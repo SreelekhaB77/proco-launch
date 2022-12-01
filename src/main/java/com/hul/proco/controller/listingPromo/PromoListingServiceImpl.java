@@ -17,6 +17,9 @@ public class PromoListingServiceImpl implements PromoListingService {
 
 	@Autowired
 	private PromoListingDAO promoListingDAO;
+	
+	@Autowired
+	private PromoListingService promoListingService;
 
 	@Override
 	public List<PromoListingBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String cagetory, 
@@ -97,6 +100,12 @@ public class PromoListingServiceImpl implements PromoListingService {
 	@Transactional(rollbackFor = { Exception.class })
 	public String promoEditUpload(CreatePromotionBean[] bean, String userId,boolean isFromUi) throws Exception {
 		return promoListingDAO.promoEditUpload(bean, userId,isFromUi);
+	}
+	
+	@Override
+	@Transactional(rollbackFor = { Exception.class })
+	public String kamVolumeUpload(List<List<String>> excelData, String userId) {	
+		return promoListingDAO.kamVolumeUpload(excelData, userId);
 	}
 
 	@Override
@@ -255,11 +264,41 @@ public class PromoListingServiceImpl implements PromoListingService {
 		return headerList;
 	}
 	
+	//Added by Kajal G for promo listing download starts-SPRINT 10
+	@Override
+	public ArrayList<String> getHeaderForPromoDownloadListing(String primaryAcc) {
+		List<String> PPMAccountList = promoListingDAO.getPPMAccount(primaryAcc);
+		ArrayList<String> headerList=new ArrayList<String>();
+		headerList.add("PROMO ID");
+		headerList.add("MOC");
+		headerList.add("BASEPACK CODE");
+		headerList.add("OFFER DESCRIPTION");
+		headerList.add("PRICE OFF");
+		headerList.add("CLUSTER");
+		headerList.add("DP QUANTITY");
+		headerList.add("PRIMARY CHANNEL");
+		for (String  list: PPMAccountList) {
+			headerList.add(list);
+		}
+		return headerList;
+	}
+	
 	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleId, String[] kamAccounts){
 		return promoListingDAO.getPromotionListingDownload(headerList,userId,moc,roleId, kamAccounts);
 	}
 	//Added by Kavitha D for promo listing download ends-SPRINT 9
 
+	//Added by Kajal G for promo listing download ends-SPRINT 10
+	public List<ArrayList<String>> getPromotionListDownload(ArrayList<String> headerList, String moc, String primaryAcc){
+		return promoListingDAO.getPromotionListingDownload(headerList,moc,primaryAcc);
+	}
+	
+	@Override
+	@Transactional
+	public List<ArrayList<String>> getKAMErrorDetails(String userId){
+		return promoListingDAO.getKAMErrorDetails(userId);
+	}
+	
 	//Added by Kavitha D for promo listing Grid dispaly starts-SPRINT 9
 
 	@Override

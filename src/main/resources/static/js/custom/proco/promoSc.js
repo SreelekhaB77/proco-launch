@@ -1,9 +1,12 @@
-$(document).ready(function() {
+$(document)
+		.ready(
+				function() {
 					
 					$('#msg-success').hide();
 					$('#msg-error').hide();
 					
-					var selectAll = false;
+					$('#successblock').hide();
+					$('#errorblock').hide();
 					
 					$("[data-hide]").on("click", function() {
 		                $(this).closest("." + $(this).attr("data-hide")).hide();
@@ -17,22 +20,24 @@ $(document).ready(function() {
 							promoTable.draw();
 						}*/
 					});
+					 var selectAll=false;
 					
-					//bharati commented below code for moc filter issue in sprint-9
 					/*var mocSelectedVal = $('#moc').comboTree({
 						source : JSON.parse(moc),
 						isMultiple : false
-						/*select:function(item){
+						select:function(item){
 							mocVal = item.title;
 							promoTable.draw();
-						}*/
-					/*});*/
+						}
+					});*/
 
-					$('.comboTreeDropDownContainer ul li span.comboTreeParentPlus').html("+");
+					$(
+							'.comboTreeDropDownContainer ul li span.comboTreeParentPlus').html("+");
 					
 					
 					
-					$('#customerChainL1').multiselect(
+					$('#customerChainL1')
+							.multiselect(
 									{
 										includeSelectAllOption : true,
 										numberDisplayed : 2,
@@ -42,17 +47,17 @@ $(document).ready(function() {
 										onChange : function(option, checked,
 												select) {
 											 var custChainSelectedData = [];
-											 var selectedOptionsChange = $('#customerChainL1 option:selected');
-											 var totalLen = $('#customerChainL1 option').length;
-
-							                    if (selectedOptionsChange.length > 0 && selectedOptionsChange.length < totalLen){
+							                    var selectedOptions = $('#customerChainL1 option:selected');
+							                    var totalLen = $('#customerChainL1 option').length;
+							                    if (selectedOptions.length > 0 && selectedOptions.length < totalLen){
 													selectAll = false;
-												}else if(selectedOptionsChange.length == totalLen){
+												}else if(selectedOptions.length == totalLen){
 													selectAll = true;
 												}
-											 
-							                    for (var i = 0; i < selectedOptionsChange.length; i++) {
-							                    	custChainSelectedData.push(selectedOptionsChange[i].value);
+							                    
+							                    
+							                    for (var i = 0; i < selectedOptions.length; i++) {
+							                    	custChainSelectedData.push(selectedOptions[i].value);
 
 							                    }
 							                    if(selectAll == true){
@@ -157,21 +162,21 @@ $(document).ready(function() {
 						year = $(this).val();
 						promoTable.draw();
 						});
-						
-						//bharati added for sprint-9 moc filter US
-						$('#Mocvalue').change(function(){
-						Mocvalue = $(this).val();
+
+						$('#Mocvaluecr').change(function(){
+							console.log("moc");
+						Mocvaluecr = $(this).val();
+						console.log(Mocvaluecr);
 						promoTable.draw();
 						});
-					
 					
 					/*PromoListing table pagination */
 				       promoTable = $('.promo-list-table').DataTable({
 
 				              /* added for second tab start */
-				          "bProcessing": true,
+				             "bProcessing": true,
 				             "bServerSide": true,
-				             "scrollY":       "300px",
+				            "scrollY":       "300px",
 						        "scrollX":        true,
 						        "scrollCollapse": true,
 						        "paging":         true,
@@ -193,8 +198,8 @@ $(document).ready(function() {
 					              },
 				             "iDisplayLength": 10,
 						     "iDisplayStart": 0,
-				              "sAjaxSource": "promoListingPagination.htm",
-				              //bharati added mocvalue aodata in srint-9
+				             
+				              "sAjaxSource": "promoScPagination.htm",
 				               "fnServerParams": function(aoData) {
 				                aoData.push(
 				    	                {"name": "category", "value": category}, 
@@ -206,16 +211,14 @@ $(document).ready(function() {
 				    	                {"name": "offerType", "value": offerType}, 
 				    	                {"name": "modality", "value": modality}, 
 				    	                {"name": "year","value": year},
-				    	                {"name": "moc","value": Mocvalue} //bharati changes this mocVal to MocValue in sprint-9
-				    	                
-				    	               
+				    	                {"name": "moc","value": Mocvaluecr} 
 				    	                );
 				              }, 
 				              "fnDrawCallback": function(oSettings){
-				            	 $('table.promo-list-table input[type="checkbox"]').change(function() {
+				            	  $('table.promo-list-table input[type="checkbox"]').change(function() {
 									    $('table.promo-list-table input[type="checkbox"]').not(this).prop('checked', false);  
 									});
-				            	  $("table.promo-list-table input[name='select_all']").prop('checked',false);
+									  $("table.promo-list-table input[name='select_all']").prop('checked',false);
                     	    	  /* Select all checkbox */
                     	    	 $("table.promo-list-table input[name='select_all']").change(function() {
                                       if ($(this).prop("checked")) {
@@ -228,14 +231,14 @@ $(document).ready(function() {
                     	    	  
                     	    	  $("table.promo-list-table input[name='promoId']").change(function() {
                             		  if($("table.promo-list-table tbody input[name='promoId']:checked").length == 1){
-                            			    $("#edit_promo").find('button').attr("disabled", false);
+                            			    $("#approveSc").find('button').attr("disabled", false);
                             			}
                             			else if($("table.promo-list-table tbody input[name='promoId']:checked").length > 1){
-                            			     $("#edit_promo").find('button').attr("disabled", true);
+                            			     $("#approveSc").find('button').attr("disabled", true);
                             			}
                     				});
+				            	 
 				              },
-							  //bharati commented uom,kitting value, reason, remark,originalId in sprint-9 US-2
 				              "aoColumns": [{
 				                  "mData": "promo_id",
 				                  "mRender": function(data, type, full) {
@@ -243,10 +246,7 @@ $(document).ready(function() {
 				                  } 
 				                  },{
 				                    "mData": "promo_id"
-				                  },/*{
-				                    "mData": "originalId"
-				                  },*/
-								  {
+				                  },{
 				                    "mData": "startDate"
 				                  },{
 				                    "mData": "endDate"
@@ -266,45 +266,24 @@ $(document).ready(function() {
 				                    "mData": "geography",
 				                  }, {
 				                    "mData": "quantity",
-				                  }, 
-								  /*{
-				                    "mData": "uom",
-				                  },*/
-								  {
+				                  }, {
 				                    "mData": "offer_value",
-				                  },
-								  /*{
-					                 "mData": "kitting_value",
-					              },*/
-								  
-								  {
+				                  },{
 					                 "mData": "status",
-					              },
-								  /*{
-						                 "mData": "reason",
-						       },*/
-								  {
-				                    "mData": "userId"
-				                  },{
-				                    "mData": "changeDate"
-				                  },{
-						                 "mData": "remark",
-						         },{
-						                 "mData": "investmentType",
-						              } ,{
-						                 "mData": "solCode",
-						              } ,{
-						                 "mData": "promotionMechanics",
-						              } ,{
-						                 "mData": "solCodeStatus",
+					              },{
+					              	 "mData": "investmentType",
+						           } ,{
+						            "mData": "solCode",
+						           } ,{
+						            "mData": "promotionMechanics",
+						           } ,{
+						             "mData": "solCodeStatus",
 						              }
 				                ]
 				                /* added for second tab end */
 
 				            });
-						  
-				      
-				       promoTable.columns.adjust().draw();
+				             promoTable.columns.adjust().draw();
 				       
 				       $('.filter-ref').on('keyup', function() {
 				    	   promoTable.columns(0).search(this.value).draw();
@@ -380,9 +359,8 @@ $(document).ready(function() {
 							basepack = ui.item.value;
 							promoTable.draw();
 						}
-					
-						
 					});
+						
 						
 						$('span.comboTreeItemTitle').on('click',function(){
 							//console.log($(this).parent('div[class="comboTreeInputWrapper"]').find('input').attr('id'));
@@ -398,11 +376,14 @@ $(document).ready(function() {
 								promoTable.draw();
 							}
 							});
-						/*$('.promo-list-table tr').each(function() {
-						    var customerId = $(this).find("td").eq(16).val();   
-						    console.log(customerId);
-						});*/
+						
 				});
+
+$('#add-depot').on('hidden.bs.modal', function() {
+	$('#msg-success').hide();
+	$('#msg-error').hide();
+	$('#reason').val("");
+});
 
 function getCustChainValues(selVal) {
 	$.ajax({
@@ -441,8 +422,8 @@ function multiSelectionForCustChain() {
 		nonSelectedText : 'ALL CUSTOMERS',
 		selectAllText : 'ALL CUSTOMERS',
 		onChange : function(option, checked, select) {
-			//console.log(option);
-			var selVals = [];
+			console.log(option);
+			//var selVals = [];
 			var selectedOptions = $('#customerChainL2 option:selected');
 			if (selectedOptions.length > 0) {
 				for (var i = 0; i < selectedOptions.length; i++) {
@@ -473,59 +454,21 @@ function split(val){
 }
 
 function downloadPromotionFile(){
-	//$("#download").submit();  //bharati commented this line for sprint-9 moc filter value pass to download promo file
-	var SelectedMoc = $("#Mocvalue").val();
-	window.location.assign(SelectedMoc+"/downloadPromoListing.htm");
-
+	/*$("#download").submit();*/
+	var SelectedMoc = $("#Mocvaluecr").val();
+	window.location.assign(SelectedMoc+"/downloadScPromoListing.htm"); //Added by Kavitha D-Promo approval download 
+	
 }
-
-function uploadValidation() {
-	if ($('#upload-file').val() == "") {
-		ezBSAlert({
-			messageText : "Please choose a file",
-			alertType : "info"
-		}).done(function(e) {
-			//console.log(e);
-		});
-		return false;
-	} else if ($('#upload-file').val() != "") {
-		var fileName = $('.file-name').text();
-
-		var FileExt = fileName.substring(fileName.lastIndexOf('.') + 1);
-		if (FileExt != "xlsx") {
-			if (FileExt != "xls") {
-				ezBSAlert({
-					messageText : "Please upload .xls or .xlsx file",
-					alertType : "info"
-				}).done(function(e) {
-					//console.log(e);
-				});
-				return false;
-			}
-		}
-	}
-}
-
-$('#add-depot').on('hidden.bs.modal', function() {
-	$('#msg-success').hide();
-	$('#msg-error').hide();
-	$('#remark').val("");
-});
 
 function validateForm(){
 	var promoIdList = [];
-	var remark=$('#remark').val();
-	$('#msg-success').hide();
-	$('#msg-error').hide();
-	if(remark==""){
-		$('#msg-error').html('Please enter remarks.');
-		$('#msg-error').show();
-		return false;
-	}
+	var remark=$('#reason').val();
+	document.getElementById('remark').value = remark;
 	$.each($("table.promo-list-table tbody input[name='promoId']:checked"),
 	function() {
 		promoIdList.push($(this).val());
 			});
 	document.getElementById('promoIdList').value = promoIdList;
-	$('#pwdform').submit();
+	$("#download").submit();
 }
+

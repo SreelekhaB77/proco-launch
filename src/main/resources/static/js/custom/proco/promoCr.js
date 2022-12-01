@@ -22,18 +22,17 @@ $(document)
 					});
 					 var selectAll=false;
 					
-					var mocSelectedVal = $('#moc').comboTree({
+					/*var mocSelectedVal = $('#moc').comboTree({
 						source : JSON.parse(moc),
 						isMultiple : false
-						/*select:function(item){
+						select:function(item){
 							mocVal = item.title;
 							promoTable.draw();
-						}*/
-					});
+						}
+					});*/
 
 					$(
-							'.comboTreeDropDownContainer ul li span.comboTreeParentPlus')
-							.html("+");
+							'.comboTreeDropDownContainer ul li span.comboTreeParentPlus').html("+");
 					
 					
 					
@@ -163,6 +162,13 @@ $(document)
 						year = $(this).val();
 						promoTable.draw();
 						});
+						//Moc filter in ncmm by viswas -SPRINT 10
+						$('#Mocvaluecr').change(function(){
+							console.log("moc");
+						Mocvaluecr = $(this).val();
+						console.log(Mocvaluecr);
+						promoTable.draw();
+						});
 					
 					/*PromoListing table pagination */
 				       promoTable = $('.promo-list-table').DataTable({
@@ -170,11 +176,29 @@ $(document)
 				              /* added for second tab start */
 				             "bProcessing": true,
 				             "bServerSide": true,
-				             "lengthChange": false,
-				             "searching": false,
-				             "ordering": false,
-				             "iDisplayLength": 5,
+				          /*  "scrollY":       "300px",
+						        "scrollX":        true,
+						        "scrollCollapse": true,*/
+						        "paging":         true,
+						        "ordering": false,
+						        "searching": true,
+						        "select": true,
+						    	"lengthMenu" : [
+									[ 5, 10, 25, 50, 100 ],
+									[ 5, 10, 25, 50, 100 ] ],
+						        "oLanguage": {
+					                  "sSearch": 'Search by Promoid:',
+					                  "oPaginate": {
+					                      "sNext": "&rarr;",
+					                      "sPrevious": "&larr;"
+					                  },
+					                  "sLengthMenu": "Records per page _MENU_ ",
+					                  "sEmptyTable": "No Pending Visibilities."
+					
+					              },
+				             "iDisplayLength": 10,
 						     "iDisplayStart": 0,
+				             
 				              "sAjaxSource": "promoCrPagination.htm",
 				               "fnServerParams": function(aoData) {
 				                aoData.push(
@@ -187,13 +211,32 @@ $(document)
 				    	                {"name": "offerType", "value": offerType}, 
 				    	                {"name": "modality", "value": modality}, 
 				    	                {"name": "year","value": year},
-				    	                {"name": "moc","value": mocVal}
+				    	                {"name": "moc","value": Mocvaluecr} //Added by viswas-SPRINT 10
 				    	                );
 				              }, 
 				              "fnDrawCallback": function(oSettings){
-				            	  /*$('table.promo-list-table input[type="checkbox"]').change(function() {
+				            	  $('table.promo-list-table input[type="checkbox"]').change(function() {
 									    $('table.promo-list-table input[type="checkbox"]').not(this).prop('checked', false);  
-									});*/
+									});
+									  $("table.promo-list-table input[name='select_all']").prop('checked',false);
+                    	    	  /* Select all checkbox */
+                    	    	 $("table.promo-list-table input[name='select_all']").change(function() {
+                                      if ($(this).prop("checked")) {
+                                        $("table.promo-list-table input:checkbox").prop("checked", true);
+
+                                      } else {
+                                        $("table.promo-list-table input:checkbox").prop("checked", false);
+                                      }
+                                    });
+                    	    	  
+                    	    	  $("table.promo-list-table input[name='promoId']").change(function() {
+                            		  if($("table.promo-list-table tbody input[name='promoId']:checked").length == 1){
+                            			    $("#approveCr").find('button').attr("disabled", false);
+                            			}
+                            			else if($("table.promo-list-table tbody input[name='promoId']:checked").length > 1){
+                            			     $("#approveCr").find('button').attr("disabled", true);
+                            			}
+                    				});
 				            	 
 				              },
 				              "aoColumns": [{
@@ -223,25 +266,85 @@ $(document)
 				                    "mData": "geography",
 				                  }, {
 				                    "mData": "quantity",
-				                  }, {
+				                  },/* {
 				                    "mData": "uom",
-				                  }, {
+				                  },*/ {
 				                    "mData": "offer_value",
-				                  },{
+				                  },/*{
 					                 "mData": "kitting_value",
-					              },{
+					              },*/{
 					                 "mData": "status",
-					              },{
+					              },/*{
 					                 "mData": "reason",
 					              },{
 					                 "mData": "remark",
 					              },{
 					                 "mData": "changesMade",
-					              }
+					              },*/{
+					              	 "mData": "investmentType",
+						           } ,{
+						            "mData": "solCode",
+						           } ,{
+						            "mData": "promotionMechanics",
+						           } ,{
+						             "mData": "solCodeStatus",
+						              }
 				                ]
 				                /* added for second tab end */
 
 				            });
+				             promoTable.columns.adjust().draw();
+				       
+				       $('.filter-ref').on('keyup', function() {
+				    	   promoTable.columns(0).search(this.value).draw();
+						});
+
+	                     $('#DataTables_Table_0_length').css({
+	                       
+	                         'padding': '20px 0'
+	                     });
+	                     $('#DataTables_Table_0_length').css({
+	                         'color': '#29290a'
+	                     });
+	                    
+	                     
+	                     $($('#table-id-promo-list-table_wrapper .row')[0]).after(
+	                             $(".summary-text"));
+
+	                     $(
+	                     $($('#table-id-promo-list-table_wrapper .row')[0]).find(
+                         	'.col-sm-6')[1]).addClass(
+                         		"promo-filter-div");
+	                     $(
+	    	                     $($('.promo-filter-div')).find(
+	                             	'#table-id-promo-list-table_filter')).addClass(
+	                             		"promo-filter");
+
+	                     
+	                     $(
+	    	                     $($('#table-id-promo-list-table_wrapper .row')[0]).find(
+	                             	'select')).addClass(
+	                             		"promolistselect");
+	                     
+	                    
+	                     $(
+	    	                     $($('.promo-filter')).find(
+	                             	'input')).addClass(
+	                             		"searchicon-wrapper-promolist");
+	                    
+	                     $('.promo-filter').find(
+                         '#table-id-promo-list-table_filter').css({
+	                         'float': 'right'
+	                     });
+				       
+	                     $('.promo-filter').css({
+	                    	 'float': 'right',
+	                    	  'padding-left': '10px',
+	                    	  'padding-top': '20px',
+	                    	    'height': '75px', 
+	                    	    'width': 'none',
+	                    	    'border-left': '2px #e8e8e8 solid'
+	                     });
 				       var categoryTags = basepacks;
 						var categoryNewList = [];
 						
@@ -361,7 +464,10 @@ function split(val){
 }
 
 function downloadPromotionFile(){
-	$("#download").submit();
+	/*$("#download").submit();*/
+	var SelectedMoc = $("#Mocvaluecr").val();
+	window.location.assign(SelectedMoc+"/downloadCrPromoListing.htm"); //Added by Kavitha D-Promo approval download 
+	
 }
 
 function validateForm(){

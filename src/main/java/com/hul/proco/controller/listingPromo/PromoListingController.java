@@ -810,6 +810,7 @@ public class PromoListingController {
 	@RequestMapping(value = "{moc}/downloadPromoListing.htm", method = RequestMethod.GET)
 	public @ResponseBody String downloadPromosForListing(@ModelAttribute("CreateBeanRegular") CreateBeanRegular createBeanRegular,@PathVariable("moc") String moc,
 			Model model,HttpServletRequest request, HttpServletResponse response) {
+		String primaryAcc = "Pharma";
 		logger.info("START downloadPromos for listing():");
 		try {
 			InputStream is;
@@ -827,16 +828,18 @@ public class PromoListingController {
 			String downloadFileName = absoluteFilePath + fileName;
 			String userId = (String) request.getSession().getAttribute("UserID");
 			
-			ArrayList<String> headerList = promoListingService.getHeaderListForPromoDownloadListing();
-			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc,roleId, kamAccounts);
+//			ArrayList<String> headerList = promoListingService.getHeaderListForPromoDownloadListing();
+			ArrayList<String> headerList = promoListingService.getHeaderForPromoDownloadListing(primaryAcc);
+//			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc,roleId, kamAccounts);
+			downloadedData = promoListingService.getPromotionListDownload(headerList, moc, primaryAcc);
 			if (downloadedData != null) {
-				UploadUtil.writeXLSFile(downloadFileName, downloadedData, null,".xls");
-				downloadLink = downloadFileName + ".xls";
+				UploadUtil.writeXLSXFile(downloadFileName, downloadedData, null,".xlsx");
+				downloadLink = downloadFileName + ".xlsx";
 				is = new FileInputStream(new File(downloadLink));
 				// copy it to response's OutputStream
 				response.setContentType("application/force-download");
 				response.setHeader("Content-Disposition", "attachment; filename=PromotionListingDownloadFile"
-						+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+						+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xlsx");
 				IOUtils.copy(is, response.getOutputStream());
 				response.flushBuffer();
 			}
@@ -846,7 +849,100 @@ public class PromoListingController {
 		}
 		return null;
 	}
+
+	//Added by Kajal G for KAM Volume Upload SPRINT 10
+	@RequestMapping(value = "kamVolumeUpload.htm", method = RequestMethod.POST)
+	public @ResponseBody String kamVolumeUpload(@ModelAttribute("createKAMVolumeBean") CreateKAMVolumeBean createKAMVolumeBean,
+			Model model, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+		String save_data = null;
+		
+		System.out.println("Start KAM Upload file");
+		CommonPropUtils commUtils = CommonPropUtils.getInstance();
+		String userId = (String) httpServletRequest.getSession().getAttribute("UserID");
+		MultipartFile file = createKAMVolumeBean.getFile();
+		String fileName = file.getOriginalFilename();
+		CreateKAMVolumeBean[] beanArray = null;
+		String filepath = FilePaths.FILE_TEMPUPLOAD_PATH;
+		
+		fileName = filepath + fileName;
+		try {
+			if (!CommonUtils.isFileEmpty(file)) {
+				if (CommonUtils.isFileProcoSizeExceeds(file)) {
+					model.addAttribute("FILE_STAUS", "FILE_SIZE_EXCEED");
+					return "FILE_SIZE_EXCEED";
+				} else if (UploadUtil.movefile(file, fileName)) {
+					List<List<String>> excelData = new ArrayList();
+					excelData = UploadUtil.readExcelContent(fileName);
+					if (excelData.isEmpty()) {
+						model.addAttribute("FILE_STAUS", "FILE_EMPTY");
+						return "FILE_EMPTY";
+					}
+					if (excelData.contains("ERROR")) {
+						model.addAttribute("FILE_STAUS", "CHECK_COL_MISMATCH");
+
+						return "CHECK_COL_MISMATCH";
+					} else if (excelData.size() > 0) {
+						save_data = promoListingService.kamVolumeUpload(excelData, userId);
+					}
+				} else {
+
+					model.addAttribute("FILE_STAUS", "FILE_EMPTY");
+					return "FILE_EMPTY";
+				}
+			} else {
+				model.addAttribute("FILE_STAUS", "FILE_EMPTY");
+				return "FILE_EMPTY";
+			}
+
+			if (save_data.equals("EXCEL_UPLOADED")) {
+				model.addAttribute("FILE_STAUS", "EXCEL_UPLOADED");
+			} else {
+				model.addAttribute("FILE_STAUS", "EXCEL_NOT_UPLOADED");
+				save_data = "EXCEL_NOT_UPLOADED";
+			}
+		} catch (Exception e) {
+			logger.error(e);
+			e.printStackTrace();
+		} catch (Throwable t) {
+			logger.error(t);
+			t.printStackTrace();
+		}
+		return save_data;
+	}
 	
+	////Added by Kajal G for KAM Volume Upload Error file SPRINT 10
+	@RequestMapping(value = "downloadKamUploadErrorFilensp.htm", method = RequestMethod.GET)
+	public @ResponseBody ModelAndView downloadKamUploadErrorFile(
+			@ModelAttribute("CreateKAMVolumeBean") CreateKAMVolumeBean createKAMVolumeBean, Model model,
+			HttpServletRequest request, HttpServletResponse response) {
+		
+		InputStream is;
+		String downloadLink = "", absoluteFilePath = "";
+		List<ArrayList<String>> downloadedData = null;
+		String userId = (String) request.getSession().getAttribute("UserID");
+		absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
+		String fileName = UploadUtil.getFileName("KAM.Error.file", "",
+				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
+		String downloadFileName = absoluteFilePath + fileName;
+		downloadedData = promoListingService.getKAMErrorDetails(userId);
+		try {
+			UploadUtil.writeXLSXFile(downloadFileName, downloadedData, null,".xlsx");
+			downloadLink = downloadFileName + ".xlsx";
+			is = new FileInputStream(new File(downloadLink));
+			response.setContentType("application/force-download");
+			response.setHeader("Content-Disposition", "attachment; filename=KAMVolumeErrorFile_"
+					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xlsx");
+			IOUtils.copy(is, response.getOutputStream());
+			response.flushBuffer();
+		} catch (FileNotFoundException e) {
+			// e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			// e.printStackTrace();
+			return null;
+		}
+		return null;
+	}
 	//Added by Kavitha D for Moc  
 	/*
 	 * @RequestMapping(value = "getMocPromo.htm", method = RequestMethod.GET)

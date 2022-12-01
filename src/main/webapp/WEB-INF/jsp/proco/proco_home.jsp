@@ -158,7 +158,7 @@
          <a href="http://34.120.128.205/VisibilityAssetTracker/promoCr.htm">
           <div class="promo-create promo-create-bg">
               <img src="assets/images/proco/icon-1.png"  class="img-responsive" alt="">
-              <div class="promo-craete-txt promo-create-txt-bg"><div>Promo CR</div></div>  
+              <div class="promo-craete-txt promo-create-txt-bg"><div>Promo Approval</div></div>  
             </div>
              </a>
              
@@ -175,13 +175,47 @@
           </div>
           </c:if>
           
+          <!--  Added by Kavitha D-For SC Login-->
+          <c:if test="${roleId eq 'SC'}">
+    	<div class="col-md-4 col-md-offset-4">
+          <div class="col-md-6 col-sm-6 col-xs-6">
+         <a href="http://localhost:8083/VisibilityAssetTracker/promoApproveSc.htm">
+          <div class="promo-create promo-create-bg">
+              <img src="assets/images/proco/icon-1.png"  class="img-responsive" alt="">
+              <div class="promo-craete-txt promo-create-txt-bg"><div>Promo Approval</div></div>  
+            </div>
+             </a>
+             
+         </div>
+         <div class="col-md-6 col-sm-6 col-xs-6 ">
+                <a href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
+           <div class="promo-create promo-listing-bg">
+              <img src="assets/images/proco/icon-2.png " class="img-responsive" alt="">
+               <div class="promo-craete-txt promo-listing-txt-bg"><div>Promo Listing</div></div>
+            </div>
+                </a>
+             </div>
+          
+          </div>
+          <div class="col-md-2 col-sm-4 col-xs-4 ">
+                <a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
+		           <div class="promo-create promo-delete-bg">
+		              <img src="assets/images/proco/deletepro.png" class="img-responsive" id="delimg" alt="">
+		               <div class="promo-craete-txt promo-delete-txt-bg"><div>Dropped Offer</div></div>
+		            </div>
+                </a>
+             </div>
+          
+          </div>
+          </c:if>
+          
           <c:if test="${roleId eq 'NSCM'}">
     <div class="col-md-6 col-md-offset-2">
           <div class="col-md-4 col-sm-6 col-xs-6">
          <a href="http://34.120.128.205/VisibilityAssetTracker/promoCr.htm">
           <div class="promo-create promo-create-bg">
               <img src="assets/images/proco/icon-1.png"  class="img-responsive" alt="">
-              <div class="promo-craete-txt promo-create-txt-bg"><div>Promo CR</div></div>  
+              <div class="promo-craete-txt promo-create-txt-bg"><div>Promo Approval</div></div>  
             </div>
              </a>
              
