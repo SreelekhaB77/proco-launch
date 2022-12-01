@@ -357,17 +357,6 @@ margin-top: -75px!important;
 								 </div>
 
 					</div>
-			<div class="form-group col-sm-4" style="margin-top: 20px;">
-						<label for="unique-id" class="control-label col-md-2">Primary Channel</label>
-						<div class="col-md-5">
-						<select class="form-control" id="Mocvalue" name="Mocvalue">
-								 <c:forEach items="${mocList}" var="mocValue">
-                                   <option value="${mocValue}"><c:out value="${mocValue}"></c:out></option>
-                                 </c:forEach>
-                                 </select>
-								 </div>
-
-					</div>
 			<!--BHARATI COMMENTED BELOW COLUMNS FOR SPRINT-9-->
 				<table id="promoTable"
 					class="table table-striped table-bordered promo-collaboration-table"
