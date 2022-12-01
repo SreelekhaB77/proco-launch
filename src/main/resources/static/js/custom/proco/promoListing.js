@@ -529,5 +529,3 @@ function validateForm(){
 	document.getElementById('promoIdList').value = promoIdList;
 	$('#pwdform').submit();
 }
-
-

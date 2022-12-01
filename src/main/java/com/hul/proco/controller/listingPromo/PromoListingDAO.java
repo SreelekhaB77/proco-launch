@@ -28,7 +28,13 @@ public interface PromoListingDAO {
 			String modality, String year, String moc, String userId, int active);
 
 	public String promoEditUpload(CreatePromotionBean[] bean, String userId,boolean isFromUi) throws Exception;
+	
+	////Added by Kajal G for KAM Volumn Upload starts-SPRINT 10
+	public String kamVolumeUpload(List<List<String>> excelData, String userId);
 
+	//Added by Kajal G for KAM Volume Error download starts-SPRINT 10
+	public List<ArrayList<String>> getKAMErrorDetails(String userId);
+		
 	public List<ArrayList<String>> getPromoEditErrorDetails(ArrayList<String> headerList, String userId);
 	
 	public List<String> getReasonListForEdit();
@@ -47,6 +53,13 @@ public interface PromoListingDAO {
 	
 	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleId, String[] kamAccounts); //Added by Kavitha D for promo listing download-SPRINT 9
 
+	//Added by Kajal for KAM Volume download-SPRINT 10
+	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList,String moc, String primaryAcc); 
+	
+	//Added by Kavitha D for promo listing download-SPRINT 9
+
+	public List<String> getPPMAccount(String primaryAccount);
+	
 	//Added by Kavitha D for promo listing Grid dispaly starts-SPRINT 9
 	public int getPromoListRowCountGrid(String userId, String roleId,String moc,String[] kamaccount);
 

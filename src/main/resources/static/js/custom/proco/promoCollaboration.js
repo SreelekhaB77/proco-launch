@@ -1,3 +1,19 @@
+//Added by Kajal G for KAM Volume upload for SPRINT -10
+var spinnerWidth = "100";
+ var spinnerHeight = "100";
+function ajaxLoader(w, h) {
+
+    var left = (window.innerWidth / 2) - (w / 2);
+    var top = (window.innerHeight / 2) - (h / 2);
+    $('.loader').css('display', 'block');
+
+    $('.loading-image').css({
+        "left": left,
+        "top": top,
+        
+    });
+}
+
 $(document)
 		.ready(
 				function() {
@@ -398,3 +414,87 @@ function uploadValidation() {
 		}
 	}
 }
+
+//Kajal G added upload code for KAM volumn Upload for sprint-10
+
+$("#KAMVolumeUpload").click(function (event) {
+						event.preventDefault();
+						
+						var fileName = $('#upload-file').val();
+						if (fileName == '') {
+							$('#uploadErrorMsg').show().html("Please select a file to upload");
+							return false;
+						} else {
+							$('#uploadErrorMsg').hide();
+							var FileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+							if (FileExt != "xlsx") {
+								if (FileExt != "xls") {
+									$('#uploadErrorMsg').show().html("Please upload .xls or .xlsx file");
+									$("#kamVolumeUpload").submit(function(e) {
+										e.preventDefault();
+									});
+									return false;
+								}
+							}
+						}
+						
+				        // Get form
+				        var form = $('#kamVolumeUpload')[0];
+                           var data = new FormData(form);
+                        $.ajax({
+				            type: "POST",
+				            enctype: 'multipart/form-data',
+				            url: 'kamVolumeUpload.htm',
+				            data: data,
+				            processData: false,
+				            contentType: false,
+				            cache: false,
+				            timeout: 600000,
+				            beforeSend: function() {
+                                ajaxLoader(spinnerWidth, spinnerHeight);
+                            },
+							
+				            success: function (resdata) {
+				            	
+				            	 $('.loader').hide();
+				            	
+				            	if(resdata.includes('EXCEL_UPLOADED')) {
+				                    $('#errorblockKamVolumeUpload').hide();
+				                	$('#KAMVolumeerrorblockUpload').hide();
+				                	$('#KAMVolumesuccessblock').show().find('span').html(' File Uploaded Successfully !!!');
+				                	 
+				                }
+				                
+				                else if(resdata.includes('EXCEL_NOT_UPLOADED')){
+				                $('#KAMVolumeerrorblockUpload').show();
+				                $('#KAMVolumesuccessblock').hide();
+				                $('#errorblockKamVolumeUpload').hide();
+				                }
+				                else if(resdata.includes('FILE_EMPTY')){
+									$('#errorblockKamVolumeUpload').show().find('span').html('Error While Uploading Empty File');
+									$('#KAMVolumeerrorblockUpload').hide();
+									$('#KAMVolumesuccessblock').hide();
+								}
+								else if(resdata.includes('CHECK_COL_MISMATCH')){
+									$('#errorblockKamVolumeUpload').show().find('span').html('Please Check Uploaded File');
+									$('#KAMVolumeerrorblockUpload').hide();
+									$('#KAMVolumesuccessblock').hide();
+								}else {
+									
+				                	$('#errorblockKamVolumeUpload').show().find('span').html('Error While Uploading File');
+				                	$('#KAMVolumesuccessblock').hide();
+				                	$('#KAMVolumeerrorblockUpload').hide();
+				                	 
+				              	 }
+				              
+							    $('#kamVolumeUpload')[0].reset();
+								$('.file-name').html("No file chosen");
+				            },
+				            error: function (e) {
+				            $('#KAMVolumesuccessblock').hide();
+				                     
+				            }
+				        });
+				       
+					    	
+				    });
