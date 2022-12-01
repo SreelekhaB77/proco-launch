@@ -117,7 +117,7 @@ margin-top: -75px!important;
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${errorMsg}"></c:out>
 				<c:if test="${FILE_STATUS=='ERROR_FILE'}">
-					<a href="http://localhost:8083/VisibilityAssetTracker/downloadKamUploadErrorFilensp.htm?level=${level}" id="downloadTempFileLink">Click
+					<a href="http://34.120.128.205/VisibilityAssetTracker/downloadKamUploadErrorFilensp.htm?level=${level}" id="downloadTempFileLink">Click
 						here to Download Error File:</a>
 
 				</c:if>
@@ -132,7 +132,7 @@ margin-top: -75px!important;
                                         <button type="button" class="close" data-hide="alert">&times;</button>
                                        
                                             <span>File contains error...</span>
-                                            <a href="http://localhost:8083/VisibilityAssetTracker/downloadKamUploadErrorFilensp.htm" id="downloadTempFileLink">Click here to Download Error File</a>
+                                            <a href="http://34.120.128.205/VisibilityAssetTracker/downloadKamUploadErrorFilensp.htm" id="downloadTempFileLink">Click here to Download Error File</a>
                                     </div>
 									<div class="alert alert-danger" style="display: none;margin-top:35px;margin-bottom: -23px" id="errorblockKamVolumeUpload">
 		                            <button type="button" class="close" data-hide="alert">&times;</button>
@@ -444,7 +444,7 @@ margin-top: -75px!important;
 				<div class="clearfix"></div>				
 			</div>
 		</form:form>
-			<%--<form:form action="http://localhost:8083/VisibilityAssetTracker/uploadKam.htm" id="kamUpload" method="POST"
+			<%--<form:form action="http://34.120.128.205/VisibilityAssetTracker/uploadKam.htm" id="kamUpload" method="POST"
 				modelAttribute="L1CollaborationBean" enctype="multipart/form-data"
 				onsubmit="return uploadValidation()">--%>
 				<!--<div class="promo-upload">KAM COLLABORATION</div>

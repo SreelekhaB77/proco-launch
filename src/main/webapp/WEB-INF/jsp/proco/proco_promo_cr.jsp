@@ -145,9 +145,9 @@ margin-top: -75px!important;
          	</div> -->
 	       <div class="proco-creation form-horizontal">
 			 	<input type="hidden" id="roleId" value="${roleId}" />
-			<!-- <div class="promo-back"><a href="http://localhost:8083/VisibilityAssetTracker/procoHome.htm"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Listing</div> -->
+			<!-- <div class="promo-back"><a href="http://34.120.128.205/VisibilityAssetTracker/procoHome.htm"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"> </span></a>Promo Listing</div> -->
 			<div class="promo-details" style="padding:10px;"><span style="color:#fff;font-weight:600;">SELECT PROMOS FOR APPROVAL</span></div>
-			<form action="http://localhost:8083/VisibilityAssetTracker/downloadCrPromoListing.htm" method="POST" enctype="multipart/form-data" id="download"> 
+			<form action="http://34.120.128.205/VisibilityAssetTracker/downloadCrPromoListing.htm" method="POST" enctype="multipart/form-data" id="download"> 
 			<div class="form-group col-sm-4" style="margin-top: 20px;">
 						<label for="unique-id" class="control-label col-md-2">MOC</label>
 						<div class="col-md-5">
@@ -366,7 +366,7 @@ margin-top: -75px!important;
 			</c:if>
 			
 			<!-- Added by Kavitha D for promo upload -SPRINT10 -->
-			<form:form action="http://localhost:8083/VisibilityAssetTracker/promoApprovalUpload.htm" method="POST"
+			<form:form action="http://34.120.128.205/VisibilityAssetTracker/promoApprovalUpload.htm" method="POST"
 			 id="promoApprovalUpload" modelAttribute="PromoCrBean"
                 enctype="multipart/form-data" onsubmit="return uploadValidation()">                
             <div class="promo-upload">PROMO APPROVAL UPLOAD</div>

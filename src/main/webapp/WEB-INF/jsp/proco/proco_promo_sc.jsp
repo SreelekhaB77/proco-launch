@@ -83,21 +83,21 @@ margin-top: -75px!important;
 					<ul class="nav nav-pills">
 					<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 proco-craetion-active"><a
-							href="http://localhost:8083/VisibilityAssetTracker/promoApproveSc.htm">
+							href="http://34.120.128.205/VisibilityAssetTracker/promoApproveSc.htm">
 								<div class="proco-create-icon"></div>
 								<div class="tab-label-proco-create-active">Promo Approval</div>
 						</a></li>
 						
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 listing"><a
-							href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
+							href="http://34.120.128.205/VisibilityAssetTracker/promoListing.htm">
 								<div class="proco-listing-icon"></div>
 								<div class="tab-label-proco-create-inactive OpenSans-font">Promo Listing</div>
 						</a></li>
 
 						
 						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
+							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="http://34.120.128.205/VisibilityAssetTracker/promoDeletion.htm">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
@@ -126,7 +126,7 @@ margin-top: -75px!important;
 				<button type="button" class="close" data-hide="alert">&times;</button>
 				<c:out value="${errorMsg}"></c:out>
 				<c:if test="${FILE_STATUS=='ERROR_FILE'}">
-					<a href="http://localhost:8083/VisibilityAssetTracker/downloadPromotionEditErrorFile.htm" id="downloadTempFileLink">Click
+					<a href="http://34.120.128.205/VisibilityAssetTracker/downloadPromotionEditErrorFile.htm" id="downloadTempFileLink">Click
 						here to Download Error File: </a>
 
 				</c:if>
@@ -144,7 +144,7 @@ margin-top: -75px!important;
 	       <div class="proco-creation form-horizontal">
 			 	<input type="hidden" id="roleId" value="${roleId}" />
 			<div class="promo-details" style="padding:10px;"><span style="color:#fff;font-weight:600;">SELECT PROMOS FOR APPROVAL</span></div>
-			<form action="http://localhost:8083/VisibilityAssetTracker/downloadPromoListing.htm" method="POST" enctype="multipart/form-data" id="download"> 
+			<form action="http://34.120.128.205/VisibilityAssetTracker/downloadPromoListing.htm" method="POST" enctype="multipart/form-data" id="download"> 
 			<div class="form-group col-sm-4" style="margin-top: 20px;">
 						<label for="unique-id" class="control-label col-md-2">MOC</label>
 						<div class="col-md-5">
@@ -206,7 +206,7 @@ margin-top: -75px!important;
 			</div> 
 			
 			<!-- Added by Kavitha D for promo upload -SPRINT10 -->
-			<form:form action="http://localhost:8083/VisibilityAssetTracker/promoApprovalScUpload.htm" method="POST"
+			<form:form action="http://34.120.128.205/VisibilityAssetTracker/promoApprovalScUpload.htm" method="POST"
 			 id="promoApprovalUpload" modelAttribute="PromoCrBean"
                 enctype="multipart/form-data" onsubmit="return uploadValidation()">                
             <div class="promo-upload">PROMO APPROVAL UPLOAD</div>
@@ -342,7 +342,7 @@ margin-top: -75px!important;
     						});
 
     				if(promoIdList.length>0){
-    				$("#approveSc").attr("href", "http://localhost:8083/VisibilityAssetTracker/approvePromoSc.htm?promoid="+promoIdList);
+    				$("#approveSc").attr("href", "http://34.120.128.205/VisibilityAssetTracker/approvePromoSc.htm?promoid="+promoIdList);
     				} else{
         				$('#promoSelectErrorMsg').show().find('span').html('Please select Promotion.');
         				}

@@ -119,7 +119,7 @@ margin-top: -75px!important;
 					 
 					 	<c:if test="${roleId eq 'SC'}">
 					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
-							href="http://localhost:8083/VisibilityAssetTracker/promoApproveSc.htm">
+							href="http://34.120.128.205/VisibilityAssetTracker/promoApproveSc.htm">
 								<div class="proco-create-icon"></div>
 								<div class="tab-label-proco-create-inactive">Promo Approval</div>
 						</a></li>
