@@ -183,8 +183,8 @@ public class DPVolumeUploadDAO implements DPVolumeUpload {
 
 		String updateQuantity = "UPDATE TBL_PROCO_PROMOTION_MASTER_V2  T1 "
 				+ "INNER JOIN TBL_PROCO_PROMOTION_MASTER_TEMP_V2 T2 ON T1.PROMO_ID=T2.PROMO_ID AND T1.MOC=T2.MOC AND T1.BASEPACK_CODE=T2.BASEPACK_CODE "
-				+ " AND T1.OFFER_DESC=T2.OFFER_DESC AND T1.BRANCH=T2.BRANCH AND T1.CLUSTER=T2.CLUSTER AND T1.PPM_ACCOUNT=T2.PPM_ACCOUNT"
-				+ " SET T1.QUANTITY=T2.QUANTITY,T1.BUDGET=T2.BUDGET, " + "STATUS='3', T1.USER_ID='" + userId + "',T2.UPDATE_STAMP='"
+				+ " AND T1.OFFER_DESC=T2.OFFER_DESC AND T1.CLUSTER=T2.CLUSTER AND T1.PPM_ACCOUNT=T2.PPM_ACCOUNT "
+				+ " SET T1.QUANTITY=T2.QUANTITY,T1.BUDGET=T2.BUDGET, " + " T1.STATUS='3', T1.USER_ID='" + userId + "',T2.UPDATE_STAMP='"
 				+ dateFormat.format(date) + "'" + "WHERE T1.STATUS='1' AND T1.ACTIVE=1 AND T2.USER_ID='" + userId + "'";
 		System.out.println("updateQuantity:"+updateQuantity);
 		return sessionFactory.getCurrentSession().createNativeQuery(updateQuantity).executeUpdate();

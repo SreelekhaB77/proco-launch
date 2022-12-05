@@ -1672,7 +1672,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				long count = finalResult.get(0).stream().filter(x -> !x.isEmpty()).count();
 				
 				for(int j=11;j<=count+1;j++) {
-					if(finalResult.get(i).get(j) != "") {
+					if(finalResult.get(i).get(j).length() > 0) {
 						queryInsert.setString(0, finalResult.get(i).get(0));
 						queryInsert.setString(1, finalResult.get(i).get(1));
 						queryInsert.setString(2, finalResult.get(i).get(2));

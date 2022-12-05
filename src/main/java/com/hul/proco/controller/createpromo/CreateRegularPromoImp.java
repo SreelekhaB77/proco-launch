@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -702,9 +703,10 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				Map<String, String> crEntries = new HashMap<String, String>();
 				Map<String, String> date_extensionMap = new HashMap<String, String>();
 				Map<String, ArrayList<String>> check_existing_sol = new HashMap<String,ArrayList<String>>();
+				List<List<String>> check_sol_code_ref = new ArrayList();
 				datafromtable.getCREntries(crEntries);
 				datafromtable.getAllSOLtype(crEntries);
-				datafromtable.getAllSOLCodeAndPromoId(crEntries,date_extensionMap,check_existing_sol);
+				datafromtable.getAllSOLCodeAndPromoId(crEntries,date_extensionMap,check_existing_sol, check_sol_code_ref);
 			
 				if (commanmap
 						.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
@@ -836,15 +838,76 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							error_msg = error_msg + "SOL type does not exist";
 						flag = 1;
 					}
-					
-					if(!crEntries.containsKey(bean.getSol_code_ref().toUpperCase()))
-					{
-						if (flag == 1)
-							error_msg = error_msg + ","+bean.getSol_code_ref()+" SOL does not exist";
-						else
-							error_msg = error_msg + bean.getSol_code_ref()+" SOL does not exist";
-						flag = 1;
+					//Added by Kajal G for Sprint -10
+					for(int i=0; i<check_sol_code_ref.size();i++) {
+						if(bean.getSol_code_ref().equalsIgnoreCase(check_sol_code_ref.get(i).get(0))) {	
+							List<String> items = Arrays.asList(check_sol_code_ref.get(i).get(11).split("\\s*,\\s*"));
+							Date date1 = new Date();
+							LocalDate localDate = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+							int m= localDate.getMonthValue();
+							String month = "";
+							String month2 = "";
+							String month3 = "";
+							
+							if(m == 12) {
+								month = String.valueOf(m);
+								month2 = String.valueOf(1);
+								month3 = String.valueOf(2);
+							}
+							else if(m == 11){
+								month = String.valueOf(m);
+								month2 = String.valueOf(12);
+								month3 = String.valueOf(1);
+							}
+							else {
+								month = String.valueOf(m);
+								int m1 = ++m;
+								month2 = String.valueOf(m1);
+								int m2 = ++m;
+								month3 = String.valueOf(m2);
+							}
+						
+							int j = 0;
+					        while (j < month.length() && month.charAt(j) == '0')
+					            j++;
+					        StringBuffer firstMonth = new StringBuffer(month);    
+					        firstMonth.replace(0, j, "MOC");
+					        
+					        int l = 0;
+					        while (l < month2.length() && month2.charAt(l) == '0')
+					            l++;
+					        StringBuffer secondMonth = new StringBuffer(month2);    
+					        secondMonth.replace(0, l, "MOC");
+					        
+					        int k = 0;
+					        while (k < month3.length() && month3.charAt(k) == '0')
+					            k++;
+					        StringBuffer thirdMonth = new StringBuffer(month3);    
+					        thirdMonth.replace(0, k, "MOC");
+					        
+					        if(items.contains(firstMonth.toString()) || items.contains(secondMonth.toString()) || items.contains(thirdMonth.toString())) {
+					        	break;
+					        }
+					        else {
+					        	if (flag == 1)
+									error_msg = error_msg + ","+bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of next 3 MOCs";
+								else
+									error_msg = error_msg + bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of next 3 MOCs";
+								flag = 1;
+								break;
+					        }
+						}
 					}
+					
+					
+//					if(!crEntries.containsKey(bean.getSol_code_ref().toUpperCase()))
+//					{
+//						if (flag == 1)
+//							error_msg = error_msg + ","+bean.getSol_code_ref()+" SOL does not exist";
+//						else
+//							error_msg = error_msg + bean.getSol_code_ref()+" SOL does not exist";
+//						flag = 1;
+//					}
 
 					if(bean.getSol_type().trim().equalsIgnoreCase("Basepack Addition"))
 					{
@@ -1003,6 +1066,43 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					if(flag==0)
 					{
 						moc=datafromtable.getMOC(bean.getMoc_name(), bean.getYear());
+					}
+					
+					if (bean.getSol_type().trim().equalsIgnoreCase("Date Extension")){
+						for(int i=0; i<check_sol_code_ref.size();i++) {
+							if(bean.getSol_code_ref().equalsIgnoreCase(check_sol_code_ref.get(i).get(0))) {	
+								List<String> items = Arrays.asList(check_sol_code_ref.get(i).get(11).split("\\s*,\\s*"));
+								Date date1 = new Date();
+								LocalDate localDate = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+								int m= localDate.getMonthValue();
+								String Previousmonth = "";
+								
+								if(m == 1) {
+									Previousmonth = String.valueOf(12);
+								}
+								else {
+									int m1 = --m;
+									Previousmonth = String.valueOf(m1);
+
+								}
+						       
+						        int k = 0;
+						        while (k < Previousmonth.length() && Previousmonth.charAt(k) == '0')
+						            k++;
+						        StringBuffer preMonth = new StringBuffer(Previousmonth);    
+						        preMonth.replace(0, k, "MOC");
+
+						        if(!items.contains(preMonth.toString())) {
+						        	if (flag == 1)
+										error_msg = error_msg + ","+bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of last MOC";
+									else
+										error_msg = error_msg + bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of last MOC";
+									flag = 1;
+									break;
+						        }
+						        break;
+							}
+						}
 					}
 					
 					if (bean.getSol_type().trim().equalsIgnoreCase("Date Extension")
