@@ -319,5 +319,11 @@ public class PromoListingServiceImpl implements PromoListingService {
 	}
 	//Added by Kavitha D for promo listing grid display ends-SPRINT 9
 
+	//Added By Sarin - Sprint10
+	@Override
+	public List<String> getPromoPrimaryChannels() {
+		return promoListingDAO.getPromoPrimaryChannels();
+	}
+
 
 }

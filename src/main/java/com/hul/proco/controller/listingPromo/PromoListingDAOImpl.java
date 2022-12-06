@@ -2018,4 +2018,18 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 		}
 		return downloadDataList;
 	}
+
+	//Added By Sarin - Sprint10
+	@Override
+	public List<String> getPromoPrimaryChannels() {
+		List<String> primaryChannelList = new ArrayList<String>();
+		try {
+			Query qryPrimary = sessionFactory.getCurrentSession().createNativeQuery("SELECT PRI_CHANNEL_NAME FROM TBL_PROCO_PRIMARY_CHANNEL_MASTER WHERE ACTIVE = 1 ORDER BY PRI_CHANNEL_NAME");
+			primaryChannelList = qryPrimary.list();
+		} catch (Exception ex) {
+			logger.debug("Exception: ", ex);
+			return null;
+		}
+		return primaryChannelList;
+	}
 }

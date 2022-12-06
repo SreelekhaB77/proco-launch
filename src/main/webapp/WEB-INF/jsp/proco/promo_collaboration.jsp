@@ -356,7 +356,20 @@ margin-top: -75px!important;
                                  </select>
 								 </div>
 
-					</div>
+			</div>
+			<!-- Added By Sarin - Sprint10 to add Primary Channel -->
+			<div class="form-group col-sm-4" style="margin-top: 20px;">
+					<label for="unique-id" class="control-label col-md-5">Primary Channel</label>
+					<div class="col-md-5">
+					<select class="form-control" id="Primarychannelvalue" name="Primarychannelvalue">
+							 <c:forEach items="${primaryChannelList}" var="primarychannelValue">
+                                  <option value="${primarychannelValue}"><c:out value="${primarychannelValue}"></c:out></option>
+                                </c:forEach>
+                                </select>
+							 </div>
+
+				</div>
+					
 			<!--BHARATI COMMENTED BELOW COLUMNS FOR SPRINT-9-->
 				<table id="promoTable"
 					class="table table-striped table-bordered promo-collaboration-table"

@@ -71,6 +71,8 @@ public interface PromoListingService {
 	
 	//Added by Kajal G for KAM Volume Upload ends-SPRINT 10
 	public String kamVolumeUpload(List<List<String>> excelData, String userId);
+	
+	public List<String> getPromoPrimaryChannels(); //Added By Sarin - Sprint10
 
 	
 }
