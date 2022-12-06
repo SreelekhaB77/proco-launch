@@ -290,7 +290,7 @@ public class DataFromTable {
 
 	private ArrayList<String> getValidChannels() {
 
-		String query = "SELECT DISTINCT CHANNEL_NAME FROM TBL_PROCO_CLUSTER_MASTER_V2 WHERE IS_ACTIVE=1";
+		String query = "SELECT DISTINCT CHANNEL_NAME FROM TBL_PROCO_CUSTOMER_MASTER_V2";
 		ArrayList<String> ar = (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(query).list();
 		return (ArrayList<String>) ar.stream().map(String::toUpperCase).collect(Collectors.toList());
 	}
@@ -358,7 +358,7 @@ public class DataFromTable {
 	}
 	public void mapPPMandChannel(Map<String, String> commanmap) {
 		// TODO Auto-generated method stub
-		String strquery="SELECT DISTINCT PPM_ACCOUNT,CHANNEL_NAME FROM TBL_PROCO_CLUSTER_MASTER_V2 WHERE IS_ACTIVE=1";
+		String strquery="SELECT DISTINCT PPM_ACCOUNT,CHANNEL_NAME FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y' UNION ALL SELECT DISTINCT P.PRI_CHANNEL_NAME, C.CHANNEL_NAME FROM TBL_PROCO_PRIMARY_CHANNEL_MASTER P INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 C ON C.SECONDARY_CHANNEL = P.PRI_CHANNEL_NAME ";
 		
 		List<Object[]> list=sessionFactory.getCurrentSession().createNativeQuery(strquery).list();
 		
