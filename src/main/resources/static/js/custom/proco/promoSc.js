@@ -1,3 +1,18 @@
+var spinnerWidth = "100";
+var spinnerHeight = "100";
+function ajaxLoader(w, h) {
+
+    var left = (window.innerWidth / 2) - (w / 2);
+    var top = (window.innerHeight / 2) - (h / 2);
+    $('.loader').css('display', 'block');
+
+    $('.loading-image').css({
+        "left": left,
+        "top": top,
+        
+    });
+}
+
 $(document)
 		.ready(
 				function() {
@@ -472,3 +487,112 @@ function validateForm(){
 	$("#download").submit();
 }
 
+function uploadValidation() {
+	if ($('#upload-file').val() == "") {
+		ezBSAlert({
+			messageText : "Please choose a file",
+			alertType : "info"
+		}).done(function(e) {
+			// console.log(e);
+		});
+		return false;
+	} else if ($('#upload-file').val() != "") {
+		var fileName = $('.file-name').text();
+
+		var FileExt = fileName.substring(fileName.lastIndexOf('.') + 1);
+		if (FileExt != "xlsx") {
+			if (FileExt != "xls") {
+				ezBSAlert({
+					messageText : "Please upload .xls or .xlsx file",
+					alertType : "info"
+				}).done(function(e) {
+					// console.log(e);
+				});
+				return false;
+			}
+		}
+	}
+}
+
+$("#KAMVolumeUpload").click(function (event) {
+	event.preventDefault();
+	
+	var fileName = $('#upload-file').val();
+	if (fileName == '') {
+		$('#uploadErrorMsg').show().html("Please select a file to upload");
+		return false;
+	} else {
+		$('#uploadErrorMsg').hide();
+		var FileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+		if (FileExt != "xlsx") {
+			if (FileExt != "xls") {
+				$('#uploadErrorMsg').show().html("Please upload .xls or .xlsx file");
+				$("#promoApprovalUpload").submit(function(e) {
+					e.preventDefault();
+				});
+				return false;
+			}
+
+		}
+	}
+	
+    // Get form
+    var form = $('#promoApprovalUpload')[0];
+       var data = new FormData(form);
+    $.ajax({
+        type: "POST",
+        enctype: 'multipart/form-data',
+        url: 'promoApprovalScUpload.htm',
+        data: data,
+        processData: false,
+        contentType: false,
+        cache: false,
+        timeout: 600000,
+        beforeSend: function() {
+            ajaxLoader(spinnerWidth, spinnerHeight);
+        },
+		
+        success: function (resdata) {
+        	
+        	
+        	 $('.loader').hide();
+        	if(resdata.includes('EXCEL_UPLOADED')) {
+                $('#errorblockApprovalUpload').hide();
+            	//$('#ProcoVolumeerrorblockUpload').hide();
+            	$('#ProcoApprovalUploadsuccessblock').show().find('span').html(' File Uploaded Successfully !!!');
+            	 
+            }
+            
+            else if(resdata.includes('EXCEL_NOT_UPLOADED')){
+	            $('#errorblockApprovalUpload').show();
+	            $('#ProcoApprovalUploadsuccessblock').hide();
+	            //$('#errorblockVolumeUpload').hide();
+            }
+            else if(resdata.includes('FILE_EMPTY')){
+				$('#errorblockApprovalUpload').show().find('span').html('Error While Uploading Empty File');
+				//$('#ProcoVolumeerrorblockUpload').hide();
+				$('#ProcoApprovalUploadsuccessblock').hide();
+			}
+			else if(resdata.includes('CHECK_COL_MISMATCH')){
+				$('#errorblockApprovalUpload').show().find('span').html('Please Check Uploaded File');
+				//$('#ProcoVolumeerrorblockUpload').hide();
+				$('#ProcoApprovalUploadsuccessblock').hide();
+			}else {
+				
+            	$('#errorblockApprovalUpload').show().find('span').html('Error While Uploading File');
+            	$('#ProcoApprovalUploadsuccessblock').hide();
+            	//$('#ProcoVolumeerrorblockUpload').hide();
+            	 
+          	 }
+          
+		    $('#promoApprovalUpload')[0].reset();
+			$('.file-name').html("No file chosen");
+        },
+        error: function (e) {
+        $('#ProcoApprovalUploadsuccessblock').hide();
+                 
+        }
+    });
+   
+    	
+});
