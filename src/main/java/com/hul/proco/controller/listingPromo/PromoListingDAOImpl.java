@@ -1861,11 +1861,11 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			//Added by Kavitha D NCMM,SC PromoListing starts-SPRINT10 
 			if (roleId.equalsIgnoreCase("NCMM")) {
 				
-				promoQueryCount += " WHERE PM.STATUS IN('3','39') AND PM.MOC='"+moc+"' ";
+				promoQueryCount += " WHERE PM.STATUS IN('3','39','38') AND PM.MOC='"+moc+"' ";
 				}
 			if (roleId.equalsIgnoreCase("SC")) {
 				
-				promoQueryCount += " WHERE PM.STATUS IN('38','41') AND PM.MOC='"+moc+"' ";
+				promoQueryCount += " WHERE PM.STATUS IN('38','41','40') AND PM.MOC='"+moc+"' ";
 			}
 			//Added by Kavitha D NCMM,SC PromoListing ends-SPRINT10 
 
@@ -1921,14 +1921,14 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				promoQueryGrid += "WHERE PM.STATUS = 1 ";
 			} */
 			
-			//Added by Kavitha D NCMM PromoListing-SPRINT10 
+			//Added by Kavitha D NCMM,SC PromoListing-SPRINT10 
 			if (roleId.equalsIgnoreCase("NCMM")) {
 				
-				promoQueryGrid += " WHERE PM.STATUS IN('3','39') AND PM.MOC='"+moc+"' ";
+				promoQueryGrid += " WHERE PM.STATUS IN('3','39','38') AND PM.MOC='"+moc+"' ";
 			}
 			if (roleId.equalsIgnoreCase("SC")) {
 				
-				promoQueryGrid += " WHERE PM.STATUS IN('38','41') AND PM.MOC='"+moc+"' ";
+				promoQueryGrid += " WHERE PM.STATUS IN('38','41','40') AND PM.MOC='"+moc+"' ";
 			}
 			if (roleId.equalsIgnoreCase("DP") /*&& (moc!= null || !moc.isEmpty())*/) {
 				if(moc.equalsIgnoreCase("all"))
@@ -1950,7 +1950,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 						+ " AND " + pageDisplayLength + "";
 			}
 			
-			//System.out.println("Volume upload promo:"+ promoQueryGrid);
+			//System.out.println("Promo listing:"+ promoQueryGrid);
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQueryGrid);
 			if (roleId.equalsIgnoreCase("KAM")) {
 				query.setParameterList("kamAccount", kamAccounts);
