@@ -378,7 +378,7 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 				String promo = split[i];
 				//createPromoDaoImpl.saveStatusInStatusTracker(promo, status, "", userId);
 				
-				String approvalCrStatus=" UPDATE TBL_PROCO_PROMOTION_MASTER_V2  T1 SET STATUS='38', T1.USER_ID='" + userId + "',T1.UPDATE_STAMP=' "+ dateFormat.format(date) + "'"
+				String approvalCrStatus=" UPDATE TBL_PROCO_PROMOTION_MASTER_V2  T1 SET T1.STATUS='38', T1.USER_ID='" + userId + "',T1.UPDATE_STAMP=' "+ dateFormat.format(date) + "'"
 						+ " WHERE T1.STATUS IN('3','39') AND T1.ACTIVE=1 AND T1.PROMO_ID='" + promoId + "' ";
 				
 				Query query = sessionFactory.getCurrentSession().createNativeQuery(approvalCrStatus);
@@ -521,7 +521,7 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 	{
 		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
 		try {
-			String downloadCrQuery= " SELECT PROMO_ID,PPM_ACCOUNT,OFFER_DESC,REMARK FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE PM.STATUS IN('3','39') AND PM.MOC= '"+moc+"'";
+			String downloadCrQuery= " SELECT DISTINCT PROMO_ID,PPM_ACCOUNT,OFFER_DESC FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE PM.STATUS IN('3','39') AND PM.MOC= '"+moc+"'";
 			Query query1  =sessionFactory.getCurrentSession().createNativeQuery(downloadCrQuery);
 		
 			Iterator itr = query1.list().iterator();
@@ -544,10 +544,14 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 		
 }
 	}
+	
+	
+	
 	//Added by Kavitha D for PromoApproval Upload starts-SPRINT 10
 	@Override
 	public String uploadApprovalData(PromoCrBean[] beanArray, String userId) throws Exception{
 		String response = null;
+		
 		ArrayList<String> responseList = new ArrayList<String>();
 		try {
 			Query queryToCheck = sessionFactory.getCurrentSession()
@@ -565,16 +569,18 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 		Query query = sessionFactory.getCurrentSession().createNativeQuery(" INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2 (PROMO_ID,PPM_ACCOUNT,OFFER_DESC,REMARK,STATUS,USER_ID) VALUES(?0,?1, ?2, ?3, ?4,?5)");
 		
 		for (int i = 0; i < beanArray.length; i++) {
+			if (beanArray[i].getRemark().equalsIgnoreCase("ACCEPTED") || beanArray[i].getRemark().equalsIgnoreCase("APPROVED") || beanArray[i].getRemark().equalsIgnoreCase("REJECTED")) {
 			query.setString(0, beanArray[i].getPromo_id());
 			query.setString(1, beanArray[i].getCustomer_chain_l1());
 			query.setString(2, beanArray[i].getOffer_desc());
 			query.setString(3, beanArray[i].getRemark());
 			
+
 			if(beanArray[i].getRemark().equalsIgnoreCase("ACCEPTED") || beanArray[i].getRemark().equalsIgnoreCase("APPROVED") ) {
-				query.setInteger(4,38);
+				query.setString(4,"38");
 			}
-			else if(beanArray[i].getRemark().equalsIgnoreCase("REJECTED") || beanArray[i].getRemark().isEmpty()) {
-				query.setInteger(4,39);
+			else if(beanArray[i].getRemark().equalsIgnoreCase("REJECTED")) {
+				query.setString(4,"39");
 			}
 			
 			query.setString(5,userId);
@@ -588,6 +594,7 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 					responseList.add(response);
 				}
 			}
+		}
 		}
 
 		if (!responseList.contains("EXCEL_NOT_UPLOADED")) {

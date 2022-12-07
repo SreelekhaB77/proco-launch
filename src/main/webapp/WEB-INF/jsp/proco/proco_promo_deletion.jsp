@@ -501,6 +501,43 @@ margin-top: -75px!important;
 				<input type="button" class="btn new-btn-download" value="PROMO DOWNLOAD" onclick="javascript: downloadPromotionFile();"></input>
 			</div>
 			<%-- </c:if> --%>
+			
+			<!-- Added by Kavitha D for promo dropped offer upload -SPRINT10 -->
+			<form:form action="http://localhost:8083/VisibilityAssetTracker/promoDroppedOfferUpload.htm" method="POST"
+			 id="promoApprovalUpload" modelAttribute="PromoCrBean"
+                enctype="multipart/form-data" onsubmit="return uploadValidation()">                
+            <div class="promo-upload">PROMO DROPPED OFFER UPLOAD</div>
+            <div class="upload-file">        
+                <div class="col-md-4 col-md-offset-4" style="padding: 30px 0px;">
+                    <div class="upload-label">
+                        <span><i class="glyphicon glyphicon-cloud-upload"></i></span> <span>
+                            <b class="SEGOEUIL-font">Promo Dropped Offer Upload File</b>
+                        </span>
+                    </div>
+                    <div class="upload-group">
+                     <div class="cust-file" style="float: right;">
+                            <span class="btn btn-upload " id="choose-file">Choose
+                                    File</span>
+                        </div>
+                       <input type="file" class="form-control" value="" name="file"
+                            id="upload-file">
+                       <div class="file-name" style="line-height: 2.3">No file
+                            chosen</div>
+                    </div>
+                    <span id="uploadErrorMsg" style="display: none; color: red">Please upload .xlsx file</span>
+                    <div class="" style="color: #fff; text-align: center">
+                       <button id="KAMVolumeUpload" class="btn new-btn-primary">UPLOAD</button>
+                    </div>
+                </div>
+                <div class="clearfix"></div>                
+            </div>
+        </form:form>
+			
+		</div>
+			
+			
+			
+			
 			<%-- <c:if test="${roleId eq 'TME'}">
 			<form:form action="http://localhost:8083/VisibilityAssetTracker/uploadPromoEdit.htm" id="promoEditUpload"
 				method="POST" modelAttribute="VolumeUploadBean"

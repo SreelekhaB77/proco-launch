@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.hul.proco.controller.createpromo.CreateBeanRegular;
 import com.hul.proco.controller.createpromo.CreatePromotionBean;
+import com.hul.proco.controller.promocr.PromoCrBean;
 
 public interface PromoListingDAO {
 
@@ -69,6 +70,8 @@ public interface PromoListingDAO {
 	//Added by Kavitha D for promo listing Grid dispaly ends-SPRINT 9
 
 	public List<String> getPromoPrimaryChannels(); //Added By Sarin - Sprint10
+	public String uploadDroppedOfferApprovalData(PromoCrBean[] beanArray, String userId) throws Exception;
+
 
 
 	

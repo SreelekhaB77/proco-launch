@@ -147,7 +147,7 @@ public class PromoApprovalImp implements PromoApproval{
 			String[] split = promoId.split(",");
 			for (int i = 0; i < split.length; i++) {
 				String promo = split[i];				
-				String approvalCrStatus=" UPDATE TBL_PROCO_PROMOTION_MASTER_V2  T1 SET STATUS='40', T1.USER_ID='" + userId + "',T1.UPDATE_STAMP=' "+ dateFormat.format(date) + "'"
+				String approvalCrStatus=" UPDATE TBL_PROCO_PROMOTION_MASTER_V2  T1 SET T1.STATUS='40', T1.USER_ID='" + userId + "',T1.UPDATE_STAMP=' "+ dateFormat.format(date) + "'"
 						+ " WHERE T1.STATUS IN('38','41') AND T1.ACTIVE=1 AND T1.PROMO_ID='" + promoId + "' ";
 				
 				Query query = sessionFactory.getCurrentSession().createNativeQuery(approvalCrStatus);
@@ -168,7 +168,7 @@ public class PromoApprovalImp implements PromoApproval{
 		{
 			List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
 			try {
-				String downloadScQuery= " SELECT PROMO_ID,PPM_ACCOUNT,OFFER_DESC,REMARK FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE PM.STATUS IN('38','41') AND PM.MOC= '"+moc+"'";
+				String downloadScQuery= " SELECT DISTINCT PROMO_ID,PPM_ACCOUNT,OFFER_DESC FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE PM.STATUS IN('38','41') AND PM.MOC= '"+moc+"'";
 				Query query1  =sessionFactory.getCurrentSession().createNativeQuery(downloadScQuery);
 			
 				Iterator itr = query1.list().iterator();
@@ -213,16 +213,17 @@ public class PromoApprovalImp implements PromoApproval{
 		Query query = sessionFactory.getCurrentSession().createNativeQuery(" INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2 (PROMO_ID,PPM_ACCOUNT,OFFER_DESC,REMARK,STATUS,USER_ID) VALUES(?0,?1, ?2, ?3, ?4,?5)");
 		
 		for (int i = 0; i < beanArray.length; i++) {
+			if (beanArray[i].getRemark().equalsIgnoreCase("ACCEPTED") || beanArray[i].getRemark().equalsIgnoreCase("APPROVED") || beanArray[i].getRemark().equalsIgnoreCase("REJECTED")) {
 			query.setString(0, beanArray[i].getPromo_id());
 			query.setString(1, beanArray[i].getCustomer_chain_l1());
 			query.setString(2, beanArray[i].getOffer_desc());
 			query.setString(3, beanArray[i].getRemark());
 			
 			if(beanArray[i].getRemark().equalsIgnoreCase("ACCEPTED") || beanArray[i].getRemark().equalsIgnoreCase("APPROVED") ) {
-				query.setInteger(4,40);
+				query.setString(4,"40");
 			}
-			else if(beanArray[i].getRemark().equalsIgnoreCase("REJECTED") || beanArray[i].getRemark().isEmpty()) {
-				query.setInteger(4,41);
+			else if(beanArray[i].getRemark().equalsIgnoreCase("REJECTED")) {
+				query.setString(4,"41");
 			}
 			
 			query.setString(5,userId);
@@ -236,6 +237,7 @@ public class PromoApprovalImp implements PromoApproval{
 					responseList.add(response);
 				}
 			}
+		}
 		}
 
 		if (!responseList.contains("EXCEL_NOT_UPLOADED")) {

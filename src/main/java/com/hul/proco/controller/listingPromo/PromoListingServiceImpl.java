@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hul.proco.controller.createpromo.CreateBeanRegular;
 import com.hul.proco.controller.createpromo.CreatePromotionBean;
+import com.hul.proco.controller.promocr.PromoCrBean;
 
 @Service
 @Transactional
@@ -60,8 +61,9 @@ public class PromoListingServiceImpl implements PromoListingService {
 	}
 
 	@Override
-	public ArrayList<String> getHeaderListForPromoDumpDownload() {
+	public ArrayList<String> getHeaderListForPromoDumpDownload(String roleId) {
 		ArrayList<String> headerList=new ArrayList<String>();
+		if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE") || roleId.equalsIgnoreCase("NCMM") || roleId.equalsIgnoreCase("SC")) {
 		headerList.add("CHANNEL");
 		headerList.add("MOC");
 		headerList.add("ACCOUNT_TYPE");
@@ -93,6 +95,13 @@ public class PromoListingServiceImpl implements PromoListingService {
 		headerList.add("TME NAME");
 		headerList.add("SALES CATEGORY");
 		headerList.add("PSA CATEGORY");
+		}
+		else if (roleId.equalsIgnoreCase("TME")) {
+			headerList.add("PROMO_ID");
+			headerList.add("PPM_ACCOUNT");
+			headerList.add("OFFER_DESCRIPTION");
+			headerList.add("REMARKS");	
+		}
 		return headerList;
 	}
 
@@ -189,6 +198,10 @@ public class PromoListingServiceImpl implements PromoListingService {
 	}
 
 	
+	public String uploadDroppedOfferApprovalData(PromoCrBean[] beanArray, String userId) throws Exception {
+		return promoListingDAO.uploadDroppedOfferApprovalData(beanArray,userId);
+	}
+
 
 	@Override
 	public String promoDeleteDate(String Id) {
