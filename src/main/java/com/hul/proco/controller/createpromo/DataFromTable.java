@@ -318,6 +318,14 @@ public class DataFromTable {
 
 	}
 	//Kajal G change's end
+	
+	//Added by Kajal G for Spint-10
+		public List<String> getAQEntries(){
+			String ValidateAQ = "SELECT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE ACCOUNT_TYPE = 'KA'";
+			Query query1  = sessionFactory.getCurrentSession().createNativeQuery(ValidateAQ);
+			List<String> list = query1.list();
+			return list;
+		}
 
 	private ArrayList<String> getValidBasepack() {
 		String basepack = "SELECT DISTINCT BASEPACK FROM TBL_PROCO_PRODUCT_MASTER_V2 WHERE IS_ACTIVE=1 AND PPM_STATUS='YES'";
