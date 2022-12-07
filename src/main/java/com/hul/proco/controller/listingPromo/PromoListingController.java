@@ -875,10 +875,9 @@ public class PromoListingController {
 
 	//Added by Kavitha D for promo listing download starts-SPRINT 9
 
-	@RequestMapping(value = "{moc}/downloadPromoListing.htm", method = RequestMethod.GET)
-	public @ResponseBody String downloadPromosForListing(@ModelAttribute("CreateBeanRegular") CreateBeanRegular createBeanRegular,@PathVariable("moc") String moc,
+	@RequestMapping(value = "{moc}/{primarychannelValue}/downloadPromoListing.htm", method = RequestMethod.GET)
+	public @ResponseBody String downloadPromosForListing(@ModelAttribute("CreateBeanRegular") CreateBeanRegular createBeanRegular,@PathVariable("moc") String moc,@PathVariable("primarychannelValue") String primarychannelValue,
 			Model model,HttpServletRequest request, HttpServletResponse response) {
-		String primaryAcc = "Pharma";
 		logger.info("START downloadPromos for listing():");
 		try {
 			InputStream is;
@@ -897,9 +896,9 @@ public class PromoListingController {
 			String userId = (String) request.getSession().getAttribute("UserID");
 			
 //			ArrayList<String> headerList = promoListingService.getHeaderListForPromoDownloadListing();
-			ArrayList<String> headerList = promoListingService.getHeaderForPromoDownloadListing(primaryAcc);
+			ArrayList<String> headerList = promoListingService.getHeaderForPromoDownloadListing(primarychannelValue);
 //			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc,roleId, kamAccounts);
-			downloadedData = promoListingService.getPromotionListDownload(headerList, moc, primaryAcc);
+			downloadedData = promoListingService.getPromotionListDownload(headerList, moc, primarychannelValue);
 			if (downloadedData != null) {
 				UploadUtil.writeXLSXFile(downloadFileName, downloadedData, null,".xlsx");
 				downloadLink = downloadFileName + ".xlsx";

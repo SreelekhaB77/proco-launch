@@ -204,6 +204,7 @@ $(document)
 						promoTable1.draw();
 						});
 						
+						
 						/*PromoListing table pagination promoTable1 = */
 						promoTable1 = $('.promo-collaboration-table').DataTable({
 
@@ -318,7 +319,8 @@ $(document)
 function downloadPromotionFile(){
 	//$("#download").submit();  //bharati commented this line for sprint-9 moc filter value pass to download promo file
 	var SelectedMoc = $("#Mocvalue").val();
-	window.location.assign(SelectedMoc+"/downloadPromoListing.htm");
+	var SelectedPriAcc = $("#Primarychannelvalue").val();
+	window.location.assign(SelectedMoc+"/"+SelectedPriAcc+"/downloadPromoListing.htm");
 
 }
 
