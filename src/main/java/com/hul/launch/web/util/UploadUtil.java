@@ -1032,17 +1032,15 @@ public class UploadUtil {
 		}
 		return res;
 	}
-
+	
 	//Kajal G changes start
 	@SuppressWarnings("resource")
 	public static boolean writeDeletePromoXLSXFile(String filePath, List<ArrayList<String>> dataList,
 			Map<String, List<List<String>>> masters, String extension) throws IOException {
-		String sheetName = "PromoDownload";// name of sheet
+		String sheetName = "sheet";// name of sheet
 		FileOutputStream fileOut = null;
 		boolean res = false;
-		try {
-			
-			
+		try {			
 			SXSSFWorkbook wb = new SXSSFWorkbook();
 			SXSSFSheet sheet = wb.createSheet(sheetName);
 			// iterating r number of rows
@@ -1320,6 +1318,47 @@ public class UploadUtil {
 				}
 			
 		
+			fileOut = new FileOutputStream(downloadFileName + extension);
+			// write this workbook to an Outputstream.
+			wb.write(fileOut);
+			fileOut.flush();
+			fileOut.close();
+			res = true;
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
+			// e.printStackTrace();
+		} finally {
+			if (fileOut != null) {
+				fileOut.close();
+			}
+		}
+		return;
+	}
+	
+	//Added by Kajal G for promo measure template starts -SPRINT 10
+	@SuppressWarnings("resource")
+	public static void writeXLSXFilePromo(String downloadFileName, List<String> downloadedData, Object masters,
+			String extension) throws IOException {
+		String sheetName = "Sheet";// name of sheet
+		FileOutputStream fileOut = null;
+		int sheetCount = 1;
+		boolean res = false;
+		try {				
+			SXSSFWorkbook wb = new SXSSFWorkbook();
+			SXSSFSheet sheet = wb.createSheet(sheetName);
+			// iterating r number of rows
+			DataFormat fmt = wb.createDataFormat();
+			CellStyle textStyle = wb.createCellStyle();
+			textStyle.setDataFormat(fmt.getFormat("@"));
+			int rowCount = 0;		
+			Row row = sheet.createRow(rowCount);
+			rowCount++;
+			for (int c = 0; c < downloadedData.size(); c++) {
+				sheet.setDefaultColumnStyle(c, textStyle);
+				Cell cell = row.createCell(c);
+				cell.setCellValue(downloadedData.get(c));
+			}
+			
 			fileOut = new FileOutputStream(downloadFileName + extension);
 			// write this workbook to an Outputstream.
 			wb.write(fileOut);

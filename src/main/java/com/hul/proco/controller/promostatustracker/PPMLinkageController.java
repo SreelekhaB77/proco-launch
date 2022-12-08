@@ -138,12 +138,12 @@ public class PPMLinkageController {
 			List<ArrayList<String>> downloadData=linkageService.getDownloadData(headers,moc);
 		if (headers != null) {
 			String downloadFileName = null;
-			UploadUtil.writeDeletePromoXLSFile(downloadFileName, downloadData, null, ".xls");
-			String downloadLink = downloadFileName + ".xls";
+			UploadUtil.writeDeletePromoXLSXFile(downloadFileName, downloadData, null, ".xlsx");
+			String downloadLink = downloadFileName + ".xlsx";
 			FileInputStream is = new FileInputStream(new File(downloadLink));
 			response.setContentType("application/force-download");
 			response.setHeader("Content-Disposition", "attachment; filename=PromoMeasureDownloadFile"
-					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xlsx");
 			IOUtils.copy(is, response.getOutputStream());
 			response.flushBuffer();
 		}
@@ -248,12 +248,12 @@ public class PPMLinkageController {
 
 		try {
 			 if (downloadedData != null) {
-				UploadUtil.writeXLSFile(downloadFileName, downloadedData, null,".xls");
-				downloadLink = downloadFileName + ".xls";
+				UploadUtil.writeXLSXFile(downloadFileName, downloadedData, null,".xlsx");
+				downloadLink = downloadFileName + ".xlsx";
 				is = new FileInputStream(new File(downloadLink));
 				response.setContentType("application/force-download");
 				response.setHeader("Content-Disposition", "attachment; filename=PPMCOEREMARKSDOWNLOADFILE"
-						+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+						+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xlsx");
 				IOUtils.copy(is, response.getOutputStream());
 				response.flushBuffer();
 			}} catch (FileNotFoundException e) {
@@ -309,12 +309,12 @@ public class PPMLinkageController {
 			ArrayList<String> headers = procoStatusTrackerService.getPpmDownloadHeaders();
 			 downloadData=procoStatusTrackerService.getPpmDownloadData(headers,selMOC);
 		if (headers != null) {
-			UploadUtil.writeXLSFile(downloadFileName, downloadData, null,".xls");
-			downloadLink = downloadFileName + ".xls";
+			UploadUtil.writeXLSXFile(downloadFileName, downloadData, null,".xlsx");
+			downloadLink = downloadFileName + ".xlsx";
 			is = new FileInputStream(new File(downloadLink));
 			response.setContentType("application/force-download");
 			response.setHeader("Content-Disposition", "attachment; filename=PPMUploadableDownloadFile"
-					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xlsx");
 			IOUtils.copy(is, response.getOutputStream());
 			response.flushBuffer();
 		}} catch (FileNotFoundException e) {

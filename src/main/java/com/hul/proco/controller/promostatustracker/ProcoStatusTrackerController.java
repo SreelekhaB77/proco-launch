@@ -286,12 +286,12 @@ public class ProcoStatusTrackerController {
 			List<String> downloadedData = procoStatusTrackerService.getPromoMeasureDownload();
 		if (downloadedData != null) {
 			String downloadFileName = null;
-			UploadUtil.writeXLSFilePromo(downloadFileName, downloadedData, null,".xls");
-			String downloadLink = downloadFileName + ".xls";
+			UploadUtil.writeXLSXFilePromo(downloadFileName, downloadedData, null,".xlsx");
+			String downloadLink = downloadFileName + ".xlsx";
 			FileInputStream is = new FileInputStream(new File(downloadLink));
 			response.setContentType("application/force-download");
 			response.setHeader("Content-Disposition", "attachment; filename=PromoMeasureDownloadFile"
-					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xlsx");
 			IOUtils.copy(is, response.getOutputStream());
 			response.flushBuffer();
 		}
@@ -433,13 +433,13 @@ public class ProcoStatusTrackerController {
 			downloadedData = procoStatusTrackerService.getPromotionStatusTracker(headerList, moc,userId);
 			
 			if (downloadedData != null) {
-				UploadUtil.writeXLSFile(downloadFileName, downloadedData, null,".xls");
-				downloadLink = downloadFileName + ".xls";
+				UploadUtil.writeXLSXFile(downloadFileName, downloadedData, null,".xlsx");
+				downloadLink = downloadFileName + ".xlsx";
 				is = new FileInputStream(new File(downloadLink));
 				// copy it to response's OutputStream
 				response.setContentType("application/force-download");
 				response.setHeader("Content-Disposition", "attachment; filename=PromoStatusTrackerFile"
-						+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+						+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xlsx");
 				IOUtils.copy(is, response.getOutputStream());
 				response.flushBuffer();
 			}
