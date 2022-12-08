@@ -126,6 +126,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		datafromtable.getConbination(commanmap);
 		datafromtable.mapPPMandChannel(commanmap);
 		datafromtable.basePackAndSaleCategory(commanmap);
+		List<String> AQlist = datafromtable.getAQEntries();
 		for (CreateBeanRegular bean : beans) {
 
 			if (template.equalsIgnoreCase("new") || template.equalsIgnoreCase("regular")) {
@@ -1068,6 +1069,18 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						moc=datafromtable.getMOC(bean.getMoc_name(), bean.getYear());
 					}
 					
+					//Added by Kajal G for Sprint-10
+					if(bean.getSol_type().trim().equalsIgnoreCase("Additional Quantity")){
+						if(!AQlist.contains(bean.getPpm_account())) {
+							if (flag == 1)
+								error_msg = error_msg + ",SOL Type AQ is allowed only for KA Customers";
+							else
+								error_msg = error_msg + "SOL Type AQ is allowed only for KA Customers";
+							flag = 1;
+						}
+					}
+					
+					//Added by Kajal G for Sprint-10
 					if (bean.getSol_type().trim().equalsIgnoreCase("Date Extension")){
 						for(int i=0; i<check_sol_code_ref.size();i++) {
 							if(bean.getSol_code_ref().equalsIgnoreCase(check_sol_code_ref.get(i).get(0))) {	
@@ -1777,7 +1790,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			channelHeaders.add("CHANNEL");
 			tdpHeaders.add("PROMO TIMEPERIOD");
 
-			String clusterQry = "SELECT DISTINCT CHANNEL_NAME, PPM_ACCOUNT, BRANCH, CLUSTER FROM TBL_PROCO_CLUSTER_MASTER_V2 WHERE IS_ACTIVE=1";
+			String clusterQry = "SELECT DISTINCT CM.CHANNEL_NAME, CASE WHEN CM.SECONDARY_CHANNEL = '' THEN CM.PPM_ACCOUNT ELSE CM.SECONDARY_CHANNEL END AS PPM_ACCOUNT, BRANCH, CLUSTER FROM TBL_PROCO_CLUSTER_MASTER_V2 CL INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = CL.PPM_ACCOUNT  WHERE CL.IS_ACTIVE=1 AND (SECONDARY_CHANNEL IN (SELECT PRI_CHANNEL_NAME FROM TBL_PROCO_PRIMARY_CHANNEL_MASTER) OR CM.SECONDARY_CHANNEL = '')";
 			String customerQry = "SELECT DISTINCT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y'ORDER BY PPM_ACCOUNT";
 			// String abcreationQry = "SELECT DISTINCT AB_CREATION_NAME FROM
 			// TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE=1";

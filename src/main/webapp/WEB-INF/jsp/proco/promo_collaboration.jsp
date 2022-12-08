@@ -164,7 +164,7 @@ margin-top: -75px!important;
 				<!--     <div class="clearfix"></div> -->
 			<!--</div>-->
 
-			<form action="http://34.120.128.205/VisibilityAssetTracker/downloadPromosForKamUpload.htm" method="POST"
+			<form action="http://34.120.128.205/VisibilityAssetTracker/downloadKAMDPUploadPrimaryChannelwise.htm" method="POST"
 				enctype="multipart/form-data">
 
 				<!--<div class="promo-form-details proco-collab-form" style="margin-bottom: 10px;">
@@ -356,7 +356,20 @@ margin-top: -75px!important;
                                  </select>
 								 </div>
 
-					</div>
+			</div>
+			<!-- Added By Sarin - Sprint10 to add Primary Channel -->
+			<div class="form-group col-sm-4" style="margin-top: 20px;">
+					<label for="unique-id" class="control-label col-md-5">Primary Channel</label>
+					<div class="col-md-5">
+					<select class="form-control" id="Primarychannelvalue" name="Primarychannelvalue">
+							 <c:forEach items="${primaryChannelList}" var="primarychannelValue">
+                                  <option value="${primarychannelValue}"><c:out value="${primarychannelValue}"></c:out></option>
+                                </c:forEach>
+                                </select>
+							 </div>
+
+				</div>
+					
 			<!--BHARATI COMMENTED BELOW COLUMNS FOR SPRINT-9-->
 				<table id="promoTable"
 					class="table table-striped table-bordered promo-collaboration-table"
@@ -405,12 +418,12 @@ margin-top: -75px!important;
 						value="KAM DOWNLOAD" disabled="disabled"></input>-->
 						<!--bharati added this btn for sprint-9-->
 						<input type="button" class="btn btn-primary"
-						value="KAM DOWNLOAD" onclick="javascript: downloadPromotionFile();"></input>
+						value="KAM DOWNLOAD" onclick="javascript: downloadKAMUploadFile();"></input>
 				</div>
 			</form>
 			
 			<form:form action="#" id="kamVolumeUpload" modelAttribute="createKAMVolumeBean" 
-				enctype="multipart/form-data" onsubmit="return uploadValidation()">
+				enctype="multipart/form-data" onsubmit="return downloadPromotionFile()">
 				
 			<div class="promo-upload">KAM VOLUME UPLOAD</div>
 			<div class="upload-file">

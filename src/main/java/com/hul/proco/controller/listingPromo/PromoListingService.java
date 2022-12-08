@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.hul.proco.controller.createpromo.CreateBeanRegular;
 import com.hul.proco.controller.createpromo.CreatePromotionBean;
+import com.hul.proco.controller.promocr.PromoCrBean;
 
 public interface PromoListingService {
 	
@@ -26,7 +27,7 @@ public interface PromoListingService {
 			String basepack, String custChainL1, String custChainL2, String geography, String offerType, String modality, 
 			String year, String moc, String userId, int active);
 	
-	public ArrayList<String> getHeaderListForPromoDumpDownload();
+	public ArrayList<String> getHeaderListForPromoDumpDownload(String roleId);
 	
 	public String promoEditUpload(CreatePromotionBean[] bean,String userId,boolean isFromUi) throws Exception;
 	
@@ -71,6 +72,10 @@ public interface PromoListingService {
 	
 	//Added by Kajal G for KAM Volume Upload ends-SPRINT 10
 	public String kamVolumeUpload(List<List<String>> excelData, String userId);
+	
+	public List<String> getPromoPrimaryChannels(); //Added By Sarin - Sprint10
+
+	public String uploadDroppedOfferApprovalData(PromoCrBean[] beanArray, String userId) throws Exception;
 
 	
 }

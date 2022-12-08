@@ -213,6 +213,7 @@ public class ProcoHomeController {
 		List<String> category = promoCrService.getAllCategories();
 		List<String> brand = promoCrService.getAllBrands();
 		List<String> basepacks = promoCrService.getAllBasepacks();
+		List<String> priChannelValue = promoListingService.getPromoPrimaryChannels();  //Added By Sarin - Sprint10
 		model.addAttribute("roleId", roleId);
 		model.addAttribute("geographyJson", geographyJson);
 		model.addAttribute("mocJson", mocJson);
@@ -224,6 +225,7 @@ public class ProcoHomeController {
 		model.addAttribute("brands", brand);
 		model.addAttribute("basepacks", basepacks);
 		model.addAttribute("mocList",mocValue);
+		model.addAttribute("primaryChannelList", priChannelValue);  //Added By Sarin - Sprint10
 		return new ModelAndView("proco/promo_collaboration");
 	}
 	

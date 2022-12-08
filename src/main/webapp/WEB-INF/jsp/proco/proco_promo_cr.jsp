@@ -8,6 +8,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>MT PLANNING</title>
+<%
+	String errorMsg = (String) request.getAttribute("errorMsg");
+	String successMsg = (String) request.getAttribute("success");
+%>
 </head>
 <body>
 <head>
@@ -60,6 +64,13 @@ margin-top: -75px!important;
 </style>
 <body class="Verdana-font">
 	<jsp:include page="../proco/proco-header.jsp" />
+	
+	<div class="loader">
+		<center>
+			<img class="loading-image" src="assets/images/spinner.gif"
+				alt="loading..." style="height: 150px; width: auto;">
+		</center>
+	</div>
 
 	<nav class="navbar navbar-inverse navbar-fixed-top container-bg"
 		style="position:relative;top: 115px;z-index: 2;background-image: none! important;
@@ -134,6 +145,26 @@ margin-top: -75px!important;
 				</c:if>
 			</div>
 		</c:if>
+		
+		<!--Added By Sarin - sprint10 - added code for errorblock with download error file for approvals-->
+		<div class="alert alert-success sucess-msg" style="display: none;margin-top:35px;margin-bottom: -23px" id="ProcoApprovalUploadsuccessblock">
+	              <button type="button" class="close" data-hide="alert">&times;</button>
+	              <span></span>
+	            </div>
+	               <div class="alert alert-danger" style="display: none;margin-top:35px;margin-bottom: -23px" id="ProcoApprovalUploaderrorblock">
+	                               <button type="button" class="close" data-hide="alert">&times;</button>
+	                              
+	                                   <span>File contains error...</span>
+	                                   <a href="#" id="downloadTempFileLink">Click here to Download Error File</a>
+	                           </div>
+	<div class="alert alert-danger" style="display: none;margin-top:35px;margin-bottom: -23px" id="errorblockApprovalUpload">
+	         <button type="button" class="close" data-hide="alert">&times;</button>
+	
+	        <!-- <span>Error while uploading file.</span>-->
+	<span></span>
+	
+	  </div>
+		<!--Added By Sarin - ends here - sprint10 - added code for errorblock with download error file for approvals-->	
 	
         <div class="alert err-alert-danger error-msg" id="promoSelectErrorMsg" style="display:none;margin-top:35px;" >
              	<button type="button" class="close" data-hide="alert">&times;</button>
@@ -366,9 +397,8 @@ margin-top: -75px!important;
 			</c:if>
 			
 			<!-- Added by Kavitha D for promo upload -SPRINT10 -->
-			<form:form action="http://34.120.128.205/VisibilityAssetTracker/promoApprovalUpload.htm" method="POST"
-			 id="promoApprovalUpload" modelAttribute="PromoCrBean"
-                enctype="multipart/form-data" onsubmit="return uploadValidation()">                
+            <form:form action="#" id="promoApprovalUpload" modelAttribute="PromoCrBean"
+                enctype="multipart/form-data" onsubmit="return uploadValidation()">
             <div class="promo-upload">PROMO APPROVAL UPLOAD</div>
             <div class="upload-file">        
                 <div class="col-md-4 col-md-offset-4" style="padding: 30px 0px;">
