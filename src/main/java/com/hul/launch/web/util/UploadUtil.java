@@ -42,6 +42,8 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFCell;
+import org.apache.poi.xssf.streaming.SXSSFRow;
 import org.apache.poi.xssf.streaming.SXSSFRow.CellIterator;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -1104,7 +1106,7 @@ public class UploadUtil {
 		int sheetCount = 1;
 		boolean res = false;
 		try {
-			HSSFWorkbook wb = new HSSFWorkbook();
+			/*HSSFWorkbook wb = new HSSFWorkbook();
 			HSSFSheet sheet = wb.createSheet(sheetName + String.valueOf(sheetCount));
 			// iterating r number of rows
 			HSSFDataFormat fmt = wb.createDataFormat();
@@ -1126,7 +1128,25 @@ public class UploadUtil {
 					HSSFCell cell = row.createCell(c);
 					cell.setCellValue(al.get(c));
 				}
-			}
+			} */
+				SXSSFWorkbook wb = new SXSSFWorkbook();
+				SXSSFSheet sheet = wb.createSheet(sheetName);
+				// iterating r number of rows
+				DataFormat fmt = wb.createDataFormat();
+				CellStyle textStyle = wb.createCellStyle();
+				textStyle.setDataFormat(fmt.getFormat("@"));
+				int rowCount = 0;
+				for (int r = 0; r < dataList.size(); r++) {
+					// iterating c number of columns
+					List<String> al = dataList.get(r);
+					Row row = sheet.createRow(rowCount);
+					rowCount++;
+					for (int c = 0; c < al.size(); c++) {
+						sheet.setDefaultColumnStyle(c, textStyle);
+						Cell cell = row.createCell(c);
+						cell.setCellValue(al.get(c));
+					}
+				}
 				
 				sheet = wb.createSheet("Masters-Cluster-Cutomer");
 				List<List<String>> clusterList = masters.get("CLUSTER");
@@ -1135,11 +1155,11 @@ public class UploadUtil {
 					for (int r = 0; r < clusterList.size(); r++) {
 						// iterating c number of columns
 						List<String> al = clusterList.get(r);
-						HSSFRow row = sheet.createRow(rowCount);
+						Row row = sheet.createRow(rowCount);
 						rowCount++;
 						for (int c = 0; c < al.size(); c++) {
 							sheet.setDefaultColumnStyle(c, textStyle);
-							HSSFCell cell = row.createCell(c);
+							Cell cell = row.createCell(c);
 							cell.setCellValue(al.get(c));
 						}
 					}
@@ -1170,11 +1190,11 @@ public class UploadUtil {
 					for (int r = 0; r < tdpList.size(); r++) {
 						// iterating c number of columns
 						List<String> al = tdpList.get(r);
-						HSSFRow row = sheet.createRow(rowCount);
+						SXSSFRow row = sheet.createRow(rowCount);
 						rowCount++;
 						for (int c = 0; c < al.size(); c++) {
 							sheet.setDefaultColumnStyle(c, textStyle);
-							HSSFCell cell = row.createCell(c);
+							SXSSFCell cell = row.createCell(c);
 							cell.setCellValue(al.get(c));
 						}
 					}
@@ -1208,11 +1228,11 @@ public class UploadUtil {
 					for (int r = 0; r < changeList.size(); r++) {
 						// iterating c number of columns
 						List<String> al = changeList.get(r);
-						HSSFRow row = sheet.createRow(rowCount);
+						SXSSFRow row = sheet.createRow(rowCount);
 						rowCount++;
 						for (int c = 0; c < al.size(); c++) {
 							sheet.setDefaultColumnStyle(c, textStyle);
-							HSSFCell cell = row.createCell(c);
+							SXSSFCell cell = row.createCell(c);
 							cell.setCellValue(al.get(c));
 						}
 					}
@@ -1257,7 +1277,8 @@ public class UploadUtil {
 			fileOut.flush();
 			fileOut.close();
 			res = true;
-		} catch (Exception e) {
+			}
+		catch (Exception e) {
 			logger.error("Exception: ", e);
 			// e.printStackTrace();
 		} finally {
@@ -1326,10 +1347,10 @@ public class UploadUtil {
 			Map<String, List<List<String>>> masters, String extension) throws IOException {
 		String sheetName = "Sheet";// name of sheet
 		FileOutputStream fileOut = null;
-		int sheetCount = 1;
+		//int sheetCount = 1;
 		boolean res = false;
 		try {
-			HSSFWorkbook wb = new HSSFWorkbook();
+			/*HSSFWorkbook wb = new HSSFWorkbook();
 			HSSFSheet sheet = wb.createSheet(sheetName + String.valueOf(sheetCount));
 			// iterating r number of rows
 			HSSFDataFormat fmt = wb.createDataFormat();
@@ -1351,9 +1372,94 @@ public class UploadUtil {
 					HSSFCell cell = row.createCell(c);
 					cell.setCellValue(al.get(c));
 				}
-			}
+			}*/
+			//Commented & Added by Kavitha D -SPRINT 10 changes
+				SXSSFWorkbook wb = new SXSSFWorkbook();
+				SXSSFSheet sheet = wb.createSheet(sheetName);
+				// iterating r number of rows
+				DataFormat fmt = wb.createDataFormat();
+				CellStyle textStyle = wb.createCellStyle();
+				textStyle.setDataFormat(fmt.getFormat("@"));
+				int rowCount = 0;
+				for (int r = 0; r < dataList.size(); r++) {
+					// iterating c number of columns
+					List<String> al = dataList.get(r);
+					Row row = sheet.createRow(rowCount);
+					rowCount++;
+					for (int c = 0; c < al.size(); c++) {
+						sheet.setDefaultColumnStyle(c, textStyle);
+						Cell cell = row.createCell(c);
+						cell.setCellValue(al.get(c));
+					}
+				}
 				
-				sheet = wb.createSheet("Masters-Cluster");
+				sheet = wb.createSheet("Masters-Cluster-Cutomer");
+				List<List<String>> clusterList = masters.get("CLUSTER");
+				if (clusterList != null) {
+					rowCount = 0;
+					for (int r = 0; r < clusterList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = clusterList.get(r);
+						Row row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							Cell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
+				}
+				sheet = wb.createSheet("Masters-Promo Timeperiod");
+				List<List<String>> tdpList = masters.get("TDP");
+				if (tdpList != null) {
+					rowCount = 0;
+					for (int r = 0; r < tdpList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = tdpList.get(r);
+						SXSSFRow row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							SXSSFCell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
+				}
+				sheet = wb.createSheet("Masters-OFFERTYPE-MODILITY");
+				List<List<String>> changeList = masters.get("OFFER TYPE");
+				if (changeList != null) {
+					rowCount = 0;
+					for (int r = 0; r < changeList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = changeList.get(r);
+						SXSSFRow row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							SXSSFCell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
+				}
+				//Added by Kavitha D-SPRINT 10 Changes
+				sheet = wb.createSheet("Masters-CR-SOL TYPES");
+				List<List<String>> solList = masters.get("SOLTYPES");
+				if (solList != null) {
+					rowCount = 0;
+					for (int r = 0; r < solList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = solList.get(r);
+						SXSSFRow row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							SXSSFCell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
+				}
+				
+				/*sheet = wb.createSheet("Masters-Cluster");
 				List<List<String>> clusterList = masters.get("CLUSTER");
 				if (clusterList != null) {
 					rowCount = 0;
@@ -1486,7 +1592,7 @@ public class UploadUtil {
 							cell.setCellValue(al.get(c));
 						}
 					}
-				}
+				} */
 			
 
 			fileOut = new FileOutputStream(filePath + extension);
@@ -1495,7 +1601,7 @@ public class UploadUtil {
 			fileOut.flush();
 			fileOut.close();
 			res = true;
-		} catch (Exception e) {
+		 }catch (Exception e) {
 			logger.error("Exception: ", e);
 			// e.printStackTrace();
 		} finally {
