@@ -875,8 +875,8 @@ public class PromoListingController {
 
 	//Added by Kavitha D for promo listing download starts-SPRINT 9
 
-	@RequestMapping(value = "{moc}/{primarychannelValue}/downloadPromoListing.htm", method = RequestMethod.GET)
-	public @ResponseBody String downloadPromosForListing(@ModelAttribute("CreateBeanRegular") CreateBeanRegular createBeanRegular,@PathVariable("moc") String moc,@PathVariable("primarychannelValue") String primarychannelValue,
+	@RequestMapping(value = "{moc}/downloadPromoListing.htm", method = RequestMethod.GET)
+	public @ResponseBody String downloadPromosForListing(@ModelAttribute("CreateBeanRegular") CreateBeanRegular createBeanRegular,@PathVariable("moc") String moc,
 			Model model,HttpServletRequest request, HttpServletResponse response) {
 		logger.info("START downloadPromos for listing():");
 		try {
@@ -895,10 +895,8 @@ public class PromoListingController {
 			String downloadFileName = absoluteFilePath + fileName;
 			String userId = (String) request.getSession().getAttribute("UserID");
 			
-//			ArrayList<String> headerList = promoListingService.getHeaderListForPromoDownloadListing();
-			ArrayList<String> headerList = promoListingService.getHeaderForPromoDownloadListing(primarychannelValue);
-//			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc,roleId, kamAccounts);
-			downloadedData = promoListingService.getPromotionListDownload(headerList, moc, primarychannelValue);
+			ArrayList<String> headerList = promoListingService.getHeaderListForPromoDownloadListing();
+			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc,roleId, kamAccounts);
 			if (downloadedData != null) {
 				UploadUtil.writeXLSXFile(downloadFileName, downloadedData, null,".xlsx");
 				downloadLink = downloadFileName + ".xlsx";
@@ -906,6 +904,47 @@ public class PromoListingController {
 				// copy it to response's OutputStream
 				response.setContentType("application/force-download");
 				response.setHeader("Content-Disposition", "attachment; filename=PromotionListingDownloadFile"
+						+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xlsx");
+				IOUtils.copy(is, response.getOutputStream());
+				response.flushBuffer();
+			}
+		} catch (Exception e) {
+			logger.debug("Exception: ", e);
+			return null;
+		}
+		return null;
+	}
+	
+	//Added by Kajal G for Download for KAM Volume Upload SPRINT 10
+	@RequestMapping(value = "{moc}/{primarychannelValue}/downloadKAMDPUploadPrimaryChannelwise.htm", method = RequestMethod.GET)
+	public @ResponseBody String downloadKAMDPUploadPrimaryChannelwise(@ModelAttribute("CreateBeanRegular") CreateBeanRegular createBeanRegular,@PathVariable("moc") String moc,@PathVariable("primarychannelValue") String primarychannelValue,
+			Model model,HttpServletRequest request, HttpServletResponse response) {
+		logger.info("START downloadPromos for listing():");
+		try {
+			InputStream is;
+			String roleId = (String) request.getSession().getAttribute("roleId");
+			//Added Proco Sprint9 Changes - Starts
+			String accountNames = (String) request.getSession().getAttribute("accountName");
+			String[] kamAccounts = accountNames.split(",");
+			//Added Proco Sprint9 Changes - Ends
+			
+			String downloadLink = "", absoluteFilePath = "";
+			List<ArrayList<String>> downloadedData = null;
+			absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
+			String fileName = UploadUtil.getFileName("Promotion.Download.Template.file", "",
+					CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
+			String downloadFileName = absoluteFilePath + fileName;
+			String userId = (String) request.getSession().getAttribute("UserID");
+			
+			ArrayList<String> headerList = promoListingService.getHeaderForPromoDownloadListing(primarychannelValue);
+			downloadedData = promoListingService.getPromotionListDownload(headerList, moc, primarychannelValue);
+			if (downloadedData != null) {
+				UploadUtil.writeXLSXFile(downloadFileName, downloadedData, null,".xlsx");
+				downloadLink = downloadFileName + ".xlsx";
+				is = new FileInputStream(new File(downloadLink));
+				// copy it to response's OutputStream
+				response.setContentType("application/force-download");
+				response.setHeader("Content-Disposition", "attachment; filename=KAMUploadDownloadFile"
 						+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xlsx");
 				IOUtils.copy(is, response.getOutputStream());
 				response.flushBuffer();

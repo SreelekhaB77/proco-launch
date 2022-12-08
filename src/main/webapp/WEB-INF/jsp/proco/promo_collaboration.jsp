@@ -164,7 +164,7 @@ margin-top: -75px!important;
 				<!--     <div class="clearfix"></div> -->
 			<!--</div>-->
 
-			<form action="http://localhost:8083/VisibilityAssetTracker/downloadPromosForKamUpload.htm" method="POST"
+			<form action="http://localhost:8083/VisibilityAssetTracker/downloadKAMDPUploadPrimaryChannelwise.htm" method="POST"
 				enctype="multipart/form-data">
 
 				<!--<div class="promo-form-details proco-collab-form" style="margin-bottom: 10px;">
@@ -418,12 +418,12 @@ margin-top: -75px!important;
 						value="KAM DOWNLOAD" disabled="disabled"></input>-->
 						<!--bharati added this btn for sprint-9-->
 						<input type="button" class="btn btn-primary"
-						value="KAM DOWNLOAD" onclick="javascript: downloadPromotionFile();"></input>
+						value="KAM DOWNLOAD" onclick="javascript: downloadKAMUploadFile();"></input>
 				</div>
 			</form>
 			
 			<form:form action="#" id="kamVolumeUpload" modelAttribute="createKAMVolumeBean" 
-				enctype="multipart/form-data" onsubmit="return uploadValidation()">
+				enctype="multipart/form-data" onsubmit="return downloadPromotionFile()">
 				
 			<div class="promo-upload">KAM VOLUME UPLOAD</div>
 			<div class="upload-file">

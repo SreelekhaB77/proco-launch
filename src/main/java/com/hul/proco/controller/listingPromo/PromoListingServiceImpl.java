@@ -277,7 +277,7 @@ public class PromoListingServiceImpl implements PromoListingService {
 		return headerList;
 	}
 	
-	//Added by Kajal G for promo listing download starts-SPRINT 10
+	//Added by Kajal G for KAM download starts-SPRINT 10
 	@Override
 	public ArrayList<String> getHeaderForPromoDownloadListing(String primaryAcc) {
 		List<String> PPMAccountList = promoListingDAO.getPPMAccount(primaryAcc);

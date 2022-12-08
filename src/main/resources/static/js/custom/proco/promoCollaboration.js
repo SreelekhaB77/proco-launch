@@ -324,6 +324,15 @@ function downloadPromotionFile(){
 
 }
 
+//Kajal G added below function in sprint-10	for download KAM Downlaod file	
+function downloadKAMUploadFile(){
+	//$("#download").submit();  //bharati commented this line for sprint-9 moc filter value pass to download promo file
+	var SelectedMoc = $("#Mocvalue").val();
+	var SelectedPriAcc = $("#Primarychannelvalue").val();
+	window.location.assign(SelectedMoc+"/"+SelectedPriAcc+"/downloadKAMDPUploadPrimaryChannelwise.htm");
+
+}
+
 function getCustChainValues(selVal) {
 	$.ajax({
 		type : "POST",
