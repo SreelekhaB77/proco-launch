@@ -320,13 +320,20 @@ public class DataFromTable {
 	//Kajal G change's end
 	
 	//Added by Kajal G for Spint-10
-		public List<String> getAQEntries(){
-			String ValidateAQ = "SELECT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE ACCOUNT_TYPE = 'KA'";
-			Query query1  = sessionFactory.getCurrentSession().createNativeQuery(ValidateAQ);
-			List<String> list = query1.list();
-			return list;
-		}
-
+	public List<String> getAQEntries(){
+		String ValidateAQ = "SELECT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE ACCOUNT_TYPE = 'KA'";
+		Query query1  = sessionFactory.getCurrentSession().createNativeQuery(ValidateAQ);
+		List<String> list = query1.list();
+		return list;
+	}
+	
+	//Added by Kajal G in Spint-10
+	public String getCurrentMoc() {
+		String getCurrentMoc = "SELECT MOC_NAME FROM TBL_VAT_MOC_MASTER WHERE STATUS = 'Y' ORDER BY UPDATE_STAMP DESC LIMIT 1";
+		Query query1  = sessionFactory.getCurrentSession().createNativeQuery(getCurrentMoc);
+		List<String> currentMoc = query1.getResultList();
+		return currentMoc.get(0);
+	}
 	private ArrayList<String> getValidBasepack() {
 		String basepack = "SELECT DISTINCT BASEPACK FROM TBL_PROCO_PRODUCT_MASTER_V2 WHERE IS_ACTIVE=1 AND PPM_STATUS='YES'";
 		return (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(basepack).list();

@@ -127,6 +127,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		datafromtable.mapPPMandChannel(commanmap);
 		datafromtable.basePackAndSaleCategory(commanmap);
 		List<String> AQlist = datafromtable.getAQEntries();
+		String currentMoc = datafromtable.getCurrentMoc();
+
 		for (CreateBeanRegular bean : beans) {
 
 			if (template.equalsIgnoreCase("new") || template.equalsIgnoreCase("regular")) {
@@ -843,9 +845,10 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					for(int i=0; i<check_sol_code_ref.size();i++) {
 						if(bean.getSol_code_ref().equalsIgnoreCase(check_sol_code_ref.get(i).get(0))) {	
 							List<String> items = Arrays.asList(check_sol_code_ref.get(i).get(11).split("\\s*,\\s*"));
-							Date date1 = new Date();
-							LocalDate localDate = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-							int m= localDate.getMonthValue();
+
+							String[] splitString = currentMoc.split("MOC");
+						    int m = Integer.valueOf(splitString[1]);
+						  
 							String month = "";
 							String month2 = "";
 							String month3 = "";
@@ -891,9 +894,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					        }
 					        else {
 					        	if (flag == 1)
-									error_msg = error_msg + ","+bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of next 3 MOCs";
+									error_msg = error_msg + ","+bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N or N+1 or N+2 MOCs";
 								else
-									error_msg = error_msg + bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of next 3 MOCs";
+									error_msg = error_msg + bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N or N+1 or N+2 MOCs";
 								flag = 1;
 								break;
 					        }
@@ -1085,9 +1088,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						for(int i=0; i<check_sol_code_ref.size();i++) {
 							if(bean.getSol_code_ref().equalsIgnoreCase(check_sol_code_ref.get(i).get(0))) {	
 								List<String> items = Arrays.asList(check_sol_code_ref.get(i).get(11).split("\\s*,\\s*"));
-								Date date1 = new Date();
-								LocalDate localDate = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-								int m= localDate.getMonthValue();
+								
+								String[] splitString = currentMoc.split("MOC");
+							    int m = Integer.valueOf(splitString[1]);
 								String Previousmonth = "";
 								
 								if(m == 1) {
@@ -1096,7 +1099,6 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								else {
 									int m1 = --m;
 									Previousmonth = String.valueOf(m1);
-
 								}
 						       
 						        int k = 0;
@@ -1107,9 +1109,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 						        if(!items.contains(preMonth.toString())) {
 						        	if (flag == 1)
-										error_msg = error_msg + ","+bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of last MOC";
+										error_msg = error_msg + ","+bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N-1 MOC";
 									else
-										error_msg = error_msg + bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of last MOC";
+										error_msg = error_msg + bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N-1 MOC";
 									flag = 1;
 									break;
 						        }
