@@ -69,7 +69,7 @@ public interface PromoListingDAO {
 	public List<String> getPromoMoc();
 	//Added by Kavitha D for promo listing Grid dispaly ends-SPRINT 9
 
-	public List<String> getPromoPrimaryChannels(); //Added By Sarin - Sprint10
+	public List<String> getPromoPrimaryChannels(String[] kamAccountsArr); //Added By Sarin - Sprint10
 	public String uploadDroppedOfferApprovalData(PromoCrBean[] beanArray, String userId) throws Exception;
 
 

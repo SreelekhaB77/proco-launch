@@ -213,7 +213,11 @@ public class ProcoHomeController {
 		List<String> category = promoCrService.getAllCategories();
 		List<String> brand = promoCrService.getAllBrands();
 		List<String> basepacks = promoCrService.getAllBasepacks();
-		List<String> priChannelValue = promoListingService.getPromoPrimaryChannels();  //Added By Sarin - Sprint10
+		//Added By Sarin - Sprint10 - Starts
+		String accountNames = (String) request.getSession().getAttribute("accountName");
+		String[] kamAccountsArr = accountNames.split(",");
+		List<String> priChannelValue = promoListingService.getPromoPrimaryChannels(kamAccountsArr);
+		//Added By Sarin - Sprint10 - Ends
 		model.addAttribute("roleId", roleId);
 		model.addAttribute("geographyJson", geographyJson);
 		model.addAttribute("mocJson", mocJson);
