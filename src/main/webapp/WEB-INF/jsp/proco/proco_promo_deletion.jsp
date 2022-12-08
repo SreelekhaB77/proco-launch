@@ -503,7 +503,7 @@ margin-top: -75px!important;
 			<%-- </c:if> --%>
 			
 			<!-- Added by Kavitha D for promo dropped offer upload -SPRINT10 -->
-			<form:form action="http://localhost:8083/VisibilityAssetTracker/promoDroppedOfferUpload.htm" method="POST"
+			<form:form action="http://34.120.128.205/VisibilityAssetTracker/promoDroppedOfferUpload.htm" method="POST"
 			 id="promoApprovalUpload" modelAttribute="PromoCrBean"
                 enctype="multipart/form-data" onsubmit="return uploadValidation()">                
             <div class="promo-upload">PROMO DROPPED OFFER UPLOAD</div>
