@@ -1798,7 +1798,14 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 		if(roleId.equalsIgnoreCase("KAM"))
 		{
 			query+=" WHERE LR.MOC='"+moc+"' AND LR.PPM_ACCOUNT IN (:kamAccount) ";
-		}else
+		}
+		//Added by Kavitha D-SPRINT 10
+		else if(roleId.equalsIgnoreCase("NCMM")|| roleId.equalsIgnoreCase("SC"))
+		{
+			query+=" WHERE LR.MOC=:moc ";
+		}
+		
+		else
 		{
 			query+=" WHERE LR.TME_NAME=:userId AND LR.MOC=:moc";		
 		}
@@ -1809,7 +1816,13 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 		if(roleId.equalsIgnoreCase("KAM")) {
 			query1.setParameterList("kamAccount", kamAccounts);
 			
-		} else {
+		} 
+		else if(roleId.equalsIgnoreCase("NCMM")|| roleId.equalsIgnoreCase("SC"))
+		{
+			query1.setString("moc", moc);
+		}
+		
+		else {
 			query1.setString("moc", moc);
 			query1.setString("userId", userId);
 		}
