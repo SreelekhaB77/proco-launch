@@ -1234,7 +1234,25 @@ public class UploadUtil {
 							cell.setCellValue(al.get(c));
 						}
 					}
+				}	
+				
+				sheet = wb.createSheet("Masters-PRODUCT-BASEPACKS");
+				List<List<String>> basepackList = masters.get("BASEPACKS");
+				if (basepackList != null) {
+					rowCount = 0;
+					for (int r = 0; r < basepackList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = basepackList.get(r);
+						SXSSFRow row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							SXSSFCell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
 				}
+				
 /*
 				sheet = wb.createSheet("Masters-Modality");
 				List<List<String>> modalityList = masters.get("MODALITY");
@@ -1480,7 +1498,7 @@ public class UploadUtil {
 						}
 					}
 				}
-				//Added by Kavitha D-SPRINT 10 Changes
+				//Added by Kavitha D-SPRINT 10 Changes starts
 				sheet = wb.createSheet("Masters-CR-SOL TYPES");
 				List<List<String>> solList = masters.get("SOLTYPES");
 				if (solList != null) {
@@ -1498,6 +1516,25 @@ public class UploadUtil {
 					}
 				}
 				
+				sheet = wb.createSheet("Masters-PRODUCT-BASEPACKS");
+				List<List<String>> basepackList = masters.get("BASEPACKS");
+				if (basepackList != null) {
+					rowCount = 0;
+					for (int r = 0; r < basepackList.size(); r++) {
+						// iterating c number of columns
+						List<String> al = basepackList.get(r);
+						SXSSFRow row = sheet.createRow(rowCount);
+						rowCount++;
+						for (int c = 0; c < al.size(); c++) {
+							sheet.setDefaultColumnStyle(c, textStyle);
+							SXSSFCell cell = row.createCell(c);
+							cell.setCellValue(al.get(c));
+						}
+					}
+				}
+				
+				//Added by Kavitha D-SPRINT 10 Changes ends
+
 				/*sheet = wb.createSheet("Masters-Cluster");
 				List<List<String>> clusterList = masters.get("CLUSTER");
 				if (clusterList != null) {
