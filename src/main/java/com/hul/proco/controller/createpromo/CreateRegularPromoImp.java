@@ -127,6 +127,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		datafromtable.mapPPMandChannel(commanmap);
 		datafromtable.basePackAndSaleCategory(commanmap);
 		List<String> AQlist = datafromtable.getAQEntries();
+		String currentMoc = datafromtable.getCurrentMoc();
+
 		for (CreateBeanRegular bean : beans) {
 
 			if (template.equalsIgnoreCase("new") || template.equalsIgnoreCase("regular")) {
@@ -843,9 +845,10 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					for(int i=0; i<check_sol_code_ref.size();i++) {
 						if(bean.getSol_code_ref().equalsIgnoreCase(check_sol_code_ref.get(i).get(0))) {	
 							List<String> items = Arrays.asList(check_sol_code_ref.get(i).get(11).split("\\s*,\\s*"));
-							Date date1 = new Date();
-							LocalDate localDate = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-							int m= localDate.getMonthValue();
+
+							String[] splitString = currentMoc.split("MOC");
+						    int m = Integer.valueOf(splitString[1]);
+						  
 							String month = "";
 							String month2 = "";
 							String month3 = "";
@@ -891,9 +894,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					        }
 					        else {
 					        	if (flag == 1)
-									error_msg = error_msg + ","+bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of next 3 MOCs";
+									error_msg = error_msg + ","+bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N or N+1 or N+2 MOCs";
 								else
-									error_msg = error_msg + bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of next 3 MOCs";
+									error_msg = error_msg + bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N or N+1 or N+2 MOCs";
 								flag = 1;
 								break;
 					        }
@@ -1085,9 +1088,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						for(int i=0; i<check_sol_code_ref.size();i++) {
 							if(bean.getSol_code_ref().equalsIgnoreCase(check_sol_code_ref.get(i).get(0))) {	
 								List<String> items = Arrays.asList(check_sol_code_ref.get(i).get(11).split("\\s*,\\s*"));
-								Date date1 = new Date();
-								LocalDate localDate = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-								int m= localDate.getMonthValue();
+								
+								String[] splitString = currentMoc.split("MOC");
+							    int m = Integer.valueOf(splitString[1]);
 								String Previousmonth = "";
 								
 								if(m == 1) {
@@ -1096,7 +1099,6 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								else {
 									int m1 = --m;
 									Previousmonth = String.valueOf(m1);
-
 								}
 						       
 						        int k = 0;
@@ -1107,9 +1109,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 						        if(!items.contains(preMonth.toString())) {
 						        	if (flag == 1)
-										error_msg = error_msg + ","+bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of last MOC";
+										error_msg = error_msg + ","+bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N-1 MOC";
 									else
-										error_msg = error_msg + bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of last MOC";
+										error_msg = error_msg + bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N-1 MOC";
 									flag = 1;
 									break;
 						        }
@@ -2159,45 +2161,49 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		Map<String, List<List<String>>> downloadDataMap = new HashMap<>();
 		List<List<String>> clusterList = new ArrayList<>();
 		List<List<String>> customerList = new ArrayList<>();
-		List<List<String>> abcreationList = new ArrayList<>();
+		// List<List<String>> abcreationList = new ArrayList<>();
 		List<List<String>> modalityList = new ArrayList<>();
 		List<List<String>> offertypeList = new ArrayList<>();
 		List<List<String>> channelList = new ArrayList<>();
-		List<List<String>> solList = new ArrayList<>();
 		List<List<String>> tdpList = new ArrayList<>();
+		List<List<String>> solList = new ArrayList<>();
+
 
 		List<String> clusterHeaders = new ArrayList<String>();
 		List<String> customerHeaders = new ArrayList<String>();
-		List<String> abcreationHeaders = new ArrayList<String>();
+		// List<String> abcreationHeaders = new ArrayList<String>();
 		List<String> modalityHeaders = new ArrayList<String>();
 		List<String> offertypeHeaders = new ArrayList<String>();
 		List<String> channelHeaders = new ArrayList<String>();
-		List<String> solHeaders = new ArrayList<String>();
 		List<String> tdpHeaders = new ArrayList<String>();
+		List<String> solHeaders = new ArrayList<String>();
+
 
 		try {
-			clusterHeaders.add("BRANCH CODE");
+			clusterHeaders.add("CHANNEL NAME");
+			clusterHeaders.add("PPM ACCOUNT");
 			clusterHeaders.add("BRANCH");
-			clusterHeaders.add("CLUSTER CODE");
 			clusterHeaders.add("CLUSTER");
-			customerHeaders.add("SECONDARY CHANNEL");
+			// customerHeaders.add("SECONDARY CHANNEL");
 			customerHeaders.add("PPM ACCOUNT (Strictly as per comm rule)");
-			abcreationHeaders.add("AB CREATION NAME");
+			// abcreationHeaders.add("AB CREATION NAME");
 			modalityHeaders.add("OFFER MODALITY");
+			offertypeHeaders.add("CHANNEL NAME");
+			offertypeHeaders.add("OFFER MODALITY");
 			offertypeHeaders.add("OFFER TYPE");
 			channelHeaders.add("CHANNEL");
-			solHeaders.add("SOL TYPE");
-			solHeaders.add("SOL REMARK");
 			tdpHeaders.add("PROMO TIMEPERIOD");
-
-			String clusterQry = "SELECT DISTINCT BRANCH_CODE, BRANCH, CLUSTER_CODE,CLUSTER FROM TBL_PROCO_CUSTOMER_MASTER";
-			String customerQry = "SELECT DISTINCT SECONDARY_CHANNEL,PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y' ORDER BY SECONDARY_CHANNEL";
-			String abcreationQry = "SELECT DISTINCT AB_CREATION_NAME FROM TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE=1";
+			solHeaders.add("CR SOL TYPES");
+			
+			String clusterQry = "SELECT DISTINCT CM.CHANNEL_NAME, CASE WHEN CM.SECONDARY_CHANNEL = '' THEN CM.PPM_ACCOUNT ELSE CM.SECONDARY_CHANNEL END AS PPM_ACCOUNT, BRANCH, CLUSTER FROM TBL_PROCO_CLUSTER_MASTER_V2 CL INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = CL.PPM_ACCOUNT  WHERE CL.IS_ACTIVE=1 AND (SECONDARY_CHANNEL IN (SELECT PRI_CHANNEL_NAME FROM TBL_PROCO_PRIMARY_CHANNEL_MASTER) OR CM.SECONDARY_CHANNEL = '')";
+			String customerQry = "SELECT DISTINCT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y'ORDER BY PPM_ACCOUNT";
+			// String abcreationQry = "SELECT DISTINCT AB_CREATION_NAME FROM
+			// TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE=1";
 			String modalityQry = "SELECT MODALITY_NAME FROM TBL_PROCO_OFFER_MODALITY_MASTER WHERE ACTIVE=1";
-			String offertypeQry = " SELECT DISTINCT OFFER_TYPE FROM TBL_PROCO_OFFER_TYPE_V2 WHERE ACTIVE=1";
+			String offertypeQry = "SELECT DISTINCT CHANNEL_NAME, OFFER_MODALITY, OFFER_TYPE FROM TBL_PROCO_INVESTMENT_TYPE_MASTER_V2 WHERE IS_ACTIVE=1";
 			String channelQry = " SELECT CHANNEL_NAME FROM TBL_PROCO_CHANNEL_MASTER WHERE ACTIVE=1";
-			String solQry = " SELECT SOL_TYPE,SOL_REMARK FROM TBL_PROCO_SOL_TYPE WHERE IS_ACTIVE=1";
 			String tdpQry = " SELECT DISTINCT TDP FROM TBL_VAT_MOC_TDP_MASTER";
+			String solQry="SELECT SOL_REMARK FROM TBL_PROCO_SOL_TYPE "; //Added by Kavitha D-SPRINT 10
 
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(clusterQry);
 
@@ -2222,8 +2228,35 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 			query = sessionFactory.getCurrentSession().createNativeQuery(customerQry);
 
-			itr = query.list().iterator();
 			customerList.add(customerHeaders);
+			itr = query.list().iterator();
+			while (itr.hasNext()) {
+				String obj = (String) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				String value = "";
+				value = (obj == null) ? "" : obj.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
+				obj = null;
+				customerList.add(dataObj);
+			}
+			downloadDataMap.put("CUSTOMER", customerList);
+
+			/*
+			 * query = sessionFactory.getCurrentSession().createNativeQuery(abcreationQry);
+			 * 
+			 * abcreationList.add(abcreationHeaders); itr = query.list().iterator(); while
+			 * (itr.hasNext()) { String obj = (String) itr.next(); ArrayList<String> dataObj
+			 * = new ArrayList<String>(); String value = ""; value = (obj == null) ? "" :
+			 * obj.toString(); dataObj.add(value.replaceAll("\\^", ",")); obj = null;
+			 * abcreationList.add(dataObj); }
+			 * 
+			 * downloadDataMap.put("AB CREATION", abcreationList);
+			 */
+
+			query = sessionFactory.getCurrentSession().createNativeQuery(offertypeQry);
+
+			offertypeList.add(offertypeHeaders);
+			itr = query.list().iterator();
 			while (itr.hasNext()) {
 				Object[] obj = (Object[]) itr.next();
 				ArrayList<String> dataObj = new ArrayList<String>();
@@ -2233,40 +2266,14 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					dataObj.add(value.replaceAll("\\^", ","));
 				}
 				obj = null;
-				customerList.add(dataObj);
-			}
-			downloadDataMap.put("CUSTOMER", customerList);
-
-			query = sessionFactory.getCurrentSession().createNativeQuery(abcreationQry);
-
-			abcreationList.add(abcreationHeaders);
-			itr = query.list().iterator();
-			while (itr.hasNext()) {
-				String obj = (String) itr.next();
-				ArrayList<String> dataObj = new ArrayList<String>();
-				String value = "";
-				value = (obj == null) ? "" : obj.toString();
-				dataObj.add(value.replaceAll("\\^", ","));
-				obj = null;
-				abcreationList.add(dataObj);
-			}
-
-			downloadDataMap.put("AB CREATION", abcreationList);
-
-			query = sessionFactory.getCurrentSession().createNativeQuery(offertypeQry);
-
-			offertypeList.add(offertypeHeaders);
-			itr = query.list().iterator();
-			while (itr.hasNext()) {
-				String obj = (String) itr.next();
-				ArrayList<String> dataObj = new ArrayList<String>();
-				String value = "";
-				value = (obj == null) ? "" : obj.toString();
-				dataObj.add(value.replaceAll("\\^", ","));
-				obj = null;
 				offertypeList.add(dataObj);
 			}
-
+			/*
+			 * while (itr.hasNext()) { String obj = (String) itr.next(); ArrayList<String>
+			 * dataObj = new ArrayList<String>(); String value = ""; value = (obj == null) ?
+			 * "" : obj.toString(); dataObj.add(value.replaceAll("\\^", ",")); obj = null;
+			 * offertypeList.add(dataObj); }
+			 */
 			downloadDataMap.put("OFFER TYPE", offertypeList);
 
 			query = sessionFactory.getCurrentSession().createNativeQuery(modalityQry);
@@ -2300,23 +2307,23 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			}
 
 			downloadDataMap.put("CHANNEL", channelList);
-
+			
+			
 			query = sessionFactory.getCurrentSession().createNativeQuery(solQry);
 
+			channelList.add(solHeaders);
 			itr = query.list().iterator();
-			solList.add(solHeaders);
 			while (itr.hasNext()) {
-				Object[] obj = (Object[]) itr.next();
+				String obj = (String) itr.next();
 				ArrayList<String> dataObj = new ArrayList<String>();
-				for (Object ob : obj) {
-					String value = "";
-					value = (ob == null) ? "" : ob.toString();
-					dataObj.add(value.replaceAll("\\^", ","));
-				}
+				String value = "";
+				value = (obj == null) ? "" : obj.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
 				obj = null;
 				solList.add(dataObj);
 			}
-			downloadDataMap.put("SOLTYPE", solList);
+
+			downloadDataMap.put("SOLTYPES", solList);
 
 			query = sessionFactory.getCurrentSession().createNativeQuery(tdpQry);
 

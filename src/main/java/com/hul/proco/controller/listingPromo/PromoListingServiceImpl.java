@@ -334,8 +334,8 @@ public class PromoListingServiceImpl implements PromoListingService {
 
 	//Added By Sarin - Sprint10
 	@Override
-	public List<String> getPromoPrimaryChannels() {
-		return promoListingDAO.getPromoPrimaryChannels();
+	public List<String> getPromoPrimaryChannels(String[] kamAccountsArr) {
+		return promoListingDAO.getPromoPrimaryChannels(kamAccountsArr);
 	}
 
 
