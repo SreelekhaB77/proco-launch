@@ -118,7 +118,7 @@ public class RegularPromoCreateController {
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			model.addAttribute("FILE_STAUS",  e);
-			// PrintStream printStream = new PrintStream(new File("C:\\logs\\log.text"));
+			 //PrintStream printStream = new PrintStream(new File("C:\\logs\\log.text"));
 			PrintStream printStream = new PrintStream(new File("/home/appuser/logs/exception.txt"));
 			e.printStackTrace(printStream);
 			return e.toString();
@@ -152,13 +152,13 @@ public class RegularPromoCreateController {
 		downloadedData.add(headerDetail);
 		Map<String, List<List<String>>> mastersForRegularTemplate = createCRPromo.getMastersForRegularTemplate();
 		try {
-			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForRegularTemplate, ".xls");
-			downloadLink = downloadFileName + ".xls";
+			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForRegularTemplate, ".xlsx");
+			downloadLink = downloadFileName + ".xlsx";
 			is = new FileInputStream(new File(downloadLink));
 			// copy it to response's OutputStream
 			response.setContentType("application/force-download");
 			response.setHeader("Content-Disposition", "attachment; filename=PromotionRegularFile_"
-					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xlsx");
 			IOUtils.copy(is, response.getOutputStream());
 			response.flushBuffer();
 		} catch (FileNotFoundException e) {
@@ -187,13 +187,13 @@ public class RegularPromoCreateController {
 		downloadedData.add(headerDetail);
 		Map<String, List<List<String>>> mastersForNewTemplate = createCRPromo.getMastersForRegularTemplate();
 		try {
-			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForNewTemplate, ".xls");
-			downloadLink = downloadFileName + ".xls";
+			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForNewTemplate, ".xlsx");
+			downloadLink = downloadFileName + ".xlsx";
 			is = new FileInputStream(new File(downloadLink));
 			// copy it to response's OutputStream
 			response.setContentType("application/force-download");
 			response.setHeader("Content-Disposition", "attachment; filename=PromotionNewFile_"
-					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xlsx");
 			IOUtils.copy(is, response.getOutputStream());
 			response.flushBuffer();
 		} catch (FileNotFoundException e) {
@@ -220,15 +220,15 @@ public class RegularPromoCreateController {
 				CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 		String downloadFileName = absoluteFilePath + fileName;
 		downloadedData.add(headerDetail);
-		Map<String, List<List<String>>> mastersForNewTemplate = createCRPromo.getMastersForRegularTemplate();
+		Map<String, List<List<String>>> mastersForNewTemplate = createCRPromo.getMastersForCrTemplate();
 		try {
-			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForNewTemplate, ".xls");
-			downloadLink = downloadFileName + ".xls";
+			UploadUtil.writePromoCrXLSFile(downloadFileName, downloadedData, mastersForNewTemplate, ".xlsx");
+			downloadLink = downloadFileName + ".xlsx";
 			is = new FileInputStream(new File(downloadLink));
 			// copy it to response's OutputStream
 			response.setContentType("application/force-download");
 			response.setHeader("Content-Disposition", "attachment; filename=PromotionCRFile_"
-					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xlsx");
 			IOUtils.copy(is, response.getOutputStream());
 			response.flushBuffer();
 		} catch (FileNotFoundException e) {
@@ -259,8 +259,8 @@ public class RegularPromoCreateController {
 		downloadedData = createCRPromo.getPromotionErrorDetails(headerDetail, userID,error_template,roleID);
 		Map<String, List<List<String>>> mastersForNewTemplate = createCRPromo.getMastersForRegularTemplate();
 		try {
-			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForNewTemplate, ".xls");
-			downloadLink = downloadFileName + ".xls";
+			UploadUtil.writePromoXLSFile(downloadFileName, downloadedData, mastersForNewTemplate, ".xlsx");
+			downloadLink = downloadFileName + ".xlsx";
 			is = new FileInputStream(new File(downloadLink));
 			/*
 			 * String actualFileName = downloadLink.substring(downloadLink.lastIndexOf("/")
@@ -269,7 +269,7 @@ public class RegularPromoCreateController {
 			// copy it to response's OutputStream
 			response.setContentType("application/force-download");
 			response.setHeader("Content-Disposition", "attachment; filename=PromotionErrorFile_"
-					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+					+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xlsx");
 			IOUtils.copy(is, response.getOutputStream());
 			response.flushBuffer();
 		} catch (FileNotFoundException e) {

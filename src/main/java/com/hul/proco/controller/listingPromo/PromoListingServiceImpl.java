@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hul.proco.controller.createpromo.CreateBeanRegular;
 import com.hul.proco.controller.createpromo.CreatePromotionBean;
+import com.hul.proco.controller.promocr.PromoCrBean;
 
 @Service
 @Transactional
@@ -17,6 +18,9 @@ public class PromoListingServiceImpl implements PromoListingService {
 
 	@Autowired
 	private PromoListingDAO promoListingDAO;
+	
+	@Autowired
+	private PromoListingService promoListingService;
 
 	@Override
 	public List<PromoListingBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String cagetory, 
@@ -57,8 +61,9 @@ public class PromoListingServiceImpl implements PromoListingService {
 	}
 
 	@Override
-	public ArrayList<String> getHeaderListForPromoDumpDownload() {
+	public ArrayList<String> getHeaderListForPromoDumpDownload(String roleId) {
 		ArrayList<String> headerList=new ArrayList<String>();
+		if (roleId.equalsIgnoreCase("KAM") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE") || roleId.equalsIgnoreCase("NCMM") || roleId.equalsIgnoreCase("SC")) {
 		headerList.add("CHANNEL");
 		headerList.add("MOC");
 		headerList.add("ACCOUNT_TYPE");
@@ -90,6 +95,13 @@ public class PromoListingServiceImpl implements PromoListingService {
 		headerList.add("TME NAME");
 		headerList.add("SALES CATEGORY");
 		headerList.add("PSA CATEGORY");
+		}
+		else if (roleId.equalsIgnoreCase("TME")) {
+			headerList.add("PROMO_ID");
+			headerList.add("PPM_ACCOUNT");
+			headerList.add("OFFER_DESCRIPTION");
+			headerList.add("REMARKS");	
+		}
 		return headerList;
 	}
 
@@ -97,6 +109,12 @@ public class PromoListingServiceImpl implements PromoListingService {
 	@Transactional(rollbackFor = { Exception.class })
 	public String promoEditUpload(CreatePromotionBean[] bean, String userId,boolean isFromUi) throws Exception {
 		return promoListingDAO.promoEditUpload(bean, userId,isFromUi);
+	}
+	
+	@Override
+	@Transactional(rollbackFor = { Exception.class })
+	public String kamVolumeUpload(List<List<String>> excelData, String userId) {	
+		return promoListingDAO.kamVolumeUpload(excelData, userId);
 	}
 
 	@Override
@@ -180,6 +198,10 @@ public class PromoListingServiceImpl implements PromoListingService {
 	}
 
 	
+	public String uploadDroppedOfferApprovalData(PromoCrBean[] beanArray, String userId) throws Exception {
+		return promoListingDAO.uploadDroppedOfferApprovalData(beanArray,userId);
+	}
+
 
 	@Override
 	public String promoDeleteDate(String Id) {
@@ -255,11 +277,41 @@ public class PromoListingServiceImpl implements PromoListingService {
 		return headerList;
 	}
 	
+	//Added by Kajal G for KAM download starts-SPRINT 10
+	@Override
+	public ArrayList<String> getHeaderForPromoDownloadListing(String primaryAcc) {
+		List<String> PPMAccountList = promoListingDAO.getPPMAccount(primaryAcc);
+		ArrayList<String> headerList=new ArrayList<String>();
+		headerList.add("PROMO ID");
+		headerList.add("MOC");
+		headerList.add("BASEPACK CODE");
+		headerList.add("OFFER DESCRIPTION");
+		headerList.add("PRICE OFF");
+		headerList.add("CLUSTER");
+		headerList.add("DP QUANTITY");
+		headerList.add("PRIMARY CHANNEL");
+		for (String  list: PPMAccountList) {
+			headerList.add(list);
+		}
+		return headerList;
+	}
+	
 	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleId, String[] kamAccounts){
 		return promoListingDAO.getPromotionListingDownload(headerList,userId,moc,roleId, kamAccounts);
 	}
 	//Added by Kavitha D for promo listing download ends-SPRINT 9
 
+	//Added by Kajal G for promo listing download ends-SPRINT 10
+	public List<ArrayList<String>> getPromotionListDownload(ArrayList<String> headerList, String moc, String primaryAcc){
+		return promoListingDAO.getPromotionListingDownload(headerList,moc,primaryAcc);
+	}
+	
+	@Override
+	@Transactional
+	public List<ArrayList<String>> getKAMErrorDetails(String userId){
+		return promoListingDAO.getKAMErrorDetails(userId);
+	}
+	
 	//Added by Kavitha D for promo listing Grid dispaly starts-SPRINT 9
 
 	@Override
@@ -279,6 +331,12 @@ public class PromoListingServiceImpl implements PromoListingService {
 		return promoListingDAO.getPromoMoc();
 	}
 	//Added by Kavitha D for promo listing grid display ends-SPRINT 9
+
+	//Added By Sarin - Sprint10
+	@Override
+	public List<String> getPromoPrimaryChannels(String[] kamAccountsArr) {
+		return promoListingDAO.getPromoPrimaryChannels(kamAccountsArr);
+	}
 
 
 }

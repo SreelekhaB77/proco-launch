@@ -1,5 +1,6 @@
 package com.hul.proco.controller.promocr;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,18 +15,14 @@ public class PromoCrServiceImpl implements PromoCrService {
 	private PromoCrDAO promoCrDAO;
 	
 	@Override
-	public List<PromoCrBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String cagetory, 
-			String brand, String basepack, String custChainL1, String custChainL2, String geography, String offerType,
-			String modality, String year, String moc, String userId, int active,String roleId) {
+	public List<PromoCrBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String userId, String roleId,String moc, String searchParameter) {
 
-		return promoCrDAO.getPromoTableList(pageDisplayStart, pageDisplayLength, cagetory, brand, 
-				basepack, custChainL1, custChainL2, geography, offerType, modality, year, moc, userId, active,roleId);
+		return promoCrDAO.getPromoTableList(pageDisplayStart, pageDisplayLength, userId,roleId,moc,searchParameter);
 	}
 
 	@Override
-	public int getPromoListRowCount(String cagetory, String brand, String basepack, String custChainL1, String custChainL2, 
-			String geography, String offerType, String modality, String year, String moc, String userId, int active,String roleId) {
-		return promoCrDAO.getPromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2, geography, offerType, modality, year, moc, userId, active,roleId);
+	public int getPromoListRowCount(String userId, String roleId,String moc) {
+		return promoCrDAO.getPromoListRowCount(userId,roleId,moc);
 	}
 
 	@Override
@@ -63,7 +60,25 @@ public class PromoCrServiceImpl implements PromoCrService {
 	public String insertToportalUsage(String userId, String roleID, String module) {
 		return promoCrDAO.insertToportalUsage( userId,  roleID,  module);
 	}
+	//Added by Kavitha D starts-SPRINT 10
+	@Override
+	public ArrayList<String> getHeaderListForPromoDownloadCrListing() {
+		ArrayList<String> headerList=new ArrayList<String>();
+		headerList.add("PROMO_ID");
+		headerList.add("PPM_ACCOUNT");
+		headerList.add("OFFER_DESCRIPTION");
+		headerList.add("REMARKS");
+		return headerList;
+	}
 	
+	public List<ArrayList<String>> getPromotionListingCrDownload(ArrayList<String> headerList, String userId,String moc, String roleId){
+		return promoCrDAO.getPromotionListingCrDownload(headerList,userId,moc,roleId);
+		
+	}
 	
-	
+	public String uploadApprovalData(PromoCrBean[] beanArray, String userId) throws Exception {
+		return promoCrDAO.uploadApprovalData(beanArray,userId);
+	}
+	//Added by Kavitha D ends-SPRINT 10
+
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.hul.proco.controller.createpromo.CreateBeanRegular;
 import com.hul.proco.controller.createpromo.CreatePromotionBean;
+import com.hul.proco.controller.promocr.PromoCrBean;
 
 public interface PromoListingService {
 	
@@ -26,7 +27,7 @@ public interface PromoListingService {
 			String basepack, String custChainL1, String custChainL2, String geography, String offerType, String modality, 
 			String year, String moc, String userId, int active);
 	
-	public ArrayList<String> getHeaderListForPromoDumpDownload();
+	public ArrayList<String> getHeaderListForPromoDumpDownload(String roleId);
 	
 	public String promoEditUpload(CreatePromotionBean[] bean,String userId,boolean isFromUi) throws Exception;
 	
@@ -50,14 +51,31 @@ public interface PromoListingService {
 	
 	//Added by Kavitha D for promo listing download starts-SPRINT 9
 	public ArrayList<String> getHeaderListForPromoDownloadListing();
+	
+	//Added by Kajal G for KAM Volume Error download starts-SPRINT 10
+	public List<ArrayList<String>> getKAMErrorDetails(String userId);
+	
+	//Added by Kajal G for KAM Volume download starts-SPRINT 10
+	public ArrayList<String> getHeaderForPromoDownloadListing(String primaryAccount);
+	
 	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleId, String[] kamAccounts);
 	//Added by Kavitha D for promo listing download ends-SPRINT 9
 
+	//Added by Kajal G for KAM Volume download Start-SPRINT 10
+	public List<ArrayList<String>> getPromotionListDownload(ArrayList<String> headerList, String moc, String primaryAccount);
+	
 	public int getPromoListRowCountGrid(String userId, String roleId,String moc,String[] kamAccountsArr);
 
 	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId, String roleId,String moc, String searchParameter, String[] kamAccounts);
 
 	public List<String> getPromoMoc();
+	
+	//Added by Kajal G for KAM Volume Upload ends-SPRINT 10
+	public String kamVolumeUpload(List<List<String>> excelData, String userId);
+	
+	public List<String> getPromoPrimaryChannels(String[] kamAccountsArr); //Added By Sarin - Sprint10
+
+	public String uploadDroppedOfferApprovalData(PromoCrBean[] beanArray, String userId) throws Exception;
 
 	
 }

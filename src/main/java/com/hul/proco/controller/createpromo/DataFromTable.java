@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -266,11 +267,11 @@ public class DataFromTable {
 	 * 
 	 * @return Map<String, ArrayList<String>>
 	 */
-	public Map<String, ArrayList<String>> getAllValidationRecords() {
+	public Map<String, ArrayList<String>> getAllValidationRecords(String templateType) {
 		Map<String, ArrayList<String>> validationmap = new HashMap<String, ArrayList<String>>();
 		validationmap.put("SOL TYPE", getSOLType());
 		validationmap.put("Channel name", getValidChannels());
-		validationmap.put("PPM Account", getValidPPMAccount());
+		validationmap.put("PPM Account", getValidPPMAccount(templateType));		
 		// validationmap.put("AB creation", getABCreation());
 		validationmap.put("baseback", getValidBasepack());
 		validationmap.put("offer type", getValidOfferType());
@@ -289,7 +290,7 @@ public class DataFromTable {
 
 	private ArrayList<String> getValidChannels() {
 
-		String query = "SELECT DISTINCT CHANNEL_NAME FROM TBL_PROCO_CLUSTER_MASTER_V2 WHERE IS_ACTIVE=1";
+		String query = "SELECT DISTINCT CHANNEL_NAME FROM TBL_PROCO_CUSTOMER_MASTER_V2";
 		ArrayList<String> ar = (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(query).list();
 		return (ArrayList<String>) ar.stream().map(String::toUpperCase).collect(Collectors.toList());
 	}
@@ -301,7 +302,38 @@ public class DataFromTable {
 		return (ArrayList<String>) ar.stream().map(String::toUpperCase).collect(Collectors.toList());
 
 	}
+	
+	//Kajal G change's start
+	public ArrayList<String> getValidPPMAccount(String templateType) {
+		String ppm_qury;
+		if(templateType.equalsIgnoreCase("regular")) {
+			ppm_qury = "SELECT DISTINCT CASE WHEN SECONDARY_CHANNEL = '' THEN PPM_ACCOUNT ELSE SECONDARY_CHANNEL END AS PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y'ORDER BY PPM_ACCOUNT";
+		}
+		else{
+			ppm_qury = "SELECT DISTINCT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE  IS_ACTIVE='Y'";
+		}
+		ArrayList<String> ar = (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(ppm_qury)
+				.list();
+		return (ArrayList<String>) ar.stream().map(String::toUpperCase).collect(Collectors.toList());
 
+	}
+	//Kajal G change's end
+	
+	//Added by Kajal G for Spint-10
+	public List<String> getAQEntries(){
+		String ValidateAQ = "SELECT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE ACCOUNT_TYPE = 'KA'";
+		Query query1  = sessionFactory.getCurrentSession().createNativeQuery(ValidateAQ);
+		List<String> list = query1.list();
+		return list;
+	}
+	
+	//Added by Kajal G in Spint-10
+	public String getCurrentMoc() {
+		String getCurrentMoc = "SELECT MOC_NAME FROM TBL_VAT_MOC_MASTER WHERE STATUS = 'Y' ORDER BY UPDATE_STAMP DESC LIMIT 1";
+		Query query1  = sessionFactory.getCurrentSession().createNativeQuery(getCurrentMoc);
+		List<String> currentMoc = query1.getResultList();
+		return currentMoc.get(0);
+	}
 	private ArrayList<String> getValidBasepack() {
 		String basepack = "SELECT DISTINCT BASEPACK FROM TBL_PROCO_PRODUCT_MASTER_V2 WHERE IS_ACTIVE=1 AND PPM_STATUS='YES'";
 		return (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(basepack).list();
@@ -341,7 +373,7 @@ public class DataFromTable {
 	}
 	public void mapPPMandChannel(Map<String, String> commanmap) {
 		// TODO Auto-generated method stub
-		String strquery="SELECT DISTINCT PPM_ACCOUNT,CHANNEL_NAME FROM TBL_PROCO_CLUSTER_MASTER_V2 WHERE IS_ACTIVE=1";
+		String strquery="SELECT DISTINCT PPM_ACCOUNT,CHANNEL_NAME FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y' UNION ALL SELECT DISTINCT P.PRI_CHANNEL_NAME, C.CHANNEL_NAME FROM TBL_PROCO_PRIMARY_CHANNEL_MASTER P INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 C ON C.SECONDARY_CHANNEL = P.PRI_CHANNEL_NAME ";
 		
 		List<Object[]> list=sessionFactory.getCurrentSession().createNativeQuery(strquery).list();
 		
@@ -422,9 +454,9 @@ public class DataFromTable {
 	 * To handle all CR template 
 	 * @param crEntries
 	 */
-	public void getAllSOLCodeAndPromoId(Map<String,String> crEntries,Map<String,String> date_extension,Map<String,ArrayList<String>> check_existing_sol) {
+	public void getAllSOLCodeAndPromoId(Map<String,String> crEntries,Map<String,String> date_extension,Map<String,ArrayList<String>> check_existing_sol,List<List<String>> check_sol_code_ref) {
 		// TODO Auto-generated method stub
-		String query="SELECT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,CASE WHEN LOCATE('%', A.PRICE_OFF) > 0 THEN A.PRICE_OFF ELSE ROUND(A.PRICE_OFF, 0) END AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR"
+		String query="SELECT DISTINCT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,CASE WHEN LOCATE('%', A.PRICE_OFF) > 0 THEN A.PRICE_OFF ELSE ROUND(A.PRICE_OFF, 0) END AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR,B.MOC AS PMR_MOC"
 				+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 A INNER JOIN TBL_PROCO_MEASURE_MASTER_V2 B "
 				+ "	ON "
 				+ "	A.PROMO_ID=B.PROMO_ID "
@@ -433,6 +465,20 @@ public class DataFromTable {
 		List<Object[]> list=sessionFactory.getCurrentSession().createNativeQuery(query	).list();
 		
 		ArrayList<String> list_of_sol=new ArrayList<String>();
+
+		Iterator itr = list.iterator();
+		while (itr.hasNext()) {
+			Object[] obj = (Object[]) itr.next();
+			ArrayList<String> dataObj = new ArrayList<String>();
+			for (Object ob : obj) {
+				String value = "";
+				value = (ob == null) ? "" : ob.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
+				
+			}
+			obj = null;
+			check_sol_code_ref.add(dataObj);
+		}
 		
 		for(Object[] obj: list)
 		{

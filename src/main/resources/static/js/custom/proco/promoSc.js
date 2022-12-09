@@ -1,9 +1,27 @@
-$(document).ready(function() {
+var spinnerWidth = "100";
+var spinnerHeight = "100";
+function ajaxLoader(w, h) {
+
+    var left = (window.innerWidth / 2) - (w / 2);
+    var top = (window.innerHeight / 2) - (h / 2);
+    $('.loader').css('display', 'block');
+
+    $('.loading-image').css({
+        "left": left,
+        "top": top,
+        
+    });
+}
+
+$(document)
+		.ready(
+				function() {
 					
 					$('#msg-success').hide();
 					$('#msg-error').hide();
 					
-					var selectAll = false;
+					$('#successblock').hide();
+					$('#errorblock').hide();
 					
 					$("[data-hide]").on("click", function() {
 		                $(this).closest("." + $(this).attr("data-hide")).hide();
@@ -17,22 +35,24 @@ $(document).ready(function() {
 							promoTable.draw();
 						}*/
 					});
+					 var selectAll=false;
 					
-					//bharati commented below code for moc filter issue in sprint-9
 					/*var mocSelectedVal = $('#moc').comboTree({
 						source : JSON.parse(moc),
 						isMultiple : false
-						/*select:function(item){
+						select:function(item){
 							mocVal = item.title;
 							promoTable.draw();
-						}*/
-					/*});*/
+						}
+					});*/
 
-					$('.comboTreeDropDownContainer ul li span.comboTreeParentPlus').html("+");
+					$(
+							'.comboTreeDropDownContainer ul li span.comboTreeParentPlus').html("+");
 					
 					
 					
-					$('#customerChainL1').multiselect(
+					$('#customerChainL1')
+							.multiselect(
 									{
 										includeSelectAllOption : true,
 										numberDisplayed : 2,
@@ -42,17 +62,17 @@ $(document).ready(function() {
 										onChange : function(option, checked,
 												select) {
 											 var custChainSelectedData = [];
-											 var selectedOptionsChange = $('#customerChainL1 option:selected');
-											 var totalLen = $('#customerChainL1 option').length;
-
-							                    if (selectedOptionsChange.length > 0 && selectedOptionsChange.length < totalLen){
+							                    var selectedOptions = $('#customerChainL1 option:selected');
+							                    var totalLen = $('#customerChainL1 option').length;
+							                    if (selectedOptions.length > 0 && selectedOptions.length < totalLen){
 													selectAll = false;
-												}else if(selectedOptionsChange.length == totalLen){
+												}else if(selectedOptions.length == totalLen){
 													selectAll = true;
 												}
-											 
-							                    for (var i = 0; i < selectedOptionsChange.length; i++) {
-							                    	custChainSelectedData.push(selectedOptionsChange[i].value);
+							                    
+							                    
+							                    for (var i = 0; i < selectedOptions.length; i++) {
+							                    	custChainSelectedData.push(selectedOptions[i].value);
 
 							                    }
 							                    if(selectAll == true){
@@ -157,21 +177,21 @@ $(document).ready(function() {
 						year = $(this).val();
 						promoTable.draw();
 						});
-						
-						//bharati added for sprint-9 moc filter US
-						$('#Mocvalue').change(function(){
-						Mocvalue = $(this).val();
+
+						$('#Mocvaluecr').change(function(){
+							console.log("moc");
+						Mocvaluecr = $(this).val();
+						console.log(Mocvaluecr);
 						promoTable.draw();
 						});
-					
 					
 					/*PromoListing table pagination */
 				       promoTable = $('.promo-list-table').DataTable({
 
 				              /* added for second tab start */
-				          "bProcessing": true,
+				             "bProcessing": true,
 				             "bServerSide": true,
-				             "scrollY":       "300px",
+				            "scrollY":       "300px",
 						        "scrollX":        true,
 						        "scrollCollapse": true,
 						        "paging":         true,
@@ -193,8 +213,8 @@ $(document).ready(function() {
 					              },
 				             "iDisplayLength": 10,
 						     "iDisplayStart": 0,
-				              "sAjaxSource": "promoListingPagination.htm",
-				              //bharati added mocvalue aodata in srint-9
+				             
+				              "sAjaxSource": "promoScPagination.htm",
 				               "fnServerParams": function(aoData) {
 				                aoData.push(
 				    	                {"name": "category", "value": category}, 
@@ -206,16 +226,14 @@ $(document).ready(function() {
 				    	                {"name": "offerType", "value": offerType}, 
 				    	                {"name": "modality", "value": modality}, 
 				    	                {"name": "year","value": year},
-				    	                {"name": "moc","value": Mocvalue} //bharati changes this mocVal to MocValue in sprint-9
-				    	                
-				    	               
+				    	                {"name": "moc","value": Mocvaluecr} 
 				    	                );
 				              }, 
 				              "fnDrawCallback": function(oSettings){
-				            	 $('table.promo-list-table input[type="checkbox"]').change(function() {
+				            	  $('table.promo-list-table input[type="checkbox"]').change(function() {
 									    $('table.promo-list-table input[type="checkbox"]').not(this).prop('checked', false);  
 									});
-				            	  $("table.promo-list-table input[name='select_all']").prop('checked',false);
+									  $("table.promo-list-table input[name='select_all']").prop('checked',false);
                     	    	  /* Select all checkbox */
                     	    	 $("table.promo-list-table input[name='select_all']").change(function() {
                                       if ($(this).prop("checked")) {
@@ -228,14 +246,14 @@ $(document).ready(function() {
                     	    	  
                     	    	  $("table.promo-list-table input[name='promoId']").change(function() {
                             		  if($("table.promo-list-table tbody input[name='promoId']:checked").length == 1){
-                            			    $("#edit_promo").find('button').attr("disabled", false);
+                            			    $("#approveSc").find('button').attr("disabled", false);
                             			}
                             			else if($("table.promo-list-table tbody input[name='promoId']:checked").length > 1){
-                            			     $("#edit_promo").find('button').attr("disabled", true);
+                            			     $("#approveSc").find('button').attr("disabled", true);
                             			}
                     				});
+				            	 
 				              },
-							  //bharati commented uom,kitting value, reason, remark,originalId in sprint-9 US-2
 				              "aoColumns": [{
 				                  "mData": "promo_id",
 				                  "mRender": function(data, type, full) {
@@ -243,10 +261,7 @@ $(document).ready(function() {
 				                  } 
 				                  },{
 				                    "mData": "promo_id"
-				                  },/*{
-				                    "mData": "originalId"
-				                  },*/
-								  {
+				                  },{
 				                    "mData": "startDate"
 				                  },{
 				                    "mData": "endDate"
@@ -266,45 +281,24 @@ $(document).ready(function() {
 				                    "mData": "geography",
 				                  }, {
 				                    "mData": "quantity",
-				                  }, 
-								  /*{
-				                    "mData": "uom",
-				                  },*/
-								  {
+				                  }, {
 				                    "mData": "offer_value",
-				                  },
-								  /*{
-					                 "mData": "kitting_value",
-					              },*/
-								  
-								  {
+				                  },{
 					                 "mData": "status",
-					              },
-								  /*{
-						                 "mData": "reason",
-						       },*/
-								  {
-				                    "mData": "userId"
-				                  },{
-				                    "mData": "changeDate"
-				                  },{
-						                 "mData": "remark",
-						         },{
-						                 "mData": "investmentType",
-						              } ,{
-						                 "mData": "solCode",
-						              } ,{
-						                 "mData": "promotionMechanics",
-						              } ,{
-						                 "mData": "solCodeStatus",
+					              },{
+					              	 "mData": "investmentType",
+						           } ,{
+						            "mData": "solCode",
+						           } ,{
+						            "mData": "promotionMechanics",
+						           } ,{
+						             "mData": "solCodeStatus",
 						              }
 				                ]
 				                /* added for second tab end */
 
 				            });
-						  
-				      
-				       promoTable.columns.adjust().draw();
+				             promoTable.columns.adjust().draw();
 				       
 				       $('.filter-ref').on('keyup', function() {
 				    	   promoTable.columns(0).search(this.value).draw();
@@ -380,9 +374,8 @@ $(document).ready(function() {
 							basepack = ui.item.value;
 							promoTable.draw();
 						}
-					
-						
 					});
+						
 						
 						$('span.comboTreeItemTitle').on('click',function(){
 							//console.log($(this).parent('div[class="comboTreeInputWrapper"]').find('input').attr('id'));
@@ -398,11 +391,14 @@ $(document).ready(function() {
 								promoTable.draw();
 							}
 							});
-						/*$('.promo-list-table tr').each(function() {
-						    var customerId = $(this).find("td").eq(16).val();   
-						    console.log(customerId);
-						});*/
+						
 				});
+
+$('#add-depot').on('hidden.bs.modal', function() {
+	$('#msg-success').hide();
+	$('#msg-error').hide();
+	$('#reason').val("");
+});
 
 function getCustChainValues(selVal) {
 	$.ajax({
@@ -441,8 +437,8 @@ function multiSelectionForCustChain() {
 		nonSelectedText : 'ALL CUSTOMERS',
 		selectAllText : 'ALL CUSTOMERS',
 		onChange : function(option, checked, select) {
-			//console.log(option);
-			var selVals = [];
+			console.log(option);
+			//var selVals = [];
 			var selectedOptions = $('#customerChainL2 option:selected');
 			if (selectedOptions.length > 0) {
 				for (var i = 0; i < selectedOptions.length; i++) {
@@ -473,10 +469,22 @@ function split(val){
 }
 
 function downloadPromotionFile(){
-	//$("#download").submit();  //bharati commented this line for sprint-9 moc filter value pass to download promo file
-	var SelectedMoc = $("#Mocvalue").val();
-	window.location.assign(SelectedMoc+"/downloadPromoListing.htm");
+	/*$("#download").submit();*/
+	var SelectedMoc = $("#Mocvaluecr").val();
+	window.location.assign(SelectedMoc+"/downloadScPromoListing.htm"); //Added by Kavitha D-Promo approval download 
+	
+}
 
+function validateForm(){
+	var promoIdList = [];
+	var remark=$('#reason').val();
+	document.getElementById('remark').value = remark;
+	$.each($("table.promo-list-table tbody input[name='promoId']:checked"),
+	function() {
+		promoIdList.push($(this).val());
+			});
+	document.getElementById('promoIdList').value = promoIdList;
+	$("#download").submit();
 }
 
 function uploadValidation() {
@@ -485,7 +493,7 @@ function uploadValidation() {
 			messageText : "Please choose a file",
 			alertType : "info"
 		}).done(function(e) {
-			//console.log(e);
+			// console.log(e);
 		});
 		return false;
 	} else if ($('#upload-file').val() != "") {
@@ -498,7 +506,7 @@ function uploadValidation() {
 					messageText : "Please upload .xls or .xlsx file",
 					alertType : "info"
 				}).done(function(e) {
-					//console.log(e);
+					// console.log(e);
 				});
 				return false;
 			}
@@ -506,26 +514,85 @@ function uploadValidation() {
 	}
 }
 
-$('#add-depot').on('hidden.bs.modal', function() {
-	$('#msg-success').hide();
-	$('#msg-error').hide();
-	$('#remark').val("");
-});
-
-function validateForm(){
-	var promoIdList = [];
-	var remark=$('#remark').val();
-	$('#msg-success').hide();
-	$('#msg-error').hide();
-	if(remark==""){
-		$('#msg-error').html('Please enter remarks.');
-		$('#msg-error').show();
+$("#KAMVolumeUpload").click(function (event) {
+	event.preventDefault();
+	
+	var fileName = $('#upload-file').val();
+	if (fileName == '') {
+		$('#uploadErrorMsg').show().html("Please select a file to upload");
 		return false;
+	} else {
+		$('#uploadErrorMsg').hide();
+		var FileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+		if (FileExt != "xlsx") {
+			if (FileExt != "xls") {
+				$('#uploadErrorMsg').show().html("Please upload .xls or .xlsx file");
+				$("#promoApprovalUpload").submit(function(e) {
+					e.preventDefault();
+				});
+				return false;
+			}
+
+		}
 	}
-	$.each($("table.promo-list-table tbody input[name='promoId']:checked"),
-	function() {
-		promoIdList.push($(this).val());
-			});
-	document.getElementById('promoIdList').value = promoIdList;
-	$('#pwdform').submit();
-}
+	
+    // Get form
+    var form = $('#promoApprovalUpload')[0];
+       var data = new FormData(form);
+    $.ajax({
+        type: "POST",
+        enctype: 'multipart/form-data',
+        url: 'promoApprovalScUpload.htm',
+        data: data,
+        processData: false,
+        contentType: false,
+        cache: false,
+        timeout: 600000,
+        beforeSend: function() {
+            ajaxLoader(spinnerWidth, spinnerHeight);
+        },
+		
+        success: function (resdata) {
+        	
+        	
+        	 $('.loader').hide();
+        	if(resdata.includes('EXCEL_UPLOADED')) {
+                $('#errorblockApprovalUpload').hide();
+            	//$('#ProcoVolumeerrorblockUpload').hide();
+            	$('#ProcoApprovalUploadsuccessblock').show().find('span').html(' File Uploaded Successfully !!!');
+            	 
+            }
+            
+            else if(resdata.includes('EXCEL_NOT_UPLOADED')){
+	            $('#errorblockApprovalUpload').show();
+	            $('#ProcoApprovalUploadsuccessblock').hide();
+	            //$('#errorblockVolumeUpload').hide();
+            }
+            else if(resdata.includes('FILE_EMPTY')){
+				$('#errorblockApprovalUpload').show().find('span').html('Error While Uploading Empty File');
+				//$('#ProcoVolumeerrorblockUpload').hide();
+				$('#ProcoApprovalUploadsuccessblock').hide();
+			}
+			else if(resdata.includes('CHECK_COL_MISMATCH')){
+				$('#errorblockApprovalUpload').show().find('span').html('Please Check Uploaded File');
+				//$('#ProcoVolumeerrorblockUpload').hide();
+				$('#ProcoApprovalUploadsuccessblock').hide();
+			}else {
+				
+            	$('#errorblockApprovalUpload').show().find('span').html('Error While Uploading File');
+            	$('#ProcoApprovalUploadsuccessblock').hide();
+            	//$('#ProcoVolumeerrorblockUpload').hide();
+            	 
+          	 }
+          
+		    $('#promoApprovalUpload')[0].reset();
+			$('.file-name').html("No file chosen");
+        },
+        error: function (e) {
+        $('#ProcoApprovalUploadsuccessblock').hide();
+                 
+        }
+    });
+   
+    	
+});
