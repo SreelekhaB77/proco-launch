@@ -1698,6 +1698,10 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			for(int i=1; i<finalResult.size();i++) {
 				long count = finalResult.get(0).stream().filter(x -> !x.isEmpty()).count();
 				
+				Query queryToDeletePromoId = sessionFactory.getCurrentSession()
+						.createNativeQuery("DELETE FROM TBL_PROCO_PROMOTION_KAM_VOLUME_UPLOAD_MASTER WHERE PROMO_ID='"+finalResult.get(i).get(0)+"'");
+				queryToDeletePromoId.executeUpdate();
+				
 				for(int j=11;j<=count+1;j++) {
 					if(finalResult.get(i).get(j).length() > 0) {
 						queryInsert.setString(0, finalResult.get(i).get(0));
