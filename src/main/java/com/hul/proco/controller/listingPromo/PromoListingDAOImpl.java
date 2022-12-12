@@ -2048,7 +2048,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 		try {
 		
 		String query= "SELECT PROMO_ID, MOC, BASEPACK_CODE, OFFER_DESC, PRICE_OFF, CLUSTER, QUANTITY AS DP_Volume"
-					+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE MOC = '"+ moc +"' AND STATUS = '3'";
+					+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE MOC = '"+ moc +"' AND STATUS = '3' AND PPM_ACCOUNT = '"+ primaryAcc +"'";
 		
 		Query query1 =sessionFactory.getCurrentSession().createNativeQuery(query);
 		Iterator itr = query1.list().iterator();

@@ -842,66 +842,69 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						flag = 1;
 					}
 					//Added by Kajal G for Sprint -10
-					for(int i=0; i<check_sol_code_ref.size();i++) {
-						if(bean.getSol_code_ref().equalsIgnoreCase(check_sol_code_ref.get(i).get(0))) {	
-							List<String> items = Arrays.asList(check_sol_code_ref.get(i).get(11).split("\\s*,\\s*"));
+					if (!bean.getSol_type().trim().equalsIgnoreCase("Date Extension")){
+						for(int i=0; i<check_sol_code_ref.size();i++) {
+							if(bean.getSol_code_ref().equalsIgnoreCase(check_sol_code_ref.get(i).get(0))) {	
+								List<String> items = Arrays.asList(check_sol_code_ref.get(i).get(11).split("\\s*,\\s*"));
 
-							String[] splitString = currentMoc.split("MOC");
-						    int m = Integer.valueOf(splitString[1]);
-						  
-							String month = "";
-							String month2 = "";
-							String month3 = "";
+								String[] splitString = currentMoc.split("MOC");
+							    int m = Integer.valueOf(splitString[1]);
+							  
+								String month = "";
+								String month2 = "";
+								String month3 = "";
+								
+								if(m == 12) {
+									month = String.valueOf(m);
+									month2 = String.valueOf(1);
+									month3 = String.valueOf(2);
+								}
+								else if(m == 11){
+									month = String.valueOf(m);
+									month2 = String.valueOf(12);
+									month3 = String.valueOf(1);
+								}
+								else {
+									month = String.valueOf(m);
+									int m1 = ++m;
+									month2 = String.valueOf(m1);
+									int m2 = ++m;
+									month3 = String.valueOf(m2);
+								}
 							
-							if(m == 12) {
-								month = String.valueOf(m);
-								month2 = String.valueOf(1);
-								month3 = String.valueOf(2);
+								int j = 0;
+						        while (j < month.length() && month.charAt(j) == '0')
+						            j++;
+						        StringBuffer firstMonth = new StringBuffer(month);    
+						        firstMonth.replace(0, j, "MOC");
+						        
+						        int l = 0;
+						        while (l < month2.length() && month2.charAt(l) == '0')
+						            l++;
+						        StringBuffer secondMonth = new StringBuffer(month2);    
+						        secondMonth.replace(0, l, "MOC");
+						        
+						        int k = 0;
+						        while (k < month3.length() && month3.charAt(k) == '0')
+						            k++;
+						        StringBuffer thirdMonth = new StringBuffer(month3);    
+						        thirdMonth.replace(0, k, "MOC");
+						        
+						        if(items.contains(firstMonth.toString()) || items.contains(secondMonth.toString()) || items.contains(thirdMonth.toString())) {
+						        	break;
+						        }
+						        else {
+						        	if (flag == 1)
+										error_msg = error_msg + ","+bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N or N+1 or N+2 MOCs";
+									else
+										error_msg = error_msg + bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N or N+1 or N+2 MOCs";
+									flag = 1;
+									break;
+						        }
 							}
-							else if(m == 11){
-								month = String.valueOf(m);
-								month2 = String.valueOf(12);
-								month3 = String.valueOf(1);
-							}
-							else {
-								month = String.valueOf(m);
-								int m1 = ++m;
-								month2 = String.valueOf(m1);
-								int m2 = ++m;
-								month3 = String.valueOf(m2);
-							}
-						
-							int j = 0;
-					        while (j < month.length() && month.charAt(j) == '0')
-					            j++;
-					        StringBuffer firstMonth = new StringBuffer(month);    
-					        firstMonth.replace(0, j, "MOC");
-					        
-					        int l = 0;
-					        while (l < month2.length() && month2.charAt(l) == '0')
-					            l++;
-					        StringBuffer secondMonth = new StringBuffer(month2);    
-					        secondMonth.replace(0, l, "MOC");
-					        
-					        int k = 0;
-					        while (k < month3.length() && month3.charAt(k) == '0')
-					            k++;
-					        StringBuffer thirdMonth = new StringBuffer(month3);    
-					        thirdMonth.replace(0, k, "MOC");
-					        
-					        if(items.contains(firstMonth.toString()) || items.contains(secondMonth.toString()) || items.contains(thirdMonth.toString())) {
-					        	break;
-					        }
-					        else {
-					        	if (flag == 1)
-									error_msg = error_msg + ","+bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N or N+1 or N+2 MOCs";
-								else
-									error_msg = error_msg + bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N or N+1 or N+2 MOCs";
-								flag = 1;
-								break;
-					        }
 						}
 					}
+					
 					
 					
 //					if(!crEntries.containsKey(bean.getSol_code_ref().toUpperCase()))
