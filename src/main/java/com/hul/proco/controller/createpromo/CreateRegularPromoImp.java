@@ -630,13 +630,29 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 
 					} else {
-						if (isStringNumber(bean.getPrice_off())) {
-							query.setString(11, bean.getPrice_off().isEmpty() ? ""
-									: String.valueOf(
-											(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100) / 100));
-						} else {
-							query.setString(11, bean.getPrice_off());
+						//Kajal G changes start for Sprint-10
+						String priceOffValue = bean.getPrice_off();
+						if(bean.getOffer_mod().contains("%") && !bean.getPrice_off().contains("%")) {
+							Double intPriceOff = Double.parseDouble(bean.getPrice_off());
+							if(intPriceOff < 1) {
+								double priceOff;
+								priceOff = intPriceOff*100;
+								double priceOffVal = Math.round(priceOff*100.0)/100.0;
+								priceOffValue = priceOffVal +"%";
+							}
+							query.setString(11, priceOffValue);
 						}
+						else {
+							if (isStringNumber(priceOffValue)) {
+								query.setString(11, bean.getPrice_off().isEmpty() ? ""
+										: String.valueOf(
+												(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100) / 100));
+							} else {
+								query.setString(11, bean.getPrice_off());
+							}
+						}
+						//Kajal G changes end for Sprint-10
+						
 						/*
 						if (bean.getBudget().isEmpty() || !isStringNumber(bean.getBudget())) {
 							if (flag == 1) {
@@ -1420,17 +1436,44 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						query.setString(11,bean.getPrice_off());
 					}
 					else {
-					if(!bean.getPrice_off().contains("%"))
-					query.setString(11, bean.getPrice_off().isEmpty()  ? ""
-							: String.valueOf(
-									(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100)
-											/ 100));
-					else
-						query.setString(11, bean.getPrice_off().split("%")[0].isEmpty() ? ""
-								: String.valueOf(
-										(double) Math.round(Double.parseDouble(bean.getPrice_off().split("%")[0]) * 100)
-												/ 100)+"%");
+					//Kajal G changes start for Sprint-10
+						
+//					if(!bean.getPrice_off().contains("%"))
+//					query.setString(11, bean.getPrice_off().isEmpty()  ? ""
+//							: String.valueOf(
+//									(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100)
+//											/ 100));
+//					else
+//						query.setString(11, bean.getPrice_off().split("%")[0].isEmpty() ? ""
+//								: String.valueOf(
+//										(double) Math.round(Double.parseDouble(bean.getPrice_off().split("%")[0]) * 100)
+//												/ 100)+"%");
+
+						String priceOffValue = bean.getPrice_off();
+						if(bean.getOffer_mod().contains("%") && !bean.getPrice_off().contains("%")) {
+							Double intPriceOff = Double.parseDouble(bean.getPrice_off());
+							if(intPriceOff < 1) {
+								double priceOff;
+								priceOff = intPriceOff*100;
+								double priceOffVal = Math.round(priceOff*100.0)/100.0;
+								priceOffValue = priceOffVal +"%";
+							}
+							query.setString(11, priceOffValue);
+						}
+						else {
+							if(!bean.getPrice_off().contains("%"))
+							query.setString(11, bean.getPrice_off().isEmpty()  ? ""
+									: String.valueOf(
+											(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100)
+													/ 100));
+							else
+								query.setString(11, bean.getPrice_off().split("%")[0].isEmpty() ? ""
+										: String.valueOf(
+												(double) Math.round(Double.parseDouble(bean.getPrice_off().split("%")[0]) * 100)
+														/ 100)+"%");
+						}
 					}
+					//Kajal G changes end for Sprint-10
 					query.setString(13, bean.getCluster());
 					query.setString(14, bean.getYear());
 					query.setString(15, bean.getBranch());
