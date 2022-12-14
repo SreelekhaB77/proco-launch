@@ -127,7 +127,6 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		datafromtable.mapPPMandChannel(commanmap);
 		datafromtable.basePackAndSaleCategory(commanmap);
 		List<String> AQlist = datafromtable.getAQEntries();
-		String currentMoc = datafromtable.getCurrentMoc();
 
 		for (CreateBeanRegular bean : beans) {
 
@@ -863,7 +862,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							if(bean.getSol_code_ref().equalsIgnoreCase(check_sol_code_ref.get(i).get(0))) {	
 								List<String> items = Arrays.asList(check_sol_code_ref.get(i).get(11).split("\\s*,\\s*"));
 
-								String[] splitString = currentMoc.split("MOC");
+								String[] splitString = bean.getMoc().split("MOC");
 							    int m = Integer.valueOf(splitString[1]);
 							  
 								String month = "";
@@ -1108,7 +1107,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							if(bean.getSol_code_ref().equalsIgnoreCase(check_sol_code_ref.get(i).get(0))) {	
 								List<String> items = Arrays.asList(check_sol_code_ref.get(i).get(11).split("\\s*,\\s*"));
 								
-								String[] splitString = currentMoc.split("MOC");
+								String[] splitString = bean.getMoc().split("MOC");
 							    int m = Integer.valueOf(splitString[1]);
 								String Previousmonth = "";
 								
