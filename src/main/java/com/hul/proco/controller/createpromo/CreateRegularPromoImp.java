@@ -777,7 +777,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 					}
 
-					if (bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity()) <= 9) {
+					if (bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity()) <= 0) {
 						if (flag == 1)
 							error_msg = error_msg + ",Mandatory input for Quantity, Min Qty criteria not met";
 						else
