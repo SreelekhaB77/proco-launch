@@ -127,6 +127,18 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		datafromtable.mapPPMandChannel(commanmap);
 		datafromtable.basePackAndSaleCategory(commanmap);
 		List<String> AQlist = datafromtable.getAQEntries();
+		
+		Map<String, String> crEntries = new HashMap<String, String>();
+		Map<String, String> date_extensionMap = new HashMap<String, String>();
+		Map<String, ArrayList<String>> check_existing_sol = new HashMap<String,ArrayList<String>>();
+		List<List<String>> check_sol_code_ref = new ArrayList();
+		
+		if(template.equalsIgnoreCase("cr"))
+		{
+			datafromtable.getCREntries(crEntries);
+			datafromtable.getAllSOLtype(crEntries);
+			datafromtable.getAllSOLCodeAndPromoId(crEntries,date_extensionMap,check_existing_sol, check_sol_code_ref);
+		}
 
 		for (CreateBeanRegular bean : beans) {
 
@@ -718,14 +730,14 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			
 			if(template.equalsIgnoreCase("cr"))
 			{
-				Map<String, String> crEntries = new HashMap<String, String>();
-				Map<String, String> date_extensionMap = new HashMap<String, String>();
-				Map<String, ArrayList<String>> check_existing_sol = new HashMap<String,ArrayList<String>>();
-				List<List<String>> check_sol_code_ref = new ArrayList();
-				datafromtable.getCREntries(crEntries);
-				datafromtable.getAllSOLtype(crEntries);
-				datafromtable.getAllSOLCodeAndPromoId(crEntries,date_extensionMap,check_existing_sol, check_sol_code_ref);
-			
+//				Map<String, String> crEntries = new HashMap<String, String>();
+//				Map<String, String> date_extensionMap = new HashMap<String, String>();
+//				Map<String, ArrayList<String>> check_existing_sol = new HashMap<String,ArrayList<String>>();
+//				List<List<String>> check_sol_code_ref = new ArrayList();
+//				datafromtable.getCREntries(crEntries);
+//				datafromtable.getAllSOLtype(crEntries);
+//				datafromtable.getAllSOLCodeAndPromoId(crEntries,date_extensionMap,check_existing_sol, check_sol_code_ref);
+//			
 				if (commanmap
 						.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
 								+ bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()
@@ -777,7 +789,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 					}
 
-					if (bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity()) <= 9) {
+					if (bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity()) <= 0) {
 						if (flag == 1)
 							error_msg = error_msg + ",Mandatory input for Quantity, Min Qty criteria not met";
 						else
