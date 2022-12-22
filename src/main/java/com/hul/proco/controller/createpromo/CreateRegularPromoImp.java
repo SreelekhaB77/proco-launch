@@ -141,7 +141,18 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		}
 
 		for (CreateBeanRegular bean : beans) {
-
+			//Added by Kajal G for rounding off price value in SPRINT-10
+			if(bean.getOffer_mod().contains("%") && !bean.getPrice_off().contains("%")) {
+				Double intPriceOff = Double.parseDouble(bean.getPrice_off());
+				if(intPriceOff < 1) {
+					double priceOff;
+					priceOff = intPriceOff*100;
+					double priceOffVal = Math.round(priceOff*100.0)/100.0;
+					String priceOffValue = priceOffVal +"%";
+					bean.setPrice_off(priceOffValue);
+				}
+			}
+			
 			if (template.equalsIgnoreCase("new") || template.equalsIgnoreCase("regular")) {
 				if (!duplicateMap.containsKey(
 						bean.getMoc_name() + bean.getYear() + bean.getPpm_account() + bean.getBasepack_code()+bean.getCluster())) {
@@ -149,9 +160,14 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							bean.getMoc_name() + bean.getYear() + bean.getPpm_account() + bean.getBasepack_code()+bean.getCluster(), "");
 					if (template.equalsIgnoreCase("new")) {
 						// MOC_NAME-YEAR – Basepack – Account – Cluster
-						if (commanmap.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
+						//Added by Kajal G for channel CNC and CNC NUTS in SPRINT-10
+						String duplicateKey = bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
 								+ bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()
-								+ bean.getCluster().toUpperCase())) {
+								+ bean.getCluster().toUpperCase();
+						if(bean.getChannel().equalsIgnoreCase("CNC") || bean.getChannel().equalsIgnoreCase("CNC NUTS"))
+								duplicateKey = duplicateKey+bean.getOffer_mod().toUpperCase();
+						
+						if (commanmap.containsKey(duplicateKey)) {
 							
 							if (flag == 1)
 								error_msg = error_msg + ",promo entry already exists against promo ID, created by "
@@ -378,10 +394,13 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					}
 					
 					if (flag == 0) {
-											
+						//Added by Kajal G for channel CNC and CNC NUTS in SPRINT-10
+						String duplicateKey = bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase();
+						if(bean.getChannel().equalsIgnoreCase("CNC") || bean.getChannel().equalsIgnoreCase("CNC NUTS"))
+								duplicateKey = duplicateKey+bean.getOffer_mod().toUpperCase();	
 						
 						if (commanmap
-								.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase())) {
+								.containsKey(duplicateKey)) {
 							if (!template.equalsIgnoreCase("regular")) {
 								if (flag == 1) {
 
@@ -737,11 +756,14 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 //				datafromtable.getCREntries(crEntries);
 //				datafromtable.getAllSOLtype(crEntries);
 //				datafromtable.getAllSOLCodeAndPromoId(crEntries,date_extensionMap,check_existing_sol, check_sol_code_ref);
-//			
+			
+				//Added by Kajal G for channel CNC and CNC NUTS in SPRINT-10
+				String duplicateKey = bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()+ bean.getCluster().toUpperCase() + bean.getSol_type().toUpperCase();
+				if(bean.getChannel().equalsIgnoreCase("CNC") || bean.getChannel().equalsIgnoreCase("CNC NUTS"))
+						duplicateKey = duplicateKey+bean.getOffer_mod().toUpperCase();	
+				
 				if (commanmap
-						.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
-								+ bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()
-								+ bean.getCluster().toUpperCase() + bean.getSol_type().toUpperCase())
+						.containsKey(duplicateKey)
 						&& !bean.getSol_type().trim().equalsIgnoreCase("Top Up"))
 				{
 					if (flag == 1)
