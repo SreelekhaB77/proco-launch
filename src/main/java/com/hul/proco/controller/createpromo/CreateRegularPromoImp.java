@@ -889,6 +889,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								: String.valueOf(
 										(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100)
 												/ 100);
+						bean.setPrice_off(price_off);
 					}else
 					{
 						if(bean.getPrice_off().contains("%"))
