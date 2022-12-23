@@ -239,6 +239,24 @@ margin-top: -75px!important;
 				</c:if>
 			</div>
 		</c:if>
+		
+		
+		<div class="alert alert-success sucess-msg" style="display: none;margin-top:35px;margin-bottom: -23px" id="ProcoApprovalUploadsuccessblock">
+	              <button type="button" class="close" data-hide="alert">&times;</button>
+	              <span></span>
+	            </div>
+	               <div class="alert alert-danger" style="display: none;margin-top:35px;margin-bottom: -23px" id="ProcoApprovalUploaderrorblock">
+	                               <button type="button" class="close" data-hide="alert">&times;</button>
+	                              
+	                                   <span>File contains error...</span>
+	                                   <a href="#" id="downloadTempFileLink">Click here to Download Error File</a>
+	                           </div>
+			<div class="alert alert-danger" style="display: none;margin-top:35px;margin-bottom: -23px" id="errorblockApprovalUpload">
+			         <button type="button" class="close" data-hide="alert">&times;</button>
+			        <!-- <span>Error while uploading file.</span>-->
+			<span></span>
+	    </div>
+	
 	
         <div class="alert err-alert-danger error-msg hide" id="promoSelectErrorMsg" style="margin-top:35px;">
              	<button type="button" class="close" data-hide="alert">&times;</button>
@@ -503,8 +521,7 @@ margin-top: -75px!important;
 			<%-- </c:if> --%>
 			
 			<!-- Added by Kavitha D for promo dropped offer upload -SPRINT10 -->
-			<form:form action="https://vat.hulcd.com/VisibilityAssetTracker/promoDroppedOfferUpload.htm" method="POST"
-			 id="promoApprovalUpload" modelAttribute="PromoCrBean"
+			<form:form action="#" id="promoApprovalUpload" modelAttribute="PromoCrBean"
                 enctype="multipart/form-data" onsubmit="return uploadValidation()">                
             <div class="promo-upload">PROMO DROPPED OFFER UPLOAD</div>
             <div class="upload-file">        

@@ -127,10 +127,32 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		datafromtable.mapPPMandChannel(commanmap);
 		datafromtable.basePackAndSaleCategory(commanmap);
 		List<String> AQlist = datafromtable.getAQEntries();
-		String currentMoc = datafromtable.getCurrentMoc();
+		
+		Map<String, String> crEntries = new HashMap<String, String>();
+		Map<String, String> date_extensionMap = new HashMap<String, String>();
+		Map<String, ArrayList<String>> check_existing_sol = new HashMap<String,ArrayList<String>>();
+		List<List<String>> check_sol_code_ref = new ArrayList();
+		
+		if(template.equalsIgnoreCase("cr"))
+		{
+			datafromtable.getCREntries(crEntries);
+			datafromtable.getAllSOLtype(crEntries);
+			datafromtable.getAllSOLCodeAndPromoId(crEntries,date_extensionMap,check_existing_sol, check_sol_code_ref);
+		}
 
 		for (CreateBeanRegular bean : beans) {
-
+			//Added by Kajal G for rounding off price value in SPRINT-10
+			if(bean.getOffer_mod().contains("%") && !bean.getPrice_off().contains("%") && !bean.getPrice_off().isEmpty()) {
+				Double intPriceOff = Double.parseDouble(bean.getPrice_off());
+				if(intPriceOff < 1) {
+					double priceOff;
+					priceOff = intPriceOff*100;
+					double priceOffVal = Math.round(priceOff*100.0)/100.0;
+					String priceOffValue = priceOffVal +"%";
+					bean.setPrice_off(priceOffValue);
+				}
+			}
+			
 			if (template.equalsIgnoreCase("new") || template.equalsIgnoreCase("regular")) {
 				if (!duplicateMap.containsKey(
 						bean.getMoc_name() + bean.getYear() + bean.getPpm_account() + bean.getBasepack_code()+bean.getCluster())) {
@@ -138,9 +160,14 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							bean.getMoc_name() + bean.getYear() + bean.getPpm_account() + bean.getBasepack_code()+bean.getCluster(), "");
 					if (template.equalsIgnoreCase("new")) {
 						// MOC_NAME-YEAR – Basepack – Account – Cluster
-						if (commanmap.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
+						//Added by Kajal G for channel CNC and CNC NUTS in SPRINT-10
+						String duplicateKey = bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
 								+ bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()
-								+ bean.getCluster().toUpperCase())) {
+								+ bean.getCluster().toUpperCase();
+						if(bean.getChannel().equalsIgnoreCase("CNC") || bean.getChannel().equalsIgnoreCase("CNC NUTS"))
+								duplicateKey = duplicateKey+bean.getOffer_mod().toUpperCase();
+						
+						if (commanmap.containsKey(duplicateKey)) {
 							
 							if (flag == 1)
 								error_msg = error_msg + ",promo entry already exists against promo ID, created by "
@@ -166,7 +193,24 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								: String.valueOf(
 										(double) Math.round(Double.parseDouble(bean.getQuantity()) * 100) / 100);
 					
+						//Added by Kajal G for SPRINT-10
+						String priceOff = bean.getPrice_off();
+                        if((bean.getPrice_off().contains("%"))) {
+                            priceOff = bean.getPrice_off().split("%")[0];
+                        }
+                        if(!isStringNumber(priceOff))
+                        {
+                            if (flag == 1)
+                                error_msg = error_msg + ",Invalid price off";
+                            else
+                                error_msg = error_msg + "Invalid price off";
+                            flag=1;
+                            query.setString(12,bean.getBudget());
+
+                        } else
+                            query.setString(12,datafromtable.calculateBudget(bean.getChannel(), quantity, bean.getPrice_off(), budget, bean.getBasepack_code(), commanmap));
 						
+                        /*
 						if(bean.getPrice_off().contains("%"))
 						{
 							if(!isStringNumber(bean.getPrice_off().split("%")[0]))
@@ -190,10 +234,10 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}else
 						    query.setString(12,datafromtable.calculateBudget(bean.getChannel(), quantity, bean.getPrice_off(), budget, bean.getBasepack_code(), commanmap));
 						
-						
+						*/
 						
 						query.setString(17, "NE");
-						if (bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity()) <= 9) {
+						if (bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity()) <= 0) {
 							if (flag == 1)
 								error_msg = error_msg + ",Mandatory input for Quantity, Min Qty criteria not met";
 							else
@@ -367,10 +411,13 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					}
 					
 					if (flag == 0) {
-											
+						//Added by Kajal G for channel CNC and CNC NUTS in SPRINT-10
+						String duplicateKey = bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase();
+						if(bean.getChannel().equalsIgnoreCase("CNC") || bean.getChannel().equalsIgnoreCase("CNC NUTS"))
+								duplicateKey = duplicateKey+bean.getOffer_mod().toUpperCase();	
 						
 						if (commanmap
-								.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase())) {
+								.containsKey(duplicateKey)) {
 							if (!template.equalsIgnoreCase("regular")) {
 								if (flag == 1) {
 
@@ -630,13 +677,29 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 
 					} else {
-						if (isStringNumber(bean.getPrice_off())) {
-							query.setString(11, bean.getPrice_off().isEmpty() ? ""
-									: String.valueOf(
-											(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100) / 100));
-						} else {
-							query.setString(11, bean.getPrice_off());
+						//Kajal G changes start for Sprint-10
+						String priceOffValue = bean.getPrice_off();
+						if(bean.getOffer_mod().contains("%") && !bean.getPrice_off().contains("%") && !bean.getPrice_off().isEmpty()) {
+							Double intPriceOff = Double.parseDouble(bean.getPrice_off());
+							if(intPriceOff < 1) {
+								double priceOff;
+								priceOff = intPriceOff*100;
+								double priceOffVal = Math.round(priceOff*100.0)/100.0;
+								priceOffValue = priceOffVal +"%";
+							}
+							query.setString(11, priceOffValue);
 						}
+						else {
+							if (isStringNumber(priceOffValue)) {
+								query.setString(11, bean.getPrice_off().isEmpty() ? ""
+										: String.valueOf(
+												(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100) / 100));
+							} else {
+								query.setString(11, bean.getPrice_off());
+							}
+						}
+						//Kajal G changes end for Sprint-10
+						
 						/*
 						if (bean.getBudget().isEmpty() || !isStringNumber(bean.getBudget())) {
 							if (flag == 1) {
@@ -703,18 +766,21 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			
 			if(template.equalsIgnoreCase("cr"))
 			{
-				Map<String, String> crEntries = new HashMap<String, String>();
-				Map<String, String> date_extensionMap = new HashMap<String, String>();
-				Map<String, ArrayList<String>> check_existing_sol = new HashMap<String,ArrayList<String>>();
-				List<List<String>> check_sol_code_ref = new ArrayList();
-				datafromtable.getCREntries(crEntries);
-				datafromtable.getAllSOLtype(crEntries);
-				datafromtable.getAllSOLCodeAndPromoId(crEntries,date_extensionMap,check_existing_sol, check_sol_code_ref);
+//				Map<String, String> crEntries = new HashMap<String, String>();
+//				Map<String, String> date_extensionMap = new HashMap<String, String>();
+//				Map<String, ArrayList<String>> check_existing_sol = new HashMap<String,ArrayList<String>>();
+//				List<List<String>> check_sol_code_ref = new ArrayList();
+//				datafromtable.getCREntries(crEntries);
+//				datafromtable.getAllSOLtype(crEntries);
+//				datafromtable.getAllSOLCodeAndPromoId(crEntries,date_extensionMap,check_existing_sol, check_sol_code_ref);
 			
+				//Added by Kajal G for channel CNC and CNC NUTS in SPRINT-10
+				String duplicateKey = bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()+ bean.getCluster().toUpperCase() + bean.getSol_type().toUpperCase();
+				if(bean.getChannel().equalsIgnoreCase("CNC") || bean.getChannel().equalsIgnoreCase("CNC NUTS"))
+						duplicateKey = duplicateKey+bean.getOffer_mod().toUpperCase();	
+				
 				if (commanmap
-						.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
-								+ bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()
-								+ bean.getCluster().toUpperCase() + bean.getSol_type().toUpperCase())
+						.containsKey(duplicateKey)
 						&& !bean.getSol_type().trim().equalsIgnoreCase("Top Up"))
 				{
 					if (flag == 1)
@@ -762,7 +828,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 					}
 
-					if (bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity()) <= 9) {
+					if (bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity()) <= 0) {
 						if (flag == 1)
 							error_msg = error_msg + ",Mandatory input for Quantity, Min Qty criteria not met";
 						else
@@ -823,6 +889,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								: String.valueOf(
 										(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100)
 												/ 100);
+						bean.setPrice_off(price_off);
 					}else
 					{
 						if(bean.getPrice_off().contains("%"))
@@ -842,66 +909,69 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						flag = 1;
 					}
 					//Added by Kajal G for Sprint -10
-					for(int i=0; i<check_sol_code_ref.size();i++) {
-						if(bean.getSol_code_ref().equalsIgnoreCase(check_sol_code_ref.get(i).get(0))) {	
-							List<String> items = Arrays.asList(check_sol_code_ref.get(i).get(11).split("\\s*,\\s*"));
+					if (!bean.getSol_type().trim().equalsIgnoreCase("Date Extension")){
+						for(int i=0; i<check_sol_code_ref.size();i++) {
+							if(bean.getSol_code_ref().equalsIgnoreCase(check_sol_code_ref.get(i).get(0))) {	
+								List<String> items = Arrays.asList(check_sol_code_ref.get(i).get(11).split("\\s*,\\s*"));
 
-							String[] splitString = currentMoc.split("MOC");
-						    int m = Integer.valueOf(splitString[1]);
-						  
-							String month = "";
-							String month2 = "";
-							String month3 = "";
+								String[] splitString = bean.getMoc().split("MOC");
+							    int m = Integer.valueOf(splitString[1]);
+							  
+								String month = "";
+								String month2 = "";
+								String month3 = "";
+								
+								if(m == 12) {
+									month = String.valueOf(m);
+									month2 = String.valueOf(1);
+									month3 = String.valueOf(2);
+								}
+								else if(m == 11){
+									month = String.valueOf(m);
+									month2 = String.valueOf(12);
+									month3 = String.valueOf(1);
+								}
+								else {
+									month = String.valueOf(m);
+									int m1 = ++m;
+									month2 = String.valueOf(m1);
+									int m2 = ++m;
+									month3 = String.valueOf(m2);
+								}
 							
-							if(m == 12) {
-								month = String.valueOf(m);
-								month2 = String.valueOf(1);
-								month3 = String.valueOf(2);
+								int j = 0;
+						        while (j < month.length() && month.charAt(j) == '0')
+						            j++;
+						        StringBuffer firstMonth = new StringBuffer(month);    
+						        firstMonth.replace(0, j, "MOC");
+						        
+						        int l = 0;
+						        while (l < month2.length() && month2.charAt(l) == '0')
+						            l++;
+						        StringBuffer secondMonth = new StringBuffer(month2);    
+						        secondMonth.replace(0, l, "MOC");
+						        
+						        int k = 0;
+						        while (k < month3.length() && month3.charAt(k) == '0')
+						            k++;
+						        StringBuffer thirdMonth = new StringBuffer(month3);    
+						        thirdMonth.replace(0, k, "MOC");
+						        
+						        if(items.contains(firstMonth.toString()) || items.contains(secondMonth.toString()) || items.contains(thirdMonth.toString())) {
+						        	break;
+						        }
+						        else {
+						        	if (flag == 1)
+										error_msg = error_msg + ","+bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N or N+1 or N+2 MOCs";
+									else
+										error_msg = error_msg + bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N or N+1 or N+2 MOCs";
+									flag = 1;
+									break;
+						        }
 							}
-							else if(m == 11){
-								month = String.valueOf(m);
-								month2 = String.valueOf(12);
-								month3 = String.valueOf(1);
-							}
-							else {
-								month = String.valueOf(m);
-								int m1 = ++m;
-								month2 = String.valueOf(m1);
-								int m2 = ++m;
-								month3 = String.valueOf(m2);
-							}
-						
-							int j = 0;
-					        while (j < month.length() && month.charAt(j) == '0')
-					            j++;
-					        StringBuffer firstMonth = new StringBuffer(month);    
-					        firstMonth.replace(0, j, "MOC");
-					        
-					        int l = 0;
-					        while (l < month2.length() && month2.charAt(l) == '0')
-					            l++;
-					        StringBuffer secondMonth = new StringBuffer(month2);    
-					        secondMonth.replace(0, l, "MOC");
-					        
-					        int k = 0;
-					        while (k < month3.length() && month3.charAt(k) == '0')
-					            k++;
-					        StringBuffer thirdMonth = new StringBuffer(month3);    
-					        thirdMonth.replace(0, k, "MOC");
-					        
-					        if(items.contains(firstMonth.toString()) || items.contains(secondMonth.toString()) || items.contains(thirdMonth.toString())) {
-					        	break;
-					        }
-					        else {
-					        	if (flag == 1)
-									error_msg = error_msg + ","+bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N or N+1 or N+2 MOCs";
-								else
-									error_msg = error_msg + bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N or N+1 or N+2 MOCs";
-								flag = 1;
-								break;
-					        }
 						}
 					}
+					
 					
 					
 //					if(!crEntries.containsKey(bean.getSol_code_ref().toUpperCase()))
@@ -1089,7 +1159,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							if(bean.getSol_code_ref().equalsIgnoreCase(check_sol_code_ref.get(i).get(0))) {	
 								List<String> items = Arrays.asList(check_sol_code_ref.get(i).get(11).split("\\s*,\\s*"));
 								
-								String[] splitString = currentMoc.split("MOC");
+								String[] splitString = bean.getMoc().split("MOC");
 							    int m = Integer.valueOf(splitString[1]);
 								String Previousmonth = "";
 								
@@ -1417,17 +1487,44 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						query.setString(11,bean.getPrice_off());
 					}
 					else {
-					if(!bean.getPrice_off().contains("%"))
-					query.setString(11, bean.getPrice_off().isEmpty()  ? ""
-							: String.valueOf(
-									(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100)
-											/ 100));
-					else
-						query.setString(11, bean.getPrice_off().split("%")[0].isEmpty() ? ""
-								: String.valueOf(
-										(double) Math.round(Double.parseDouble(bean.getPrice_off().split("%")[0]) * 100)
-												/ 100)+"%");
+					//Kajal G changes start for Sprint-10
+						
+//					if(!bean.getPrice_off().contains("%"))
+//					query.setString(11, bean.getPrice_off().isEmpty()  ? ""
+//							: String.valueOf(
+//									(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100)
+//											/ 100));
+//					else
+//						query.setString(11, bean.getPrice_off().split("%")[0].isEmpty() ? ""
+//								: String.valueOf(
+//										(double) Math.round(Double.parseDouble(bean.getPrice_off().split("%")[0]) * 100)
+//												/ 100)+"%");
+
+						String priceOffValue = bean.getPrice_off();
+						if(bean.getOffer_mod().contains("%") && !bean.getPrice_off().contains("%") && !bean.getPrice_off().isEmpty()) {
+							Double intPriceOff = Double.parseDouble(bean.getPrice_off());
+							if(intPriceOff < 1) {
+								double priceOff;
+								priceOff = intPriceOff*100;
+								double priceOffVal = Math.round(priceOff*100.0)/100.0;
+								priceOffValue = priceOffVal +"%";
+							}
+							query.setString(11, priceOffValue);
+						}
+						else {
+							if(!bean.getPrice_off().contains("%"))
+							query.setString(11, bean.getPrice_off().isEmpty()  ? ""
+									: String.valueOf(
+											(double) Math.round(Double.parseDouble(bean.getPrice_off()) * 100)
+													/ 100));
+							else
+								query.setString(11, bean.getPrice_off().split("%")[0].isEmpty() ? ""
+										: String.valueOf(
+												(double) Math.round(Double.parseDouble(bean.getPrice_off().split("%")[0]) * 100)
+														/ 100)+"%");
+						}
 					}
+					//Kajal G changes end for Sprint-10
 					query.setString(13, bean.getCluster());
 					query.setString(14, bean.getYear());
 					query.setString(15, bean.getBranch());

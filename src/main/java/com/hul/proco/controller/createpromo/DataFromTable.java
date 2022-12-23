@@ -112,7 +112,8 @@ public class DataFromTable {
 	public void getConbination(Map<String,String> h)
 	{
 		//bean.getMoc_name() + bean.getPpm_account() + bean.getYear() + sale_cate
-		String q_String="SELECT MOC_NAME,MOC_YEAR,PPM_ACCOUNT,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER,CR_SOL_TYPE FROM TBL_PROCO_PROMOTION_MASTER_V2 ";
+//		String q_String="SELECT MOC_NAME,MOC_YEAR,PPM_ACCOUNT,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER,CR_SOL_TYPE FROM TBL_PROCO_PROMOTION_MASTER_V2 ";
+		String q_String = "SELECT MOC_NAME,MOC_YEAR,PPM_ACCOUNT,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER,CR_SOL_TYPE,OFFER_MODALITY,CHANNEL_NAME FROM TBL_PROCO_PROMOTION_MASTER_V2 PM INNER JOIN (SELECT CONCAT(SUBSTRING(MOC, 3, 4),SUBSTRING(MOC,1,2)) AS CURRENT_MOC FROM TBL_VAT_MOC_MASTER WHERE STATUS = 'Y' LIMIT 1) MM ON 1=1 WHERE CONCAT(SUBSTRING(PM.MOC, 3, 4),SUBSTRING(PM.MOC,1,2)) >= MM.CURRENT_MOC AND Status !='42'";
 		List<Object[]> mapdata_list = sessionFactory.getCurrentSession().createNativeQuery(q_String).list();
 		for (Object[] data : mapdata_list) {
 			h.put(String.valueOf(data[0]).toUpperCase() + String.valueOf(data[1]).toUpperCase()
@@ -126,6 +127,22 @@ public class DataFromTable {
 			h.put(String.valueOf(data[0]).toUpperCase() + String.valueOf(data[1]).toUpperCase()
 					+ String.valueOf(data[2]).toUpperCase() + String.valueOf(data[3]).toUpperCase()+String.valueOf(data[6]).toUpperCase()+String.valueOf(data[7]).toUpperCase(),
 					String.valueOf(data[4]) + " " + String.valueOf(data[5])); 
+			
+			//Added by Kajal G for channel CNC and CNC NUTS in SPRINT-10
+			if (String.valueOf(data[9]).toUpperCase().equalsIgnoreCase("CNC") || String.valueOf(data[9]).toUpperCase().equalsIgnoreCase("CNC NUTS")) {
+				h.put(String.valueOf(data[0]).toUpperCase() + String.valueOf(data[1]).toUpperCase()
+						+ String.valueOf(data[2]).toUpperCase() + String.valueOf(data[3]).toUpperCase()+ String.valueOf(data[8]).toUpperCase(),
+						String.valueOf(data[4]) + " " + String.valueOf(data[5]));
+				
+				h.put(String.valueOf(data[0]).toUpperCase() + String.valueOf(data[1]).toUpperCase()
+						+ String.valueOf(data[2]).toUpperCase() + String.valueOf(data[3]).toUpperCase()+String.valueOf(data[6]).toUpperCase()+ String.valueOf(data[8]).toUpperCase(),
+						String.valueOf(data[4]) + " " + String.valueOf(data[5]));
+				
+				h.put(String.valueOf(data[0]).toUpperCase() + String.valueOf(data[1]).toUpperCase()
+						+ String.valueOf(data[2]).toUpperCase() + String.valueOf(data[3]).toUpperCase()+String.valueOf(data[6]).toUpperCase()+String.valueOf(data[7]).toUpperCase()+ String.valueOf(data[8]).toUpperCase(),
+						String.valueOf(data[4]) + " " + String.valueOf(data[5])); 
+				
+			}
 			
 		}
 		
@@ -327,13 +344,6 @@ public class DataFromTable {
 		return list;
 	}
 	
-	//Added by Kajal G in Spint-10
-	public String getCurrentMoc() {
-		String getCurrentMoc = "SELECT MOC_NAME FROM TBL_VAT_MOC_MASTER WHERE STATUS = 'Y' ORDER BY UPDATE_STAMP DESC LIMIT 1";
-		Query query1  = sessionFactory.getCurrentSession().createNativeQuery(getCurrentMoc);
-		List<String> currentMoc = query1.getResultList();
-		return currentMoc.get(0);
-	}
 	private ArrayList<String> getValidBasepack() {
 		String basepack = "SELECT DISTINCT BASEPACK FROM TBL_PROCO_PRODUCT_MASTER_V2 WHERE IS_ACTIVE=1 AND PPM_STATUS='YES'";
 		return (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(basepack).list();
@@ -442,9 +452,14 @@ public class DataFromTable {
 				return String.valueOf(price*quanti);
 			}else
 			{
+				
 				Double price=Double.valueOf(price_off.substring(0,price_off.length()-1));
 				Double quanti=Double.valueOf(quantity);
-				return  String.valueOf(price*quanti*Double.parseDouble(map.get(basepack+"_MRP")));
+				//Added by Kajal G for SPRINT-10
+				if(map.get(basepack) != null)
+					return  String.valueOf(price*quanti*Double.parseDouble(map.get(basepack+"_MRP")));
+				else
+					return String.valueOf(price*quanti*0);
 			}
 		}
 		
@@ -456,7 +471,8 @@ public class DataFromTable {
 	 */
 	public void getAllSOLCodeAndPromoId(Map<String,String> crEntries,Map<String,String> date_extension,Map<String,ArrayList<String>> check_existing_sol,List<List<String>> check_sol_code_ref) {
 		// TODO Auto-generated method stub
-		String query="SELECT DISTINCT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,CASE WHEN LOCATE('%', A.PRICE_OFF) > 0 THEN A.PRICE_OFF ELSE ROUND(A.PRICE_OFF, 0) END AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR,B.MOC AS PMR_MOC"
+		//String query="SELECT DISTINCT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,CASE WHEN LOCATE('%', A.PRICE_OFF) > 0 THEN A.PRICE_OFF ELSE ROUND(A.PRICE_OFF, 0) END AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR,B.MOC AS PMR_MOC"
+		String query="SELECT DISTINCT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER, A.PRICE_OFF AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR,B.MOC AS PMR_MOC"
 				+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 A INNER JOIN TBL_PROCO_MEASURE_MASTER_V2 B "
 				+ "	ON "
 				+ "	A.PROMO_ID=B.PROMO_ID "
