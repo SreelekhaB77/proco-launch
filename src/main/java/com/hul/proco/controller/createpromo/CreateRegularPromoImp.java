@@ -142,7 +142,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 		for (CreateBeanRegular bean : beans) {
 			//Added by Kajal G for rounding off price value in SPRINT-10
-			if(bean.getOffer_mod().contains("%") && !bean.getPrice_off().contains("%")) {
+			if(bean.getOffer_mod().contains("%") && !bean.getPrice_off().contains("%") && !bean.getPrice_off().isEmpty()) {
 				Double intPriceOff = Double.parseDouble(bean.getPrice_off());
 				if(intPriceOff < 1) {
 					double priceOff;
@@ -193,7 +193,24 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								: String.valueOf(
 										(double) Math.round(Double.parseDouble(bean.getQuantity()) * 100) / 100);
 					
+						//Added by Kajal G for SPRINT-10
+						String priceOff = bean.getPrice_off();
+                        if((bean.getPrice_off().contains("%"))) {
+                            priceOff = bean.getPrice_off().split("%")[0];
+                        }
+                        if(!isStringNumber(priceOff))
+                        {
+                            if (flag == 1)
+                                error_msg = error_msg + ",Invalid price off";
+                            else
+                                error_msg = error_msg + "Invalid price off";
+                            flag=1;
+                            query.setString(12,bean.getBudget());
+
+                        } else
+                            query.setString(12,datafromtable.calculateBudget(bean.getChannel(), quantity, bean.getPrice_off(), budget, bean.getBasepack_code(), commanmap));
 						
+                        /*
 						if(bean.getPrice_off().contains("%"))
 						{
 							if(!isStringNumber(bean.getPrice_off().split("%")[0]))
@@ -217,7 +234,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}else
 						    query.setString(12,datafromtable.calculateBudget(bean.getChannel(), quantity, bean.getPrice_off(), budget, bean.getBasepack_code(), commanmap));
 						
-						
+						*/
 						
 						query.setString(17, "NE");
 						if (bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity()) <= 0) {
@@ -662,7 +679,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					} else {
 						//Kajal G changes start for Sprint-10
 						String priceOffValue = bean.getPrice_off();
-						if(bean.getOffer_mod().contains("%") && !bean.getPrice_off().contains("%")) {
+						if(bean.getOffer_mod().contains("%") && !bean.getPrice_off().contains("%") && !bean.getPrice_off().isEmpty()) {
 							Double intPriceOff = Double.parseDouble(bean.getPrice_off());
 							if(intPriceOff < 1) {
 								double priceOff;
@@ -1483,7 +1500,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 //												/ 100)+"%");
 
 						String priceOffValue = bean.getPrice_off();
-						if(bean.getOffer_mod().contains("%") && !bean.getPrice_off().contains("%")) {
+						if(bean.getOffer_mod().contains("%") && !bean.getPrice_off().contains("%") && !bean.getPrice_off().isEmpty()) {
 							Double intPriceOff = Double.parseDouble(bean.getPrice_off());
 							if(intPriceOff < 1) {
 								double priceOff;
