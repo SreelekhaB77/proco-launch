@@ -76,6 +76,17 @@ public interface PromoListingService {
 	public List<String> getPromoPrimaryChannels(String[] kamAccountsArr); //Added By Sarin - Sprint10
 
 	public String uploadDroppedOfferApprovalData(PromoCrBean[] beanArray, String userId) throws Exception;
+    
+	//Added by kavitha D-SPRINT 11 changes-STARTS
+	public List<String> getProcoBasepack();
+	
+	public List<String> getPpmAccount();
+
+	public List<String> getProcoChannel();
+
+	public List<String> getProcoCluster();
+	//Added by kavitha D-SPRINT 11 changes-ENDS
+
 
 	
 }

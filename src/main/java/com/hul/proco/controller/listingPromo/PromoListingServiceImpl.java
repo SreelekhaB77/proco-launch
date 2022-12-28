@@ -337,6 +337,25 @@ public class PromoListingServiceImpl implements PromoListingService {
 	public List<String> getPromoPrimaryChannels(String[] kamAccountsArr) {
 		return promoListingDAO.getPromoPrimaryChannels(kamAccountsArr);
 	}
+	
+	//Added by kavitha D-SPRINT 11 changes starts
+	@Override
+	public List<String> getProcoBasepack() {
+		return promoListingDAO.getProcoBasepack();
+	}
+	
+	@Override
+	public List<String> getPpmAccount() {
+		return promoListingDAO.getPpmAccount();
+	}
+	@Override
+	public List<String> getProcoChannel() {
+		return promoListingDAO.getProcoChannel();
+	}
+	@Override
+	public List<String> getProcoCluster() {
+		return promoListingDAO.getProcoCluster();
+	}
 
 
 }

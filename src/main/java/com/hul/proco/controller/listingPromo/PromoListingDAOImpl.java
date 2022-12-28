@@ -2222,7 +2222,62 @@ public class PromoListingDAOImpl implements PromoListingDAO {
         }
         return primaryChannelList;
     }
+
+	@Override
+	public List<String> getProcoBasepack() {		
+		List<String> promoBasepack = new ArrayList<String>();
+		try {
+			Query qryPromoBasepack = sessionFactory.getCurrentSession().createNativeQuery(" SELECT DISTINCT BASEPACK FROM TBL_PROCO_PRODUCT_MASTER_V2 WHERE IS_ACTIVE = 1 ");
+			promoBasepack = qryPromoBasepack.list();
+		} catch (Exception ex) {
+			logger.debug("Exception: ", ex);
+			return null;
+		}
+		return promoBasepack;
 	
+		
+	}
+		
+	@Override
+	public List<String> getPpmAccount() {
+		List<String> promoAccount = new ArrayList<String>();
+		try {
+			Query qryProcoaccount = sessionFactory.getCurrentSession().createNativeQuery(" SELECT DISTINCT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y' ORDER BY PPM_ACCOUNT ");
+			promoAccount = qryProcoaccount.list();
+		} catch (Exception ex) {
+			logger.debug("Exception: ", ex);
+			return null;
+		}
+		return promoAccount;		
+	}
+	
+	@Override
+	public List<String> getProcoChannel() {
+		List<String> promoChannel = new ArrayList<String>();
+		try {
+			Query qryPromoChannel = sessionFactory.getCurrentSession().createNativeQuery(" SELECT DISTINCT CHANNEL_NAME FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y' ORDER BY CHANNEL_NAME ");
+			promoChannel = qryPromoChannel.list();
+		} catch (Exception ex) {
+			logger.debug("Exception: ", ex);
+			return null;
+		}
+		return promoChannel;
+		
+	}
+	
+	@Override
+	public List<String> getProcoCluster() {
+		List<String> promoCluster = new ArrayList<String>();
+		try {
+			Query qryPromoCluster = sessionFactory.getCurrentSession().createNativeQuery(" SELECT DISTINCT CLUSTER FROM TBL_PROCO_CLUSTER_MASTER_V2 ORDER BY CLUSTER ");
+			promoCluster = qryPromoCluster.list();
+		} catch (Exception ex) {
+			logger.debug("Exception: ", ex);
+			return null;
+		}
+		return promoCluster;	
+		
+	}
 
 
 }

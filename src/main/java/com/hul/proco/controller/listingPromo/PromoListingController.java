@@ -301,6 +301,12 @@ public class PromoListingController {
 		List<String> changesMadeListForEdit = promoListingService.getChangesMadeListForEdit();
 		List<String> reasonListForEdit = promoListingService.getReasonListForEdit();
 		List<String> mocValue = promoListingService.getPromoMoc();
+		//Kavitha D changes for filters-SPROINT 11 starts
+		List<String> procoBasepack = promoListingService.getProcoBasepack();
+		List<String> ppmAccount = promoListingService.getPpmAccount();
+		List<String> procoChannel = promoListingService.getProcoChannel();
+		List<String> procoCluster = promoListingService.getProcoCluster();
+		//Kavitha D changes for filters-SPRINT 11 ends
 				
 		model.addAttribute("mocJson", mocJson);
 		model.addAttribute("years", yearList);
@@ -314,6 +320,11 @@ public class PromoListingController {
 		model.addAttribute("changesMadeList", changesMadeListForEdit);
 		model.addAttribute("reasonList", reasonListForEdit);
 		model.addAttribute("mocList", mocValue);
+		model.addAttribute("procoBasepacks", procoBasepack);
+		model.addAttribute("ppmAccountList", ppmAccount);
+		model.addAttribute("procoChannelList", procoChannel);
+		model.addAttribute("procoClusterList", procoCluster);
+
 
 	}
 

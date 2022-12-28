@@ -81,6 +81,13 @@ public class ProcoHomeController {
 		
 		List<String> mocValue = promoListingService.getPromoMoc(); //Added by Kavitha D for promo listing MOC filter-SPRINT 9
 		
+		//Kavitha D changes for filters-SPROINT 11 starts
+		List<String> procoBasepack = promoListingService.getProcoBasepack();
+		List<String> ppmAccount = promoListingService.getPpmAccount();
+		List<String> procoChannel = promoListingService.getProcoChannel();
+		List<String> procoCluster = promoListingService.getProcoCluster();
+		//Kavitha D changes for filters-SPRINT 11 ends
+		
 		if(roleId.equalsIgnoreCase("TME") || roleId.equalsIgnoreCase("DP")){
 			List<String> category = createPromoService.getAllCategories(userId);
 			List<String> brand = createPromoService.getAllBrands(userId);
@@ -102,6 +109,11 @@ public class ProcoHomeController {
 		model.addAttribute("modality", modality);
 		model.addAttribute("offerTypes", offerTypes);
 		model.addAttribute("mocList", mocValue);
+		model.addAttribute("procoBasepacks", procoBasepack);
+		model.addAttribute("ppmAccountList", ppmAccount);
+		model.addAttribute("procoChannelList", procoChannel);
+		model.addAttribute("procoClusterList", procoCluster);
+
 
 		return new ModelAndView("proco/proco_promo_listing");
 	}

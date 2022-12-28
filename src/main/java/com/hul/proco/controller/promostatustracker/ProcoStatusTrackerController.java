@@ -109,6 +109,14 @@ public class ProcoStatusTrackerController {
 		//Sarin Changes Performance - Ends
 		long endTime = System.currentTimeMillis();
 		logger.info("duration of Promo page intialization: "+(endTime-startTime));
+		
+		//Kavitha D changes for filter-SPRINT 11 starts
+		List<String> procoBasepack = promoListingService.getProcoBasepack();
+		List<String> ppmAccount = promoListingService.getPpmAccount();
+		List<String> procoChannel = promoListingService.getProcoChannel();
+		List<String> procoCluster = promoListingService.getProcoCluster();
+		//Kavitha D changes for filter-SPRINT 11 ends
+
 		model.addAttribute("geographyJson", geographyJson);
 		model.addAttribute("mocJson", mocJson);
 		model.addAttribute("years", yearList);
@@ -120,7 +128,10 @@ public class ProcoStatusTrackerController {
 		model.addAttribute("basepacks", basepacks);
 		model.addAttribute("promoIds", promoIds);
 		model.addAttribute("mocList", mocValue);
-
+		model.addAttribute("procoBasepacks", procoBasepack);
+		model.addAttribute("ppmAccountList", ppmAccount);
+		model.addAttribute("procoChannelList", procoChannel);
+		model.addAttribute("procoClusterList", procoCluster);
 		return new ModelAndView("proco/proco_status_tracker");
 	}
 	
