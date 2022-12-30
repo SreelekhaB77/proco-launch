@@ -82,7 +82,7 @@ table {
 
 .middle-section {
 	margin-top: 80px;
-	margin-bottom: 54px
+	margin-bottom: 5px
 }
 
 .dataTable {
@@ -284,7 +284,7 @@ div.login-box:hover {
 }
 #table-id-promo-list-table_length{
 text-align: left;
-    padding: 20px 0px;
+    padding: 20px 20px;
     color: rgb(41, 41, 10);
 }
 .table-id-promo-list-table_filter{
@@ -300,6 +300,7 @@ text-align: left;
 /*------------------------*/
 .col-sm-4 {
 	margin-bottom: 15px;
+	margin-top: 15px;
 }
 
 .promo-create {

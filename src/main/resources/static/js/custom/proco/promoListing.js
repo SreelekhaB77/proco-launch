@@ -157,6 +157,24 @@ $(document).ready(function() {
 						year = $(this).val();
 						promoTable.draw();
 						});
+						//viswas added this changes for filters in sprint-11	
+					$('#ProcoBasepack').change(function(){
+						ProcoBasepack = $(this).val();
+						promoTable.draw();
+						});
+						
+						$('#PpmAccount').change(function(){
+							PpmAccount = $(this).val();
+							PromoTable.draw();
+						});
+						$('#ProcoClusterList').change(function(){
+							ProcoClusterList = $(this).val();
+							PromoTable.draw();
+						});
+						$('#ProcoChannelList').change(function(){
+							ProcoChannelList = $(this).val();
+							PromoTable.draw();
+						});
 						
 						//bharati added for sprint-9 moc filter US
 						$('#Mocvalue').change(function(){
@@ -206,7 +224,12 @@ $(document).ready(function() {
 				    	                {"name": "offerType", "value": offerType}, 
 				    	                {"name": "modality", "value": modality}, 
 				    	                {"name": "year","value": year},
-				    	                {"name": "moc","value": Mocvalue} //bharati changes this mocVal to MocValue in sprint-9
+				    	                {"name": "moc","value": Mocvalue}, //bharati changes this mocVal to MocValue in sprint-9
+				    	                  //viswas add this changes in sprint-11
+				    	                {"name": "promobasepack","value": ProcoBasepack},
+				    	                {"name": "ppmaccount","value": PpmAccount},
+				    	                {"name": "prococluster","value":ProcoClusterList},
+				    	                {"name": "procochannel","value": ProcoChannelList}//viswas chnages this lists in sprint-11
 				    	                
 				    	               
 				    	                );
@@ -312,7 +335,7 @@ $(document).ready(function() {
 
 	                     $('#DataTables_Table_0_length').css({
 	                       
-	                         'padding': '20px 0'
+	                         'padding': '20px 30px'
 	                     });
 	                     $('#DataTables_Table_0_length').css({
 	                         'color': '#29290a'
@@ -348,13 +371,13 @@ $(document).ready(function() {
 	                         'float': 'right'
 	                     });
 				       
-	                     $('.promo-filter').css({
+	                    $('.promo-filter').css({
 	                    	 'float': 'right',
 	                    	  'padding-left': '10px',
 	                    	  'padding-top': '20px',
 	                    	    'height': '75px', 
 	                    	    'width': 'none',
-	                    	    'border-left': '2px #e8e8e8 solid'
+	                    	   /*  'border-left': '2px #e8e8e8 solid'*/
 	                     });
 				       var categoryTags = basepacks;
 						var categoryNewList = [];
