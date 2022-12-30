@@ -9,11 +9,11 @@ import com.hul.proco.controller.listingPromo.PromoListingBean;
 import com.hul.proco.controller.listingPromo.PromoMeasureReportBean;
 
 public interface ProcoStatusTrackerService {
-	public List<PromoListingBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String moc,String searchParameter);
+	public List<PromoListingBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster,String searchParameter);
 	
-	public int getPromoListRowCount(String moc);
+	public int getPromoListRowCount(String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster);
 	
-	public List<ArrayList<String>> getPromotionStatusTracker(ArrayList<String> headerList, String moc, String userId);
+	public List<ArrayList<String>> getPromotionStatusTracker(ArrayList<String> headerList, String moc, String promobasepack,String ppmaccount,String procochannel,String prococluster,String userId);
 	public List<ArrayList<String>> getPromotionStatusTrackerCustomerPortal(ArrayList<String> headerList, String cagetory,
 			String brand, String basepack, String custChainL1, String custChainL2, String geography, String offerType,
 			String modality, String year, String moc, String userId, int active, String promoId);
