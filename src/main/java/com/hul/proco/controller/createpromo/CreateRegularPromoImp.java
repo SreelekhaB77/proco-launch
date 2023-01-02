@@ -126,7 +126,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		datafromtable.getConbination(commanmap);
 		datafromtable.mapPPMandChannel(commanmap);
 		datafromtable.basePackAndSaleCategory(commanmap);
-		List<String> AQlist = datafromtable.getAQEntries();
+//		List<String> AQlist = datafromtable.getAQEntries();
 		
 		Map<String, String> crEntries = new HashMap<String, String>();
 		Map<String, String> date_extensionMap = new HashMap<String, String>();
@@ -1142,6 +1142,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						moc=datafromtable.getMOC(bean.getMoc_name(), bean.getYear());
 					}
 					
+					/*
 					//Added by Kajal G for Sprint-10
 					if(bean.getSol_type().trim().equalsIgnoreCase("Additional Quantity")){
 						if(!AQlist.contains(bean.getPpm_account())) {
@@ -1152,6 +1153,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							flag = 1;
 						}
 					}
+					*/
 					
 					//Added by Kajal G for Sprint-10
 					if (bean.getSol_type().trim().equalsIgnoreCase("Date Extension")){
