@@ -113,7 +113,7 @@ public class DataFromTable {
 	{
 		//bean.getMoc_name() + bean.getPpm_account() + bean.getYear() + sale_cate
 //		String q_String="SELECT MOC_NAME,MOC_YEAR,PPM_ACCOUNT,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER,CR_SOL_TYPE FROM TBL_PROCO_PROMOTION_MASTER_V2 ";
-		String q_String = "SELECT MOC_NAME,MOC_YEAR,PPM_ACCOUNT,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER,CR_SOL_TYPE,OFFER_MODALITY,CHANNEL_NAME FROM TBL_PROCO_PROMOTION_MASTER_V2 PM INNER JOIN (SELECT CONCAT(SUBSTRING(MOC, 3, 4),SUBSTRING(MOC,1,2)) AS CURRENT_MOC FROM TBL_VAT_MOC_MASTER WHERE STATUS = 'Y' LIMIT 1) MM ON 1=1 WHERE CONCAT(SUBSTRING(PM.MOC, 3, 4),SUBSTRING(PM.MOC,1,2)) >= MM.CURRENT_MOC AND Status !='42'";
+		String q_String = "SELECT MOC_NAME,MOC_YEAR,PPM_ACCOUNT,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER,CR_SOL_TYPE,IF (OFFER_TYPE = 'Ground Ops', OFFER_TYPE, OFFER_MODALITY) AS OFFER_MODALITY,CHANNEL_NAME FROM TBL_PROCO_PROMOTION_MASTER_V2 PM INNER JOIN (SELECT CONCAT(SUBSTRING(MOC, 3, 4),SUBSTRING(MOC,1,2)) AS CURRENT_MOC FROM TBL_VAT_MOC_MASTER WHERE STATUS = 'Y' LIMIT 1) MM ON 1=1 WHERE CONCAT(SUBSTRING(PM.MOC, 3, 4),SUBSTRING(PM.MOC,1,2)) >= MM.CURRENT_MOC AND Status !='42'";
 		List<Object[]> mapdata_list = sessionFactory.getCurrentSession().createNativeQuery(q_String).list();
 		for (Object[] data : mapdata_list) {
 			h.put(String.valueOf(data[0]).toUpperCase() + String.valueOf(data[1]).toUpperCase()
@@ -129,7 +129,7 @@ public class DataFromTable {
 					String.valueOf(data[4]) + " " + String.valueOf(data[5])); 
 			
 			//Added by Kajal G for channel CNC and CNC NUTS in SPRINT-10
-			if (String.valueOf(data[9]).toUpperCase().equalsIgnoreCase("CNC") || String.valueOf(data[9]).toUpperCase().equalsIgnoreCase("CNC NUTS")) {
+//			if (String.valueOf(data[9]).toUpperCase().equalsIgnoreCase("CNC") || String.valueOf(data[9]).toUpperCase().equalsIgnoreCase("CNC NUTS")) {
 				h.put(String.valueOf(data[0]).toUpperCase() + String.valueOf(data[1]).toUpperCase()
 						+ String.valueOf(data[2]).toUpperCase() + String.valueOf(data[3]).toUpperCase()+ String.valueOf(data[8]).toUpperCase(),
 						String.valueOf(data[4]) + " " + String.valueOf(data[5]));
@@ -142,7 +142,7 @@ public class DataFromTable {
 						+ String.valueOf(data[2]).toUpperCase() + String.valueOf(data[3]).toUpperCase()+String.valueOf(data[6]).toUpperCase()+String.valueOf(data[7]).toUpperCase()+ String.valueOf(data[8]).toUpperCase(),
 						String.valueOf(data[4]) + " " + String.valueOf(data[5])); 
 				
-			}
+//			}
 			
 		}
 		
@@ -474,9 +474,8 @@ public class DataFromTable {
 		//String query="SELECT DISTINCT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,CASE WHEN LOCATE('%', A.PRICE_OFF) > 0 THEN A.PRICE_OFF ELSE ROUND(A.PRICE_OFF, 0) END AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR,B.MOC AS PMR_MOC"
 		String query="SELECT DISTINCT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER, A.PRICE_OFF AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR,B.MOC AS PMR_MOC"
 				+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 A INNER JOIN TBL_PROCO_MEASURE_MASTER_V2 B "
-				+ "	ON "
-				+ "	A.PROMO_ID=B.PROMO_ID "
-				+ "	WHERE B.PROMOTION_STATUS IN ('APPROVED','AMEND APPROVED','SUBMITTED','AMEND SUBMITTED')";
+				+ "	ON A.PROMO_ID=B.PROMO_ID "
+				+ "	WHERE B.PROMOTION_STATUS IN ('Approved','AmendApproved','Submitted','AmendSubmitted')";
 		
 		List<Object[]> list=sessionFactory.getCurrentSession().createNativeQuery(query	).list();
 		

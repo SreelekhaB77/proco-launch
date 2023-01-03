@@ -155,19 +155,25 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			
 			if (template.equalsIgnoreCase("new") || template.equalsIgnoreCase("regular")) {
 				if (!duplicateMap.containsKey(
-						bean.getMoc_name() + bean.getYear() + bean.getPpm_account() + bean.getBasepack_code()+bean.getCluster())) {
+						bean.getMoc_name() + bean.getYear() + bean.getPpm_account() + bean.getBasepack_code()+bean.getCluster()+bean.getOffer_desc()+ bean.getOfr_type()+bean.getOffer_mod())) {
 					duplicateMap.put(
-							bean.getMoc_name() + bean.getYear() + bean.getPpm_account() + bean.getBasepack_code()+bean.getCluster(), "");
+							bean.getMoc_name() + bean.getYear() + bean.getPpm_account() + bean.getBasepack_code()+bean.getCluster()+bean.getOffer_desc()+ bean.getOfr_type()+bean.getOffer_mod(), "");
 					if (template.equalsIgnoreCase("new")) {
 						// MOC_NAME-YEAR – Basepack – Account – Cluster
 						//Added by Kajal G for channel CNC and CNC NUTS in SPRINT-10
 						String duplicateKey = bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
 								+ bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()
 								+ bean.getCluster().toUpperCase();
-						if(bean.getChannel().equalsIgnoreCase("CNC") || bean.getChannel().equalsIgnoreCase("CNC NUTS"))
-								duplicateKey = duplicateKey+bean.getOffer_mod().toUpperCase();
+//						if(bean.getChannel().equalsIgnoreCase("CNC") || bean.getChannel().equalsIgnoreCase("CNC NUTS"))
+//								duplicateKey = duplicateKey+bean.getOffer_mod().toUpperCase();
 						
-						if (commanmap.containsKey(duplicateKey)) {
+						if(bean.getOfr_type().equalsIgnoreCase("Ground Ops"))
+							duplicateKey = duplicateKey+bean.getOfr_type().toUpperCase();
+						else
+							duplicateKey = duplicateKey+bean.getOffer_mod().toUpperCase();
+						
+						
+						if (commanmap.containsKey(duplicateKey) && !bean.getOfr_type().equalsIgnoreCase("Visibility")) {
 							
 							if (flag == 1)
 								error_msg = error_msg + ",promo entry already exists against promo ID, created by "
@@ -413,11 +419,15 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					if (flag == 0) {
 						//Added by Kajal G for channel CNC and CNC NUTS in SPRINT-10
 						String duplicateKey = bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase();
-						if(bean.getChannel().equalsIgnoreCase("CNC") || bean.getChannel().equalsIgnoreCase("CNC NUTS"))
-								duplicateKey = duplicateKey+bean.getOffer_mod().toUpperCase();	
+//						if(bean.getChannel().equalsIgnoreCase("CNC") || bean.getChannel().equalsIgnoreCase("CNC NUTS"))
+//								duplicateKey = duplicateKey+bean.getOffer_mod().toUpperCase();	
 						
-						if (commanmap
-								.containsKey(duplicateKey)) {
+						if(bean.getOfr_type().equalsIgnoreCase("Ground Ops"))
+							duplicateKey = duplicateKey+bean.getOfr_type().toUpperCase();
+						else
+							duplicateKey = duplicateKey+bean.getOffer_mod().toUpperCase();
+						
+						if (commanmap.containsKey(duplicateKey) && !bean.getOfr_type().equalsIgnoreCase("Visibility")) {
 							if (!template.equalsIgnoreCase("regular")) {
 								if (flag == 1) {
 
@@ -776,12 +786,17 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			
 				//Added by Kajal G for channel CNC and CNC NUTS in SPRINT-10
 				String duplicateKey = bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase() + bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()+ bean.getCluster().toUpperCase() + bean.getSol_type().toUpperCase();
-				if(bean.getChannel().equalsIgnoreCase("CNC") || bean.getChannel().equalsIgnoreCase("CNC NUTS"))
-						duplicateKey = duplicateKey+bean.getOffer_mod().toUpperCase();	
+//				if(bean.getChannel().equalsIgnoreCase("CNC") || bean.getChannel().equalsIgnoreCase("CNC NUTS"))
+//						duplicateKey = duplicateKey+bean.getOffer_mod().toUpperCase();	
+				
+				if(bean.getOfr_type().equalsIgnoreCase("Ground Ops"))
+					duplicateKey = duplicateKey+bean.getOfr_type().toUpperCase();
+				else
+					duplicateKey = duplicateKey+bean.getOffer_mod().toUpperCase();
 				
 				if (commanmap
 						.containsKey(duplicateKey)
-						&& !bean.getSol_type().trim().equalsIgnoreCase("Top Up"))
+						&& !bean.getSol_type().trim().equalsIgnoreCase("Top Up") && !bean.getOfr_type().equalsIgnoreCase("Visibility"))
 				{
 					if (flag == 1)
 						error_msg = error_msg + ",promo entry already exists";
@@ -805,10 +820,12 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				query.setString(26, commanmap.get(bean.getBasepack_code().toUpperCase()));
 				
 				if (!duplicateMap.containsKey(bean.getMoc_name().toUpperCase() +bean.getYear().toUpperCase()+ bean.getBasepack_code().toUpperCase()
-						+ bean.getPpm_account().toUpperCase() + bean.getCluster().toUpperCase() + bean.getSol_type().trim().toUpperCase())) {
+						+ bean.getPpm_account().toUpperCase() + bean.getCluster().toUpperCase() + bean.getSol_type().trim().toUpperCase()
+						+ bean.getOffer_desc() + bean.getOfr_type() + bean.getOffer_mod())) {
 
 					duplicateMap.put(bean.getMoc_name().toUpperCase() +bean.getYear().toUpperCase()+ bean.getBasepack_code().toUpperCase()
-							+ bean.getPpm_account().toUpperCase() + bean.getCluster().toUpperCase() + bean.getSol_type().trim().toUpperCase(), "");
+							+ bean.getPpm_account().toUpperCase() + bean.getCluster().toUpperCase() + bean.getSol_type().trim().toUpperCase()
+							+ bean.getOffer_desc()+ bean.getOfr_type()+ bean.getOffer_mod(), "");
 					
 					if(!bean.getPrice_off().contains("%")) {
 					if (bean.getPrice_off().isEmpty() || !isStringNumber(bean.getPrice_off())) {
