@@ -472,7 +472,7 @@ public class DataFromTable {
 	public void getAllSOLCodeAndPromoId(Map<String,String> crEntries,Map<String,String> date_extension,Map<String,ArrayList<String>> check_existing_sol,List<List<String>> check_sol_code_ref) {
 		// TODO Auto-generated method stub
 		//String query="SELECT DISTINCT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,CASE WHEN LOCATE('%', A.PRICE_OFF) > 0 THEN A.PRICE_OFF ELSE ROUND(A.PRICE_OFF, 0) END AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR,B.MOC AS PMR_MOC"
-		String query="SELECT DISTINCT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER, A.PRICE_OFF AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR,B.MOC AS PMR_MOC"
+		String query="SELECT DISTINCT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER, A.PRICE_OFF AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR,B.MOC AS PMR_MOC,A.OFFER_MODALITY"
 				+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 A INNER JOIN TBL_PROCO_MEASURE_MASTER_V2 B "
 				+ "	ON A.PROMO_ID=B.PROMO_ID "
 				+ "	WHERE B.PROMOTION_STATUS IN ('Approved','AmendApproved','Submitted','AmendSubmitted')";
@@ -552,18 +552,18 @@ public class DataFromTable {
 			//B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,A.PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR
 			crEntries.put(
 					String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[10]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
-							+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[6]).toUpperCase() + String.valueOf(obj[5]).toUpperCase(),
+							+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[6]).toUpperCase() + String.valueOf(obj[5]).toUpperCase()+ String.valueOf(obj[12]).toUpperCase(),
 					String.valueOf(obj[5]).toUpperCase()); // for Missing geo and basepack addition if present
 			
 			crEntries.put(
 					String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[10]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
-							+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[6]).toUpperCase(),
+							+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[6]).toUpperCase()+ String.valueOf(obj[12]).toUpperCase(),
 					String.valueOf(obj[5]).toUpperCase());  // for Missing geo
 			
 			//B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,A.PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR
 			crEntries.put(
 					String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[10]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
-						+ String.valueOf(obj[5]).toUpperCase()+String.valueOf(obj[6]).toUpperCase(),
+						+ String.valueOf(obj[5]).toUpperCase()+String.valueOf(obj[6]).toUpperCase()+ String.valueOf(obj[12]).toUpperCase(),
 					String.valueOf(obj[4]).toUpperCase()); // Addition basepack 
 			
 			//PROMOTION_ID-0, PROMO_ID-1, MOC_NAME-2, PPM_ACCOUNT-3, BASEPACK_CODE-4, CLUSTER-5,PRICE_OFF-6, START_DATE-7, END_DATE-8, PROMO_TIMEPERIOD-9, MOC_YEAR -10
