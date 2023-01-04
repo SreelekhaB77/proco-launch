@@ -50,7 +50,7 @@ public class DataFromTable {
 					+ "INNER JOIN TBL_PROCO_INVESTMENT_TYPE_MASTER_V2 B ON B.OFFER_MODALITY = T.OFFER_MODALITY AND B.OFFER_TYPE = T.OFFER_TYPE "
 					+ "INNER JOIN  (SELECT BASEPACK,SALES_CATEGORY FROM (SELECT ROW_NUMBER() OVER (PARTITION BY BASEPACK ORDER BY BASEPACK,SALES_CATEGORY) AS ROW_NUM,BASEPACK,SALES_CATEGORY FROM TBL_PROCO_PRODUCT_MASTER_V2 A WHERE IS_ACTIVE=1 GROUP BY BASEPACK,SALES_CATEGORY) A WHERE ROW_NUM=1) C ON C.BASEPACK=T.BASEPACK_CODE "
 					+ " " + "SET "
-					+ "PPM_DESC_STAGE=CONCAT(A.ACCOUNT_TYPE ,':',  B.MODALITY_KEY,':',T.PPM_ACCOUNT,':',C.SALES_CATEGORY,':',T.OFFER_DESC,':',T.PROMOTION_ID,IF (A.NON_UNIFY <> '', concat(':', A.NON_UNIFY), ''))  WHERE USER_ID='"
+					+ "PPM_DESC_STAGE=CONCAT(A.ACCOUNT_TYPE ,':',  B.MODALITY_KEY,':',T.PPM_ACCOUNT,':',C.SALES_CATEGORY,':',T.OFFER_DESC,':',T.PROMOTION_ID,IF (((A.NON_UNIFY <> '') OR (A.ACCOUNT_TYPE = 'KA' AND A.NON_UNIFY <> 'NON UNIFY' AND T.CR_SOL_TYPE = 'Additional Quantity')), concat(':', 'NON UNIFY'), ''))  WHERE USER_ID='"
 					+ uid + "'  " + "";
 		} else {
 			
@@ -113,7 +113,7 @@ public class DataFromTable {
 	{
 		//bean.getMoc_name() + bean.getPpm_account() + bean.getYear() + sale_cate
 //		String q_String="SELECT MOC_NAME,MOC_YEAR,PPM_ACCOUNT,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER,CR_SOL_TYPE FROM TBL_PROCO_PROMOTION_MASTER_V2 ";
-		String q_String = "SELECT MOC_NAME,MOC_YEAR,PPM_ACCOUNT,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER,CR_SOL_TYPE,OFFER_MODALITY,CHANNEL_NAME FROM TBL_PROCO_PROMOTION_MASTER_V2 PM INNER JOIN (SELECT CONCAT(SUBSTRING(MOC, 3, 4),SUBSTRING(MOC,1,2)) AS CURRENT_MOC FROM TBL_VAT_MOC_MASTER WHERE STATUS = 'Y' LIMIT 1) MM ON 1=1 WHERE CONCAT(SUBSTRING(PM.MOC, 3, 4),SUBSTRING(PM.MOC,1,2)) >= MM.CURRENT_MOC AND Status !='42'";
+		String q_String = "SELECT MOC_NAME,MOC_YEAR,PPM_ACCOUNT,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER,CR_SOL_TYPE,IF (OFFER_TYPE = 'Ground Ops', OFFER_TYPE, OFFER_MODALITY) AS OFFER_MODALITY,CHANNEL_NAME FROM TBL_PROCO_PROMOTION_MASTER_V2 PM INNER JOIN (SELECT CONCAT(SUBSTRING(MOC, 3, 4),SUBSTRING(MOC,1,2)) AS CURRENT_MOC FROM TBL_VAT_MOC_MASTER WHERE STATUS = 'Y' LIMIT 1) MM ON 1=1 WHERE CONCAT(SUBSTRING(PM.MOC, 3, 4),SUBSTRING(PM.MOC,1,2)) >= MM.CURRENT_MOC AND Status !='42'";
 		List<Object[]> mapdata_list = sessionFactory.getCurrentSession().createNativeQuery(q_String).list();
 		for (Object[] data : mapdata_list) {
 			h.put(String.valueOf(data[0]).toUpperCase() + String.valueOf(data[1]).toUpperCase()
@@ -129,7 +129,7 @@ public class DataFromTable {
 					String.valueOf(data[4]) + " " + String.valueOf(data[5])); 
 			
 			//Added by Kajal G for channel CNC and CNC NUTS in SPRINT-10
-			if (String.valueOf(data[9]).toUpperCase().equalsIgnoreCase("CNC") || String.valueOf(data[9]).toUpperCase().equalsIgnoreCase("CNC NUTS")) {
+//			if (String.valueOf(data[9]).toUpperCase().equalsIgnoreCase("CNC") || String.valueOf(data[9]).toUpperCase().equalsIgnoreCase("CNC NUTS")) {
 				h.put(String.valueOf(data[0]).toUpperCase() + String.valueOf(data[1]).toUpperCase()
 						+ String.valueOf(data[2]).toUpperCase() + String.valueOf(data[3]).toUpperCase()+ String.valueOf(data[8]).toUpperCase(),
 						String.valueOf(data[4]) + " " + String.valueOf(data[5]));
@@ -142,7 +142,7 @@ public class DataFromTable {
 						+ String.valueOf(data[2]).toUpperCase() + String.valueOf(data[3]).toUpperCase()+String.valueOf(data[6]).toUpperCase()+String.valueOf(data[7]).toUpperCase()+ String.valueOf(data[8]).toUpperCase(),
 						String.valueOf(data[4]) + " " + String.valueOf(data[5])); 
 				
-			}
+//			}
 			
 		}
 		
@@ -472,11 +472,10 @@ public class DataFromTable {
 	public void getAllSOLCodeAndPromoId(Map<String,String> crEntries,Map<String,String> date_extension,Map<String,ArrayList<String>> check_existing_sol,List<List<String>> check_sol_code_ref) {
 		// TODO Auto-generated method stub
 		//String query="SELECT DISTINCT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,CASE WHEN LOCATE('%', A.PRICE_OFF) > 0 THEN A.PRICE_OFF ELSE ROUND(A.PRICE_OFF, 0) END AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR,B.MOC AS PMR_MOC"
-		String query="SELECT DISTINCT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER, A.PRICE_OFF AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR,B.MOC AS PMR_MOC"
+		String query="SELECT DISTINCT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER, A.PRICE_OFF AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR,B.MOC AS PMR_MOC,A.OFFER_MODALITY"
 				+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 A INNER JOIN TBL_PROCO_MEASURE_MASTER_V2 B "
-				+ "	ON "
-				+ "	A.PROMO_ID=B.PROMO_ID "
-				+ "	WHERE B.PROMOTION_STATUS IN ('APPROVED','AMEND APPROVED','SUBMITTED','AMEND SUBMITTED')";
+				+ "	ON A.PROMO_ID=B.PROMO_ID "
+				+ "	WHERE B.PROMOTION_STATUS IN ('Approved','AmendApproved','Submitted','AmendSubmitted')";
 		
 		List<Object[]> list=sessionFactory.getCurrentSession().createNativeQuery(query	).list();
 		
@@ -553,18 +552,18 @@ public class DataFromTable {
 			//B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,A.PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR
 			crEntries.put(
 					String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[10]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
-							+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[6]).toUpperCase() + String.valueOf(obj[5]).toUpperCase(),
+							+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[6]).toUpperCase() + String.valueOf(obj[5]).toUpperCase()+ String.valueOf(obj[12]).toUpperCase(),
 					String.valueOf(obj[5]).toUpperCase()); // for Missing geo and basepack addition if present
 			
 			crEntries.put(
 					String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[10]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
-							+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[6]).toUpperCase(),
+							+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[6]).toUpperCase()+ String.valueOf(obj[12]).toUpperCase(),
 					String.valueOf(obj[5]).toUpperCase());  // for Missing geo
 			
 			//B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,A.PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR
 			crEntries.put(
 					String.valueOf(obj[2]).toUpperCase() + String.valueOf(obj[10]).toUpperCase() + String.valueOf(obj[3]).toUpperCase()
-						+ String.valueOf(obj[5]).toUpperCase()+String.valueOf(obj[6]).toUpperCase(),
+						+ String.valueOf(obj[5]).toUpperCase()+String.valueOf(obj[6]).toUpperCase()+ String.valueOf(obj[12]).toUpperCase(),
 					String.valueOf(obj[4]).toUpperCase()); // Addition basepack 
 			
 			//PROMOTION_ID-0, PROMO_ID-1, MOC_NAME-2, PPM_ACCOUNT-3, BASEPACK_CODE-4, CLUSTER-5,PRICE_OFF-6, START_DATE-7, END_DATE-8, PROMO_TIMEPERIOD-9, MOC_YEAR -10
