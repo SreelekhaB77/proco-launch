@@ -272,6 +272,9 @@ public class PromoListingServiceImpl implements PromoListingService {
 		headerList.add("MRP");
 		headerList.add("AB CREATION");
 		headerList.add("BUDGET");
+		headerList.add("CURRENT STATUS"); //Added by Kavitha D-SPRINT 10 Changes
+		headerList.add("SOL TYPE");
+		headerList.add("SOL TYPE SHORTKEY");
 	
 		
 		return headerList;
