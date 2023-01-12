@@ -52,12 +52,6 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 		//List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
 		//List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
 		String promoQuery = "";
-		
-		List<String> basepackp1 = new ArrayList<String>(Arrays.asList(promobasepack.split(",")));
-		List<String> accountp1 = new ArrayList<String>(Arrays.asList(ppmaccount.split(",")));
-		List<String> channelp1 = new ArrayList<String>(Arrays.asList(procochannel.split(",")));
-		List<String> clusterp1 = new ArrayList<String>(Arrays.asList(prococluster.split(",")));
-
 		try {
 			// kiran - row number changes
 			// promoQuery = "SELECT * FROM ( SELECT A.PROMO_ID ,A.P1_BASEPACK ,A.OFFER_DESC
@@ -93,74 +87,33 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 					//+ "  FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR  ON PR.PROMO_ID = PM.PROMO_ID "
 					//+ "  LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
 					//+ "  LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE "
-					+ "  WHERE PM.MOC='"+moc+"'";
+					+ "  WHERE PM.MOC='"+moc+"' ";
 			
-			
-		//Kavitha D changes for filter-SPRINT 11 starts	
-			if (!promobasepack.equalsIgnoreCase("All")) {
-				if (basepackp1.size() == 1) {
-					promoQuery += "AND (PM.BASEPACK_CODE LIKE '%" + basepackp1.get(0) + "%') ";
-				} else {
-					for (int i = 0; i < basepackp1.size(); i++) {
-						if (i == 0) {
-							promoQuery += "AND (PM.BASEPACK_CODE LIKE '%" + basepackp1.get(i) + "%' ";
-						} else if (i < basepackp1.size() - 1) {
-							promoQuery += "OR PM.BASEPACK_CODE LIKE '%" + basepackp1.get(i) + "%' ";
-						} else if (i == basepackp1.size() - 1) {
-							promoQuery += "OR PM.BASEPACK_CODE LIKE '%" + basepackp1.get(i) + "%') ";
-						}
-					}
+						
+			//Kavitha D changes for filter-SPRINT 11 starts	
+			if(!promobasepack.equalsIgnoreCase("ALL")) {
+				if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
+				promoQuery +=	"AND PM.BASEPACK_CODE='"+promobasepack+"'";	
+				}
+			}
+			if(!ppmaccount.equalsIgnoreCase("ALL")) {
+				if(!ppmaccount.equalsIgnoreCase("SELECT PPM ACCOUNT")){
+				promoQuery +=	"AND PM.PPM_ACCOUNT='"+ppmaccount+"'";	
 				}
 			}
 			
-			if (!ppmaccount.equalsIgnoreCase("All")) {
-				if (accountp1.size() == 1) {
-					promoQuery += "AND (PM.PPM_ACCOUNT LIKE '%" + accountp1.get(0) + "%') ";
-				} else {
-					for (int i = 0; i < accountp1.size(); i++) {
-						if (i == 0) {
-							promoQuery += "AND (PM.PPM_ACCOUNT LIKE '%" + accountp1.get(i) + "%' ";
-						} else if (i < accountp1.size() - 1) {
-							promoQuery += "OR PM.PPM_ACCOUNT LIKE '%" + accountp1.get(i) + "%' ";
-						} else if (i == accountp1.size() - 1) {
-							promoQuery += "OR PM.PPM_ACCOUNT LIKE '%" + accountp1.get(i) + "%') ";
-						}
-					}
+			if(!procochannel.equalsIgnoreCase("ALL")) {
+				if(!procochannel.equalsIgnoreCase("SELECT CHANNEL")) {
+				promoQuery +=	"AND PM.CHANNEL_NAME='"+procochannel+"'";	
 				}
 			}
 			
-			if (!procochannel.equalsIgnoreCase("All")) {
-				if (channelp1.size() == 1) {
-					promoQuery += "AND (PM.CHANNEL_NAME LIKE '%" + channelp1.get(0) + "%') ";
-				} else {
-					for (int i = 0; i < channelp1.size(); i++) {
-						if (i == 0) {
-							promoQuery += "AND (PM.CHANNEL_NAME LIKE '%" + channelp1.get(i) + "%' ";
-						} else if (i < channelp1.size() - 1) {
-							promoQuery += "OR PM.CHANNEL_NAME LIKE '%" + channelp1.get(i) + "%' ";
-						} else if (i == channelp1.size() - 1) {
-							promoQuery += "OR PM.CHANNEL_NAME LIKE '%" + channelp1.get(i) + "%') ";
-						}
-					}
+			if(!prococluster.equalsIgnoreCase("ALL")) {
+				if(!prococluster.equalsIgnoreCase("SELECT CLUSTER")) {
+				promoQuery +=	"AND PM.CLUSTER='"+prococluster+"'";	
 				}
 			}
-			
-			if (!prococluster.equalsIgnoreCase("All")) {
-				if (clusterp1.size() == 1) {
-					promoQuery += "AND (PM.CLUSTER LIKE '%" + clusterp1.get(0) + "%') ";
-				} else {
-					for (int i = 0; i < basepackp1.size(); i++) {
-						if (i == 0) {
-							promoQuery += "AND (PM.CLUSTER LIKE '%" + clusterp1.get(i) + "%' ";
-						} else if (i < clusterp1.size() - 1) {
-							promoQuery += "OR PM.CLUSTER LIKE '%" + clusterp1.get(i) + "%' ";
-						} else if (i == clusterp1.size() - 1) {
-							promoQuery += "OR PM.CLUSTER LIKE '%" + clusterp1.get(i) + "%') ";
-						}
-					}
-				}
-			}
-			
+					
 			//Kavitha D changes for filter-SPRINT 11 ends	
 
 			/*if (!cagetory.equalsIgnoreCase("All")) {
@@ -400,12 +353,6 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 		List<BigInteger> list = null;
 		//List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
 		//List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
-		
-		List<String> basepackp1 = new ArrayList<String>(Arrays.asList(promobasepack.split(",")));
-		List<String> accountp1 = new ArrayList<String>(Arrays.asList(ppmaccount.split(",")));
-		List<String> channelp1 = new ArrayList<String>(Arrays.asList(procochannel.split(",")));
-		List<String> clusterp1 = new ArrayList<String>(Arrays.asList(prococluster.split(",")));
-
 		try {
 			//Commented by Kavitha D for SPRINT 9 changes
 			//String rowCount = "SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_MASTER AS A INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK = C.BASEPACK INNER JOIN TBL_PROCO_STATUS_TRACKER AS D ON A.PROMO_ID = D.PROMO_ID INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON E.STATUS_ID = D.STATUS_ID WHERE A.START_DATE > CURRENT_DATE ";
@@ -416,72 +363,32 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 					//+ " FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR ON PR.PROMO_ID = PM.PROMO_ID "
 					//+ " LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
 					//+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE "
-					+ " WHERE PM.MOC='"+moc+"'";
+					+ "  WHERE PM.MOC='"+moc+"'";
 			
 			//Kavitha D changes for filter-SPRINT 11 starts	
-			if (!promobasepack.equalsIgnoreCase("All")) {
-				if (basepackp1.size() == 1) {
-					rowCount += "AND (PM.BASEPACK_CODE LIKE '%" + basepackp1.get(0) + "%') ";
-				} else {
-					for (int i = 0; i < basepackp1.size(); i++) {
-						if (i == 0) {
-							rowCount += "AND (PM.BASEPACK_CODE LIKE '%" + basepackp1.get(i) + "%' ";
-						} else if (i < basepackp1.size() - 1) {
-							rowCount += "OR PM.BASEPACK_CODE LIKE '%" + basepackp1.get(i) + "%' ";
-						} else if (i == basepackp1.size() - 1) {
-							rowCount += "OR PM.BASEPACK_CODE LIKE '%" + basepackp1.get(i) + "%') ";
-						}
-					}
+			if(!promobasepack.equalsIgnoreCase("ALL")) {
+				if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
+					rowCount +=	"AND PM.BASEPACK_CODE='"+promobasepack+"'";	
+				}
+			}
+			if(!ppmaccount.equalsIgnoreCase("ALL")) {
+				if(!ppmaccount.equalsIgnoreCase("SELECT PPM ACCOUNT")){
+					rowCount +=	"AND PM.PPM_ACCOUNT='"+ppmaccount+"'";	
 				}
 			}
 			
-			if (!ppmaccount.equalsIgnoreCase("All")) {
-				if (accountp1.size() == 1) {
-					rowCount += "AND (PM.PPM_ACCOUNT LIKE '%" + accountp1.get(0) + "%') ";
-				} else {
-					for (int i = 0; i < accountp1.size(); i++) {
-						if (i == 0) {
-							rowCount += "AND (PM.PPM_ACCOUNT LIKE '%" + accountp1.get(i) + "%' ";
-						} else if (i < accountp1.size() - 1) {
-							rowCount += "OR PM.PPM_ACCOUNT LIKE '%" + accountp1.get(i) + "%' ";
-						} else if (i == accountp1.size() - 1) {
-							rowCount += "OR PM.PPM_ACCOUNT LIKE '%" + accountp1.get(i) + "%') ";
-						}
-					}
+			if(!procochannel.equalsIgnoreCase("ALL")) {
+				if(!procochannel.equalsIgnoreCase("SELECT CHANNEL")) {
+					rowCount +=	"AND PM.CHANNEL_NAME='"+procochannel+"'";	
 				}
 			}
 			
-			if (!procochannel.equalsIgnoreCase("All")) {
-				if (channelp1.size() == 1) {
-					rowCount += "AND (PM.CHANNEL_NAME LIKE '%" + channelp1.get(0) + "%') ";
-				} else {
-					for (int i = 0; i < channelp1.size(); i++) {
-						if (i == 0) {
-							rowCount += "AND (PM.CHANNEL_NAME LIKE '%" + channelp1.get(i) + "%' ";
-						} else if (i < channelp1.size() - 1) {
-							rowCount += "OR PM.CHANNEL_NAME LIKE '%" + channelp1.get(i) + "%' ";
-						} else if (i == channelp1.size() - 1) {
-							rowCount += "OR PM.CHANNEL_NAME LIKE '%" + channelp1.get(i) + "%') ";
-						}
-					}
+			if(!prococluster.equalsIgnoreCase("ALL")) {
+				if(!prococluster.equalsIgnoreCase("SELECT CLUSTER")) {
+					rowCount +=	"AND PM.CLUSTER='"+prococluster+"'";	
 				}
 			}
 			
-			if (!prococluster.equalsIgnoreCase("All")) {
-				if (clusterp1.size() == 1) {
-					rowCount += "AND (PM.CLUSTER LIKE '%" + clusterp1.get(0) + "%') ";
-				} else {
-					for (int i = 0; i < basepackp1.size(); i++) {
-						if (i == 0) {
-							rowCount += "AND (PM.CLUSTER LIKE '%" + clusterp1.get(i) + "%' ";
-						} else if (i < clusterp1.size() - 1) {
-							rowCount += "OR PM.CLUSTER LIKE '%" + clusterp1.get(i) + "%' ";
-						} else if (i == clusterp1.size() - 1) {
-							rowCount += "OR PM.CLUSTER LIKE '%" + clusterp1.get(i) + "%') ";
-						}
-					}
-				}
-			}		
 			//Kavitha D changes for filter-SPRINT 11 ends
 
 			
@@ -602,7 +509,7 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 				}
 			}*/
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(rowCount);
-			//System.out.println(query);
+			//System.out.println(rowCount);
 			list = query.list();
 		} catch (Exception ex) {
 			logger.debug("Exception: ", ex);
@@ -633,12 +540,6 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
 		String promoQuery = "";
 		String query = "";
-		
-		List<String> basepackp1 = new ArrayList<String>(Arrays.asList(promobasepack.split(",")));
-		List<String> accountp1 = new ArrayList<String>(Arrays.asList(ppmaccount.split(",")));
-		List<String> channelp1 = new ArrayList<String>(Arrays.asList(procochannel.split(",")));
-		List<String> clusterp1 = new ArrayList<String>(Arrays.asList(prococluster.split(",")));
-
 		try {
 			
 			  int userRole = getUserRoleId(userId); 
@@ -666,82 +567,36 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 							+ " START_DATE,END_DATE,OFFER_DESC,PPM_DESC,BASEPACK_CODE,BASEPACK_DESC,CHILDPACK,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,QUANTITY,FIXED_BUDGET ,BRANCH,"
 							+ " SALES_CLUSTER ,PPM_CUSTOMER,CMM_NAME,TME_NAME,SALES_CATEGORY,PSA_CATEGORY,PROMOTION_STATUS,PPM_PROMOTION_CREATOR ,PROMOTION_MECHANICS,INVESTMENT_TYPE,"
 							+ " SALES_CLUSTER_CODE ,BRAND,SUB_BRAND,PPM_BUDGET_HOLDER_NAME ,FUND_TYPE,INVESTMENT_AMOUNT ,PROMO_ENTRY_TYPE ,PROMO_USER_NAME ,PROMO_USER_TIME ,"
-							+ " PPM_APPROVED_DATE ,PPM_CREATION_DATE ,NON_UNIFY,PPM_SUBMISSION_DATE ,PPM_MODIFIED_DATE ,COE_REMARKS,MRP ,AB_CREATION ,BUDGET ,CURRENT_STATUS,SOL_TYPE,SOL_TYPE_SHORTKEY " //Added current_status,sol type,sol type short key-SPRINT 10
+							+ " PPM_APPROVED_DATE ,PPM_CREATION_DATE ,NON_UNIFY,PPM_SUBMISSION_DATE ,PPM_MODIFIED_DATE ,COE_REMARKS,MRP ,AB_CREATION ,BUDGET ,CURRENT_STATUS,SOL_TYPE,SOL_TYPE_SHORTKEY " //Added current_status,sol type,sol type short key-SPRINT 10 "
 							+ " FROM TBL_PROCO_PROMO_LISTING_REPORT  LR "
 							+ " WHERE LR.MOC=:moc " ;
 					
 					//Kavitha D changes for filter-SPRINT 11 starts	
-					if (!promobasepack.equalsIgnoreCase("All")) {
-						if (basepackp1.size() == 1) {
-							query += "AND (LR.BASEPACK_CODE LIKE '%" + basepackp1.get(0) + "%') ";
-							
-						} else {
-							for (int i = 0; i < basepackp1.size(); i++) {
-								if (i == 0) {
-									query += "AND (LR.BASEPACK_CODE LIKE '%" + basepackp1.get(i) + "%' ";
-								} else if (i < basepackp1.size() - 1) {
-									query += "OR LR.BASEPACK_CODE LIKE '%" + basepackp1.get(i) + "%' ";
-								} else if (i == basepackp1.size() - 1) {
-									query += "OR LR.BASEPACK_CODE LIKE '%" + basepackp1.get(i) + "%') ";
-								}
-							}
+					
+					if(!promobasepack.equalsIgnoreCase("ALL")) {
+						if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
+							query +=	"AND LR.BASEPACK_CODE='"+promobasepack+"'";	
+						}
+					}
+					if(!ppmaccount.equalsIgnoreCase("ALL")) {
+						if(!ppmaccount.equalsIgnoreCase("SELECT PPM ACCOUNT")){
+							query +=	"AND LR.PPM_ACCOUNT='"+ppmaccount+"'";	
 						}
 					}
 					
-					if (!ppmaccount.equalsIgnoreCase("All")) {
-						if (accountp1.size() == 1) {
-							query += "AND (LR.PPM_ACCOUNT LIKE '%" + accountp1.get(0) + "%') ";
-							
-						} else {
-							for (int i = 0; i < accountp1.size(); i++) {
-								if (i == 0) {
-									query += "AND (LR.PPM_ACCOUNT LIKE '%" + accountp1.get(i) + "%' ";
-								} else if (i < accountp1.size() - 1) {
-									query += "OR LR.PPM_ACCOUNT LIKE '%" + accountp1.get(i) + "%' ";
-								} else if (i == accountp1.size() - 1) {
-									query += "OR LR.PPM_ACCOUNT LIKE '%" + accountp1.get(i) + "%') ";
-								}
-							}
+					if(!procochannel.equalsIgnoreCase("ALL")) {
+						if(!procochannel.equalsIgnoreCase("SELECT CHANNEL")) {
+							query +=	"AND LR.CHANNEL='"+procochannel+"'";	
 						}
 					}
 					
-					if (!procochannel.equalsIgnoreCase("All")) {
-						if (channelp1.size() == 1) {
-							query += "AND (LR.CHANNEL LIKE '%" + channelp1.get(0) + "%') ";
-							
-						} else {
-							for (int i = 0; i < channelp1.size(); i++) {
-								if (i == 0) {
-									query += "AND (LR.CHANNEL LIKE '%" + channelp1.get(i) + "%' ";
-								} else if (i < channelp1.size() - 1) {
-									query += "OR LR.CHANNEL LIKE '%" + channelp1.get(i) + "%' ";
-								} else if (i == channelp1.size() - 1) {
-									query += "OR LR.CHANNEL LIKE '%" + channelp1.get(i) + "%') ";
-								}
-							}
+					if(!prococluster.equalsIgnoreCase("ALL")) {
+						if(!prococluster.equalsIgnoreCase("SELECT CLUSTER")) {
+							query +=	"AND LR.SALES_CLUSTER='"+prococluster+"'";	
 						}
 					}
-					
-					if (!prococluster.equalsIgnoreCase("All")) {
-						if (clusterp1.size() == 1) {
-							query += "AND (LR.SALES_CLUSTER LIKE '%" + clusterp1.get(0) + "%') ";
-							
-						} else {
-							for (int i = 0; i < basepackp1.size(); i++) {
-								if (i == 0) {
-									query += "AND (LR.SALES_CLUSTER LIKE '%" + clusterp1.get(i) + "%' ";
-								} else if (i < clusterp1.size() - 1) {
-									query += "OR LR.SALES_CLUSTER LIKE '%" + clusterp1.get(i) + "%' ";
-								} else if (i == clusterp1.size() - 1) {
-									query += "OR LR.SALES_CLUSTER LIKE '%" + clusterp1.get(i) + "%') ";
-								}
-							}
-						}
-					}			
 							
 					//Kavitha D changes for filter-SPRINT 11 ends
-
-					
 			  
 			  } else {
 			 

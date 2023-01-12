@@ -52,7 +52,7 @@ public interface PromoListingDAO {
 	
 	public String promoDeleteDate(String Id);
 	
-	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleId, String[] kamAccounts); //Added by Kavitha D for promo listing download-SPRINT 9
+	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster,String roleId, String[] kamAccounts); //Added by Kavitha D for promo listing download-SPRINT 9
 
 	//Added by Kajal for KAM Volume download-SPRINT 10
 	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList,String moc, String primaryAcc); 
@@ -62,9 +62,9 @@ public interface PromoListingDAO {
 	public List<String> getPPMAccount(String primaryAccount);
 	
 	//Added by Kavitha D for promo listing Grid dispaly starts-SPRINT 9
-	public int getPromoListRowCountGrid(String userId, String roleId,String moc,String[] kamaccount);
+	public int getPromoListRowCountGrid(String userId, String roleId,String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster,String[] kamaccount);
 
-	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId,String roleId,String moc,String searchParameter, String[] kamAccounts);
+	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId,String roleId,String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster,String searchParameter, String[] kamAccounts);
 
 	public List<String> getPromoMoc();
 	//Added by Kavitha D for promo listing Grid dispaly ends-SPRINT 9

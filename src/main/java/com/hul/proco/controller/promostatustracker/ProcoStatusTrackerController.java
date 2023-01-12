@@ -223,9 +223,8 @@ public class ProcoStatusTrackerController {
 			promoIdVal = promoId;
 		}
 		
-		
-		if (procoBasepack == null || procoBasepack.isEmpty() || (procoBasepack.equalsIgnoreCase("undefined")) || (procoBasepack.equalsIgnoreCase("SELECT BASEPACK"))|| (procoBasepack.equalsIgnoreCase("ALL")))
-				{
+		//Added by Kavitha D-SPRINT 11
+		if (procoBasepack == null || procoBasepack.isEmpty() || (procoBasepack.equalsIgnoreCase("undefined")) || (procoBasepack.equalsIgnoreCase("SELECT BASEPACK"))|| (procoBasepack.equalsIgnoreCase("ALL"))){
 			promobasepack = "all";
 		} else {
 			promobasepack = procoBasepack;

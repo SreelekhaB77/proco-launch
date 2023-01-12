@@ -57,7 +57,8 @@ public class PromoListingController {
 			@RequestParam("offerType") String offerTypeValue, @RequestParam("modality") String modalityValue,
 			@RequestParam("year") String yearValue, @RequestParam("custChainL2") String custChainL2Value,
 			@RequestParam("basepack") String basepackValue, @RequestParam("geography") String geographyValue,
-			@RequestParam("moc") String mocValue, HttpServletRequest request) {
+			@RequestParam("moc") String mocValue,@RequestParam("promobasepack") String procoBasepack,
+			@RequestParam("ppmaccount") String ppmAccount,@RequestParam("procochannel") String procoChannel,@RequestParam("prococluster") String procoCluster, HttpServletRequest request) {
 		String roleId = (String) request.getSession().getAttribute("roleId");
 		String userId = (String) request.getSession().getAttribute("UserID");
 		Integer pageDisplayStart = Integer.valueOf(request.getParameter("iDisplayStart"));
@@ -70,6 +71,8 @@ public class PromoListingController {
 		Integer pageNumber = (pageDisplayStart / pageDisplayLength) + 1;
 		String cagetory = "", brand = "", basepack = "", custChainL1 = "", custChainL2 = "", geography = "";
 		String offerType = "", modality = "", year = "", moc = "";
+		String promobasepack="", ppmaccount="", procochannel="", prococluster="";
+
 
 		if (cagetoryValue == null || cagetoryValue.isEmpty() || (cagetoryValue.equalsIgnoreCase("undefined"))
 				|| (cagetoryValue.equalsIgnoreCase("ALL CATEGORIES"))) {
@@ -131,6 +134,28 @@ public class PromoListingController {
 			moc = mocValue;
 		}
 
+		//Added by Kavitha D-SPRINT 11
+		if (procoBasepack == null || procoBasepack.isEmpty() || (procoBasepack.equalsIgnoreCase("undefined")) || (procoBasepack.equalsIgnoreCase("SELECT BASEPACK"))|| (procoBasepack.equalsIgnoreCase("ALL"))){
+			promobasepack = "all";
+		} else {
+			promobasepack = procoBasepack;
+		}
+		if (ppmAccount == null || ppmAccount.isEmpty() || (ppmAccount.equalsIgnoreCase("undefined"))|| (ppmAccount.equalsIgnoreCase("SELECT PPM ACCOUNT"))|| (ppmAccount.equalsIgnoreCase("ALL"))) {
+			ppmaccount = "all";
+		} else {
+			ppmaccount = ppmAccount;
+		}
+		if (procoChannel == null || procoChannel.isEmpty() || (procoChannel.equalsIgnoreCase("undefined"))|| (procoChannel.equalsIgnoreCase("SELECT CHANNEL"))|| (procoChannel.equalsIgnoreCase("ALL"))) {
+			procochannel = "all";
+		} else {
+			procochannel = procoChannel;
+		}
+		if (procoCluster == null || procoCluster.isEmpty() || (procoCluster.equalsIgnoreCase("undefined"))|| (procoCluster.equalsIgnoreCase("SELCET CLUSTER"))|| (procoCluster.equalsIgnoreCase("ALL"))) {
+			prococluster = "all";
+		} else {
+			prococluster = procoCluster;
+		}
+
 		//Added by kavitha D for promolisting changes-SPRINT 9
 		/*int rowCount = promoListingService.getPromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2,
 				geography, offerType, modality, year, moc, userId, 1,roleId);
@@ -138,9 +163,9 @@ public class PromoListingController {
 				(pageNumber * pageDisplayLength), cagetory, brand, basepack, custChainL1, custChainL2, geography,
 				offerType, modality, year, moc, userId, 1,roleId ,searchParameter);*/
 		
-		int rowCount = promoListingService.getPromoListRowCountGrid(userId,roleId,moc,kamAccountsArr);
+		int rowCount = promoListingService.getPromoListRowCountGrid(userId,roleId,moc,promobasepack,ppmaccount,procochannel,prococluster,kamAccountsArr);
 		List<PromoListingBean> promoList = promoListingService.getPromoTableListGrid((pageDisplayStart + 1),
-				(pageNumber * pageDisplayLength),userId,roleId,moc,searchParameter, kamAccountsArr);
+				(pageNumber * pageDisplayLength),userId,roleId,moc,promobasepack,ppmaccount,procochannel,prococluster,searchParameter, kamAccountsArr);
 
 
 		PromoListingJsonObject jsonObj = new PromoListingJsonObject();
@@ -886,8 +911,9 @@ public class PromoListingController {
 
 	//Added by Kavitha D for promo listing download starts-SPRINT 9
 
-	@RequestMapping(value = "{moc}/downloadPromoListing.htm", method = RequestMethod.GET)
+	@RequestMapping(value = "{moc}/{promobasepack}/{ppmaccount}/{procochannel}/{prococluster}/downloadPromoListing.htm", method = RequestMethod.GET)
 	public @ResponseBody String downloadPromosForListing(@ModelAttribute("CreateBeanRegular") CreateBeanRegular createBeanRegular,@PathVariable("moc") String moc,
+			@PathVariable("promobasepack") String procoBasepack,@PathVariable("ppmaccount") String ppmAccount,@PathVariable("procochannel") String procoChannel,@PathVariable("prococluster") String procoCluster,
 			Model model,HttpServletRequest request, HttpServletResponse response) {
 		logger.info("START downloadPromos for listing():");
 		try {
@@ -905,9 +931,32 @@ public class PromoListingController {
 					CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 			String downloadFileName = absoluteFilePath + fileName;
 			String userId = (String) request.getSession().getAttribute("UserID");
+			String promobasepack="", ppmaccount="", procochannel="", prococluster="";
+
+			if (procoBasepack == null || procoBasepack.isEmpty() || (procoBasepack.equalsIgnoreCase("undefined")) || (procoBasepack.equalsIgnoreCase("SELECT BASEPACK"))|| (procoBasepack.equalsIgnoreCase("ALL")))
+			{
+				promobasepack = "all";
+			} else {
+				promobasepack = procoBasepack;
+			}
+			if (ppmAccount == null || ppmAccount.isEmpty() || (ppmAccount.equalsIgnoreCase("undefined"))|| (ppmAccount.equalsIgnoreCase("SELECT PPM ACCOUNT"))|| (ppmAccount.equalsIgnoreCase("ALL"))) {
+				ppmaccount = "all";
+			} else {
+				ppmaccount = ppmAccount;
+			}
+			if (procoChannel == null || procoChannel.isEmpty() || (procoChannel.equalsIgnoreCase("undefined"))|| (procoChannel.equalsIgnoreCase("SELECT CHANNEL"))|| (procoChannel.equalsIgnoreCase("ALL"))) {
+				procochannel = "all";
+			} else {
+				procochannel = procoChannel;
+			}
+			if (procoCluster == null || procoCluster.isEmpty() || (procoCluster.equalsIgnoreCase("undefined"))|| (procoCluster.equalsIgnoreCase("SELCET CLUSTER"))|| (procoCluster.equalsIgnoreCase("ALL"))) {
+				prococluster = "all";
+			} else {
+				prococluster = procoCluster;
+			}
 			
 			ArrayList<String> headerList = promoListingService.getHeaderListForPromoDownloadListing();
-			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc,roleId, kamAccounts);
+			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc,promobasepack,ppmaccount,procochannel,prococluster,roleId, kamAccounts);
 			if (downloadedData != null) {
 				UploadUtil.writeXLSXFile(downloadFileName, downloadedData, null,".xlsx");
 				downloadLink = downloadFileName + ".xlsx";

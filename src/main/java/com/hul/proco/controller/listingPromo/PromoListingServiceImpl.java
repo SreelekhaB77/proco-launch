@@ -299,8 +299,8 @@ public class PromoListingServiceImpl implements PromoListingService {
 		return headerList;
 	}
 	
-	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleId, String[] kamAccounts){
-		return promoListingDAO.getPromotionListingDownload(headerList,userId,moc,roleId, kamAccounts);
+	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster,String roleId, String[] kamAccounts){
+		return promoListingDAO.getPromotionListingDownload(headerList,userId,moc,promobasepack,ppmaccount,procochannel,prococluster,roleId, kamAccounts);
 	}
 	//Added by Kavitha D for promo listing download ends-SPRINT 9
 
@@ -318,14 +318,14 @@ public class PromoListingServiceImpl implements PromoListingService {
 	//Added by Kavitha D for promo listing Grid dispaly starts-SPRINT 9
 
 	@Override
-	public int getPromoListRowCountGrid(String userId,String roleId,String moc,String[] kamAccountsArr) {
-		return promoListingDAO.getPromoListRowCountGrid(userId,roleId,moc,kamAccountsArr);
+	public int getPromoListRowCountGrid(String userId,String roleId,String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster,String[] kamAccountsArr) {
+		return promoListingDAO.getPromoListRowCountGrid(userId,roleId,moc,promobasepack,ppmaccount,procochannel,prococluster,kamAccountsArr);
 	}
 
 	@Override
 	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId,String roleId,
-			String moc,String searchParameter, String[] kamAccounts) {
-		return promoListingDAO.getPromoTableListGrid(pageDisplayStart,pageDisplayLength,userId,roleId,moc,searchParameter, kamAccounts);
+			String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster,String searchParameter, String[] kamAccounts) {
+		return promoListingDAO.getPromoTableListGrid(pageDisplayStart,pageDisplayLength,userId,roleId,moc,promobasepack,ppmaccount,procochannel,prococluster,searchParameter, kamAccounts);
 	}
 
 
