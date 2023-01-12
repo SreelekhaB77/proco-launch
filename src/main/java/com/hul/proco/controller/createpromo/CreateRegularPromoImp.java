@@ -132,6 +132,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		Map<String, String> date_extensionMap = new HashMap<String, String>();
 		Map<String, ArrayList<String>> check_existing_sol = new HashMap<String,ArrayList<String>>();
 		List<List<String>> check_sol_code_ref = new ArrayList();
+		List<String> clusterList = datafromtable.getClusterList();
 		
 		if(template.equalsIgnoreCase("cr"))
 		{
@@ -154,6 +155,15 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			}
 			
 			if (template.equalsIgnoreCase("new") || template.equalsIgnoreCase("regular")) {
+			  List<String> clusterListValue =  new ArrayList();
+			  if(template.equalsIgnoreCase("regular") && bean.getCluster().equalsIgnoreCase("ALL INDIA")) {
+					clusterListValue = clusterList;
+				}
+			  else
+					clusterListValue.add(bean.getCluster());
+				
+			  for(int i=0; i<clusterListValue.size();i++) {
+				   bean.setCluster(clusterListValue.get(i));
 				if (!duplicateMap.containsKey(
 						bean.getMoc_name() + bean.getYear() + bean.getPpm_account() + bean.getBasepack_code()+bean.getCluster()+bean.getOffer_desc()+ bean.getOfr_type()+bean.getOffer_mod())) {
 					duplicateMap.put(
@@ -264,9 +274,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					if (!clusterandppm.get(bean.getPpm_account().toUpperCase())
 							.contains(bean.getCluster().toUpperCase())) {
 						if (flag == 1) {
-							error_msg = error_msg + "Invalid " + bean.getPpm_account() + " for " + bean.getCluster();
-						} else
 							error_msg = error_msg + ",Invalid " + bean.getPpm_account() + " for " + bean.getCluster();
+						} else
+							error_msg = error_msg + "Invalid " + bean.getPpm_account() + " for " + bean.getCluster();
 
 						flag = 1;
 
@@ -274,9 +284,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					}else
 					{
 						if (flag == 1) {
-							error_msg = error_msg + "Invalid " + bean.getPpm_account() + " for " + bean.getCluster();
-						} else
 							error_msg = error_msg + ",Invalid " + bean.getPpm_account() + " for " + bean.getCluster();
+						} else
+							error_msg = error_msg + "Invalid " + bean.getPpm_account() + " for " + bean.getCluster();
 
 						flag = 1;
 					}
@@ -770,8 +780,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 					error_msg = "";
 					flag = 0;
-
 				}
+			  }
 			}
 			
 			if(template.equalsIgnoreCase("cr"))
@@ -2558,6 +2568,13 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				else
 					qry = "SELECT CHANNEL_NAME,MOC_YEAR,MOC_NAME,PPM_ACCOUNT,PROMO_TIMEPERIOD,OFFER_DESC,BASEPACK_CODE,BASEPACK_DESC,CHILD_BASEPACK_CODE,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,BUDGET,CLUSTER,TEMPLATE_TYPE,USER_ID,ERROR_MSG"
 							+ " FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE USER_ID=?0";
+					
+				/*
+					//Kajal G changes for error file-SPRINT 11
+					qry = "SELECT CHANNEL_NAME,MOC_YEAR,MOC_NAME,PPM_ACCOUNT,PROMO_TIMEPERIOD,OFFER_DESC,BASEPACK_CODE,BASEPACK_DESC,CHILD_BASEPACK_CODE,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,BUDGET,"
+							+ " IF (COUNT(CHANNEL_NAME) > 14, 'ALL INDIA', CLUSTER) AS CLUSTER,TEMPLATE_TYPE,USER_ID,GROUP_CONCAT(DISTINCT ERROR_MSG) AS ERROR_MSG"
+							+ " FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE USER_ID=?0 GROUP BY CHANNEL_NAME,MOC_YEAR,MOC_NAME,PPM_ACCOUNT,PROMO_TIMEPERIOD,OFFER_DESC,BASEPACK_CODE,BASEPACK_DESC,CHILD_BASEPACK_CODE,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,BUDGET";
+				*/
 
 			} else if (error_template.equalsIgnoreCase("ne")) {
 				qry = /*"SELECT CHANNEL_NAME,MOC_YEAR,MOC_NAME,PPM_ACCOUNT,PROMO_TIMEPERIOD,BASEPACK_CODE BASEPACK_CODE,BASEPACK_DESC,CHILD_BASEPACK_CODE,OFFER_DESC,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,BUDGET,CLUSTER,QUANTITY,TEMPLATE_TYPE,USER_ID,ERROR_MSG"
