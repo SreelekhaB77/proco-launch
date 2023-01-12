@@ -36,7 +36,7 @@
 float: right!important;
 width: 40%!important;
 margin-top: -66px!important;
-padding-right: 155px;
+padding-right: 140px;
 }
 
 #Mocvalue{
@@ -330,10 +330,10 @@ margin-left:0px!important;
 		</form>-->
 			<div class="promo-list table-header-tracker">PROMO LIST</div>
 			<!--bharati added this below form for moc filter-->
-			<form action="http://localhost:8083/VisibilityAssetTracker/downloadPromoStatusTracker.htm" method="POST" enctype="multipart/form-data" id="download">
-			<div class="form-group col-sm-4" style="margin-top: 20px; padding-left: 0px;">
-						<label for="unique-id" class="control-label col-md-3">MOC</label>
-						<div class="col-md-6">
+		<form action="http://localhost:8083/VisibilityAssetTracker/downloadPromoStatusTracker.htm" method="POST" enctype="multipart/form-data" id="download">
+			<div class="form-group col-sm-4" style="margin-top: 20px;">
+						<label for="unique-id" class="control-label col-md-3" ">MOC</label>
+						<div class="col-md-6" >
 						<select class="form-control" id="Mocvalue" name="Mocvalue">
 								 <c:forEach items="${mocList}" var="mocValue">
                                    <option value="${mocValue}"><c:out value="${mocValue}"></c:out></option>
@@ -352,8 +352,8 @@ margin-left:0px!important;
                 </select>
                   </div>
                  </div>
-                    <div class="form-group col-sm-4" style="margin-top: 20px;">
-                <label class="control-label col-md-3" for="uom">PPM ACCOUNT</label>
+                <div class="form-group col-sm-4" style="margin-top: 20px;">
+                <label class="control-label col-md-3" for="uom" >PPM ACCOUNT</label>
 				<div class="col-md-6">
 				<select class="form-control" id="PpmAccount" name="PpmAccount">
 				<option>SELECT PPM ACCOUNT</option>
@@ -363,8 +363,7 @@ margin-left:0px!important;
 				</select>
 				</div>
 				</div>	
-				
-				</div><div class="form-group col-sm-4">
+				<div class="form-group col-sm-4">
 				<label class="control-label col-md-3" for="uom">CLUSTER</label>
 				<div class="col-md-6">
 				<select class="form-control" id="ProcoClusterList" name="ProcoClusterList">
@@ -386,7 +385,7 @@ margin-left:0px!important;
 				</select>
 				</div>
 				</div>
-			</form>
+		</form>
 			<form>
 			<!--bharati removed below columns form table in sprint-9-->
 			<table class="table table-striped table-bordered promo-list-table table-responsive" cellspacing="0"  style="width: 100%;">

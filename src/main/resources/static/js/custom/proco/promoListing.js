@@ -157,6 +157,12 @@ $(document).ready(function() {
 						year = $(this).val();
 						promoTable.draw();
 						});
+						
+						//bharati added for sprint-9 moc filter US
+						$('#Mocvalue').change(function(){
+						Mocvalue = $(this).val();
+						promoTable.draw();
+						});
 						//viswas added this changes for filters in sprint-11	
 					$('#ProcoBasepack').change(function(){
 						ProcoBasepack = $(this).val();
@@ -165,22 +171,17 @@ $(document).ready(function() {
 						
 						$('#PpmAccount').change(function(){
 							PpmAccount = $(this).val();
-							PromoTable.draw();
+							promoTable.draw();
 						});
 						$('#ProcoClusterList').change(function(){
 							ProcoClusterList = $(this).val();
-							PromoTable.draw();
+							promoTable.draw();
 						});
 						$('#ProcoChannelList').change(function(){
 							ProcoChannelList = $(this).val();
-							PromoTable.draw();
+							promoTable.draw();
 						});
 						
-						//bharati added for sprint-9 moc filter US
-						$('#Mocvalue').change(function(){
-						Mocvalue = $(this).val();
-						promoTable.draw();
-						});
 					
 					
 					/*PromoListing table pagination */
@@ -498,7 +499,12 @@ function split(val){
 function downloadPromotionFile(){
 	//$("#download").submit();  //bharati commented this line for sprint-9 moc filter value pass to download promo file
 	var SelectedMoc = $("#Mocvalue").val();
-	window.location.assign(SelectedMoc+"/downloadPromoListing.htm");
+	var SelectedBasepack = $('#ProcoBasepack').val();
+    var SelectedAccount = $('#PpmAccount').val();
+    var SelectedCluster = $('#ProcoClusterList').val();
+    var SelectedChannel = $('#ProcoChannelList').val();
+	
+    window.location.assign(SelectedMoc+"/"+SelectedBasepack+"/"+SelectedAccount+"/"+SelectedChannel+"/"+SelectedCluster+"/downloadPromoListing.htm");
 
 }
 

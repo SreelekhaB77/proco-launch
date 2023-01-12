@@ -23,9 +23,6 @@ Tags: light, white, single page, multipurpose, multi page, custom-colors, Bootst
 /*--------------------*/
 /* BASIC TYPOGRAPHY */
 /*--------------------*/
-body, html {
-	
-}
 
 body {
 	overflow-x: hidden !important;
@@ -82,7 +79,7 @@ table {
 
 .middle-section {
 	margin-top: 80px;
-	margin-bottom: 5px
+	margin-bottom: 54px
 }
 
 .dataTable {
@@ -1464,7 +1461,7 @@ i.icon-search {
 	font-size: 85px;
 }
 
-<style>/*------------------------*/
+/*------------------------*/
 /* COMBO TREE */
 /*------------------------*/
 .comboTreeWrapper {
