@@ -33,8 +33,9 @@
 <style>
 .promo-filter-div{
 float: right!important;
-width: 30%!important;
-margin-top: -75px!important;
+width: 40%!important;
+margin-top: -66px!important;
+padding-right: 143px;
 }
 
 #Mocvalue{
@@ -341,16 +342,59 @@ margin-top: -75px!important;
 			<!--bharati added below form for sprint-9 moc changes-->
 			<form action="http://34.120.128.205/VisibilityAssetTracker/downloadPromoListing.htm" method="POST" enctype="multipart/form-data" id="download">
 			<div class="form-group col-sm-4" style="margin-top: 20px;">
-						<label for="unique-id" class="control-label col-md-2">MOC</label>
-						<div class="col-md-5">
+						<label for="unique-id" class="control-label col-md-3" style="margin-left: -25px;">MOC</label>
+						<div class="col-md-6" style="margin-left: 25px;" >
 						<select class="form-control" id="Mocvalue" name="Mocvalue">
 								 <c:forEach items="${mocList}" var="mocValue">
                                    <option value="${mocValue}"><c:out value="${mocValue}"></c:out></option>
                                  </c:forEach>
                                  </select>
 								 </div>
-
 					</div>
+					 <div class="form-group col-sm-4" style="margin-top: 20px;">
+                    <label class="control-label col-md-3" for="uom">BASEPACK</label>
+                    <div class="col-md-6">
+                    <select class="form-control" id="ProcoBasepack" name="ProcoBasepack">
+                    <option>SELECT BASEPACK</option>
+                    <c:forEach  items="${procoBasepacks}" var="procoBasepack">
+                    <option value="${procoBasepack}">${procoBasepack}</option>
+                 </c:forEach>
+                </select>
+                  </div>
+                 </div>
+                <div class="form-group col-sm-4" style="margin-top: 20px; margin-left: 57px; ">
+                <label class="control-label col-md-3" for="uom" style="text-align:left; padding:0px">PPM ACCOUNT</label>
+				<div class="col-md-6">
+				<select class="form-control" id="PpmAccount" name="PpmAccount">
+				<option>SELECT PPM ACCOUNT</option>
+				<c:forEach items="${ppmAccountList}" var="ppmAccount" >
+				<option value="${ppmAccount}">${ppmAccount}</option>
+				</c:forEach>
+				</select>
+				</div>
+				</div>	
+				<div class="form-group col-sm-4">
+				<label class="control-label col-md-3" for="uom">CLUSTER</label>
+				<div class="col-md-6">
+				<select class="form-control" id="ProcoClusterList" name="ProcoClusterList">
+				<option>SELECT CLUSTER</option>
+				<c:forEach items="${procoClusterList}" var="procoCluster" >
+				<option value="${procoCluster}">${procoCluster}</option>
+				</c:forEach>
+				</select>
+				</div>
+				</div>
+				<div class="form-group col-sm-4">
+				<label class="control-label col-md-3" for="uom">CHANNEL</label>
+				<div class="col-md-6">
+				<select class="form-control" id="ProcoChannelList" name="ProcoChannelList">
+				<option>SELECT CHANNEL</option>
+				<c:forEach items="${procoChannelList}" var="procoChannel" >
+				<option value="${procoChannel}">${procoChannel}</option>
+				</c:forEach>
+				</select>
+				</div>
+				</div>
 			</form>
 			<form>
 			<!--bharati commented uom,kitting value, reason,remark and added last 4 columns in sprint-9 US-2-->
@@ -553,6 +597,10 @@ margin-top: -75px!important;
 		<script type="text/javascript">
 		var moc = '${mocJson}';
 		var Mocvalue = $('#Mocvalue').val(); //bharati added in sprint-9 for moc filter
+		var ProcoBasepack = $('#ProcoBasepack').val();
+        var PpmAccount = $('#PpmAccount').val();
+        var ProcoClusterList = $('#ProcoClusterList').val();
+        var ProcoChannelList = $('#ProcoChannelList').val();//viswas added in sprint-11 for filters
 		var geographyData = '${geographyJson}';
 		var basepacks = '${basepacks}';
 		var newBasepacks = null;

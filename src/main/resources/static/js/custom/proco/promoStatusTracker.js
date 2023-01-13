@@ -347,8 +347,26 @@ $(document).ready(function() {
 						Mocvalue = $(this).val();
 						promoTable.draw();
 						});
+
+					//viswas added this changes for filters in sprint-11	
+					$('#ProcoBasepack').change(function(){
+						ProcoBasepack = $(this).val();
+						promoTable.draw();
+						});
 						
-					
+						$('#PpmAccount').change(function(){
+							PpmAccount = $(this).val();
+							promoTable.draw();
+						});
+						$('#ProcoClusterList').change(function(){
+							ProcoClusterList = $(this).val();
+							promoTable.draw();
+						});
+						$('#ProcoChannelList').change(function(){
+							ProcoChannelList = $(this).val();
+							promoTable.draw();
+						});
+						
 						//bharati code end here for sprint-9
 						
 					/*PromoListing table pagination */
@@ -392,7 +410,13 @@ $(document).ready(function() {
 				    	                {"name": "modality", "value": modality}, 
 				    	                {"name": "year","value": year},
 				    	                {"name": "moc","value": Mocvalue},//bharati changes this mocVal to MocValue in sprint-9
-				    	                {"name": "promoId","value": promoId}
+				    	                {"name": "promoId","value": promoId},
+				    	                //viswas add this changes in sprint-11
+				    	               {"name": "promobasepack","value": ProcoBasepack},
+				    	                 {"name": "ppmaccount","value": PpmAccount},
+				    	                 {"name": "prococluster","value":ProcoClusterList},
+				    	                 {"name": "procochannel","value": ProcoChannelList}//viswas chnages this lists in sprint-11
+				    	                
 				    	                );
 				              }, 
 				              "fnDrawCallback": function(oSettings){
@@ -473,7 +497,7 @@ $(document).ready(function() {
 
 	                     $('#DataTables_Table_0_length').css({
 	                       
-	                         'padding': '20px 0'
+	                         'padding': '20px 30px'
 	                     });
 	                     $('#DataTables_Table_0_length').css({
 	                         'color': '#29290a'
@@ -509,12 +533,12 @@ $(document).ready(function() {
 	                     });
 				       
 	                     $('.promo-filter').css({
-	                    	 'float': 'right',
+	                    	'float': 'right',
 	                    	  'padding-left': '10px',
 	                    	  'padding-top': '20px',
 	                    	    'height': '75px', 
 	                    	    'width': 'none',
-	                    	    'border-left': '2px #e8e8e8 solid'
+	                    	   /* 'border-left': '2px #e8e8e8 solid'*/
 	                     });
 	                     
 				       var categoryTags = basepacks;
@@ -651,7 +675,12 @@ function split(val){
 function downloadPromotionFile(){
 	//$("#download").submit();  //bharati commented this line for sprint-9 moc filter value pass to download promo file
 	var SelectedMoc = $("#Mocvalue").val();
-	window.location.assign(SelectedMoc+"/downloadPromoStatusTracker.htm");
+	var SelectedBasepack = $('#ProcoBasepack').val();
+    var SelectedAccount = $('#PpmAccount').val();
+    var SelectedCluster = $('#ProcoClusterList').val();
+    var SelectedChannel = $('#ProcoChannelList').val();
+
+    window.location.assign(SelectedMoc+"/"+SelectedBasepack+"/"+SelectedAccount+"/"+SelectedChannel+"/"+SelectedCluster+"/downloadPromoStatusTracker.htm");
 }
 
 function uploadValidation() {

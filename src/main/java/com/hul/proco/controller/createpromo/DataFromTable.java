@@ -344,6 +344,14 @@ public class DataFromTable {
 		return list;
 	}
 	
+	//Added by Kajal G for Spint-11
+	public List<String> getClusterList(){
+		String clusterList = "SELECT DISTINCT CLUSTER FROM TBL_PROCO_ALLINDIA_CLUSTER_MASTER_V2 WHERE IS_ACTIVE = 1";
+		Query query1  = sessionFactory.getCurrentSession().createNativeQuery(clusterList);
+		List<String> list = query1.list();
+		return list;
+	}
+	
 	private ArrayList<String> getValidBasepack() {
 		String basepack = "SELECT DISTINCT BASEPACK FROM TBL_PROCO_PRODUCT_MASTER_V2 WHERE IS_ACTIVE=1 AND PPM_STATUS='YES'";
 		return (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(basepack).list();

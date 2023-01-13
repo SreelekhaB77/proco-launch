@@ -20,18 +20,18 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 	private ProcoStatusTrackerDAO procoStatusTrackerDao;
 	
 	@Override
-	public List<PromoListingBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String moc, String searchParameter) {
-		return procoStatusTrackerDao.getPromoTableList(pageDisplayStart, pageDisplayLength, moc,searchParameter);
+	public List<PromoListingBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster, String searchParameter) {
+		return procoStatusTrackerDao.getPromoTableList(pageDisplayStart, pageDisplayLength, moc,promobasepack,ppmaccount,procochannel,prococluster,searchParameter);
 	}
 
 	@Override
-	public int getPromoListRowCount(String moc) {
-		return procoStatusTrackerDao.getPromoListRowCount(moc);
+	public int getPromoListRowCount(String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster) {
+		return procoStatusTrackerDao.getPromoListRowCount(moc,promobasepack,ppmaccount,procochannel,prococluster);
 	}
 
 	@Override
-	public List<ArrayList<String>> getPromotionStatusTracker(ArrayList<String> headerList, String moc, String userId) {
-		return procoStatusTrackerDao.getPromotionStatusTracker(headerList,moc,userId);
+	public List<ArrayList<String>> getPromotionStatusTracker(ArrayList<String> headerList, String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster, String userId) {
+		return procoStatusTrackerDao.getPromotionStatusTracker(headerList,moc,promobasepack,ppmaccount,procochannel,prococluster,userId);
 	}
 	
 	@Override

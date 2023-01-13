@@ -46,8 +46,8 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public List<PromoListingBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String moc,
-			String searchParameter) {
+	public List<PromoListingBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String moc,String promobasepack,
+			String ppmaccount,String procochannel,String prococluster,String searchParameter) {
 		List<PromoListingBean> promoList = new ArrayList<>();
 		//List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
 		//List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
@@ -87,8 +87,35 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 					//+ "  FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR  ON PR.PROMO_ID = PM.PROMO_ID "
 					//+ "  LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
 					//+ "  LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE "
-					+ "  WHERE PM.MOC='"+moc+"'";
+					+ "  WHERE PM.MOC='"+moc+"' ";
 			
+						
+			//Kavitha D changes for filter-SPRINT 11 starts	
+			if(!promobasepack.equalsIgnoreCase("ALL")) {
+				if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
+				promoQuery +=	"AND PM.BASEPACK_CODE='"+promobasepack+"'";	
+				}
+			}
+			if(!ppmaccount.equalsIgnoreCase("ALL")) {
+				if(!ppmaccount.equalsIgnoreCase("SELECT PPM ACCOUNT")){
+				promoQuery +=	"AND PM.PPM_ACCOUNT='"+ppmaccount+"'";	
+				}
+			}
+			
+			if(!procochannel.equalsIgnoreCase("ALL")) {
+				if(!procochannel.equalsIgnoreCase("SELECT CHANNEL")) {
+				promoQuery +=	"AND PM.CHANNEL_NAME='"+procochannel+"'";	
+				}
+			}
+			
+			if(!prococluster.equalsIgnoreCase("ALL")) {
+				if(!prococluster.equalsIgnoreCase("SELECT CLUSTER")) {
+				promoQuery +=	"AND PM.CLUSTER='"+prococluster+"'";	
+				}
+			}
+					
+			//Kavitha D changes for filter-SPRINT 11 ends	
+
 			/*if (!cagetory.equalsIgnoreCase("All")) {
 				promoQuery += "AND C.CATEGORY = '" + cagetory + "' ";
 			}
@@ -320,7 +347,7 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public int getPromoListRowCount(String moc) {
+	public int getPromoListRowCount(String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster) {
 		// kiran - bigint to int changes
 		// List<Integer> list = null;
 		List<BigInteger> list = null;
@@ -336,7 +363,35 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 					//+ " FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR ON PR.PROMO_ID = PM.PROMO_ID "
 					//+ " LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
 					//+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE "
-					+ " WHERE PM.MOC= '"+moc+"'";
+					+ "  WHERE PM.MOC='"+moc+"'";
+			
+			//Kavitha D changes for filter-SPRINT 11 starts	
+			if(!promobasepack.equalsIgnoreCase("ALL")) {
+				if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
+					rowCount +=	"AND PM.BASEPACK_CODE='"+promobasepack+"'";	
+				}
+			}
+			if(!ppmaccount.equalsIgnoreCase("ALL")) {
+				if(!ppmaccount.equalsIgnoreCase("SELECT PPM ACCOUNT")){
+					rowCount +=	"AND PM.PPM_ACCOUNT='"+ppmaccount+"'";	
+				}
+			}
+			
+			if(!procochannel.equalsIgnoreCase("ALL")) {
+				if(!procochannel.equalsIgnoreCase("SELECT CHANNEL")) {
+					rowCount +=	"AND PM.CHANNEL_NAME='"+procochannel+"'";	
+				}
+			}
+			
+			if(!prococluster.equalsIgnoreCase("ALL")) {
+				if(!prococluster.equalsIgnoreCase("SELECT CLUSTER")) {
+					rowCount +=	"AND PM.CLUSTER='"+prococluster+"'";	
+				}
+			}
+			
+			//Kavitha D changes for filter-SPRINT 11 ends
+
+			
 			/*if (!cagetory.equalsIgnoreCase("All")) {
 				rowCount += "AND C.CATEGORY = '" + cagetory + "' ";
 			}
@@ -454,7 +509,7 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 				}
 			}*/
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(rowCount);
-			//System.out.println(query);
+			//System.out.println(rowCount);
 			list = query.list();
 		} catch (Exception ex) {
 			logger.debug("Exception: ", ex);
@@ -479,7 +534,7 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public List<ArrayList<String>> getPromotionStatusTracker(ArrayList<String> headerList,String moc, String userId) {
+	public List<ArrayList<String>> getPromotionStatusTracker(ArrayList<String> headerList,String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster, String userId) {
 		//List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
 		//List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
 		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
@@ -512,11 +567,36 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 							+ " START_DATE,END_DATE,OFFER_DESC,PPM_DESC,BASEPACK_CODE,BASEPACK_DESC,CHILDPACK,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,QUANTITY,FIXED_BUDGET ,BRANCH,"
 							+ " SALES_CLUSTER ,PPM_CUSTOMER,CMM_NAME,TME_NAME,SALES_CATEGORY,PSA_CATEGORY,PROMOTION_STATUS,PPM_PROMOTION_CREATOR ,PROMOTION_MECHANICS,INVESTMENT_TYPE,"
 							+ " SALES_CLUSTER_CODE ,BRAND,SUB_BRAND,PPM_BUDGET_HOLDER_NAME ,FUND_TYPE,INVESTMENT_AMOUNT ,PROMO_ENTRY_TYPE ,PROMO_USER_NAME ,PROMO_USER_TIME ,"
-							+ " PPM_APPROVED_DATE ,PPM_CREATION_DATE ,NON_UNIFY,PPM_SUBMISSION_DATE ,PPM_MODIFIED_DATE ,COE_REMARKS,MRP ,AB_CREATION ,BUDGET ,CURRENT_STATUS,SOL_TYPE,SOL_TYPE_SHORTKEY " //Added current_status,sol type,sol type short key-SPRINT 10
+							+ " PPM_APPROVED_DATE ,PPM_CREATION_DATE ,NON_UNIFY,PPM_SUBMISSION_DATE ,PPM_MODIFIED_DATE ,COE_REMARKS,MRP ,AB_CREATION ,BUDGET ,CURRENT_STATUS,SOL_TYPE,SOL_TYPE_SHORTKEY " //Added current_status,sol type,sol type short key-SPRINT 10 "
 							+ " FROM TBL_PROCO_PROMO_LISTING_REPORT  LR "
 							+ " WHERE LR.MOC=:moc " ;
-
 					
+					//Kavitha D changes for filter-SPRINT 11 starts	
+					
+					if(!promobasepack.equalsIgnoreCase("ALL")) {
+						if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
+							query +=	"AND LR.BASEPACK_CODE='"+promobasepack+"'";	
+						}
+					}
+					if(!ppmaccount.equalsIgnoreCase("ALL")) {
+						if(!ppmaccount.equalsIgnoreCase("SELECT PPM ACCOUNT")){
+							query +=	"AND LR.PPM_ACCOUNT='"+ppmaccount+"'";	
+						}
+					}
+					
+					if(!procochannel.equalsIgnoreCase("ALL")) {
+						if(!procochannel.equalsIgnoreCase("SELECT CHANNEL")) {
+							query +=	"AND LR.CHANNEL='"+procochannel+"'";	
+						}
+					}
+					
+					if(!prococluster.equalsIgnoreCase("ALL")) {
+						if(!prococluster.equalsIgnoreCase("SELECT CLUSTER")) {
+							query +=	"AND LR.SALES_CLUSTER='"+prococluster+"'";	
+						}
+					}
+							
+					//Kavitha D changes for filter-SPRINT 11 ends
 			  
 			  } else {
 			 
@@ -634,6 +714,8 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 			}*/
 			Query query1 = sessionFactory.getCurrentSession().createNativeQuery(query);
 			query1.setString("moc", moc);
+
+			
 			Iterator itr = query1.list().iterator();
 			downloadDataList.add(headerList);
 			while (itr.hasNext()) {

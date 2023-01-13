@@ -23,9 +23,6 @@ Tags: light, white, single page, multipurpose, multi page, custom-colors, Bootst
 /*--------------------*/
 /* BASIC TYPOGRAPHY */
 /*--------------------*/
-body, html {
-	
-}
 
 body {
 	overflow-x: hidden !important;
@@ -284,7 +281,7 @@ div.login-box:hover {
 }
 #table-id-promo-list-table_length{
 text-align: left;
-    padding: 20px 0px;
+    padding: 20px 20px;
     color: rgb(41, 41, 10);
 }
 .table-id-promo-list-table_filter{
@@ -300,6 +297,7 @@ text-align: left;
 /*------------------------*/
 .col-sm-4 {
 	margin-bottom: 15px;
+	margin-top: 15px;
 }
 
 .promo-create {
@@ -1463,7 +1461,7 @@ i.icon-search {
 	font-size: 85px;
 }
 
-<style>/*------------------------*/
+/*------------------------*/
 /* COMBO TREE */
 /*------------------------*/
 .comboTreeWrapper {
