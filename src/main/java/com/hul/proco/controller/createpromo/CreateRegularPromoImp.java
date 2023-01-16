@@ -1918,8 +1918,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			// abcreationHeaders.add("AB CREATION NAME");
 			modalityHeaders.add("OFFER MODALITY");
 			offertypeHeaders.add("CHANNEL NAME");
-			offertypeHeaders.add("OFFER MODALITY");
 			offertypeHeaders.add("OFFER TYPE");
+			offertypeHeaders.add("OFFER MODALITY"); //Changed sequence for SPRINT 11
 			channelHeaders.add("CHANNEL");
 			tdpHeaders.add("PROMO TIMEPERIOD");
 			
@@ -1938,7 +1938,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			// String abcreationQry = "SELECT DISTINCT AB_CREATION_NAME FROM
 			// TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE=1";
 			String modalityQry = "SELECT MODALITY_NAME FROM TBL_PROCO_OFFER_MODALITY_MASTER WHERE ACTIVE=1";
-			String offertypeQry = "SELECT DISTINCT CHANNEL_NAME, OFFER_MODALITY, OFFER_TYPE FROM TBL_PROCO_INVESTMENT_TYPE_MASTER_V2 WHERE IS_ACTIVE=1";
+			String offertypeQry = //"SELECT DISTINCT CHANNEL_NAME, OFFER_MODALITY, OFFER_TYPE FROM TBL_PROCO_INVESTMENT_TYPE_MASTER_V2 WHERE IS_ACTIVE=1";
+					" SELECT DISTINCT CHANNEL_NAME, OFFER_TYPE,OFFER_MODALITY FROM TBL_PROCO_INVESTMENT_TYPE_MASTER_V2 WHERE IS_ACTIVE=1"; //Changed offer modality sequence for SPRINT 11
 			String channelQry = " SELECT CHANNEL_NAME FROM TBL_PROCO_CHANNEL_MASTER WHERE ACTIVE=1";
 			String tdpQry = " SELECT DISTINCT TDP FROM TBL_VAT_MOC_TDP_MASTER";
 			String basepackQry = " SELECT DISTINCT CHANNEL_NAME, BASEPACK, BASEPACK_DESC, BP_MRP, SALES_CATEGORY, BRAND, CMM_NAME, TME_NAME FROM TBL_PROCO_PRODUCT_MASTER_V2 WHERE IS_ACTIVE = 1 "; //Added by Kavitha D-SPRINT 10
@@ -2353,8 +2354,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			// abcreationHeaders.add("AB CREATION NAME");
 			modalityHeaders.add("OFFER MODALITY");
 			offertypeHeaders.add("CHANNEL NAME");
-			offertypeHeaders.add("OFFER MODALITY");
 			offertypeHeaders.add("OFFER TYPE");
+			offertypeHeaders.add("OFFER MODALITY");
 			channelHeaders.add("CHANNEL");
 			tdpHeaders.add("PROMO TIMEPERIOD");
 			solHeaders.add("CR SOL TYPES");
@@ -2372,7 +2373,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			// String abcreationQry = "SELECT DISTINCT AB_CREATION_NAME FROM
 			// TBL_PROCO_AB_CREATION_MASTER WHERE ACTIVE=1";
 			String modalityQry = "SELECT MODALITY_NAME FROM TBL_PROCO_OFFER_MODALITY_MASTER WHERE ACTIVE=1";
-			String offertypeQry = "SELECT DISTINCT CHANNEL_NAME, OFFER_MODALITY, OFFER_TYPE FROM TBL_PROCO_INVESTMENT_TYPE_MASTER_V2 WHERE IS_ACTIVE=1";
+			String offertypeQry = //"SELECT DISTINCT CHANNEL_NAME, OFFER_MODALITY, OFFER_TYPE FROM TBL_PROCO_INVESTMENT_TYPE_MASTER_V2 WHERE IS_ACTIVE=1";
+					" SELECT DISTINCT CHANNEL_NAME, OFFER_TYPE,OFFER_MODALITY FROM TBL_PROCO_INVESTMENT_TYPE_MASTER_V2 WHERE IS_ACTIVE=1"; //Changed offer modality sequence for SPRINT 11
+
 			String channelQry = " SELECT CHANNEL_NAME FROM TBL_PROCO_CHANNEL_MASTER WHERE ACTIVE=1";
 			String tdpQry = " SELECT DISTINCT TDP FROM TBL_VAT_MOC_TDP_MASTER";
 			String solQry="SELECT SOL_REMARK FROM TBL_PROCO_SOL_TYPE "; //Added by Kavitha D-SPRINT 10
