@@ -353,8 +353,14 @@ public class DataFromTable {
 	}
 	
 	private ArrayList<String> getValidBasepack() {
-		String basepack = "SELECT DISTINCT BASEPACK FROM TBL_PROCO_PRODUCT_MASTER_V2 WHERE IS_ACTIVE=1 AND PPM_STATUS='YES'";
-		return (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(basepack).list();
+//		String basepack = "SELECT DISTINCT BASEPACK FROM TBL_PROCO_PRODUCT_MASTER_V2 WHERE IS_ACTIVE=1 AND PPM_STATUS='YES'";
+//		return (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(basepack).list();
+		
+		//Added by Kajal G for SPRINT - 11
+		String basepack = "SELECT DISTINCT CONCAT(BASEPACK, CHANNEL_NAME) AS BASEPACK_CHANNEL FROM TBL_PROCO_PRODUCT_MASTER_V2 WHERE IS_ACTIVE=1 AND PPM_STATUS='YES'";
+		ArrayList<String> ar = (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(basepack)
+				.list();
+		return (ArrayList<String>) ar.stream().map(String::toUpperCase).collect(Collectors.toList());
 	}
 
 	private ArrayList<String> getValidOfferType() {

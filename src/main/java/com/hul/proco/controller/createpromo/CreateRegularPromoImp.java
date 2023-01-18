@@ -396,12 +396,11 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							}
 					}
 					  
-					
-					if (!validationmap.get("baseback").contains(bean.getBasepack_code())) {
+					if (!validationmap.get("baseback").contains(bean.getBasepack_code()+bean.getChannel().toUpperCase())){
 						if (flag == 1)
-							error_msg = error_msg + ",Invalid Parent basepack";
+							error_msg = error_msg + ",Invalid Parent basepack for " + bean.getChannel();
 						else {
-							error_msg = error_msg + "Invalid parent baseback";
+							error_msg = error_msg + "Invalid parent baseback for " + bean.getChannel();
 							flag = 1;
 						}
 					}
@@ -1110,14 +1109,15 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 					}
 					
-					if (!validationmap.get("baseback").contains(bean.getBasepack_code())) {
+					if (!validationmap.get("baseback").contains(bean.getBasepack_code()+bean.getChannel().toUpperCase())) {
 						if (flag == 1)
-							error_msg = error_msg + ",Invalid Parent basepack";
+							error_msg = error_msg + ",Invalid Parent basepack for " + bean.getChannel();
 						else {
-							error_msg = error_msg + "Invalid parent baseback";
+							error_msg = error_msg + "Invalid parent baseback for " + bean.getChannel();
 							flag = 1;
 						}
 					}
+					
 					//Kajal G changes start
 					if(datafromtable.specialChar(bean.getOffer_desc()))
 					{
