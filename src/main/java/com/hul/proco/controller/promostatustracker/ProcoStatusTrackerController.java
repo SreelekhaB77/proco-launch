@@ -112,7 +112,7 @@ public class ProcoStatusTrackerController {
 		
 		//Kavitha D changes for filter-SPRINT 11 starts
 		List<String> procoBasepack = promoListingService.getProcoBasepack();
-		List<String> ppmAccount = promoListingService.getPpmAccount();
+		List<String> ppmAccount = promoListingService.getPpmAccount(id,roleId);
 		List<String> procoChannel = promoListingService.getProcoChannel();
 		List<String> procoCluster = promoListingService.getProcoCluster();
 		//Kavitha D changes for filter-SPRINT 11 ends

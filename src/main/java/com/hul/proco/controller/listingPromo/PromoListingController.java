@@ -202,7 +202,7 @@ public class PromoListingController {
 		
 		model.addAttribute("CreatePromotionBean", promoList);
 		model.addAttribute("roleId", roleId);
-		setModelAttributes(model,userId);
+		setModelAttributes(model,userId,request);
 		return new ModelAndView("proco/promo_edit");
 	}
 
@@ -214,7 +214,7 @@ public class PromoListingController {
 		String remark = request.getParameter("remark");
 		promoListingService.deletePromotion(promoId,userId,remark);
 		model.addAttribute("roleId", roleId);
-		setModelAttributes(model,userId);
+		setModelAttributes(model,userId,request);
 		model.addAttribute("success", "Promotion deleted successfully. ");
 		return new ModelAndView("proco/proco_promo_listing");
 	}
@@ -236,7 +236,7 @@ public class PromoListingController {
 		model.addAttribute("CreatePromotionBean", promoList);
 		model.addAttribute("roleId", roleId);
 		model.addAttribute("duplicate", true);
-		setModelAttributes(model,userId);
+		setModelAttributes(model,userId,request);
 
 		return new ModelAndView("proco/proco_create");
 	}
@@ -289,11 +289,11 @@ public class PromoListingController {
 				if (createPromotion.equals("ERROR_FILE")) {
 					String errorMsg = createPromoService.getErrorMsg(userId);
 					model.addAttribute("errorMsg", errorMsg);
-					setModelAttributes(model,userId);
+					setModelAttributes(model,userId,request);
 					return new ModelAndView("proco/promo_edit");
 				} else if (createPromotion.equals("ERROR")) {
 					model.addAttribute("errorMsg", "Unhandled exception: Failed to update promotion");
-					setModelAttributes(model,userId);
+					setModelAttributes(model,userId,request);
 					return new ModelAndView("proco/promo_edit");
 				}
 
@@ -301,18 +301,19 @@ public class PromoListingController {
 				model.addAttribute("success", "Promotion updated successfully.");
 			}
 			model.addAttribute("roleId", roleId);
-			setModelAttributes(model,userId);
+			setModelAttributes(model,userId,request);
 		} catch (Exception e) {
 			logger.debug("Exception: ", e);
 			model.addAttribute("errorMsg", "Failed to update promotion");
-			setModelAttributes(model,userId);
+			setModelAttributes(model,userId,request);
 			return new ModelAndView("proco/promo_edit");
 		}
 		return new ModelAndView("proco/proco_promo_listing");
 	}
 
 	@SuppressWarnings("unchecked")
-	private void setModelAttributes(Model model,String userId) {
+	private void setModelAttributes(Model model,String userId,HttpServletRequest request) {
+		String roleId = (String) request.getSession().getAttribute("roleId");
 		List<String> customerChainL1 = createPromoService.getCustomerChainL1();
 		List<String> offerTypes = createPromoService.getOfferTypes();
 		String geographyJson = createPromoService.getGeography(false);
@@ -328,7 +329,7 @@ public class PromoListingController {
 		List<String> mocValue = promoListingService.getPromoMoc();
 		//Kavitha D changes for filters-SPROINT 11 starts
 		List<String> procoBasepack = promoListingService.getProcoBasepack();
-		List<String> ppmAccount = promoListingService.getPpmAccount();
+		List<String> ppmAccount = promoListingService.getPpmAccount(userId,roleId);
 		List<String> procoChannel = promoListingService.getProcoChannel();
 		List<String> procoCluster = promoListingService.getProcoCluster();
 		//Kavitha D changes for filters-SPRINT 11 ends
@@ -513,14 +514,14 @@ public class PromoListingController {
 						if (map.isEmpty()) {
 							model.addAttribute("FILE_STATUS", "ERROR");
 							model.addAttribute("errorMsg", "File does not contain data");
-							setModelAttributes(model,userId);
+							setModelAttributes(model,userId,request);
 							return new ModelAndView("proco/proco_promo_listing");
 						}
 						if (map.containsKey("ERROR")) {
 							List<Object> errorList = map.get("ERROR");
 							String errorMsg = (String) errorList.get(0);
 							model.addAttribute("errorMsg", errorMsg);
-							setModelAttributes(model,userId);
+							setModelAttributes(model,userId,request);
 							return new ModelAndView("proco/proco_promo_listing");
 						} else if (map.containsKey("DATA")) {
 							List<?> list = map.get("DATA");
@@ -535,7 +536,7 @@ public class PromoListingController {
 							} else if (savedData != null && savedData.equals("ERROR")) {
 								model.addAttribute("errorMsg", "Error while updating promos");
 							}
-							setModelAttributes(model,userId);
+							setModelAttributes(model,userId,request);
 						}
 					}
 				}
@@ -545,12 +546,12 @@ public class PromoListingController {
 		} catch (Exception e) {
 			logger.debug("Exception: ", e);
 			model.addAttribute("errorMsg", "Error while uploading file");
-			setModelAttributes(model,userId);
+			setModelAttributes(model,userId,request);
 			return new ModelAndView("proco/proco_promo_listing");
 		} catch (Throwable e) {
 			logger.debug("Exception: ", e);
 			model.addAttribute("errorMsg", "Error while uploading file");
-			setModelAttributes(model,userId);
+			setModelAttributes(model,userId,request);
 			return new ModelAndView("proco/proco_promo_listing");
 		}
 		return new ModelAndView("proco/proco_promo_listing");

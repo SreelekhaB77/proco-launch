@@ -80,7 +80,7 @@ public interface PromoListingService {
 	//Added by kavitha D-SPRINT 11 changes-STARTS
 	public List<String> getProcoBasepack();
 	
-	public List<String> getPpmAccount();
+	public List<String> getPpmAccount(String userId,String roleId);
 
 	public List<String> getProcoChannel();
 

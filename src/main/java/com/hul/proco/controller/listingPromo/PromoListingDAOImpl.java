@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -1835,32 +1836,33 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			//Kavitha D changes for filter-SPRINT 11 ends
 		}
 		
-		else
+		else if(roleId.equalsIgnoreCase("TME")|| roleId.equalsIgnoreCase("COE"))
+
 		{
-			query+=" WHERE LR.TME_NAME=:userId AND LR.MOC=:moc";
+			query+=" WHERE LR.MOC=:moc AND LR.TME_NAME=:userId ";
 			
 				//Kavitha D changes for filter-SPRINT 11 starts	
 				
 				if(!promobasepack.equalsIgnoreCase("ALL")) {
 					if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
-						query +=	"AND LR.BASEPACK_CODE='"+promobasepack+"'";	
+						query +=	" AND LR.BASEPACK_CODE='"+promobasepack+"'";	
 					}
 				}
 				if(!ppmaccount.equalsIgnoreCase("ALL")) {
 					if(!ppmaccount.equalsIgnoreCase("SELECT PPM ACCOUNT")){
-						query +=	"AND LR.PPM_ACCOUNT='"+ppmaccount+"'";	
+						query +=	" AND LR.PPM_ACCOUNT='"+ppmaccount+"'";	
 					}
 				}
 				
 				if(!procochannel.equalsIgnoreCase("ALL")) {
 					if(!procochannel.equalsIgnoreCase("SELECT CHANNEL")) {
-						query +=	"AND LR.CHANNEL='"+procochannel+"'";	
+						query +=	" AND LR.CHANNEL='"+procochannel+"'";	
 					}
 				}
 				
 				if(!prococluster.equalsIgnoreCase("ALL")) {
 					if(!prococluster.equalsIgnoreCase("SELECT CLUSTER")) {
-						query +=	"AND LR.SALES_CLUSTER='"+prococluster+"'";	
+						query +=	" AND LR.SALES_CLUSTER='"+prococluster+"'";	
 					}
 				}
 						
@@ -1880,7 +1882,8 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			
 		}
 		
-		else {
+		else if(roleId.equalsIgnoreCase("TME")|| roleId.equalsIgnoreCase("COE"))
+		 		{
 			query1.setString("moc", moc);
 			query1.setString("userId", userId);
 			
@@ -2053,9 +2056,34 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				
 				for(String kamAccount:kamAccounts)
 					promoQueryCount+="'"+kamAccount+"',";
-					
 				 promoQueryCount = promoQueryCount.substring(0, promoQueryCount.length()-1)+")";
+
+					//Kavitha D changes for filter-SPRINT 11 starts
+				if(!promobasepack.equalsIgnoreCase("ALL")) {
+					if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
+						promoQueryCount +=	"AND PM.BASEPACK_CODE='"+promobasepack+"'";	
+					}
 				}
+				if(!ppmaccount.equalsIgnoreCase("ALL")) {
+					if(!ppmaccount.equalsIgnoreCase("SELECT PPM ACCOUNT")){
+						promoQueryCount +=	"AND PM.PPM_ACCOUNT='"+ppmaccount+"'";	
+					}
+				}
+				
+				if(!procochannel.equalsIgnoreCase("ALL")) {
+					if(!procochannel.equalsIgnoreCase("SELECT CHANNEL")) {
+						promoQueryCount +=	"AND PM.CHANNEL_NAME='"+procochannel+"'";	
+					}
+				}
+				
+				if(!prococluster.equalsIgnoreCase("ALL")) {
+					if(!prococluster.equalsIgnoreCase("SELECT CLUSTER")) {
+						promoQueryCount +=	"AND PM.CLUSTER='"+prococluster+"'";	
+					}
+				}
+					
+				}
+			//Kavitha D changes for filter-SPRINT 11 ends
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQueryCount);
 			list = query.list();
 		} catch (Exception ex) {
@@ -2222,7 +2250,33 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			
 			if (roleId.equalsIgnoreCase("KAM")) {
 				promoQueryGrid += " WHERE PM.MOC='"+moc+ "' AND PM.PPM_ACCOUNT IN (:kamAccount) ";
+				
+				//Kavitha D changes for filter-SPRINT 11 starts
+				if(!promobasepack.equalsIgnoreCase("ALL")) {
+					if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
+						promoQueryGrid +=	"AND PM.BASEPACK_CODE='"+promobasepack+"'";	
+					}
+				}
+				if(!ppmaccount.equalsIgnoreCase("ALL")) {
+					if(!ppmaccount.equalsIgnoreCase("SELECT PPM ACCOUNT")){
+						promoQueryGrid +=	"AND PM.PPM_ACCOUNT='"+ppmaccount+"'";	
+					}
+				}
+				
+				if(!procochannel.equalsIgnoreCase("ALL")) {
+					if(!procochannel.equalsIgnoreCase("SELECT CHANNEL")) {
+						promoQueryGrid +=	"AND PM.CHANNEL_NAME='"+procochannel+"'";	
+					}
+				}
+				
+				if(!prococluster.equalsIgnoreCase("ALL")) {
+					if(!prococluster.equalsIgnoreCase("SELECT CLUSTER")) {
+						promoQueryGrid +=	"AND PM.CLUSTER='"+prococluster+"'";	
+					}
+				}
 			}
+			//Kavitha D changes for filter-SPRINT 11 ends
+
 			if(searchParameter!=null && searchParameter.length()>0){
 				promoQueryGrid +="AND UCASE(PM.PROMO_ID) LIKE UCASE('%"+searchParameter+"%')";
 			}
@@ -2495,12 +2549,22 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 	}
 		
 	@Override
-	public List<String> getPpmAccount() {
+	public List<String> getPpmAccount(String userId,String roleId) {
 		List<String> promoAccount = new ArrayList<String>();
 		try {
-			Query qryProcoaccount = sessionFactory.getCurrentSession().createNativeQuery(" SELECT DISTINCT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y' ORDER BY PPM_ACCOUNT ");
+			if (roleId.equalsIgnoreCase("TME") || roleId.equalsIgnoreCase("DP") || roleId.equalsIgnoreCase("COE") || roleId.equalsIgnoreCase("NCMM") || roleId.equalsIgnoreCase("SC")) {
+			Query qryProcoaccount = sessionFactory.getCurrentSession().createNativeQuery("SELECT DISTINCT PPM_ACCOUNT FROM TBL_PROCO_CUSTOMER_MASTER_V2 WHERE IS_ACTIVE='Y' ORDER BY PPM_ACCOUNT ");
 			promoAccount = qryProcoaccount.list();
-		} catch (Exception ex) {
+			}
+			
+			else if (roleId.equalsIgnoreCase("KAM")){
+			Query qryProcoaccount = sessionFactory.getCurrentSession().createNativeQuery("SELECT DISTINCT ACCOUNT_NAME FROM TBL_VAT_USER_DETAILS WHERE USERID=:userId");		
+			qryProcoaccount.setString("userId", userId);
+			List<String> kamAccount=qryProcoaccount.list();
+			for(String str:kamAccount) {
+				promoAccount=Arrays.stream(str.split(",")).collect(Collectors.toList());
+			}
+			} }catch (Exception ex) {
 			logger.debug("Exception: ", ex);
 			return null;
 		}
