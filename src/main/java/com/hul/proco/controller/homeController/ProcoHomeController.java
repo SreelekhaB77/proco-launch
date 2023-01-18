@@ -83,7 +83,7 @@ public class ProcoHomeController {
 		
 		//Kavitha D changes for filters-SPROINT 11 starts
 		List<String> procoBasepack = promoListingService.getProcoBasepack();
-		List<String> ppmAccount = promoListingService.getPpmAccount();
+		List<String> ppmAccount = promoListingService.getPpmAccount(userId,roleId);
 		List<String> procoChannel = promoListingService.getProcoChannel();
 		List<String> procoCluster = promoListingService.getProcoCluster();
 		//Kavitha D changes for filters-SPRINT 11 ends

@@ -348,8 +348,8 @@ public class PromoListingServiceImpl implements PromoListingService {
 	}
 	
 	@Override
-	public List<String> getPpmAccount() {
-		return promoListingDAO.getPpmAccount();
+	public List<String> getPpmAccount(String userId,String roleId) {
+		return promoListingDAO.getPpmAccount(userId,roleId);
 	}
 	@Override
 	public List<String> getProcoChannel() {
