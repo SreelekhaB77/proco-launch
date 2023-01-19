@@ -331,7 +331,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					query.setString(14, bean.getYear());
 					query.setString(24, "");
 					query.setString(25, "");
-					query.setString(26, commanmap.get(bean.getBasepack_code()));
+					query.setString(26, commanmap.get(bean.getBasepack_code()+bean.getChannel()));
 					
 					if (datafromtable.validateYear(bean.getYear(), bean.getMoc_name())) {
 						query.setString(23, bean.getYear());
@@ -826,7 +826,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				} else {
 					query.setString(12, bean.getBudget());
 				}
-				query.setString(26, commanmap.get(bean.getBasepack_code().toUpperCase()));
+				query.setString(26, commanmap.get(bean.getBasepack_code().toUpperCase()+bean.getChannel().toUpperCase()));
 				
 				if (!duplicateMap.containsKey(bean.getMoc_name().toUpperCase() +bean.getYear().toUpperCase()+ bean.getBasepack_code().toUpperCase()
 						+ bean.getPpm_account().toUpperCase() + bean.getCluster().toUpperCase() + bean.getSol_type().trim().toUpperCase()
