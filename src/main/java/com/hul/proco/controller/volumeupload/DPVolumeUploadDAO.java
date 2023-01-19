@@ -61,7 +61,7 @@ public class DPVolumeUploadDAO implements DPVolumeUpload {
 					+ "INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.PPM_ACCOUNT AND CM.CHANNEL_NAME = PM.CHANNEL_NAME "
 					+ "WHERE PM.TEMPLATE_TYPE = 'R' AND PM.STATUS = 1 AND PM.OFFER_TYPE ='Ground Ops' AND PM.CHANNEL_NAME IN ('MT_RETAIL', 'MT NUTS', 'CNC NUTS', 'HUL3')";
 			*/
-			String query_list ="SELECT * FROM vw_dp_volume_download";
+			String query_list ="SELECT * FROM VW_DP_VOLUME_DOWNLOAD";
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(query_list);
 			downloadDataList.add(header);
 			Iterator itr = query.list().iterator();
