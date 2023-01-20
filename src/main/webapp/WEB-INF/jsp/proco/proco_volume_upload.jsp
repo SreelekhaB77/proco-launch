@@ -385,6 +385,10 @@
 	
 	<script type="text/javascript">
 		var moc = '${mocJson}';
+		var ProcoBasepack = null;
+        var PpmAccount = null;
+        var ProcoClusterList = null;
+        var ProcoChannelList =null;//viswas added in sprint-11 for filters
 		var geographyData = '${geographyJson}';
 		var basepacks = '${basepacks}';
 		var newBasepacks = null;
