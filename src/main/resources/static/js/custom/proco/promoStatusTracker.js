@@ -675,6 +675,7 @@ function split(val){
 function downloadPromotionFile(){
 	//$("#download").submit();  //bharati commented this line for sprint-9 moc filter value pass to download promo file
 	var SelectedMoc = $("#Mocvalue").val();
+	//Added by viswas in sprint-11 for filters.
 	var SelectedBasepack = $('#ProcoBasepack').val();
     var SelectedAccount = $('#PpmAccount').val();
     var SelectedCluster = $('#ProcoClusterList').val();
