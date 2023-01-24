@@ -331,7 +331,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					query.setString(14, bean.getYear());
 					query.setString(24, "");
 					query.setString(25, "");
-					query.setString(26, commanmap.get(bean.getBasepack_code()+bean.getChannel()));
+					query.setString(26, commanmap.get(bean.getBasepack_code().toUpperCase()+bean.getChannel().toUpperCase()));
 					
 					if (datafromtable.validateYear(bean.getYear(), bean.getMoc_name())) {
 						query.setString(23, bean.getYear());
