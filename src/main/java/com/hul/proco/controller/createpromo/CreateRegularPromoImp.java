@@ -805,7 +805,10 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				
 				if (commanmap
 						.containsKey(duplicateKey)
-						&& !bean.getSol_type().trim().equalsIgnoreCase("Top Up") && !bean.getOfr_type().equalsIgnoreCase("Visibility"))
+						&& !bean.getSol_type().trim().equalsIgnoreCase("Top Up") 
+						&& !bean.getSol_type().trim().equalsIgnoreCase("Budget Extension")
+						&& !bean.getSol_type().trim().equalsIgnoreCase("Additional Quantity")
+						&& !bean.getOfr_type().equalsIgnoreCase("Visibility"))
 				{
 					if (flag == 1)
 						error_msg = error_msg + ",promo entry already exists";
@@ -1030,15 +1033,17 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 					}
 					//moc_name,year,PPM_ACCOUNT,BASEPACK_CODE,CLUSTER
-					if(bean.getSol_type().trim().equalsIgnoreCase("TOP UP"))
+					if(bean.getSol_type().trim().equalsIgnoreCase("TOP UP") 
+							|| bean.getSol_type().trim().equalsIgnoreCase("Budget Extension")
+							|| bean.getSol_type().trim().equalsIgnoreCase("Additional Quantity"))
 					{
 						if (!crEntries.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
 								+ bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()
 								+ bean.getCluster())) {
 							if (flag == 1)
-								error_msg = error_msg + ",Promo entry does not exists for moc, ppm account, basepack and cluster for TOP UP";
+								error_msg = error_msg + ",Promo entry does not exists for moc, ppm account, basepack and cluster for " + bean.getSol_type();
 							else
-								error_msg = error_msg + "Promo entry does not exists for moc, ppm account, basepack and cluster for TOP UP";
+								error_msg = error_msg + "Promo entry does not exists for moc, ppm account, basepack and cluster for " + bean.getSol_type();
 							flag = 1;
 						}
 					}
@@ -1093,9 +1098,10 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					
 					
 					//MOC_NAME-2, PPM_ACCOUNT-3, BASEPACK_CODE-4, CLUSTER-5,PRICE_OFF-6, year-10
-					if (bean.getSol_type().trim().equalsIgnoreCase("Budget Extension")
+					/*if (bean.getSol_type().trim().equalsIgnoreCase("Budget Extension")
 							|| bean.getSol_type().trim().equalsIgnoreCase("Additional Quantity")
-							|| bean.getSol_type().trim().equalsIgnoreCase("Liquidation"))
+							|| bean.getSol_type().trim().equalsIgnoreCase("Liquidation"))*/
+					if (bean.getSol_type().trim().equalsIgnoreCase("Liquidation"))
 					{
 						if (!crEntries
 								.containsKey(bean.getMoc_name().toUpperCase() + bean.getPpm_account().toUpperCase()
@@ -1347,6 +1353,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 									// if year is equal and check if moc is back dated
 									if (year_frommap_cr == yearfromexcel) {
+										/*
 										if (datafromtable.getFutureDatedMOC(moc_frommap_cr, moc_name_fromexcel)) {
 											if (flag == 1)
 												error_msg += ",MOC  must be future dated.";
@@ -1381,6 +1388,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 											}
 										}
+										*/
 									} else if (yearfromexcel > year_frommap_cr) {
 										String moc_group = datehandle.get(bean.getChannel().toUpperCase() + "_"
 												+ bean.getPpm_account().toUpperCase());
