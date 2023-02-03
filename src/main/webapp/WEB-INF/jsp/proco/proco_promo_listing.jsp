@@ -392,7 +392,7 @@ padding-right: 135px;
 				</div>
 				</div>
 				
-				<div class="form-group col-sm-4" style="margin-top: 20px;margin-left:-25px">
+				<div class="form-group col-sm-4" style="margin-top: 20px; margin-left:-25px; ">
 				<label class="control-label col-md-3"  "for="uom">CLUSTER</label>
 				<div class="col-md-6">
 				<select class="form-control" id="ProcoClusterList" name="ProcoClusterList">
@@ -639,7 +639,7 @@ padding-right: 135px;
 		var modality = null;
 		var year = null;
 		var geography = null;
-		var mocVal = null;
+		//var mocVal = null;
 		var startDate1 = $('#fromDate').val();
 		var endDate1 = $('#toDate').val();//viswas added in sprint-11 for filters
 		  jQuery.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {

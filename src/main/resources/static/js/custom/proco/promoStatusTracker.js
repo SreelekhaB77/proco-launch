@@ -3,6 +3,8 @@
   var spinnerHeight = "100";
  
 $(document).ready(function() {
+	 $('#startDate1').val("2000-01-20");
+	 $('#endDate1').val("2000-02-21");
 	
 	$(document).on("click", "#btnSubmitBasePack1, #btnSubmitBasePack, .validate_dowload", function(){
         $("#successblock, #errorblock, #successblockUpload, #erorblockUpload").hide();
@@ -366,6 +368,16 @@ $(document).ready(function() {
 							ProcoChannelList = $(this).val();
 							promoTable.draw();
 						});
+						$('#startDate1').change(function(){
+							//console.log("hi")
+							startDate1 =startDate1Val;
+							promoTable.draw();
+						});
+						$('#endDate1').change(function(){
+							//console.log("hi");
+							endDate1 = endDate1Val;
+							promoTable.draw();
+						});
 						
 						//bharati code end here for sprint-9
 						
@@ -415,7 +427,9 @@ $(document).ready(function() {
 				    	               {"name": "promobasepack","value": ProcoBasepack},
 				    	                 {"name": "ppmaccount","value": PpmAccount},
 				    	                 {"name": "prococluster","value":ProcoClusterList},
-				    	                 {"name": "procochannel","value": ProcoChannelList}//viswas chnages this lists in sprint-11
+				    	                 {"name": "procochannel","value": ProcoChannelList},
+				    	                  {"name": "startDate1","value":startDate1},
+				    	                {"name": "endDate1","value":endDate1}//viswas chnages this lists in sprint-11
 				    	                
 				    	                );
 				              }, 
@@ -603,6 +617,43 @@ $(document).ready(function() {
 						    window.location.replace("/VisibilityAssetTracker/proco_measure_upload.jsp");
 						})
 				});
+				var startDate1Val,endDate1Val;
+function promoStartDate1(){
+	startDate1Val = $('#startDate1').val();
+	endDate1Val = $('#endDate1').val();
+	
+	if( startDate1Val != '' && endDate1Val != ''){
+				$('#Mocvalue').val("");
+				$('#Mocvalue').prop('disabled',true);
+				
+			} 
+	
+   
+	//console.log('StartDateVal is ',startDate1Val);
+	
+}
+function promoEndDate1(){
+	startDate1Val = $('#startDate1').val();
+	endDate1Val = $('#endDate1').val();
+	if( startDate1Val != '' && endDate1Val != ''){
+				$('#Mocvalue').val("");
+				$('#Mocvalue').prop('disabled',true);
+				
+			} 
+	//console.log('EndDateVal is ',endDate1Val);
+	
+}
+function dateDisable(){
+	var Mocvalue = $('#Mocvalue').val();
+	if(Mocvalue != ''){
+		$('#startDate1').val("");
+		$('#endDate1').val("");
+		$('#startDate1').prop('disabled',true);
+		$('#endDate1').prop('disabled',true);
+		//$('.promoStartDate1').startDate1('disable');
+		//$('.promoEndDate1').startDate1('disable');
+	}
+}
 
 function getCustChainValues(selVal) {
 	$.ajax({
@@ -680,8 +731,10 @@ function downloadPromotionFile(){
     var SelectedAccount = $('#PpmAccount').val();
     var SelectedCluster = $('#ProcoClusterList').val();
     var SelectedChannel = $('#ProcoChannelList').val();
-
-    window.location.assign(SelectedMoc+"/"+SelectedBasepack+"/"+SelectedAccount+"/"+SelectedChannel+"/"+SelectedCluster+"/downloadPromoStatusTracker.htm");
+    var SelectedstartDate1 =(($('#startDate1').val()) == "")? null:$('#startDate1').val();
+	//console.log("startDate is ", startDate1)
+	var SelectedendDate1 =(($('#endDate1').val()) == "")? null:$('#endDate1').val();
+    window.location.assign(SelectedMoc+"/"+SelectedBasepack+"/"+SelectedAccount+"/"+SelectedChannel+"/"+SelectedCluster+"/"+SelectedstartDate1+"/"+SelectedendDate1+"/downloadPromoStatusTracker.htm");
 }
 
 function uploadValidation() {
