@@ -635,14 +635,13 @@ padding-right: 135px;
 		var brand = null;
 		var basepack = null;
 		var custChainL1 = null;
-		
 		var offerType = null;
 		var modality = null;
 		var year = null;
 		var geography = null;
 		var mocVal = null;
 		var startDate1 = $('#fromDate').val();
-		var endDate1 = $('#toDate').val();
+		var endDate1 = $('#toDate').val();//viswas added in sprint-11 for filters
 		  jQuery.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
               return {
                   "iStart": oSettings._iDisplayStart,
