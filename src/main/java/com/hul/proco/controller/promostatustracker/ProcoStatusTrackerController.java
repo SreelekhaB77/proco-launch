@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -143,7 +145,10 @@ public class ProcoStatusTrackerController {
 			@RequestParam("year") String yearValue, @RequestParam("custChainL2") String custChainL2Value,
 			@RequestParam("basepack") String basepackValue, @RequestParam("geography") String geographyValue,
 			@RequestParam("moc") String mocValue, @RequestParam("promoId") String promoId,@RequestParam("promobasepack") String procoBasepack,
-			@RequestParam("ppmaccount") String ppmAccount,@RequestParam("procochannel") String procoChannel,@RequestParam("prococluster") String procoCluster,HttpServletRequest request) {
+			@RequestParam("ppmaccount") String ppmAccount,@RequestParam("procochannel") String procoChannel,@RequestParam("prococluster") String procoCluster,
+			@RequestParam(value="startDate1",required=false) @DateTimeFormat(pattern="MMddyyyy") String fromDate,
+			@RequestParam(value="endDate1",required=false) @DateTimeFormat(pattern="MMddyyyy") String toDate,
+			HttpServletRequest request) {
 
 		long startTime = System.currentTimeMillis();
 		String userId = (String) request.getSession().getAttribute("UserID");
@@ -252,9 +257,9 @@ public class ProcoStatusTrackerController {
 				(pageNumber * pageDisplayLength), cagetory, brand, basepack, custChainL1, custChainL2, geography,
 				offerType, modality, year, moc, userId, 1,promoIdVal,searchParameter);*/
 		
-		int rowCount = procoStatusTrackerService.getPromoListRowCount(moc,promobasepack,ppmaccount,procochannel,prococluster);
+		int rowCount = procoStatusTrackerService.getPromoListRowCount(moc,promobasepack,ppmaccount,procochannel,prococluster,fromDate,toDate);
 		List<PromoListingBean> promoList = procoStatusTrackerService.getPromoTableList((pageDisplayStart + 1),
-				(pageNumber * pageDisplayLength), moc,promobasepack,ppmaccount,procochannel,prococluster,searchParameter);
+				(pageNumber * pageDisplayLength), moc,promobasepack,ppmaccount,procochannel,prococluster,searchParameter,fromDate,toDate);
 
 		
 		
@@ -339,9 +344,10 @@ public class ProcoStatusTrackerController {
 	}
 	//Added by Kavitha D for promo measure template ends-SPRINT 9
 
-	@RequestMapping(value = "{moc}/{promobasepack}/{ppmaccount}/{procochannel}/{prococluster}/downloadPromoStatusTracker.htm", method = RequestMethod.GET)
+	@RequestMapping(value = "{moc}/{promobasepack}/{ppmaccount}/{procochannel}/{prococluster}/{startDate1}/{endDate1}/downloadPromoStatusTracker.htm", method = RequestMethod.GET)
 	public ModelAndView downloadPromoStatusTracker(@PathVariable("moc") String moc,@PathVariable("promobasepack") String procoBasepack,
 			@PathVariable("ppmaccount") String ppmAccount,@PathVariable("procochannel") String procoChannel,@PathVariable("prococluster") String procoCluster,
+			@PathVariable("startDate1") @DateTimeFormat(pattern="MMddyyyy") String fromDate,@PathVariable("endDate1") @DateTimeFormat(pattern="MMddyyyy") String toDate,
 			Model model,HttpServletRequest request, HttpServletResponse response) {
 		logger.info("START downloadPromoStatusTracker():");
 		try {
@@ -490,7 +496,7 @@ public class ProcoStatusTrackerController {
 			/*downloadedData = procoStatusTrackerService.getPromotionStatusTracker(headerList, cagetory, brand, basepack, custChainL1,
 					custChainL2, geography, offerType, modality, year, moc, userId, 1,promoId);*/
 			
-			downloadedData = procoStatusTrackerService.getPromotionStatusTracker(headerList, moc,promobasepack,ppmaccount,procochannel,prococluster,userId);
+			downloadedData = procoStatusTrackerService.getPromotionStatusTracker(headerList, moc,promobasepack,ppmaccount,procochannel,prococluster,userId,fromDate,toDate);
 			
 			if (downloadedData != null) {
 				UploadUtil.writeXLSXFile(downloadFileName, downloadedData, null,".xlsx");

@@ -3,6 +3,7 @@ package com.hul.proco.controller.promostatustracker;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +21,18 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 	private ProcoStatusTrackerDAO procoStatusTrackerDao;
 	
 	@Override
-	public List<PromoListingBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster, String searchParameter) {
-		return procoStatusTrackerDao.getPromoTableList(pageDisplayStart, pageDisplayLength, moc,promobasepack,ppmaccount,procochannel,prococluster,searchParameter);
+	public List<PromoListingBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster, String searchParameter,String fromDate,String toDate) {
+		return procoStatusTrackerDao.getPromoTableList(pageDisplayStart, pageDisplayLength, moc,promobasepack,ppmaccount,procochannel,prococluster,searchParameter,fromDate,toDate);
 	}
 
 	@Override
-	public int getPromoListRowCount(String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster) {
-		return procoStatusTrackerDao.getPromoListRowCount(moc,promobasepack,ppmaccount,procochannel,prococluster);
+	public int getPromoListRowCount(String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster,String fromDate,String toDate) {
+		return procoStatusTrackerDao.getPromoListRowCount(moc,promobasepack,ppmaccount,procochannel,prococluster,fromDate,toDate);
 	}
 
 	@Override
-	public List<ArrayList<String>> getPromotionStatusTracker(ArrayList<String> headerList, String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster, String userId) {
-		return procoStatusTrackerDao.getPromotionStatusTracker(headerList,moc,promobasepack,ppmaccount,procochannel,prococluster,userId);
+	public List<ArrayList<String>> getPromotionStatusTracker(ArrayList<String> headerList, String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster, String userId,String fromDate,String toDate) {
+		return procoStatusTrackerDao.getPromotionStatusTracker(headerList,moc,promobasepack,ppmaccount,procochannel,prococluster,userId,fromDate,toDate);
 	}
 	
 	@Override
