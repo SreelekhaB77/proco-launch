@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -58,7 +60,13 @@ public class PromoListingController {
 			@RequestParam("year") String yearValue, @RequestParam("custChainL2") String custChainL2Value,
 			@RequestParam("basepack") String basepackValue, @RequestParam("geography") String geographyValue,
 			@RequestParam("moc") String mocValue,@RequestParam("promobasepack") String procoBasepack,
-			@RequestParam("ppmaccount") String ppmAccount,@RequestParam("procochannel") String procoChannel,@RequestParam("prococluster") String procoCluster, HttpServletRequest request) {
+			@RequestParam("ppmaccount") String ppmAccount,@RequestParam("procochannel") String procoChannel,
+			@RequestParam("prococluster") String procoCluster, 
+			@RequestParam(value="startDate1",required=false) @DateTimeFormat(pattern="MMddyyyy") String fromDate,
+			@RequestParam(value="endDate1",required=false) @DateTimeFormat(pattern="MMddyyyy") String toDate,
+			HttpServletRequest request) {
+		
+		logger.info("START DATE:" + fromDate + "END DATE:" + toDate);
 		String roleId = (String) request.getSession().getAttribute("roleId");
 		String userId = (String) request.getSession().getAttribute("UserID");
 		Integer pageDisplayStart = Integer.valueOf(request.getParameter("iDisplayStart"));
@@ -72,6 +80,7 @@ public class PromoListingController {
 		String cagetory = "", brand = "", basepack = "", custChainL1 = "", custChainL2 = "", geography = "";
 		String offerType = "", modality = "", year = "", moc = "";
 		String promobasepack="", ppmaccount="", procochannel="", prococluster="";
+		
 
 
 		if (cagetoryValue == null || cagetoryValue.isEmpty() || (cagetoryValue.equalsIgnoreCase("undefined"))
@@ -155,7 +164,8 @@ public class PromoListingController {
 		} else {
 			prococluster = procoCluster;
 		}
-
+		
+		
 		//Added by kavitha D for promolisting changes-SPRINT 9
 		/*int rowCount = promoListingService.getPromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2,
 				geography, offerType, modality, year, moc, userId, 1,roleId);
@@ -163,10 +173,11 @@ public class PromoListingController {
 				(pageNumber * pageDisplayLength), cagetory, brand, basepack, custChainL1, custChainL2, geography,
 				offerType, modality, year, moc, userId, 1,roleId ,searchParameter);*/
 		
-		int rowCount = promoListingService.getPromoListRowCountGrid(userId,roleId,moc,promobasepack,ppmaccount,procochannel,prococluster,kamAccountsArr);
+		int rowCount = promoListingService.getPromoListRowCountGrid(userId,roleId,moc,promobasepack,ppmaccount,procochannel,prococluster,kamAccountsArr,fromDate,toDate);
 		List<PromoListingBean> promoList = promoListingService.getPromoTableListGrid((pageDisplayStart + 1),
-				(pageNumber * pageDisplayLength),userId,roleId,moc,promobasepack,ppmaccount,procochannel,prococluster,searchParameter, kamAccountsArr);
+				(pageNumber * pageDisplayLength),userId,roleId,moc,promobasepack,ppmaccount,procochannel,prococluster,searchParameter, kamAccountsArr,fromDate,toDate);
 
+		logger.info("LOGGER OUTPUT FOR PROMOLIST:" + promoList);
 
 		PromoListingJsonObject jsonObj = new PromoListingJsonObject();
 		jsonObj.setJsonBean(promoList);
@@ -332,6 +343,8 @@ public class PromoListingController {
 		List<String> ppmAccount = promoListingService.getPpmAccount(userId,roleId);
 		List<String> procoChannel = promoListingService.getProcoChannel();
 		List<String> procoCluster = promoListingService.getProcoCluster();
+	
+
 		//Kavitha D changes for filters-SPRINT 11 ends
 				
 		model.addAttribute("mocJson", mocJson);
@@ -912,10 +925,10 @@ public class PromoListingController {
 
 	//Added by Kavitha D for promo listing download starts-SPRINT 9
 
-	@RequestMapping(value = "{moc}/{promobasepack}/{ppmaccount}/{procochannel}/{prococluster}/downloadPromoListing.htm", method = RequestMethod.GET)
+	@RequestMapping(value = "{moc}/{promobasepack}/{ppmaccount}/{procochannel}/{prococluster}/{startDate1}/{endDate1}/downloadPromoListing.htm", method = RequestMethod.GET)
 	public @ResponseBody String downloadPromosForListing(@ModelAttribute("CreateBeanRegular") CreateBeanRegular createBeanRegular,@PathVariable("moc") String moc,
 			@PathVariable("promobasepack") String procoBasepack,@PathVariable("ppmaccount") String ppmAccount,@PathVariable("procochannel") String procoChannel,@PathVariable("prococluster") String procoCluster,
-			Model model,HttpServletRequest request, HttpServletResponse response) {
+			@PathVariable("startDate1") @DateTimeFormat(pattern="MMddyyyy") String fromDate,@PathVariable("endDate1") @DateTimeFormat(pattern="MMddyyyy") String toDate,Model model,HttpServletRequest request, HttpServletResponse response) {
 		logger.info("START downloadPromos for listing():");
 		try {
 			InputStream is;
@@ -957,7 +970,7 @@ public class PromoListingController {
 			}
 			
 			ArrayList<String> headerList = promoListingService.getHeaderListForPromoDownloadListing();
-			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc,promobasepack,ppmaccount,procochannel,prococluster,roleId, kamAccounts);
+			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc,promobasepack,ppmaccount,procochannel,prococluster,roleId, kamAccounts,fromDate,toDate);
 			if (downloadedData != null) {
 				UploadUtil.writeXLSXFile(downloadFileName, downloadedData, null,".xlsx");
 				downloadLink = downloadFileName + ".xlsx";
