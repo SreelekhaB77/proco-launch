@@ -1,5 +1,10 @@
 $(document).ready(function() {
-					
+	
+
+	 $('#startDate1').val("2000-01-20");
+	 $('#endDate1').val("2000-02-21");
+	
+	
 					$('#msg-success').hide();
 					$('#msg-error').hide();
 					
@@ -181,7 +186,16 @@ $(document).ready(function() {
 							ProcoChannelList = $(this).val();
 							promoTable.draw();
 						});
-						
+						$('#startDate1').change(function(){
+							//console.log("hi")
+							startDate1 =$(this).val();
+							promoTable.draw();
+						});
+						$('#endDate1').change(function(){
+							//console.log("hi");
+							endDate1 =$(this).val();
+							promoTable.draw();
+						});
 					
 					
 					/*PromoListing table pagination */
@@ -230,7 +244,9 @@ $(document).ready(function() {
 				    	                {"name": "promobasepack","value": ProcoBasepack},
 				    	                {"name": "ppmaccount","value": PpmAccount},
 				    	                {"name": "prococluster","value":ProcoClusterList},
-				    	                {"name": "procochannel","value": ProcoChannelList}//viswas chnages this lists in sprint-11
+				    	                {"name": "procochannel","value": ProcoChannelList},//viswas chnages this lists in sprint-11
+				    	               {"name": "startDate1","value":startDate1},
+				    	                {"name": "endDate1","value":endDate1}
 				    	                
 				    	               
 				    	                );
@@ -304,6 +320,7 @@ $(document).ready(function() {
 								  {
 					                 "mData": "status",
 					              },
+					              
 								  /*{
 						                 "mData": "reason",
 						       },*/
@@ -321,8 +338,9 @@ $(document).ready(function() {
 						                 "mData": "promotionMechanics",
 						              } ,{
 						                 "mData": "solCodeStatus",
-						              }
-				                ]
+						              },
+						              
+						     ]
 				                /* added for second tab end */
 
 				            });
@@ -425,9 +443,50 @@ $(document).ready(function() {
 						/*$('.promo-list-table tr').each(function() {
 						    var customerId = $(this).find("td").eq(16).val();   
 						    console.log(customerId);
+					
+					
 						});*/
+						
+						
+						
 				});
-
+				var startDate1Val,endDate1Val;
+function promoStartDate1(){
+	startDate1Val = $('#startDate1').val();
+	//endDate1Val = $('#endDate1').val();
+	
+	if( startDate1Val != '' && endDate1Val != ''){
+				$('#Mocvalue').val("");
+				$('#Mocvalue').prop('disabled',true);
+				
+			} 
+	
+   
+	//console.log('StartDateVal is ',startDate1Val);
+	
+}
+function promoEndDate1(){
+	//startDate1Val = $('#startDate1').val();
+	endDate1Val = $('#endDate1').val();
+	if( startDate1Val != '' && endDate1Val != ''){
+				$('#Mocvalue').val("");
+				$('#Mocvalue').prop('disabled',true);
+				
+			} 
+	//console.log('EndDateVal is ',endDate1Val);
+	
+}
+function dateDisable(){
+	var Mocvalue = $('#Mocvalue').val();
+	if(Mocvalue != ''){
+		$('#startDate1').val("");
+		$('#endDate1').val("");
+		$('#startDate1').prop('disabled',true);
+		$('#endDate1').prop('disabled',true);
+		//$('.promoStartDate1').startDate1('disable');
+		//$('.promoEndDate1').endDate1('disable');
+	}
+}
 function getCustChainValues(selVal) {
 	$.ajax({
 		type : "POST",
@@ -503,8 +562,10 @@ function downloadPromotionFile(){
     var SelectedAccount = $('#PpmAccount').val();
     var SelectedCluster = $('#ProcoClusterList').val();
     var SelectedChannel = $('#ProcoChannelList').val();
-	
-    window.location.assign(SelectedMoc+"/"+SelectedBasepack+"/"+SelectedAccount+"/"+SelectedChannel+"/"+SelectedCluster+"/downloadPromoListing.htm");
+	var SelectedstartDate1 =(($('#startDate1').val()) == "")? null:$('#startDate1').val();
+	//console.log("startDate is ", startDate1)
+	var SelectedendDate1 =(($('#endDate1').val()) == "")? null:$('#endDate1').val();
+    window.location.assign(SelectedMoc+"/"+SelectedBasepack+"/"+SelectedAccount+"/"+SelectedChannel+"/"+SelectedCluster+"/"+SelectedstartDate1+"/"+SelectedendDate1+"/downloadPromoListing.htm");
 
 }
 
@@ -558,3 +619,4 @@ function validateForm(){
 	document.getElementById('promoIdList').value = promoIdList;
 	$('#pwdform').submit();
 }
+

@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -34,6 +35,7 @@ import org.springframework.stereotype.Repository;
 import com.google.gson.Gson;
 import com.hul.proco.controller.listingPromo.PromoListingBean;
 import com.hul.proco.controller.listingPromo.PromoMeasureReportBean;
+import com.hul.proco.controller.listingPromo.PromoListingDAOImpl;
 
 @Repository
 public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
@@ -43,16 +45,21 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 	@Autowired
 	private SessionFactory sessionFactory;
 	private NativeQuery qry;
+	
+	@Autowired
+	private PromoListingDAOImpl PromoListingDAOImpl;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<PromoListingBean> getPromoTableList(int pageDisplayStart, int pageDisplayLength, String moc,String promobasepack,
-			String ppmaccount,String procochannel,String prococluster,String searchParameter) {
+			String ppmaccount,String procochannel,String prococluster,String searchParameter,String fromDate,String toDate) {
 		List<PromoListingBean> promoList = new ArrayList<>();
 		//List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
 		//List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
 		String promoQuery = "";
 		try {
+		
+			
 			// kiran - row number changes
 			// promoQuery = "SELECT * FROM ( SELECT A.PROMO_ID ,A.P1_BASEPACK ,A.OFFER_DESC
 			// ,A.OFFER_TYPE ,A.OFFER_MODALITY ,A.GEOGRAPHY ,A.QUANTITY ,A.UOM
@@ -82,15 +89,21 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 					+ "  ROW_NUMBER() OVER (ORDER BY PM.UPDATE_STAMP DESC) AS ROW_NEXT "
 					+ "  FROM TBL_PROCO_PROMOTION_MASTER_V2 PM "
 					+ "  INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.PPM_ACCOUNT AND CM.CHANNEL_NAME = PM.CHANNEL_NAME "
-					+ "  INNER JOIN TBL_PROCO_STATUS_MASTER PSM ON PSM.STATUS_ID = PM.STATUS "
+					+ "  INNER JOIN TBL_PROCO_STATUS_MASTER PSM ON PSM.STATUS_ID = PM.STATUS WHERE ";
 					//+ "  LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS "
 					//+ "  FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR  ON PR.PROMO_ID = PM.PROMO_ID "
 					//+ "  LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
 					//+ "  LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE "
-					+ "  WHERE PM.MOC='"+moc+"' ";
+					//+ "  WHERE PM.MOC='"+moc+"' ";
 			
-						
 			//Kavitha D changes for filter-SPRINT 11 starts	
+
+			if(fromDate==null && toDate==null) {
+					promoQuery +=	" PM.MOC='"+moc+"'";	
+					}else {
+					promoQuery +="  PM.START_DATE='"+fromDate+"' AND PM.END_DATE='"+toDate+"'";	
+					}
+						
 			if(!promobasepack.equalsIgnoreCase("ALL")) {
 				if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
 				promoQuery +=	"AND PM.BASEPACK_CODE='"+promobasepack+"'";	
@@ -347,7 +360,7 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public int getPromoListRowCount(String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster) {
+	public int getPromoListRowCount(String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster,String fromDate,String toDate) {
 		// kiran - bigint to int changes
 		// List<Integer> list = null;
 		List<BigInteger> list = null;
@@ -358,14 +371,20 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 			//String rowCount = "SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_MASTER AS A INNER JOIN TBL_PROCO_PRODUCT_MASTER AS C ON A.P1_BASEPACK = C.BASEPACK INNER JOIN TBL_PROCO_STATUS_TRACKER AS D ON A.PROMO_ID = D.PROMO_ID INNER JOIN TBL_PROCO_STATUS_MASTER AS E ON E.STATUS_ID = D.STATUS_ID WHERE A.START_DATE > CURRENT_DATE ";
 
 			String rowCount = " SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM "
-					+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.PPM_ACCOUNT AND CM.CHANNEL_NAME = PM.CHANNEL_NAME  "
+					+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.PPM_ACCOUNT AND CM.CHANNEL_NAME = PM.CHANNEL_NAME WHERE ";
 					//+ " LEFT JOIN (SELECT PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS "
 					//+ " FROM TBL_PROCO_MEASURE_MASTER_V2 GROUP BY PROMOTION_ID, PROMOTION_NAME, PROMO_ID, INVESTMENT_TYPE, PROMOTION_MECHANICS, PROMOTION_STATUS) PR ON PR.PROMO_ID = PM.PROMO_ID "
 					//+ " LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
 					//+ " LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE "
-					+ "  WHERE PM.MOC='"+moc+"'";
+					//+ "  WHERE PM.MOC='"+moc+"'";
 			
 			//Kavitha D changes for filter-SPRINT 11 starts	
+			
+			if(fromDate==null && toDate==null) {
+				rowCount +=	" PM.MOC='"+moc+"'";	
+				}else {
+				rowCount +="  PM.START_DATE='"+fromDate+"' AND PM.END_DATE='"+toDate+"'";	
+				}
 			if(!promobasepack.equalsIgnoreCase("ALL")) {
 				if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
 					rowCount +=	"AND PM.BASEPACK_CODE='"+promobasepack+"'";	
@@ -534,7 +553,7 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public List<ArrayList<String>> getPromotionStatusTracker(ArrayList<String> headerList,String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster, String userId) {
+	public List<ArrayList<String>> getPromotionStatusTracker(ArrayList<String> headerList,String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster, String userId,String fromDate,String toDate) {
 		//List<String> custL1 = new ArrayList<String>(Arrays.asList(custChainL1.split(",")));
 		//List<String> custL2 = new ArrayList<String>(Arrays.asList(custChainL2.split(",")));
 		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
@@ -568,10 +587,23 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 							+ " SALES_CLUSTER ,PPM_CUSTOMER,CMM_NAME,TME_NAME,SALES_CATEGORY,PSA_CATEGORY,PROMOTION_STATUS,PPM_PROMOTION_CREATOR ,PROMOTION_MECHANICS,INVESTMENT_TYPE,"
 							+ " SALES_CLUSTER_CODE ,BRAND,SUB_BRAND,PPM_BUDGET_HOLDER_NAME ,FUND_TYPE,INVESTMENT_AMOUNT ,PROMO_ENTRY_TYPE ,PROMO_USER_NAME ,PROMO_USER_TIME ,"
 							+ " PPM_APPROVED_DATE ,PPM_CREATION_DATE ,NON_UNIFY,PPM_SUBMISSION_DATE ,PPM_MODIFIED_DATE ,COE_REMARKS,MRP ,AB_CREATION ,BUDGET ,CURRENT_STATUS,SOL_TYPE,SOL_TYPE_SHORTKEY " //Added current_status,sol type,sol type short key-SPRINT 10 "
-							+ " FROM TBL_PROCO_PROMO_LISTING_REPORT  LR "
-							+ " WHERE LR.MOC=:moc " ;
+							+ " FROM TBL_PROCO_PROMO_LISTING_REPORT  LR  WHERE ";
+							//+ " WHERE LR.MOC=:moc " ;
 					
 					//Kavitha D changes for filter-SPRINT 11 starts	
+					
+					if(fromDate.equals("null")|| toDate.equals("null")) {
+						query += " LR.MOC='"+moc+"'";	
+					}
+					
+					else if(fromDate.equalsIgnoreCase("2000-01-20") && toDate.equalsIgnoreCase("2000-02-21")){
+						 
+						query += " LR.MOC='"+moc+"'";	
+					}
+					
+					else {
+						query +=" LR.START_DATE='"+fromDate+"' AND LR.END_DATE='"+toDate+"'";	
+					}
 					
 					if(!promobasepack.equalsIgnoreCase("ALL")) {
 						if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
@@ -712,8 +744,10 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 					promoQuery += "AND A.MOC = '" + moc + "' ";
 				}
 			}*/
+			  
+			//System.out.println("PromoStatusTracker:"+query);
 			Query query1 = sessionFactory.getCurrentSession().createNativeQuery(query);
-			query1.setString("moc", moc);
+			//query1.setString("moc", moc);
 
 			
 			Iterator itr = query1.list().iterator();
