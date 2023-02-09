@@ -2097,10 +2097,11 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				promoQueryCount += " WHERE PM.STATUS IN (1, 3) ";
 						//+ "AND PM.MOC='"+moc+ "' ";
 				if(fromDate==null && toDate==null) {
-					promoQueryCount +=	"AND PM.MOC='"+moc+"'";	
+					if(!moc.equalsIgnoreCase("all"))
+						promoQueryCount +=	"AND PM.MOC='"+moc+"'";	
 				}else {
 					promoQueryCount +=" AND PM.START_DATE='"+fromDate+"' AND PM.END_DATE='"+toDate+"'";	
-			}
+				}
 				//Kavitha D changes for filter-SPRINT 11 starts	
 				if(!promobasepack.equalsIgnoreCase("ALL")) {
 					if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
@@ -2358,10 +2359,11 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					promoQueryGrid += " WHERE PM.STATUS IN (1, 3) "; //for dp listing
 							//+ "AND PM.MOC='"+moc+ "' "; 
 				if(fromDate==null && toDate==null) {
-					promoQueryGrid +=	"AND PM.MOC='"+moc+"'";	
+					if(!moc.equalsIgnoreCase("all"))
+						promoQueryGrid +=	"AND PM.MOC='"+moc+"'";	
 				}else {
-				promoQueryGrid +=" AND PM.START_DATE='"+fromDate+"' AND PM.END_DATE='"+toDate+"'";	
-			}
+					promoQueryGrid +=" AND PM.START_DATE='"+fromDate+"' AND PM.END_DATE='"+toDate+"'";	
+				}
 					
 				//Kavitha D changes for filter-SPRINT 11 starts	
 				if(!promobasepack.equalsIgnoreCase("ALL")) {
