@@ -2534,7 +2534,8 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 		headerList.add("DISCOUNT");		
 		headerList.add("PERCENT_PROMOTED_VOLUME");		
 		headerList.add("PLANNED_QUANTITY");		
-		headerList.add("INVESTMENT_AMOUNT");		
+		headerList.add("INVESTMENT_AMOUNT");
+		headerList.add("CUSTOMER_CHAIN_NAME"); //Added by Kavitha D-SPRINT 11 changes
 		return headerList;		
 	}
 	//Added by kavitha D-SPRINT 9

@@ -620,7 +620,7 @@ padding-right: 135px;
 		<script type="text/javascript" src="assets/js/custom/proco/promoListing.js"></script>
 		<script type="text/javascript" src="assets/js/custom/proco/alert-modal.js"></script>
 		<script type="text/javascript">
-		var moc = '${mocJson}';
+		var moc = "${mocJson}";
 		var Mocvalue = $('#Mocvalue').val(); //bharati added in sprint-9 for moc filter
 		var ProcoBasepack = $('#ProcoBasepack').val();
         var PpmAccount = $('#PpmAccount').val();
@@ -743,7 +743,6 @@ padding-right: 135px;
         		  
 					
               });
-	
 		</script>
 </body>
 

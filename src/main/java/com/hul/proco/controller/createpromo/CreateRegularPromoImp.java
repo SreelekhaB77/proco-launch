@@ -183,7 +183,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							duplicateKey = duplicateKey+bean.getOffer_mod().toUpperCase();
 						
 						
-						if (commanmap.containsKey(duplicateKey) && !bean.getOfr_type().equalsIgnoreCase("Visibility")) {
+						if (commanmap.containsKey(duplicateKey) && !bean.getOfr_type().equalsIgnoreCase("Visibility")
+								&& !uid.equalsIgnoreCase("dummy.finance")) {
 							
 							if (flag == 1)
 								error_msg = error_msg + ",promo entry already exists against promo ID, created by "
@@ -436,7 +437,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						else
 							duplicateKey = duplicateKey+bean.getOffer_mod().toUpperCase();
 						
-						if (commanmap.containsKey(duplicateKey) && !bean.getOfr_type().equalsIgnoreCase("Visibility")) {
+						if (commanmap.containsKey(duplicateKey) && !bean.getOfr_type().equalsIgnoreCase("Visibility")
+								&& !uid.equalsIgnoreCase("dummy.finance")) {
 							if (!template.equalsIgnoreCase("regular")) {
 								if (flag == 1) {
 
@@ -808,7 +810,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						&& !bean.getSol_type().trim().equalsIgnoreCase("Top Up") 
 						&& !bean.getSol_type().trim().equalsIgnoreCase("Budget Extension")
 						&& !bean.getSol_type().trim().equalsIgnoreCase("Additional Quantity")
-						&& !bean.getOfr_type().equalsIgnoreCase("Visibility"))
+						&& !bean.getOfr_type().equalsIgnoreCase("Visibility")
+						&& !uid.equalsIgnoreCase("dummy.finance"))
 				{
 					if (flag == 1)
 						error_msg = error_msg + ",promo entry already exists";
@@ -1012,7 +1015,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 //						flag = 1;
 //					}
 
-					if(bean.getSol_type().trim().equalsIgnoreCase("Basepack Addition"))
+					if(bean.getSol_type().trim().equalsIgnoreCase("Basepack Addition") && !uid.equalsIgnoreCase("dummy.finance"))
 					{
 						if(crEntries.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toString() + bean.getPpm_account().toUpperCase()+bean.getBasepack_code().toUpperCase()+bean.getPrice_off().toUpperCase() + bean.getCluster().toUpperCase()+bean.getOffer_mod().toUpperCase())) {
 							if (flag == 1)
@@ -1058,7 +1061,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						flag = 1;
 					}
 
-					if(bean.getSol_type().trim().equalsIgnoreCase("Missing Geo"))
+					if(bean.getSol_type().trim().equalsIgnoreCase("Missing Geo") && !uid.equalsIgnoreCase("dummy.finance"))
 					{
 						//System.out.println("key:"+bean.getMoc_name().toUpperCase() + bean.getYear().toString() + bean.getPpm_account().toUpperCase()+bean.getBasepack_code().toUpperCase()+bean.getPrice_off().toUpperCase() + bean.getCluster().toUpperCase());
 						//System.out.println("map:"+crEntries);
@@ -1197,30 +1200,42 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								String[] splitString = bean.getMoc().split("MOC");
 							    int m = Integer.valueOf(splitString[1]);
 								String Previousmonth = "";
+								String Currentmonth = "";
 								
 								if(m == 1) {
+									Currentmonth = String.valueOf(m);
 									Previousmonth = String.valueOf(12);
 								}
 								else {
+									Currentmonth = String.valueOf(m);
 									int m1 = --m;
 									Previousmonth = String.valueOf(m1);
 								}
 						       
+								int j = 0;
+						        while (j < Currentmonth.length() && Currentmonth.charAt(j) == '0')
+						            j++;
+						        StringBuffer firstMonth = new StringBuffer(Currentmonth);    
+						        firstMonth.replace(0, j, "MOC");
+						        
 						        int k = 0;
 						        while (k < Previousmonth.length() && Previousmonth.charAt(k) == '0')
 						            k++;
 						        StringBuffer preMonth = new StringBuffer(Previousmonth);    
 						        preMonth.replace(0, k, "MOC");
-
-						        if(!items.contains(preMonth.toString())) {
+						        
+						        if(items.contains(firstMonth.toString()) || items.contains(preMonth.toString())) {
+						        	break;
+						        }
+						        else {
 						        	if (flag == 1)
-										error_msg = error_msg + ","+bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N-1 MOC";
+										error_msg = error_msg + ","+bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N or N-1 MOCs";
 									else
-										error_msg = error_msg + bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N-1 MOC";
+										error_msg = error_msg + bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N or N-1 MOCs";
 									flag = 1;
 									break;
 						        }
-						        break;
+						        
 							}
 						}
 					}
@@ -1239,7 +1254,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						//System.out.println("tdp_key:"+tdp_key);
 						if (date_extensionMap.containsKey(tdp_key)) {
 							if (bean.getPromo_time_period().toUpperCase().trim()
-									.equalsIgnoreCase(date_extensionMap.get(tdp_key))) {
+									.equalsIgnoreCase(date_extensionMap.get(tdp_key)) && !uid.equalsIgnoreCase("dummy.finance")) {
 
 								if (flag == 1)
 									error_msg = error_msg + ",Promo entry already does exists";
@@ -1362,6 +1377,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 											flag = 1;
 										} else {
+										*/
 											String moc_group = datehandle.get(bean.getChannel().toUpperCase() + "_"
 													+ bean.getPpm_account().toUpperCase());
 											String moc_name = bean.getMoc_name().toUpperCase(),
@@ -1372,10 +1388,10 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 											if (!datehandle.containsKey(start_key)
 													&& !datehandle.containsKey(end_key)) {
 												if (flag == 1)
-													error_msg += ",Invalid " + bean.getPromo_time_period() + "for"
+													error_msg += ",Invalid " + bean.getPromo_time_period() + " for "
 															+ bean.getMoc_name() + " and " + bean.getYear();
 												else
-													error_msg += "Invalid " + bean.getPromo_time_period() + "for"
+													error_msg += "Invalid " + bean.getPromo_time_period() + " for "
 															+ bean.getMoc_name() + " and " + bean.getYear();
 
 												flag = 1;
@@ -1387,8 +1403,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 												query.setString(21, datehandle.get(end_key));
 
 											}
-										}
-										*/
+//										}
+									
 									} else if (yearfromexcel > year_frommap_cr) {
 										String moc_group = datehandle.get(bean.getChannel().toUpperCase() + "_"
 												+ bean.getPpm_account().toUpperCase());
