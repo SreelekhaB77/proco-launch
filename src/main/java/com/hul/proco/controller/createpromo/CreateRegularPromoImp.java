@@ -1200,30 +1200,42 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								String[] splitString = bean.getMoc().split("MOC");
 							    int m = Integer.valueOf(splitString[1]);
 								String Previousmonth = "";
+								String Currentmonth = "";
 								
 								if(m == 1) {
+									Currentmonth = String.valueOf(m);
 									Previousmonth = String.valueOf(12);
 								}
 								else {
+									Currentmonth = String.valueOf(m);
 									int m1 = --m;
 									Previousmonth = String.valueOf(m1);
 								}
 						       
+								int j = 0;
+						        while (j < Currentmonth.length() && Currentmonth.charAt(j) == '0')
+						            j++;
+						        StringBuffer firstMonth = new StringBuffer(Currentmonth);    
+						        firstMonth.replace(0, j, "MOC");
+						        
 						        int k = 0;
 						        while (k < Previousmonth.length() && Previousmonth.charAt(k) == '0')
 						            k++;
 						        StringBuffer preMonth = new StringBuffer(Previousmonth);    
 						        preMonth.replace(0, k, "MOC");
-
-						        if(!items.contains(preMonth.toString())) {
+						        
+						        if(items.contains(firstMonth.toString()) || items.contains(preMonth.toString())) {
+						        	break;
+						        }
+						        else {
 						        	if (flag == 1)
-										error_msg = error_msg + ","+bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N-1 MOC";
+										error_msg = error_msg + ","+bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N or N-1 MOCs";
 									else
-										error_msg = error_msg + bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N-1 MOC";
+										error_msg = error_msg + bean.getSol_code_ref()+" Invalid Parent SOL - SOL Should be of N or N-1 MOCs";
 									flag = 1;
 									break;
 						        }
-						        break;
+						        
 							}
 						}
 					}
