@@ -165,7 +165,15 @@ public class PromoListingController {
 			prococluster = procoCluster;
 		}
 		
-		
+		//Added by Kajal G for promolisting changes-SPRINT 11
+		if((fromDate == null || fromDate.isEmpty()) && (toDate == null || toDate.isEmpty())) {
+			fromDate = null;
+			toDate = null;
+		}
+		else {
+			fromDate = fromDate;
+			toDate = toDate;
+		}
 		//Added by kavitha D for promolisting changes-SPRINT 9
 		/*int rowCount = promoListingService.getPromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2,
 				geography, offerType, modality, year, moc, userId, 1,roleId);
