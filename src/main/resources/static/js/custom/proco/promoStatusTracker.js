@@ -618,6 +618,8 @@ $(document).ready(function() {
 						})
 				});
 				var startDate1Val,endDate1Val;
+ mocValueSelected = $('#Mocvalue');
+	mocValSelected = mocValueSelected.val();
 function promoStartDate1(){
 	startDate1Val = $('#startDate1').val();
 	endDate1Val = $('#endDate1').val();
@@ -626,12 +628,15 @@ function promoStartDate1(){
 				$('#Mocvalue').val("");
 				$('#Mocvalue').prop('disabled',true);
 				
-			} 
-	
+			} else{
+				$('#Mocvalue').val(mocValSelected);
+				$('#Mocvalue').prop('disabled',false);				
+			}
    
 	//console.log('StartDateVal is ',startDate1Val);
 	
 }
+	
 function promoEndDate1(){
 	startDate1Val = $('#startDate1').val();
 	endDate1Val = $('#endDate1').val();
@@ -639,21 +644,27 @@ function promoEndDate1(){
 				$('#Mocvalue').val("");
 				$('#Mocvalue').prop('disabled',true);
 				
-			} 
+			} else{
+				$('#Mocvalue').val(mocValSelected);
+				$('#Mocvalue').prop('disabled',false);				
+			}
 	//console.log('EndDateVal is ',endDate1Val);
 	
 }
-function dateDisable(){
-	var Mocvalue = $('#Mocvalue').val();
-	if(Mocvalue != ''){
-		$('#startDate1').val("");
-		$('#endDate1').val("");
-		$('#startDate1').prop('disabled',true);
-		$('#endDate1').prop('disabled',true);
-		//$('.promoStartDate1').startDate1('disable');
-		//$('.promoEndDate1').startDate1('disable');
-	}
+          function dateDisable(){
+	          currMocVal = $('#Mocvalue').val();
+        		if(currMocVal === mocValSelected){
+        			$('#startDate1').val("");
+        			$('#endDate1').val("");
+        			$('#startDate1').prop('disabled',false);
+        			$('#endDate1').prop('disabled',false);
+        		} else {
+	
+        			$('#startDate1').prop('disabled',true);
+        			$('#endDate1').prop('disabled',true);
 }
+        	}
+
 
 function getCustChainValues(selVal) {
 	$.ajax({
