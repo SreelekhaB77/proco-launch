@@ -249,6 +249,16 @@ public class ProcoStatusTrackerController {
 		} else {
 			prococluster = procoCluster;
 		}
+		
+		//Added by Kajal G for promolisting changes-SPRINT 11
+		if((fromDate == null || fromDate.isEmpty()) && (toDate == null || toDate.isEmpty())) {
+			fromDate = null;
+			toDate = null;
+		}
+		else {
+			fromDate = fromDate;
+			toDate = toDate;
+		}
 
 		//Added by Kavitha D for SPRINT 9 Changes
 		/*int rowCount = procoStatusTrackerService.getPromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2,
