@@ -293,12 +293,12 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					}
 					if ((bean.getChannel().equalsIgnoreCase("CNC")
 							|| bean.getChannel().equalsIgnoreCase("HUL3")) && (bean.getBudget().isEmpty()
-							|| bean.getBudget() == null))
+							|| bean.getBudget() == null|| Integer.parseInt(bean.getBudget())<= 0))
 					{
 						if (flag == 1)
-							error_msg = error_msg + ",Budget entry mandatory for HUL3 and CNC channel";
+							error_msg = error_msg + ",Budget entry mandatory for HUL3 and CNC channel, Min budget criteria not met";
 						else
-							error_msg = error_msg + "Budget entry mandatory for HUL3 and CNC channel";
+							error_msg = error_msg + "Budget entry mandatory for HUL3 and CNC channel, Min budget criteria not met";
 						flag=1;
 					}
 					
@@ -876,15 +876,15 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							error_msg = error_msg + "Mandatory childpack code for kitting promo type, invalid Child basepack";
 						flag = 1;
 					}
-					
+				
 					if ((bean.getChannel().equalsIgnoreCase("CNC")
 							|| bean.getChannel().equalsIgnoreCase("HUL3")) && (bean.getBudget().isEmpty()
-							|| bean.getBudget() == null))
+							|| bean.getBudget() == null || Integer.parseInt(bean.getBudget())<= 0))
 					{
 						if (flag == 1)
-							error_msg = error_msg + ",Budget entry mandatory for HUL3 and CNC channel";
+							error_msg = error_msg + ",Budget entry mandatory for HUL3 and CNC channel, Min budget criteria not met";
 						else
-							error_msg = error_msg + "Budget entry mandatory for HUL3 and CNC channel";
+							error_msg = error_msg + "Budget entry mandatory for HUL3 and CNC channel, Min budget criteria not met";
 						flag=1;
 					}
 					
