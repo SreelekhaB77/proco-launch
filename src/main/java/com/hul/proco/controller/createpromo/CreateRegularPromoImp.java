@@ -820,6 +820,29 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					flag = 1;
 				}
 				
+				// Added by Kajal G for sprint-11
+				String duplicateDEKey = bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
+						+ bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()
+						+ bean.getCluster().toUpperCase();
+				
+				if(bean.getOfr_type().equalsIgnoreCase("Ground Ops"))
+					duplicateDEKey = duplicateDEKey+bean.getOfr_type().toUpperCase();
+				else
+					duplicateDEKey = duplicateDEKey+bean.getOffer_mod().toUpperCase();
+				
+				
+				if (commanmap.containsKey(duplicateDEKey) 
+						&& bean.getSol_type().trim().equalsIgnoreCase("Date Extension")
+						&& !bean.getOfr_type().equalsIgnoreCase("Visibility")
+						&& !uid.equalsIgnoreCase("dummy.finance")) {
+					
+					if (flag == 1)
+						error_msg = error_msg + ", promo entry already exists for Date Extension";
+					else
+						error_msg = error_msg + "promo entry already exists for Date Extension";
+					flag=1;
+				}
+				
 				String budget=bean.getBudget().isEmpty() ? ""
 						: String.valueOf(
 								(double) Math.round(Double.parseDouble(bean.getBudget()) * 100) / 100);
