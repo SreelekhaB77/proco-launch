@@ -1816,7 +1816,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			}
 			
 			else {
-				query +=" LR.START_DATE='"+fromDate+"' AND LR.END_DATE='"+toDate+"'";	
+				query +=" LR.START_DATE>='"+fromDate+"' AND LR.END_DATE<='"+toDate+"'";	
 			}
 			
 			query+=" AND LR.PPM_ACCOUNT IN (:kamAccount) ";
@@ -1835,7 +1835,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			}
 			
 			else {
-				query +=" LR.START_DATE='"+fromDate+"' AND LR.END_DATE='"+toDate+"'";	
+				query +=" LR.START_DATE>='"+fromDate+"' AND LR.END_DATE<='"+toDate+"'";	
 			}
 			//Kavitha D changes for filter-SPRINT 11 starts	
 			
@@ -1881,7 +1881,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			}
 			
 			else {
-				query +=" LR.START_DATE='"+fromDate+"' AND LR.END_DATE='"+toDate+"'";	
+				query +=" LR.START_DATE>='"+fromDate+"' AND LR.END_DATE<='"+toDate+"'";	
 			}
 			//Kavitha D changes for filter-SPRINT 11 starts	
 			
@@ -1979,7 +1979,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				if(fromDate==null && toDate==null) {
 					promoQueryCount +=	"AND PM.MOC='"+moc+"'";	
 				}else {
-					promoQueryCount +=" AND PM.START_DATE='"+fromDate+"' AND PM.END_DATE='"+toDate+"'";	
+					promoQueryCount +=" AND PM.START_DATE>='"+fromDate+"' AND PM.END_DATE<='"+toDate+"'";	
 			}
 			
 				//Kavitha D changes for filter-SPRINT 11 starts	
@@ -2023,7 +2023,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				if(fromDate==null && toDate==null) {
 					promoQueryCount +=	"AND PM.MOC='"+moc+"'";	
 				}else {
-					promoQueryCount +=" AND PM.START_DATE='"+fromDate+"' AND PM.END_DATE='"+toDate+"'";	
+					promoQueryCount +=" AND PM.START_DATE>='"+fromDate+"' AND PM.END_DATE<='"+toDate+"'";	
 			}
 				//Kavitha D changes for filter-SPRINT 11 starts	
 				if(!promobasepack.equalsIgnoreCase("ALL")) {
@@ -2058,7 +2058,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				if(fromDate==null && toDate==null) {
 					promoQueryCount +=	"AND PM.MOC='"+moc+"'";	
 				}else {
-					promoQueryCount +=" AND PM.START_DATE='"+fromDate+"' AND PM.END_DATE='"+toDate+"'";	
+					promoQueryCount +=" AND PM.START_DATE>='"+fromDate+"' AND PM.END_DATE<='"+toDate+"'";	
 			}
 				//Kavitha D changes for filter-SPRINT 11 starts	
 				if(!promobasepack.equalsIgnoreCase("ALL")) {
@@ -2100,7 +2100,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					if(!moc.equalsIgnoreCase("all"))
 						promoQueryCount +=	"AND PM.MOC='"+moc+"'";	
 				}else {
-					promoQueryCount +=" AND PM.START_DATE='"+fromDate+"' AND PM.END_DATE='"+toDate+"'";	
+					promoQueryCount +=" AND PM.START_DATE>='"+fromDate+"' AND PM.END_DATE<='"+toDate+"'";	
 				}
 				//Kavitha D changes for filter-SPRINT 11 starts	
 				if(!promobasepack.equalsIgnoreCase("ALL")) {
@@ -2132,7 +2132,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				if(fromDate==null && toDate==null) {
 					promoQueryCount +=	"AND PM.MOC='"+moc+"'";	
 				}else {
-					promoQueryCount +=" AND PM.START_DATE='"+fromDate+"' AND PM.END_DATE='"+toDate+"'";	
+					promoQueryCount +=" AND PM.START_DATE>='"+fromDate+"' AND PM.END_DATE<='"+toDate+"'";	
 				}
 				
 				//promoQueryCount += " WHERE PM.MOC='"+moc+ "' AND PM.PPM_ACCOUNT IN ( ";
@@ -2166,7 +2166,8 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 						promoQueryCount +=	"AND PM.CLUSTER='"+prococluster+"'";	
 					}
 				}	
-				}			
+				}		
+			//System.out.println("PROMO QUERY COUNT:"+ promoQueryCount);
 			//Kavitha D changes for filter-SPRINT 11 ends
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQueryCount);
 			list = query.list();
@@ -2235,7 +2236,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					if(fromDate==null && toDate==null) {
 						promoQueryGrid +=	"AND PM.MOC='"+moc+"'";	
 					}else {
-					promoQueryGrid +=" AND PM.START_DATE='"+fromDate+"' AND PM.END_DATE='"+toDate+"'";	
+					promoQueryGrid +=" AND PM.START_DATE>='"+fromDate+"' AND PM.END_DATE<='"+toDate+"'";	
 				}
 				
 				//Kavitha D changes for filter-SPRINT 11 starts	
@@ -2305,7 +2306,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				if(fromDate==null && toDate==null) {
 					promoQueryGrid +=	"AND PM.MOC='"+moc+"'";	
 				}else {
-				promoQueryGrid +=" AND PM.START_DATE='"+fromDate+"' AND PM.END_DATE='"+toDate+"'";	
+					promoQueryGrid +=" AND PM.START_DATE>='"+fromDate+"' AND PM.END_DATE<='"+toDate+"'";	
 			}
 				
 				//Kavitha D changes for filter-SPRINT 11 ends
@@ -2343,7 +2344,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				if(fromDate==null && toDate==null) {
 					promoQueryGrid +=	"AND PM.MOC='"+moc+"'";	
 				}else {
-				promoQueryGrid +=" AND PM.START_DATE='"+fromDate+"' AND PM.END_DATE='"+toDate+"'";	
+				promoQueryGrid +=" AND PM.START_DATE>='"+fromDate+"' AND PM.END_DATE<='"+toDate+"'";	
 			}
 				
 				
@@ -2362,7 +2363,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					if(!moc.equalsIgnoreCase("all"))
 						promoQueryGrid +=	"AND PM.MOC='"+moc+"'";	
 				}else {
-					promoQueryGrid +=" AND PM.START_DATE='"+fromDate+"' AND PM.END_DATE='"+toDate+"'";	
+					promoQueryGrid +=" AND PM.START_DATE>='"+fromDate+"' AND PM.END_DATE<='"+toDate+"'";	
 				}
 					
 				//Kavitha D changes for filter-SPRINT 11 starts	
@@ -2396,7 +2397,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				if(fromDate==null && toDate==null) {
 					promoQueryGrid +=	"AND PM.MOC='"+moc+"'";	
 				}else {
-				promoQueryGrid +=" AND PM.START_DATE='"+fromDate+"' AND PM.END_DATE='"+toDate+"'";	
+					promoQueryGrid +=" AND PM.START_DATE>='"+fromDate+"' AND PM.END_DATE<='"+toDate+"'";	
 			}
 				
 				promoQueryGrid += " AND PM.PPM_ACCOUNT IN (:kamAccount) ";
@@ -2438,7 +2439,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 						+ " AND " + pageDisplayLength + "";
 			}
 			
-			//System.out.println("Promo listing:"+ promoQueryGrid);
+			//System.out.println("Promo listing GRID QUERY:"+ promoQueryGrid);
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQueryGrid);
 			if (roleId.equalsIgnoreCase("KAM")) {
 				query.setParameterList("kamAccount", kamAccounts);

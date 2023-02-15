@@ -293,12 +293,12 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					}
 					if ((bean.getChannel().equalsIgnoreCase("CNC")
 							|| bean.getChannel().equalsIgnoreCase("HUL3")) && (bean.getBudget().isEmpty()
-							|| bean.getBudget() == null))
+							|| bean.getBudget() == null|| Integer.parseInt(bean.getBudget())<= 0))
 					{
 						if (flag == 1)
-							error_msg = error_msg + ",Budget entry mandatory for HUL3 and CNC channel";
+							error_msg = error_msg + ",Budget entry mandatory for HUL3 and CNC channel, Min budget criteria not met";
 						else
-							error_msg = error_msg + "Budget entry mandatory for HUL3 and CNC channel";
+							error_msg = error_msg + "Budget entry mandatory for HUL3 and CNC channel, Min budget criteria not met";
 						flag=1;
 					}
 					
@@ -820,6 +820,29 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					flag = 1;
 				}
 				
+				// Added by Kajal G for sprint-11
+				String duplicateDEKey = bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
+						+ bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()
+						+ bean.getCluster().toUpperCase();
+				
+				if(bean.getOfr_type().equalsIgnoreCase("Ground Ops"))
+					duplicateDEKey = duplicateDEKey+bean.getOfr_type().toUpperCase();
+				else
+					duplicateDEKey = duplicateDEKey+bean.getOffer_mod().toUpperCase();
+				
+				
+				if (commanmap.containsKey(duplicateDEKey) 
+						&& bean.getSol_type().trim().equalsIgnoreCase("Date Extension")
+						&& !bean.getOfr_type().equalsIgnoreCase("Visibility")
+						&& !uid.equalsIgnoreCase("dummy.finance")) {
+					
+					if (flag == 1)
+						error_msg = error_msg + ", promo entry already exists for Date Extension";
+					else
+						error_msg = error_msg + "promo entry already exists for Date Extension";
+					flag=1;
+				}
+				
 				String budget=bean.getBudget().isEmpty() ? ""
 						: String.valueOf(
 								(double) Math.round(Double.parseDouble(bean.getBudget()) * 100) / 100);
@@ -876,15 +899,15 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							error_msg = error_msg + "Mandatory childpack code for kitting promo type, invalid Child basepack";
 						flag = 1;
 					}
-					
+				
 					if ((bean.getChannel().equalsIgnoreCase("CNC")
 							|| bean.getChannel().equalsIgnoreCase("HUL3")) && (bean.getBudget().isEmpty()
-							|| bean.getBudget() == null))
+							|| bean.getBudget() == null || Integer.parseInt(bean.getBudget())<= 0))
 					{
 						if (flag == 1)
-							error_msg = error_msg + ",Budget entry mandatory for HUL3 and CNC channel";
+							error_msg = error_msg + ",Budget entry mandatory for HUL3 and CNC channel, Min budget criteria not met";
 						else
-							error_msg = error_msg + "Budget entry mandatory for HUL3 and CNC channel";
+							error_msg = error_msg + "Budget entry mandatory for HUL3 and CNC channel, Min budget criteria not met";
 						flag=1;
 					}
 					
