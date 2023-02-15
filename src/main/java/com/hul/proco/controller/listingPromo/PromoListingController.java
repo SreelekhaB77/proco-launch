@@ -977,6 +977,15 @@ public class PromoListingController {
 				prococluster = procoCluster;
 			}
 			
+			if((fromDate == null || fromDate.isEmpty()) && (toDate == null || toDate.isEmpty())) {
+				fromDate = null;
+				toDate = null;
+			}
+			else {
+				fromDate = fromDate;
+				toDate = toDate;
+			}
+			
 			ArrayList<String> headerList = promoListingService.getHeaderListForPromoDownloadListing();
 			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc,promobasepack,ppmaccount,procochannel,prococluster,roleId, kamAccounts,fromDate,toDate);
 			if (downloadedData != null) {

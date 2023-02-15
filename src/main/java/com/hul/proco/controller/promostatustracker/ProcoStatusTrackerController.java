@@ -502,6 +502,14 @@ public class ProcoStatusTrackerController {
 				prococluster = procoCluster;
 			}
 			
+			if((fromDate == null || fromDate.isEmpty()) && (toDate == null || toDate.isEmpty())) {
+				fromDate = null;
+				toDate = null;
+			}
+			else {
+				fromDate = fromDate;
+				toDate = toDate;
+			}
 			ArrayList<String> headerList = procoStatusTrackerService.getHeaderListForPromoStatusTracker(userId, false);
 			/*downloadedData = procoStatusTrackerService.getPromotionStatusTracker(headerList, cagetory, brand, basepack, custChainL1,
 					custChainL2, geography, offerType, modality, year, moc, userId, 1,promoId);*/

@@ -101,7 +101,7 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 			if(fromDate==null && toDate==null) {
 					promoQuery +=	" PM.MOC='"+moc+"'";	
 					}else {
-					promoQuery +="  PM.START_DATE='"+fromDate+"' AND PM.END_DATE='"+toDate+"'";	
+					promoQuery +="  PM.START_DATE>='"+fromDate+"' AND PM.END_DATE<='"+toDate+"'";	
 					}
 						
 			if(!promobasepack.equalsIgnoreCase("ALL")) {
@@ -383,7 +383,7 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 			if(fromDate==null && toDate==null) {
 				rowCount +=	" PM.MOC='"+moc+"'";	
 				}else {
-				rowCount +="  PM.START_DATE='"+fromDate+"' AND PM.END_DATE='"+toDate+"'";	
+				rowCount +="  PM.START_DATE>='"+fromDate+"' AND PM.END_DATE<='"+toDate+"'";	
 				}
 			if(!promobasepack.equalsIgnoreCase("ALL")) {
 				if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
@@ -602,7 +602,7 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 					}
 					
 					else {
-						query +=" LR.START_DATE='"+fromDate+"' AND LR.END_DATE='"+toDate+"'";	
+						query +=" LR.START_DATE>='"+fromDate+"' AND LR.END_DATE<='"+toDate+"'";	
 					}
 					
 					if(!promobasepack.equalsIgnoreCase("ALL")) {
