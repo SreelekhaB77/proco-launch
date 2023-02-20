@@ -810,6 +810,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						&& !bean.getSol_type().trim().equalsIgnoreCase("Top Up") 
 						&& !bean.getSol_type().trim().equalsIgnoreCase("Budget Extension")
 						&& !bean.getSol_type().trim().equalsIgnoreCase("Additional Quantity")
+						&& !bean.getSol_type().trim().equalsIgnoreCase("Date Extension")
 						&& !bean.getOfr_type().equalsIgnoreCase("Visibility")
 						&& !uid.equalsIgnoreCase("dummy.finance"))
 				{
@@ -833,14 +834,30 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				
 				if (commanmap.containsKey(duplicateDEKey) 
 						&& bean.getSol_type().trim().equalsIgnoreCase("Date Extension")
-						&& !bean.getOfr_type().equalsIgnoreCase("Visibility")
 						&& !uid.equalsIgnoreCase("dummy.finance")) {
-					
-					if (flag == 1)
-						error_msg = error_msg + ", promo entry already exists for Date Extension";
-					else
-						error_msg = error_msg + "promo entry already exists for Date Extension";
-					flag=1;
+					String excelTPD = bean.getPromo_time_period().toUpperCase();
+					String mapTPD = commanmap.get(duplicateDEKey);
+					// to check future tdp or not
+					if (excelTPD.contains("TDP") && mapTPD.contains("TDP")) {
+						
+						int excelTPDValue = Integer.parseInt(excelTPD.replaceAll("[^0-9]", "")); // 37 enter in excel
+						int mapTPDValue = Integer.parseInt(mapTPD.replaceAll("[^0-9]", "")); // 31 map
+						
+						if (!(excelTPDValue > mapTPDValue)) {
+							if (flag == 1)
+								error_msg = error_msg + ",Back dated Promotime period";
+							else
+								error_msg = error_msg +"Back dated Promotime period";
+							flag = 1;
+						}
+					}
+					else {
+						if (flag == 1)
+							error_msg = error_msg + ", promo entry already exists for " + bean.getSol_code_ref();
+						else
+							error_msg = error_msg + "promo entry already exists for "+ bean.getSol_code_ref();
+						flag=1;
+					}
 				}
 				
 				String budget=bean.getBudget().isEmpty() ? ""
