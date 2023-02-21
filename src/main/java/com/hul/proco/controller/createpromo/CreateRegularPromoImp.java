@@ -291,14 +291,13 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 						flag = 1;
 					}
-					if ((bean.getChannel().equalsIgnoreCase("CNC")
-							|| bean.getChannel().equalsIgnoreCase("HUL3")) && (bean.getBudget().isEmpty()
+					if (bean.getChannel().equalsIgnoreCase("CNC") && (bean.getBudget().isEmpty()
 							|| bean.getBudget() == null|| Integer.parseInt(bean.getBudget())<= 0))
 					{
 						if (flag == 1)
-							error_msg = error_msg + ",Budget entry mandatory for HUL3 and CNC channel, Min budget criteria not met";
+							error_msg = error_msg + ",Budget entry mandatory for CNC channel, Min budget criteria not met";
 						else
-							error_msg = error_msg + "Budget entry mandatory for HUL3 and CNC channel, Min budget criteria not met";
+							error_msg = error_msg + "Budget entry mandatory for CNC channel, Min budget criteria not met";
 						flag=1;
 					}
 					
@@ -917,14 +916,13 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						flag = 1;
 					}
 				
-					if ((bean.getChannel().equalsIgnoreCase("CNC")
-							|| bean.getChannel().equalsIgnoreCase("HUL3")) && (bean.getBudget().isEmpty()
+					if (bean.getChannel().equalsIgnoreCase("CNC") && (bean.getBudget().isEmpty()
 							|| bean.getBudget() == null || Integer.parseInt(bean.getBudget())<= 0))
 					{
 						if (flag == 1)
-							error_msg = error_msg + ",Budget entry mandatory for HUL3 and CNC channel, Min budget criteria not met";
+							error_msg = error_msg + ",Budget entry mandatory for CNC channel, Min budget criteria not met";
 						else
-							error_msg = error_msg + "Budget entry mandatory for HUL3 and CNC channel, Min budget criteria not met";
+							error_msg = error_msg + "Budget entry mandatory for CNC channel, Min budget criteria not met";
 						flag=1;
 					}
 					
