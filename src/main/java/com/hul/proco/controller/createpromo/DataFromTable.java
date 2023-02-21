@@ -460,7 +460,7 @@ public class DataFromTable {
 	
 	public String calculateBudget(String channel,String quantity,String price_off,String budget,String basepack,Map<String,String> map)
 	{
-		if(channel.equalsIgnoreCase("CNC") ||channel.equalsIgnoreCase("HUL3") )
+		if(channel.equalsIgnoreCase("CNC"))
 		{
 			return budget;
 		}
