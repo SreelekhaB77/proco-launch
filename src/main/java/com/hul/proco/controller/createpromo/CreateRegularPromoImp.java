@@ -1376,11 +1376,21 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 										.get(bean.getSol_code_ref().toUpperCase().trim());
 								// PPM_ACCOUNT,BASEPACK_CODE,CLUSTER Map<sol,arrayList<String>)
 								// System.out.println("key_from_map:"+key_from_map);
-
+								
 								String keywithexcel = bean.getPpm_account().toUpperCase().trim()
 										+ bean.getBasepack_code().toUpperCase().trim()
 										+ bean.getCluster().toUpperCase().trim();
 								// System.out.println("keywithexcel:"+keywithexcel);
+							if(key_from_map==null) {
+								if (flag == 1)
+									error_msg += ","+bean.getSol_code_ref() +" SOL Code does not exists";
+								else
+									error_msg += bean.getSol_code_ref() +" SOL Code does not exists";
+
+								flag = 1;
+							}
+							else {
+								
 								if (!key_from_map.contains(keywithexcel)) {
 									if (flag == 1)
 										error_msg += ",Promo entry does not exists";
@@ -1479,6 +1489,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 									}
 
 								}
+							  }
 							}
 						  
 						}
