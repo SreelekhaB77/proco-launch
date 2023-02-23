@@ -1791,8 +1791,12 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				+ " LEFT JOIN TBL_PROCO_SOL_TYPE ST ON ST.SOL_TYPE = PM.CR_SOL_TYPE "
 				+ " LEFT JOIN (SELECT DISTINCT BASEPACK,SALES_CATEGORY,PPM_SALES_CATEGORY FROM TBL_PROCO_PRODUCT_MASTER_V2) PRM ON PRM.BASEPACK = PM.BASEPACK_CODE "; */
 			//Added by Kavitha D-changes SPRINT 9
-		   qry = sessionFactory.getCurrentSession().createNativeQuery("CALL PROMO_LISTING_DOWNLOAD(:moc)");
+			//qry = sessionFactory.getCurrentSession().createNativeQuery("CALL PROMO_LISTING_DOWNLOAD(:moc)");
+			qry = sessionFactory.getCurrentSession().createNativeQuery("CALL PROMO_LISTING_DOWNLOAD(:moc,:fromDate,:toDate)"); //Added by kavitha D-SPRINT 11
 			qry.setParameter("moc", moc);
+			qry.setParameter("fromDate", fromDate);
+			qry.setParameter("toDate", toDate);
+
 			qry.executeUpdate();
 			
 			String query= " SELECT CHANNEL,YEAR,MOC ,ACCOUNT_TYPE,CLAIM_SETTLEMENT_TYPE,SECONDARY_CHANNEL,PPM_ACCOUNT,PROMO_ID,SOLCODE,MOC_CYCLE,PROMO_TIMEPERIOD,SOL_RELEASE_ON,"
@@ -1913,7 +1917,6 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 		}
 		
 		//System.out.println(query);
-		
 		Query query1  =sessionFactory.getCurrentSession().createNativeQuery(query);
 		
 		if(roleId.equalsIgnoreCase("KAM")) {
