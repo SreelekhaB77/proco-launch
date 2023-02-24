@@ -1325,12 +1325,15 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 										String end_key = moc_name + moc_year + moc_group + "_end_date";
 										
 										// check if tdp mapped with moc and year
-										if (!datehandle.containsKey(start_key) && !datehandle.containsKey(end_key)) {
+										String promoStartDate = promotimemap.get(moc+bean.getPromo_time_period()+"start_date");
+										String promoEndDate = promotimemap.get(moc+bean.getPromo_time_period()+"end_date" );
+										if ((!datehandle.containsKey(start_key) && !datehandle.containsKey(end_key)) || 
+										(promoStartDate ==null && promoEndDate == null)) { // Changed by Kajal G in sprint-11
 											if (flag == 1)
-												error_msg += ",Invalid " + bean.getPromo_time_period() + "for"
+												error_msg += ",Invalid " + bean.getPromo_time_period() + " for "
 														+ bean.getMoc_name() + " and " + bean.getYear();
 											else
-												error_msg += "Invalid " + bean.getPromo_time_period() + "for"
+												error_msg += "Invalid " + bean.getPromo_time_period() + " for "
 														+ bean.getMoc_name() + " and " + bean.getYear();
 
 											flag = 1;

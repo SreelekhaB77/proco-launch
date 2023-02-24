@@ -527,6 +527,30 @@ public class DataFromTable {
 					+ String.valueOf(obj[3]).toUpperCase() + String.valueOf(obj[4]).toUpperCase()
 					+ String.valueOf(obj[5]).toUpperCase(), String.valueOf(obj[9]).toUpperCase()); // CHECK FOR TPD  
 			
+			//Added by kajal for TDP N-1 MOC in Sprint-11
+			String[] splitString = String.valueOf(obj[2]).toUpperCase().split("MOC");
+		    int m = Integer.valueOf(splitString[1]);
+			String nextMonth = "";
+			
+			if(m == 12) {
+				nextMonth = String.valueOf(1);
+			}
+			else {
+				int m1 = ++m;
+				nextMonth = String.valueOf(m1);
+			}
+	       
+			int j = 0;
+	        while (j < nextMonth.length() && nextMonth.charAt(j) == '0')
+	            j++;
+	        StringBuffer nextMonthMOC = new StringBuffer(nextMonth);    
+	        nextMonthMOC.replace(0, j, "MOC");
+	        
+	        date_extension.put(String.valueOf(obj[10]).toUpperCase() + String.valueOf(nextMonthMOC).toUpperCase()
+					+ String.valueOf(obj[3]).toUpperCase() + String.valueOf(obj[4]).toUpperCase()
+					+ String.valueOf(obj[5]).toUpperCase(), String.valueOf("TDP0").toUpperCase()); // CHECK FOR TPD for N-1 MOC
+			
+			
 			//KEY : PROMOTION_ID VALUE : PPM_ACCOUNT,BASEPACK_CODE,CLUSTER
 			list_of_sol.add(String.valueOf(obj[3]).toUpperCase()
 					+ String.valueOf(obj[4]).toUpperCase() + String.valueOf(obj[5]).toUpperCase());
