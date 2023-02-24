@@ -2695,7 +2695,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 	public List<String> getProcoBasepack() {		
 		List<String> promoBasepack = new ArrayList<String>();
 		try {
-			Query qryPromoBasepack = sessionFactory.getCurrentSession().createNativeQuery("SELECT DISTINCT BASEPACK FROM TBL_PROCO_PRODUCT_MASTER_V2 WHERE IS_ACTIVE = 1 ");
+			Query qryPromoBasepack = sessionFactory.getCurrentSession().createNativeQuery("SELECT DISTINCT BASEPACK FROM TBL_PROCO_PRODUCT_MASTER_V2 WHERE IS_ACTIVE = 1 ORDER BY BASEPACK");
 			promoBasepack = qryPromoBasepack.list();
 		} catch (Exception ex) {
 			logger.debug("Exception: ", ex);
