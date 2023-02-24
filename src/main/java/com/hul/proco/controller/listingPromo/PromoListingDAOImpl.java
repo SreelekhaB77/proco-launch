@@ -2132,12 +2132,6 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			}
 			if (roleId.equalsIgnoreCase("KAM")) {
 
-				if(fromDate==null && toDate==null) {
-					promoQueryCount +=	"AND PM.MOC='"+moc+"'";	
-				}else {
-					promoQueryCount +=" AND PM.START_DATE>='"+fromDate+"' AND PM.END_DATE<='"+toDate+"'";	
-				}
-				
 				//promoQueryCount += " WHERE PM.MOC='"+moc+ "' AND PM.PPM_ACCOUNT IN ( ";
 				promoQueryCount += " WHERE PM.PPM_ACCOUNT IN ( ";
 
@@ -2146,6 +2140,13 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					promoQueryCount+="'"+kamAccount+"',";
 				 promoQueryCount = promoQueryCount.substring(0, promoQueryCount.length()-1)+")";
 
+
+					if(fromDate==null && toDate==null) {
+						promoQueryCount +=	"AND PM.MOC='"+moc+"'";	
+					}else {
+						promoQueryCount +=" AND PM.START_DATE>='"+fromDate+"' AND PM.END_DATE<='"+toDate+"'";	
+					}
+					
 					//Kavitha D changes for filter-SPRINT 11 starts
 				if(!promobasepack.equalsIgnoreCase("ALL")) {
 					if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
@@ -2397,13 +2398,15 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 			
 			if (roleId.equalsIgnoreCase("KAM")) {
 				
+				promoQueryGrid += " WHERE PM.PPM_ACCOUNT IN (:kamAccount) ";
+
+				
 				if(fromDate==null && toDate==null) {
 					promoQueryGrid +=	"AND PM.MOC='"+moc+"'";	
 				}else {
 					promoQueryGrid +=" AND PM.START_DATE>='"+fromDate+"' AND PM.END_DATE<='"+toDate+"'";	
 			}
 				
-				promoQueryGrid += " AND PM.PPM_ACCOUNT IN (:kamAccount) ";
 				
 				//Kavitha D changes for filter-SPRINT 11 starts
 				if(!promobasepack.equalsIgnoreCase("ALL")) {

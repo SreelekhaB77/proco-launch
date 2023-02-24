@@ -581,8 +581,8 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 				    //qry = sessionFactory.getCurrentSession().createNativeQuery("CALL PROMO_LISTING_DOWNLOAD(:moc)");
 				    qry = sessionFactory.getCurrentSession().createNativeQuery("CALL PROMO_LISTING_DOWNLOAD(:moc,:fromDate,:toDate)"); //Added by Kavitha D-SPRINT 11
 					qry.setParameter("moc", moc);
-					qry.setParameter("moc", fromDate);
-					qry.setParameter("moc", toDate);
+					qry.setParameter("fromDate", fromDate);
+					qry.setParameter("toDate", toDate);
 
 					qry.executeUpdate();
 					
