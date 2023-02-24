@@ -1,6 +1,7 @@
 package com.hul.proco.controller.listingPromo;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -58,15 +59,15 @@ public interface PromoListingService {
 	//Added by Kajal G for KAM Volume download starts-SPRINT 10
 	public ArrayList<String> getHeaderForPromoDownloadListing(String primaryAccount);
 	
-	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String roleId, String[] kamAccounts);
+	public List<ArrayList<String>> getPromotionListingDownload(ArrayList<String> headerList, String userId,String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster,String roleId, String[] kamAccounts,String fromDate,String toDate);
 	//Added by Kavitha D for promo listing download ends-SPRINT 9
 
 	//Added by Kajal G for KAM Volume download Start-SPRINT 10
 	public List<ArrayList<String>> getPromotionListDownload(ArrayList<String> headerList, String moc, String primaryAccount);
 	
-	public int getPromoListRowCountGrid(String userId, String roleId,String moc,String[] kamAccountsArr);
+	public int getPromoListRowCountGrid(String userId, String roleId,String moc,String promobasepack,String ppmaccount,String procochannel,String prococluster,String[] kamAccountsArr,String fromDate,String toDate);
 
-	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId, String roleId,String moc, String searchParameter, String[] kamAccounts);
+	public List<PromoListingBean> getPromoTableListGrid(int pageDisplayStart, int pageDisplayLength, String userId, String roleId,String moc, String promobasepack,String ppmaccount,String procochannel,String prococluster,String searchParameter, String[] kamAccounts,String fromDate,String toDate);
 
 	public List<String> getPromoMoc();
 	
@@ -76,6 +77,20 @@ public interface PromoListingService {
 	public List<String> getPromoPrimaryChannels(String[] kamAccountsArr); //Added By Sarin - Sprint10
 
 	public String uploadDroppedOfferApprovalData(PromoCrBean[] beanArray, String userId) throws Exception;
+    
+	//Added by kavitha D-SPRINT 11 changes-STARTS
+	public List<String> getProcoBasepack();
+	
+	public List<String> getPpmAccount(String userId,String roleId);
+
+	public List<String> getProcoChannel();
+
+	public List<String> getProcoCluster();
+	
+
+
+	//Added by kavitha D-SPRINT 11 changes-ENDS
+
 
 	
 }

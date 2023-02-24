@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -57,7 +59,14 @@ public class PromoListingController {
 			@RequestParam("offerType") String offerTypeValue, @RequestParam("modality") String modalityValue,
 			@RequestParam("year") String yearValue, @RequestParam("custChainL2") String custChainL2Value,
 			@RequestParam("basepack") String basepackValue, @RequestParam("geography") String geographyValue,
-			@RequestParam("moc") String mocValue, HttpServletRequest request) {
+			@RequestParam("moc") String mocValue,@RequestParam("promobasepack") String procoBasepack,
+			@RequestParam("ppmaccount") String ppmAccount,@RequestParam("procochannel") String procoChannel,
+			@RequestParam("prococluster") String procoCluster, 
+			@RequestParam(value="startDate1",required=false) @DateTimeFormat(pattern="MMddyyyy") String fromDate,
+			@RequestParam(value="endDate1",required=false) @DateTimeFormat(pattern="MMddyyyy") String toDate,
+			HttpServletRequest request) {
+		
+		logger.info("START DATE:" + fromDate + "END DATE:" + toDate);
 		String roleId = (String) request.getSession().getAttribute("roleId");
 		String userId = (String) request.getSession().getAttribute("UserID");
 		Integer pageDisplayStart = Integer.valueOf(request.getParameter("iDisplayStart"));
@@ -70,6 +79,9 @@ public class PromoListingController {
 		Integer pageNumber = (pageDisplayStart / pageDisplayLength) + 1;
 		String cagetory = "", brand = "", basepack = "", custChainL1 = "", custChainL2 = "", geography = "";
 		String offerType = "", modality = "", year = "", moc = "";
+		String promobasepack="", ppmaccount="", procochannel="", prococluster="";
+		
+
 
 		if (cagetoryValue == null || cagetoryValue.isEmpty() || (cagetoryValue.equalsIgnoreCase("undefined"))
 				|| (cagetoryValue.equalsIgnoreCase("ALL CATEGORIES"))) {
@@ -131,6 +143,37 @@ public class PromoListingController {
 			moc = mocValue;
 		}
 
+		//Added by Kavitha D-SPRINT 11
+		if (procoBasepack == null || procoBasepack.isEmpty() || (procoBasepack.equalsIgnoreCase("undefined")) || (procoBasepack.equalsIgnoreCase("SELECT BASEPACK"))|| (procoBasepack.equalsIgnoreCase("ALL"))){
+			promobasepack = "all";
+		} else {
+			promobasepack = procoBasepack;
+		}
+		if (ppmAccount == null || ppmAccount.isEmpty() || (ppmAccount.equalsIgnoreCase("undefined"))|| (ppmAccount.equalsIgnoreCase("SELECT PPM ACCOUNT"))|| (ppmAccount.equalsIgnoreCase("ALL"))) {
+			ppmaccount = "all";
+		} else {
+			ppmaccount = ppmAccount;
+		}
+		if (procoChannel == null || procoChannel.isEmpty() || (procoChannel.equalsIgnoreCase("undefined"))|| (procoChannel.equalsIgnoreCase("SELECT CHANNEL"))|| (procoChannel.equalsIgnoreCase("ALL"))) {
+			procochannel = "all";
+		} else {
+			procochannel = procoChannel;
+		}
+		if (procoCluster == null || procoCluster.isEmpty() || (procoCluster.equalsIgnoreCase("undefined"))|| (procoCluster.equalsIgnoreCase("SELCET CLUSTER"))|| (procoCluster.equalsIgnoreCase("ALL"))) {
+			prococluster = "all";
+		} else {
+			prococluster = procoCluster;
+		}
+		
+		//Added by Kajal G for promolisting changes-SPRINT 11
+		if((fromDate == null || fromDate.isEmpty()) && (toDate == null || toDate.isEmpty())) {
+			fromDate = null;
+			toDate = null;
+		}
+		else {
+			fromDate = fromDate;
+			toDate = toDate;
+		}
 		//Added by kavitha D for promolisting changes-SPRINT 9
 		/*int rowCount = promoListingService.getPromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2,
 				geography, offerType, modality, year, moc, userId, 1,roleId);
@@ -138,10 +181,11 @@ public class PromoListingController {
 				(pageNumber * pageDisplayLength), cagetory, brand, basepack, custChainL1, custChainL2, geography,
 				offerType, modality, year, moc, userId, 1,roleId ,searchParameter);*/
 		
-		int rowCount = promoListingService.getPromoListRowCountGrid(userId,roleId,moc,kamAccountsArr);
+		int rowCount = promoListingService.getPromoListRowCountGrid(userId,roleId,moc,promobasepack,ppmaccount,procochannel,prococluster,kamAccountsArr,fromDate,toDate);
 		List<PromoListingBean> promoList = promoListingService.getPromoTableListGrid((pageDisplayStart + 1),
-				(pageNumber * pageDisplayLength),userId,roleId,moc,searchParameter, kamAccountsArr);
+				(pageNumber * pageDisplayLength),userId,roleId,moc,promobasepack,ppmaccount,procochannel,prococluster,searchParameter, kamAccountsArr,fromDate,toDate);
 
+		logger.info("LOGGER OUTPUT FOR PROMOLIST:" + promoList);
 
 		PromoListingJsonObject jsonObj = new PromoListingJsonObject();
 		jsonObj.setJsonBean(promoList);
@@ -177,7 +221,7 @@ public class PromoListingController {
 		
 		model.addAttribute("CreatePromotionBean", promoList);
 		model.addAttribute("roleId", roleId);
-		setModelAttributes(model,userId);
+		setModelAttributes(model,userId,request);
 		return new ModelAndView("proco/promo_edit");
 	}
 
@@ -189,7 +233,7 @@ public class PromoListingController {
 		String remark = request.getParameter("remark");
 		promoListingService.deletePromotion(promoId,userId,remark);
 		model.addAttribute("roleId", roleId);
-		setModelAttributes(model,userId);
+		setModelAttributes(model,userId,request);
 		model.addAttribute("success", "Promotion deleted successfully. ");
 		return new ModelAndView("proco/proco_promo_listing");
 	}
@@ -211,7 +255,7 @@ public class PromoListingController {
 		model.addAttribute("CreatePromotionBean", promoList);
 		model.addAttribute("roleId", roleId);
 		model.addAttribute("duplicate", true);
-		setModelAttributes(model,userId);
+		setModelAttributes(model,userId,request);
 
 		return new ModelAndView("proco/proco_create");
 	}
@@ -264,11 +308,11 @@ public class PromoListingController {
 				if (createPromotion.equals("ERROR_FILE")) {
 					String errorMsg = createPromoService.getErrorMsg(userId);
 					model.addAttribute("errorMsg", errorMsg);
-					setModelAttributes(model,userId);
+					setModelAttributes(model,userId,request);
 					return new ModelAndView("proco/promo_edit");
 				} else if (createPromotion.equals("ERROR")) {
 					model.addAttribute("errorMsg", "Unhandled exception: Failed to update promotion");
-					setModelAttributes(model,userId);
+					setModelAttributes(model,userId,request);
 					return new ModelAndView("proco/promo_edit");
 				}
 
@@ -276,18 +320,19 @@ public class PromoListingController {
 				model.addAttribute("success", "Promotion updated successfully.");
 			}
 			model.addAttribute("roleId", roleId);
-			setModelAttributes(model,userId);
+			setModelAttributes(model,userId,request);
 		} catch (Exception e) {
 			logger.debug("Exception: ", e);
 			model.addAttribute("errorMsg", "Failed to update promotion");
-			setModelAttributes(model,userId);
+			setModelAttributes(model,userId,request);
 			return new ModelAndView("proco/promo_edit");
 		}
 		return new ModelAndView("proco/proco_promo_listing");
 	}
 
 	@SuppressWarnings("unchecked")
-	private void setModelAttributes(Model model,String userId) {
+	private void setModelAttributes(Model model,String userId,HttpServletRequest request) {
+		String roleId = (String) request.getSession().getAttribute("roleId");
 		List<String> customerChainL1 = createPromoService.getCustomerChainL1();
 		List<String> offerTypes = createPromoService.getOfferTypes();
 		String geographyJson = createPromoService.getGeography(false);
@@ -301,6 +346,14 @@ public class PromoListingController {
 		List<String> changesMadeListForEdit = promoListingService.getChangesMadeListForEdit();
 		List<String> reasonListForEdit = promoListingService.getReasonListForEdit();
 		List<String> mocValue = promoListingService.getPromoMoc();
+		//Kavitha D changes for filters-SPROINT 11 starts
+		List<String> procoBasepack = promoListingService.getProcoBasepack();
+		List<String> ppmAccount = promoListingService.getPpmAccount(userId,roleId);
+		List<String> procoChannel = promoListingService.getProcoChannel();
+		List<String> procoCluster = promoListingService.getProcoCluster();
+	
+
+		//Kavitha D changes for filters-SPRINT 11 ends
 				
 		model.addAttribute("mocJson", mocJson);
 		model.addAttribute("years", yearList);
@@ -314,6 +367,11 @@ public class PromoListingController {
 		model.addAttribute("changesMadeList", changesMadeListForEdit);
 		model.addAttribute("reasonList", reasonListForEdit);
 		model.addAttribute("mocList", mocValue);
+		model.addAttribute("procoBasepacks", procoBasepack);
+		model.addAttribute("ppmAccountList", ppmAccount);
+		model.addAttribute("procoChannelList", procoChannel);
+		model.addAttribute("procoClusterList", procoCluster);
+
 
 	}
 
@@ -477,14 +535,14 @@ public class PromoListingController {
 						if (map.isEmpty()) {
 							model.addAttribute("FILE_STATUS", "ERROR");
 							model.addAttribute("errorMsg", "File does not contain data");
-							setModelAttributes(model,userId);
+							setModelAttributes(model,userId,request);
 							return new ModelAndView("proco/proco_promo_listing");
 						}
 						if (map.containsKey("ERROR")) {
 							List<Object> errorList = map.get("ERROR");
 							String errorMsg = (String) errorList.get(0);
 							model.addAttribute("errorMsg", errorMsg);
-							setModelAttributes(model,userId);
+							setModelAttributes(model,userId,request);
 							return new ModelAndView("proco/proco_promo_listing");
 						} else if (map.containsKey("DATA")) {
 							List<?> list = map.get("DATA");
@@ -499,7 +557,7 @@ public class PromoListingController {
 							} else if (savedData != null && savedData.equals("ERROR")) {
 								model.addAttribute("errorMsg", "Error while updating promos");
 							}
-							setModelAttributes(model,userId);
+							setModelAttributes(model,userId,request);
 						}
 					}
 				}
@@ -509,12 +567,12 @@ public class PromoListingController {
 		} catch (Exception e) {
 			logger.debug("Exception: ", e);
 			model.addAttribute("errorMsg", "Error while uploading file");
-			setModelAttributes(model,userId);
+			setModelAttributes(model,userId,request);
 			return new ModelAndView("proco/proco_promo_listing");
 		} catch (Throwable e) {
 			logger.debug("Exception: ", e);
 			model.addAttribute("errorMsg", "Error while uploading file");
-			setModelAttributes(model,userId);
+			setModelAttributes(model,userId,request);
 			return new ModelAndView("proco/proco_promo_listing");
 		}
 		return new ModelAndView("proco/proco_promo_listing");
@@ -875,9 +933,10 @@ public class PromoListingController {
 
 	//Added by Kavitha D for promo listing download starts-SPRINT 9
 
-	@RequestMapping(value = "{moc}/downloadPromoListing.htm", method = RequestMethod.GET)
+	@RequestMapping(value = "{moc}/{promobasepack}/{ppmaccount}/{procochannel}/{prococluster}/{startDate1}/{endDate1}/downloadPromoListing.htm", method = RequestMethod.GET)
 	public @ResponseBody String downloadPromosForListing(@ModelAttribute("CreateBeanRegular") CreateBeanRegular createBeanRegular,@PathVariable("moc") String moc,
-			Model model,HttpServletRequest request, HttpServletResponse response) {
+			@PathVariable("promobasepack") String procoBasepack,@PathVariable("ppmaccount") String ppmAccount,@PathVariable("procochannel") String procoChannel,@PathVariable("prococluster") String procoCluster,
+			@PathVariable("startDate1") @DateTimeFormat(pattern="MMddyyyy") String fromDate,@PathVariable("endDate1") @DateTimeFormat(pattern="MMddyyyy") String toDate,Model model,HttpServletRequest request, HttpServletResponse response) {
 		logger.info("START downloadPromos for listing():");
 		try {
 			InputStream is;
@@ -894,9 +953,41 @@ public class PromoListingController {
 					CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 			String downloadFileName = absoluteFilePath + fileName;
 			String userId = (String) request.getSession().getAttribute("UserID");
+			String promobasepack="", ppmaccount="", procochannel="", prococluster="";
+
+			if (procoBasepack == null || procoBasepack.isEmpty() || (procoBasepack.equalsIgnoreCase("undefined")) || (procoBasepack.equalsIgnoreCase("SELECT BASEPACK"))|| (procoBasepack.equalsIgnoreCase("ALL")))
+			{
+				promobasepack = "all";
+			} else {
+				promobasepack = procoBasepack;
+			}
+			if (ppmAccount == null || ppmAccount.isEmpty() || (ppmAccount.equalsIgnoreCase("undefined"))|| (ppmAccount.equalsIgnoreCase("SELECT PPM ACCOUNT"))|| (ppmAccount.equalsIgnoreCase("ALL"))) {
+				ppmaccount = "all";
+			} else {
+				ppmaccount = ppmAccount;
+			}
+			if (procoChannel == null || procoChannel.isEmpty() || (procoChannel.equalsIgnoreCase("undefined"))|| (procoChannel.equalsIgnoreCase("SELECT CHANNEL"))|| (procoChannel.equalsIgnoreCase("ALL"))) {
+				procochannel = "all";
+			} else {
+				procochannel = procoChannel;
+			}
+			if (procoCluster == null || procoCluster.isEmpty() || (procoCluster.equalsIgnoreCase("undefined"))|| (procoCluster.equalsIgnoreCase("SELCET CLUSTER"))|| (procoCluster.equalsIgnoreCase("ALL"))) {
+				prococluster = "all";
+			} else {
+				prococluster = procoCluster;
+			}
+			
+			if((fromDate == null || fromDate.isEmpty()) && (toDate == null || toDate.isEmpty())) {
+				fromDate = null;
+				toDate = null;
+			}
+			else {
+				fromDate = fromDate;
+				toDate = toDate;
+			}
 			
 			ArrayList<String> headerList = promoListingService.getHeaderListForPromoDownloadListing();
-			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc,roleId, kamAccounts);
+			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc,promobasepack,ppmaccount,procochannel,prococluster,roleId, kamAccounts,fromDate,toDate);
 			if (downloadedData != null) {
 				UploadUtil.writeXLSXFile(downloadFileName, downloadedData, null,".xlsx");
 				downloadLink = downloadFileName + ".xlsx";

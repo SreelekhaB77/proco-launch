@@ -48,16 +48,17 @@ public class DataFromTable {
 			update_ppm_desc = "UPDATE TBL_PROCO_PROMOTION_MASTER_TEMP_V2 T "
 					+ "INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 A ON A.PPM_ACCOUNT=T.PPM_ACCOUNT AND A.CHANNEL_NAME=T.CHANNEL_NAME "
 					+ "INNER JOIN TBL_PROCO_INVESTMENT_TYPE_MASTER_V2 B ON B.OFFER_MODALITY = T.OFFER_MODALITY AND B.OFFER_TYPE = T.OFFER_TYPE "
-					+ "INNER JOIN  (SELECT BASEPACK,SALES_CATEGORY FROM (SELECT ROW_NUMBER() OVER (PARTITION BY BASEPACK ORDER BY BASEPACK,SALES_CATEGORY) AS ROW_NUM,BASEPACK,SALES_CATEGORY FROM TBL_PROCO_PRODUCT_MASTER_V2 A WHERE IS_ACTIVE=1 GROUP BY BASEPACK,SALES_CATEGORY) A WHERE ROW_NUM=1) C ON C.BASEPACK=T.BASEPACK_CODE "
+					+ "INNER JOIN  (SELECT CHANNEL_NAME,BASEPACK,SALES_CATEGORY FROM (SELECT ROW_NUMBER() OVER (PARTITION BY BASEPACK, CHANNEL_NAME ORDER BY BASEPACK,SALES_CATEGORY) AS ROW_NUM,CHANNEL_NAME,BASEPACK,SALES_CATEGORY FROM TBL_PROCO_PRODUCT_MASTER_V2 A WHERE IS_ACTIVE=1 GROUP BY CHANNEL_NAME,BASEPACK,SALES_CATEGORY) A WHERE ROW_NUM=1) C ON C.BASEPACK=T.BASEPACK_CODE AND C.CHANNEL_NAME = T.CHANNEL_NAME "
+					+ "INNER JOIN TBL_PROCO_SOL_TYPE S ON S.SOL_REMARK=T.CR_SOL_TYPE "
 					+ " " + "SET "
-					+ "PPM_DESC_STAGE=CONCAT(A.ACCOUNT_TYPE ,':',  B.MODALITY_KEY,':',T.PPM_ACCOUNT,':',C.SALES_CATEGORY,':',T.OFFER_DESC,':',T.PROMOTION_ID,IF (((A.NON_UNIFY <> '') OR (A.ACCOUNT_TYPE = 'KA' AND A.NON_UNIFY <> 'NON UNIFY' AND T.CR_SOL_TYPE = 'Additional Quantity')), concat(':', 'NON UNIFY'), ''))  WHERE USER_ID='"
+					+ "PPM_DESC_STAGE=CONCAT(A.ACCOUNT_TYPE ,':',  B.MODALITY_KEY,':',T.PPM_ACCOUNT,':',C.SALES_CATEGORY,':',S.SOL_TYPE,':',T.OFFER_DESC,':',T.PROMOTION_ID,IF (((A.NON_UNIFY <> '') OR (A.ACCOUNT_TYPE = 'KA' AND A.NON_UNIFY <> 'NON UNIFY' AND T.CR_SOL_TYPE = 'Additional Quantity')), concat(':', 'NON UNIFY'), ''))  WHERE USER_ID='"
 					+ uid + "'  " + "";
 		} else {
 			
 			update_ppm_desc = "UPDATE TBL_PROCO_PROMOTION_MASTER_TEMP_V2 T "
 					+ "INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 A ON A.PPM_ACCOUNT=T.PPM_ACCOUNT AND A.CHANNEL_NAME=T.CHANNEL_NAME "
 					+ "INNER JOIN TBL_PROCO_INVESTMENT_TYPE_MASTER_V2 B ON B.OFFER_MODALITY = T.OFFER_MODALITY AND B.OFFER_TYPE = T.OFFER_TYPE "
-					+ "INNER JOIN  (SELECT BASEPACK,SALES_CATEGORY FROM (SELECT ROW_NUMBER() OVER (PARTITION BY BASEPACK ORDER BY BASEPACK,SALES_CATEGORY) AS ROW_NUM,BASEPACK,SALES_CATEGORY FROM TBL_PROCO_PRODUCT_MASTER_V2 A WHERE IS_ACTIVE=1 GROUP BY BASEPACK,SALES_CATEGORY) A WHERE ROW_NUM=1) C ON C.BASEPACK=T.BASEPACK_CODE "
+					+ "INNER JOIN  (SELECT CHANNEL_NAME,BASEPACK,SALES_CATEGORY FROM (SELECT ROW_NUMBER() OVER (PARTITION BY BASEPACK, CHANNEL_NAME ORDER BY BASEPACK,SALES_CATEGORY) AS ROW_NUM,CHANNEL_NAME,BASEPACK,SALES_CATEGORY FROM TBL_PROCO_PRODUCT_MASTER_V2 A WHERE IS_ACTIVE=1 GROUP BY CHANNEL_NAME,BASEPACK,SALES_CATEGORY) A WHERE ROW_NUM=1) C ON C.BASEPACK=T.BASEPACK_CODE AND C.CHANNEL_NAME = T.CHANNEL_NAME "
 					+ " " + "SET "
 					+ "PPM_DESC_STAGE=CONCAT(A.ACCOUNT_TYPE ,':',  B.MODALITY_KEY,':',T.PPM_ACCOUNT,':',C.SALES_CATEGORY,':',T.OFFER_DESC,IF (A.NON_UNIFY <> '', concat(':', A.NON_UNIFY), ''))  WHERE USER_ID='"
 					+ uid + "'  " + "";
@@ -113,7 +114,7 @@ public class DataFromTable {
 	{
 		//bean.getMoc_name() + bean.getPpm_account() + bean.getYear() + sale_cate
 //		String q_String="SELECT MOC_NAME,MOC_YEAR,PPM_ACCOUNT,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER,CR_SOL_TYPE FROM TBL_PROCO_PROMOTION_MASTER_V2 ";
-		String q_String = "SELECT MOC_NAME,MOC_YEAR,PPM_ACCOUNT,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER,CR_SOL_TYPE,IF (OFFER_TYPE = 'Ground Ops', OFFER_TYPE, OFFER_MODALITY) AS OFFER_MODALITY,CHANNEL_NAME FROM TBL_PROCO_PROMOTION_MASTER_V2 PM INNER JOIN (SELECT CONCAT(SUBSTRING(MOC, 3, 4),SUBSTRING(MOC,1,2)) AS CURRENT_MOC FROM TBL_VAT_MOC_MASTER WHERE STATUS = 'Y' LIMIT 1) MM ON 1=1 WHERE CONCAT(SUBSTRING(PM.MOC, 3, 4),SUBSTRING(PM.MOC,1,2)) >= MM.CURRENT_MOC AND Status !='42'";
+		String q_String = "SELECT MOC_NAME,MOC_YEAR,PPM_ACCOUNT,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER,CR_SOL_TYPE,IF (OFFER_TYPE = 'Ground Ops', OFFER_TYPE, OFFER_MODALITY) AS OFFER_MODALITY,CHANNEL_NAME,PROMO_TIMEPERIOD FROM TBL_PROCO_PROMOTION_MASTER_V2 PM INNER JOIN (SELECT CONCAT(SUBSTRING(MOC, 3, 4),SUBSTRING(MOC,1,2)) AS CURRENT_MOC FROM TBL_VAT_MOC_MASTER WHERE STATUS = 'Y' LIMIT 1) MM ON 1=1 WHERE CONCAT(SUBSTRING(PM.MOC, 3, 4),SUBSTRING(PM.MOC,1,2)) >= MM.CURRENT_MOC AND Status !='42'";
 		List<Object[]> mapdata_list = sessionFactory.getCurrentSession().createNativeQuery(q_String).list();
 		for (Object[] data : mapdata_list) {
 			h.put(String.valueOf(data[0]).toUpperCase() + String.valueOf(data[1]).toUpperCase()
@@ -141,6 +142,10 @@ public class DataFromTable {
 				h.put(String.valueOf(data[0]).toUpperCase() + String.valueOf(data[1]).toUpperCase()
 						+ String.valueOf(data[2]).toUpperCase() + String.valueOf(data[3]).toUpperCase()+String.valueOf(data[6]).toUpperCase()+String.valueOf(data[7]).toUpperCase()+ String.valueOf(data[8]).toUpperCase(),
 						String.valueOf(data[4]) + " " + String.valueOf(data[5])); 
+				
+				h.put(String.valueOf(data[0]).toUpperCase() + String.valueOf(data[1]).toUpperCase()
+						+ String.valueOf(data[2]).toUpperCase() + String.valueOf(data[3]).toUpperCase()+String.valueOf(data[6]).toUpperCase()+ String.valueOf(data[8]).toUpperCase(),
+						String.valueOf(data[10]).toUpperCase());
 				
 //			}
 			
@@ -344,9 +349,23 @@ public class DataFromTable {
 		return list;
 	}
 	
+	//Added by Kajal G for Spint-11
+	public List<String> getClusterList(){
+		String clusterList = "SELECT DISTINCT CLUSTER FROM TBL_PROCO_ALLINDIA_CLUSTER_MASTER_V2 WHERE IS_ACTIVE = 1";
+		Query query1  = sessionFactory.getCurrentSession().createNativeQuery(clusterList);
+		List<String> list = query1.list();
+		return list;
+	}
+	
 	private ArrayList<String> getValidBasepack() {
-		String basepack = "SELECT DISTINCT BASEPACK FROM TBL_PROCO_PRODUCT_MASTER_V2 WHERE IS_ACTIVE=1 AND PPM_STATUS='YES'";
-		return (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(basepack).list();
+//		String basepack = "SELECT DISTINCT BASEPACK FROM TBL_PROCO_PRODUCT_MASTER_V2 WHERE IS_ACTIVE=1 AND PPM_STATUS='YES'";
+//		return (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(basepack).list();
+		
+		//Added by Kajal G for SPRINT - 11
+		String basepack = "SELECT DISTINCT CONCAT(BASEPACK, CHANNEL_NAME) AS BASEPACK_CHANNEL FROM TBL_PROCO_PRODUCT_MASTER_V2 WHERE IS_ACTIVE=1 AND PPM_STATUS='YES'";
+		ArrayList<String> ar = (ArrayList<String>) sessionFactory.getCurrentSession().createNativeQuery(basepack)
+				.list();
+		return (ArrayList<String>) ar.stream().map(String::toUpperCase).collect(Collectors.toList());
 	}
 
 	private ArrayList<String> getValidOfferType() {
@@ -371,13 +390,16 @@ public class DataFromTable {
 	}
 	public void basePackAndSaleCategory(Map<String, String> commanmap)
 	{
-		String sale_cat = "SELECT BASEPACK,SALES_CATEGORY,BP_MRP FROM (SELECT ROW_NUMBER() OVER (PARTITION BY BASEPACK ORDER BY BASEPACK,SALES_CATEGORY) AS ROW_NUM,BASEPACK,SALES_CATEGORY,BP_MRP FROM TBL_PROCO_PRODUCT_MASTER_V2 A WHERE IS_ACTIVE=1 GROUP BY BASEPACK,SALES_CATEGORY,BP_MRP) A WHERE ROW_NUM=1";
+//		String sale_cat = "SELECT BASEPACK,SALES_CATEGORY,BP_MRP FROM (SELECT ROW_NUMBER() OVER (PARTITION BY BASEPACK ORDER BY BASEPACK,SALES_CATEGORY) AS ROW_NUM,BASEPACK,SALES_CATEGORY,BP_MRP FROM TBL_PROCO_PRODUCT_MASTER_V2 A WHERE IS_ACTIVE=1 GROUP BY BASEPACK,SALES_CATEGORY,BP_MRP) A WHERE ROW_NUM=1";
 		
+		//Added by Kajal G for Sprint-11
+		String sale_cat = "SELECT BASEPACK,SALES_CATEGORY,BP_MRP,CHANNEL_NAME FROM (SELECT ROW_NUMBER() OVER (PARTITION BY CHANNEL_NAME,BASEPACK ORDER BY BASEPACK,SALES_CATEGORY) AS ROW_NUM,CHANNEL_NAME,BASEPACK,SALES_CATEGORY,BP_MRP "
+							+ "FROM TBL_PROCO_PRODUCT_MASTER_V2 A WHERE IS_ACTIVE=1 GROUP BY CHANNEL_NAME, BASEPACK,SALES_CATEGORY,BP_MRP) A WHERE ROW_NUM=1 ";
 		List<Object[]> list=sessionFactory.getCurrentSession().createNativeQuery(sale_cat).list();
 		
 		for(Object[] obj:list)
 		{
-			commanmap.put(String.valueOf(obj[0]).toUpperCase(), String.valueOf(obj[1]).toUpperCase());
+			commanmap.put(String.valueOf(obj[0]).toUpperCase()+String.valueOf(obj[3]).toUpperCase(), String.valueOf(obj[1]).toUpperCase());
 			commanmap.put(String.valueOf(obj[0]).toUpperCase()+"_MRP", String.valueOf(obj[2]).toUpperCase());
 		}
 	}
@@ -438,7 +460,7 @@ public class DataFromTable {
 	
 	public String calculateBudget(String channel,String quantity,String price_off,String budget,String basepack,Map<String,String> map)
 	{
-		if(channel.equalsIgnoreCase("CNC") ||channel.equalsIgnoreCase("HUL3") )
+		if(channel.equalsIgnoreCase("CNC"))
 		{
 			return budget;
 		}
@@ -504,6 +526,30 @@ public class DataFromTable {
 			date_extension.put(String.valueOf(obj[10]).toUpperCase() + String.valueOf(obj[2]).toUpperCase()
 					+ String.valueOf(obj[3]).toUpperCase() + String.valueOf(obj[4]).toUpperCase()
 					+ String.valueOf(obj[5]).toUpperCase(), String.valueOf(obj[9]).toUpperCase()); // CHECK FOR TPD  
+			
+			//Added by kajal for TDP N-1 MOC in Sprint-11
+			String[] splitString = String.valueOf(obj[2]).toUpperCase().split("MOC");
+		    int m = Integer.valueOf(splitString[1]);
+			String nextMonth = "";
+			
+			if(m == 12) {
+				nextMonth = String.valueOf(1);
+			}
+			else {
+				int m1 = ++m;
+				nextMonth = String.valueOf(m1);
+			}
+	       
+			int j = 0;
+	        while (j < nextMonth.length() && nextMonth.charAt(j) == '0')
+	            j++;
+	        StringBuffer nextMonthMOC = new StringBuffer(nextMonth);    
+	        nextMonthMOC.replace(0, j, "MOC");
+	        
+	        date_extension.put(String.valueOf(obj[10]).toUpperCase() + String.valueOf(nextMonthMOC).toUpperCase()
+					+ String.valueOf(obj[3]).toUpperCase() + String.valueOf(obj[4]).toUpperCase()
+					+ String.valueOf(obj[5]).toUpperCase(), String.valueOf("TDP0").toUpperCase()); // CHECK FOR TPD for N-1 MOC
+			
 			
 			//KEY : PROMOTION_ID VALUE : PPM_ACCOUNT,BASEPACK_CODE,CLUSTER
 			list_of_sol.add(String.valueOf(obj[3]).toUpperCase()

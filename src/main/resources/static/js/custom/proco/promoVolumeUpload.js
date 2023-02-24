@@ -140,6 +140,24 @@ $(document).ready(function() {
 						year = $(this).val();
 						promoTable.draw();
 						});
+						$('#ProcoBasepack').change(function(){
+						ProcoBasepack = $(this).val();
+						promoTable.draw();
+						});
+						
+						$('#PpmAccount').change(function(){
+							PpmAccount = $(this).val();
+							promoTable.draw();
+						});
+						$('#ProcoClusterList').change(function(){
+							ProcoClusterList = $(this).val();
+							promoTable.draw();
+						});
+						$('#ProcoChannelList').change(function(){
+							ProcoChannelList = $(this).val();
+							promoTable.draw();
+						});
+						
 
 					promoTable = $('.promo-list-table').DataTable(
 									{
@@ -183,7 +201,24 @@ $(document).ready(function() {
 											}, {
 												"name" : "moc",
 												"value" : mocVal
-											});
+												
+											}, {
+												"name": "promobasepack",
+											    "value": ProcoBasepack 
+											    
+											}, {
+												"name": "ppmaccount",
+				    	                        "value": PpmAccount
+				    	                        
+				    	                    },{
+					                           "name": "prococluster",
+				    	                       "value":ProcoClusterList
+				    	                       
+				    	                    },{
+					                            "name": "procochannel",
+				    	                        "value": ProcoChannelList
+				    	                     
+				    	                   } );
 										},
 										"fnDrawCallback" : function(oSettings) {
 											$('table.promo-list-table input[type="checkbox"]').change(function() {

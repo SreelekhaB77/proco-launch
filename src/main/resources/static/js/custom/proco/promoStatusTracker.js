@@ -3,6 +3,8 @@
   var spinnerHeight = "100";
  
 $(document).ready(function() {
+	 $('#startDate1').val("2000-01-20");
+	 $('#endDate1').val("2000-02-21");
 	
 	$(document).on("click", "#btnSubmitBasePack1, #btnSubmitBasePack, .validate_dowload", function(){
         $("#successblock, #errorblock, #successblockUpload, #erorblockUpload").hide();
@@ -347,8 +349,36 @@ $(document).ready(function() {
 						Mocvalue = $(this).val();
 						promoTable.draw();
 						});
+
+					//viswas added this changes for filters in sprint-11	
+					$('#ProcoBasepack').change(function(){
+						ProcoBasepack = $(this).val();
+						promoTable.draw();
+						});
 						
-					
+						$('#PpmAccount').change(function(){
+							PpmAccount = $(this).val();
+							promoTable.draw();
+						});
+						$('#ProcoClusterList').change(function(){
+							ProcoClusterList = $(this).val();
+							promoTable.draw();
+						});
+						$('#ProcoChannelList').change(function(){
+							ProcoChannelList = $(this).val();
+							promoTable.draw();
+						});
+						$('#startDate1').change(function(){
+							//console.log("hi")
+							startDate1 =startDate1Val;
+							promoTable.draw();
+						});
+						$('#endDate1').change(function(){
+							//console.log("hi");
+							endDate1 = endDate1Val;
+							promoTable.draw();
+						});
+						
 						//bharati code end here for sprint-9
 						
 					/*PromoListing table pagination */
@@ -392,7 +422,15 @@ $(document).ready(function() {
 				    	                {"name": "modality", "value": modality}, 
 				    	                {"name": "year","value": year},
 				    	                {"name": "moc","value": Mocvalue},//bharati changes this mocVal to MocValue in sprint-9
-				    	                {"name": "promoId","value": promoId}
+				    	                {"name": "promoId","value": promoId},
+				    	                //viswas add this changes in sprint-11
+				    	               {"name": "promobasepack","value": ProcoBasepack},
+				    	                 {"name": "ppmaccount","value": PpmAccount},
+				    	                 {"name": "prococluster","value":ProcoClusterList},
+				    	                 {"name": "procochannel","value": ProcoChannelList},
+				    	                  {"name": "startDate1","value":startDate1},
+				    	                {"name": "endDate1","value":endDate1}//viswas chnages this lists in sprint-11
+				    	                
 				    	                );
 				              }, 
 				              "fnDrawCallback": function(oSettings){
@@ -473,7 +511,7 @@ $(document).ready(function() {
 
 	                     $('#DataTables_Table_0_length').css({
 	                       
-	                         'padding': '20px 0'
+	                         'padding': '20px 30px'
 	                     });
 	                     $('#DataTables_Table_0_length').css({
 	                         'color': '#29290a'
@@ -509,12 +547,12 @@ $(document).ready(function() {
 	                     });
 				       
 	                     $('.promo-filter').css({
-	                    	 'float': 'right',
+	                    	'float': 'right',
 	                    	  'padding-left': '10px',
 	                    	  'padding-top': '20px',
 	                    	    'height': '75px', 
 	                    	    'width': 'none',
-	                    	    'border-left': '2px #e8e8e8 solid'
+	                    	   /* 'border-left': '2px #e8e8e8 solid'*/
 	                     });
 	                     
 				       var categoryTags = basepacks;
@@ -579,6 +617,54 @@ $(document).ready(function() {
 						    window.location.replace("/VisibilityAssetTracker/proco_measure_upload.jsp");
 						})
 				});
+				var startDate1Val,endDate1Val;
+ mocValueSelected = $('#Mocvalue');
+	mocValSelected = mocValueSelected.val();
+function promoStartDate1(){
+	startDate1Val = $('#startDate1').val();
+	endDate1Val = $('#endDate1').val();
+	
+	if( startDate1Val != '' && endDate1Val != ''){
+				$('#Mocvalue').val("");
+				$('#Mocvalue').prop('disabled',true);
+				
+			} else{
+				$('#Mocvalue').val(mocValSelected);
+				$('#Mocvalue').prop('disabled',false);				
+			}
+   
+	//console.log('StartDateVal is ',startDate1Val);
+	
+}
+	
+function promoEndDate1(){
+	startDate1Val = $('#startDate1').val();
+	endDate1Val = $('#endDate1').val();
+	if( startDate1Val != '' && endDate1Val != ''){
+				$('#Mocvalue').val("");
+				$('#Mocvalue').prop('disabled',true);
+				
+			} else{
+				$('#Mocvalue').val(mocValSelected);
+				$('#Mocvalue').prop('disabled',false);				
+			}
+	//console.log('EndDateVal is ',endDate1Val);
+	
+}
+          function dateDisable(){
+	          currMocVal = $('#Mocvalue').val();
+        		if(currMocVal === mocValSelected){
+        			$('#startDate1').val("");
+        			$('#endDate1').val("");
+        			$('#startDate1').prop('disabled',false);
+        			$('#endDate1').prop('disabled',false);
+        		} else {
+	
+        			$('#startDate1').prop('disabled',true);
+        			$('#endDate1').prop('disabled',true);
+}
+        	}
+
 
 function getCustChainValues(selVal) {
 	$.ajax({
@@ -651,7 +737,15 @@ function split(val){
 function downloadPromotionFile(){
 	//$("#download").submit();  //bharati commented this line for sprint-9 moc filter value pass to download promo file
 	var SelectedMoc = $("#Mocvalue").val();
-	window.location.assign(SelectedMoc+"/downloadPromoStatusTracker.htm");
+	//Added by viswas in sprint-11 for filters.
+	var SelectedBasepack = $('#ProcoBasepack').val();
+    var SelectedAccount = $('#PpmAccount').val();
+    var SelectedCluster = $('#ProcoClusterList').val();
+    var SelectedChannel = $('#ProcoChannelList').val();
+    var SelectedstartDate1 =(($('#startDate1').val()) == "")? null:$('#startDate1').val();
+	//console.log("startDate is ", startDate1)
+	var SelectedendDate1 =(($('#endDate1').val()) == "")? null:$('#endDate1').val();
+    window.location.assign(SelectedMoc+"/"+SelectedBasepack+"/"+SelectedAccount+"/"+SelectedChannel+"/"+SelectedCluster+"/"+SelectedstartDate1+"/"+SelectedendDate1+"/downloadPromoStatusTracker.htm");
 }
 
 function uploadValidation() {

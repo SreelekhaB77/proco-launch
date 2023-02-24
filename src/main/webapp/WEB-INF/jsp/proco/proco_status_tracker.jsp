@@ -34,8 +34,9 @@
 <style>
 .promo-filter-div{
 float: right!important;
-width: 30%!important;
-margin-top: -75px!important;
+width: 40%!important;
+margin-top: -77px!important;
+padding-right: 137px;
 }
 
 #Mocvalue{
@@ -330,18 +331,79 @@ margin-left:0px!important;
 			<div class="promo-list table-header-tracker">PROMO LIST</div>
 			<!--bharati added this below form for moc filter-->
 			<form action="https://vat.hulcd.com/VisibilityAssetTracker/downloadPromoStatusTracker.htm" method="POST" enctype="multipart/form-data" id="download">
+			 <!--viswas added below Startdate and Enddate filters for sprint-11-->
+
 			<div class="form-group col-sm-4" style="margin-top: 20px;">
-						<label for="unique-id" class="control-label col-md-2">MOC</label>
-						<div class="col-md-5">
-						<select class="form-control" id="Mocvalue" name="Mocvalue">
+				<label class="control-label col-md-4" for="uom"style="margin-top: 8px;" >START DATE:</label>
+                <div class="col-md-6">
+                <input type='date' name="startDate1" class="form-control" id="startDate1" onChange="promoStartDate1()" autocomplete="off" >
+               
+                               
+                    
+                      </div>
+                  </div>	
+                   <div class="form-group col-sm-4"style="margin-top: 20px;">
+				<label class="control-label col-md-4" for="uom"- style="margin-top: 8px;">END DATE:</label>
+                <div class="col-md-6">
+               <input type='date' name="endDate1" class="form-control" id="endDate1" onChange="promoEndDate1()"  autocomplete="off" />               
+               
+                 </div>
+                 </div>	
+			<div class="form-group col-sm-4" style="margin-top: 20px;">
+						<label for="unique-id" class="control-label col-md-3" style="margin-top: 8px;">MOC</label>
+						<div class="col-md-6" >
+						<select class="form-control" id="Mocvalue" name="Mocvalue" onChange="dateDisable()">
 								 <c:forEach items="${mocList}" var="mocValue">
                                    <option value="${mocValue}"><c:out value="${mocValue}"></c:out></option>
                                  </c:forEach>
                                  </select>
 								 </div>
-
 					</div>
-			</form>
+					 <div class="form-group col-sm-4" style="margin-top: 20px; margin-left: 2px ">
+                    <label class="control-label col-md-3" for="uom" style="margin-top: 8px;">BASEPACK</label>
+                    <div class="col-md-6" style="margin-left: 28px;">
+                    <select class="form-control" id="ProcoBasepack" name="ProcoBasepack">
+                    <option>SELECT BASEPACK</option>
+                    <c:forEach  items="${procoBasepacks}" var="procoBasepack">
+                    <option value="${procoBasepack}">${procoBasepack}</option>
+                 </c:forEach>
+                </select>
+                  </div>
+                 </div>
+                <div class="form-group col-sm-4" style="margin-top: 20px;">
+                <label class="control-label col-md-3" for="uom" >PPM ACCOUNT</label>
+				<div class="col-md-6"style="margin-left: 30px;">
+				<select class="form-control" id="PpmAccount" name="PpmAccount" >
+				<option>SELECT PPM ACCOUNT</option>
+				<c:forEach items="${ppmAccountList}" var="ppmAccount" >
+				<option value="${ppmAccount}">${ppmAccount}</option>
+				</c:forEach>
+				</select>
+				</div>
+				</div>	
+				<div class="form-group col-sm-4"style="margin-left:-2px;">
+				<label class="control-label col-md-3" for="uom"style="margin-top: 8px;">CLUSTER</label>
+				<div class="col-md-6">
+				<select class="form-control" id="ProcoClusterList" name="ProcoClusterList">
+				<option>SELECT CLUSTER</option>
+				<c:forEach items="${procoClusterList}" var="procoCluster" >
+				<option value="${procoCluster}">${procoCluster}</option>
+				</c:forEach>
+				</select>
+				</div>
+				</div>
+				<div class="form-group col-sm-4">
+				<label class="control-label col-md-3" for="uom"style="margin-top: 8px;">CHANNEL</label>
+				<div class="col-md-6" style="margin-left:30px;">
+				<select class="form-control" id="ProcoChannelList" name="ProcoChannelList">
+				<option>SELECT CHANNEL</option>
+				<c:forEach items="${procoChannelList}" var="procoChannel" >
+				<option value="${procoChannel}">${procoChannel}</option>
+				</c:forEach>
+				</select>
+				</div>
+				</div>
+		</form>
 			<form>
 			<!--bharati removed below columns form table in sprint-9-->
 			<table class="table table-striped table-bordered promo-list-table table-responsive" cellspacing="0"  style="width: 100%;">
@@ -482,6 +544,10 @@ margin-left:0px!important;
 		<script type="text/javascript">
 		var moc = '${mocJson}';
 		var Mocvalue = $('#Mocvalue').val(); //bharati added in sprint-9 for moc filter
+		var ProcoBasepack = $('#ProcoBasepack').val();
+        var PpmAccount = $('#PpmAccount').val();
+        var ProcoClusterList = $('#ProcoClusterList').val();
+        var ProcoChannelList = $('#ProcoChannelList').val();//viswas added in sprint-11 for filters
 		var geographyData = '${geographyJson}';
 		var basepacks = '${basepacks}';
 		var newBasepacks = null;
@@ -497,6 +563,8 @@ margin-left:0px!important;
 		var year = null;
 		var geography = null;
 		var mocVal = null;
+		var startDate1 = $('#fromDate').val();
+		var endDate1 = $('#toDate').val();
 		  jQuery.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
               return {
                   "iStart": oSettings._iDisplayStart,

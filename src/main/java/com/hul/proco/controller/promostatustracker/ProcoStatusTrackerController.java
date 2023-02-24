@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -109,6 +111,14 @@ public class ProcoStatusTrackerController {
 		//Sarin Changes Performance - Ends
 		long endTime = System.currentTimeMillis();
 		logger.info("duration of Promo page intialization: "+(endTime-startTime));
+		
+		//Kavitha D changes for filter-SPRINT 11 starts
+		List<String> procoBasepack = promoListingService.getProcoBasepack();
+		List<String> ppmAccount = promoListingService.getPpmAccount(id,roleId);
+		List<String> procoChannel = promoListingService.getProcoChannel();
+		List<String> procoCluster = promoListingService.getProcoCluster();
+		//Kavitha D changes for filter-SPRINT 11 ends
+
 		model.addAttribute("geographyJson", geographyJson);
 		model.addAttribute("mocJson", mocJson);
 		model.addAttribute("years", yearList);
@@ -120,7 +130,10 @@ public class ProcoStatusTrackerController {
 		model.addAttribute("basepacks", basepacks);
 		model.addAttribute("promoIds", promoIds);
 		model.addAttribute("mocList", mocValue);
-
+		model.addAttribute("procoBasepacks", procoBasepack);
+		model.addAttribute("ppmAccountList", ppmAccount);
+		model.addAttribute("procoChannelList", procoChannel);
+		model.addAttribute("procoClusterList", procoCluster);
 		return new ModelAndView("proco/proco_status_tracker");
 	}
 	
@@ -131,7 +144,11 @@ public class ProcoStatusTrackerController {
 			@RequestParam("offerType") String offerTypeValue, @RequestParam("modality") String modalityValue,
 			@RequestParam("year") String yearValue, @RequestParam("custChainL2") String custChainL2Value,
 			@RequestParam("basepack") String basepackValue, @RequestParam("geography") String geographyValue,
-			@RequestParam("moc") String mocValue, @RequestParam("promoId") String promoId,HttpServletRequest request) {
+			@RequestParam("moc") String mocValue, @RequestParam("promoId") String promoId,@RequestParam("promobasepack") String procoBasepack,
+			@RequestParam("ppmaccount") String ppmAccount,@RequestParam("procochannel") String procoChannel,@RequestParam("prococluster") String procoCluster,
+			@RequestParam(value="startDate1",required=false) @DateTimeFormat(pattern="MMddyyyy") String fromDate,
+			@RequestParam(value="endDate1",required=false) @DateTimeFormat(pattern="MMddyyyy") String toDate,
+			HttpServletRequest request) {
 
 		long startTime = System.currentTimeMillis();
 		String userId = (String) request.getSession().getAttribute("UserID");
@@ -142,6 +159,7 @@ public class ProcoStatusTrackerController {
 
 		String cagetory = "", brand = "", basepack = "", custChainL1 = "", custChainL2 = "", geography = "";
 		String offerType = "", modality = "", year = "", moc = "", promoIdVal="";
+		String promobasepack="", ppmaccount="", procochannel="", prococluster="";
 
 		if (cagetoryValue == null || cagetoryValue.isEmpty() || (cagetoryValue.equalsIgnoreCase("undefined"))
 				|| (cagetoryValue.equalsIgnoreCase("ALL CATEGORIES"))) {
@@ -209,6 +227,38 @@ public class ProcoStatusTrackerController {
 		} else {
 			promoIdVal = promoId;
 		}
+		
+		//Added by Kavitha D-SPRINT 11
+		if (procoBasepack == null || procoBasepack.isEmpty() || (procoBasepack.equalsIgnoreCase("undefined")) || (procoBasepack.equalsIgnoreCase("SELECT BASEPACK"))|| (procoBasepack.equalsIgnoreCase("ALL"))){
+			promobasepack = "all";
+		} else {
+			promobasepack = procoBasepack;
+		}
+		if (ppmAccount == null || ppmAccount.isEmpty() || (ppmAccount.equalsIgnoreCase("undefined"))|| (ppmAccount.equalsIgnoreCase("SELECT PPM ACCOUNT"))|| (ppmAccount.equalsIgnoreCase("ALL"))) {
+			ppmaccount = "all";
+		} else {
+			ppmaccount = ppmAccount;
+		}
+		if (procoChannel == null || procoChannel.isEmpty() || (procoChannel.equalsIgnoreCase("undefined"))|| (procoChannel.equalsIgnoreCase("SELECT CHANNEL"))|| (procoChannel.equalsIgnoreCase("ALL"))) {
+			procochannel = "all";
+		} else {
+			procochannel = procoChannel;
+		}
+		if (procoCluster == null || procoCluster.isEmpty() || (procoCluster.equalsIgnoreCase("undefined"))|| (procoCluster.equalsIgnoreCase("SELCET CLUSTER"))|| (procoCluster.equalsIgnoreCase("ALL"))) {
+			prococluster = "all";
+		} else {
+			prococluster = procoCluster;
+		}
+		
+		//Added by Kajal G for promolisting changes-SPRINT 11
+		if((fromDate == null || fromDate.isEmpty()) && (toDate == null || toDate.isEmpty())) {
+			fromDate = null;
+			toDate = null;
+		}
+		else {
+			fromDate = fromDate;
+			toDate = toDate;
+		}
 
 		//Added by Kavitha D for SPRINT 9 Changes
 		/*int rowCount = procoStatusTrackerService.getPromoListRowCount(cagetory, brand, basepack, custChainL1, custChainL2,
@@ -217,9 +267,9 @@ public class ProcoStatusTrackerController {
 				(pageNumber * pageDisplayLength), cagetory, brand, basepack, custChainL1, custChainL2, geography,
 				offerType, modality, year, moc, userId, 1,promoIdVal,searchParameter);*/
 		
-		int rowCount = procoStatusTrackerService.getPromoListRowCount(moc);
+		int rowCount = procoStatusTrackerService.getPromoListRowCount(moc,promobasepack,ppmaccount,procochannel,prococluster,fromDate,toDate);
 		List<PromoListingBean> promoList = procoStatusTrackerService.getPromoTableList((pageDisplayStart + 1),
-				(pageNumber * pageDisplayLength), moc,searchParameter);
+				(pageNumber * pageDisplayLength), moc,promobasepack,ppmaccount,procochannel,prococluster,searchParameter,fromDate,toDate);
 
 		
 		
@@ -304,8 +354,10 @@ public class ProcoStatusTrackerController {
 	}
 	//Added by Kavitha D for promo measure template ends-SPRINT 9
 
-	@RequestMapping(value = "{moc}/downloadPromoStatusTracker.htm", method = RequestMethod.GET)
-	public ModelAndView downloadPromoStatusTracker(@PathVariable("moc") String moc,
+	@RequestMapping(value = "{moc}/{promobasepack}/{ppmaccount}/{procochannel}/{prococluster}/{startDate1}/{endDate1}/downloadPromoStatusTracker.htm", method = RequestMethod.GET)
+	public ModelAndView downloadPromoStatusTracker(@PathVariable("moc") String moc,@PathVariable("promobasepack") String procoBasepack,
+			@PathVariable("ppmaccount") String ppmAccount,@PathVariable("procochannel") String procoChannel,@PathVariable("prococluster") String procoCluster,
+			@PathVariable("startDate1") @DateTimeFormat(pattern="MMddyyyy") String fromDate,@PathVariable("endDate1") @DateTimeFormat(pattern="MMddyyyy") String toDate,
 			Model model,HttpServletRequest request, HttpServletResponse response) {
 		logger.info("START downloadPromoStatusTracker():");
 		try {
@@ -426,11 +478,43 @@ public class ProcoStatusTrackerController {
 			} else {
 				promoId = promoIdValue;
 			} */
+			String promobasepack="", ppmaccount="", procochannel="", prococluster="";
+
+			if (procoBasepack == null || procoBasepack.isEmpty() || (procoBasepack.equalsIgnoreCase("undefined")) || (procoBasepack.equalsIgnoreCase("SELECT BASEPACK"))|| (procoBasepack.equalsIgnoreCase("ALL")))
+			{
+				promobasepack = "all";
+			} else {
+				promobasepack = procoBasepack;
+			}
+			if (ppmAccount == null || ppmAccount.isEmpty() || (ppmAccount.equalsIgnoreCase("undefined"))|| (ppmAccount.equalsIgnoreCase("SELECT PPM ACCOUNT"))|| (ppmAccount.equalsIgnoreCase("ALL"))) {
+				ppmaccount = "all";
+			} else {
+				ppmaccount = ppmAccount;
+			}
+			if (procoChannel == null || procoChannel.isEmpty() || (procoChannel.equalsIgnoreCase("undefined"))|| (procoChannel.equalsIgnoreCase("SELECT CHANNEL"))|| (procoChannel.equalsIgnoreCase("ALL"))) {
+				procochannel = "all";
+			} else {
+				procochannel = procoChannel;
+			}
+			if (procoCluster == null || procoCluster.isEmpty() || (procoCluster.equalsIgnoreCase("undefined"))|| (procoCluster.equalsIgnoreCase("SELCET CLUSTER"))|| (procoCluster.equalsIgnoreCase("ALL"))) {
+				prococluster = "all";
+			} else {
+				prococluster = procoCluster;
+			}
+			
+			if((fromDate == null || fromDate.isEmpty()) && (toDate == null || toDate.isEmpty())) {
+				fromDate = null;
+				toDate = null;
+			}
+			else {
+				fromDate = fromDate;
+				toDate = toDate;
+			}
 			ArrayList<String> headerList = procoStatusTrackerService.getHeaderListForPromoStatusTracker(userId, false);
 			/*downloadedData = procoStatusTrackerService.getPromotionStatusTracker(headerList, cagetory, brand, basepack, custChainL1,
 					custChainL2, geography, offerType, modality, year, moc, userId, 1,promoId);*/
 			
-			downloadedData = procoStatusTrackerService.getPromotionStatusTracker(headerList, moc,userId);
+			downloadedData = procoStatusTrackerService.getPromotionStatusTracker(headerList, moc,promobasepack,ppmaccount,procochannel,prococluster,userId,fromDate,toDate);
 			
 			if (downloadedData != null) {
 				UploadUtil.writeXLSXFile(downloadFileName, downloadedData, null,".xlsx");
