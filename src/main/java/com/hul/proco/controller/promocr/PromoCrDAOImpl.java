@@ -162,7 +162,7 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 			
 				if (roleId.equalsIgnoreCase("NCMM")) {
 				
-				promoQuery += " WHERE PM.STATUS IN('3','39') AND PM.MOC='"+moc+"' ";
+				promoQuery += " WHERE (PM.STATUS IN('3','39') OR (PM.STATUS IN ('1','39') AND (PM.TEMPLATE_TYPE = 'NE' OR PM.CR_SOL_TYPE='Additional Quantity'))) AND PM.MOC='"+moc+"' ";
 							}
 			
 				if(searchParameter!=null && searchParameter.length()>0){
@@ -379,7 +379,7 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 				//createPromoDaoImpl.saveStatusInStatusTracker(promo, status, "", userId);
 				
 				String approvalCrStatus=" UPDATE TBL_PROCO_PROMOTION_MASTER_V2  T1 SET T1.STATUS='38', T1.USER_ID='" + userId + "',T1.UPDATE_STAMP=' "+ dateFormat.format(date) + "'"
-						+ " WHERE T1.STATUS IN('3','39') AND T1.ACTIVE=1 AND T1.PROMO_ID='" + promoId + "' ";
+						+ " WHERE T1.STATUS IN('1','3','39') AND T1.ACTIVE=1 AND T1.PROMO_ID='" + promoId + "' ";
 				
 				Query query = sessionFactory.getCurrentSession().createNativeQuery(approvalCrStatus);
 				query.executeUpdate();

@@ -438,7 +438,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						
 						if (commanmap.containsKey(duplicateKey) && !bean.getOfr_type().equalsIgnoreCase("Visibility")
 								&& !uid.equalsIgnoreCase("dummy.finance")) {
-							if (!template.equalsIgnoreCase("regular")) {
+							/*if (!template.equalsIgnoreCase("regular")) { //Commented by Kajal G for new template
 								if (flag == 1) {
 
 									error_msg = error_msg + ",promo ID against other clusters exist, give entry as CR";
@@ -447,7 +447,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								}
 
 								flag = 1;
-							} else {
+							} else { */
+							if (template.equalsIgnoreCase("regular")) {
 								if (flag == 1) {
 
 									error_msg = error_msg + ",Promo entry already exist against promo ID, created by "
