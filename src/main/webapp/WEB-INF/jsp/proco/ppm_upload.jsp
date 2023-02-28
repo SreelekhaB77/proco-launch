@@ -48,8 +48,8 @@ font-size: 22px!important;
 	
 }
 .tab-label-proco-status-inactive {
-   line-height: 2.9!important;
-  font-size: 1.4em!important;
+   line-height: 1.4!important;
+  font-size: 1.5em!important;
 }
 </style>
 </head>
@@ -85,14 +85,14 @@ font-size: 22px!important;
 				<div class="row">
 					<ul class="nav nav-pills">
 					
-					<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 proco-listing-inactive">
+					<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 proco-listing-inactive" style="margin-left:-15px; margin-right:-20px;">
 						<a href="http://localhost:8083/VisibilityAssetTracker/promoStatusTracker.htm">
 								<div class="proco-listing-icon"></div>
 								<div class="tab-label-proco-status-inactive OpenSans-font">Promo Status Tracker</div>
 						</a></li>
 						
-						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 listing">
-						<a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm" style="margin-top: 10px;margin-left: -23px;">
+						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 listing" style= "width:234px;">
+						<a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm" style="margin-top: 10px;margin-left: -27px;">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
@@ -103,12 +103,18 @@ font-size: 22px!important;
 								<div class="tab-label-proco-Signops-inactive OpenSans-font">Upload Measure Report</div>
 							</a>
 						</li>
-						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-ppm-active"  style="margin-top: 10px;width:23%">
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-ppm-active"  style="margin-top: 10px;width:19%">
 							<a href="http://localhost:8083/VisibilityAssetTracker/ProcoPpmCoeRemarks.htm">
 								<div class="proco-ppm-icon"></div>
 								<div class="tab-label-proco-ppm-active OpenSans-font">PPM Upload</div>
 							</a>
 						</li>
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 timeline" style="margin-top: 10px;width:19%">
+							<a href="http://localhost:8083/VisibilityAssetTracker/procoTimeline.htm"style="width: 220px;">
+								<div class="proco-timeline-icon "></div>
+								<div class="tab-label-proco-timeline-inactive OpenSans-font">Promo Timeline</div>
+							</a>
+						</li> 
 					
 
 					</ul>

@@ -77,19 +77,19 @@ margin-top: -75px!important;
 					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoCreation.htm">
 								<div class="proco-create-icon"></div>
-								<div class="tab-label-proco-create-inactive">Promo Creation</div>
+								<div class="tab-label-proco-create-inactive"style="margin-left:-25px;">Promo Creation</div>
 						</a></li>
 					<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 listing"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
 								<div class="proco-listing-icon"></div>
-								<div class="tab-label-proco-create-inactive OpenSans-font">Promo
+								<div class="tab-label-proco-create-inactive OpenSans-font"style="margin-left:-25px;">Promo
 									Listing</div>
 						</a></li>
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 proco-del-active"><a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
 								<div class="proco-deletion-icon"></div>
-								<div class="tab-label-proco-create-active OpenSans-font">Dropped Offer</div>
+								<div class="tab-label-proco-create-active OpenSans-font"style="padding-top: 15px;">Dropped Offer</div>
 						</a></li>
 					 </c:if>
 					 
@@ -97,7 +97,7 @@ margin-top: -75px!important;
 					  <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoVolumeUpload.htm">
 								<div class="proco-volume-icon"></div>
-								<div class="tab-label-proco-volume-inactive">Volume Upload</div>
+								<div class="tab-label-proco-volume-inactive"style="margin-left: -30px;">Volume Upload</div>
 						</a></li>
 						<!--bharati commented disaggregation tab in sprint-9-->
 						<!--<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 disaggregation"><a
@@ -109,13 +109,13 @@ margin-top: -75px!important;
 							class="col-md-3 col-sm-6 col-xs-12 listing"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
 								<div class="proco-listing-icon"></div>
-								<div class="tab-label-proco-create-inactive OpenSans-font">Promo
+								<div class="tab-label-proco-create-inactive OpenSans-font"style="margin-left: -30px;">Promo
 									Listing</div>
 						</a></li>
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 proco-del-active"><a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
 								<div class="proco-deletion-icon"></div>
-								<div class="tab-label-proco-create-active OpenSans-font">Dropped Offer</div>
+								<div class="tab-label-proco-create-active OpenSans-font" style="padding-top:12px;">Dropped Offer</div>
 						</a></li>
 					  </c:if>
 					   <c:if test="${roleId eq 'KAM'}">
@@ -127,19 +127,19 @@ margin-top: -75px!important;
 					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 collaboration"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoCollaboration.htm">
 								<div class="proco-collaboration-icon"></div>
-								<div class="tab-label-proco-collaboration-inactive">Collaboration</div>
+								<div class="tab-label-proco-collaboration-inactive"style="margin-left: -30px;">Collaboration</div>
 						</a></li>
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 listing"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
 								<div class="proco-listing-icon"></div>
-								<div class="tab-label-proco-create-inactive OpenSans-font">Promo
+								<div class="tab-label-proco-create-inactive OpenSans-font"style="margin-left: -30px;">Promo
 									Listing</div>
 						</a></li>
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 proco-del-active"><a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
 								<div class="proco-deletion-icon"></div>
-								<div class="tab-label-proco-create-active OpenSans-font">Dropped Offer</div>
+								<div class="tab-label-proco-create-active OpenSans-font"style="padding-top: 10px;">Dropped Offer</div>
 						</a></li>
 						</c:if>
 						
@@ -147,19 +147,19 @@ margin-top: -75px!important;
 					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoCr.htm">
 								<div class="proco-create-icon"></div>
-								<div class="tab-label-proco-create-inactive">Promo CR</div>
+								<div class="tab-label-proco-create-inactive"style="margin-left: -30px;">Promo Approval</div>
 						</a></li>
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 listing"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
 								<div class="proco-listing-icon"></div>
-								<div class="tab-label-proco-create-inactive OpenSans-font">Promo
+								<div class="tab-label-proco-create-inactive OpenSans-font"style="margin-left: -30px;">Promo
 									Listing</div>
 						</a></li>
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 proco-del-active"><a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
 								<div class="proco-deletion-icon"></div>
-								<div class="tab-label-proco-create-active OpenSans-font">Dropped Offer</div>
+								<div class="tab-label-proco-create-active OpenSans-font"style="padding-top: 14px;">Dropped Offer</div>
 						</a></li>
 					 </c:if>
 					 
@@ -173,8 +173,7 @@ margin-top: -75px!important;
 							class="col-md-3 col-sm-6 col-xs-12 listing"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoListing.htm">
 								<div class="proco-listing-icon"></div>
-								<div class="tab-label-proco-create-inactive OpenSans-font">Promo
-									Listing</div>
+								<div class="tab-label-proco-create-inactive OpenSans-font">PromoListing</div>
 						</a></li>
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 proco-del-active"><a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
@@ -183,28 +182,34 @@ margin-top: -75px!important;
 						</a></li>
 					 </c:if>
 					 <c:if test="${roleId eq 'COE'}">
-					<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 proco-listing-inactive">
-					<a href="http://localhost:8083/VisibilityAssetTracker/promoStatusTracker.htm">
+					<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 proco-listing-inactive"style=" margin-right: -60px; margin-left:13px;">
+					<a href="http://localhost:8083/VisibilityAssetTracker/promoStatusTracker.htm" style="margin-left:-27px;" >
 								<div class="proco-listing-icon"></div>
-								<div class="tab-label-proco-status-inactive OpenSans-font">Promo Status Tracker</div>
+								<div class="tab-label-proco-status-inactive OpenSans-font" >Promo Status Tracker</div>
 						</a></li>
-						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 proco-del-active">
-						<a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm" style="margin-top: 10px;margin-left: -23px;">
+						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 proco-del-active"style=" margin-top: 10px; margin-right:-60px; margin-left:-10px  ">
+							<a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm" style="width:220px;">
 								<div class="proco-deletion-icon"></div>
-								<div class="tab-label-proco-create-active OpenSans-font">Dropped Offer</div>
+								<div class="tab-label-proco-create-active OpenSans-font"  style="padding-top: 15px;">Dropped Offer</div>
 						</a></li>
-					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 promo-lib-bg" style="margin-top: 10px;margin-right: 15px;">
+					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 promo-lib-bg" style=" margin-top: 10px; margin-right: 18px;  ">
 							<a href="http://localhost:8083/VisibilityAssetTracker/ProcoMeasureReportUploadPage.htm" id="measHref">
 								<div class="proco-Signops-icon"></div>
 								<div class="tab-label-proco-Signops-inactive OpenSans-font">Upload Measure Report</div>
 							</a>
 						</li>  
-						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-ppm-inactive" style="margin-top: 10px;width:23%">
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-ppm-inactive" style=" margin-top: 10px; width:17%; margin-right:18px;  ">
 							<a href="http://localhost:8083/VisibilityAssetTracker/ProcoPpmCoeRemarks.htm">
 								<div class="proco-ppm-icon"></div>
 								<div class="tab-label-proco-ppm-inactive OpenSans-font">PPM Upload</div>
 							</a>
 						</li>
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 timeline" style="width:19%; margin-top: 10px;">
+							<a href="http://localhost:8083/VisibilityAssetTracker/procoTimeline.htm" style="width:220px;">
+								<div class="proco-timeline-icon "></div>
+								<div class="tab-label-proco-timeline-inactive OpenSans-font">Promo Timeline</div>
+							</a>
+						</li> 
 					 </c:if>
 					
 						
