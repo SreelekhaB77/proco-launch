@@ -88,14 +88,15 @@ margin-left:0px!important;
 					<ul class="nav nav-pills">
 					
 					<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 proco-tracker-active"><a
+							class="col-md-3 col-sm-6 col-xs-12 proco-tracker-active" style=" margin-right: -65px;"><a
 							href="http://localhost:8083/VisibilityAssetTracker/promoStatusTracker.htm">
 								<div class="proco-tracker-icon"></div>
 								<div class="tab-label-proco-create-active OpenSans-font">Promo Status Tracker</div>
 						</a></li>
 						
 						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm">
+							class="col-md-3 col-sm-6 col-xs-12 listing"style="margin-right:-50px;">
+							<a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm" style="width:234px;">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
@@ -106,10 +107,16 @@ margin-left:0px!important;
 								<div class="tab-label-proco-Signops-inactive OpenSans-font">Upload Measure Report</div>
 							</a>
 						</li> 
-						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-ppm-inactive" style="width:23%">
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-ppm-inactive"style="width:17%; margin-right:15px;">
 							<a href="http://localhost:8083/VisibilityAssetTracker/ProcoPpmCoeRemarks.htm">
 								<div class="proco-ppm-icon"></div>
 								<div class="tab-label-proco-ppm-inactive OpenSans-font">PPM Upload</div>
+							</a>
+						</li> 
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 timeline" style="width:19%">
+							<a href="http://localhost:8083/VisibilityAssetTracker/procoTimeline.htm" style="width:230px;">
+								<div class="proco-timeline-icon "></div>
+								<div class="tab-label-proco-timeline-inactive OpenSans-font">Promo Timeline</div>
 							</a>
 						</li> 
 					

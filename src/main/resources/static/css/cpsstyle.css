@@ -503,7 +503,7 @@ html, body {
 	color: #878787;
 }
 
-.upload-image { //
+.upload-image { 
 	background: url(../images/upload-icon-n-body.png) no-repeat;
 	position: relative;
 	/* left: 47%;
@@ -781,7 +781,7 @@ select#final-status {
 .tab-content.marginT35 {
     margin-top: 45px;
 }
-.dataTables_filter { //
+.dataTables_filter { 
 	width: 10%;
 	float: left;
 	text-align: right;
@@ -867,7 +867,7 @@ div.file_upload {
 	position: absolute;
 	overflow: hidden;
 	cursor: pointer;
-	-webkit-border-top-right-radius: 5px;
+	-webkit-border-top-right-radius :5px;
 	-webkit-border-bottom-right-radius: 5px;
 	-moz-border-radius-topright: 5px;
 	-moz-border-radius-bottomright: 5px;

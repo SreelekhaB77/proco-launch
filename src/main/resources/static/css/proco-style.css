@@ -395,14 +395,15 @@ img#libimg {
 
 .promo-lib-bg {
     background-color: #fff;
+    width:234px;
 }
 .promo-ppm-inactive {
     background-color: #fff;
 }
 /*bharati changes font size in sprint-9*/
 .tab-label-proco-Signops-inactive {
-    padding-left: 17%;
-    line-height: 2.7em;
+    padding-left: 22%;
+    line-height: 1.4em;
     font-size: 1.5em; 
     color: #3F3F3F;
 }
@@ -1062,6 +1063,16 @@ span.comboTreeItemTitle {
     background-color: #035597;
     margin-left: -13px;
 }
+.proco-timeline-icon {
+    width: 55px;
+    height: 60px;
+    float: left;
+    padding-right: 10px;
+    background: url("../images/lock-png.png") no-repeat center center;
+    background-size: 46px;
+    background-color: #035597;
+    margin-left: -13px;
+}
 
 .launchupload-parent{
 	border: 2px dashed gray;
@@ -1079,14 +1090,14 @@ span.comboTreeItemTitle {
 /*change font size and left margin 87 to 60 in sprint- 9*/
 .tab-label-proco-create-active {
 	font-size: 1.5em;
-	/*line-height:2em;*/
+	line-height:1.4em;
     float: left;
     height: 60px;
     position: absolute;
     left: 60px;
-    top: 4px;
+    /*top: 4px;*/
     color: #fff;
-    padding-top: 10px;
+    padding-top: 1px;
 }
 .proco-craetion-active a {
 	background-color: #035597 !important;
@@ -1257,7 +1268,7 @@ img#delimg {
     float: left;
     height: 40px;
     position: absolute;
-    left: 100px;
+    left: 60px;
     top: 6px;
     color: #3F3F3F;
 }
@@ -1268,18 +1279,28 @@ img#delimg {
     float: left;
     height: 40px;
     position: absolute;
-    left: 100px;
+    left: 50px;
+    top: 6px;
+    color: #3F3F3F;
+}
+.tab-label-proco-timeline-inactive { 
+    font-size: 1.6em;
+    line-height:2em;
+    float: left;
+    height: 40px;
+    position: absolute;
+    left: 50px;
     top: 6px;
     color: #3F3F3F;
 }
 .tab-label-proco-ppm-active {
-    font-size: 0.8em;
-    line-height:2.4em;
+   /*font-size: 1.5em;*/
+   line-height:1.4em;
     float: left;
     height: 40px;
     position: absolute;
-    left: 100px;
-    top: 6px;
+    left: 40px;
+    top: 10px;
     color: #fff;
 }
 .tab-label-proco-listing-active {
@@ -1310,8 +1331,8 @@ img#delimg {
     height: 60px;
     padding: 0 !important;
     color: #fff;
-    line-height: 2.5;
-    font-size: 1.7em;
+    line-height: 1.4;
+    font-size: 1.5em;
     
 }
 /*bharati added style in sprint-9 for ppm upload tab*/
@@ -1329,11 +1350,12 @@ img#delimg {
 .tab-label-proco-status-inactive {
     background-color: #fff;
     height: 60px;
-    line-height: 2.8;
+    line-height: 1.4;
     padding-left: 23%;
-    font-size: 1.4em;
+    font-size: 1.5em;
     color: #3F3F3F;
     border-radius: 3px;
+    width:234px;
 }
 .tab-label-proco-listing-inactive{
     font-size: 1.7em;
@@ -1344,9 +1366,30 @@ img#delimg {
     left: 100px;
     top: 6px;
     color: #3F3F3F;
+    
+}
+.timeline-active a{
+	background-color: #035597 !important;
+    position: relative;
+    height: 60px;
+    padding: 0 !important;
+    color: #fff;
+    line-height: 2.5;
+    font-size: 1.7em;
+}
+.tab-label-proco-timeline-active{
+line-height:1.4em;
+    float: left;
+    height: 40px;
+    position: absolute;
+    left: 40px;
+    top: 10px;
+    color: #fff;	
 }
 
-.dashboard a, .listing a,.collaboration a,.disaggregation a,.upload a, .create a, .promo-lib-bg a, .edit a, .track a, .coe-moc a, .coe-asset-management a, .coe-profile a, .coe-track a, .catman-pending a, .coe-hfs a ,.promo-ppm-inactive a{
+
+
+.dashboard a, .listing a,.collaboration a,.disaggregation a,.upload a, .create a, .promo-lib-bg a, .edit a, .track a, .coe-moc a, .coe-asset-management a, .coe-profile a, .coe-track a, .catman-pending a, .coe-hfs a ,.promo-ppm-inactive a,.timeline a{
         padding: 0 !important;
     position: relative;
     height: 60px;
@@ -1645,6 +1688,7 @@ span.comboTreeItemTitle {
 	position: relative;
 	height: 60px;
 	padding: 0 !important;
+	width:234px;
 }
 
 .proco-tracker-form {
@@ -1808,7 +1852,7 @@ span.comboTreeItemTitle {
 	padding-top:3rem;
 }
 .product-logo-cls img{width:16rem;}
-.user-details-cls{float:right;margin-top:30px;}
+.user-details-cls{float:right;margin-top:10px;}
 .logo-sml-cls img{width:5rem;}
 .home-cls a{font-size:25px;}
 
