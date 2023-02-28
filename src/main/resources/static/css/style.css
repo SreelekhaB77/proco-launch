@@ -111,8 +111,9 @@ label {
 
 .profile-name {
 	margin: 4px 4px 4px 4px;
-	font-size: 12px;
-	color: #999;
+	font-size: 15px;
+	color: #6A6AAA;
+	margin-top:12px;
 }
 /* Change for CPS */
 span.Mt-CPS-link {
@@ -190,14 +191,18 @@ span.Mt-CPS-link {
 
 .margin-t10>ul>li>a {
 	padding: 15px !important;
-	color: #009ad4;
+	color: #035597;
+    font-weight: 500;
+    text-transform:uppercase;
 }
+
 
 .margin-t10>ul>li.active>a, .margin-t10>ul>li.active>a:hover,
 	.margin-t10>ul>li.active>a:focus {
-	background-color: #276baa;
+	background-color: #03437A;
 	color: #fff;
 }
+
 
 .margin-t20 {
 	margin: 20px 0 0 0;
@@ -3481,5 +3486,6 @@ input#chkPassport {
 a:-webkit-any-link {
 	text-decoration:none;
 	}
+	
 .modal-header {color:black !important;} 
 

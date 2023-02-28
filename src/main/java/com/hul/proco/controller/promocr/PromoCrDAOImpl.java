@@ -162,7 +162,7 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 			
 				if (roleId.equalsIgnoreCase("NCMM")) {
 				
-				promoQuery += " WHERE (PM.STATUS IN('3','39') OR (PM.STATUS IN ('1','39') AND (PM.TEMPLATE_TYPE = 'NE' OR PM.CR_SOL_TYPE='Additional Quantity'))) AND PM.MOC='"+moc+"' ";
+				promoQuery += " WHERE (PM.STATUS IN('3','39') OR (PM.STATUS IN ('1','39') AND (PM.TEMPLATE_TYPE = 'NE' OR PM.CR_SOL_TYPE='Additional Quantity'))) AND PM.MOC='"+moc+"' ";// Changed by kajal G for Sprint -11
 							}
 			
 				if(searchParameter!=null && searchParameter.length()>0){
@@ -351,7 +351,7 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 			
 			if (roleId.equalsIgnoreCase("NCMM")) {
 				
-				rowCount += " WHERE PM.STATUS IN('3','39')  AND PM.MOC='"+moc+"'";
+				rowCount += " WHERE (PM.STATUS IN('3','39') OR (PM.STATUS IN ('1','39') AND (PM.TEMPLATE_TYPE = 'NE' OR PM.CR_SOL_TYPE='Additional Quantity'))) AND PM.MOC='"+moc+"'";// Changed by kajal G for Sprint -11
 			}
 		
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(rowCount);
@@ -521,7 +521,8 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 	{
 		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
 		try {
-			String downloadCrQuery= " SELECT DISTINCT PROMO_ID,PPM_ACCOUNT,OFFER_DESC FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE PM.STATUS IN('3','39') AND PM.MOC= '"+moc+"'";
+			String downloadCrQuery= " SELECT DISTINCT PROMO_ID,PPM_ACCOUNT,OFFER_DESC FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE (PM.STATUS IN('3','39') OR (PM.STATUS IN ('1','39') "
+					+ "AND (PM.TEMPLATE_TYPE = 'NE' OR PM.CR_SOL_TYPE='Additional Quantity'))) AND PM.MOC= '"+moc+"'"; // Changed by kajal G for Sprint -11
 			Query query1  =sessionFactory.getCurrentSession().createNativeQuery(downloadCrQuery);
 		
 			Iterator itr = query1.list().iterator();

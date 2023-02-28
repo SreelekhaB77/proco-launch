@@ -88,19 +88,19 @@
 
 						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 proco-craetion-active"><a href="http://34.120.128.205/VisibilityAssetTracker/promoCreation.htm">
 								<div class="proco-create-icon"></div>
-								<div class="tab-label-proco-create-active">Promo Creation</div>
+								<div class="tab-label-proco-create-active" style="padding-top: 15px;">Promo Creation</div>
 						</a></li>
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 listing"><a
 							href="http://34.120.128.205/VisibilityAssetTracker/promoListing.htm">
 								<div class="proco-listing-icon"></div>
-								<div class="tab-label-proco-create-inactive OpenSans-font">Promo Listing</div>
+								<div class="tab-label-proco-create-inactive OpenSans-font"style="margin-left: -30px; ">Promo Listing</div>
 						</a></li>
 
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="http://34.120.128.205/VisibilityAssetTracker/promoDeletion.htm">
 								<div class="proco-deletion-icon"></div>
-								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
+								<div class="tab-label-proco-del-inactive OpenSans-font"style="margin-left: 10px;">Dropped Offer</div>
 						</a></li>
 
 
