@@ -142,31 +142,31 @@ top:2px;
 						<ul class="nav nav-pills nav-pills-new">
 					
 					<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 proco-listing-inactive"style=" margin-right: -65px;">
-						<a href="http://localhost:8083/VisibilityAssetTracker/promoStatusTracker.htm" style="margin-left:-15px;">
+						<a href="http://34.120.128.205/VisibilityAssetTracker/promoStatusTracker.htm" style="margin-left:-15px;">
 								<div class="proco-listing-icon"></div>
 								<div class="tab-label-proco-status-inactive OpenSans-font">Promo Status Tracker</div>
 						</a></li>
 						
 						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 listing"style=" margin-top: 10px; margin-right:-50px;">
-							<a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm" style="width:234px;">
+							<a href="http://34.120.128.205/VisibilityAssetTracker/promoDeletion.htm" style="width:234px;">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
 						
 						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-lib-bg" style=" margin-top: 10px; width:234px; margin-right:15px; ">
-							<a href="http://localhost:8083/VisibilityAssetTracker/ProcoMeasureReportUploadPage.htm" >
+							<a href="http://34.120.128.205/VisibilityAssetTracker/ProcoMeasureReportUploadPage.htm" >
 								<div class="proco-Signops-icon"></div>
 								<div class="tab-label-proco-Signops-inactive OpenSans-font">Upload Measure Report</div>
 							</a>
 						</li>
 						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-ppm-inactive" style="margin-top: 10px;width:17%; margin-right:15px;">
-							<a href="http://localhost:8083/VisibilityAssetTracker/ProcoPpmCoeRemarks.htm">
+							<a href="http://34.120.128.205/VisibilityAssetTracker/ProcoPpmCoeRemarks.htm">
 								<div class="proco-ppm-icon"></div>
 								<div class="tab-label-proco-ppm-inactive OpenSans-font">PPM Upload</div>
 							</a>
 						</li>
 						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 timeline-active" style="width:19%;  margin-top: 10px">
-							<a href="http://localhost:8083/VisibilityAssetTracker/procoTimeline.htm" style="width: 220px;">
+							<a href="http://34.120.128.205/VisibilityAssetTracker/procoTimeline.htm" style="width: 220px;">
 								<div class="proco-timeline-icon "></div>
 								<div class="tab-label-proco-timeline-active OpenSans-font">Promo Timeline</div>
 							</a>
@@ -415,7 +415,7 @@ top:2px;
 				e.preventDefault();
 				$.ajax({
 					type: "POST",
-					url: "http://localhost:8083/VisibilityAssetTracker/coeUpdateProcoTimeline.htm",
+					url: "http://34.120.128.205/VisibilityAssetTracker/coeUpdateProcoTimeline.htm",
 					data: promolockJson(),
 					contentType: "application/json; charset=utf-8",
 		            dataType: "json",
@@ -448,7 +448,7 @@ top:2px;
 				e.preventDefault();
 				$.ajax({
 					type: "POST",
-					url: "http://localhost:8083/VisibilityAssetTracker/coeUpdateProcoTimeline.htm",
+					url: "http://34.120.128.205/VisibilityAssetTracker/coeUpdateProcoTimeline.htm",
 					data: userlockJson(),
 					contentType: "application/json; charset=utf-8",
 		            dataType: "json",
