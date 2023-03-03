@@ -113,12 +113,12 @@ margin-left:0px!important;
 								<div class="tab-label-proco-ppm-inactive OpenSans-font">PPM Upload</div>
 							</a>
 						</li> 
-						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 timeline" style="width:19%">
+						<!--<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 timeline" style="width:19%">
 							<a href="http://34.120.128.205/VisibilityAssetTracker/procoTimeline.htm" style="width:230px;">
 								<div class="proco-timeline-icon "></div>
 								<div class="tab-label-proco-timeline-inactive OpenSans-font">Promo Timeline</div>
 							</a>
-						</li> 
+						</li> -->
 					
 
 					</ul>
