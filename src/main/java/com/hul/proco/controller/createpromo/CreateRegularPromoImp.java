@@ -1291,6 +1291,12 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								+ bean.getCluster().toUpperCase();
 						//System.out.println("date_extensionMap:"+date_extensionMap);
 						//System.out.println("tdp_key:"+tdp_key);
+						if(bean.getOfr_type().equalsIgnoreCase("Ground Ops"))
+							tdp_key = tdp_key+bean.getOfr_type().toUpperCase();
+						else
+							tdp_key = tdp_key+bean.getOffer_mod().toUpperCase();
+						
+						
 						if (date_extensionMap.containsKey(tdp_key)) {
 							if (bean.getPromo_time_period().toUpperCase().trim()
 									.equalsIgnoreCase(date_extensionMap.get(tdp_key)) && !uid.equalsIgnoreCase("dummy.finance")) {
