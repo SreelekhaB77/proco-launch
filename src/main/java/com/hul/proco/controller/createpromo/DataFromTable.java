@@ -494,7 +494,7 @@ public class DataFromTable {
 	public void getAllSOLCodeAndPromoId(Map<String,String> crEntries,Map<String,String> date_extension,Map<String,ArrayList<String>> check_existing_sol,List<List<String>> check_sol_code_ref) {
 		// TODO Auto-generated method stub
 		//String query="SELECT DISTINCT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,CASE WHEN LOCATE('%', A.PRICE_OFF) > 0 THEN A.PRICE_OFF ELSE ROUND(A.PRICE_OFF, 0) END AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR,B.MOC AS PMR_MOC"
-		String query="SELECT DISTINCT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER, A.PRICE_OFF AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR,B.MOC AS PMR_MOC,A.OFFER_MODALITY"
+		String query="SELECT DISTINCT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER, A.PRICE_OFF AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR,B.MOC AS PMR_MOC,A.OFFER_MODALITY,IF (A.OFFER_TYPE = 'Ground Ops', A.OFFER_TYPE, A.OFFER_MODALITY) AS OFFER_TYPE"
 				+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 A INNER JOIN TBL_PROCO_MEASURE_MASTER_V2 B "
 				+ "	ON A.PROMO_ID=B.PROMO_ID "
 				+ "	WHERE B.PROMOTION_STATUS IN ('Approved','AmendApproved','Submitted','AmendSubmitted') AND A.STATUS !='42'";
@@ -525,7 +525,7 @@ public class DataFromTable {
 			//KEY: YEAR,MOC_NAME,PPM_ACCOUNT,BASEPACK_CODE,CLUSTER VALUE:PROMOTIME PERIOD
 			date_extension.put(String.valueOf(obj[10]).toUpperCase() + String.valueOf(obj[2]).toUpperCase()
 					+ String.valueOf(obj[3]).toUpperCase() + String.valueOf(obj[4]).toUpperCase()
-					+ String.valueOf(obj[5]).toUpperCase(), String.valueOf(obj[9]).toUpperCase()); // CHECK FOR TPD  
+					+ String.valueOf(obj[5]).toUpperCase() + String.valueOf(obj[13]).toUpperCase(), String.valueOf(obj[9]).toUpperCase()); // CHECK FOR TPD  
 			
 			//Added by kajal for TDP N-1 MOC in Sprint-11
 			String[] splitString = String.valueOf(obj[2]).toUpperCase().split("MOC");
@@ -548,7 +548,7 @@ public class DataFromTable {
 	        
 	        date_extension.put(String.valueOf(obj[10]).toUpperCase() + String.valueOf(nextMonthMOC).toUpperCase()
 					+ String.valueOf(obj[3]).toUpperCase() + String.valueOf(obj[4]).toUpperCase()
-					+ String.valueOf(obj[5]).toUpperCase(), String.valueOf("TDP0").toUpperCase()); // CHECK FOR TPD for N-1 MOC
+					+ String.valueOf(obj[5]).toUpperCase()+ String.valueOf(obj[13]).toUpperCase(), String.valueOf("TDP0").toUpperCase()); // CHECK FOR TPD for N-1 MOC
 			
 			
 			//KEY : PROMOTION_ID VALUE : PPM_ACCOUNT,BASEPACK_CODE,CLUSTER
