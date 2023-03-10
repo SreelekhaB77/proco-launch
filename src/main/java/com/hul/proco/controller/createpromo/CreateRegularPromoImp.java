@@ -438,7 +438,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						
 						if (commanmap.containsKey(duplicateKey) && !bean.getOfr_type().equalsIgnoreCase("Visibility")
 								&& !uid.equalsIgnoreCase("dummy.finance")) {
-							if (!template.equalsIgnoreCase("regular")) {
+							/*if (!template.equalsIgnoreCase("regular")) { //Commented by Kajal G for new template
 								if (flag == 1) {
 
 									error_msg = error_msg + ",promo ID against other clusters exist, give entry as CR";
@@ -447,7 +447,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								}
 
 								flag = 1;
-							} else {
+							} else { */
+							if (template.equalsIgnoreCase("regular")) {
 								if (flag == 1) {
 
 									error_msg = error_msg + ",Promo entry already exist against promo ID, created by "
@@ -1290,6 +1291,12 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								+ bean.getCluster().toUpperCase();
 						//System.out.println("date_extensionMap:"+date_extensionMap);
 						//System.out.println("tdp_key:"+tdp_key);
+						if(bean.getOfr_type().equalsIgnoreCase("Ground Ops"))
+							tdp_key = tdp_key+bean.getOfr_type().toUpperCase();
+						else
+							tdp_key = tdp_key+bean.getOffer_mod().toUpperCase();
+						
+						
 						if (date_extensionMap.containsKey(tdp_key)) {
 							if (bean.getPromo_time_period().toUpperCase().trim()
 									.equalsIgnoreCase(date_extensionMap.get(tdp_key)) && !uid.equalsIgnoreCase("dummy.finance")) {

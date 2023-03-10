@@ -62,7 +62,7 @@
 							class="col-md-3 col-sm-6 col-xs-12 proco-volume-active"><a
 							href="https://vat.hulcd.com/VisibilityAssetTracker/promoVolumeUpload.htm">
 								<div class="proco-volume-icon"></div>
-								<div class="tab-label-proco-volume-active">Volume Upload</div>
+								<div class="tab-label-proco-volume-active"style="margin-left: -30px;">Volume Upload</div>
 						</a></li>
 						<!--bharati commented disaggregation tab in sprint-9-->
 						<!--<li role="presentation"
@@ -76,13 +76,13 @@
 							class="col-md-3 col-sm-6 col-xs-12 listing"><a
 							href="https://vat.hulcd.com/VisibilityAssetTracker/promoListing.htm">
 								<div class="proco-listing-icon"></div>
-								<div class="tab-label-proco-listing-inactive OpenSans-font">Promo Listing</div>
+								<div class="tab-label-proco-listing-inactive OpenSans-font"style="margin-left: -30px;">Promo Listing</div>
 						</a></li>
 
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 listing"><a href="https://vat.hulcd.com/VisibilityAssetTracker/promoDeletion.htm">
 								<div class="proco-deletion-icon"></div>
-								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
+								<div class="tab-label-proco-del-inactive OpenSans-font"style="margin-left: 10px;">Dropped Offer</div>
 						</a></li>
 
 					</ul>
