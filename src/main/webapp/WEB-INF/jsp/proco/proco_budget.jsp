@@ -43,7 +43,7 @@ font-size: 22px!important;
 }
 .promo-lib-bg-active a {
    
-    line-height: 1.4!important;
+    line-height: 2.9!important;
     font-size: 1.5em!important;
 	
 }
@@ -51,8 +51,8 @@ font-size: 22px!important;
    line-height: 1.4!important;
   font-size: 1.5em!important;
 }
-.nav-pills>li+li {
-margin-left:0px!important;
+.ddd{
+width:100%;
 }
 </style>
 </head>
@@ -88,22 +88,22 @@ margin-left:0px!important;
 				<div class="row">
 					<ul class="nav nav-pills">
 					
-					<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 proco-listing-inactive"style=" margin-right: -65px;">
-						<a href="http://localhost:8083/VisibilityAssetTracker/promoStatusTracker.htm" style="margin-left:-15px;">
+					<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 proco-listing-inactive" style="margin-left:-15px; margin-right:-20px;">
+						<a href="http://localhost:8083/VisibilityAssetTracker/promoStatusTracker.htm">
 								<div class="proco-listing-icon"></div>
 								<div class="tab-label-proco-status-inactive OpenSans-font">Promo Status Tracker</div>
 						</a></li>
 						
-						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 listing"style="margin-right:-59px; margin-top: 10px;">
-							<a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm" style="width:225px;">
+						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 listing" style= "width:234px; margin-left:-10px;">
+						<a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm" style="margin-top: 10px;margin-left: -18px;">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
 						
-						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-lib-bg-active" style=" width: 250px; margin-top: 10px; margin-right: 5px;">
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-lib-bg" style="margin-top: 10px; margin-right: 15px;">
 							<a href="http://localhost:8083/VisibilityAssetTracker/ProcoMeasureReportUploadPage.htm" >
 								<div class="proco-Signops-icon"></div>
-								<div class="tab-label-proco-Signops-active OpenSans-font">Upload Measure Report</div>
+								<div class="tab-label-proco-Signops-inactive OpenSans-font">Upload Measure Report</div>
 							</a>
 						</li>
 						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-ppm-inactive"  style="margin-top: 10px;width:210px; margin-right:15px;">
@@ -121,22 +121,22 @@ margin-left:0px!important;
 						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 budget" style="width:19%;margin-top: 10px;">
 							<a href="http://localhost:8083/VisibilityAssetTracker/procoBudget.htm" style="width:247px;">
 								<div class="proco-budget-icon "></div>
-								<div class="tab-label-proco-budget-inactive OpenSans-font">BUDGET REPORT</div>
+								<div class="tab-label-proco-budget-active OpenSans-font">BUDGET REPORT</div>
 							</a>
 						</li>
 			
 					</ul>
+					
 				</div>
 			</div>
 
 
 		</div>
+		
 		<!--/.navbar-collapse -->
 	</div>
 	</nav>
-
-	<!-- Main jumbotron for a primary marketing message or call to action -->
-	<div class="container-fluid container-bg middle-section">	
+	<div class="container-fluid container-bg middle-section">
 	<c:if test="${FILE_STATUS=='SUCCESS_FILE'}">
 			<div class="alert succ-alert-success sucess-msg" id="successblock"
 				style="display: block" style="margin-top:35px;">
@@ -155,30 +155,19 @@ margin-left:0px!important;
 				</c:if>
 			</div>
 		</c:if>
-		
-		<!--bharati added code for errorblock and successblock for sprint-9 US-15-->
-	                 				<div class="alert alert-success sucess-msg" style="display: none;margin-top:35px;" id="ppmsuccessblock">
+			<div class="alert alert-success sucess-msg" style="display: none;margin-top:35px;" id="budgetsuccessblock">
 		                                 <button type="button" class="close" data-hide="alert">&times;</button>
 		                                 <span></span>
 	                                </div>
                                    
-									<div class="alert alert-danger" style="display: none;margin-top:35px;" id="ppmerrorblockUpload">
+									<div class="alert alert-danger" style="display: none;margin-top:35px;" id="budgeterrorblockUpload">
 		                            <button type="button" class="close" data-hide="alert">&times;</button>
 		
 		                           <!-- <span>Error while uploading file.</span>-->
 								   <span></span>
 		
 	                               </div>
-								  
-		
-		<!--bharati code end here for sprint-9-->
-		
-		<div class="alert err-alert-danger" id="MocDownloadErorblockUpload" style="display:none; margin-top:35px;" data-hide="alert">
-			  <a href="#" class="close new-close-btn" aria-label="close">&times;</a>
-			  <strong>Error! </strong> <span>Please select the MOC.</span>
-		</div>
-               	
-         	<div class="alert succ-alert-success alert-dismissible" id="successblockUpload" style="display:none;margin-top:35px;">
+								  <div class="alert succ-alert-success alert-dismissible" id="successblockUpload" style="display:none;margin-top:35px;">
 			  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 			  <strong>Success! </strong> File uploaded successfully.
 			</div>
@@ -187,24 +176,18 @@ margin-left:0px!important;
 			  <strong>Error! </strong> <span>File does not contain any data.</span>
 			</div>
 		<div class="proco-creation form-horizontal">
-			<input type="hidden" id="roleId" value="${roleId}" />
 			
 		</div>
-			
-				
-		
-		
-		 <div class="promo-measure-upload">PROCO MEASURE REPORT UPLOAD</div>
-							<div class="row">
-								<div class="col-md-6 col-sm-6 ddd">
-								<!--bharati changes this below form for sprint-9 US-15 ppminkageupload-->
-									<form id="coeStatusMeasFileUpload" class="form-horizontal" action="#" enctype="multipart/form-data" name="coeStatusFileUpload">
+			 <div class="promo-budget-upload">LIVE BUDGET REPORT</div>
+			 <div class="row">
+			 <div class="col-md-6 col-sm-6 ddd">
+			 <form id="coeStatusBudgetFileUpload" class="form-horizontal" action="http://localhost:8083/VisibilityAssetTracker/procoLiveBudgetUpload.htm" enctype="multipart/form-data" name="coeStatusFileUpload">
 		
 									<div class="launchupload-parent">
-										<div class="proco-measure-upload-wrapper">
+										<div class="proco-budget-upload-wrapper">
 											<div style="text-align: center; color: #878787;">
 			
-												<h2 class="SEGOEUIL-font">Measure Report Upload File</h2>
+												<h2 class="SEGOEUIL-font">Budget Report Upload File</h2>
 												<div class="upload-image">
 													<i class="fa fa-upload" aria-hidden="true"></i>
 												</div>
@@ -214,95 +197,18 @@ margin-left:0px!important;
 												<span id="uploadErrorMeaMsg" style="display: none; color: red"></span>
 												
 												<div class="input-group upload-status-files">
-													<input id="uploadmeasscre" name="file" type="file" class="file">
+												<div class="file-input file-input-new" style="width: 300px;">
+													<input id="uploadbudget" name="file" type="file" class="file">
 												</div>
-												<input class="validate_upload btn marginT10 new-btn-primary" type="submit" id="btnSubmitBasePack1" value="Upload" />
-												<!--<a href="http://localhost:8083/VisibilityAssetTracker/downloadSampleMeasureReport.htm" class="validate_upload btn marginT10 new-btn-download" id="btnSubmitBasePack">Promo Measure Template</a>-->
-												<!--bharati commented above line and added below line for measure report download in sprint-9-->
-											<a href="http://localhost:8083/VisibilityAssetTracker/promoMeasureDownloadTemplate.htm" class="validate_upload btn marginT10 new-btn-download" id="btnSubmitBasePack">Promo Measure Template</a>
-											</div>
-										</div>
+												<input class="validate_upload btn marginT10 new-btn-primary" type="submit" id="btnSubmitBudgetReport" value="Upload" />
+</div></div>
+									</div>
 									</div>
 								</form> 
 							</div>
-							<div class="col-md-6 col-sm-6 ddd">
-							<!--bharati commented this form form sprint-9 moc changes-->
-							 	<!--<form style="margin-top:45px;" action="http://localhost:8083/VisibilityAssetTracker/downloadMeasureReport.htm" id="download-measure-report" method="POST" onsubmit="downloadMeasureReport(event)">
-							 		<div class="launchupload-parent">
-										<div class="proco-measure-download-wrapper">
-											<h2 class="SEGOEUIL-font">Measure Report Download File</h2>
-											<div class="upload-image">
-												<i class="fa fa-download" aria-hidden="true"></i>
-											</div>
-											<div class="">
-												<input placeholder="Select MOC" autocomplete="off" id="moc-filter" name="moc-filter" class="form-control" />
-												<input id="MocYear" name="MocYear" type="hidden" class="form-control" />
-												<input id="MocMonth" name="MocMonth" type="hidden" class="form-control" />
-											</div>
-											<input class="validate_dowload btn marginT10 new-btn-download" type="submit" value="Download" />
-										</div>
-									</div>
-								</form>-->
-								
-								<form style="margin-top:45px;" action="http://localhost:8083/VisibilityAssetTracker/dpMesureDownloadBasedOnMoc.htm" id="download-measure-report" method="POST">
-							 		<div class="launchupload-parent">
-										<div class="proco-measure-download-wrapper">
-											<h2 class="SEGOEUIL-font">Measure Report Download File</h2>
-											<div class="upload-image">
-												<i class="fa fa-download" aria-hidden="true"></i>
-											</div>
-											<p id="selectMsgMoc" style="display: none; color: red; margin-left: 17px;">Please Select the MOC.</p>
-											<div class="form-group col-sm-12" style="margin-top: 0px;">
-											
-						<label for="unique-id" class="control-label col-md-2" style="margin-top:9px;">MOC</label>
-						<div class="col-md-9">
-						<select class="form-control" id="Mocvalue1" name="Mocvalue1">
-							</select>
-								 </div>
-                         </div>
-					<input class="validate_dowload btn marginT10 new-btn-download" style="margin-top:0px;" onclick="javascript: downloadMeasureReport();" type="button"  value="Download" />
-										</div>
-									</div>
-								</form>
-							</div>
-						</div>
-
-					
-					
-					
-	<%-- <form:form action="http://localhost:8083/VisibilityAssetTracker/uploadProcoMeasureReport.htm" id="coeStatusMeasFileUpload"
-				method="POST" modelAttribute="VolumeUploadBean"
-				enctype="multipart/form-data" onsubmit="return uploadMeasureValidation()">
-			<div class="promo-upload">PROMO MEASURE UPLOAD</div>
-			<div class="upload-file">
-				<div class="col-md-4 col-md-offset-4" style="padding: 30px 0px;">
-					<div class="upload-label">
-						<span><i class="glyphicon glyphicon-cloud-upload"></i></span> <span>
-							<b class="SEGOEUIL-font">Upload Promo Measure File</b>
-						</span>
-					</div>
-					<div class="upload-group">
-
-
-						<div class="cust-file" style="float: right;">
-							<span class="btn btn-upload " id="choose-file">Choose File</span>
-						</div>
-
-						<input type="file" class="form-control" value="" name="file" id="upload-ms-file">
-
-						<div class="file-ms-name" style="line-height: 2.3">No file chosen</div>
-					</div>
-
-					<div class="" style="color: #fff; text-align: center">
-						<button class="btn btn-primary">UPLOAD</button>
-
-					</div>
-				</div>
-				<div class="clearfix"></div>
-			</div>
-		</form:form> --%>
-		</div>
-		<jsp:include page="../proco/proco-footer.jsp" />
+							</div></div>
+	
+	<jsp:include page="../proco/proco-footer.jsp" />
 
 		<!-- Bootstrap core JavaScript
     ================================================== -->
@@ -325,11 +231,6 @@ margin-left:0px!important;
 		<script type="text/javascript"
 		src="assets/js/custom/proco/alert-modal.js"></script>
 		<script type="text/javascript">
-
-		var MeasureUploadResponse = '${MeasureUploadResponse}';
-		if(MeasureUploadResponse.trim() != "" && MeasureUploadResponse != "null"){
-			displayUploadStatus(MeasureUploadResponse);
-		}
 		
 		var DownloadMocList = '${DownloadMocList}';
 		var moc = '${mocJson}';
@@ -364,7 +265,11 @@ margin-left:0px!important;
               };
           };
 
+		
+
 		</script>
 </body>
+	
 </body>
 </html>
+						

@@ -91,6 +91,12 @@ margin-top: -75px!important;
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-create-active OpenSans-font"style="padding-top: 15px;">Dropped Offer</div>
 						</a></li>
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 budget" style="width:19%;">
+							<a href="http://localhost:8083/VisibilityAssetTracker/procoBudget.htm" style="width:260px;">
+								<div class="proco-budget-icon "></div>
+								<div class="tab-label-proco-budget-inactive OpenSans-font">BUDGET REPORT</div>
+							</a>
+						</li>
 					 </c:if>
 					 
 					  <c:if test="${roleId eq 'DP'}">
@@ -187,8 +193,8 @@ margin-top: -75px!important;
 								<div class="proco-listing-icon"></div>
 								<div class="tab-label-proco-status-inactive OpenSans-font" >Promo Status Tracker</div>
 						</a></li>
-						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 proco-del-active"style=" margin-top: 10px; margin-right:-60px; margin-left:-10px  ">
-							<a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm" style="width:220px;">
+						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 proco-del-active"style=" margin-top: 10px; margin-right:-70px; margin-left:-15px  ">
+							<a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm" style="width:212px;">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-create-active OpenSans-font"  style="padding-top: 15px;">Dropped Offer</div>
 						</a></li>
@@ -210,6 +216,12 @@ margin-top: -75px!important;
 								<div class="tab-label-proco-timeline-inactive OpenSans-font">Promo Timeline</div>
 							</a>
 						</li> -->
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 budget" style="width:19%;">
+							<a href="http://localhost:8083/VisibilityAssetTracker/procoBudget.htm" style="width:247px;">
+								<div class="proco-budget-icon "></div>
+								<div class="tab-label-proco-budget-inactive OpenSans-font">BUDGET REPORT</div>
+							</a>
+						</li>
 					 </c:if>
 					
 						

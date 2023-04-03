@@ -92,7 +92,7 @@ font-size: 22px!important;
 						</a></li>
 						
 						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 listing" style= "width:234px;">
-						<a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm" style="margin-top: 10px;margin-left: -27px;">
+						<a href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm" style="margin-top: 10px;margin-left: -18px;">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
@@ -103,7 +103,7 @@ font-size: 22px!important;
 								<div class="tab-label-proco-Signops-inactive OpenSans-font">Upload Measure Report</div>
 							</a>
 						</li>
-						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-ppm-active"  style="margin-top: 10px;width:19%">
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-ppm-active"  style="margin-top: 10px;width:18%">
 							<a href="http://localhost:8083/VisibilityAssetTracker/ProcoPpmCoeRemarks.htm">
 								<div class="proco-ppm-icon"></div>
 								<div class="tab-label-proco-ppm-active OpenSans-font">PPM Upload</div>
@@ -115,6 +115,12 @@ font-size: 22px!important;
 								<div class="tab-label-proco-timeline-inactive OpenSans-font">Promo Timeline</div>
 							</a>
 						</li> -->
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 budget" style="width:19%;margin-top: 10px;">
+							<a href="http://localhost:8083/VisibilityAssetTracker/procoBudget.htm" style="width:247px;">
+								<div class="proco-budget-icon "></div>
+								<div class="tab-label-proco-budget-inactive OpenSans-font">BUDGET REPORT</div>
+							</a>
+						</li>
 					
 
 					</ul>

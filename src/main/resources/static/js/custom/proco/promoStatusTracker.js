@@ -1314,3 +1314,98 @@ $("#btnSubmitPpmCoeRemark").click(function (event) {
 					    
 					    	
 				    });
+
+	    
+				    
+				    
+				    $("#btnSubmitBudgetReport").click(function (event) {
+					
+						event.preventDefault();
+						
+						var fileName = $('#uploadbudget').val();
+						if (fileName == '') {
+							
+							$('#uploadbudgetErrorMeaMsg').show().html("Please select a file to upload");
+							return false;
+						} else {
+							$('#uploadbudgetErrorMeaMsg').hide();
+							var FileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+							if (FileExt != "xlsx") {
+								if (FileExt != "xls") {
+									$('#uploadbudgetErrorMeaMsg').show().html("Please upload .xls or .xlsx file");
+									$("#coeStatusBudgetFileUpload").submit(function(e) {
+										e.preventDefault();
+									});
+									return false;
+								}
+
+							}
+						}
+						
+				        
+				        var form = $('#coeStatusBudgetFileUpload')[0];
+                           var data = new FormData(form);
+                        $.ajax({
+				            type: "POST",
+				            enctype: 'multipart/form-data',
+				            url: 'procoLiveBudgetUpload.htm' ,
+				            data: data,
+				            processData: false,
+				            contentType: false,
+				            cache: false,
+				            timeout: 600000,
+				            beforeSend: function() {
+                                ajaxLoader(spinnerWidth, spinnerHeight);
+                            },
+							
+				            success: function (ModRes) {
+				            	//console.log(resdata);
+				            	
+				            	
+				            	 $('.loader').hide();
+				            	 if(ModRes.includes('EXCEL_UPLOADED')) {
+					
+				                    $('#budgeterrorblockUpload').hide();
+				                	$('#budgetsuccessblock').show().find('span').html(' File Uploaded Successfully !!!');
+				                	 
+				                }
+				                
+				                else if(ModRes.includes('EXCEL_NOT_UPLOADED')){
+				               $('#budgetsuccessblock').hide();
+				                $('#budgeterrorblockUpload').show().find('span').html(' File Contains Error ');
+				                }
+								 else if(ModRes.includes('File Size Exceeds')){
+									 $('#budgeterrorblockUpload').show().find('span').html('File Size Limit Exceeded');
+                                     $('#budgetsuccessblock').hide();
+								 }
+				                else if(ModRes.includes('FILE_EMPTY')){
+									$('#budgeterrorblockUpload').show().find('span').html('Error While Uploading Empty File');
+									$('#budgetsuccessblock').hide();
+								}
+								else if(ModRes.includes('CHECK_COL_MISMATCH')){
+									$('#budgeterrorblockUpload').show().find('span').html('Please Check Uploaded File');
+									$('#budgetsuccessblock').hide();
+								}else if(ModRes.includes('Column count is not match with expected')){
+									$('#budgeterrorblockUpload').show().find('span').html('Please Upload correct File');
+									$('#budgetsuccessblock').hide();
+								}
+								else{
+									
+				                	$('#budgeterrorblockUpload').show().find('span').html('Error While Uploading File');
+				                	$('#budgetsuccessblock').hide();
+				                	
+				                	 
+				              	 }
+				                    
+				                 $('#coeStatusBudgetFileUpload')[0].reset();
+								 //$('.file-name').html("No file chosen");
+				            },
+				            error: function (e) {
+				            $('#budgetsuccessblock').hide();
+				                 
+				            }
+				        });
+				       
+					    
+					    	
+				    });
