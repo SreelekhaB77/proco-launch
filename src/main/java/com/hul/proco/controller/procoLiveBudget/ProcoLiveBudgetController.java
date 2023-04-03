@@ -56,11 +56,12 @@ public class ProcoLiveBudgetController {
 	
 	
 	
-	@PostMapping(value="procoLiveBudgetUpload.htm")
-	public String procoLiveBudgetUpload(@ModelAttribute("BudgetHolderBean") BudgetHolderBean budgetHolderBean,
+	//@PostMapping(value="procoLiveBudgetUpload.htm")
+	@RequestMapping(value = "procoLiveBudgetUpload.htm", method = RequestMethod.POST)
+	public @ResponseBody String procoLiveBudgetUpload(@ModelAttribute("BudgetHolderBean") BudgetHolderBean budgetHolderBean,
 			Model model, HttpServletRequest httpServletRequest,
-			HttpServletResponse httpServletResponse)throws IOException  {
-		String savedData = null;
+			HttpServletResponse httpServletResponse) throws IOException{
+		String save_data = null;
 		String userID = (String) httpServletRequest.getSession().getAttribute("UserID");
 		CommonPropUtils commUtils = CommonPropUtils.getInstance();
 		MultipartFile file = budgetHolderBean.getFile();
@@ -70,62 +71,54 @@ public class ProcoLiveBudgetController {
 		fileName = filepath + fileName;
 		try {
 			if (!CommonUtils.isFileEmpty(file)) {
-				if (CommonUtils.isMearsureReportFileSizeExceeds(file)) {
-					model.addAttribute("errorMsg", commUtils.getProperty("File.Size.Exceeds"));
-					model.addAttribute("ModRes", "File Size Exceeds");
-					return "File Size Exceeds";
-				} else {
-					if (UploadUtil.movefile(file, fileName)) {
-						int excelColumnCount = UploadUtil.readExcelCellCount(fileName);
-						if (excelColumnCount == 23) {
-							Map<String, List<Object>> map = null;
-							map = ExOM.mapFromExcel(new File(fileName)).to(BudgetHolderBean.class).map(23, false, null);
-							
-							if (map.isEmpty()) {
-								model.addAttribute("ModRes", "FILE_EMPTY");
-								return "FILE_EMPTY";
-							}
-							if (map.containsKey("ERROR")) {
-								model.addAttribute("ModRes", "CHECK_COL_MISMATCH");
-
-								return "CHECK_COL_MISMATCH";
-							} else if (map.containsKey("DATA")) {
-								List<?> datafromexcel = map.get("DATA");
-								beanArray = (BudgetHolderBean[]) datafromexcel
-										.toArray(new BudgetHolderBean[datafromexcel.size()]);
-																
-								savedData =procoLiveBudgetService.budgetHolderData(beanArray,userID);
-								System.out.println("SAVED DATA:"+ savedData);
-								
-							}
-							
-							if(savedData.equals("EXCEL_UPLOADED"))
-							{
-								model.addAttribute("ModRes", "EXCEL_UPLOADED");
-								return"EXCEL_UPLOADED";
-							}else
-							{
-								model.addAttribute("ModRes", "EXCEL_NOT_UPLOADED");
-								return"EXCEL_NOT_UPLOADED";
-							}
-							
-							
-						} else {
-							model.addAttribute("ModRes", "Column count is not match with expected");
-							return "Column count is not match with expected";
-						}
+				if (CommonUtils.isFileProcoSizeExceeds(file)) {
+					model.addAttribute("FILE_STAUS", "FILE_SIZE_EXCEED");
+					return "FILE_SIZE_EXCEED";
+				} else if (UploadUtil.movefile(file, fileName)) {
+					Map<String, List<Object>> map = null;
+					map = ExOM.mapFromExcel(new File(fileName)).to(BudgetHolderBean.class).map(23, false, null);
+					if (map.isEmpty()) {
+						model.addAttribute("FILE_STAUS", "FILE_EMPTY");
+						return "FILE_EMPTY";
 					}
+					if (map.containsKey("ERROR")) {
+						model.addAttribute("FILE_STAUS", "CHECK_COL_MISMATCH");
+
+						return "CHECK_COL_MISMATCH";
+					} else if (map.containsKey("DATA")) {
+						List<?> datafromexcel = map.get("DATA");
+						beanArray = (BudgetHolderBean[]) datafromexcel
+								.toArray(new BudgetHolderBean[datafromexcel.size()]);
+						
+						save_data = procoLiveBudgetService.budgetHolderData(beanArray, userID);
+					}
+
+				} else {
+
+					model.addAttribute("FILE_STAUS", "FILE_EMPTY");
+					return "FILE_EMPTY";
 				}
+			} else {
+				model.addAttribute("FILE_STAUS", "FILE_EMPTY");
+				return "FILE_EMPTY";
 			}
-		}catch (Exception e) {
+			if (save_data.equals("EXCEL_UPLOADED")) {
+				model.addAttribute("FILE_STAUS", "EXCEL_UPLOADED");
+				save_data="EXCEL_UPLOADED";
+			} else {
+				model.addAttribute("FILE_STAUS", "EXCEL_NOT_UPLOADED");
+				save_data = "EXCEL_NOT_UPLOADED";
+			}
+
+		} catch (Exception e) {
 			logger.error(e);
-		}
-		catch (Throwable e) {
+			e.printStackTrace();
+		} catch (Throwable e) {
 			logger.error(e);
+			e.printStackTrace();
 		}
-		return savedData;
-	
-	}
+		return save_data;
+		}
 	
 	
 	@GetMapping(value="procoLiveBudgetDownload.htm")
