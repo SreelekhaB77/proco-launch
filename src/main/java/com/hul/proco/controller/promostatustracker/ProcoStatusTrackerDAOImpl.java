@@ -579,12 +579,18 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 				  		+ "  LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE WHERE PM.MOC='"+moc+"'"; */
 				  //Added by Kavitha D -SPRINT 9
 				    //qry = sessionFactory.getCurrentSession().createNativeQuery("CALL PROMO_LISTING_DOWNLOAD(:moc)");
-				    qry = sessionFactory.getCurrentSession().createNativeQuery("CALL PROMO_LISTING_DOWNLOAD(:moc,:fromDate,:toDate)"); //Added by Kavitha D-SPRINT 11
-					qry.setParameter("moc", moc);
-					qry.setParameter("fromDate", fromDate);
-					qry.setParameter("toDate", toDate);
+				    
+				  try {
+					  qry = sessionFactory.getCurrentSession().createNativeQuery("CALL PROMO_LISTING_DOWNLOAD(:moc,:fromDate,:toDate)"); //Added by Kavitha D-SPRINT 11
+						qry.setParameter("moc", moc);
+						qry.setParameter("fromDate", fromDate);
+						qry.setParameter("toDate", toDate);
 
-					qry.executeUpdate();
+						qry.executeUpdate();  
+				  }catch (Exception ex) {
+						logger.debug("Exception :", ex);
+						return null;
+				  	}
 					
 					query= " SELECT CHANNEL,YEAR,MOC ,ACCOUNT_TYPE,CLAIM_SETTLEMENT_TYPE,SECONDARY_CHANNEL,PPM_ACCOUNT,PROMO_ID,SOLCODE,MOC_CYCLE,PROMO_TIMEPERIOD,SOL_RELEASE_ON,"
 							+ " START_DATE,END_DATE,OFFER_DESC,PPM_DESC,BASEPACK_CODE,BASEPACK_DESC,CHILDPACK,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,QUANTITY,FIXED_BUDGET ,BRANCH,"
@@ -840,6 +846,47 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 		}
 	}
 
+	//Added by Kajal G in SPRINT -12
+	@Override
+	public List<ArrayList<String>> getVisiDownloadedData(ArrayList<String> headerList,String moc){
+		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
+		String query = "";
+		query = "SELECT DISTINCT A.VISI_REF_NO,B.PROMOTION_ID AS SOL_CODE,A.START_DATE,A.END_DATE,A.MOC,A.HFS_CONNECTIVITY,A.NEW_CONTINUED,A.MADE_BY,A.ACCOUNT_NAME,"
+				+ "A.SPLIT_REQUIRE,A.PPM_ACCOUNT_NAME,A.DESCRIPTION_1,A.PPM_DESC,REGION,A.STATE,CITY,A.BASEPACK,A.BASEPACK_DESC,"
+				+ "A.VISIBILITY_DESC,A.ASSET_DESC,A.ASSET_TYPE,A.ASSET_REMARK,A.POP_CLASS,A.UNIT_PER_STORE,A.NO_OF_STORES,"
+				+ "A.AMOUNT_PER_STORE_PER_MOC,A.AMOUNT_PER_BASEPACK_PER_MOC,A.COMMENTS,A.HHT_TRACKING,A.CATEGORY,A.MIGRATED_CATEGORY,"
+				+ "A.SUB_ELEMENTS,A.MBQ,A.BRAND,A.TOTAL_NO_OF_ASSET,A.VISIBILITY_AMOUNT,A.OUTLET_CODE,A.OUTLET_NAME,A.MAPPED_POP_CLASS,"
+				+ "A.STATUS,A.DATE_OF_CREATION,A.LAST_EDITED,A.CLASSIFICATION,A.EDIT_DELETE_REASON,A.VISIBILITY_PAYOUT_CODE "
+				+ "FROM TBL_PROCO_VISIBILITY_MASTER AS A INNER JOIN TBL_PROCO_MEASURE_MASTER_V2 AS B ON "
+				+ "A.VISI_REF_NO = SUBSTRING_INDEX(B.PROMOTION_NAME, ':', 1)";
+		
+		if(!moc.equalsIgnoreCase("null")) {
+			query += " WHERE A.MOC='"+moc+"'";
+		}
+		try {
+			Query query1 = sessionFactory.getCurrentSession().createNativeQuery(query);
+			Iterator itr = query1.list().iterator();
+			downloadDataList.add(headerList);
+			while (itr.hasNext()) {
+				Object[] obj = (Object[]) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				ArrayList<String> downCusData = new ArrayList<String>();
+				for (Object ob : obj) {
+					String value = "";
+					value = (ob == null) ? "" : ob.toString();
+					dataObj.add(value.replaceAll("\\^", ","));
+				}
+				obj = null;
+				downloadDataList.add(dataObj);
+			}
+			return downloadDataList;
+		}catch (Exception ex) {
+			logger.debug("Exception :", ex);
+			return null;
+		}
+		
+	}
+	
 	public static boolean isBigDecimal(String str) {
 		try {
 			new BigDecimal(str);

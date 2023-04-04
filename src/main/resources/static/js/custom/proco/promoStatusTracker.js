@@ -1315,10 +1315,8 @@ $("#btnSubmitPpmCoeRemark").click(function (event) {
 					    	
 				    });
 
-	    
-				    
-				    
-				    $("#btnSubmitBudgetReport").click(function (event) {
+
+$("#btnSubmitBudgetReport").click(function (event) {
 					
 						event.preventDefault();
 						
@@ -1409,3 +1407,95 @@ $("#btnSubmitPpmCoeRemark").click(function (event) {
 					    
 					    	
 				    });
+				    
+/*Added by kajal G in SPRINT-12*/
+$("#btnSubmitVisiUpload").click(function (event) {
+						event.preventDefault();
+						
+						var fileName = $('#uploadvisibility').val();
+						if (fileName == '') {
+							$('#uploadvisibilityErrorMeaMsg').show().html("Please select a file to upload");
+							return false;
+						} else {
+							$('#uploadvisibilityErrorMeaMsg').hide();
+							var FileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+							if (FileExt != "xlsx") {
+								if (FileExt != "xls") {
+									$('#uploadvisibilityErrorMeaMsg').show().html("Please upload .xls or .xlsx file");
+									$("#visibilityUpload").submit(function(e) {
+										e.preventDefault();
+									});
+									return false;
+								}
+
+							}
+						}
+						
+				        // Get form
+				        var form = $('#visibilityUpload')[0];
+                           var data = new FormData(form);
+                        $.ajax({
+				            type: "POST",
+				            enctype: 'multipart/form-data',
+				            url: 'visibilityUpload.htm' ,
+				            data: data,
+				            processData: false,
+				            contentType: false,
+				            cache: false,
+				            timeout: 600000,
+				            beforeSend: function() {
+                                ajaxLoader(spinnerWidth, spinnerHeight);
+                            },
+							
+				            success: function (ModRes) {
+				            	//console.log(resdata);
+				            	
+				            	 $('.loader').hide();
+				            	 if(ModRes.includes('EXCEL_UPLOADED')) {
+				                    $('#visierrorblockUpload').hide();
+				                	$('#visisuccessblock').show().find('span').html(' File Uploaded Successfully !!!');
+				                	 
+				                }
+				                
+				                else if(ModRes.includes('EXCEL_NOT_UPLOADED')){
+				               $('#visisuccessblock').hide();
+				                $('#visierrorblockUpload').show().find('span').html(' File Contains Error ');
+				                }
+								 else if(ModRes.includes('File Size Exceeds')){
+									 $('#visierrorblockUpload').show().find('span').html('File Size Limit Exceeded');
+                                     $('#visisuccessblock').hide();
+								 }
+				                else if(ModRes.includes('FILE_EMPTY')){
+									$('#visierrorblockUpload').show().find('span').html('Error While Uploading Empty File');
+									$('#visisuccessblock').hide();
+								}
+								else if(ModRes.includes('CHECK_COL_MISMATCH')){
+									$('#visierrorblockUpload').show().find('span').html('Please Check Uploaded File');
+									$('#visisuccessblock').hide();
+								}else if(ModRes.includes('Column count is not match with expected')){
+									$('#visierrorblockUpload').show().find('span').html('Please Upload correct File');
+									$('#visisuccessblock').hide();
+								}
+								else if(ModRes.includes('START_DATE_AND_END_DATE_ERROR')){
+									$('#visierrorblockUpload').show().find('span').html('Start date and End date should be in mm/dd/yyyy format');
+									$('#visisuccessblock').hide();
+								}
+								else{
+									
+				                	$('#visierrorblockUpload').show().find('span').html('Error While Uploading File');
+				                	$('#visisuccessblock').hide();     	 
+				              	 }
+				                    
+				                 $('#visibilityUpload')[0].reset();
+								 //$('.file-name').html("No file chosen");
+				            },
+				            error: function (e) {
+				            $('#visisuccessblock').hide();
+				                 
+				            }
+				        });
+				       
+					    
+					    	
+				    });
+

@@ -35,6 +35,12 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 		return procoStatusTrackerDao.getPromotionStatusTracker(headerList,moc,promobasepack,ppmaccount,procochannel,prococluster,userId,fromDate,toDate);
 	}
 	
+	//Added by Kajal G in SPRINT-12
+	@Override
+	public List<ArrayList<String>> getVisiDownloadedData(ArrayList<String> headerList, String moc) {
+		return procoStatusTrackerDao.getVisiDownloadedData(headerList,moc);
+	}
+	
 	@Override
 	public List<ArrayList<String>> getPromotionStatusTrackerCustomerPortal(ArrayList<String> headerList, String cagetory,
 			String brand, String basepack, String custChainL1, String custChainL2, String geography, String offerType,
@@ -173,6 +179,58 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 		} else {
 			headerList = getHeaderListForPromoStatusTracker();
 		}
+		return headerList;
+	}
+	
+	//Added by Kajal G-SPRINT 12
+	@Override 
+	public ArrayList<String> getVisiHeaderListForPromoStatusTracker(){
+		ArrayList<String> headerList = new ArrayList<String>();
+			headerList.add("VISI REF NO.");
+			headerList.add("SOL CODE");
+			headerList.add("START DATE");
+			headerList.add("END DATE");
+			headerList.add("MOC");
+			headerList.add("HFS CONNECTIVITY");
+			headerList.add("NEW/CONTINUED");
+			headerList.add("MADE BY");
+			headerList.add("ACCOUNT NAME");
+			headerList.add("SPLIT REQUIRE");
+			headerList.add("PPM ACCOUNT NAME - EXCEPT NMT/RC");
+			headerList.add("DESCRIPTION 1");
+			headerList.add("PPM DESC");
+			headerList.add("REGION");
+			headerList.add("STATE");
+			headerList.add("CITY");
+			headerList.add("BASEPACK");
+			headerList.add("BASEPACK DESC");
+			headerList.add("VISIBILITY DESC");
+			headerList.add("ASSET DESCRIPTION");
+			headerList.add("ASSET TYPE");
+			headerList.add("ASSET REMARK");
+			headerList.add("POP-CLASS");
+			headerList.add("UNIT PER STORE");
+			headerList.add("NO. OF STORES");
+			headerList.add("AMOUNT PER STORE PER MOC");
+			headerList.add("AMOUNT PER BASEPACK PER MOC");
+			headerList.add("COMMENTS");
+			headerList.add("HHT TRACKING");
+			headerList.add("CATEGORY");
+			headerList.add("MIGRATED CATEGORY");
+			headerList.add("SUB ELEMENTS");
+			headerList.add("MBQ");
+			headerList.add("BRAND");
+			headerList.add("TOTAL NO. OF ASSET");
+			headerList.add("VISIBILITY AMOUNT");
+			headerList.add("OUTLET CODE");
+			headerList.add("OUTLET NAME");
+			headerList.add("MAPPED POP-CLASS");
+			headerList.add("STATUS");
+			headerList.add("DATE OF CREATION");
+			headerList.add("LAST EDITED");
+			headerList.add("CLASSIFICATION");
+			headerList.add("EDIT/DELETE REASON");
+			headerList.add("VISIBILITY_PAYOUT_CODE");
 		return headerList;
 	}
 

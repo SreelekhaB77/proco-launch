@@ -746,6 +746,71 @@ public class UploadUtil {
 				fileOut.close();
 			}
 		}
+		
+		return res;
+	}
+
+	//Added by Kajal G for Visibility and Promo Status Tracker in SPRINT-12
+	@SuppressWarnings("resource")
+	public static boolean writeXLSXFileForTrackerVisi(String filePath, List<ArrayList<String>> dataList,
+			List<ArrayList<String>> visiDataList, Map<String, List<List<String>>> masters, String extension) throws IOException {
+		String sheetName = "sheet";// name of sheet
+		String visiSheet = "Visibility Details";// name of Visibility sheet
+		FileOutputStream fileOut = null;
+		boolean res = false;
+		try {
+			SXSSFWorkbook wb = new SXSSFWorkbook();
+			SXSSFSheet sheet = wb.createSheet(sheetName);
+			// iterating r number of rows
+			DataFormat fmt = wb.createDataFormat();
+			CellStyle textStyle = wb.createCellStyle();
+			textStyle.setDataFormat(fmt.getFormat("@"));
+			int rowCount = 0;
+			for (int r = 0; r < dataList.size(); r++) {
+				// iterating c number of columns
+				List<String> al = dataList.get(r);
+				Row row = sheet.createRow(rowCount);
+				rowCount++;
+				for (int c = 0; c < al.size(); c++) {
+					sheet.setDefaultColumnStyle(c, textStyle);
+					Cell cell = row.createCell(c);
+					cell.setCellValue(al.get(c));
+				}
+			}
+			
+			SXSSFSheet visisheet = wb.createSheet(visiSheet);
+			// iterating r number of rows
+			DataFormat dfmt = wb.createDataFormat();
+			CellStyle celltextStyle = wb.createCellStyle();
+			celltextStyle.setDataFormat(dfmt.getFormat("@"));
+			int rowCou = 0;
+			for (int r = 0; r < visiDataList.size(); r++) {
+				// iterating c number of columns
+				List<String> al = visiDataList.get(r);
+				Row row = visisheet.createRow(rowCou);
+				rowCou++;
+				for (int c = 0; c < al.size(); c++) {
+					visisheet.setDefaultColumnStyle(c, celltextStyle);
+					Cell cell = row.createCell(c);
+					cell.setCellValue(al.get(c));
+				}
+			}
+
+			fileOut = new FileOutputStream(filePath + extension);
+			// write this workbook to an Outputstream.
+			wb.write(fileOut);
+			fileOut.flush();
+			fileOut.close();
+			res = true;
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
+			// e.printStackTrace();
+		} finally {
+			if (fileOut != null) {
+				fileOut.close();
+			}
+		}
+		
 		return res;
 	}
 	
