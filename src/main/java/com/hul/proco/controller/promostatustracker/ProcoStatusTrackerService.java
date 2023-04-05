@@ -56,6 +56,12 @@ public interface ProcoStatusTrackerService {
 
 	public List<String> getMOCforCoedownload();
 
+	//Added by Kajal G in SPRINT-12
+	public ArrayList<String> getVisiHeaderListForPromoStatusTracker();
+	
+	//Added by Kajal G in SPRINT-12
+	public List<ArrayList<String>> getVisiDownloadedData(ArrayList<String> headerList, String moc);
+
 	
 
 }

@@ -94,8 +94,8 @@ margin-left:0px!important;
 								<div class="tab-label-proco-status-inactive OpenSans-font">Promo Status Tracker</div>
 						</a></li>
 						
-						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 listing"style="margin-right:-50px; margin-top: 10px;">
-							<a href="http://34.120.128.205/VisibilityAssetTracker/promoDeletion.htm" style="width:234px;">
+						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 listing"style="margin-right:-59px; margin-top: 10px;">
+							<a href="http://34.120.128.205/VisibilityAssetTracker/promoDeletion.htm" style="width:225px;">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
@@ -118,7 +118,31 @@ margin-left:0px!important;
 								<div class="tab-label-proco-timeline-inactive OpenSans-font">Promo Timeline</div>
 							</a>
 						</li> -->
-			
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 budget" style="width:19%;margin-top: 10px;">
+							<a href="http://34.120.128.205/VisibilityAssetTracker/procoBudget.htm" style="width:247px;">
+								<div class="proco-budget-icon "></div>
+								<div class="tab-label-proco-budget-inactive OpenSans-font">BUDGET REPORT</div>
+							</a>
+						</li>	
+					</ul>
+				</div>
+				<div class="row">
+					<ul class="nav nav-pills">
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 visibility-bg"  style="margin-top: 10px;width:21%">
+							<a href="http://34.120.128.205/VisibilityAssetTracker/procovisibilityUpload.htm" style="margin-left: 6%;">
+								<div class="proco-ppm-icon"></div>
+								<div class="tab-label-visi-upload-inactive OpenSans-font">Visibility Upload</div>
+							</a>
+						</li>
+						<li role="presentation"
+							class="col-md-3 col-sm-6 col-xs-12 ab-creation"
+							style="margin-top: 10px; width: 19%"><a
+							href="http://34.120.128.205/VisibilityAssetTracker/procoABCreationPage.htm">
+								<div class="proco-ppm-icon"></div>
+								<div class="tab-label-ab-creation-upload-inactive OpenSans-font">AB Creation Report
+									Upload</div>
+						</a>
+						</li>	
 					</ul>
 				</div>
 			</div>
@@ -130,8 +154,7 @@ margin-left:0px!important;
 	</nav>
 
 	<!-- Main jumbotron for a primary marketing message or call to action -->
-	<div class="container-fluid container-bg middle-section">
-	
+	<div class="container-fluid container-bg middle-section">	
 	<c:if test="${FILE_STATUS=='SUCCESS_FILE'}">
 			<div class="alert succ-alert-success sucess-msg" id="successblock"
 				style="display: block" style="margin-top:35px;">
@@ -203,7 +226,7 @@ margin-left:0px!important;
 												<div class="upload-image">
 													<i class="fa fa-upload" aria-hidden="true"></i>
 												</div>
-			
+		
 												<div class="upload-max-size">Maximum Upload File Size
 													:10MB</div>
 												<span id="uploadErrorMeaMsg" style="display: none; color: red"></span>

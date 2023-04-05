@@ -95,8 +95,8 @@ margin-left:0px!important;
 						</a></li>
 						
 						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 listing"style="margin-right:-50px;">
-							<a href="http://34.120.128.205/VisibilityAssetTracker/promoDeletion.htm" style="width:234px;">
+							class="col-md-3 col-sm-6 col-xs-12 listing"style="margin-right:-60px;">
+							<a href="http://34.120.128.205/VisibilityAssetTracker/promoDeletion.htm" style="width:225px;">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
@@ -113,6 +113,7 @@ margin-left:0px!important;
 								<div class="tab-label-proco-ppm-inactive OpenSans-font">PPM Upload</div>
 							</a>
 						</li> 
+						
 						<!--<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 timeline" style="width:19%">
 							<a href="http://34.120.128.205/VisibilityAssetTracker/procoTimeline.htm" style="width:230px;">
 								<div class="proco-timeline-icon "></div>
@@ -120,7 +121,31 @@ margin-left:0px!important;
 							</a>
 						</li> -->
 					
-
+                       <li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 budget" style="width:19%">
+							<a href="http://34.120.128.205/VisibilityAssetTracker/procoBudget.htm" style="width:247px;">
+								<div class="proco-budget-icon "></div>
+								<div class="tab-label-proco-budget-inactive OpenSans-font">BUDGET REPORT</div>
+							</a>
+						</li>
+						
+					</ul>
+				</div>
+				<div class="row">
+					<ul class="nav nav-pills">
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 visibility-bg"  style="margin-top: 10px;width:21%">
+							<a href="http://34.120.128.205/VisibilityAssetTracker/procovisibilityUpload.htm" style="margin-left: 6%;">
+								<div class="proco-ppm-icon"></div>
+								<div class="tab-label-visi-upload-inactive OpenSans-font">Visibility Upload</div>
+							</a>
+						</li>
+						<li role="presentation"
+							class="col-md-3 col-sm-6 col-xs-12 ab-creation"
+							style="margin-top: 10px; width: 19%"><a
+							href="http://34.120.128.205/VisibilityAssetTracker/procoABCreationPage.htm">
+								<div class="proco-ppm-icon"></div>
+								<div class="tab-label-ab-creation-upload-inactive OpenSans-font">AB Creation Report
+									Upload</div>
+						</a></li>
 					</ul>
 				</div>
 			</div>
