@@ -124,29 +124,40 @@ footer {
 									Upload</div>
 						</a></li>
 						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 budget"
-							style="width: 19%"><a
+							style="width: 19%; margin-top: 10px;margin-left: 10px;"><a
 							href="http://localhost:8083/VisibilityAssetTracker/procoBudget.htm"
 							style="width: 247px;">
 								<div class="proco-budget-icon "></div>
 								<div class="tab-label-proco-budget-inactive OpenSans-font">BUDGET
 									REPORT</div>
 						</a></li>
-						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 visibility-active"
-							style="margin-top: 10px; width: 19%"><a
-							href="http://localhost:8083/VisibilityAssetTracker/procovisibilityUpload.htm">
-								<div class="proco-ppm-icon"></div>
-								<div class="tab-label-visi-upload-active OpenSans-font">Visibility
-									Upload</div>
-						</a></li>
+						
 						<!----	<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 timeline" style="margin-top: 10px;width:19%">
 							<a href="http://localhost:8083/VisibilityAssetTracker/procoTimeline.htm"style="width: 220px;">
 								<div class="proco-timeline-icon "></div>
 								<div class="tab-label-proco-timeline-inactive OpenSans-font">Promo Timeline</div>
 							</a>
 						</li> -->
-
-
+					</ul>
+				</div>
+				<div class="row">
+					<ul class="nav nav-pills">
+						<li role="presentation"
+							class="col-md-3 col-sm-6 col-xs-12 visibility-active"
+							style="margin-top: 10px; width: 21%"><a
+							href="http://localhost:8083/VisibilityAssetTracker/procovisibilityUpload.htm" style="margin-left: 6%;">
+								<div class="proco-ppm-icon"></div>
+								<div class="tab-label-visi-upload-active OpenSans-font">Visibility
+									Upload</div>
+						</a></li>
+						<li role="presentation"
+							class="col-md-3 col-sm-6 col-xs-12 ab-creation"
+							style="margin-top: 10px; width: 19%"><a
+							href="http://localhost:8083/VisibilityAssetTracker/procoABCreationPage.htm">
+								<div class="proco-ppm-icon"></div>
+								<div class="tab-label-ab-creation-upload-inactive OpenSans-font">AB Creation Report
+									Upload</div>
+						</a></li>
 					</ul>
 				</div>
 			</div>
@@ -192,28 +203,29 @@ footer {
 		<div class="promo-measure-upload">Visibility Upload</div>
 		<div class="row">
 			<div class="col-md-12 col-sm-12 ddd">
-				<form id="visibilityUpload" class="form-horizontal" action="#"
-					enctype="multipart/form-data" name="coeStatusFileUpload">
+				<form id="visibilityUpload" class="form-horizontal"
+					action="#" enctype="multipart/form-data" name="coeStatusFileUpload">
 
 					<div class="launchupload-parent">
-						<div class="proco-measure-upload-wrapper">
+						<div class="proco-budget-upload-wrapper">
 							<div style="text-align: center; color: #878787;">
 
-								<h2 class="SEGOEUIL-font">Visibility Upload</h2>
+								<h2 class="SEGOEUIL-font">Visibility Upload File</h2>
 								<div class="upload-image">
 									<i class="fa fa-upload" aria-hidden="true"></i>
 								</div>
 
-								<span id="uploadvisibilityErrorMeaMsg"
-									style="display: none; color: red"></span>
+								<div class="upload-max-size">Maximum Upload File Size
+									:10MB</div>
+								<span id="uploadvisibilityErrorMeaMsg" style="display: none; color: red"></span>
 
 								<div class="input-group upload-status-files">
-									<input id="uploadvisibility" name="file" type="file"
-										class="file">
+									<div class="file-input file-input-new" style="width: 300px;">
+										<input id="uploadvisibility" name="file" type="file" class="file">
+									</div>
+									<input class="validate_upload btn marginT10 new-btn-primary"
+										type="submit" id="btnSubmitVisiUpload" value="Upload" />
 								</div>
-								<input class="validate_upload btn marginT10 new-btn-primary"
-									type="submit" id="btnSubmitVisiUpload" value="Upload" />
-
 							</div>
 						</div>
 					</div>

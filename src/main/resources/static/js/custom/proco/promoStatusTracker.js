@@ -1499,3 +1499,90 @@ $("#btnSubmitVisiUpload").click(function (event) {
 					    	
 				    });
 
+
+/*Added by kajal G in SPRINT-12*/
+$("#btnSubmitAbCreationUpload").click(function (event) {
+						event.preventDefault();
+						
+						var fileName = $('#uploadabCreation').val();
+						if (fileName == '') {
+							$('#uploadabCreationErrorMeaMsg').show().html("Please select a file to upload");
+							return false;
+						} else {
+							$('#uploadabCreationErrorMeaMsg').hide();
+							var FileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+							if (FileExt != "xlsx") {
+								if (FileExt != "xls") {
+									$('#uploadabCreationErrorMeaMsg').show().html("Please upload .xls or .xlsx file");
+									$("#abCreationReportUpload").submit(function(e) {
+										e.preventDefault();
+									});
+									return false;
+								}
+
+							}
+						}
+						
+				        // Get form
+				        var form = $('#abCreationReportUpload')[0];
+                           var data = new FormData(form);
+                        $.ajax({
+				            type: "POST",
+				            enctype: 'multipart/form-data',
+				            url: 'abCreationReportUpload.htm' ,
+				            data: data,
+				            processData: false,
+				            contentType: false,
+				            cache: false,
+				            timeout: 600000,
+				            beforeSend: function() {
+                                ajaxLoader(spinnerWidth, spinnerHeight);
+                            },
+							
+				            success: function (ModRes) {
+				            	//console.log(resdata);
+				            	
+				            	 $('.loader').hide();
+				            	 if(ModRes.includes('EXCEL_UPLOADED')) {
+				                    $('#abcreationerrorblockUpload').hide();
+				                	$('#abcreationsuccessblock').show().find('span').html(' File Uploaded Successfully !!!');
+				                	 
+				                }
+				                
+				                else if(ModRes.includes('EXCEL_NOT_UPLOADED')){
+				               $('#visisuccessblock').hide();
+				                $('#abcreationsuccessblock').show().find('span').html(' File Contains Error ');
+				                }
+								 else if(ModRes.includes('File Size Exceeds')){
+									 $('#abcreationerrorblockUpload').show().find('span').html('File Size Limit Exceeded');
+                                     $('#abcreationsuccessblock').hide();
+								 }
+				                else if(ModRes.includes('FILE_EMPTY')){
+									$('#abcreationerrorblockUpload').show().find('span').html('Error While Uploading Empty File');
+									$('#abcreationsuccessblock').hide();
+								}
+								else if(ModRes.includes('CHECK_COL_MISMATCH')){
+									$('#abcreationerrorblockUpload').show().find('span').html('Please Check Uploaded File');
+									$('#abcreationsuccessblock').hide();
+								}else if(ModRes.includes('Column count is not match with expected')){
+									$('#abcreationerrorblockUpload').show().find('span').html('Please Upload correct File');
+									$('#abcreationsuccessblock').hide();
+								}
+								else{
+									
+				                	$('#abcreationerrorblockUpload').show().find('span').html('Error While Uploading File');
+				                	$('#abcreationsuccessblock').hide();     	 
+				              	 }
+				                    
+				                 $('#abCreationReportUpload')[0].reset();
+								 //$('.file-name').html("No file chosen");
+				            },
+				            error: function (e) {
+				            $('#abcreationsuccessblock').hide();
+				                 
+				            }
+				        });
+				       
+					    
+					    	
+				    });

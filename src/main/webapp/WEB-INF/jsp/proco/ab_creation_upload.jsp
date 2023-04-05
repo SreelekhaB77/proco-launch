@@ -54,10 +54,6 @@ footer {
 	line-height: 1.4 !important;
 	font-size: 1.5em !important;
 }
-
-.ddd {
-	width: 100%;
-}
 </style>
 </head>
 <body class="Verdana-font">
@@ -101,14 +97,15 @@ footer {
 						</a></li>
 
 						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 listing"
-							style="width: 234px; margin-left: -10px;"><a
+							class="col-md-3 col-sm-6 col-xs-12 listing" style="width: 234px;">
+							<a
 							href="http://localhost:8083/VisibilityAssetTracker/promoDeletion.htm"
-							style="margin-top: 10px; margin-left: -18px;">
+							style="margin-top: 10px; margin-left: -27px;">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped
 									Offer</div>
-						</a></li>
+						</a>
+						</li>
 
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 promo-lib-bg"
@@ -120,34 +117,32 @@ footer {
 						</a></li>
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 promo-ppm-inactive"
-							style="margin-top: 10px; width: 210px; margin-right: 15px;">
-							<a
+							style="margin-top: 10px; width: 18%"><a
 							href="http://localhost:8083/VisibilityAssetTracker/ProcoPpmCoeRemarks.htm">
 								<div class="proco-ppm-icon"></div>
 								<div class="tab-label-proco-ppm-inactive OpenSans-font">PPM
 									Upload</div>
-						</a>
-						</li>
-						<!--<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 timeline" style="margin-top: 10px; width:19%">
-							<a href="http://localhost:8083/VisibilityAssetTracker/procoTimeline.htm" style="width: 220px;">
+						</a></li>
+						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 budget"
+							style="width: 19% ; margin-top: 10px;margin-left: 10px;"><a
+							href="http://localhost:8083/VisibilityAssetTracker/procoBudget.htm"
+							style="width: 247px;">
+								<div class="proco-budget-icon "></div>
+								<div class="tab-label-proco-budget-inactive OpenSans-font">BUDGET
+									REPORT</div>
+						</a></li>
+						<!----	<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 timeline" style="margin-top: 10px;width:19%">
+							<a href="http://localhost:8083/VisibilityAssetTracker/procoTimeline.htm"style="width: 220px;">
 								<div class="proco-timeline-icon "></div>
 								<div class="tab-label-proco-timeline-inactive OpenSans-font">Promo Timeline</div>
 							</a>
 						</li> -->
-						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 budget"
-							style="width: 19%; margin-top: 10px;"><a
-							href="http://localhost:8083/VisibilityAssetTracker/procoBudget.htm"
-							style="width: 247px;">
-								<div class="proco-budget-icon "></div>
-								<div class="tab-label-proco-budget-active OpenSans-font">BUDGET
-									REPORT</div>
-						</a></li>
+
 
 					</ul>
 				</div>
 				<div class="row">
 					<ul class="nav nav-pills">
-						
 						<li role="presentation"
 							class="col-md-3 col-sm-6 col-xs-12 visibility-bg"
 							style="margin-top: 10px; width: 21%"><a
@@ -157,11 +152,11 @@ footer {
 									Upload</div>
 						</a></li>
 						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 ab-creation"
+							class="col-md-3 col-sm-6 col-xs-12 ab-creation-active"
 							style="margin-top: 10px; width: 19%"><a
 							href="http://localhost:8083/VisibilityAssetTracker/procoABCreationPage.htm">
 								<div class="proco-ppm-icon"></div>
-								<div class="tab-label-ab-creation-upload-inactive OpenSans-font">AB Creation Report
+								<div class="tab-label-ab-creation-upload-active OpenSans-font">AB Creation Report
 									Upload</div>
 						</a></li>
 					</ul>
@@ -170,45 +165,27 @@ footer {
 
 
 		</div>
-
 		<!--/.navbar-collapse -->
 	</div>
 	</nav>
-	<div class="container-fluid container-bg middle-section">
-		<c:if test="${FILE_STATUS=='SUCCESS_FILE'}">
-			<div class="alert succ-alert-success sucess-msg" id="successblock"
-				style="display: block" style="margin-top:35px;">
-				<button type="button" class="close" data-hide="alert">&times;</button>
-				<c:out value="${success}"></c:out>
-			</div>
-		</c:if>
-		<c:if test="${errorMsg!=null}">
-			<div class="alert err-alert-danger sucess-msg" id="errorblock"
-				style="margin-top: 35px;">
-				<button type="button" class="close" data-hide="alert">&times;</button>
-				<c:out value="${errorMsg}"></c:out>
-				<c:if test="${FILE_STATUS=='ERROR_FILE'}">
-					<a
-						href="http://localhost:8083/VisibilityAssetTracker/downloadPromotionEditErrorFile.htm"
-						id="downloadTempFileLink">Click here to Download Error File:</a>
 
-				</c:if>
-			</div>
-		</c:if>
+	<!-- Main jumbotron for a primary marketing message or call to action -->
+	<div class="container-fluid container-bg middle-section">
+
 		<div class="alert alert-success sucess-msg"
-			style="display: none; margin-top: 35px;" id="budgetsuccessblock">
+			style="display: none; margin-top: 35px;" id="abcreationsuccessblock">
 			<button type="button" class="close" data-hide="alert">&times;</button>
 			<span></span>
 		</div>
 
 		<div class="alert alert-danger"
-			style="display: none; margin-top: 35px;" id="budgeterrorblockUpload">
+			style="display: none; margin-top: 35px;" id="abcreationerrorblockUpload">
 			<button type="button" class="close" data-hide="alert">&times;</button>
 
-			<!-- <span>Error while uploading file.</span>-->
 			<span></span>
 
 		</div>
+
 		<div class="alert succ-alert-success alert-dismissible"
 			id="successblockUpload" style="display: none; margin-top: 35px;">
 			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -219,32 +196,36 @@ footer {
 			<a href="#" class="close" aria-label="close">&times;</a> <strong>Error!
 			</strong> <span>File does not contain any data.</span>
 		</div>
-		<div class="proco-creation form-horizontal"></div>
-		<div class="promo-budget-upload">LIVE BUDGET REPORT</div>
+		<div class="proco-creation form-horizontal">
+			<input type="hidden" id="roleId" value="${roleId}" />
+
+		</div>
+
+		<div class="promo-measure-upload">AB Creation Report Upload</div>
 		<div class="row">
-			<div class="col-md-6 col-sm-6 ddd">
-				<form id="coeStatusBudgetFileUpload" class="form-horizontal"
+			<div class="col-md-12 col-sm-12 ddd">
+				<form id="abCreationReportUpload" class="form-horizontal"
 					action="#" enctype="multipart/form-data" name="coeStatusFileUpload">
 
 					<div class="launchupload-parent">
 						<div class="proco-budget-upload-wrapper">
 							<div style="text-align: center; color: #878787;">
 
-								<h2 class="SEGOEUIL-font">Budget Report Upload File</h2>
+								<h2 class="SEGOEUIL-font">AB Creation Report Upload File</h2>
 								<div class="upload-image">
 									<i class="fa fa-upload" aria-hidden="true"></i>
 								</div>
 
 								<div class="upload-max-size">Maximum Upload File Size
 									:10MB</div>
-								<span id="uploadErrorMeaMsg" style="display: none; color: red"></span>
+								<span id="uploadabCreationErrorMeaMsg" style="display: none; color: red"></span>
 
 								<div class="input-group upload-status-files">
 									<div class="file-input file-input-new" style="width: 300px;">
-										<input id="uploadbudget" name="file" type="file" class="file">
+										<input id="uploadabCreation" name="file" type="file" class="file">
 									</div>
 									<input class="validate_upload btn marginT10 new-btn-primary"
-										type="submit" id="btnSubmitBudgetReport" value="Upload" />
+										type="submit" id="btnSubmitAbCreationUpload" value="Upload" />
 								</div>
 							</div>
 						</div>
@@ -253,7 +234,6 @@ footer {
 			</div>
 		</div>
 	</div>
-
 	<jsp:include page="../proco/proco-footer.jsp" />
 
 	<!-- Bootstrap core JavaScript
@@ -279,6 +259,5 @@ footer {
 		src="assets/js/custom/proco/alert-modal.js"></script>
 
 </body>
-
 </body>
 </html>

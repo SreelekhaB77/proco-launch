@@ -121,16 +121,29 @@ font-size: 22px!important;
 								<div class="tab-label-proco-budget-inactive OpenSans-font">BUDGET REPORT</div>
 							</a>
 						</li>
-						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 visibility-bg"  style="margin-top: 10px;width:19%">
-							<a href="http://localhost:8083/VisibilityAssetTracker/procovisibilityUpload.htm">
+					</ul>
+				</div>
+				<div class="row">
+					<ul class="nav nav-pills">
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 visibility-bg"  style="margin-top: 10px;width:21%">
+							<a href="http://localhost:8083/VisibilityAssetTracker/procovisibilityUpload.htm" style="margin-left: 6%;">
 								<div class="proco-ppm-icon"></div>
 								<div class="tab-label-visi-upload-inactive OpenSans-font">Visibility Upload</div>
 							</a>
 						</li>
-					
-
+						<li role="presentation"
+							class="col-md-3 col-sm-6 col-xs-12 ab-creation"
+							style="margin-top: 10px; width: 19%"><a
+							href="http://localhost:8083/VisibilityAssetTracker/procoABCreationPage.htm">
+								<div class="proco-ppm-icon"></div>
+								<div class="tab-label-ab-creation-upload-inactive OpenSans-font">AB Creation Report
+									Upload</div>
+						</a>
+						</li>
 					</ul>
 				</div>
+					
+						
 			</div>
 
 

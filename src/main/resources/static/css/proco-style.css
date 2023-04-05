@@ -1291,6 +1291,14 @@ img#delimg {
     position: absolute;
     color: #3F3F3F;
 }
+/*Added by Kajal G in SPRINT-12*/
+.tab-label-ab-creation-upload-inactive {
+    padding-left: 22%;
+    line-height: 1.4em;
+    font-size: 1.5em; 
+    position: absolute;
+    color: #3F3F3F;
+}
 /*bharati added style for ppm uplaod tab in coe in sprint-9*/
 .tab-label-proco-ppm-inactive { 
     font-size: 1.6em;
@@ -1343,6 +1351,14 @@ img#delimg {
     top: 10px;
     color: #fff;
 }
+/*Added by Kajal G in SPRINT-12*/
+.tab-label-ab-creation-upload-active {
+   line-height:1.4em;
+   color: #fff;
+   padding-left: 22%;
+   font-size: 0.9em;
+   color: #fff;
+}
 .tab-label-proco-listing-active {
 	font-size: 1.750em;
     float: left;
@@ -1388,6 +1404,17 @@ img#delimg {
 }
 /*Added by Kajal G in SPRINT-12 */
 .visibility-active a{
+	background-color: #035597 !important;
+    position: relative;
+    height: 60px;
+    padding: 0 !important;
+    color: #fff;
+    line-height: 2.5;
+    font-size: 1.7em;
+    
+}
+/*Added by Kajal G in SPRINT-12 */
+.ab-creation-active a{
 	background-color: #035597 !important;
     position: relative;
     height: 60px;
@@ -1452,7 +1479,7 @@ line-height:1.4em;
 
 
 
-.dashboard a, .listing a,.collaboration a,.disaggregation a,.upload a, .create a, .promo-lib-bg a, .edit a, .track a, .coe-moc a, .coe-asset-management a, .coe-profile a, .coe-track a, .catman-pending a, .coe-hfs a ,.promo-ppm-inactive a,.timeline a,.budget a,.visibility-bg a{
+.dashboard a, .listing a,.collaboration a,.disaggregation a,.upload a, .create a, .promo-lib-bg a, .edit a, .track a, .coe-moc a, .coe-asset-management a, .coe-profile a, .coe-track a, .catman-pending a, .coe-hfs a ,.promo-ppm-inactive a,.timeline a,.budget a,.visibility-bg a,.ab-creation a{
         padding: 0 !important;
     position: relative;
     height: 60px;
