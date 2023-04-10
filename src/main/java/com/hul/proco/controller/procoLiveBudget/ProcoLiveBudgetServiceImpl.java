@@ -23,7 +23,8 @@ public class ProcoLiveBudgetServiceImpl implements ProcoLiveBudgetService {
 	public ArrayList<String> procoLiveBudgetDownloadHeaderList(){
 		 {
 				ArrayList<String> headerList=new ArrayList<String>();
-				headerList.add("BUDGET_HOLDER");	
+				headerList.add("BUDGET_HOLDER");
+				headerList.add("CATEGORY");
 				headerList.add("PRODUCT");	
 				headerList.add("CUSTOMER");	
 				headerList.add("FUND_TYPE");

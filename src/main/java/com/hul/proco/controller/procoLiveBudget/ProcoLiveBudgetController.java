@@ -54,9 +54,6 @@ public class ProcoLiveBudgetController {
 		return new ModelAndView("proco/proco_budget");
 	}
 	
-	
-	
-	//@PostMapping(value="procoLiveBudgetUpload.htm")
 	@RequestMapping(value = "procoLiveBudgetUpload.htm", method = RequestMethod.POST)
 	public @ResponseBody String procoLiveBudgetUpload(@ModelAttribute("BudgetHolderBean") BudgetHolderBean budgetHolderBean,
 			Model model, HttpServletRequest httpServletRequest,
@@ -76,7 +73,7 @@ public class ProcoLiveBudgetController {
 					return "FILE_SIZE_EXCEED";
 				} else if (UploadUtil.movefile(file, fileName)) {
 					Map<String, List<Object>> map = null;
-					map = ExOM.mapFromExcel(new File(fileName)).to(BudgetHolderBean.class).map(23, false, null);
+					map = ExOM.mapFromExcel(new File(fileName)).to(BudgetHolderBean.class).map(24, false, null);
 					if (map.isEmpty()) {
 						model.addAttribute("FILE_STAUS", "FILE_EMPTY");
 						return "FILE_EMPTY";
@@ -180,9 +177,7 @@ public class ProcoLiveBudgetController {
 		String json = gson.toJson(jsonObj);
 		return json;
 	}
-	
-	
-	
+		
 	
 }
 	

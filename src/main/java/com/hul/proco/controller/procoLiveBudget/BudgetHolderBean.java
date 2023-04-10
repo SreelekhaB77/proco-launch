@@ -10,6 +10,9 @@ public class BudgetHolderBean {
 	@Column(name="BUDGET_HOLDER")
 	private String budget_holder;
 	
+	@Column(name="CATEGORY")
+	private String category;
+	
 	@Column(name="PRODUCT")
 	private String product;
 	
@@ -288,12 +291,21 @@ public class BudgetHolderBean {
 		this.userId = userId;
 	}
 
+	
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
 	@Override
 	public String toString() {
-		return "BudgetHolderBean [file=" + file + ", budget_holder=" + budget_holder + ", product=" + product
-				+ ", Customer=" + Customer + ", fund_type=" + fund_type + ", original_amount=" + original_amount
-				+ ", adjusted_amount=" + adjusted_amount + ", revised_amount=" + revised_amount + ", update_amount="
-				+ update_amount + ", transfer_in=" + transfer_in + ", transfer_out=" + transfer_out
+		return "BudgetHolderBean [file=" + file + ", budget_holder=" + budget_holder + ", category=" + category
+				+ ", product=" + product + ", Customer=" + Customer + ", fund_type=" + fund_type + ", original_amount="
+				+ original_amount + ", adjusted_amount=" + adjusted_amount + ", revised_amount=" + revised_amount
+				+ ", update_amount=" + update_amount + ", transfer_in=" + transfer_in + ", transfer_out=" + transfer_out
 				+ ", transfer_pipeline=" + transfer_pipeline + ", total_amount=" + total_amount + ", pipeline_amount="
 				+ pipeline_amount + ", commitment_amount=" + commitment_amount + ", remaining_amount="
 				+ remaining_amount + ", actuals=" + actuals + ", adjustment_against_actuals="
