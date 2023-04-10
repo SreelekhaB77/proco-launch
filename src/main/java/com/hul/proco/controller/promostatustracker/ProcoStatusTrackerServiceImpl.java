@@ -170,6 +170,9 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 			headerList.add("PPM SUBMISSION DATE");
 			headerList.add("PPM MODIFIED DATE");
 			headerList.add("COE REMARKS");
+			headerList.add("STATUS IN CENTRAL UNIFY");
+			headerList.add("TME SUBMIT DATE");
+			headerList.add("AUDITOR SUBMIT DATE");
 			headerList.add("MRP");
 			headerList.add("AB CREATION");
 			headerList.add("BUDGET");
