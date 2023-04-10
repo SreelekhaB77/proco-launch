@@ -1288,10 +1288,10 @@ $("#btnSubmitPpmCoeRemark").click(function (event) {
 									$('#ppmcoesuccessblock').hide();
 								}
 								else if(ModRes.includes('CHECK_COL_MISMATCH')){
-									$('#ppmcoeerrorblockUpload').show().find('span').html('Please Check Uploaded File');
+									$('#ppmcoeerrorblockUpload').show().find('span').html('Columns are not matching,Please Check Uploaded File');
 									$('#ppmcoesuccessblock').hide();
 								}else if(ModRes.includes('Column count is not match with expected')){
-									$('#ppmcoeerrorblockUpload').show().find('span').html('Please Upload correct File');
+									$('#ppmcoeerrorblockUpload').show().find('span').html('Column count is not match with expected,Please Upload correct File');
 									$('#ppmcoesuccessblock').hide();
 								}
 								else{
@@ -1381,10 +1381,10 @@ $("#btnSubmitBudgetReport").click(function (event) {
 									$('#budgetsuccessblock').hide();
 								}
 								else if(ModRes.includes('CHECK_COL_MISMATCH')){
-									$('#budgeterrorblockUpload').show().find('span').html('Please Check Uploaded File');
+									$('#budgeterrorblockUpload').show().find('span').html('Columns are not macthing,Please Check Uploaded File');
 									$('#budgetsuccessblock').hide();
 								}else if(ModRes.includes('Column count is not match with expected')){
-									$('#budgeterrorblockUpload').show().find('span').html('Please Upload correct File');
+									$('#budgeterrorblockUpload').show().find('span').html('Column count is not match with, expectedPlease Upload correct File');
 									$('#budgetsuccessblock').hide();
 								}
 								else{
