@@ -47,9 +47,12 @@ public class ProcoJsonObject {
 		return "ProcoJsonObject [iTotalRecords=" + iTotalRecords + ", iTotalDisplayRecords=" + iTotalDisplayRecords
 				+ ", sEcho=" + sEcho + ", sColumns=" + sColumns + ", aaData=" + aaData + "]";
 	}
-	public void setJsonBean(List<BudgetHolderBean> promoList) {
-		// TODO Auto-generated method stub
-		
+	public List<BudgetHolderBean> getJsonBean() {
+		return aaData;
+	}
+
+	public void setJsonBean(List<BudgetHolderBean> aaData) {
+		this.aaData = aaData;
 	}
 	
 	

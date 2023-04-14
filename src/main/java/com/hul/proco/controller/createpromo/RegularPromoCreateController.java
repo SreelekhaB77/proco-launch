@@ -89,9 +89,14 @@ public class RegularPromoCreateController {
 					}
 					if (map.containsKey("ERROR")) {
 						model.addAttribute("FILE_STAUS", "CHECK_COL_MISMATCH");
-
 						return "CHECK_COL_MISMATCH";
-					} else if (map.containsKey("DATA")) {
+					} 
+					//Added by Kajal G for empty row in excel
+					else if (map.containsKey("EMPTY_ROW")) {
+						model.addAttribute("FILE_STAUS", "EMPTY_ROW");
+						return "EMPTY_ROW";
+					}
+					else if (map.containsKey("DATA")) {
 						List<?> datafromexcel = map.get("DATA");
 						beanArray = (CreateBeanRegular[]) datafromexcel
 								.toArray(new CreateBeanRegular[datafromexcel.size()]);

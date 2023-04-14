@@ -27,7 +27,7 @@ $(document)
 		                $(this).closest("." + $(this).attr("data-hide")).hide();
 		              });
 					
-				/*	var geographySelectedVal = $('#geography').comboTree({
+					/*var geographySelectedVal = $('#geography').comboTree({
 						source : JSON.parse(geographyData),
 						isMultiple : false
 						/*select:function(item){
@@ -53,12 +53,12 @@ $(document)
 					
 					
 					
-					$('#customerChainL1')
+					/*$('#customerChainL1')
 							.multiselect(
 									{
 										includeSelectAllOption : true,
 										numberDisplayed : 2,
-										/* buttonWidth: '100px', */
+										 buttonWidth: '100px', 
 										nonSelectedText : 'ALL CUSTOMERS',
 										selectAllText : 'ALL CUSTOMERS',
 										onChange : function(option, checked,
@@ -122,7 +122,7 @@ $(document)
 															'<input type="text" class="form-control" name="cust-chain" id="customerChainL2" value="ALL CUSTOMERS" readonly="readonly">');
 										}
 
-									});
+									});*/
 					
 					
 
@@ -197,13 +197,13 @@ $(document)
 						promoTable.draw();
 						});
 					
-					/*PromoListing table pagination */
+					/*PromoBudgetListing table pagination */
 				       promoTable = $('.promo-list-table').DataTable({
 
 				              /* added for second tab start */
 				    	   "bProcessing": true,
 				             "bServerSide": true,
-				             "scrollY":       "200px",
+				             "scrollY":       "300px",
 						        "scrollX":        true,
 						        "scrollCollapse": true,
 						        "paging":         true,
@@ -214,7 +214,7 @@ $(document)
 									[ 5, 10, 25, 50, 100 ],
 									[ 5, 10, 25, 50, 100 ] ],
 						       "oLanguage": {
-					                 "sSearch": 'Search :',
+					                 "sSearch": 'Search by Promoid: ',
 					                  "oPaginate": {
 					                      "sNext": "&rarr;",
 					                      "sPrevious": "&larr;"
@@ -245,12 +245,13 @@ $(document)
 									    $('table.promo-list-table input[type="checkbox"]').not(this).prop('checked', false);  
 									});
 				              },
-				              "aoColumns": [/*{
+				              "aoColumns": [{
 				                  "mData": "promo_id",
 				                  "mRender": function(data, type, full) {
+					 console.log("data:"+data);
 				                    return '<input type="checkbox" class="visiData" name="promoId" id="promo_id" value="'+data+'">';
 				                  } 
-				                  },*/
+				                  },
 				            	  {
 				                    "mData": "budget_holder"
 				                  },{
@@ -303,14 +304,14 @@ $(document)
 						              }
 				                ]
 				                /* added for second tab end */
-
+							
 				            });
-				         
-				       $('.filter-ref').on('keyup', function() {
+				        
+				    /*   $('.filter-ref').on('keyup', function() {
 				    	   promoTable.columns(0).search(this.value).draw();
-						});
+						});*/
 				       
-				      /* $('#DataTables_Table_0_length').css({
+				       $('#DataTables_Table_0_length').css({
 	                       
 	                         'padding': '20px 0'
 	                     });
@@ -326,10 +327,10 @@ $(document)
 	                     $($('#DataTables_Table_0_wrapper .row')[0]).find(
                        	'.col-sm-6')[1]).addClass(
                        		"promo-filter-div");
-	                     $(
+	                     /*$(
 	    	                     $($('.promo-filter-div')).find(
 	                             	'#DataTables_Table_0_filter')).addClass(
-	                             		"promo-filter");
+	                             		"promo-filter");*/
 
 	                     
 	                     $(
@@ -355,7 +356,7 @@ $(document)
 	                    	    'height': '75px', 
 	                    	    'width': 'none',
 	                    	    'border-left': '2px #e8e8e8 solid'
-	                     });*/
+	                     });
 				       
 				       $('#DataTables_Table_0_length').css({
 	                       
@@ -369,14 +370,14 @@ $(document)
 	                     $($('#table-id-promo-list-table_wrapper .row')[0]).after(
 	                             $(".summary-text"));
 
-	                     $(
+	                    /* $(
 	                     $($('#table-id-promo-list-table_wrapper .row')[0]).find(
                        	'.col-sm-6')[1]).addClass(
-                       		"promo-filter-div");
-	                     $(
+                       		"promo-filter-div");*/
+	                     /*$(
 	    	                     $($('.promo-filter-div')).find(
 	                             	'#table-id-promo-list-table_filter')).addClass(
-	                             		"promo-filter");
+	                             		"promo-filter");*/
 
 	                     
 	                     $(
@@ -385,15 +386,15 @@ $(document)
 	                             		"promolistselect");
 	                     
 	                    
-	                     $(
+	                     /*$(
 	    	                     $($('.promo-filter')).find(
 	                             	'input')).addClass(
-	                             		"searchicon-wrapper-promolist");
+	                             		"searchicon-wrapper-promolist");*/
 	                    
-	                     $('.promo-filter').find(
+	                    /* $('.promo-filter').find(
                        '#table-id-promo-list-table_filter').css({
 	                         'float': 'right'
-	                     });
+	                     });*/
 				       
 	                     $('.promo-filter').css({
 	                    	 'float': 'right',
@@ -433,7 +434,7 @@ $(document)
 						
 					});*/
 						
-						$('span.comboTreeItemTitle').on('click',function(){
+						/*$('span.comboTreeItemTitle').on('click',function(){
 							//console.log($(this).parent('div[class="comboTreeInputWrapper"]').find('input').attr('id'));
 							var geographyTitle;
 							var comboTreeinputId = $(this).parents('div[class="comboTreeWrapper"]').find('input').attr('id');
@@ -446,13 +447,13 @@ $(document)
 								mocVal = geographyTitle;
 								promoTable.draw();
 							}
-							});
-						/*$('.promo-list-table tr').each(function() {
+							});*/
+						$('.promo-list-table tr').each(function() {
 						    var customerId = $(this).find("td").eq(16).val();   
 						    console.log(customerId);
-						});*/
+						});
 				});
-
+/*
 function getCustChainValues(selVal) {
 	$.ajax({
 		type : "POST",
@@ -480,13 +481,13 @@ function getCustChainValues(selVal) {
 	});
 }
 
-
-
+*/
+/*
 function multiSelectionForCustChain() {
 	$('#customerChainL2').multiselect({
 		includeSelectAllOption : true,
 		numberDisplayed : 2,
-		/* buttonWidth: '100px',*/
+		buttonWidth: '100px',
 		nonSelectedText : 'ALL CUSTOMERS',
 		selectAllText : 'ALL CUSTOMERS',
 		onChange : function(option, checked, select) {
@@ -514,6 +515,7 @@ function multiSelectionForCustChain() {
 
 	});
 }
+*/
 function extractLast(term){
 	return split(term).pop();
 }
@@ -522,7 +524,6 @@ function split(val){
 }
 
 function downloadPromotionFile(){
-	
 	window.location.assign("procoLiveBudgetDownload.htm");
 }
 

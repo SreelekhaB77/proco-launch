@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -380,6 +381,22 @@ public class ExOM {
 		return map;
 	}
 
+	//Added by Kajal G in SPRINT-12
+	private static boolean isRowEmpty(Row row) {
+		boolean isEmpty = true;
+		DataFormatter dataFormatter = new DataFormatter();
+
+		if (row != null) {
+			for (Cell cell : row) {
+				if (dataFormatter.formatCellValue(cell).trim().length() > 0) {
+					isEmpty = false;
+					break;
+				}
+			}
+		}
+
+		return isEmpty;
+	}
 	@SuppressWarnings("unchecked")
 	public <T> Map<String, List<T>> map(int columnLength, boolean isSpecialCharAllowed, ArrayList<Integer> columnsToValidate) throws Throwable {
 		InputStream inputStream = null;
@@ -394,6 +411,12 @@ public class ExOM {
 			//int numberOfSheets = workbook.getNumberOfSheets();
 			//for (int index = 0; index < numberOfSheets; index++) {
 				Sheet sheet = workbook.getSheetAt(index);
+				for (Row row : sheet) {
+					if (isRowEmpty(row)) {
+						map.put("EMPTY_ROW", errorList);
+						return map;
+					}
+				}
 				rowIterator = sheet.iterator();
 				int lastRowNum = sheet.getLastRowNum();
 				if (lastRowNum == 0) {

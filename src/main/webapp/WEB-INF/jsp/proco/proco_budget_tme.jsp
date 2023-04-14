@@ -132,7 +132,7 @@ margin-top: -75px!important;
 		</c:if>
 		
 		
-		<div class="alert alert-success sucess-msg" style="display: none;margin-top:35px;margin-bottom: -23px" id="ProcoApprovalUploadsuccessblock">
+		<!--  <div class="alert alert-success sucess-msg" style="display: none;margin-top:35px;margin-bottom: -23px" id="ProcoApprovalUploadsuccessblock">
 	              <button type="button" class="close" data-hide="alert">&times;</button>
 	              <span></span>
 	            </div>
@@ -144,9 +144,9 @@ margin-top: -75px!important;
 	                           </div>
 			<div class="alert alert-danger" style="display: none;margin-top:35px;margin-bottom: -23px" id="errorblockApprovalUpload">
 			         <button type="button" class="close" data-hide="alert">&times;</button>
-			        <!-- <span>Error while uploading file.</span>-->
+			       
 			<span></span>
-	    </div>
+	    </div> -->
 	
 	
         <div class="alert err-alert-danger error-msg hide" id="promoSelectErrorMsg" style="margin-top:35px;">
@@ -157,14 +157,11 @@ margin-top: -75px!important;
              	<button type="button" class="close" data-hide="alert">&times;</button>
                 <span>Promotion Uploaded Successfully</span>
          	</div> -->
-		<!--  <div class="proco-creation form-horizontal">-->
+		  <div class="proco-creation form-horizontal">
 			<input type="hidden" id="roleId" value="${roleId}" />
 			<div class="promo-list table-header-deletion">PROCO BUDGET DOWNLOAD</div>
-			<div class="form-group col-sm-4" style="margin-top: 20px;">
-						
-
-					</div>
-					<form>
+			
+			<form>
 			<!--bharati commented uom,kitting value, reason,remark and added last 4 columns in sprint-9 US-2-->
 			<table id="table-id-promo-list-table" class="table table-striped table-bordered promo-list-table table-responsive" style="width: 100%;">
 				<thead>
