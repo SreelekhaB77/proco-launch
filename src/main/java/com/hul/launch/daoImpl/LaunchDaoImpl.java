@@ -802,13 +802,24 @@ public class LaunchDaoImpl implements LaunchDao {
 			downloadDataList.add(headerDetail);
 			for(String launchId : listOfLaunchData) {
 				
-				Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
+				/*Query query2 = sessionFactory.getCurrentSession().createNativeQuery(
 						"select DISTINCT LAUNCH_name,tlb.BP_CODE,tlb.BP_DESCRIPTION,launch_moc,ACCOUNT_NAME_L2,abc.ACCOUNT_NAME ACCOUNT_NAME,abc.depot,HUL_STORE_FORMAT,CLUSTER,REPORTING_CODE,(CASE WHEN tvcom.FMCG_CSP_CODE IS NOT NULL"
 								+" THEN tvcom.FMCG_CSP_CODE ELSE COLOUR_CSP_CODE END) AS DEPO_CODE"
 								+" from MODTRD.TBL_LAUNCH_BUILDUP_TEMP abc,TBL_VAT_COMM_OUTLET_MASTER tvcom,MODTRD.TBL_LAUNCH_MASTER asd,TBL_LAUNCH_BASEPACK tlb WHERE "
 								+" tvcom.HUL_OUTLET_CODE = abc.HFS_CODE AND abc.LAUNCH_ID = asd.launch_id and  LAUNCH_REJECTED !='2' and asd.LAUNCH_ID = tlb.LAUNCH_ID"
 								+" and tlb.BP_CODE = trim(substr(SKU_NAME, 1, locate(':', SKU_NAME) - 1)) "  //Added By Sarin - sprint8 11Apr2022 Issuefix , basepack is showing for accounts even if the basepack is rejected.
-								+" AND (tlb.BP_STATUS != 'REJECTED BY TME' OR tlb.BP_STATUS IS NULL) and tlb.LAUNCH_ID IN (:listOfLaunchData)");
+								+" AND (tlb.BP_STATUS != 'REJECTED BY TME' OR tlb.BP_STATUS IS NULL) and tlb.LAUNCH_ID IN (:listOfLaunchData)");*/
+
+				
+				Query query2 = sessionFactory.getCurrentSession().createNativeQuery(" SELECT DISTINCT asd.LAUNCH_NAME,tlb.BP_CODE,tlb.BP_DESCRIPTION,asd.LAUNCH_MOC,abc.ACCOUNT_NAME_L2,"
+						+ " abc.ACCOUNT_NAME ACCOUNT_NAME,abc.depot,abc.HUL_STORE_FORMAT,abc.CLUSTER,abc.REPORTING_CODE,(CASE WHEN tvcom.FMCG_CSP_CODE IS NOT NULL "
+						+ " THEN tvcom.FMCG_CSP_CODE ELSE tvcom.COLOUR_CSP_CODE END) AS DEPO_CODE "
+						+ " FROM MODTRD.TBL_LAUNCH_BUILDUP_TEMP abc "
+						+ " INNER JOIN TBL_VAT_COMM_OUTLET_MASTER tvcom ON tvcom.HUL_OUTLET_CODE=abc.HFS_CODE "
+						+ " INNER JOIN MODTRD.TBL_LAUNCH_MASTER asd ON asd.LAUNCH_ID=abc.LAUNCH_ID "
+						+ " INNER JOIN TBL_LAUNCH_BASEPACK tlb ON tlb.LAUNCH_ID=asd.LAUNCH_ID "
+						+ " WHERE asd.LAUNCH_REJECTED !='2' AND tlb.BP_CODE = trim(substr(SKU_NAME, 1, locate(':', SKU_NAME) - 1)) "
+						+ " AND (tlb.BP_STATUS != 'REJECTED BY TME' OR tlb.BP_STATUS IS NULL) and tlb.LAUNCH_ID IN (:listOfLaunchData)");
 
 				query2.setParameter("listOfLaunchData", launchId);
 				
