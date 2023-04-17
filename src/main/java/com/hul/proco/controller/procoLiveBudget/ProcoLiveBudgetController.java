@@ -172,7 +172,7 @@ public class ProcoLiveBudgetController {
 		Integer pageDisplayLength = Integer.valueOf(request.getParameter("iDisplayLength"));
 		Integer pageNumber = (pageDisplayStart / pageDisplayLength) + 1;
 		String searchParameter = request.getParameter("sSearch");
-		int rowCount = procoLiveBudgetService.getProcoBudgetRowCount();
+		int rowCount = procoLiveBudgetService.getProcoBudgetRowCount(searchParameter);
 		List<BudgetHolderBean> promoList = procoLiveBudgetService.getProcoBudgetTableList((pageDisplayStart + 1),(pageNumber * pageDisplayLength),searchParameter);
 		ProcoJsonObject jsonObj = new ProcoJsonObject();
 		jsonObj.setJsonBean(promoList);

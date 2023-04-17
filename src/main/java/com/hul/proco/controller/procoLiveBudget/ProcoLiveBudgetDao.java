@@ -10,7 +10,7 @@ public String budgetHolderData(BudgetHolderBean[] beanArray,String userID) throw
 
 public List<ArrayList<String>> procoLiveBudgetDownload(ArrayList<String> headerDetails);
 
-public int getProcoBudgetRowCount();
+public int getProcoBudgetRowCount(String searchParameter);
 
 public List<BudgetHolderBean> getProcoBudgetTableList(int pageDisplayStart, int pageDisplayLength,
 		String searchParameter);

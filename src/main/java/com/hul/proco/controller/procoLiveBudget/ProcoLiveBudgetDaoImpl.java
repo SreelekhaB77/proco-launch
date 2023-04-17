@@ -145,13 +145,20 @@ public List<ArrayList<String>> procoLiveBudgetDownload(ArrayList<String> headerD
 //Added by kavitha D Budget download file ends-Sprint 12
 
 @Override
-public int getProcoBudgetRowCount() {
+public int getProcoBudgetRowCount(String searchParameter) {
 	// TODO Auto-generated method stub
 	List<BigInteger> list = null;
 	try {
 
-		String rowCount = " SELECT COUNT(1) FROM TBL_PROCO_BUDGET_MASTER LIMIT1 ";
+		String rowCount = "SELECT COUNT(1) FROM (SELECT BUDGET_HOLDER,CATEGORY,PRODUCT,CUSTOMER,FUND_TYPE,ORIGINAL_AMOUNT,ADJUSTED_AMOUNT,REVISED_AMOUNT,UPDATE_AMOUNT,TRANSFER_IN,TRANSFER_OUT,TRANSFER_PIPELINE,TOTAL_AMOUNT,PIPELINE_AMOUNT,COMMITMENT_AMOUNT,"
+				+ "	REMAINING_AMOUNT,ACTUALS ,ADJUSTMENT_AGAINST_ACTUALS,UTILIZATION,POST_CLOSE_ACTUAL_AMOUNT,PAST_YEAR_CLOSED_PROMOTIONS_AMOUNT,TIME_PHASE ,REPORT_DOWNLOADED_BY ,REPORT_DOWNLOADED_DATE ,UPDATED_TIME_STAMP,ROW_NUMBER() OVER (ORDER BY UPDATED_TIME_STAMP) AS ROW_NEXT "
+				+ " FROM TBL_PROCO_BUDGET_MASTER  ";
 		
+		if(searchParameter!=null && searchParameter.length()>0){
+			rowCount +=" WHERE CONCAT(UCASE(BUDGET_HOLDER),UCASE(CUSTOMER),UCASE(CATEGORY),UCASE(PRODUCT),UCASE(FUND_TYPE),UCASE(TIME_PHASE), UCASE(REPORT_DOWNLOADED_BY)) LIKE UCASE('%"+searchParameter+"%')";
+		}
+		rowCount += " )AS BUDGET_TEMP ";
+
 		Query query = sessionFactory.getCurrentSession().createNativeQuery(rowCount);
 		list = query.list();
 	} catch (Exception ex) {
@@ -168,15 +175,18 @@ public List<BudgetHolderBean> getProcoBudgetTableList(int pageDisplayStart, int 
 	String promoQuery = "";
 	try {
 		
-		
 		promoQuery = " SELECT * FROM (SELECT BUDGET_HOLDER,CATEGORY,PRODUCT,CUSTOMER,FUND_TYPE,ORIGINAL_AMOUNT,ADJUSTED_AMOUNT,REVISED_AMOUNT,UPDATE_AMOUNT,TRANSFER_IN,TRANSFER_OUT,TRANSFER_PIPELINE,TOTAL_AMOUNT,PIPELINE_AMOUNT,COMMITMENT_AMOUNT,"
-				+ " REMAINING_AMOUNT,ACTUALS ,ADJUSTMENT_AGAINST_ACTUALS,UTILIZATION,POST_CLOSE_ACTUAL_AMOUNT,PAST_YEAR_CLOSED_PROMOTIONS_AMOUNT,TIME_PHASE ,REPORT_DOWNLOADED_BY ,REPORT_DOWNLOADED_DATE ,ROW_NUMBER() OVER (ORDER BY UPDATED_TIME_STAMP) AS ROW_NEXT"
+				+ " REMAINING_AMOUNT,ACTUALS ,ADJUSTMENT_AGAINST_ACTUALS,UTILIZATION,POST_CLOSE_ACTUAL_AMOUNT,PAST_YEAR_CLOSED_PROMOTIONS_AMOUNT,TIME_PHASE ,REPORT_DOWNLOADED_BY ,REPORT_DOWNLOADED_DATE ,UPDATED_TIME_STAMP,ROW_NUMBER() OVER (ORDER BY UPDATED_TIME_STAMP) AS ROW_NEXT"
 				+ " FROM TBL_PROCO_BUDGET_MASTER ";
 		
+		if(searchParameter!=null && searchParameter.length()>0){
+			promoQuery +=" WHERE CONCAT(UCASE(BUDGET_HOLDER),UCASE(CATEGORY),UCASE(PRODUCT),UCASE(FUND_TYPE),UCASE(TIME_PHASE), UCASE(REPORT_DOWNLOADED_BY)) LIKE UCASE('%"+searchParameter+"%')";
+		}
+		
 		if (pageDisplayLength == 0) {
-			promoQuery += " ORDER BY BUDGET_HOLDER,CATEGORY) AS PROMO_TEMP";
+			promoQuery += " ORDER BY BUDGET_HOLDER,CATEGORY) AS BUDGET_TEMP";
 		} else {
-			promoQuery += " ORDER BY BUDGET_HOLDER,CATEGORY) AS PROMO_TEMP WHERE ROW_NEXT BETWEEN " + pageDisplayStart + " AND " + pageDisplayLength + " ";
+			promoQuery += " ORDER BY BUDGET_HOLDER,CATEGORY) AS BUDGET_TEMP WHERE ROW_NEXT BETWEEN " + pageDisplayStart + " AND " + pageDisplayLength + " ";
 		}
 		Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQuery);
 
@@ -208,7 +218,6 @@ public List<BudgetHolderBean> getProcoBudgetTableList(int pageDisplayStart, int 
 			budgetHolderBean.setReport_downloaded_by(obj[22]== null ? "" :obj[22].toString());
 			budgetHolderBean.setReport_downlaoded_date(obj[23]== null ? "" :obj[23].toString());
 			budgetHolderBean.setUploaded_timestamp(obj[24]== null ? "" :obj[24].toString());
-
 
 			promoList.add(budgetHolderBean);
 		}
