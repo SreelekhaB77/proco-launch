@@ -184,6 +184,11 @@ $(document)
 						promoTable.draw();
 						});
 						
+						$('#adjusted_amount').change(function(){
+							adjusted_amount = $(this).val();
+							promoTable.draw();
+						});
+						
 						$('#revised_amount').change(function(){
 						revised_amount = $(this).val();
 						promoTable.draw();
@@ -213,8 +218,8 @@ $(document)
 						    	"lengthMenu" : [
 									[ 5, 10, 25, 50, 100 ],
 									[ 5, 10, 25, 50, 100 ] ],
-						       "oLanguage": {
-					                 "sSearch": 'Search by Promoid: ',
+						      "oLanguage": {
+					                 "sSearch": 'Search: ',
 					                  "oPaginate": {
 					                      "sNext": "&rarr;",
 					                      "sPrevious": "&larr;"
@@ -234,24 +239,39 @@ $(document)
 				    	                {"name": "Customer", "value": Customer}, 
 				    	                {"name": "fund_type", "value": fund_type}, 
 				    	                {"name": "original_amount", "value": original_amount}, 
+				    	              //	  {"name": "adjusted_amount", "value": adjusted_amount}, 
 				    	                {"name": "revised_amount", "value": revised_amount}, 
 				    	                {"name": "update_amount", "value": update_amount}, 
 				    	                {"name": "transfer_in","value": transfer_in},
-				    	                {"name": "transfer_out","value": transfer_out} 
+				    	                {"name": "transfer_out","value": transfer_out} ,
+				    	                {"name": "transfer_pipeline","value": transfer_pipeline},
+				    	                {"name": "total_amount","value": total_amount},
+				    	                {"name": "pipeline_amount","value": pipeline_amount},
+				    	                {"name": "commitment_amount","value": commitment_amount},
+				    	                {"name": "remaining_amount","value": remaining_amount},
+				    	                {"name": "actuals","value": actuals},
+				    	                {"name": "adjustment_against_actuals","value": adjustment_against_actuals},
+				    	                {"name": "usage","value": usage},
+     			    	                {"name": "post_close_actual_amount","value": post_close_actual_amount},
+				    	                {"name": "past_year_closed_promotions_amount","value": past_year_closed_promotions_amount},
+				    	                {"name": "time_phase","value": time_phase},
+				    	                {"name": "report_downloaded_by","value": report_downloaded_by},
+				    	                {"name": "report_downlaoded_date","value": report_downlaoded_date},
+				    	                {"name": "uploaded_timestamp","value": uploaded_timestamp}, 
 				    	                );
 				              }, 
 				              "fnDrawCallback": function(oSettings){
-				            	  $('table.promo-list-table input[type="checkbox"]').change(function() {
+				            	 /* $('table.promo-list-table input[type="checkbox"]').change(function() {
 									    $('table.promo-list-table input[type="checkbox"]').not(this).prop('checked', false);  
-									});
+									});*/
 				              },
-				              "aoColumns": [{
+				              "aoColumns": [/*{
 				                  "mData": "promo_id",
 				                  "mRender": function(data, type, full) {
 					 console.log("data:"+data);
 				                    return '<input type="checkbox" class="visiData" name="promoId" id="promo_id" value="'+data+'">';
 				                  } 
-				                  },
+				                  },*/
 				            	  {
 				                    "mData": "budget_holder"
 				                  },{
@@ -265,6 +285,8 @@ $(document)
 				                    "mData": "fund_type"
 				                  }, {
 				                    "mData": "original_amount"
+				                  }, {
+				                    "mData": "adjusted_amount"
 				                  },{
 				                    "mData": "revised_amount"
 				                  }, {
@@ -298,6 +320,8 @@ $(document)
 						              } ,{
 						                 "mData": "time_phase",
 						              } ,{
+						                 "mData": "report_downloaded_by",
+						              },{
 						                 "mData": "report_downlaoded_date",
 						              },{
 						                 "mData": "uploaded_timestamp",
@@ -307,11 +331,11 @@ $(document)
 							
 				            });
 				        
-				    /*   $('.filter-ref').on('keyup', function() {
+				       $('.filter-ref').on('keyup', function() {
 				    	   promoTable.columns(0).search(this.value).draw();
-						});*/
+						});
 				       
-				       $('#DataTables_Table_0_length').css({
+				      /* $('#DataTables_Table_0_length').css({
 	                       
 	                         'padding': '20px 0'
 	                     });
@@ -327,10 +351,10 @@ $(document)
 	                     $($('#DataTables_Table_0_wrapper .row')[0]).find(
                        	'.col-sm-6')[1]).addClass(
                        		"promo-filter-div");
-	                     /*$(
+	                     $(
 	    	                     $($('.promo-filter-div')).find(
 	                             	'#DataTables_Table_0_filter')).addClass(
-	                             		"promo-filter");*/
+	                             		"promo-filter");
 
 	                     
 	                     $(
@@ -356,7 +380,7 @@ $(document)
 	                    	    'height': '75px', 
 	                    	    'width': 'none',
 	                    	    'border-left': '2px #e8e8e8 solid'
-	                     });
+	                     });*/
 				       
 				       $('#DataTables_Table_0_length').css({
 	                       
@@ -370,14 +394,14 @@ $(document)
 	                     $($('#table-id-promo-list-table_wrapper .row')[0]).after(
 	                             $(".summary-text"));
 
-	                    /* $(
+	                     $(
 	                     $($('#table-id-promo-list-table_wrapper .row')[0]).find(
                        	'.col-sm-6')[1]).addClass(
-                       		"promo-filter-div");*/
-	                     /*$(
+                       		"promo-filter-div");
+	                     $(
 	    	                     $($('.promo-filter-div')).find(
 	                             	'#table-id-promo-list-table_filter')).addClass(
-	                             		"promo-filter");*/
+	                             		"promo-filter");
 
 	                     
 	                     $(
@@ -386,15 +410,15 @@ $(document)
 	                             		"promolistselect");
 	                     
 	                    
-	                     /*$(
+	                     $(
 	    	                     $($('.promo-filter')).find(
 	                             	'input')).addClass(
-	                             		"searchicon-wrapper-promolist");*/
+	                             		"searchicon-wrapper-promolist");
 	                    
-	                    /* $('.promo-filter').find(
+	                     $('.promo-filter').find(
                        '#table-id-promo-list-table_filter').css({
 	                         'float': 'right'
-	                     });*/
+	                     });
 				       
 	                     $('.promo-filter').css({
 	                    	 'float': 'right',
@@ -448,11 +472,11 @@ $(document)
 								promoTable.draw();
 							}
 							});*/
-						$('.promo-list-table tr').each(function() {
+					/*	$('.promo-list-table tr').each(function() {
 						    var customerId = $(this).find("td").eq(16).val();   
 						    console.log(customerId);
 						});
-				});
+				});*/
 /*
 function getCustChainValues(selVal) {
 	$.ajax({
@@ -577,9 +601,4 @@ function validateForm(){
 	document.getElementById('promoIdList').value = promoIdList;
 	$('#pwdform').submit();
 }
-
-
-	
-
-    	
-
+});

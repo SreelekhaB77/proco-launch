@@ -33,7 +33,6 @@
 .promo-filter-div{
 float: right!important;
 width: 30%!important;
-margin-top: -75px!important;
 }
 
 #Mocvalue{
@@ -44,6 +43,7 @@ margin-top: -75px!important;
     width: 60%!important;
     margin-top: -85px!important;	
 }
+
 
 }
 
@@ -233,6 +233,20 @@ margin-top: -75px!important;
 		var update_amount = null;
 		var transfer_in = null;
 		var transfer_out = null;
+		var transfer_pipeline = null;
+		var total_amount = null;
+		var pipeline_amount = null;
+		var commitment_amount = null;
+		var remaining_amount = null;
+		var actuals = null;
+		var adjustment_against_actuals = null;
+		var usage = null;
+		var post_close_actual_amount = null;
+		var past_year_closed_promotions_amount = null;
+		var time_phase = null;
+		var report_downloaded_by = null;
+		var report_downlaoded_date = null;
+		var uploaded_timestamp = null;
 		
 		  jQuery.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
               return {
