@@ -202,6 +202,7 @@ width: 30%!important;
 				<input type="button" class="btn new-btn-download" value="PROMO DOWNLOAD" onclick="javascript: downloadPromotionFile();"></input>
 			</div>
 			</div>
+			</div>
 			<jsp:include page="../proco/proco-footer.jsp" />
 
 
