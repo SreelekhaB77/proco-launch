@@ -139,8 +139,8 @@ footer {
 							href="http://34.120.128.205/VisibilityAssetTracker/procoBudget.htm"
 							style="width: 247px;">
 								<div class="proco-budget-icon "></div>
-								<div class="tab-label-proco-budget-active OpenSans-font">BUDGET
-									REPORT</div>
+								<div class="tab-label-proco-budget-active OpenSans-font">Budget
+									Report</div>
 						</a></li>
 
 					</ul>

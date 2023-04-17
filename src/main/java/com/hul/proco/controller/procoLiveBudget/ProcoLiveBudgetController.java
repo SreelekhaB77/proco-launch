@@ -54,6 +54,12 @@ public class ProcoLiveBudgetController {
 		return new ModelAndView("proco/proco_budget");
 	}
 	
+	@GetMapping(value="procoBudgetTme.htm")
+	public ModelAndView mainPageFormTme(Model modelObj) {
+		return new ModelAndView("proco/proco_budget_tme");
+	}
+	
+	
 	@RequestMapping(value = "procoLiveBudgetUpload.htm", method = RequestMethod.POST)
 	public @ResponseBody String procoLiveBudgetUpload(@ModelAttribute("BudgetHolderBean") BudgetHolderBean budgetHolderBean,
 			Model model, HttpServletRequest httpServletRequest,
@@ -166,7 +172,7 @@ public class ProcoLiveBudgetController {
 		Integer pageDisplayLength = Integer.valueOf(request.getParameter("iDisplayLength"));
 		Integer pageNumber = (pageDisplayStart / pageDisplayLength) + 1;
 		String searchParameter = request.getParameter("sSearch");
-		int rowCount = procoLiveBudgetService.getProcoBudgetRowCount();
+		int rowCount = procoLiveBudgetService.getProcoBudgetRowCount(searchParameter);
 		List<BudgetHolderBean> promoList = procoLiveBudgetService.getProcoBudgetTableList((pageDisplayStart + 1),(pageNumber * pageDisplayLength),searchParameter);
 		ProcoJsonObject jsonObj = new ProcoJsonObject();
 		jsonObj.setJsonBean(promoList);

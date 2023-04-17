@@ -59,9 +59,8 @@ public class ProcoLiveBudgetServiceImpl implements ProcoLiveBudgetService {
 	}
 
 
-	@Override
-	public int getProcoBudgetRowCount() {
-		return procoLiveBudgetDao.getProcoBudgetRowCount();
+	public int getProcoBudgetRowCount(String searchParameter) {
+		return procoLiveBudgetDao.getProcoBudgetRowCount(searchParameter);
 	}
 
 

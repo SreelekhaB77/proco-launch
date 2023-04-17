@@ -29,6 +29,7 @@ public class ProcoLiveBudgetDaoImpl implements ProcoLiveBudgetDao {
 		 			+ "REPORT_DOWNLOADED_DATE,USERID ) VALUES (?0,?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14,"
 		 			+ " ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24)";
  
+ //Added by Kavitha D -Sprint 12 for budget file upload file implementation starts here
 @SuppressWarnings("deprecation")
 @Override
 public String budgetHolderData(BudgetHolderBean[] beanArray,String userID) throws Exception {
@@ -110,7 +111,10 @@ private String saveToMain(String userID) {
 	}
 	return "0";
 }
+//Added by Kavitha D -Sprint 12 for budget file upload file implementation ends here
 
+
+//Added by kavitha D Budget download file starts-sprint 12
 @Override
 public List<ArrayList<String>> procoLiveBudgetDownload(ArrayList<String> headerDetails) {
 	// TODO Auto-generated method stub
@@ -138,15 +142,23 @@ public List<ArrayList<String>> procoLiveBudgetDownload(ArrayList<String> headerD
 	}
 		return downloadList;
 	}
+//Added by kavitha D Budget download file ends-Sprint 12
 
 @Override
-public int getProcoBudgetRowCount() {
+public int getProcoBudgetRowCount(String searchParameter) {
 	// TODO Auto-generated method stub
 	List<BigInteger> list = null;
 	try {
 
-		String rowCount = " SELECT COUNT(1) FROM TBL_PROCO_BUDGET_MASTER LIMIT1";
+		String rowCount = "SELECT COUNT(1) FROM (SELECT BUDGET_HOLDER,CATEGORY,PRODUCT,CUSTOMER,FUND_TYPE,ORIGINAL_AMOUNT,ADJUSTED_AMOUNT,REVISED_AMOUNT,UPDATE_AMOUNT,TRANSFER_IN,TRANSFER_OUT,TRANSFER_PIPELINE,TOTAL_AMOUNT,PIPELINE_AMOUNT,COMMITMENT_AMOUNT,"
+				+ "	REMAINING_AMOUNT,ACTUALS ,ADJUSTMENT_AGAINST_ACTUALS,UTILIZATION,POST_CLOSE_ACTUAL_AMOUNT,PAST_YEAR_CLOSED_PROMOTIONS_AMOUNT,TIME_PHASE ,REPORT_DOWNLOADED_BY ,REPORT_DOWNLOADED_DATE ,UPDATED_TIME_STAMP,ROW_NUMBER() OVER (ORDER BY UPDATED_TIME_STAMP) AS ROW_NEXT "
+				+ " FROM TBL_PROCO_BUDGET_MASTER  ";
 		
+		if(searchParameter!=null && searchParameter.length()>0){
+			rowCount +=" WHERE CONCAT(UCASE(BUDGET_HOLDER),UCASE(CUSTOMER),UCASE(CATEGORY),UCASE(PRODUCT),UCASE(FUND_TYPE),UCASE(TIME_PHASE), UCASE(REPORT_DOWNLOADED_BY)) LIKE UCASE('%"+searchParameter+"%')";
+		}
+		rowCount += " )AS BUDGET_TEMP ";
+
 		Query query = sessionFactory.getCurrentSession().createNativeQuery(rowCount);
 		list = query.list();
 	} catch (Exception ex) {
@@ -155,7 +167,7 @@ public int getProcoBudgetRowCount() {
 	return (list != null && list.size() > 0) ? list.get(0).intValue() : 0;
 }
 	
-
+//Added by Kavitha D for budget data pagination-SPRINT 12 starts
 @Override
 public List<BudgetHolderBean> getProcoBudgetTableList(int pageDisplayStart, int pageDisplayLength,
 		String searchParameter) {
@@ -163,24 +175,24 @@ public List<BudgetHolderBean> getProcoBudgetTableList(int pageDisplayStart, int 
 	String promoQuery = "";
 	try {
 		
+		promoQuery = " SELECT * FROM (SELECT BUDGET_HOLDER,CATEGORY,PRODUCT,CUSTOMER,FUND_TYPE,ORIGINAL_AMOUNT,ADJUSTED_AMOUNT,REVISED_AMOUNT,UPDATE_AMOUNT,TRANSFER_IN,TRANSFER_OUT,TRANSFER_PIPELINE,TOTAL_AMOUNT,PIPELINE_AMOUNT,COMMITMENT_AMOUNT,"
+				+ " REMAINING_AMOUNT,ACTUALS ,ADJUSTMENT_AGAINST_ACTUALS,UTILIZATION,POST_CLOSE_ACTUAL_AMOUNT,PAST_YEAR_CLOSED_PROMOTIONS_AMOUNT,TIME_PHASE ,REPORT_DOWNLOADED_BY ,REPORT_DOWNLOADED_DATE ,UPDATED_TIME_STAMP,ROW_NUMBER() OVER (ORDER BY UPDATED_TIME_STAMP) AS ROW_NEXT"
+				+ " FROM TBL_PROCO_BUDGET_MASTER ";
 		
-		promoQuery = " SELECT * FROM (SELECT BUDGET_HOLDER,CATEGORY,PRODUCT,CUSTOMER,FUND_TYPE,ORIGINAL_AMOUNT,ADJUSTED_AMOUNT,REVISED_AMOUNT,UPDATE_AMOUNT,TRANSFER_IN,TRANSFER_OUT,TRANSFER_PIPELINE,TOTAL_AMOUNT,PIPELINE_AMOUNT,COMMITMENT_AMOUNT,REMAINING_AMOUNT,ACTUALS ,ADJUSTMENT_AGAINST_ACTUALS,UTILIZATION,POST_CLOSE_ACTUAL_AMOUNT,PAST_YEAR_CLOSED_PROMOTIONS_AMOUNT,TIME_PHASE ,REPORT_DOWNLOADED_BY ,REPORT_DOWNLOADED_DATE,UPDATED_TIME_STAMP FROM TBL_PROCO_BUDGET_MASTER) AS ROW_NEXT "
-		+ " FROM TBL_PROCO_BUDGET_MASTER ";
+		if(searchParameter!=null && searchParameter.length()>0){
+			promoQuery +=" WHERE CONCAT(UCASE(BUDGET_HOLDER),UCASE(CATEGORY),UCASE(PRODUCT),UCASE(FUND_TYPE),UCASE(TIME_PHASE), UCASE(REPORT_DOWNLOADED_BY)) LIKE UCASE('%"+searchParameter+"%')";
+		}
 		
 		if (pageDisplayLength == 0) {
-			promoQuery += " ORDER BY BUDGET_HOLDER,PRODUCT) AS PROMO_TEMP";
+			promoQuery += " ORDER BY BUDGET_HOLDER,CATEGORY) AS BUDGET_TEMP";
 		} else {
-			promoQuery += " ORDER BY BUDGET_HOLDER,PRODUCT) AS PROMO_TEMP WHERE ROW_NEXT BETWEEN " + pageDisplayStart + " AND " + pageDisplayLength + " ";
+			promoQuery += " ORDER BY BUDGET_HOLDER,CATEGORY) AS BUDGET_TEMP WHERE ROW_NEXT BETWEEN " + pageDisplayStart + " AND " + pageDisplayLength + " ";
 		}
-		//System.out.println(promoQuery);
-
 		Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQuery);
 
 		List<Object[]> list = query.list();
 		for (Object[] obj : list) {
 			BudgetHolderBean budgetHolderBean = new BudgetHolderBean();
-		
-			
 			budgetHolderBean.setBudget_holder(obj[0]== null ? "" :obj[0].toString());
 			budgetHolderBean.setCategory(obj[1]== null ? "" :obj[1].toString());
 			budgetHolderBean.setProduct(obj[2]== null ? "" :obj[2].toString());
@@ -207,7 +219,6 @@ public List<BudgetHolderBean> getProcoBudgetTableList(int pageDisplayStart, int 
 			budgetHolderBean.setReport_downlaoded_date(obj[23]== null ? "" :obj[23].toString());
 			budgetHolderBean.setUploaded_timestamp(obj[24]== null ? "" :obj[24].toString());
 
-
 			promoList.add(budgetHolderBean);
 		}
 	} catch (Exception ex) {
@@ -218,7 +229,8 @@ public List<BudgetHolderBean> getProcoBudgetTableList(int pageDisplayStart, int 
 	return promoList;
 }
 
-	
+//Added by Kavitha D for budget data pagination-SPRINT 12 ends
+
 
 
 }

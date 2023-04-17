@@ -96,13 +96,11 @@ margin-top: -75px!important;
 										style="padding-top: 15px;">Dropped Offer</div>
 							</a></li>
 							<li role="presentation"
-								class="col-md-3 col-sm-6 col-xs-12 budget" style="width: 19%;">
-								<a
-								href="http://34.120.128.205/VisibilityAssetTracker/procoBudget.htm"
+								class="col-md-3 col-sm-6 col-xs-12 budget" style="width: 19%;"><a
+								href="http://34.120.128.205/VisibilityAssetTracker/procoBudgetTme.htm"
 								style="width: 260px;">
 									<div class="proco-budget-icon "></div>
-									<div class="tab-label-proco-budget-inactive OpenSans-font">BUDGET
-										REPORT</div>
+									<div class="tab-label-proco-budget-inactive OpenSans-font">Budget Report</div>
 							</a>
 							</li>
 						</c:if>
@@ -259,11 +257,10 @@ margin-top: -75px!important;
 							<li role="presentation"
 								class="col-md-3 col-sm-6 col-xs-12 budget" style="width: 19%;margin-top: 10px">
 								<a
-								href="http://34.120.128.205/VisibilityAssetTracker/procoBudget.htm"
+								href="http://34.120.128.205/VisibilityAssetTracker/procoLiveBudget.htm"
 								style="width: 247px;">
 									<div class="proco-budget-icon "></div>
-									<div class="tab-label-proco-budget-inactive OpenSans-font">BUDGET
-										REPORT</div>
+									<div class="tab-label-proco-budget-inactive OpenSans-font">Budget Report</div>
 							</a>
 							</li>
 					</ul>
