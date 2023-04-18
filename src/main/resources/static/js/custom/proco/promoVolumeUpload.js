@@ -630,7 +630,6 @@ $("#PromoVolumeUpload").click(function (event) {
 							
 				            success: function (resdata) {
 				            	
-				            	
 				            	 $('.loader').hide();
 				            	if(resdata.includes('EXCEL_UPLOADED')) {
 				                    $('#errorblockVolumeUpload').hide();
@@ -653,7 +652,14 @@ $("#PromoVolumeUpload").click(function (event) {
 									$('#errorblockVolumeUpload').show().find('span').html('Please Check Uploaded File');
 									$('#ProcoVolumeerrorblockUpload').hide();
 									$('#ProcoVolumesuccessblock').hide();
-								}else {
+								}
+								//Added by kajal G for empty rows in excel in SPRINT-12
+								else if(resdata.includes('EMPTY_ROW')){
+									$('#errorblockVolumeUpload').show().find('span').html('File having some empty rows, Please remove empty rows while uploading');
+									$('#ProcoVolumeerrorblockUpload').hide();
+									$('#ProcoVolumesuccessblock').hide();
+								}
+								else {
 									
 				                	$('#errorblockVolumeUpload').show().find('span').html('Error While Uploading File');
 				                	$('#ProcoVolumesuccessblock').hide();
