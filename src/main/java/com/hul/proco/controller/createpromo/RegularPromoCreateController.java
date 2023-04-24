@@ -115,7 +115,11 @@ public class RegularPromoCreateController {
 			}
 			if (save_data.equals("EXCEL_UPLOADED")) {
 				model.addAttribute("FILE_STAUS", "EXCEL_UPLOADED");
-			} else {
+			} 
+			else if (save_data.equals("INVALID_MOC")) {
+				model.addAttribute("FILE_STAUS", "INVALID_MOC");
+			}
+			else {
 				model.addAttribute("FILE_STAUS", "EXCEL_NOT_UPLOADED");
 				save_data = "EXCEL_NOT_UPLOADED";
 			}
