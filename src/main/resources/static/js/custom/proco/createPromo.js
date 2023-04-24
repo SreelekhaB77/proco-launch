@@ -1152,6 +1152,12 @@ $("#ProcoRegularFileUpload").click(function (event) {
 									$('#ProcoRegularerrorblockUpload').hide();
 									$('#Procosuccessblock').hide();
 								}
+								//Added by kajal G for empty rows in excel in SPRINT-13
+								else if(resdata.includes('INVALID_MOC')){
+									$('#errorblockUpload').show().find('span').html('File having invalid MOC');
+									$('#ProcoRegularerrorblockUpload').hide();
+									$('#Procosuccessblock').hide();
+								}
 								else{
 									//console.log("Error");
 				                	$('#errorblockUpload').show().find('span').html('Error - Please contact support team');
