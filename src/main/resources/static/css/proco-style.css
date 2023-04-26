@@ -342,7 +342,9 @@ text-align: left;
 	bottom: 0;
 	width: auto;
 }
-
+button.multiselect.dropdown-toggle.btn.btn-default {
+    overflow: hidden;
+}
 .promo-craete-txt {
 	width: 100%;
 	position: absolute;

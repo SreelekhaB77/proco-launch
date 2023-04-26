@@ -27,8 +27,7 @@
 <link rel="stylesheet" type="text/css"	href="assets/css/custom-font.css">
 <link rel="stylesheet" type="text/css"	href="assets/css/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
-
-</head>
+<link rel="stylesheet" type="text/css" href="multiselect/css/jquery.multiselect.css"></head>
 <!--bharati added below style for sprint-9 moc filter changes -->
 <style>
 .promo-filter-div{
@@ -369,7 +368,7 @@ padding-right: 135px;
 			<div class="form-group col-sm-4" style="margin-top: 20px;">
 						<label for="unique-id" class="control-label col-md-3"style="margin-left:10px;">MOC</label>
 						<div class="col-md-6" style="margin-left: 25px;" >
-						<select class="form-control" id="Mocvalue" name="Mocvalue" onChange="dateDisable()" >
+						<select class="form-control" id="Mocvalue"  name="Mocvalue" onChange="dateDisable()" multiple>
 								   <c:forEach items="${mocList}" var="mocValue">
                                    <option value="${mocValue}"><c:out value="${mocValue}">
                                    </c:out></option>
@@ -380,8 +379,7 @@ padding-right: 135px;
 					 <div class="form-group col-sm-4" style="margin-top: 20px; margin-left:2px">
                     <label class="control-label col-md-3" for="uom">BASEPACK</label>
                     <div class="col-md-6" style="margin-left:15px;">
-                    <select class="form-control" id="ProcoBasepack" name="ProcoBasepack">
-                    <option>SELECT BASEPACK</option>
+                    <select class="form-control" id="ProcoBasepack" name="ProcoBasepack" multiple>
                     <c:forEach  items="${procoBasepacks}" var="procoBasepack">
                     <option value="${procoBasepack}">${procoBasepack}</option>
                  </c:forEach>
@@ -391,8 +389,7 @@ padding-right: 135px;
                 <div class="form-group col-sm-4" style="margin-top: 20px; margin-left: 57px; ">
                 <label class="control-label col-md-3" for="uom" style="text-align:left; padding:0px">PPM ACCOUNT</label>
 				<div class="col-md-6" style="margin-left:-12px;">
-				<select class="form-control" id="PpmAccount" name="PpmAccount">
-				<option>SELECT PPM ACCOUNT</option>
+				<select class="form-control" id="PpmAccount" name="PpmAccount" multiple>
 				<c:forEach items="${ppmAccountList}" var="ppmAccount" >
 				<option value="${ppmAccount}">${ppmAccount}</option>
 				</c:forEach>
@@ -403,8 +400,7 @@ padding-right: 135px;
 				<div class="form-group col-sm-4" style="margin-top: 20px; margin-left:-25px; ">
 				<label class="control-label col-md-3"  "for="uom">CLUSTER</label>
 				<div class="col-md-6">
-				<select class="form-control" id="ProcoClusterList" name="ProcoClusterList">
-				<option>SELECT CLUSTER</option>
+				<select class="form-control" id="ProcoClusterList" name="ProcoClusterList" multiple>
 				<c:forEach items="${procoClusterList}" var="procoCluster" >
 				<option value="${procoCluster}">${procoCluster}</option>
 				</c:forEach>
@@ -414,8 +410,7 @@ padding-right: 135px;
 				<div class="form-group col-sm-4"style="margin-left:16px">
 				<label class="control-label col-md-3"style="margin-left:-16px" for="uom">CHANNEL</label>
 				<div class="col-md-6"style="margin-left:16px">
-				<select class="form-control" id="ProcoChannelList" name="ProcoChannelList">
-				<option>SELECT CHANNEL</option>
+				<select class="form-control" id="ProcoChannelList" name="ProcoChannelList" multiple>
 				<c:forEach items="${procoChannelList}" var="procoChannel" >
 				<option value="${procoChannel}">${procoChannel}</option>
 				</c:forEach>
@@ -627,6 +622,7 @@ padding-right: 135px;
 		<script type="text/javascript" src="assets/js/jquery-ui.js"></script>
 		<script type="text/javascript" src="assets/js/custom/proco/promoListing.js"></script>
 		<script type="text/javascript" src="assets/js/custom/proco/alert-modal.js"></script>
+		<script type="text/javascript" src="multiselect/js/jquery.multiselect.js"></script>
 		<script type="text/javascript">
 		var moc = "${mocJson}";
 		var Mocvalue = $('#Mocvalue').val(); //bharati added in sprint-9 for moc filter
@@ -665,7 +661,37 @@ padding-right: 135px;
           };
 
           $(document).ready(function(){
-
+        	  $('#Mocvalue').multiselect({
+        		  columns: 1,
+        		  //nSelectedText: 'selected', 
+        		  //nonSelectedText: 'SELECT BASEPACK',
+        		  search: true
+        		  });
+        	  
+        	  $('#ProcoBasepack').multiselect({
+        		  columns: 1,
+        		  nSelectedText: 'selected', 
+        		  nonSelectedText: 'SELECT BASEPACK',
+        		  search: true
+        		  });
+        	  $('#PpmAccount').multiselect({
+        		  columns: 1,
+        		  nSelectedText: 'selected', 
+        		  nonSelectedText: 'SELECT PPM ACCOUNT',
+        		  search: true
+        		  });
+        	  $('#ProcoClusterList').multiselect({
+        		  columns: 1,
+        		  nSelectedText: 'selected', 
+        		  nonSelectedText: 'SELECT CLUSTER',
+        		  search: true
+        		  });
+        	  $('#ProcoChannelList').multiselect({
+        		  columns: 1,
+        		  nSelectedText: 'selected', 
+        		  nonSelectedText: 'SELECT CHANNEL',
+        		  search: true
+        		  });
         	 
         		  $('#duplicate_promo').on('click',function(){
         			  $('#successblock').hide();

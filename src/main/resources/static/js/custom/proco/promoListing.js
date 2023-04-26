@@ -22,6 +22,14 @@ $(document).ready(function() {
 							promoTable.draw();
 						}*/
 					});
+					var  date  = new Date();
+				var  getMonth = date.getMonth()+1;
+				var  getYear = date.getFullYear();
+				var  pad2Zero = getMonth.toString().padStart(2,'0');
+				var  custDate = [pad2Zero,getYear].join('');
+				 mocValueSelected =$('#Mocvalue').val(custDate);
+                //console.log(mocValueSelected);
+	              mocValSelected = mocValueSelected.val();
 					
 					//bharati commented below code for moc filter issue in sprint-9
 					/*var mocSelectedVal = $('#moc').comboTree({
@@ -165,27 +173,34 @@ $(document).ready(function() {
 						
 						//bharati added for sprint-9 moc filter US
 						$('#Mocvalue').change(function(){
-						Mocvalue = $(this).val();
+						var Mocvalue = new Array();
+                        Mocvalue.push($(this).val());
 						promoTable.draw();
 						});
 						//viswas added this changes for filters in sprint-11	
 					$('#ProcoBasepack').change(function(){
-						ProcoBasepack = $(this).val();
+						var ProcoBasepack = new Array();
+                        ProcoBasepack.push($(this).val());
 						promoTable.draw();
 						});
 						
 						$('#PpmAccount').change(function(){
-							PpmAccount = $(this).val();
+							var PpmAccount = new Array();
+                            PpmAccount.push($(this).val());
 							promoTable.draw();
 						});
 						$('#ProcoClusterList').change(function(){
-							ProcoClusterList = $(this).val();
+							var ProcoClusterList = new Array();
+                            ProcoClusterList.push($(this).val());
 							promoTable.draw();
 						});
 						$('#ProcoChannelList').change(function(){
-							ProcoChannelList = $(this).val();
+							var ProcoChannelList = new Array();
+                            ProcoChannelList.push($(this).val());
 							promoTable.draw();
 						});
+						
+						
 						$('#startDate1').change(function(){
 							//console.log("hi")
 							startDate1 =$(this).val();
@@ -451,8 +466,15 @@ $(document).ready(function() {
 						
 				});
 				var startDate1Val,endDate1Val;
-    mocValueSelected = $('#Mocvalue');
-	mocValSelected = mocValueSelected.val();
+				/*var  date  = new Date();
+				var  getMonth = date.getMonth()+1;
+				var  getYear = date.getFullYear();
+				var  pad2Zero = getMonth.toString().padStart(2,'0');
+				var  custDate = [pad2Zero,getYear].join('');
+				//console.log('modifieddate',custDate)*/
+    //mocValueSelected =$('#Mocvalue').val(custDate);
+    //console.log(mocValueSelected);
+	//mocValSelected = mocValueSelected.val();
 function promoStartDate1(){
 	startDate1Val = $('#startDate1').val();
 	endDate1Val = $('#endDate1').val();
