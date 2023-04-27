@@ -27,9 +27,12 @@ $(document).ready(function() {
 				var  getYear = date.getFullYear();
 				var  pad2Zero = getMonth.toString().padStart(2,'0');
 				var  custDate = [pad2Zero,getYear].join('');
-				 mocValueSelected =$('#Mocvalue').val(custDate);
+				
+				mocValueSelected =$('#Mocvalue').val(custDate);
                 //console.log(mocValueSelected);
 	              mocValSelected = mocValueSelected.val();
+	              
+	          
 					
 					//bharati commented below code for moc filter issue in sprint-9
 					/*var mocSelectedVal = $('#moc').comboTree({
@@ -172,31 +175,32 @@ $(document).ready(function() {
 						});
 						
 						//bharati added for sprint-9 moc filter US
+						
 						$('#Mocvalue').change(function(){
-						var Mocvalue = new Array();
-                        Mocvalue.push($(this).val());
+							var Mocval = $(this).val();
+						Mocvalue = Mocval.toString();
 						promoTable.draw();
 						});
 						//viswas added this changes for filters in sprint-11	
 					$('#ProcoBasepack').change(function(){
-						var ProcoBasepack = new Array();
-                        ProcoBasepack.push($(this).val());
+						var basepack = $(this).val();
+                        ProcoBasepack = basepack.toString();
 						promoTable.draw();
 						});
 						
 						$('#PpmAccount').change(function(){
-							var PpmAccount = new Array();
-                            PpmAccount.push($(this).val());
+							var account = $(this).val();
+                            PpmAccount= account.toString();
 							promoTable.draw();
 						});
 						$('#ProcoClusterList').change(function(){
-							var ProcoClusterList = new Array();
-                            ProcoClusterList.push($(this).val());
+							var ProcoCluster = $(this).val();
+                            ProcoClusterList = ProcoCluster.toString();
 							promoTable.draw();
 						});
 						$('#ProcoChannelList').change(function(){
-							var ProcoChannelList = new Array();
-                            ProcoChannelList.push($(this).val());
+							var ProcoChannel = $(this).val();
+                            ProcoChannelList = ProcoChannel.toString();
 							promoTable.draw();
 						});
 						
