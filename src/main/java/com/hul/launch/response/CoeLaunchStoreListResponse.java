@@ -109,4 +109,13 @@ public class CoeLaunchStoreListResponse {
 	public void setCustomerCode(String customerCode) {
 		this.customerCode = customerCode;
 	}
+
+	@Override
+	public String toString() {
+		return "CoeLaunchStoreListResponse [launchName=" + launchName + ", basepackCode=" + basepackCode
+				+ ", basepackDisc=" + basepackDisc + ", launchMoc=" + launchMoc + ", l1Chain=" + l1Chain + ", l2Chain="
+				+ l2Chain + ", depot=" + depot + ", storeFormat=" + storeFormat + ", cluster=" + cluster
+				+ ", hulOlCode=" + hulOlCode + ", customerCode=" + customerCode + ", error=" + error + "]";
+	}
+	
 }

@@ -460,11 +460,11 @@ public class UploadUtil {
 			for (int r = 0; r < dataList.size(); r++) {
 				// iterating c number of columns
 				List<String> al = dataList.get(r);
-				if (rowCount > 0 && rowCount % 65535 == 0) {
+				/*if (rowCount > 0 && rowCount % 65535 == 0) {
 					sheetCount++;
 					sheet = wb.createSheet(sheetName + String.valueOf(sheetCount));
 					rowCount = 0;
-				}
+				}*/
 				HSSFRow row = sheet.createRow(rowCount);
 				rowCount++;
 				for (int c = 0; c < al.size(); c++) {
@@ -1753,6 +1753,51 @@ public class UploadUtil {
 		return res;
 	}
 	//Added by Kavitha D for promo cr template ends-SPRINT 9
+	
+	//Added by Kavitha D for coe launch store list template ends-SPRINT 9
+	@SuppressWarnings("resource")
+	public static boolean writeCoeXLSXFile(String filePath, List<ArrayList<String>> listDownload,
+			Map<String, List<List<String>>> masters, String extension) throws IOException {
+		String sheetName = "Sheet";// name of sheet
+		FileOutputStream fileOut = null;
+		int sheetCount = 1;
+		boolean res = false;
+		try {
+			SXSSFWorkbook wb = new SXSSFWorkbook() ;
+			SXSSFSheet sheet = wb.createSheet(sheetName);
+			// iterating r number of rows
+			DataFormat fmt = wb.createDataFormat();
+			CellStyle textStyle = wb.createCellStyle();
+			textStyle.setDataFormat(fmt.getFormat("@"));
+			int rowCount = 0;	
+			for (int r = 0; r < listDownload.size(); r++) {
+				// iterating c number of columns
+				List<String> al = listDownload.get(r);
+				Row row = sheet.createRow(rowCount);
+				rowCount++;
+				for (int c = 0; c < al.size(); c++) {
+					sheet.setDefaultColumnStyle(c, textStyle);
+					Cell cell = row.createCell(c);
+					cell.setCellValue(al.get(c));
+				}
+			}
+
+			fileOut = new FileOutputStream(filePath + extension);
+			// write this workbook to an Outputstream.
+			wb.write(fileOut);
+			fileOut.flush();
+			fileOut.close();
+			res = true;
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
+			 e.printStackTrace();
+		} finally {
+			if (fileOut != null) {
+				fileOut.close();
+			}
+		}
+		return res;
+	}
 
 }
 

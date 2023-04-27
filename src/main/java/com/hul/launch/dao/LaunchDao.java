@@ -64,6 +64,10 @@ public interface LaunchDao {
 
 	List<ArrayList<String>> getLaunchStoreListDump(ArrayList<String> headerDetail, String userId,
 			List<String> listOfLaunchData);
+	
+	public List<ArrayList<String>> getLaunchStoreListDumpPagination(ArrayList<String> headerDetail, String userId,
+			List<String> listOfLaunchData,int pageDisplayStart, int pageDisplayLength, String searchParameter);
+	
 
 	String saveLaunchStatus(String result, String userId);
 
@@ -104,5 +108,7 @@ public interface LaunchDao {
 		// Added By Harsha as part of sprint 8
 		public List<ArrayList<String>> getLaunchStoreLimitListDump(ArrayList<String> headerDetail, String userId,
 				List<String> listOfLaunchData);
+
+		public int getLaunchListRowCountGrid(List<String> listOfLaunchData, String searchParameter);
 		
 }

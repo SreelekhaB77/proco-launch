@@ -28,11 +28,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.hul.launch.constants.ResponseCodeConstants;
 import com.hul.launch.constants.ResponseConstants;
 import com.hul.launch.model.TblLaunchMaster;
 import com.hul.launch.request.GetCoeLaunchDetailsRequest;
 import com.hul.launch.response.CoeDocDownloadResponse;
+import com.hul.launch.response.CoeStoreListJsonObject;
 import com.hul.launch.response.GlobleResponse;
 import com.hul.launch.response.LaunchCoeBasePackResponse;
 import com.hul.launch.response.LaunchCoeClusterResponse;
@@ -52,6 +54,7 @@ import com.hul.launch.service.LaunchServiceCoe;
 import com.hul.launch.web.util.CommonUtils;
 import com.hul.launch.web.util.FilePaths;
 import com.hul.launch.web.util.UploadUtil;
+import com.hul.proco.controller.listingPromo.PromoListingJsonObject;
 import com.hul.proco.controller.promocr.PromoCrService;
 
 /**
@@ -562,20 +565,40 @@ public class CoeLaunchPlanController {
 	}
 	
 	@RequestMapping(value = "{launchIds}/getLaunchStoreListCoe.htm", method = RequestMethod.GET)
-	public @ResponseBody String getLaunchStoreListCoe(@PathVariable("launchIds") String launchIds,
-			Model model, HttpServletRequest request, HttpServletResponse response) {
+	public @ResponseBody String getLaunchStoreListCoe(@PathVariable("launchIds") String launchIds
+			,Model model, HttpServletRequest request, HttpServletResponse response) {
 		
 		
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		CoeStoreListJsonObject jsonObj = new CoeStoreListJsonObject();
 		List<ArrayList<String>> listOfLaunch = new ArrayList<ArrayList<String>>();
 		ArrayList<String> headerDetail = getLaunchStoreListCoe();
+		//Added by Kavitha D for launch performance-SPRINT 13P1
+		String userId = (String) request.getSession().getAttribute("UserID");
+		//Integer pageDisplayStart = Integer.valueOf(request.getParameter("iDisplayStart"));
+		//Integer pageDisplayLength = Integer.valueOf(request.getParameter("iDisplayLength"));
+		Integer pageDisplayStart =0;
+		Integer pageDisplayLength =100;
+		logger.info("Page Display Start:" +pageDisplayStart);
+		logger.info("Page Display length:" +pageDisplayLength);		
+
+		
+		Integer pageNumber = (pageDisplayStart / pageDisplayLength) + 1;
+		String searchParameter = request.getParameter("sSearch");
 		try {
 			
-			String userId = (String) request.getSession().getAttribute("UserID");
 			String[] launchId = launchIds.split(",");
 			List<String> listOfLaunchData = Arrays.asList(launchId);
-			listOfLaunch = launchService.getLaunchStoreListDump(headerDetail, userId,
-					listOfLaunchData);
+			//listOfLaunch = launchService.getLaunchStoreListDump(headerDetail, userId,listOfLaunchData);
+			int rowCount = launchService.getLaunchListRowCountGrid(listOfLaunchData,searchParameter);
+			listOfLaunch = launchService.getLaunchStoreListDumpPagination(headerDetail, userId,listOfLaunchData,(pageDisplayStart + 1),(pageNumber * pageDisplayLength),searchParameter);
+			
+			jsonObj.setJsonBean(listOfLaunch);
+			jsonObj.setiTotalDisplayRecords(rowCount);
+			jsonObj.setiTotalRecords(rowCount);
+
+			//Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			
 			
 			
 			if (null == listOfLaunch.get(0)) {
@@ -583,44 +606,47 @@ public class CoeLaunchPlanController {
 			}
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
-			return gson.toJson(new GlobleResponse(ResponseConstants.MSG_FAILURE_RESPONSE,
-					ResponseCodeConstants.STATUS_FAILURE_GET_LAUNCH_STORE_LIST, e.toString()));
+			/*return gson.toJson(new GlobleResponse(ResponseConstants.MSG_FAILURE_RESPONSE,
+					ResponseCodeConstants.STATUS_FAILURE_GET_LAUNCH_STORE_LIST, e.toString()));*/
 		}
-		return gson.toJson(new GlobleResponse(ResponseConstants.MSG_SUCCESS_RESPONSE,
-				ResponseCodeConstants.STATUS_SUCCESS_GET_LAUNCH_STORE_LIST, listOfLaunch));
-	}
+		/*return gson.toJson(new GlobleResponse(ResponseConstants.MSG_SUCCESS_RESPONSE,
+				ResponseCodeConstants.STATUS_SUCCESS_GET_LAUNCH_STORE_LIST, listOfLaunch));*/
+			String json = gson.toJson(jsonObj);
+			return json;
+		}
+	
 
 	@RequestMapping(value = "{launchIds}/downloadLaunchStoreListCoe.htm", method = RequestMethod.GET)
 	//public @ResponseBody ModelAndView downloadLaunchStoreListCoe(@PathVariable("launchIds") String launchIds,  //Sarin prod changes
 	public @ResponseBody String downloadLaunchStoreListCoe(@PathVariable("launchIds") String launchIds,
 			Model model, HttpServletRequest request, HttpServletResponse response) {
-		Gson gson = new Gson();
-		
+		//Gson gson = new Gson();
+		try {
 			InputStream is;
 			String downloadLink = "", absoluteFilePath = "";
-			List<ArrayList<String>> downloadedData = new ArrayList<ArrayList<String>>();
+			//List<ArrayList<String>> downloadedData = new ArrayList<ArrayList<String>>();
 			absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
 			String fileName = UploadUtil.getFileName("LaunchStoreList.Template.file", "",
 					CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
 			String downloadFileName = absoluteFilePath + fileName;
-		try {
 			ArrayList<String> headerDetail = getLaunchStoreListCoe();
-			downloadedData.add(headerDetail);
+			//downloadedData.add(headerDetail);
 			String userId = (String) request.getSession().getAttribute("UserID");
 			String[] launchId = launchIds.split(",");
 			List<String> listOfLaunchData = Arrays.asList(launchId);
-			List<ArrayList<String>> listDownload = launchService.getLaunchStoreListDump(headerDetail, userId,
-					listOfLaunchData);
+			List<ArrayList<String>> listDownload = launchService.getLaunchStoreListDump(headerDetail, userId,listOfLaunchData);
 			if (listDownload != null) {
-				UploadUtil.writeXLSFile(downloadFileName, listDownload, null, ".xls");
-				downloadLink = downloadFileName + ".xls";
+				//UploadUtil.writeXLSFile(downloadFileName, listDownload, null, ".xls");
+				UploadUtil.writeCoeXLSXFile(downloadFileName, listDownload,null, ".xlsx");//Changed file format by Kavitha D-sprint 13P1
+				downloadLink = downloadFileName + ".xlsx";
 				is = new FileInputStream(new File(downloadLink));
 				response.setContentType("application/force-download");
 				response.setHeader("Content-Disposition", "attachment; filename=LaunchStoreListTemplate"
-						+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xls");
+						+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xlsx");
 				IOUtils.copy(is, response.getOutputStream());
 				response.flushBuffer();
 			}
+			
 		} catch (Exception e) {
 			logger.error("Exception: ", e);
 			/*
@@ -628,14 +654,18 @@ public class CoeLaunchPlanController {
 			modelAndView.addObject("Error", e.toString());
 			return modelAndView;
 			*/
-			Map<String, String> map = new HashMap<>();
+			//Commented and added by Kavitha D-sprint 13P1
+			/*Map<String, String> map = new HashMap<>();
 			map.put("Error", e.toString());
-			return gson.toJson(map);
+			return gson.toJson(map);*/
+			return null;
 		}
 		//return new ModelAndView("productsPage");
-		Map<String, String> map = new HashMap<>();
+		/*Map<String, String> map = new HashMap<>();
 		map.put("FileToDownload", fileName);
-		return gson.toJson(map);
+		return gson.toJson(map);*/
+		return null;
+
 	}
 	
 	// Added By Harsha as part of sprint 8 changes -- Starts 

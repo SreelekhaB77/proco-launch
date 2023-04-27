@@ -57,7 +57,11 @@ public interface LaunchService {
 
 	public List<ArrayList<String>> getLaunchStoreListDump(ArrayList<String> headerDetail, String userId,
 			List<String> listOfLaunchData);
-
+	
+	public List<ArrayList<String>> getLaunchStoreListDumpPagination(ArrayList<String> headerDetail, String userId,
+			List<String> listOfLaunchData,int pageDisplayStart, int pageDisplayLength, String searchParameter);
+	
+	
 	public String saveLaunchStatus(String result, String userId);
 
 	public String updateLaunchStatus(String string, String userId, String launchId);
@@ -92,6 +96,8 @@ public interface LaunchService {
 	// Added By Harsha
 	List<ArrayList<String>> getLaunchStoreListLimitDump(ArrayList<String> headerDetail, String userId,
 			List<String> listOfLaunchData);
+
+	public int getLaunchListRowCountGrid(List<String> listOfLaunchData, String searchParameter);
 
 	
 }
