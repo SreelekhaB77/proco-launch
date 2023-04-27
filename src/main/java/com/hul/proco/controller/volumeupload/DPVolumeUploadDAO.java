@@ -103,8 +103,38 @@ public class DPVolumeUploadDAO implements DPVolumeUpload {
 		getMRP(calculateBudget);
 		
 		for (CreateBeanRegular bean : beanArray) {
+			//Kajal G changes start for SPRINT-12
+			if(!bean.getQuantity().isEmpty()) {
+				boolean numeric = true;
+		        try {
+		            int num = Integer.parseInt(bean.getQuantity());
+		        } catch (NumberFormatException e) {
+		            numeric = false;
+		        }
+
+		        if(!numeric){
+                    if (flag == 1)
+                        error_msg = error_msg + ",Invalid Quantity";
+                    else
+                        error_msg = error_msg + "Invalid Quantity";
+                    flag=1;
+                }else {
+                	Integer quantity = Integer.parseInt(bean.getQuantity());
+    				if (!(quantity >= 1)) {
+    					error_msg =error_msg+ "Quantity should be greater than or equal to 1";
+    					flag = 1;
+    				}
+                }
+			}else {
+				if (flag == 1)
+					error_msg = error_msg + ",Mandatory input for Quantity";
+				else
+					error_msg = error_msg + "Mandatory input for Quantity";
+				flag = 1;
+			}
+			//Kajal G changes end
 			
-			if (bean.getQuantity().isEmpty() || !bean.getQuantity().matches("\\d+")) {
+			/*if (bean.getQuantity().isEmpty() || !bean.getQuantity().matches("\\d+")) {
 				error_msg = "Quantity should be a numeric value";
 				flag = 1;
 			}
@@ -115,7 +145,8 @@ public class DPVolumeUploadDAO implements DPVolumeUpload {
 					error_msg =error_msg+ "Quantity should be greater than or equal to 1";
 					flag = 1;
 				}
-			}
+			}*/
+			
 			query.setString(1, bean.getChannel());
 			query.setString(2, bean.getMoc());
 			query.setString(3, bean.getYear());

@@ -1063,6 +1063,16 @@ span.comboTreeItemTitle {
     background-color: #035597;
     margin-left: -13px;
 }
+.proco-budget-icon {
+    width: 55px;
+    height: 60px;
+    float: left;
+    padding-right: 10px;
+    background: url(../images/proco/signop.png) no-repeat center center;
+    background-size: 46px;
+    background-color: #035597;
+    margin-left: -13px;
+}
 .proco-timeline-icon {
     width: 55px;
     height: 60px;
@@ -1272,6 +1282,23 @@ img#delimg {
     top: 6px;
     color: #3F3F3F;
 }
+/*Added by Kajal G in SPRINT-12*/
+.tab-label-visi-upload-inactive {
+    padding-left: 22%;
+    line-height: 1.4em;
+    font-size: 1.5em; 
+    top: 16px;
+    position: absolute;
+    color: #3F3F3F;
+}
+/*Added by Kajal G in SPRINT-12*/
+.tab-label-ab-creation-upload-inactive {
+    padding-left: 22%;
+    line-height: 1.4em;
+    font-size: 1.5em; 
+    position: absolute;
+    color: #3F3F3F;
+}
 /*bharati added style for ppm uplaod tab in coe in sprint-9*/
 .tab-label-proco-ppm-inactive { 
     font-size: 1.6em;
@@ -1293,6 +1320,17 @@ img#delimg {
     top: 6px;
     color: #3F3F3F;
 }
+/*viswas added style in sprint-12 for budget upload tab*/
+.tab-label-proco-budget-inactive { 
+    font-size: 1.6em;
+    line-height:2em;
+    float: left;
+    height: 40px;
+    position: absolute;
+    left: 47px;
+    top: 6px;
+    color: #3F3F3F;
+}
 .tab-label-proco-ppm-active {
    /*font-size: 1.5em;*/
    line-height:1.4em;
@@ -1302,6 +1340,24 @@ img#delimg {
     left: 40px;
     top: 10px;
     color: #fff;
+}
+/*Added by Kajal G in SPRINT-12*/
+.tab-label-visi-upload-active {
+   line-height:1.4em;
+    float: left;
+    height: 40px;
+    position: absolute;
+    left: 40px;
+    top: 10px;
+    color: #fff;
+}
+/*Added by Kajal G in SPRINT-12*/
+.tab-label-ab-creation-upload-active {
+   line-height:1.4em;
+   color: #fff;
+   padding-left: 22%;
+   font-size: 0.9em;
+   color: #fff;
 }
 .tab-label-proco-listing-active {
 	font-size: 1.750em;
@@ -1344,6 +1400,40 @@ img#delimg {
     color: #fff;
     line-height: 2.5;
     font-size: 1.7em;
+    
+}
+/*Added by Kajal G in SPRINT-12 */
+.visibility-active a{
+	background-color: #035597 !important;
+    position: relative;
+    height: 60px;
+    padding: 0 !important;
+    color: #fff;
+    line-height: 2.5;
+    font-size: 1.7em;
+    
+}
+/*Added by Kajal G in SPRINT-12 */
+.ab-creation-active a{
+	background-color: #035597 !important;
+    position: relative;
+    height: 60px;
+    padding: 0 !important;
+    color: #fff;
+    line-height: 2.5;
+    font-size: 1.7em;
+    
+}
+/*viswas added style in sprint-12 for budget upload tab*/
+.tab-label-proco-budget-active{
+	background-color: #035597 !important;
+   /* position: relative;*/
+    height: 60px;
+    padding: 0 !important;
+    color: #fff;
+    line-height: 2.5;
+    font-size: 1.7em;
+    margin-right:-7px;
     
 }
 /*bharati chnaged below style left,fontsize,line height in spint-9*/ 
@@ -1389,7 +1479,7 @@ line-height:1.4em;
 
 
 
-.dashboard a, .listing a,.collaboration a,.disaggregation a,.upload a, .create a, .promo-lib-bg a, .edit a, .track a, .coe-moc a, .coe-asset-management a, .coe-profile a, .coe-track a, .catman-pending a, .coe-hfs a ,.promo-ppm-inactive a,.timeline a{
+.dashboard a, .listing a,.collaboration a,.disaggregation a,.upload a, .create a, .promo-lib-bg a, .edit a, .track a, .coe-moc a, .coe-asset-management a, .coe-profile a, .coe-track a, .catman-pending a, .coe-hfs a ,.promo-ppm-inactive a,.timeline a,.budget a,.visibility-bg a,.ab-creation a{
         padding: 0 !important;
     position: relative;
     height: 60px;
@@ -1467,7 +1557,8 @@ i.icon-search {
 
 
 .proco-measure-download-wrapper,
-.proco-measure-upload-wrapper {
+.proco-measure-upload-wrapper ,
+.proco-budget-upload-wrapper {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -1487,7 +1578,8 @@ i.icon-search {
 }
 
 .proco-measure-download-wrapper .validate_dowload,
-.proco-measure-upload-wrapper .validate_upload  {
+.proco-measure-upload-wrapper .validate_upload ,
+.proco-budget-upload-wrapper .validate_upload{
 	margin-top: 10px;
 }
 
@@ -1701,6 +1793,14 @@ span.comboTreeItemTitle {
 }
 
 .promo-measure-upload {
+	background: #035597 !important;	
+	color: #fff;
+	padding: 10px;
+    padding-left: inherit;
+    margin-top: 20px;
+    font-weight: 700;
+}
+.promo-budget-upload {
 	background: #035597 !important;	
 	color: #fff;
 	padding: 10px;

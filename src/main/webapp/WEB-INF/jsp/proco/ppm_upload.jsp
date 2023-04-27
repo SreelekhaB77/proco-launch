@@ -95,8 +95,7 @@ font-size: 22px!important;
 						
 
 						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 listing" style= "width:234px;">
-						<a href="https://vat.hulcd.com/VisibilityAssetTracker/promoDeletion.htm" style="margin-top: 10px;margin-left: -27px;">
-
+						<a href="http://vat.hulcd.com/VisibilityAssetTracker/promoDeletion.htm" style="margin-top: 10px;margin-left: -18px;">
 								<div class="proco-deletion-icon"></div>
 								<div class="tab-label-proco-del-inactive OpenSans-font">Dropped Offer</div>
 						</a></li>
@@ -107,25 +106,47 @@ font-size: 22px!important;
 								<div class="tab-label-proco-Signops-inactive OpenSans-font">Upload Measure Report</div>
 							</a>
 						</li>
-
-
-						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-ppm-active"  style="margin-top: 10px;width:19%">
-							<a href="https://vat.hulcd.com/VisibilityAssetTracker/ProcoPpmCoeRemarks.htm">
-
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-ppm-active"  style="margin-top: 10px;width:18%">
+							<a href="http://vat.hulcd.com/VisibilityAssetTracker/ProcoPpmCoeRemarks.htm">
 								<div class="proco-ppm-icon"></div>
 								<div class="tab-label-proco-ppm-active OpenSans-font">PPM Upload</div>
 							</a>
 						</li>
 					<!----	<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 timeline" style="margin-top: 10px;width:19%">
-							<a href="http://34.120.128.205/VisibilityAssetTracker/procoTimeline.htm"style="width: 220px;">
+							<a href="http://vat.hulcd.com/VisibilityAssetTracker/procoTimeline.htm"style="width: 220px;">
 								<div class="proco-timeline-icon "></div>
 								<div class="tab-label-proco-timeline-inactive OpenSans-font">Promo Timeline</div>
 							</a>
 						</li> -->
-					
-
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 budget" style="width:19%;margin-top: 10px;">
+							<a href="http://vat.hulcd.com/VisibilityAssetTracker/procoBudget.htm" style="width:247px;">
+								<div class="proco-budget-icon "></div>
+								<div class="tab-label-proco-budget-inactive OpenSans-font">BUDGET REPORT</div>
+							</a>
+						</li>
 					</ul>
 				</div>
+				<div class="row">
+					<ul class="nav nav-pills">
+						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 visibility-bg"  style="margin-top: 10px;width:21%">
+							<a href="http://vat.hulcd.com/VisibilityAssetTracker/procovisibilityUpload.htm" style="margin-left: 6%;">
+								<div class="proco-ppm-icon"></div>
+								<div class="tab-label-visi-upload-inactive OpenSans-font">Visibility Upload</div>
+							</a>
+						</li>
+						<li role="presentation"
+							class="col-md-3 col-sm-6 col-xs-12 ab-creation"
+							style="margin-top: 10px; width: 19%"><a
+							href="http://vat.hulcd.com/VisibilityAssetTracker/procoABCreationPage.htm">
+								<div class="proco-ppm-icon"></div>
+								<div class="tab-label-ab-creation-upload-inactive OpenSans-font">AB Creation Report
+									Upload</div>
+						</a>
+						</li>
+					</ul>
+				</div>
+					
+						
 			</div>
 
 
@@ -251,7 +272,7 @@ font-size: 22px!important;
 					
 					
 					
-	<%-- <form:form action="http://localhost:8083/VisibilityAssetTracker/uploadProcoMeasureReport.htm" id="coeStatusMeasFileUpload"
+	<%-- <form:form action="http://vat.hulcd.com/VisibilityAssetTracker/uploadProcoMeasureReport.htm" id="coeStatusMeasFileUpload"
 				method="POST" modelAttribute="VolumeUploadBean"
 				enctype="multipart/form-data" onsubmit="return uploadMeasureValidation()">
 			<div class="promo-upload">PROMO MEASURE UPLOAD</div>

@@ -1055,6 +1055,12 @@ $("#ProcoRegularFileUpload").click(function (event) {
 									$('#ProcoRegularerrorblockUpload').hide();
 									$('#Procosuccessblock').hide();
 								}
+								//Added by kajal G for empty rows in excel in SPRINT-12
+								else if(resdata.includes('EMPTY_ROW')){
+									$('#errorblockUpload').show().find('span').html('File having some empty rows, Please remove empty rows while uploading');
+									$('#ProcoRegularerrorblockUpload').hide();
+									$('#Procosuccessblock').hide();
+								}
 								else{
 									console.log(resdata);// Mayur added the changes
 				                	$('#errorblockUpload').show().find('span').html('Error - Please contact support team');// Mayur's changes for updating the message
@@ -1137,6 +1143,18 @@ $("#ProcoRegularFileUpload").click(function (event) {
 								}
 								else if(resdata.includes('CHECK_COL_MISMATCH')){
 									$('#errorblockUpload').show().find('span').html('Please Check Uploaded File');
+									$('#ProcoRegularerrorblockUpload').hide();
+									$('#Procosuccessblock').hide();
+								}
+								//Added by kajal G for empty rows in excel in SPRINT-12
+								else if(resdata.includes('EMPTY_ROW')){
+									$('#errorblockUpload').show().find('span').html('File having some empty rows, Please remove empty rows while uploading');
+									$('#ProcoRegularerrorblockUpload').hide();
+									$('#Procosuccessblock').hide();
+								}
+								//Added by kajal G for empty rows in excel in SPRINT-13
+								else if(resdata.includes('INVALID_MOC')){
+									$('#errorblockUpload').show().find('span').html('File having invalid MOC');
 									$('#ProcoRegularerrorblockUpload').hide();
 									$('#Procosuccessblock').hide();
 								}
@@ -1224,6 +1242,12 @@ $("#ProcoRegularFileUpload").click(function (event) {
 								}
 								else if(resdata.includes('CHECK_COL_MISMATCH')){
 									$('#errorblockUpload').show().find('span').html('Please Check Uploaded File');
+									$('#ProcoRegularerrorblockUpload').hide();
+									$('#Procosuccessblock').hide();
+								}
+								//Added by kajal G for empty rows in excel in SPRINT-12
+								else if(resdata.includes('EMPTY_ROW')){
+									$('#errorblockUpload').show().find('span').html('File having some empty rows, Please remove empty rows while uploading');
 									$('#ProcoRegularerrorblockUpload').hide();
 									$('#Procosuccessblock').hide();
 								}

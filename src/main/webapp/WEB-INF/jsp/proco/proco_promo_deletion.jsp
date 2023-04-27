@@ -73,157 +73,222 @@ margin-top: -75px!important;
 			<div class="">
 				<div class="row">
 					<ul class="nav nav-pills nav-no-margin">
-					 <c:if test="${roleId eq 'TME'}"> 
-					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
-							href="https://vat.hulcd.com/VisibilityAssetTracker/promoCreation.htm">
-								<div class="proco-create-icon"></div>
-								<div class="tab-label-proco-create-inactive"style="margin-left:-25px;">Promo Creation</div>
-						</a></li>
-					<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 listing"><a
-							href="https://vat.hulcd.com/VisibilityAssetTracker/promoListing.htm">
-								<div class="proco-listing-icon"></div>
-								<div class="tab-label-proco-create-inactive OpenSans-font"style="margin-left:-25px;">Promo
-									Listing</div>
-						</a></li>
-						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 proco-del-active"><a href="https://vat.hulcd.com/VisibilityAssetTracker/promoDeletion.htm">
-								<div class="proco-deletion-icon"></div>
-								<div class="tab-label-proco-create-active OpenSans-font"style="padding-top: 15px;">Dropped Offer</div>
-						</a></li>
-					 </c:if>
-					 
-					  <c:if test="${roleId eq 'DP'}">
-					  <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
-							href="https://vat.hulcd.com/VisibilityAssetTracker/promoVolumeUpload.htm">
-								<div class="proco-volume-icon"></div>
-								<div class="tab-label-proco-volume-inactive"style="margin-left: -30px;">Volume Upload</div>
-						</a></li>
-						<!--bharati commented disaggregation tab in sprint-9-->
-						<!--<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 disaggregation"><a
-							href="https://vat.hulcd.com/VisibilityAssetTracker/promoDisaggregation.htm">
+						<c:if test="${roleId eq 'TME'}">
+							<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 create"><a
+								href="http://vat.hulcd.com/VisibilityAssetTracker/promoCreation.htm">
+									<div class="proco-create-icon"></div>
+									<div class="tab-label-proco-create-inactive"
+										style="margin-left: -25px;">Promo Creation</div>
+							</a></li>
+							<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 listing"><a
+								href="http://vat.hulcd.com/VisibilityAssetTracker/promoListing.htm">
+									<div class="proco-listing-icon"></div>
+									<div class="tab-label-proco-create-inactive OpenSans-font"
+										style="margin-left: -25px;">Promo Listing</div>
+							</a></li>
+							<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 proco-del-active"><a
+								href="http://vat.hulcd.com/VisibilityAssetTracker/promoDeletion.htm">
+									<div class="proco-deletion-icon"></div>
+									<div class="tab-label-proco-create-active OpenSans-font"
+										style="padding-top: 15px;">Dropped Offer</div>
+							</a></li>
+							<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 budget" style="width: 19%;"><a
+								href="http://vat.hulcd.com/VisibilityAssetTracker/procoBudgetTme.htm"
+								style="width: 260px;">
+									<div class="proco-budget-icon "></div>
+									<div class="tab-label-proco-budget-inactive OpenSans-font">Budget Report</div>
+							</a>
+							</li>
+						</c:if>
+
+						<c:if test="${roleId eq 'DP'}">
+							<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 create"><a
+								href="http://vat.hulcd.com/VisibilityAssetTracker/promoVolumeUpload.htm">
+									<div class="proco-volume-icon"></div>
+									<div class="tab-label-proco-volume-inactive"
+										style="margin-left: -30px;">Volume Upload</div>
+							</a></li>
+							<!--bharati commented disaggregation tab in sprint-9-->
+							<!--<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 disaggregation"><a
+							href="http://vat.hulcd.com/VisibilityAssetTracker/promoDisaggregation.htm">
 								<div class="proco-disaggregation-icon"></div>
 								<div class="tab-label-proco-disaggregation-inactive">Disaggregation</div>
 						</a></li>-->
-						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 listing"><a
-							href="https://vat.hulcd.com/VisibilityAssetTracker/promoListing.htm">
-								<div class="proco-listing-icon"></div>
-								<div class="tab-label-proco-create-inactive OpenSans-font"style="margin-left: -30px;">Promo
-									Listing</div>
-						</a></li>
-						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 proco-del-active"><a href="https://vat.hulcd.com/VisibilityAssetTracker/promoDeletion.htm">
-								<div class="proco-deletion-icon"></div>
-								<div class="tab-label-proco-create-active OpenSans-font" style="padding-top:12px;">Dropped Offer</div>
-						</a></li>
-					  </c:if>
-					   <c:if test="${roleId eq 'KAM'}">
-					    <!-- <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 disaggregation"><a
-							href="https://vat.hulcd.com/VisibilityAssetTracker/promoDisaggregation.htm">
+							<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 listing"><a
+								href="http://vat.hulcd.com/VisibilityAssetTracker/promoListing.htm">
+									<div class="proco-listing-icon"></div>
+									<div class="tab-label-proco-create-inactive OpenSans-font"
+										style="margin-left: -30px;">Promo Listing</div>
+							</a></li>
+							<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 proco-del-active"><a
+								href="http://vat.hulcd.com/VisibilityAssetTracker/promoDeletion.htm">
+									<div class="proco-deletion-icon"></div>
+									<div class="tab-label-proco-create-active OpenSans-font"
+										style="padding-top: 12px;">Dropped Offer</div>
+							</a></li>
+						</c:if>
+						<c:if test="${roleId eq 'KAM'}">
+							<!-- <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 disaggregation"><a
+							href="http://vat.hulcd.com/VisibilityAssetTracker/promoDisaggregation.htm">
 								<div class="proco-disaggregation-icon"></div>
 								<div class="tab-label-proco-disaggregation-inactive">Disaggregation</div>
 						</a></li> -->
-					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 collaboration"><a
-							href="https://vat.hulcd.com/VisibilityAssetTracker/promoCollaboration.htm">
-								<div class="proco-collaboration-icon"></div>
-								<div class="tab-label-proco-collaboration-inactive"style="margin-left: -30px;">Collaboration</div>
-						</a></li>
-						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 listing"><a
-							href="https://vat.hulcd.com/VisibilityAssetTracker/promoListing.htm">
-								<div class="proco-listing-icon"></div>
-								<div class="tab-label-proco-create-inactive OpenSans-font"style="margin-left: -30px;">Promo
-									Listing</div>
-						</a></li>
-						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 proco-del-active"><a href="https://vat.hulcd.com/VisibilityAssetTracker/promoDeletion.htm">
-								<div class="proco-deletion-icon"></div>
-								<div class="tab-label-proco-create-active OpenSans-font"style="padding-top: 10px;">Dropped Offer</div>
-						</a></li>
+							<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 collaboration"><a
+								href="http://vat.hulcd.com/VisibilityAssetTracker/promoCollaboration.htm">
+									<div class="proco-collaboration-icon"></div>
+									<div class="tab-label-proco-collaboration-inactive"
+										style="margin-left: -30px;">Collaboration</div>
+							</a></li>
+							<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 listing"><a
+								href="http://vat.hulcd.com/VisibilityAssetTracker/promoListing.htm">
+									<div class="proco-listing-icon"></div>
+									<div class="tab-label-proco-create-inactive OpenSans-font"
+										style="margin-left: -30px;">Promo Listing</div>
+							</a></li>
+							<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 proco-del-active"><a
+								href="http://vat.hulcd.com/VisibilityAssetTracker/promoDeletion.htm">
+									<div class="proco-deletion-icon"></div>
+									<div class="tab-label-proco-create-active OpenSans-font"
+										style="padding-top: 10px;">Dropped Offer</div>
+							</a></li>
 						</c:if>
-						
+
 						<c:if test="${roleId eq 'NCMM'}">
-					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
-							href="https://vat.hulcd.com/VisibilityAssetTracker/promoCr.htm">
-								<div class="proco-create-icon"></div>
-								<div class="tab-label-proco-create-inactive"style="margin-left: -30px;">Promo Approval</div>
-						</a></li>
-						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 listing"><a
-							href="https://vat.hulcd.com/VisibilityAssetTracker/promoListing.htm">
-								<div class="proco-listing-icon"></div>
-								<div class="tab-label-proco-create-inactive OpenSans-font"style="margin-left: -30px;">Promo
-									Listing</div>
-						</a></li>
-						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 proco-del-active"><a href="https://vat.hulcd.com/VisibilityAssetTracker/promoDeletion.htm">
-								<div class="proco-deletion-icon"></div>
-								<div class="tab-label-proco-create-active OpenSans-font"style="padding-top: 14px;">Dropped Offer</div>
-						</a></li>
-					 </c:if>
-					 
-					 <c:if test="${roleId eq 'NSCM'}">
-					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 create"><a
-							href="https://vat.hulcd.com/VisibilityAssetTracker/promoCr.htm">
-								<div class="proco-create-icon"></div>
-								<div class="tab-label-proco-create-inactive">Promo CR</div>
-						</a></li>
-						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 listing"><a
-							href="https://vat.hulcd.com/VisibilityAssetTracker/promoListing.htm">
-								<div class="proco-listing-icon"></div>
-								<div class="tab-label-proco-create-inactive OpenSans-font">PromoListing</div>
-						</a></li>
-						<li role="presentation"
-							class="col-md-3 col-sm-6 col-xs-12 proco-del-active"><a href="https://vat.hulcd.com/VisibilityAssetTracker/promoDeletion.htm">
-								<div class="proco-deletion-icon"></div>
-								<div class="tab-label-proco-create-active OpenSans-font">Dropped Offer</div>
-						</a></li>
-					 </c:if>
-					 <c:if test="${roleId eq 'COE'}">
+							<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 create"><a
+								href="http://vat.hulcd.com/VisibilityAssetTracker/promoCr.htm">
+									<div class="proco-create-icon"></div>
+									<div class="tab-label-proco-create-inactive"
+										style="margin-left: -30px;">Promo Approval</div>
+							</a></li>
+							<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 listing"><a
+								href="http://vat.hulcd.com/VisibilityAssetTracker/promoListing.htm">
+									<div class="proco-listing-icon"></div>
+									<div class="tab-label-proco-create-inactive OpenSans-font"
+										style="margin-left: -30px;">Promo Listing</div>
+							</a></li>
+							<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 proco-del-active"><a
+								href="http://vat.hulcd.com/VisibilityAssetTracker/promoDeletion.htm">
+									<div class="proco-deletion-icon"></div>
+									<div class="tab-label-proco-create-active OpenSans-font"
+										style="padding-top: 14px;">Dropped Offer</div>
+							</a></li>
+						</c:if>
 
-					<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 proco-listing-inactive"style=" margin-right: -60px; margin-left:13px;">
-					<a href="https://vat.hulcd.com/VisibilityAssetTracker/promoStatusTracker.htm" style="margin-left:-27px;" >
-
-								<div class="proco-listing-icon"></div>
-								<div class="tab-label-proco-status-inactive OpenSans-font" >Promo Status Tracker</div>
-						</a></li>
-
-						<li role="presentation" class="col-md-3 col-sm-6 col-xs-12 proco-del-active"style=" margin-top: 10px; margin-right:-60px; margin-left:-10px  ">
-							<a href="https://vat.hulcd.com/VisibilityAssetTracker/promoDeletion.htm" style="width:220px;">
-
-								<div class="proco-deletion-icon"></div>
-								<div class="tab-label-proco-create-active OpenSans-font"  style="padding-top: 15px;">Dropped Offer</div>
-						</a></li>
-
-
-					 <li role="presentation" class="col-md-3 col-sm-6 col-xs-12 promo-lib-bg" style=" margin-top: 10px; margin-right: 18px;  ">
-							<a href="https://vat.hulcd.com/VisibilityAssetTracker/ProcoMeasureReportUploadPage.htm" id="measHref">
-
-								<div class="proco-Signops-icon"></div>
-								<div class="tab-label-proco-Signops-inactive OpenSans-font">Upload Measure Report</div>
+						<c:if test="${roleId eq 'NSCM'}">
+							<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 create"><a
+								href="http://vat.hulcd.com/VisibilityAssetTracker/promoCr.htm">
+									<div class="proco-create-icon"></div>
+									<div class="tab-label-proco-create-inactive">Promo CR</div>
+							</a></li>
+							<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 listing"><a
+								href="http://vat.hulcd.com/VisibilityAssetTracker/promoListing.htm">
+									<div class="proco-listing-icon"></div>
+									<div class="tab-label-proco-create-inactive OpenSans-font">PromoListing</div>
+							</a></li>
+							<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 proco-del-active"><a
+								href="http://vat.hulcd.com/VisibilityAssetTracker/promoDeletion.htm">
+									<div class="proco-deletion-icon"></div>
+									<div class="tab-label-proco-create-active OpenSans-font">Dropped
+										Offer</div>
+							</a></li>
+						</c:if>
+						<c:if test="${roleId eq 'COE'}">
+							<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 proco-listing-inactive"
+								style="margin-right: -60px; margin-left: 13px;"><a
+								href="http://vat.hulcd.com/VisibilityAssetTracker/promoStatusTracker.htm"
+								style="margin-left: -27px;">
+									<div class="proco-listing-icon"></div>
+									<div class="tab-label-proco-status-inactive OpenSans-font">Promo
+										Status Tracker</div>
+							</a></li>
+							<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 proco-del-active"
+								style="margin-top: 10px; margin-right: -70px; margin-left: -15px">
+								<a
+								href="http://vat.hulcd.com/VisibilityAssetTracker/promoDeletion.htm"
+								style="width: 212px;">
+									<div class="proco-deletion-icon"></div>
+									<div class="tab-label-proco-create-active OpenSans-font"
+										style="padding-top: 15px;">Dropped Offer</div>
 							</a>
-						</li>  
-
-						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 promo-ppm-inactive" style=" margin-top: 10px; width:17%; margin-right:18px;  ">
-							<a href="https://vat.hulcd.com/VisibilityAssetTracker/ProcoPpmCoeRemarks.htm">
-
-								<div class="proco-ppm-icon"></div>
-								<div class="tab-label-proco-ppm-inactive OpenSans-font">PPM Upload</div>
+							</li>
+							<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 promo-lib-bg"
+								style="margin-top: 10px; margin-right: 18px;"><a
+								href="http://vat.hulcd.com/VisibilityAssetTracker/ProcoMeasureReportUploadPage.htm"
+								id="measHref">
+									<div class="proco-Signops-icon"></div>
+									<div class="tab-label-proco-Signops-inactive OpenSans-font">Upload
+										Measure Report</div>
+							</a></li>
+							<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 promo-ppm-inactive"
+								style="margin-top: 10px; width: 17%; margin-right: 18px;">
+								<a
+								href="http://vat.hulcd.com/VisibilityAssetTracker/ProcoPpmCoeRemarks.htm">
+									<div class="proco-ppm-icon"></div>
+									<div class="tab-label-proco-ppm-inactive OpenSans-font">PPM
+										Upload</div>
 							</a>
-						</li>
-						<!--<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 timeline" style="width:19%; margin-top: 10px;">
-							<a href="http://34.120.128.205/VisibilityAssetTracker/procoTimeline.htm" style="width:220px;">
+							</li>
+							<!--<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 timeline" style="width:19%; margin-top: 10px;">
+							<a href="http://vat.hulcd.com/VisibilityAssetTracker/procoTimeline.htm" style="width:220px;">
 								<div class="proco-timeline-icon "></div>
 								<div class="tab-label-proco-timeline-inactive OpenSans-font">Promo Timeline</div>
 							</a>
 						</li> -->
-					 </c:if>
-					
-						
+							<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 budget" style="width: 19%;margin-top: 10px">
+								<a
+								href="http://vat.hulcd.com/VisibilityAssetTracker/procoLiveBudget.htm"
+								style="width: 247px;">
+									<div class="proco-budget-icon "></div>
+									<div class="tab-label-proco-budget-inactive OpenSans-font">Budget Report</div>
+							</a>
+							</li>
 					</ul>
 				</div>
+				<div class="row">
+					<ul class="nav nav-pills nav-no-margin">
+						<li role="presentation"
+							class="col-md-3 col-sm-6 col-xs-12 visibility-bg"
+							style="margin-top: 10px; width: 21%"><a
+							href="http://vat.hulcd.com/VisibilityAssetTracker/procovisibilityUpload.htm" style="margin-left: 6%;">
+								<div class="proco-ppm-icon"></div>
+								<div class="tab-label-visi-upload-inactive OpenSans-font">Visibility
+									Upload</div>
+						</a></li>
+						<li role="presentation"
+							class="col-md-3 col-sm-6 col-xs-12 ab-creation"
+							style="margin-top: 10px; width: 19%"><a
+							href="http://vat.hulcd.com/VisibilityAssetTracker/procoABCreationPage.htm">
+								<div class="proco-ppm-icon"></div>
+								<div class="tab-label-ab-creation-upload-inactive OpenSans-font">AB
+									Creation Report Upload</div>
+						</a></li>
+
+
+
+					</ul>
+				</div>
+				</c:if>
 			</div>
 
 

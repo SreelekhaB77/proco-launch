@@ -579,23 +579,41 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 				  		+ "  LEFT JOIN TBL_PROCO_PRODUCT_MASTER PRM ON PRM.BASEPACK = PM.BASEPACK_CODE WHERE PM.MOC='"+moc+"'"; */
 				  //Added by Kavitha D -SPRINT 9
 				    //qry = sessionFactory.getCurrentSession().createNativeQuery("CALL PROMO_LISTING_DOWNLOAD(:moc)");
-				    qry = sessionFactory.getCurrentSession().createNativeQuery("CALL PROMO_LISTING_DOWNLOAD(:moc,:fromDate,:toDate)"); //Added by Kavitha D-SPRINT 11
-					qry.setParameter("moc", moc);
-					qry.setParameter("fromDate", fromDate);
-					qry.setParameter("toDate", toDate);
+				    
+				  try {
+					  qry = sessionFactory.getCurrentSession().createNativeQuery("CALL PROMO_LISTING_DOWNLOAD(:moc,:fromDate,:toDate)"); //Added by Kavitha D-SPRINT 11
+						qry.setParameter("moc", moc);
+						qry.setParameter("fromDate", fromDate);
+						qry.setParameter("toDate", toDate);
 
-					qry.executeUpdate();
+						qry.executeUpdate();  
+				  }catch (Exception ex) {
+						logger.debug("Exception :", ex);
+						return null;
+				  	}
 					
-					query= " SELECT CHANNEL,YEAR,MOC ,ACCOUNT_TYPE,CLAIM_SETTLEMENT_TYPE,SECONDARY_CHANNEL,PPM_ACCOUNT,PROMO_ID,SOLCODE,MOC_CYCLE,PROMO_TIMEPERIOD,SOL_RELEASE_ON,"
+					/*query= " SELECT CHANNEL,YEAR,MOC ,ACCOUNT_TYPE,CLAIM_SETTLEMENT_TYPE,SECONDARY_CHANNEL,PPM_ACCOUNT,PROMO_ID,SOLCODE,MOC_CYCLE,PROMO_TIMEPERIOD,SOL_RELEASE_ON,"
 							+ " START_DATE,END_DATE,OFFER_DESC,PPM_DESC,BASEPACK_CODE,BASEPACK_DESC,CHILDPACK,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,QUANTITY,FIXED_BUDGET ,BRANCH,"
 							+ " SALES_CLUSTER ,PPM_CUSTOMER,CMM_NAME,TME_NAME,SALES_CATEGORY,PSA_CATEGORY,PROMOTION_STATUS,PPM_PROMOTION_CREATOR ,PROMOTION_MECHANICS,INVESTMENT_TYPE,"
 							+ " SALES_CLUSTER_CODE ,BRAND,SUB_BRAND,PPM_BUDGET_HOLDER_NAME ,FUND_TYPE,INVESTMENT_AMOUNT ,PROMO_ENTRY_TYPE ,PROMO_USER_NAME ,PROMO_USER_TIME ,"
 							+ " PPM_APPROVED_DATE ,PPM_CREATION_DATE ,NON_UNIFY,PPM_SUBMISSION_DATE ,PPM_MODIFIED_DATE ,COE_REMARKS,MRP ,AB_CREATION ,BUDGET ,CURRENT_STATUS,SOL_TYPE,SOL_TYPE_SHORTKEY " //Added current_status,sol type,sol type short key-SPRINT 10 "
-							+ " FROM TBL_PROCO_PROMO_LISTING_REPORT  LR  WHERE ";
+							+ " FROM TBL_PROCO_PROMO_LISTING_REPORT  LR  WHERE ";*/
 							//+ " WHERE LR.MOC=:moc " ;
+				
+				  //Changed by Kajal G In SPRINT-12
+				  query="SELECT LR.CHANNEL,LR.YEAR,LR.MOC,LR.ACCOUNT_TYPE,LR.CLAIM_SETTLEMENT_TYPE,LR.SECONDARY_CHANNEL,LR.PPM_ACCOUNT,"
+				  		+ "LR.PROMO_ID,LR.SOLCODE,LR.MOC_CYCLE,LR.PROMO_TIMEPERIOD,LR.SOL_RELEASE_ON,LR.START_DATE,LR.END_DATE,LR.OFFER_DESC,"
+				  		+ "LR.PPM_DESC,LR.BASEPACK_CODE,LR.BASEPACK_DESC,LR.CHILDPACK,LR.OFFER_TYPE,LR.OFFER_MODALITY,LR.PRICE_OFF,LR.QUANTITY,"
+				  		+ "LR.FIXED_BUDGET,LR.BRANCH,LR.SALES_CLUSTER ,LR.PPM_CUSTOMER,LR.CMM_NAME,LR.TME_NAME,LR.SALES_CATEGORY,"
+				  		+ "LR.PSA_CATEGORY,LR.PROMOTION_STATUS,LR.PPM_PROMOTION_CREATOR ,LR.PROMOTION_MECHANICS,LR.INVESTMENT_TYPE,"
+				  		+ "LR.SALES_CLUSTER_CODE,LR.BRAND,LR.SUB_BRAND,LR.PPM_BUDGET_HOLDER_NAME,LR.FUND_TYPE,LR.INVESTMENT_AMOUNT,LR.PROMO_ENTRY_TYPE,"
+				  		+ "LR.PROMO_USER_NAME,LR.PROMO_USER_TIME,LR.PPM_APPROVED_DATE,LR.PPM_CREATION_DATE,LR.NON_UNIFY,LR.PPM_SUBMISSION_DATE,"
+				  		+ "LR.PPM_MODIFIED_DATE,LR.COE_REMARKS,IF (AB.STATUS_IN_CENTRAL_UNIFY IS NULL, '-', AB.STATUS_IN_CENTRAL_UNIFY) AS STATUS_IN_CENTRAL_UNIFY,"
+				  		+ "IF (AB.TME_SUBMIT_DATE IS NULL, '-', AB.TME_SUBMIT_DATE) AS TME_SUBMIT_DATE,IF (AB.AUDITOR_SUBMIT_DATE IS NULL, '-', AB.AUDITOR_SUBMIT_DATE) AS AUDITOR_SUBMIT_DATE,"
+				  		+ "LR.MRP,LR.AB_CREATION,LR.BUDGET,LR.CURRENT_STATUS,LR.SOL_TYPE,LR.SOL_TYPE_SHORTKEY FROM TBL_PROCO_PROMO_LISTING_REPORT LR "
+				  		+ "LEFT JOIN TBL_PROCO_AB_CREATION_REPORT_MASTER AB ON AB.ACTIVITY_CODE=LR.SOLCODE WHERE";
 					
-					//Kavitha D changes for filter-SPRINT 11 starts	
-					
+				  //Kavitha D changes for filter-SPRINT 11 starts	
 					if(fromDate.equals("null")|| toDate.equals("null")) {
 						query += " LR.MOC='"+moc+"'";	
 					}
@@ -840,6 +858,47 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 		}
 	}
 
+	//Added by Kajal G in SPRINT -12
+	@Override
+	public List<ArrayList<String>> getVisiDownloadedData(ArrayList<String> headerList,String moc){
+		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
+		String query = "";
+		query = "SELECT DISTINCT A.VISI_REF_NO,B.PROMOTION_ID AS SOL_CODE,A.START_DATE,A.END_DATE,A.MOC,A.HFS_CONNECTIVITY,A.NEW_CONTINUED,A.MADE_BY,A.ACCOUNT_NAME,"
+				+ "A.SPLIT_REQUIRE,A.PPM_ACCOUNT_NAME,A.DESCRIPTION_1,A.PPM_DESC,REGION,A.STATE,CITY,A.BASEPACK,A.BASEPACK_DESC,"
+				+ "A.VISIBILITY_DESC,A.ASSET_DESC,A.ASSET_TYPE,A.ASSET_REMARK,A.POP_CLASS,A.UNIT_PER_STORE,A.NO_OF_STORES,"
+				+ "A.AMOUNT_PER_STORE_PER_MOC,A.AMOUNT_PER_BASEPACK_PER_MOC,A.COMMENTS,A.HHT_TRACKING,A.CATEGORY,A.MIGRATED_CATEGORY,"
+				+ "A.SUB_ELEMENTS,A.MBQ,A.BRAND,A.TOTAL_NO_OF_ASSET,A.VISIBILITY_AMOUNT,A.OUTLET_CODE,A.OUTLET_NAME,A.MAPPED_POP_CLASS,"
+				+ "A.STATUS,A.DATE_OF_CREATION,A.LAST_EDITED,A.CLASSIFICATION,A.EDIT_DELETE_REASON,A.VISIBILITY_PAYOUT_CODE "
+				+ "FROM TBL_PROCO_VISIBILITY_MASTER AS A INNER JOIN TBL_PROCO_MEASURE_MASTER_V2 AS B ON "
+				+ "A.VISI_REF_NO = SUBSTRING_INDEX(B.PROMOTION_NAME, ':', 1)";
+		
+		if(!moc.equalsIgnoreCase("null")) {
+			query += " WHERE A.MOC='"+moc+"'";
+		}
+		try {
+			Query query1 = sessionFactory.getCurrentSession().createNativeQuery(query);
+			Iterator itr = query1.list().iterator();
+			downloadDataList.add(headerList);
+			while (itr.hasNext()) {
+				Object[] obj = (Object[]) itr.next();
+				ArrayList<String> dataObj = new ArrayList<String>();
+				ArrayList<String> downCusData = new ArrayList<String>();
+				for (Object ob : obj) {
+					String value = "";
+					value = (ob == null) ? "" : ob.toString();
+					dataObj.add(value.replaceAll("\\^", ","));
+				}
+				obj = null;
+				downloadDataList.add(dataObj);
+			}
+			return downloadDataList;
+		}catch (Exception ex) {
+			logger.debug("Exception :", ex);
+			return null;
+		}
+		
+	}
+	
 	public static boolean isBigDecimal(String str) {
 		try {
 			new BigDecimal(str);

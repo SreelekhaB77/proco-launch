@@ -147,7 +147,15 @@ padding-right: 135px;
 								<div class="tab-label-proco-del-inactive OpenSans-font"style="margin-left: 10px;">Dropped Offer</div>
 						</a></li>
 						
-					
+					<li role="presentation"
+								class="col-md-3 col-sm-6 col-xs-12 budget" style="width: 19%;">
+								<a
+								href="http://34.120.128.205/VisibilityAssetTracker/procoBudgetTme.htm"
+								style="width: 247px;">
+									<div class="proco-budget-icon "></div>
+									<div class="tab-label-proco-budget-inactive OpenSans-font">Budget Report</div>
+							</a>
+							</li>
 					</ul>
 				</div>
 			</div>

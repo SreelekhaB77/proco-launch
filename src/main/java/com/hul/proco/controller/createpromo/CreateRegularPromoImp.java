@@ -120,10 +120,16 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				i++;
 			}
 		}
+		
+		try{
+			moc_from_db = datafromtable.getMOC(beans[0].getMoc_name(), beans[0].getYear());
+		}catch(Exception e) {
+			return "INVALID_MOC";
+		}
 		Map<String, String> basepackmap = getAllCategory(listofcategory);
 		Map<String, String> promotimemap = getAllTDPTimeperiod();
 		Map<String, String> commanmap = new HashMap<String, String>();
-		datafromtable.getConbination(commanmap);
+		datafromtable.getConbination(commanmap,moc_from_db);
 		datafromtable.mapPPMandChannel(commanmap);
 		datafromtable.basePackAndSaleCategory(commanmap);
 //		List<String> AQlist = datafromtable.getAQEntries();
@@ -138,7 +144,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		{
 			datafromtable.getCREntries(crEntries);
 			datafromtable.getAllSOLtype(crEntries);
-			datafromtable.getAllSOLCodeAndPromoId(crEntries,date_extensionMap,check_existing_sol, check_sol_code_ref);
+			datafromtable.getAllSOLCodeAndPromoId(crEntries,date_extensionMap,check_existing_sol, check_sol_code_ref,moc_from_db);
 		}
 
 		for (CreateBeanRegular bean : beans) {
@@ -254,13 +260,48 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						*/
 						
 						query.setString(17, "NE");
-						if (bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity()) <= 0) {
+						
+//						if (bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity()) <= 0) {
+//							if (flag == 1)
+//								error_msg = error_msg + ",Mandatory input for Quantity, Min Qty criteria not met";
+//							else
+//								error_msg = error_msg + "Mandatory input for Quantity, Min Qty criteria not met";
+//							flag = 1;
+//						}
+						
+						//Kajal G changes start for SPRINT-12
+						if(!bean.getQuantity().isEmpty()) {
+							boolean numeric = true;
+					        try {
+					            int num = Integer.parseInt(bean.getQuantity());
+					        } catch (NumberFormatException e) {
+					            numeric = false;
+					        }
+
+					        if(!numeric){
+	                            if (flag == 1)
+	                                error_msg = error_msg + ",Invalid Quantity";
+	                            else
+	                                error_msg = error_msg + "Invalid Quantity";
+	                            flag=1;
+	                        }else {
+	                        	if(Integer.parseInt(bean.getQuantity()) <= 0) {
+									if (flag == 1)
+										error_msg = error_msg + ",Min Quantity criteria not met";
+									else
+										error_msg = error_msg + "Min Quantity criteria not met";
+									flag = 1;
+								}
+	                        }
+						}else {
 							if (flag == 1)
-								error_msg = error_msg + ",Mandatory input for Quantity, Min Qty criteria not met";
+								error_msg = error_msg + ",Mandatory input for Quantity";
 							else
-								error_msg = error_msg + "Mandatory input for Quantity, Min Qty criteria not met";
+								error_msg = error_msg + "Mandatory input for Quantity";
 							flag = 1;
 						}
+						//Kajal G changes end
+						
 						if (isStringNumber(bean.getQuantity()))
 							query.setString(18, bean.getQuantity().isEmpty() ? ""
 									: String.valueOf(
@@ -307,9 +348,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						if(!asmlMap.containsKey(bean.getOffer_mod().toUpperCase()+bean.getOfr_type().toUpperCase()))
 						{
 							if (flag == 1)
-								error_msg = error_msg + ",Invalid offer modality and offer type for AMSL";
+								error_msg = error_msg + ",Invalid offer modality and offer type for ASML";
 							else
-								error_msg = error_msg + "Invalid offer modality and offer type for AMSL";
+								error_msg = error_msg + "Invalid offer modality and offer type for ASML";
 							flag=1;
 						}
 					}
@@ -900,14 +941,46 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						}
 					}
 
-					if (bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity()) <= 0) {
+//					if (bean.getQuantity().isEmpty() || Integer.parseInt(bean.getQuantity()) <= 0) {
+//						if (flag == 1)
+//							error_msg = error_msg + ",Mandatory input for Quantity, Min Qty criteria not met";
+//						else
+//							error_msg = error_msg + "Mandatory input for Quantity, Min Qty criteria not met";
+//						flag = 1;
+//					}
+					
+					//Kajal G changes start for SPRINT-12
+					if(!bean.getQuantity().isEmpty()) {
+						boolean numeric = true;
+				        try {
+				            int num = Integer.parseInt(bean.getQuantity());
+				        } catch (NumberFormatException e) {
+				            numeric = false;
+				        }
+
+				        if(!numeric){
+                            if (flag == 1)
+                                error_msg = error_msg + ",Invalid Quantity";
+                            else
+                                error_msg = error_msg + "Invalid Quantity";
+                            flag=1;
+                        }else {
+                        	if(Integer.parseInt(bean.getQuantity()) <= 0) {
+								if (flag == 1)
+									error_msg = error_msg + ",Min Quantity criteria not met";
+								else
+									error_msg = error_msg + "Min Quantity criteria not met";
+								flag = 1;
+							}
+                        }
+					}else {
 						if (flag == 1)
-							error_msg = error_msg + ",Mandatory input for Quantity, Min Qty criteria not met";
+							error_msg = error_msg + ",Mandatory input for Quantity";
 						else
-							error_msg = error_msg + "Mandatory input for Quantity, Min Qty criteria not met";
+							error_msg = error_msg + "Mandatory input for Quantity";
 						flag = 1;
 					}
-					
+					//Kajal G changes end
 					if (bean.getOffer_mod().equalsIgnoreCase("MT Kitting") && bean.getC_pack_code().isEmpty()) {
 						if (flag == 1) {
 							error_msg = error_msg

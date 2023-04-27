@@ -1288,10 +1288,10 @@ $("#btnSubmitPpmCoeRemark").click(function (event) {
 									$('#ppmcoesuccessblock').hide();
 								}
 								else if(ModRes.includes('CHECK_COL_MISMATCH')){
-									$('#ppmcoeerrorblockUpload').show().find('span').html('Please Check Uploaded File');
+									$('#ppmcoeerrorblockUpload').show().find('span').html('Columns are not matching,Please Check Uploaded File');
 									$('#ppmcoesuccessblock').hide();
 								}else if(ModRes.includes('Column count is not match with expected')){
-									$('#ppmcoeerrorblockUpload').show().find('span').html('Please Upload correct File');
+									$('#ppmcoeerrorblockUpload').show().find('span').html('Column count is not match with expected,Please Upload correct File');
 									$('#ppmcoesuccessblock').hide();
 								}
 								else{
@@ -1307,6 +1307,278 @@ $("#btnSubmitPpmCoeRemark").click(function (event) {
 				            },
 				            error: function (e) {
 				            $('#ppmcoesuccessblock').hide();
+				                 
+				            }
+				        });
+				       
+					    
+					    	
+				    });
+
+
+$("#btnSubmitBudgetReport").click(function (event) {
+					
+						event.preventDefault();
+						
+						var fileName = $('#uploadbudget').val();
+						if (fileName == '') {
+							
+							$('#uploadbudgetErrorMeaMsg').show().html("Please select a file to upload");
+							return false;
+						} else {
+							$('#uploadbudgetErrorMeaMsg').hide();
+							var FileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+							if (FileExt != "xlsx") {
+								if (FileExt != "xls") {
+									$('#uploadbudgetErrorMeaMsg').show().html("Please upload .xls or .xlsx file");
+									$("#coeStatusBudgetFileUpload").submit(function(e) {
+										e.preventDefault();
+									});
+									return false;
+								}
+
+							}
+						}
+						
+				        
+				        var form = $('#coeStatusBudgetFileUpload')[0];
+                           var data = new FormData(form);
+                        $.ajax({
+				            type: "POST",
+				            enctype: 'multipart/form-data',
+				            url: 'procoLiveBudgetUpload.htm' ,
+				            data: data,
+				            processData: false,
+				            contentType: false,
+				            cache: false,
+				            timeout: 600000,
+				            beforeSend: function() {
+                                ajaxLoader(spinnerWidth, spinnerHeight);
+                            },
+							
+				            success: function (ModRes) {
+				            	//console.log(resdata);
+				            	
+				            	
+				            	 $('.loader').hide();
+				            	 if(ModRes.includes('EXCEL_UPLOADED')) {
+					
+				                    $('#budgeterrorblockUpload').hide();
+				                	$('#budgetsuccessblock').show().find('span').html(' File Uploaded Successfully !!!');
+				                	 
+				                }
+				                
+				                else if(ModRes.includes('EXCEL_NOT_UPLOADED')){
+				               $('#budgetsuccessblock').hide();
+				                $('#budgeterrorblockUpload').show().find('span').html(' File Contains Error ');
+				                }
+								 else if(ModRes.includes('File Size Exceeds')){
+									 $('#budgeterrorblockUpload').show().find('span').html('File Size Limit Exceeded');
+                                     $('#budgetsuccessblock').hide();
+								 }
+				                else if(ModRes.includes('FILE_EMPTY')){
+									$('#budgeterrorblockUpload').show().find('span').html('Error While Uploading Empty File');
+									$('#budgetsuccessblock').hide();
+								}
+								else if(ModRes.includes('CHECK_COL_MISMATCH')){
+									$('#budgeterrorblockUpload').show().find('span').html('Columns are not macthing,Please Check Uploaded File');
+									$('#budgetsuccessblock').hide();
+								}else if(ModRes.includes('Column count is not match with expected')){
+									$('#budgeterrorblockUpload').show().find('span').html('Column count is not match with, expectedPlease Upload correct File');
+									$('#budgetsuccessblock').hide();
+								}
+								else{
+									
+				                	$('#budgeterrorblockUpload').show().find('span').html('Error While Uploading File');
+				                	$('#budgetsuccessblock').hide();
+				                	
+				                	 
+				              	 }
+				                    
+				                 $('#coeStatusBudgetFileUpload')[0].reset();
+								 //$('.file-name').html("No file chosen");
+				            },
+				            error: function (e) {
+				            $('#budgetsuccessblock').hide();
+				                 
+				            }
+				        });
+				       
+					    
+					    	
+				    });
+				    
+/*Added by kajal G in SPRINT-12*/
+$("#btnSubmitVisiUpload").click(function (event) {
+						event.preventDefault();
+						
+						var fileName = $('#uploadvisibility').val();
+						if (fileName == '') {
+							$('#uploadvisibilityErrorMeaMsg').show().html("Please select a file to upload");
+							return false;
+						} else {
+							$('#uploadvisibilityErrorMeaMsg').hide();
+							var FileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+							if (FileExt != "xlsx") {
+								if (FileExt != "xls") {
+									$('#uploadvisibilityErrorMeaMsg').show().html("Please upload .xls or .xlsx file");
+									$("#visibilityUpload").submit(function(e) {
+										e.preventDefault();
+									});
+									return false;
+								}
+
+							}
+						}
+						
+				        // Get form
+				        var form = $('#visibilityUpload')[0];
+                           var data = new FormData(form);
+                        $.ajax({
+				            type: "POST",
+				            enctype: 'multipart/form-data',
+				            url: 'visibilityUpload.htm' ,
+				            data: data,
+				            processData: false,
+				            contentType: false,
+				            cache: false,
+				            timeout: 600000,
+				            beforeSend: function() {
+                                ajaxLoader(spinnerWidth, spinnerHeight);
+                            },
+							
+				            success: function (ModRes) {
+				            	//console.log(resdata);
+				            	
+				            	 $('.loader').hide();
+				            	 if(ModRes.includes('EXCEL_UPLOADED')) {
+				                    $('#visierrorblockUpload').hide();
+				                	$('#visisuccessblock').show().find('span').html(' File Uploaded Successfully !!!');
+				                	 
+				                }
+				                
+				                else if(ModRes.includes('EXCEL_NOT_UPLOADED')){
+				               $('#visisuccessblock').hide();
+				                $('#visierrorblockUpload').show().find('span').html(' File Contains Error ');
+				                }
+								 else if(ModRes.includes('File Size Exceeds')){
+									 $('#visierrorblockUpload').show().find('span').html('File Size Limit Exceeded');
+                                     $('#visisuccessblock').hide();
+								 }
+				                else if(ModRes.includes('FILE_EMPTY')){
+									$('#visierrorblockUpload').show().find('span').html('Error While Uploading Empty File');
+									$('#visisuccessblock').hide();
+								}
+								else if(ModRes.includes('CHECK_COL_MISMATCH')){
+									$('#visierrorblockUpload').show().find('span').html('Please Check Uploaded File');
+									$('#visisuccessblock').hide();
+								}else if(ModRes.includes('Column count is not match with expected')){
+									$('#visierrorblockUpload').show().find('span').html('Please Upload correct File');
+									$('#visisuccessblock').hide();
+								}
+								else if(ModRes.includes('START_DATE_AND_END_DATE_ERROR')){
+									$('#visierrorblockUpload').show().find('span').html('Start date and End date should be in mm/dd/yyyy format');
+									$('#visisuccessblock').hide();
+								}
+								else{
+									
+				                	$('#visierrorblockUpload').show().find('span').html('Error While Uploading File');
+				                	$('#visisuccessblock').hide();     	 
+				              	 }
+				                    
+				                 $('#visibilityUpload')[0].reset();
+								 //$('.file-name').html("No file chosen");
+				            },
+				            error: function (e) {
+				            $('#visisuccessblock').hide();
+				                 
+				            }
+				        });
+				       
+					    
+					    	
+				    });
+
+
+/*Added by kajal G in SPRINT-12*/
+$("#btnSubmitAbCreationUpload").click(function (event) {
+						event.preventDefault();
+						
+						var fileName = $('#uploadabCreation').val();
+						if (fileName == '') {
+							$('#uploadabCreationErrorMeaMsg').show().html("Please select a file to upload");
+							return false;
+						} else {
+							$('#uploadabCreationErrorMeaMsg').hide();
+							var FileExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+							if (FileExt != "xlsx") {
+								if (FileExt != "xls") {
+									$('#uploadabCreationErrorMeaMsg').show().html("Please upload .xls or .xlsx file");
+									$("#abCreationReportUpload").submit(function(e) {
+										e.preventDefault();
+									});
+									return false;
+								}
+
+							}
+						}
+						
+				        // Get form
+				        var form = $('#abCreationReportUpload')[0];
+                           var data = new FormData(form);
+                        $.ajax({
+				            type: "POST",
+				            enctype: 'multipart/form-data',
+				            url: 'abCreationReportUpload.htm' ,
+				            data: data,
+				            processData: false,
+				            contentType: false,
+				            cache: false,
+				            timeout: 600000,
+				            beforeSend: function() {
+                                ajaxLoader(spinnerWidth, spinnerHeight);
+                            },
+							
+				            success: function (ModRes) {
+				            	//console.log(resdata);
+				            	
+				            	 $('.loader').hide();
+				            	 if(ModRes.includes('EXCEL_UPLOADED')) {
+				                    $('#abcreationerrorblockUpload').hide();
+				                	$('#abcreationsuccessblock').show().find('span').html(' File Uploaded Successfully !!!');
+				                	 
+				                }
+				                
+				                else if(ModRes.includes('EXCEL_NOT_UPLOADED')){
+				               $('#visisuccessblock').hide();
+				                $('#abcreationsuccessblock').show().find('span').html(' File Contains Error ');
+				                }
+								 else if(ModRes.includes('File Size Exceeds')){
+									 $('#abcreationerrorblockUpload').show().find('span').html('File Size Limit Exceeded');
+                                     $('#abcreationsuccessblock').hide();
+								 }
+				                else if(ModRes.includes('FILE_EMPTY')){
+									$('#abcreationerrorblockUpload').show().find('span').html('Error While Uploading Empty File');
+									$('#abcreationsuccessblock').hide();
+								}
+								else if(ModRes.includes('CHECK_COL_MISMATCH')){
+									$('#abcreationerrorblockUpload').show().find('span').html('Please Check Uploaded File');
+									$('#abcreationsuccessblock').hide();
+								}else if(ModRes.includes('Column count is not match with expected')){
+									$('#abcreationerrorblockUpload').show().find('span').html('Please Upload correct File');
+									$('#abcreationsuccessblock').hide();
+								}
+								else{
+									
+				                	$('#abcreationerrorblockUpload').show().find('span').html('Error While Uploading File');
+				                	$('#abcreationsuccessblock').hide();     	 
+				              	 }
+				                    
+				                 $('#abCreationReportUpload')[0].reset();
+								 //$('.file-name').html("No file chosen");
+				            },
+				            error: function (e) {
+				            $('#abcreationsuccessblock').hide();
 				                 
 				            }
 				        });

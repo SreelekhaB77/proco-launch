@@ -403,6 +403,7 @@ public class ProcoStatusTrackerController {
 			InputStream is;
 			String downloadLink = "", absoluteFilePath = "";
 			List<ArrayList<String>> downloadedData = null;
+			List<ArrayList<String>> visiDownloadedData=null;
 			absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
 			String fileName = UploadUtil.getFileName("Promotion.Error.file", "",
 					CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
@@ -514,10 +515,17 @@ public class ProcoStatusTrackerController {
 			/*downloadedData = procoStatusTrackerService.getPromotionStatusTracker(headerList, cagetory, brand, basepack, custChainL1,
 					custChainL2, geography, offerType, modality, year, moc, userId, 1,promoId);*/
 			
+			//Added by Kajal G for Visibility download in SPRINT-12
+			ArrayList<String> visiHeaderList = procoStatusTrackerService.getVisiHeaderListForPromoStatusTracker();
+			
 			downloadedData = procoStatusTrackerService.getPromotionStatusTracker(headerList, moc,promobasepack,ppmaccount,procochannel,prococluster,userId,fromDate,toDate);
 			
+			//Added by Kajal G for Visibility download in SPRINT-12
+			visiDownloadedData = procoStatusTrackerService.getVisiDownloadedData(visiHeaderList, moc);
+			
 			if (downloadedData != null) {
-				UploadUtil.writeXLSXFile(downloadFileName, downloadedData, null,".xlsx");
+				//Changed by Kajal G for Visibility download in SPRINT-12
+				UploadUtil.writeXLSXFileForTrackerVisi(downloadFileName, downloadedData,visiDownloadedData, null,".xlsx");
 				downloadLink = downloadFileName + ".xlsx";
 				is = new FileInputStream(new File(downloadLink));
 				// copy it to response's OutputStream

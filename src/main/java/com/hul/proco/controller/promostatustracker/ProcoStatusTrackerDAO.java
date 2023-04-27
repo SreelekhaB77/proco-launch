@@ -53,5 +53,8 @@ public interface ProcoStatusTrackerDAO {
 	public List<ArrayList<String>> getPpmDownloadData(ArrayList<String> headers, String selMOC);
 
 	public List<String> getMOCforCoedownload();
+	
+	//Added by Kajal G in SPRINT-12
+	public List<ArrayList<String>> getVisiDownloadedData(ArrayList<String> headerList,String moc);
 
 }
