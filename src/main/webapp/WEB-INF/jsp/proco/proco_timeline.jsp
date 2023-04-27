@@ -415,7 +415,7 @@ top:2px;
 				e.preventDefault();
 				$.ajax({
 					type: "POST",
-					url: "http://34.120.128.205/VisibilityAssetTracker/coeUpdateProcoTimeline.htm",
+					url: "http://vat.hulcd.com/VisibilityAssetTracker/coeUpdateProcoTimeline.htm",
 					data: promolockJson(),
 					contentType: "application/json; charset=utf-8",
 		            dataType: "json",
@@ -448,7 +448,7 @@ top:2px;
 				e.preventDefault();
 				$.ajax({
 					type: "POST",
-					url: "http://34.120.128.205/VisibilityAssetTracker/coeUpdateProcoTimeline.htm",
+					url: "http://vat.hulcd.com/VisibilityAssetTracker/coeUpdateProcoTimeline.htm",
 					data: userlockJson(),
 					contentType: "application/json; charset=utf-8",
 		            dataType: "json",
