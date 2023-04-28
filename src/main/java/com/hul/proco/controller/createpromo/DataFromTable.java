@@ -205,6 +205,15 @@ public class DataFromTable {
 		Query session_query = sessionFactory.getCurrentSession().createNativeQuery(query);
 		return session_query.uniqueResult().toString();
 	}
+	//Added by kajal G in SPINT-13
+	public String getMOCSRNO(String moc_name) {
+		String srNOQuery = "SELECT SR_NO FROM TBL_VAT_MOC_MASTER WHERE MOC='"+moc_name+"' LIMIT 1";
+		Query getsrNOQuery = sessionFactory.getCurrentSession().createNativeQuery(srNOQuery);
+		String srNo = getsrNOQuery.uniqueResult().toString();
+		String preMOCquery = "SELECT MOC FROM TBL_VAT_MOC_MASTER WHERE SR_NO < "+srNo+" ORDER BY SR_NO DESC LIMIT 1";
+		Query getPreMOCquery = sessionFactory.getCurrentSession().createNativeQuery(preMOCquery);
+		return getPreMOCquery.uniqueResult().toString();
+	}
     /**
      * 
      * @return map to send the dates by to controller implementation
@@ -494,10 +503,11 @@ public class DataFromTable {
 	public void getAllSOLCodeAndPromoId(Map<String,String> crEntries,Map<String,String> date_extension,Map<String,ArrayList<String>> check_existing_sol,List<List<String>> check_sol_code_ref, String moc) {
 		// TODO Auto-generated method stub
 		//String query="SELECT DISTINCT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,CASE WHEN LOCATE('%', A.PRICE_OFF) > 0 THEN A.PRICE_OFF ELSE ROUND(A.PRICE_OFF, 0) END AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR,B.MOC AS PMR_MOC"
+		String mocList = moc.replaceAll("^|$", "'").replaceAll(",", "','"); 
 		String query="SELECT DISTINCT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER, A.PRICE_OFF AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR,B.MOC AS PMR_MOC,A.OFFER_MODALITY,IF (A.OFFER_TYPE = 'Ground Ops', A.OFFER_TYPE, A.OFFER_MODALITY) AS OFFER_TYPE"
 				+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 AS A INNER JOIN TBL_PROCO_MEASURE_MASTER_V2 AS B "
 				+ "	ON A.PROMO_ID=B.PROMO_ID "
-				+ "	WHERE B.PROMOTION_STATUS IN ('Approved','AmendApproved','Submitted','AmendSubmitted') AND A.STATUS !='42' AND A.MOC ='"+moc+"'";
+				+ "	WHERE B.PROMOTION_STATUS IN ('Approved','AmendApproved','Submitted','AmendSubmitted') AND A.STATUS !='42' AND A.MOC IN ("+mocList+")";
 		
 		List<Object[]> list=sessionFactory.getCurrentSession().createNativeQuery(query	).list();
 		
