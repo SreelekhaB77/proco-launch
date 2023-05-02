@@ -1979,7 +1979,6 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 		List<BigInteger> list = null;
 		try {
 
-//			System.out.println("MOC:  "+moc.replaceAll("^|$", "'").replaceAll(",", "','"));
 			if(moc.equalsIgnoreCase("SELECT MOC")) {
 				moc=getPromoListingMoc();	
 			}
@@ -1998,7 +1997,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				if(fromDate==null && toDate==null) {
 					String mocVal = moc.replaceAll("^|$", "'").replaceAll(",", "','");
 					//promoQueryCount +=	"AND PM.MOC='"+moc+"'";	
-					promoQueryCount +=	"AND PM.MOC IN ("+mocVal+")";// Added by kajal G in sprint 13
+					promoQueryCount +=	" AND PM.MOC IN ("+mocVal+")";// Added by kajal G in sprint 13
 				}else {
 					promoQueryCount +=" AND PM.START_DATE>='"+fromDate+"' AND PM.END_DATE<='"+toDate+"'";	
 			}
@@ -2008,14 +2007,14 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
 						String promobasepackVal = promobasepack.replaceAll("^|$", "'").replaceAll(",", "','");
 						//promoQueryCount +=	"AND PM.BASEPACK_CODE='"+promobasepack+"'";	
-						promoQueryCount +=	"AND PM.BASEPACK_CODE IN ("+promobasepackVal+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.BASEPACK_CODE IN ("+promobasepackVal+")";// Added by kajal G in sprint 13
 					}
 				}
 				if(!ppmaccount.equalsIgnoreCase("ALL")) {
 					if(!ppmaccount.equalsIgnoreCase("SELECT PPM ACCOUNT")){
 						//promoQueryCount +=	"AND PM.PPM_ACCOUNT='"+ppmaccount+"'";	
 						String ppmaccountVal = ppmaccount.replaceAll("^|$", "'").replaceAll(",", "','");
-						promoQueryCount +=	"AND PM.PPM_ACCOUNT IN ("+ppmaccountVal+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.PPM_ACCOUNT IN ("+ppmaccountVal+")";// Added by kajal G in sprint 13
 					}
 				}
 				
@@ -2023,7 +2022,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					if(!procochannel.equalsIgnoreCase("SELECT CHANNEL")) {
 						//promoQueryCount +=	"AND PM.CHANNEL_NAME='"+procochannel+"'";
 						String procochannelVal = procochannel.replaceAll("^|$", "'").replaceAll(",", "','");
-						promoQueryCount +=	"AND PM.CHANNEL_NAME IN ("+procochannelVal+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.CHANNEL_NAME IN ("+procochannelVal+")";// Added by kajal G in sprint 13
 					}
 				}
 				
@@ -2031,7 +2030,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					if(!prococluster.equalsIgnoreCase("SELECT CLUSTER")) {
 						//promoQueryCount +=	"AND PM.CLUSTER='"+prococluster+"'";	
 						String prococlusterVal = prococluster.replaceAll("^|$", "'").replaceAll(",", "','");
-						promoQueryCount +=	"AND PM.CLUSTER IN ("+prococlusterVal+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.CLUSTER IN ("+prococlusterVal+")";// Added by kajal G in sprint 13
 						
 					}
 				}
@@ -2053,7 +2052,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				if(fromDate==null && toDate==null) {
 					//promoQueryCount +=	"AND PM.MOC='"+moc+"'";	
 					String mocVal = moc.replaceAll("^|$", "'").replaceAll(",", "','");
-					promoQueryCount +=	"AND PM.MOC IN ("+mocVal+")";// Added by kajal G in sprint 13
+					promoQueryCount +=	" AND PM.MOC IN ("+mocVal+")";// Added by kajal G in sprint 13
 				}else {
 					promoQueryCount +=" AND PM.START_DATE>='"+fromDate+"' AND PM.END_DATE<='"+toDate+"'";	
 			}
@@ -2062,14 +2061,14 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
 						//promoQueryCount +=	"AND PM.BASEPACK_CODE='"+promobasepack+"'";	
 						String promobasepackVal = promobasepack.replaceAll("^|$", "'").replaceAll(",", "','");
-						promoQueryCount +=	"AND PM.BASEPACK_CODE IN ("+promobasepackVal+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.BASEPACK_CODE IN ("+promobasepackVal+")";// Added by kajal G in sprint 13
 					}
 				}
 				if(!ppmaccount.equalsIgnoreCase("ALL")) {
 					if(!ppmaccount.equalsIgnoreCase("SELECT PPM ACCOUNT")){
 						//promoQueryCount +=	"AND PM.PPM_ACCOUNT='"+ppmaccount+"'";
 						String ppmaccountVal = ppmaccount.replaceAll("^|$", "'").replaceAll(",", "','");
-						promoQueryCount +=	"AND PM.PPM_ACCOUNT IN ("+ppmaccountVal+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.PPM_ACCOUNT IN ("+ppmaccountVal+")";// Added by kajal G in sprint 13
 					
 					}
 				}
@@ -2078,7 +2077,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					if(!procochannel.equalsIgnoreCase("SELECT CHANNEL")) {
 						//promoQueryCount +=	"AND PM.CHANNEL_NAME='"+procochannel+"'";
 						String procochannelVal = procochannel.replaceAll("^|$", "'").replaceAll(",", "','");
-						promoQueryCount +=	"AND PM.CHANNEL_NAME IN ("+procochannelVal+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.CHANNEL_NAME IN ("+procochannelVal+")";// Added by kajal G in sprint 13
 					
 					}
 				}
@@ -2087,7 +2086,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					if(!prococluster.equalsIgnoreCase("SELECT CLUSTER")) {
 						//promoQueryCount +=	"AND PM.CLUSTER='"+prococluster+"'";
 						String prococlusterVal = prococluster.replaceAll("^|$", "'").replaceAll(",", "','");
-						promoQueryCount +=	"AND PM.CLUSTER IN ("+prococlusterVal+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.CLUSTER IN ("+prococlusterVal+")";// Added by kajal G in sprint 13
 					
 					}
 				}
@@ -2101,7 +2100,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				if(fromDate==null && toDate==null) {
 					//promoQueryCount +=	"AND PM.MOC='"+moc+"'";	
 					String mocVal = moc.replaceAll("^|$", "'").replaceAll(",", "','");
-					promoQueryCount +=	"AND PM.MOC IN ("+mocVal+")";// Added by kajal G in sprint 13
+					promoQueryCount +=	" AND PM.MOC IN ("+mocVal+")";// Added by kajal G in sprint 13
 				}else {
 					promoQueryCount +=" AND PM.START_DATE>='"+fromDate+"' AND PM.END_DATE<='"+toDate+"'";	
 			}
@@ -2110,14 +2109,14 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
 						//promoQueryCount +=	"AND PM.BASEPACK_CODE='"+promobasepack+"'";	
 						String promobasepackVal = promobasepack.replaceAll("^|$", "'").replaceAll(",", "','");
-						promoQueryCount +=	"AND PM.BASEPACK_CODE IN ("+promobasepackVal+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.BASEPACK_CODE IN ("+promobasepackVal+")";// Added by kajal G in sprint 13
 					}
 				}
 				if(!ppmaccount.equalsIgnoreCase("ALL")) {
 					if(!ppmaccount.equalsIgnoreCase("SELECT PPM ACCOUNT")){
 						//promoQueryCount +=	"AND PM.PPM_ACCOUNT='"+ppmaccount+"'";	
 						String ppmaccountVal = ppmaccount.replaceAll("^|$", "'").replaceAll(",", "','");
-						promoQueryCount +=	"AND PM.PPM_ACCOUNT IN ("+ppmaccount+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.PPM_ACCOUNT IN ("+ppmaccount+")";// Added by kajal G in sprint 13
 					
 					}
 				}
@@ -2126,7 +2125,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					if(!procochannel.equalsIgnoreCase("SELECT CHANNEL")) {
 						//promoQueryCount +=	"AND PM.CHANNEL_NAME='"+procochannel+"'";
 						String procochannelVal = procochannel.replaceAll("^|$", "'").replaceAll(",", "','");
-						promoQueryCount +=	"AND PM.CHANNEL_NAME IN ("+procochannelVal+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.CHANNEL_NAME IN ("+procochannelVal+")";// Added by kajal G in sprint 13
 					
 					}
 				}
@@ -2135,7 +2134,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					if(!prococluster.equalsIgnoreCase("SELECT CLUSTER")) {
 						//promoQueryCount +=	"AND PM.CLUSTER='"+prococluster+"'";
 						String prococlusterVal = prococluster.replaceAll("^|$", "'").replaceAll(",", "','");
-						promoQueryCount +=	"AND PM.CLUSTER IN ("+prococlusterVal+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.CLUSTER IN ("+prococlusterVal+")";// Added by kajal G in sprint 13
 					
 					}
 				}		
@@ -2155,7 +2154,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				if(fromDate==null && toDate==null) {
 					if(!moc.equalsIgnoreCase("all")) {
 						String mocVal = moc.replaceAll("^|$", "'").replaceAll(",", "','");
-						promoQueryCount +=	"AND PM.MOC IN ("+mocVal+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.MOC IN ("+mocVal+")";// Added by kajal G in sprint 13
 					}
 						//promoQueryCount +=	"AND PM.MOC='"+moc+"'";	
 					
@@ -2167,7 +2166,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
 						//promoQueryCount +=	"AND PM.BASEPACK_CODE='"+promobasepack+"'";	
 						String promobasepackVal = promobasepack.replaceAll("^|$", "'").replaceAll(",", "','");
-						promoQueryCount +=	"AND PM.BASEPACK_CODE IN ("+promobasepackVal+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.BASEPACK_CODE IN ("+promobasepackVal+")";// Added by kajal G in sprint 13
 					
 					}
 				}
@@ -2175,7 +2174,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					if(!ppmaccount.equalsIgnoreCase("SELECT PPM ACCOUNT")){
 						//promoQueryCount +=	"AND PM.PPM_ACCOUNT='"+ppmaccount+"'";	
 						String ppmaccountVal = ppmaccount.replaceAll("^|$", "'").replaceAll(",", "','");
-						promoQueryCount +=	"AND PM.PPM_ACCOUNT IN ("+ppmaccount+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.PPM_ACCOUNT IN ("+ppmaccount+")";// Added by kajal G in sprint 13
 					
 					}
 				}
@@ -2184,7 +2183,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					if(!procochannel.equalsIgnoreCase("SELECT CHANNEL")) {
 						//promoQueryCount +=	"AND PM.CHANNEL_NAME='"+procochannel+"'";
 						String procochannelVal = procochannel.replaceAll("^|$", "'").replaceAll(",", "','");
-						promoQueryCount +=	"AND PM.CHANNEL_NAME IN ("+procochannelVal+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.CHANNEL_NAME IN ("+procochannelVal+")";// Added by kajal G in sprint 13
 					
 					}
 				}
@@ -2193,7 +2192,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					if(!prococluster.equalsIgnoreCase("SELECT CLUSTER")) {
 						//promoQueryCount +=	"AND PM.CLUSTER='"+prococluster+"'";
 						String prococlusterVal = prococluster.replaceAll("^|$", "'").replaceAll(",", "','");
-						promoQueryCount +=	"AND PM.CLUSTER IN ("+prococlusterVal+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.CLUSTER IN ("+prococlusterVal+")";// Added by kajal G in sprint 13
 					
 					}
 				}	
@@ -2213,7 +2212,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					if(fromDate==null && toDate==null) {
 						//promoQueryCount +=	"AND PM.MOC='"+moc+"'";	
 						String mocVal = moc.replaceAll("^|$", "'").replaceAll(",", "','");
-						promoQueryCount +=	"AND PM.MOC IN ("+mocVal+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.MOC IN ("+mocVal+")";// Added by kajal G in sprint 13
 					}else {
 						promoQueryCount +=" AND PM.START_DATE>='"+fromDate+"' AND PM.END_DATE<='"+toDate+"'";	
 					}
@@ -2223,7 +2222,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
 						//promoQueryCount +=	"AND PM.BASEPACK_CODE='"+promobasepack+"'";	
 						String promobasepackVal = promobasepack.replaceAll("^|$", "'").replaceAll(",", "','");
-						promoQueryCount +=	"AND PM.BASEPACK_CODE IN ("+promobasepackVal+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.BASEPACK_CODE IN ("+promobasepackVal+")";// Added by kajal G in sprint 13
 					
 					}
 				}
@@ -2231,7 +2230,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					if(!ppmaccount.equalsIgnoreCase("SELECT PPM ACCOUNT")){
 						//promoQueryCount +=	"AND PM.PPM_ACCOUNT='"+ppmaccount+"'";	
 						String ppmaccountVal = ppmaccount.replaceAll("^|$", "'").replaceAll(",", "','");
-						promoQueryCount +=	"AND PM.PPM_ACCOUNT IN ("+ppmaccount+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.PPM_ACCOUNT IN ("+ppmaccount+")";// Added by kajal G in sprint 13
 					
 					}
 				}
@@ -2240,7 +2239,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					if(!procochannel.equalsIgnoreCase("SELECT CHANNEL")) {
 						//promoQueryCount +=	"AND PM.CHANNEL_NAME='"+procochannel+"'";
 						String procochannelVal = procochannel.replaceAll("^|$", "'").replaceAll(",", "','");
-						promoQueryCount +=	"AND PM.CHANNEL_NAME IN ("+procochannelVal+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.CHANNEL_NAME IN ("+procochannelVal+")";// Added by kajal G in sprint 13
 					
 					}
 				}
@@ -2249,7 +2248,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 					if(!prococluster.equalsIgnoreCase("SELECT CLUSTER")) {
 						//promoQueryCount +=	"AND PM.CLUSTER='"+prococluster+"'";
 						String prococlusterVal = prococluster.replaceAll("^|$", "'").replaceAll(",", "','");
-						promoQueryCount +=	"AND PM.CLUSTER IN ("+prococlusterVal+")";// Added by kajal G in sprint 13
+						promoQueryCount +=	" AND PM.CLUSTER IN ("+prococlusterVal+")";// Added by kajal G in sprint 13
 					
 					}
 				}	

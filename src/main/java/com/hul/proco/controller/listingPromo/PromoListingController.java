@@ -80,9 +80,7 @@ public class PromoListingController {
 		Integer pageNumber = (pageDisplayStart / pageDisplayLength) + 1;
 		String cagetory = "", brand = "", basepack = "", custChainL1 = "", custChainL2 = "", geography = "";
 		String offerType = "", modality = "", year = "", moc = "";
-		String promobasepack="", ppmaccount="", procochannel="";
-		ArrayList prococluster;
-		
+		String promobasepack="", ppmaccount="", procochannel="",prococluster="";	
 
 
 		if (cagetoryValue == null || cagetoryValue.isEmpty() || (cagetoryValue.equalsIgnoreCase("undefined"))
@@ -161,11 +159,11 @@ public class PromoListingController {
 		} else {
 			procochannel = procoChannel;
 		}
-//		if (procoCluster == null || procoCluster.isEmpty() || (procoCluster.equalsIgnoreCase("undefined"))|| (procoCluster.equalsIgnoreCase("SELCET CLUSTER"))|| (procoCluster.equalsIgnoreCase("ALL"))) {
-//			prococluster = "all";
-//		} else {
-//			prococluster = procoCluster;
-//		}
+		if (procoCluster == null || procoCluster.isEmpty() || (procoCluster.equalsIgnoreCase("undefined"))|| (procoCluster.equalsIgnoreCase("SELCET CLUSTER"))|| (procoCluster.equalsIgnoreCase("ALL"))) {
+			prococluster = "all";
+		} else {
+			prococluster = procoCluster;
+		}
 		
 		//Added by Kajal G for promolisting changes-SPRINT 11
 		if((fromDate == null || fromDate.isEmpty()) && (toDate == null || toDate.isEmpty())) {
@@ -183,13 +181,10 @@ public class PromoListingController {
 				(pageNumber * pageDisplayLength), cagetory, brand, basepack, custChainL1, custChainL2, geography,
 				offerType, modality, year, moc, userId, 1,roleId ,searchParameter);*/
 		
-//		int rowCount = promoListingService.getPromoListRowCountGrid(userId,roleId,moc,promobasepack,ppmaccount,procochannel,prococluster,kamAccountsArr,fromDate,toDate);
-//		List<PromoListingBean> promoList = promoListingService.getPromoTableListGrid((pageDisplayStart + 1),
-//				(pageNumber * pageDisplayLength),userId,roleId,moc,promobasepack,ppmaccount,procochannel,prococluster,searchParameter, kamAccountsArr,fromDate,toDate);
+		int rowCount = promoListingService.getPromoListRowCountGrid(userId,roleId,moc,promobasepack,ppmaccount,procochannel,prococluster,kamAccountsArr,fromDate,toDate);
+		List<PromoListingBean> promoList = promoListingService.getPromoTableListGrid((pageDisplayStart + 1),
+				(pageNumber * pageDisplayLength),userId,roleId,moc,promobasepack,ppmaccount,procochannel,prococluster,searchParameter, kamAccountsArr,fromDate,toDate);
 		
-		int rowCount = 0;
-		
-		List<PromoListingBean> promoList = null;
 		
 		logger.info("LOGGER OUTPUT FOR PROMOLIST:" + promoList);
 
