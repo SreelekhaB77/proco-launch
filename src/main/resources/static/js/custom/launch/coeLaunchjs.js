@@ -911,6 +911,8 @@ var oTable;
 function coeDocument(){
 var launchIdsArr =  getlaunchId();
 var LaunchStr    = launchIdsArr.join();
+setTimeout(function(){
+$("#coelaunchSubTab").click();
 oTable = $('#coefinalTable').DataTable({
 				    	   "bProcessing": true,
 				             "bServerSide": true,
@@ -940,9 +942,7 @@ oTable = $('#coefinalTable').DataTable({
 				                aoData.push(
 				    	                {"name": "LaunchStr", "value": LaunchStr}
  				    	                
-				    	                );
-				    	           $("#coelaunchSubTab").click();
-				    	                
+				    	                );				    	                
 				              }, 
 				              "aoColumns": [{
 				                    "mData": "launchName"
@@ -967,10 +967,10 @@ oTable = $('#coefinalTable').DataTable({
 			                    "mData": "hulOlCode"
 			                  }, {
 			                    "mData": "customerCode"
-			                  }]
-				            });
-				       				       
-				       oTable.columns.adjust().draw();
+			                  }]			                  
+				            });			       				       
+				        }, 8000)
+			   oTable.columns.adjust().draw();				        	
 }
 //Added by Prathap HR-SPRINT 13P1 for launch store list pagination ends			
 

@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.ListUtils;
 import org.apache.log4j.Logger;
@@ -701,7 +702,7 @@ public class LaunchDaoImpl implements LaunchDao {
 						.prepareStatement("SELECT LAUNCH_MOC_KAM FROM TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS"
 								+ " WHERE IS_ACTIVE = 1 AND  LAUNCH_KAM_ACCOUNT= '" 
 								+ Account + "'"  
-						+ " AND LAUNCH_ID = '" + launchId + "'");		
+						+ " AND LAUNCH_ID IN ("+launchId+")");		
 				ResultSet rs = stmt.executeQuery();
 				while (rs.next()) {
 					launchMoc = rs.getString(1);
@@ -2090,9 +2091,15 @@ public class LaunchDaoImpl implements LaunchDao {
 		public List<CoeLaunchStoreListResponse> getLaunchStoreListDumpPagination(List<String> listOfLaunchData, int pageDisplayStart, int pageDisplayLength) {
 
 				List<CoeLaunchStoreListResponse> downloadDataList = new ArrayList<>();
-                //List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
+				String launchId="";
+				if(listOfLaunchData.size()>1) {
+				 launchId= listOfLaunchData.stream().collect(Collectors.joining("','", "'", "'"));
+				}
+				else {
+				 launchId =listOfLaunchData.toString().replace("[","'").replace("]","'");
+				}
+				
 				try {
-					for(String launchId : listOfLaunchData) {	
 						String query2 = " SELECT * FROM ( SELECT DISTINCT asd.LAUNCH_NAME,tlb.BP_CODE,tlb.BP_DESCRIPTION,asd.LAUNCH_MOC,abc.ACCOUNT_NAME_L2,"
 								+ " abc.ACCOUNT_NAME ACCOUNT_NAME,abc.depot,abc.HUL_STORE_FORMAT,abc.CLUSTER,abc.REPORTING_CODE,(CASE WHEN tvcom.FMCG_CSP_CODE IS NOT NULL "
 								+ " THEN tvcom.FMCG_CSP_CODE ELSE tvcom.COLOUR_CSP_CODE END) AS DEPO_CODE ,ROW_NUMBER() OVER (ORDER BY abc.UPDATED_DATE DESC) AS ROW_NEXT "
@@ -2101,13 +2108,13 @@ public class LaunchDaoImpl implements LaunchDao {
 								+ " INNER JOIN MODTRD.TBL_LAUNCH_MASTER asd ON asd.LAUNCH_ID=abc.LAUNCH_ID "
 								+ " INNER JOIN TBL_LAUNCH_BASEPACK tlb ON tlb.LAUNCH_ID=asd.LAUNCH_ID "
 								+ " WHERE asd.LAUNCH_REJECTED !='2' AND tlb.BP_CODE = trim(substr(SKU_NAME, 1, locate(':', SKU_NAME) - 1)) "
-								+ " AND (tlb.BP_STATUS != 'REJECTED BY TME' OR tlb.BP_STATUS IS NULL) and tlb.LAUNCH_ID IN ('"+launchId+"')";						
+								+ " AND (tlb.BP_STATUS != 'REJECTED BY TME' OR tlb.BP_STATUS IS NULL) and tlb.LAUNCH_ID IN ("+launchId+")";
 						if (pageDisplayLength == 0) {
 							query2 += " ORDER BY abc.ACCOUNT_NAME,tlb.BP_CODE) AS LAUNCH_TEMP";
 						} else {
 							query2 += " ORDER BY abc.ACCOUNT_NAME,tlb.BP_CODE) AS LAUNCH_TEMP WHERE ROW_NEXT BETWEEN " + pageDisplayStart + " AND " + pageDisplayLength + " ";
 						}
-						logger.info("Query of pagination :"+ query2);
+						//logger.info("Query of pagination :"+ query2);
 						Query query = sessionFactory.getCurrentSession().createNativeQuery(query2);
 						
 						Iterator<Object> itr = query.list().iterator();
@@ -2141,12 +2148,10 @@ public class LaunchDaoImpl implements LaunchDao {
 									launchBean.setHulOlCode(obj[9]== null ? "" :obj[9].toString());
 									launchBean.setCustomerCode(obj[10]== null ? "" :obj[10].toString());
 									
-							downloadDataList.add(launchBean);
-							
-							
+							downloadDataList.add(launchBean);		
 
 						}	
-					}
+					
 					return downloadDataList;
 
 				} catch (Exception ex) {
@@ -2160,20 +2165,27 @@ public class LaunchDaoImpl implements LaunchDao {
 		@Override
 		public int getLaunchListRowCountGrid(List<String> listOfLaunchData) {
 			List<BigInteger> list = null;
+			String launchId="";
+			if(listOfLaunchData.size()>1) {
+			 launchId= listOfLaunchData.stream().collect(Collectors.joining("','", "'", "'"));
+			}
+			else {
+			 launchId =listOfLaunchData.toString().replace("[","'").replace("]","'");
+			}
+			
 			try {
-				for(String launchId : listOfLaunchData) {
 				String rowCount = "SELECT COUNT(1) FROM (SELECT DISTINCT asd.LAUNCH_NAME,tlb.BP_CODE,tlb.BP_DESCRIPTION,asd.LAUNCH_MOC,abc.ACCOUNT_NAME_L2, abc.ACCOUNT_NAME ACCOUNT_NAME,abc.depot,abc.HUL_STORE_FORMAT,abc.CLUSTER,abc.REPORTING_CODE,(CASE WHEN tvcom.FMCG_CSP_CODE IS NOT NULL  THEN tvcom.FMCG_CSP_CODE ELSE tvcom.COLOUR_CSP_CODE END) AS DEPO_CODE ,ROW_NUMBER() OVER (ORDER BY abc.UPDATED_DATE DESC) AS ROW_NEXT"
 						+ " FROM MODTRD.TBL_LAUNCH_BUILDUP_TEMP abc  "
 						+ " INNER JOIN TBL_VAT_COMM_OUTLET_MASTER tvcom ON tvcom.HUL_OUTLET_CODE=abc.HFS_CODE  "
 						+ " INNER JOIN MODTRD.TBL_LAUNCH_MASTER asd ON asd.LAUNCH_ID=abc.LAUNCH_ID  "
 						+ " INNER JOIN TBL_LAUNCH_BASEPACK tlb ON tlb.LAUNCH_ID=asd.LAUNCH_ID "
 						+ " WHERE asd.LAUNCH_REJECTED !='2' AND tlb.BP_CODE = trim(substr(SKU_NAME, 1, locate(':', SKU_NAME) - 1)) "
-						+ " AND (tlb.BP_STATUS != 'REJECTED BY TME' OR tlb.BP_STATUS IS NULL) and tlb.LAUNCH_ID IN('"+launchId +"')";
-				rowCount += " )AS LAUNCH_TEMP ";
+						+ " AND (tlb.BP_STATUS != 'REJECTED BY TME' OR tlb.BP_STATUS IS NULL) and tlb.LAUNCH_ID IN("+launchId+") )AS LAUNCH_TEMP ";
 
+				System.out.println("Row Count Query:"+ rowCount);
 				Query query = sessionFactory.getCurrentSession().createNativeQuery(rowCount);
 				list = query.list();
-			}} catch (Exception ex) {
+			} catch (Exception ex) {
 				logger.debug("Exception: ", ex);
 			}
 			return (list != null && list.size() > 0) ? list.get(0).intValue() : 0;
