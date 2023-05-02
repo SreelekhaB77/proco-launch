@@ -776,7 +776,7 @@ function coedownloadFinalStrLst() {
 }
 //last screen save	
 
-function coeDocument(){
+/*function coeDocument(){
 	
 	var launchIdsArr =  getlaunchId();
 	var LaunchStr    = launchIdsArr.join();
@@ -807,7 +807,7 @@ function coeDocument(){
              //$('#successblockUpload').show().find('span').html(' Launch Created Successfully !!!');
              $("#coelaunchSubTab").click();
             var row = "";
-			/*
+			
 			for (var i = 0; i < coestrlstdata.responseData.listOfCoeLaunchStoreListResponse.length; i++) {
 				row += "<tr><td><input name='coelaunchbase' type='text' class='form-control l1chain' readonly value= '"
 			 		+ coestrlstdata.responseData.listOfCoeLaunchStoreListResponse[i].launchName
@@ -843,7 +843,7 @@ function coeDocument(){
 			 		+ coestrlstdata.responseData.listOfCoeLaunchStoreListResponse[i].sellInVal
 			 		+"'></td></tr>";
 			}
-			*/
+			
 			
 			
 				for (var i = 1; i < coestrlstdata.responseData.length; i++) {
@@ -905,7 +905,75 @@ function coeDocument(){
 			    console.log( errorThrown );
 			}
 			});
+			} */
+//Added by Prathap HR-SPRINT 13P1 for launch store list pagination starts			
+var oTable;
+function coeDocument(){
+var launchIdsArr =  getlaunchId();
+var LaunchStr    = launchIdsArr.join();
+oTable = $('#coefinalTable').DataTable({
+				    	   "bProcessing": true,
+				             "bServerSide": true,
+				             "scrollY":       "200px",
+						        "scrollX":        true,
+						        "scrollCollapse": true,
+						        "paging":         true,
+						        "ordering": false,
+						        "searching": false,
+						        "select": true,
+				             "lengthMenu" : [
+									[ 5, 10, 25, 50, 100 ],
+									[ 5, 10, 25, 50, 100 ] ],
+						        "oLanguage": {
+					                  "oPaginate": {
+					                      "sNext": "&rarr;",
+					                      "sPrevious": "&larr;"
+					                  },
+					                  "sLengthMenu": "Records per page _MENU_ ",
+					                  "sEmptyTable": "No Pending launches."
+					
+					              },
+				             "iDisplayLength": 10,
+					      	 "iDisplayStart": 0,
+				              "sAjaxSource": ""+LaunchStr+'/getLaunchStoreListCoe.htm',
+				      		   "fnServerParams": function(aoData) {
+				                aoData.push(
+				    	                {"name": "LaunchStr", "value": LaunchStr}
+ 				    	                
+				    	                );
+				    	           $("#coelaunchSubTab").click();
+				    	                
+				              }, 
+				              "aoColumns": [{
+				                    "mData": "launchName"
+			                  },
+							  {
+			                    "mData": "basepackCode"
+			                  },{
+			                    "mData": "basepackDisc"
+			                  },{
+			                    "mData": "launchMoc"
+			                  }, 			  {
+			                    "mData": "l1Chain"
+			                  },{
+			                    "mData": "l2Chain"
+			                  }, {
+			                    "mData": "depot"
+			                  }, {
+			                    "mData": "storeFormat"
+			                  }, {
+			                    "mData": "cluster"
+			                  }, {
+			                    "mData": "hulOlCode"
+			                  }, {
+			                    "mData": "customerCode"
+			                  }]
+				            });
+				       				       
+				       oTable.columns.adjust().draw();
 }
+//Added by Prathap HR-SPRINT 13P1 for launch store list pagination ends			
+
 
 //screen 7 last screen download
 /*function coedownloadMstnClrTemplate() {

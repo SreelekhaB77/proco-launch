@@ -10,6 +10,7 @@ import com.hul.launch.request.AcceptByTmeRequestByUpload;
 import com.hul.launch.request.RejectByTmeRequest;
 import com.hul.launch.request.SaveLaunchSubmitRequest;
 import com.hul.launch.response.CoeDocDownloadResponse;
+import com.hul.launch.response.CoeLaunchStoreListResponse;
 import com.hul.launch.response.LaunchCoeBasePackResponse;
 import com.hul.launch.response.LaunchCoeClusterResponse;
 import com.hul.launch.response.LaunchCoeFinalPageResponse;
@@ -64,6 +65,9 @@ public interface LaunchDao {
 
 	List<ArrayList<String>> getLaunchStoreListDump(ArrayList<String> headerDetail, String userId,
 			List<String> listOfLaunchData);
+	
+	public List<CoeLaunchStoreListResponse> getLaunchStoreListDumpPagination(List<String> listOfLaunchData,int pageDisplayStart, int pageDisplayLength);
+	
 
 	String saveLaunchStatus(String result, String userId);
 
@@ -104,5 +108,7 @@ public interface LaunchDao {
 		// Added By Harsha as part of sprint 8
 		public List<ArrayList<String>> getLaunchStoreLimitListDump(ArrayList<String> headerDetail, String userId,
 				List<String> listOfLaunchData);
+
+		public int getLaunchListRowCountGrid(List<String> listOfLaunchData);
 		
 }
