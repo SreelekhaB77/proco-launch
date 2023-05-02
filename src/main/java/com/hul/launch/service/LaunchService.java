@@ -8,6 +8,7 @@ import com.hul.launch.request.AcceptByTmeRequest;
 import com.hul.launch.request.RejectByTmeRequest;
 import com.hul.launch.request.SaveLaunchSubmitRequest;
 import com.hul.launch.response.CoeDocDownloadResponse;
+import com.hul.launch.response.CoeLaunchStoreListResponse;
 import com.hul.launch.response.LaunchCoeBasePackResponse;
 import com.hul.launch.response.LaunchCoeClusterResponse;
 import com.hul.launch.response.LaunchCoeFinalPageResponse;
@@ -58,8 +59,7 @@ public interface LaunchService {
 	public List<ArrayList<String>> getLaunchStoreListDump(ArrayList<String> headerDetail, String userId,
 			List<String> listOfLaunchData);
 	
-	public List<ArrayList<String>> getLaunchStoreListDumpPagination(ArrayList<String> headerDetail, String userId,
-			List<String> listOfLaunchData,int pageDisplayStart, int pageDisplayLength, String searchParameter);
+	public List<CoeLaunchStoreListResponse> getLaunchStoreListDumpPagination(List<String> listOfLaunchData,int pageDisplayStart, int pageDisplayLength);
 	
 	
 	public String saveLaunchStatus(String result, String userId);
@@ -97,7 +97,7 @@ public interface LaunchService {
 	List<ArrayList<String>> getLaunchStoreListLimitDump(ArrayList<String> headerDetail, String userId,
 			List<String> listOfLaunchData);
 
-	public int getLaunchListRowCountGrid(List<String> listOfLaunchData, String searchParameter);
+	public int getLaunchListRowCountGrid(List<String> listOfLaunchData);
 
 	
 }

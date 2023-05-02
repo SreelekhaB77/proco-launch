@@ -34,6 +34,7 @@ import com.hul.launch.constants.ResponseConstants;
 import com.hul.launch.model.TblLaunchMaster;
 import com.hul.launch.request.GetCoeLaunchDetailsRequest;
 import com.hul.launch.response.CoeDocDownloadResponse;
+import com.hul.launch.response.CoeLaunchStoreListResponse;
 import com.hul.launch.response.CoeStoreListJsonObject;
 import com.hul.launch.response.GlobleResponse;
 import com.hul.launch.response.LaunchCoeBasePackResponse;
@@ -567,39 +568,30 @@ public class CoeLaunchPlanController {
 	@RequestMapping(value = "{launchIds}/getLaunchStoreListCoe.htm", method = RequestMethod.GET)
 	public @ResponseBody String getLaunchStoreListCoe(@PathVariable("launchIds") String launchIds
 			,Model model, HttpServletRequest request, HttpServletResponse response) {
-		
-		
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		CoeStoreListJsonObject jsonObj = new CoeStoreListJsonObject();
-		List<ArrayList<String>> listOfLaunch = new ArrayList<ArrayList<String>>();
-		ArrayList<String> headerDetail = getLaunchStoreListCoe();
+		//List<ArrayList<String>> listOfLaunch = new ArrayList<ArrayList<String>>();
+		//ArrayList<String> headerDetail = getLaunchStoreListCoe();
+		
 		//Added by Kavitha D for launch performance-SPRINT 13P1
 		String userId = (String) request.getSession().getAttribute("UserID");
-		//Integer pageDisplayStart = Integer.valueOf(request.getParameter("iDisplayStart"));
-		//Integer pageDisplayLength = Integer.valueOf(request.getParameter("iDisplayLength"));
-		Integer pageDisplayStart =0;
-		Integer pageDisplayLength =100;
+		Integer pageDisplayStart = Integer.valueOf(request.getParameter("iDisplayStart"));
+		Integer pageDisplayLength = Integer.valueOf(request.getParameter("iDisplayLength"));
 		logger.info("Page Display Start:" +pageDisplayStart);
 		logger.info("Page Display length:" +pageDisplayLength);		
 
-		
 		Integer pageNumber = (pageDisplayStart / pageDisplayLength) + 1;
-		String searchParameter = request.getParameter("sSearch");
 		try {
 			
 			String[] launchId = launchIds.split(",");
 			List<String> listOfLaunchData = Arrays.asList(launchId);
 			//listOfLaunch = launchService.getLaunchStoreListDump(headerDetail, userId,listOfLaunchData);
-			int rowCount = launchService.getLaunchListRowCountGrid(listOfLaunchData,searchParameter);
-			listOfLaunch = launchService.getLaunchStoreListDumpPagination(headerDetail, userId,listOfLaunchData,(pageDisplayStart + 1),(pageNumber * pageDisplayLength),searchParameter);
+			int rowCount = launchService.getLaunchListRowCountGrid(listOfLaunchData);
+			List<CoeLaunchStoreListResponse> listOfLaunch = launchService.getLaunchStoreListDumpPagination(listOfLaunchData,(pageDisplayStart + 1),(pageNumber * pageDisplayLength));
 			
 			jsonObj.setJsonBean(listOfLaunch);
 			jsonObj.setiTotalDisplayRecords(rowCount);
 			jsonObj.setiTotalRecords(rowCount);
-
-			//Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			
-			
 			
 			if (null == listOfLaunch.get(0)) {
 				throw new Exception("Record Not Found");

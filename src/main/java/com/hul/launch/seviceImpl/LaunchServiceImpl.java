@@ -20,6 +20,7 @@ import com.hul.launch.request.AcceptByTmeRequest;
 import com.hul.launch.request.RejectByTmeRequest;
 import com.hul.launch.request.SaveLaunchSubmitRequest;
 import com.hul.launch.response.CoeDocDownloadResponse;
+import com.hul.launch.response.CoeLaunchStoreListResponse;
 import com.hul.launch.response.LaunchCoeBasePackResponse;
 import com.hul.launch.response.LaunchCoeClusterResponse;
 import com.hul.launch.response.LaunchCoeFinalPageResponse;
@@ -134,13 +135,12 @@ public class LaunchServiceImpl implements LaunchService {
 	}
 
 	@Override
-	public List<ArrayList<String>> getLaunchStoreListDumpPagination(ArrayList<String> headerDetail, String userId,
-			List<String> listOfLaunchData,int pageDisplayStart, int pageDisplayLength, String searchParameter){
-		return launchDao.getLaunchStoreListDumpPagination(headerDetail, userId, listOfLaunchData,pageDisplayStart,pageDisplayLength,searchParameter);
+	public List<CoeLaunchStoreListResponse> getLaunchStoreListDumpPagination(List<String> listOfLaunchData,int pageDisplayStart, int pageDisplayLength){
+		return launchDao.getLaunchStoreListDumpPagination(listOfLaunchData,pageDisplayStart,pageDisplayLength);
 	}
 	@Override
-	public int getLaunchListRowCountGrid(List<String> listOfLaunchData, String searchParameter) {
-		return launchDao.getLaunchListRowCountGrid(listOfLaunchData,searchParameter);
+	public int getLaunchListRowCountGrid(List<String> listOfLaunchData) {
+		return launchDao.getLaunchListRowCountGrid(listOfLaunchData);
 	}
 	
 	@Override

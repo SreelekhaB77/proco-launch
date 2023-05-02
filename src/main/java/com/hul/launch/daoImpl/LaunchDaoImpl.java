@@ -2084,17 +2084,15 @@ public class LaunchDaoImpl implements LaunchDao {
 				return null;
 			}
 		}
+		//Added by Kavitha D-SPRINT 13P1 changes-Starts
 		@Override
-		@SuppressWarnings({ "unchecked", "null" })
-		public List<ArrayList<String>> getLaunchStoreListDumpPagination(ArrayList<String> headerDetail, String userId,
-				List<String> listOfLaunchData, int pageDisplayStart, int pageDisplayLength, String searchParameter) {
+		@SuppressWarnings({ "unchecked" })
+		public List<CoeLaunchStoreListResponse> getLaunchStoreListDumpPagination(List<String> listOfLaunchData, int pageDisplayStart, int pageDisplayLength) {
 
-				List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
+				List<CoeLaunchStoreListResponse> downloadDataList = new ArrayList<>();
+                //List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
 				try {
-					downloadDataList.add(headerDetail);
-					for(String launchId : listOfLaunchData) {
-						
-						
+					for(String launchId : listOfLaunchData) {	
 						String query2 = " SELECT * FROM ( SELECT DISTINCT asd.LAUNCH_NAME,tlb.BP_CODE,tlb.BP_DESCRIPTION,asd.LAUNCH_MOC,abc.ACCOUNT_NAME_L2,"
 								+ " abc.ACCOUNT_NAME ACCOUNT_NAME,abc.depot,abc.HUL_STORE_FORMAT,abc.CLUSTER,abc.REPORTING_CODE,(CASE WHEN tvcom.FMCG_CSP_CODE IS NOT NULL "
 								+ " THEN tvcom.FMCG_CSP_CODE ELSE tvcom.COLOUR_CSP_CODE END) AS DEPO_CODE ,ROW_NUMBER() OVER (ORDER BY abc.UPDATED_DATE DESC) AS ROW_NEXT "
@@ -2103,12 +2101,7 @@ public class LaunchDaoImpl implements LaunchDao {
 								+ " INNER JOIN MODTRD.TBL_LAUNCH_MASTER asd ON asd.LAUNCH_ID=abc.LAUNCH_ID "
 								+ " INNER JOIN TBL_LAUNCH_BASEPACK tlb ON tlb.LAUNCH_ID=asd.LAUNCH_ID "
 								+ " WHERE asd.LAUNCH_REJECTED !='2' AND tlb.BP_CODE = trim(substr(SKU_NAME, 1, locate(':', SKU_NAME) - 1)) "
-								+ " AND (tlb.BP_STATUS != 'REJECTED BY TME' OR tlb.BP_STATUS IS NULL) and tlb.LAUNCH_ID IN ('"+launchId+"')";
-
-						if(searchParameter!=null && searchParameter.length()>0){
-							query2 +="  CONCAT(UCASE(asd.LAUNCH_NAME),UCASE(tlb.BP_DESCRIPTION),UCASE(abc.ACCOUNT_NAME)) LIKE UCASE('%"+searchParameter+"%')";
-						}
-						
+								+ " AND (tlb.BP_STATUS != 'REJECTED BY TME' OR tlb.BP_STATUS IS NULL) and tlb.LAUNCH_ID IN ('"+launchId+"')";						
 						if (pageDisplayLength == 0) {
 							query2 += " ORDER BY abc.ACCOUNT_NAME,tlb.BP_CODE) AS LAUNCH_TEMP";
 						} else {
@@ -2135,22 +2128,22 @@ public class LaunchDaoImpl implements LaunchDao {
 									else {
 										dataObj.set(3, dataObj.get(3));
 									}
-
-							//obj = null;
-							downloadDataList.add(dataObj);
+									CoeLaunchStoreListResponse launchBean = new CoeLaunchStoreListResponse();
+									launchBean.setLaunchName(obj[0]== null ? "" :obj[0].toString());
+									launchBean.setBasepackCode(obj[1]== null ? "" :obj[1].toString());
+									launchBean.setBasepackDisc(obj[2]== null ? "" :obj[2].toString());
+									launchBean.setLaunchMoc(dataObj.get(3));
+									launchBean.setL1Chain(obj[4]== null ? "" :obj[4].toString());
+									launchBean.setL2Chain(obj[5]== null ? "" :obj[5].toString());	
+									launchBean.setDepot(obj[6]== null ? "" :obj[6].toString());
+									launchBean.setStoreFormat(obj[7]== null ? "" :obj[7].toString());
+									launchBean.setCluster(obj[8]== null ? "" :obj[8].toString());
+									launchBean.setHulOlCode(obj[9]== null ? "" :obj[9].toString());
+									launchBean.setCustomerCode(obj[10]== null ? "" :obj[10].toString());
+									
+							downloadDataList.add(launchBean);
 							
-							CoeLaunchStoreListResponse launchBean = new CoeLaunchStoreListResponse();
-							launchBean.setLaunchName(obj[0]== null ? "" :obj[0].toString());
-							launchBean.setBasepackCode(obj[1]== null ? "" :obj[1].toString());
-							launchBean.setBasepackDisc(obj[2]== null ? "" :obj[2].toString());
-							launchBean.setLaunchMoc(obj[3]== null ? "" :obj[3].toString());
-							launchBean.setL1Chain(obj[4]== null ? "" :obj[4].toString());
-							launchBean.setL2Chain(obj[5]== null ? "" :obj[5].toString());	
-							launchBean.setDepot(obj[6]== null ? "" :obj[6].toString());
-							launchBean.setStoreFormat(obj[7]== null ? "" :obj[7].toString());
-							launchBean.setCluster(obj[8]== null ? "" :obj[8].toString());
-							launchBean.setHulOlCode(obj[9]== null ? "" :obj[9].toString());
-							launchBean.setCustomerCode(obj[10]== null ? "" :obj[10].toString());
+							
 
 						}	
 					}
@@ -2158,14 +2151,14 @@ public class LaunchDaoImpl implements LaunchDao {
 
 				} catch (Exception ex) {
 					logger.debug("Exception :", ex);
-					ArrayList<String> arrList = new ArrayList<>();
+					/*ArrayList<String> arrList = new ArrayList<>();
 					arrList.add(ex.toString());
-					downloadDataList.add(arrList);
+					downloadDataList.add(arrList);*/
 					return downloadDataList;
 				}
 		}
 		@Override
-		public int getLaunchListRowCountGrid(List<String> listOfLaunchData, String searchParameter) {
+		public int getLaunchListRowCountGrid(List<String> listOfLaunchData) {
 			List<BigInteger> list = null;
 			try {
 				for(String launchId : listOfLaunchData) {
@@ -2176,10 +2169,6 @@ public class LaunchDaoImpl implements LaunchDao {
 						+ " INNER JOIN TBL_LAUNCH_BASEPACK tlb ON tlb.LAUNCH_ID=asd.LAUNCH_ID "
 						+ " WHERE asd.LAUNCH_REJECTED !='2' AND tlb.BP_CODE = trim(substr(SKU_NAME, 1, locate(':', SKU_NAME) - 1)) "
 						+ " AND (tlb.BP_STATUS != 'REJECTED BY TME' OR tlb.BP_STATUS IS NULL) and tlb.LAUNCH_ID IN('"+launchId +"')";
-				
-				if(searchParameter!=null && searchParameter.length()>0){
-					rowCount +="  CONCAT(UCASE(asd.LAUNCH_NAME),UCASE(tlb.BP_DESCRIPTION),UCASE(abc.ACCOUNT_NAME)) LIKE UCASE('%"+searchParameter+"%')";
-				}
 				rowCount += " )AS LAUNCH_TEMP ";
 
 				Query query = sessionFactory.getCurrentSession().createNativeQuery(rowCount);
@@ -2190,3 +2179,4 @@ public class LaunchDaoImpl implements LaunchDao {
 			return (list != null && list.size() > 0) ? list.get(0).intValue() : 0;
 		}
 }
+//Added by Kavitha D-SPRINT 13P1 changes-ends

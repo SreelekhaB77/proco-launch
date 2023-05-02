@@ -3,6 +3,8 @@ package com.hul.launch.response;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hul.proco.controller.listingPromo.PromoListingBean;
+
 public class CoeStoreListJsonObject {
 	
 	int iTotalRecords;
@@ -34,17 +36,20 @@ public class CoeStoreListJsonObject {
 	public void setsColumns(String sColumns) {
 		this.sColumns = sColumns;
 	}
-	public List<CoeLaunchStoreListResponse> getAaData() {
+	public List<CoeLaunchStoreListResponse> getJsonBean() {
 		return aaData;
 	}
-	public void setAaData(List<CoeLaunchStoreListResponse> aaData) {
+	
+	public void setJsonBean(List<CoeLaunchStoreListResponse> aaData) {
 		this.aaData = aaData;
-	}
-	public void setJsonBean(List<ArrayList<String>> listOfLaunch) {
-		this.aaData = aaData;
-		
 	}
 	
-
-
+	
+	@Override
+	public String toString() {
+		return "CoeStoreListJsonObject [iTotalRecords=" + iTotalRecords + ", iTotalDisplayRecords="
+				+ iTotalDisplayRecords + ", sEcho=" + sEcho + ", sColumns=" + sColumns + ", aaData=" + aaData + "]";
+	}
+	
+	
 }
