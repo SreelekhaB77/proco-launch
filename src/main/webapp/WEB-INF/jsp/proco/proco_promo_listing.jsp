@@ -28,6 +28,9 @@
 <link rel="stylesheet" type="text/css"	href="assets/css/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="multiselect/css/jquery.multiselect.css"></head>
+<link rel="stylesheet" href="https://phpcoder.tech/multiselect/css/jquery.multiselect.css">
+
+
 <!--bharati added below style for sprint-9 moc filter changes -->
 <style>
 .promo-filter-div{
@@ -376,6 +379,9 @@ padding-right: 135px;
                                  </select>
 								 </div>
 					</div>
+					<div class="download-btn">
+							<input type="button" class="btn new-btn-download" value="Reset" onclick="javascript: resetdata();" style="margin-top: -50px;"></input>
+					</div>
 					 <div class="form-group col-sm-4" style="margin-top: 20px; margin-left:2px">
                     <label class="control-label col-md-3" for="uom">BASEPACK</label>
                     <div class="col-md-6" style="margin-left:15px;">
@@ -623,6 +629,7 @@ padding-right: 135px;
 		<script type="text/javascript" src="assets/js/custom/proco/promoListing.js"></script>
 		<script type="text/javascript" src="assets/js/custom/proco/alert-modal.js"></script>
 		<script type="text/javascript" src="multiselect/js/jquery.multiselect.js"></script>
+		<script src="https://phpcoder.tech/multiselect/js/jquery.multiselect.js"></script>
 		<script type="text/javascript">
 		var moc = "${mocJson}";
 		var Mocvalue = $('#Mocvalue').val(); //bharati added in sprint-9 for moc filter

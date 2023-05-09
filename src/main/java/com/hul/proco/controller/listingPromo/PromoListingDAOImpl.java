@@ -1780,7 +1780,17 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				moc=getPromoListingMoc();	
 			}
 			
-			String mocValFilter = moc.replaceAll("^|$", "'").replaceAll(",", "','");
+			String mocValFilter=moc.replaceAll(","," ");
+			
+			String[] numbers = mocValFilter.split(" ");
+			StringBuilder quotedString = new StringBuilder();
+			for (String number : numbers) {
+			quotedString.append("'").append(number).append("' ");
+			}
+			String result = quotedString.toString().trim();
+			
+			//String mocValFilter = moc.replaceAll("^|$", "'").replaceAll(",", "','");
+	
 
 		/*String qry=" SELECT PM.CHANNEL_NAME, PM.MOC, CM.ACCOUNT_TYPE, CM.POS_ONINVOICE, CM.PPM_ACCOUNT, PM.PROMO_ID,"
 				+ " PR.PROMOTION_ID AS SOL_CODE, CASE WHEN MOC_GROUP = 'GROUP_ONE' THEN 'MOC' ELSE CASE WHEN MOC_GROUP = 'GROUP_THREE' THEN 'BM' ELSE '26 to 25' END END AS MOC_BM_CYCLE,"
@@ -1795,13 +1805,12 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 				+ " LEFT JOIN (SELECT DISTINCT BASEPACK,SALES_CATEGORY,PPM_SALES_CATEGORY FROM TBL_PROCO_PRODUCT_MASTER_V2) PRM ON PRM.BASEPACK = PM.BASEPACK_CODE "; */
 			//Added by Kavitha D-changes SPRINT 9
 			//qry = sessionFactory.getCurrentSession().createNativeQuery("CALL PROMO_LISTING_DOWNLOAD(:moc)");
-			qry = sessionFactory.getCurrentSession().createNativeQuery("CALL PROMO_LISTING_DOWNLOAD(:mocValFilter,:fromDate,:toDate)"); //Added by kavitha D-SPRINT 11
-			qry.setParameter("mocValFilter", mocValFilter);
+			qry = sessionFactory.getCurrentSession().createNativeQuery("CALL PROMO_LISTING_DOWNLOAD(:result,:fromDate,:toDate)"); //Added by kavitha D-SPRINT 11
+			qry.setParameter("result", result);
 			qry.setParameter("fromDate", fromDate);
 			qry.setParameter("toDate", toDate);
-
 			qry.executeUpdate();
-			
+		
 			/*
 			String query= " SELECT CHANNEL,YEAR,MOC ,ACCOUNT_TYPE,CLAIM_SETTLEMENT_TYPE,SECONDARY_CHANNEL,PPM_ACCOUNT,PROMO_ID,SOLCODE,MOC_CYCLE,PROMO_TIMEPERIOD,SOL_RELEASE_ON,"
 					+ " START_DATE,END_DATE,OFFER_DESC,PPM_DESC,BASEPACK_CODE,BASEPACK_DESC,CHILDPACK,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,QUANTITY,FIXED_BUDGET ,BRANCH,"
