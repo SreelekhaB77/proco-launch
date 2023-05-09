@@ -22,6 +22,16 @@ $(document).ready(function() {
 							promoTable.draw();
 						}*/
 					});
+					var  date  = new Date();
+				var  getMonth = date.getMonth()+1;
+				var  getYear = date.getFullYear();
+				var  pad2Zero = getMonth.toString().padStart(2,'0');
+				var  custDate = [pad2Zero,getYear].join('');
+				
+				mocValueSelected =$('#Mocvalue').val(custDate);
+	             mocValSelected = mocValueSelected.val();
+	              
+	          
 					
 					//bharati commented below code for moc filter issue in sprint-9
 					/*var mocSelectedVal = $('#moc').comboTree({
@@ -136,8 +146,6 @@ $(document).ready(function() {
 
 					});
 					
-					
-					
 					$('#category').change(function(){
 						category = $(this).val();
 						promoTable.draw();
@@ -164,28 +172,37 @@ $(document).ready(function() {
 						});
 						
 						//bharati added for sprint-9 moc filter US
+						
 						$('#Mocvalue').change(function(){
-						Mocvalue = $(this).val();
+							var Mocval = $(this).val();
+						Mocvalue = Mocval.toString();
 						promoTable.draw();
 						});
+						console.log(Mocvalue);
 						//viswas added this changes for filters in sprint-11	
 					$('#ProcoBasepack').change(function(){
-						ProcoBasepack = $(this).val();
+						var basepack = $(this).val();
+                        ProcoBasepack = basepack.toString();
 						promoTable.draw();
 						});
 						
 						$('#PpmAccount').change(function(){
-							PpmAccount = $(this).val();
+							var account = $(this).val();
+                            PpmAccount= account.toString();
 							promoTable.draw();
 						});
 						$('#ProcoClusterList').change(function(){
-							ProcoClusterList = $(this).val();
+							var ProcoCluster = $(this).val();
+                            ProcoClusterList = ProcoCluster.toString();
 							promoTable.draw();
 						});
 						$('#ProcoChannelList').change(function(){
-							ProcoChannelList = $(this).val();
+							var ProcoChannel = $(this).val();
+                            ProcoChannelList = ProcoChannel.toString();
 							promoTable.draw();
 						});
+						
+						
 						$('#startDate1').change(function(){
 							//console.log("hi")
 							startDate1 =$(this).val();
@@ -239,7 +256,7 @@ $(document).ready(function() {
 				    	                {"name": "offerType", "value": offerType}, 
 				    	                {"name": "modality", "value": modality}, 
 				    	                {"name": "year","value": year},
-				    	                {"name": "moc","value": Mocvalue}, //bharati changes this mocVal to MocValue in sprint-9
+				    	                {"name": "moc","value": Mocvalue == null ? custDate: Mocvalue}, //bharati changes this mocVal to MocValue in sprint-9
 				    	                  //viswas add this changes in sprint-11
 				    	                {"name": "promobasepack","value": ProcoBasepack},
 				    	                {"name": "ppmaccount","value": PpmAccount},
@@ -451,8 +468,15 @@ $(document).ready(function() {
 						
 				});
 				var startDate1Val,endDate1Val;
-    mocValueSelected = $('#Mocvalue');
-	mocValSelected = mocValueSelected.val();
+				/*var  date  = new Date();
+				var  getMonth = date.getMonth()+1;
+				var  getYear = date.getFullYear();
+				var  pad2Zero = getMonth.toString().padStart(2,'0');
+				var  custDate = [pad2Zero,getYear].join('');
+				//console.log('modifieddate',custDate)*/
+    //mocValueSelected =$('#Mocvalue').val(custDate);
+    //console.log(mocValueSelected);
+	//mocValSelected = mocValueSelected.val();
 function promoStartDate1(){
 	startDate1Val = $('#startDate1').val();
 	endDate1Val = $('#endDate1').val();
@@ -565,14 +589,17 @@ function extractLast(term){
 function split(val){
 	return val.split(/,\s*/);
 }
+function resetdata(){
+location.reload();
+}
 
 function downloadPromotionFile(){
 	//$("#download").submit();  //bharati commented this line for sprint-9 moc filter value pass to download promo file
 	var SelectedMoc = $("#Mocvalue").val();
-	var SelectedBasepack = $('#ProcoBasepack').val();
-    var SelectedAccount = $('#PpmAccount').val();
-    var SelectedCluster = $('#ProcoClusterList').val();
-    var SelectedChannel = $('#ProcoChannelList').val();
+	var SelectedBasepack = (($('#ProcoBasepack').val()) == null)? 'SELECT BASEPACK':$("#ProcoBasepack").val();
+    var SelectedAccount = (($('#PpmAccount').val()) == null)? 'SELECT PPM ACCOUNT':$("#PpmAccount").val();
+    var SelectedCluster = (($('#ProcoClusterList').val()) == null)? 'SELCET CLUSTER':$("#ProcoClusterList").val();
+    var SelectedChannel = (($('#ProcoChannelList').val()) == null)? 'SELECT CHANNEL':$("#ProcoChannelList").val();
 	var SelectedstartDate1 =(($('#startDate1').val()) == "")? null:$('#startDate1').val();
 	//console.log("startDate is ", startDate1)
 	var SelectedendDate1 =(($('#endDate1').val()) == "")? null:$('#endDate1').val();

@@ -113,7 +113,15 @@ $(document).ready(function() {
 	} catch (ex){
 		console.log(ex);
 	}*/
-	
+	      var  date  = new Date();
+		  var  getMonth = date.getMonth()+1;
+		  var  getYear = date.getFullYear();
+		  var  pad2Zero = getMonth.toString().padStart(2,'0');
+		  var  custDate = [pad2Zero,getYear].join('');
+
+		  mocValueSelected =$('#Mocvalue').val(custDate);
+	      mocValSelected = mocValueSelected.val();     
+	              
 	
 	/***** */
 	//bharati added below code for moc bind options in sprint-9
@@ -346,26 +354,31 @@ $(document).ready(function() {
 						
 						//bharati added for sprint-9 moc filter US
 						$('#Mocvalue').change(function(){
-						Mocvalue = $(this).val();
+						var Mocval = $(this).val();
+						Mocvalue = Mocval.toString();
 						promoTable.draw();
 						});
 
 					//viswas added this changes for filters in sprint-11	
 					$('#ProcoBasepack').change(function(){
-						ProcoBasepack = $(this).val();
+						var basepack = $(this).val();
+						ProcoBasepack = basepack.toString();					
 						promoTable.draw();
 						});
 						
 						$('#PpmAccount').change(function(){
-							PpmAccount = $(this).val();
+							var account = $(this).val();
+							PpmAccount= account.toString();						
 							promoTable.draw();
 						});
 						$('#ProcoClusterList').change(function(){
-							ProcoClusterList = $(this).val();
+							var ProcoCluster = $(this).val();
+							ProcoClusterList = ProcoCluster.toString();
 							promoTable.draw();
 						});
 						$('#ProcoChannelList').change(function(){
-							ProcoChannelList = $(this).val();
+							var ProcoChannel = $(this).val();
+							ProcoChannelList = ProcoChannel.toString();							
 							promoTable.draw();
 						});
 						$('#startDate1').change(function(){
@@ -421,7 +434,7 @@ $(document).ready(function() {
 				    	                {"name": "offerType", "value": offerType}, 
 				    	                {"name": "modality", "value": modality}, 
 				    	                {"name": "year","value": year},
-				    	                {"name": "moc","value": Mocvalue},//bharati changes this mocVal to MocValue in sprint-9
+				    	                {"name": "moc","value": Mocvalue == null ? custDate: Mocvalue},//bharati changes this mocVal to MocValue in sprint-9
 				    	                {"name": "promoId","value": promoId},
 				    	                //viswas add this changes in sprint-11
 				    	               {"name": "promobasepack","value": ProcoBasepack},
@@ -617,9 +630,8 @@ $(document).ready(function() {
 						    window.location.replace("/VisibilityAssetTracker/proco_measure_upload.jsp");
 						})
 				});
-				var startDate1Val,endDate1Val;
- mocValueSelected = $('#Mocvalue');
-	mocValSelected = mocValueSelected.val();
+				
+				var startDate1Val,endDate1Val; 
 function promoStartDate1(){
 	startDate1Val = $('#startDate1').val();
 	endDate1Val = $('#endDate1').val();
@@ -733,15 +745,18 @@ function extractLast(term){
 function split(val){
 	return val.split(/,\s*/);
 }
+function resetdata(){
+alert("HI");
+}
 
 function downloadPromotionFile(){
 	//$("#download").submit();  // commented this line for sprint-9 moc filter value pass to download promo file
 	var SelectedMoc = $("#Mocvalue").val();
 	//Added by viswas in sprint-11 for filters.
-	var SelectedBasepack = $('#ProcoBasepack').val();
-    var SelectedAccount = $('#PpmAccount').val();
-    var SelectedCluster = $('#ProcoClusterList').val();
-    var SelectedChannel = $('#ProcoChannelList').val();
+	var SelectedBasepack = (($('#ProcoBasepack').val()) == null)? 'SELECT BASEPACK':$("#ProcoBasepack").val();
+    var SelectedAccount = (($('#PpmAccount').val()) == null)? 'SELECT PPM ACCOUNT':$("#PpmAccount").val();
+    var SelectedCluster = (($('#ProcoClusterList').val()) == null)? 'SELCET CLUSTER':$("#ProcoClusterList").val();
+    var SelectedChannel = (($('#ProcoChannelList').val()) == null)? 'SELECT CHANNEL':$("#ProcoChannelList").val();
     var SelectedstartDate1 =(($('#startDate1').val()) == "")? null:$('#startDate1').val();
 	//console.log("startDate is ", startDate1)
 	var SelectedendDate1 =(($('#endDate1').val()) == "")? null:$('#endDate1').val();

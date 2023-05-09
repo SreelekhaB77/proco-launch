@@ -100,7 +100,8 @@ margin-top: -75px!important;
 								href="http://34.120.128.205/VisibilityAssetTracker/procoBudgetTme.htm"
 								style="width: 260px;">
 									<div class="proco-budget-icon "></div>
-									<div class="tab-label-proco-budget-inactive OpenSans-font">Budget Report</div>
+									<div class="tab-label-proco-budget-inactive OpenSans-font">Budget
+										Report</div>
 							</a>
 							</li>
 						</c:if>
