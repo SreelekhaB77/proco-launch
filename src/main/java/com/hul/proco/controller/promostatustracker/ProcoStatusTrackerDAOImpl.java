@@ -259,7 +259,7 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 				
 			}
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(promoQuery);
-			System.out.println(promoQuery);
+			//System.out.println(promoQuery);
 			List<Object[]> list = query.list();
 			for (Object[] obj : list) {
 				PromoListingBean promoBean = new PromoListingBean();
@@ -557,7 +557,7 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 				}
 			}*/
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(rowCount);
-			System.out.println(rowCount);
+			//System.out.println(rowCount);
 			list = query.list();
 		} catch (Exception ex) {
 			logger.debug("Exception: ", ex);
@@ -589,7 +589,6 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 		String promoQuery = "";
 		String query = "";
 		try {
-			String mocValFilter = moc.replaceAll("^|$", "'").replaceAll(",", "','");
 			
 			  int userRole = getUserRoleId(userId); 
 			  if(userRole == 2) { 
@@ -611,8 +610,8 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 				    //qry = sessionFactory.getCurrentSession().createNativeQuery("CALL PROMO_LISTING_DOWNLOAD(:moc)");
 				    
 				  try {
-					  qry = sessionFactory.getCurrentSession().createNativeQuery("CALL PROMO_LISTING_DOWNLOAD(:mocValFilter,:fromDate,:toDate)"); //Added by Kavitha D-SPRINT 11
-						qry.setParameter("mocValFilter", mocValFilter);
+					  qry = sessionFactory.getCurrentSession().createNativeQuery("CALL PROMO_LISTING_DOWNLOAD(:moc,:fromDate,:toDate)"); //Added by Kavitha D-SPRINT 11
+						qry.setParameter("moc", moc);
 						qry.setParameter("fromDate", fromDate);
 						qry.setParameter("toDate", toDate);
 
@@ -645,16 +644,13 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 					
 				  //Kavitha D changes for filter-SPRINT 11 starts	
 					if(fromDate.equals("null")|| toDate.equals("null")) {
-						//query += " LR.MOC='"+moc+"'";
-						String mocVal = moc.replaceAll("^|$", "'").replaceAll(",", "','");
-						query +=	"  LR.MOC IN ("+mocVal+")";//Added by Kavitha D-SPRINT13
+						query += " LR.MOC='"+moc+"'";
 					}
 					
 					else if(fromDate.equalsIgnoreCase("2000-01-20") && toDate.equalsIgnoreCase("2000-02-21")){
 						 
-						//query += " LR.MOC='"+moc+"'";	
-						String mocVal = moc.replaceAll("^|$", "'").replaceAll(",", "','");
-						query +=	"  LR.MOC IN ("+mocVal+")";//Added by Kavitha D-SPRINT13
+						query += " LR.MOC='"+moc+"'";	
+						
 					}
 					
 					else {
@@ -663,36 +659,24 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 					
 					if(!promobasepack.equalsIgnoreCase("ALL")) {
 						if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
-							//query +=	"AND LR.BASEPACK_CODE='"+promobasepack+"'";	
-							String promobasepackVal = promobasepack.replaceAll("^|$", "'").replaceAll(",", "','");
-							query +=	" AND LR.BASEPACK_CODE IN ("+promobasepackVal+")";// Added by Kavitha D in sprint 13
-
+							query +=	"AND LR.BASEPACK_CODE='"+promobasepack+"'";						
 						}
 					}
 					if(!ppmaccount.equalsIgnoreCase("ALL")) {
 						if(!ppmaccount.equalsIgnoreCase("SELECT PPM ACCOUNT")){
-							//query +=	"AND LR.PPM_ACCOUNT='"+ppmaccount+"'";
-							String ppmaccountVal = ppmaccount.replaceAll("^|$", "'").replaceAll(",", "','");
-							query +=	" AND LR.PPM_ACCOUNT IN ("+ppmaccountVal+")";// Added by Kavitha D in sprint 13
-
+							query +=	"AND LR.PPM_ACCOUNT='"+ppmaccount+"'";					
 						}
 					}
 					
 					if(!procochannel.equalsIgnoreCase("ALL")) {
 						if(!procochannel.equalsIgnoreCase("SELECT CHANNEL")) {
-							//query +=	"AND LR.CHANNEL='"+procochannel+"'";
-							String procochannelVal = procochannel.replaceAll("^|$", "'").replaceAll(",", "','");
-							query +=	" AND LR.CHANNEL IN ("+procochannelVal+")";// Added by Kavitha D in sprint 13
-
+							query +=	"AND LR.CHANNEL='"+procochannel+"'";
 						}
 					}
 					
 					if(!prococluster.equalsIgnoreCase("ALL")) {
 						if(!prococluster.equalsIgnoreCase("SELECT CLUSTER")) {
-							//query +=	"AND LR.SALES_CLUSTER='"+prococluster+"'";
-							String prococlusterVal = prococluster.replaceAll("^|$", "'").replaceAll(",", "','");
-							query +=	" AND LR.SALES_CLUSTER IN ("+prococlusterVal+")";// Added by Kavitha D in sprint 13
-
+							query +=	"AND LR.SALES_CLUSTER='"+prococluster+"'";
 						}
 					}
 							
