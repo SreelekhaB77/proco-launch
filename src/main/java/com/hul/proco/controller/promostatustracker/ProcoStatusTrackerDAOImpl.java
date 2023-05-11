@@ -684,7 +684,7 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 						if(!prococluster.equalsIgnoreCase("SELECT CLUSTER")) {
 							//query +=	" AND LR.SALES_CLUSTER='"+prococluster+"'";	
 							String prococlusterVal = prococluster.replaceAll("^|$", "'").replaceAll(",", "','");
-							query +=	" AND PM.SALES_CLUSTER IN ("+prococlusterVal+")";// Added by Kavitha D-Sprint13					
+							query +=	" AND LR.SALES_CLUSTER IN ("+prococlusterVal+")";// Added by Kavitha D-Sprint13					
 						}
 					}	
 							
