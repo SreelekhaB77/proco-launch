@@ -393,7 +393,7 @@ margin-left:0px!important;
 								 </div>
 					</div>
 							<div class="download-btn">
-							<input type="button" class="btn new-btn-download" value="Reset" onclick="javascript: resetdata();" style="margin-top: -50px;"></input>
+							<input type="button" class="btn new-btn-download" value="Reset" onclick="javascript: resetdata();" style="margin-top: -28px;cursor:pointer;"></input>
 							</div>
 					 <div class="form-group col-sm-4" style="margin-top: 20px; margin-left: 2px ">
                     <label class="control-label col-md-3" for="uom" style="margin-top: 8px;">BASEPACK</label>

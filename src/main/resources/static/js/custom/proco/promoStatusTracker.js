@@ -746,7 +746,7 @@ function split(val){
 	return val.split(/,\s*/);
 }
 function resetdata(){
-alert("HI");
+location.reload();
 }
 
 function downloadPromotionFile(){
