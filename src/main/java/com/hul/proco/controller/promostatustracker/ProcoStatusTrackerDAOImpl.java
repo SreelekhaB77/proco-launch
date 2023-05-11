@@ -659,26 +659,34 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 					
 					if(!promobasepack.equalsIgnoreCase("ALL")) {
 						if(!promobasepack.equalsIgnoreCase("SELECT BASEPACK")) {
-							query +=	"AND LR.BASEPACK_CODE='"+promobasepack+"'";						
+							//query +=	" AND LR.BASEPACK_CODE='"+promobasepack+"'";
+							String promobasepackVal = promobasepack.replaceAll("^|$", "'").replaceAll(",", "','");
+							query +=	" AND LR.BASEPACK_CODE IN ("+promobasepackVal+")";// Added by Kavitha D- sprint 13					
 						}
 					}
 					if(!ppmaccount.equalsIgnoreCase("ALL")) {
 						if(!ppmaccount.equalsIgnoreCase("SELECT PPM ACCOUNT")){
-							query +=	"AND LR.PPM_ACCOUNT='"+ppmaccount+"'";					
+							//query +=	" AND LR.PPM_ACCOUNT='"+ppmaccount+"'";
+							String ppmaccountVal = ppmaccount.replaceAll("^|$", "'").replaceAll(",", "','");
+							query +=	" AND LR.PPM_ACCOUNT IN ("+ppmaccountVal+")";//Added by Kavitha D-Sprint13			
 						}
 					}
 					
 					if(!procochannel.equalsIgnoreCase("ALL")) {
 						if(!procochannel.equalsIgnoreCase("SELECT CHANNEL")) {
-							query +=	"AND LR.CHANNEL='"+procochannel+"'";
+							//query +=	" AND LR.CHANNEL='"+procochannel+"'";
+							String procochannelVal = procochannel.replaceAll("^|$", "'").replaceAll(",", "','");
+							query +=	" AND LR.CHANNEL IN ("+procochannelVal+")";// Added by Kavitha D-Sprint13				
 						}
 					}
 					
 					if(!prococluster.equalsIgnoreCase("ALL")) {
 						if(!prococluster.equalsIgnoreCase("SELECT CLUSTER")) {
-							query +=	"AND LR.SALES_CLUSTER='"+prococluster+"'";
+							//query +=	" AND LR.SALES_CLUSTER='"+prococluster+"'";	
+							String prococlusterVal = prococluster.replaceAll("^|$", "'").replaceAll(",", "','");
+							query +=	" AND PM.SALES_CLUSTER IN ("+prococlusterVal+")";// Added by Kavitha D-Sprint13					
 						}
-					}
+					}	
 							
 					//Kavitha D changes for filter-SPRINT 11 ends
 			  
@@ -796,8 +804,7 @@ public class ProcoStatusTrackerDAOImpl implements ProcoStatusTrackerDAO {
 					promoQuery += "AND A.MOC = '" + moc + "' ";
 				}
 			}*/
-			  
-			//System.out.println("PromoStatusTracker:"+query);
+			  System.out.println("PromoStatusTracker:"+query);
 			Query query1 = sessionFactory.getCurrentSession().createNativeQuery(query);
 			//query1.setString("moc", moc);
 
