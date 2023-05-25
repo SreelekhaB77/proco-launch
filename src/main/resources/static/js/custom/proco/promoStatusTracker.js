@@ -1476,7 +1476,7 @@ $("#btnSubmitVisiUpload").click(function (event) {
 				               $('#visisuccessblock').hide();
 				                $('#visierrorblockUpload').show().find('span').html(' File Contains Error ');
 				                }
-								 else if(ModRes.includes('File Size Exceeds')){
+								 else if(ModRes.includes('FILE_SIZE_EXCEED')){
 									 $('#visierrorblockUpload').show().find('span').html('File Size Limit Exceeded');
                                      $('#visisuccessblock').hide();
 								 }
