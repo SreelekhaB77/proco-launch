@@ -628,7 +628,14 @@ $("#KAMVolumeUpload").click(function (event) {
 				$('#errorblockApprovalUpload').show().find('span').html('Please Check Uploaded File');
 				//$('#ProcoVolumeerrorblockUpload').hide();
 				$('#ProcoApprovalUploadsuccessblock').hide();
-			}else {
+			}
+			//Added by kajal G for empty rows in excel in SPRINT-12
+			else if (resdata.includes('EMPTY_ROW')) {
+				$('#errorblockApprovalUpload').show().find('span').html('File having some empty rows, Please remove empty rows while uploading');
+				//$('#ProcoVolumeerrorblockUpload').hide();
+				$('#ProcoApprovalUploadsuccessblock').hide();
+			}
+			else {
 				
             	$('#errorblockApprovalUpload').show().find('span').html('Error While Uploading File');
             	$('#ProcoApprovalUploadsuccessblock').hide();
