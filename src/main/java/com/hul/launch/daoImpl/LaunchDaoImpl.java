@@ -1,5 +1,6 @@
 package com.hul.launch.daoImpl;
 
+import java.math.BigInteger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.ListUtils;
 import org.apache.log4j.Logger;
@@ -35,6 +37,7 @@ import com.hul.launch.request.SaveFinalLaunchListRequest;
 import com.hul.launch.request.SaveFinalLaunchRequest;
 import com.hul.launch.request.SaveLaunchSubmitRequest;
 import com.hul.launch.response.CoeDocDownloadResponse;
+import com.hul.launch.response.CoeLaunchStoreListResponse;
 import com.hul.launch.response.LaunchCoeBasePackResponse;
 import com.hul.launch.response.LaunchCoeClusterResponse;
 import com.hul.launch.response.LaunchCoeFinalPageResponse;
@@ -43,6 +46,7 @@ import com.hul.launch.response.LaunchFinalPlanResponse;
 import com.hul.launch.response.LaunchKamInputsResponse;
 import com.hul.launch.response.LaunchKamQueriesAnsweredResponse;
 import com.hul.launch.service.LaunchFinalService;
+import com.hul.proco.controller.listingPromo.PromoListingBean;
 
 /**
  * 
@@ -698,7 +702,7 @@ public class LaunchDaoImpl implements LaunchDao {
 						.prepareStatement("SELECT LAUNCH_MOC_KAM FROM TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS"
 								+ " WHERE IS_ACTIVE = 1 AND  LAUNCH_KAM_ACCOUNT= '" 
 								+ Account + "'"  
-						+ " AND LAUNCH_ID = '" + launchId + "'");		
+						+ " AND LAUNCH_ID IN ("+launchId+")");		
 				ResultSet rs = stmt.executeQuery();
 				while (rs.next()) {
 					launchMoc = rs.getString(1);
@@ -810,7 +814,7 @@ public class LaunchDaoImpl implements LaunchDao {
 								+" and tlb.BP_CODE = trim(substr(SKU_NAME, 1, locate(':', SKU_NAME) - 1)) "  //Added By Sarin - sprint8 11Apr2022 Issuefix , basepack is showing for accounts even if the basepack is rejected.
 								+" AND (tlb.BP_STATUS != 'REJECTED BY TME' OR tlb.BP_STATUS IS NULL) and tlb.LAUNCH_ID IN (:listOfLaunchData)");*/
 
-				
+				//Added by Kavitha D-Sprint 13P1 changes
 				Query query2 = sessionFactory.getCurrentSession().createNativeQuery(" SELECT DISTINCT asd.LAUNCH_NAME,tlb.BP_CODE,tlb.BP_DESCRIPTION,asd.LAUNCH_MOC,abc.ACCOUNT_NAME_L2,"
 						+ " abc.ACCOUNT_NAME ACCOUNT_NAME,abc.depot,abc.HUL_STORE_FORMAT,abc.CLUSTER,abc.REPORTING_CODE,(CASE WHEN tvcom.FMCG_CSP_CODE IS NOT NULL "
 						+ " THEN tvcom.FMCG_CSP_CODE ELSE tvcom.COLOUR_CSP_CODE END) AS DEPO_CODE "
@@ -2081,6 +2085,110 @@ public class LaunchDaoImpl implements LaunchDao {
 				return null;
 			}
 		}
-		
-	
+		//Added by Kavitha D-SPRINT 13P1 changes-Starts
+		@Override
+		@SuppressWarnings({ "unchecked" })
+		public List<CoeLaunchStoreListResponse> getLaunchStoreListDumpPagination(List<String> listOfLaunchData, int pageDisplayStart, int pageDisplayLength) {
+
+				List<CoeLaunchStoreListResponse> downloadDataList = new ArrayList<>();
+				String launchId="";
+				if(listOfLaunchData.size()>1) {
+				 launchId= listOfLaunchData.stream().collect(Collectors.joining("','", "'", "'"));
+				}
+				else {
+				 launchId =listOfLaunchData.toString().replace("[","'").replace("]","'");
+				}
+				
+				try {
+						String query2 = " SELECT * FROM ( SELECT DISTINCT asd.LAUNCH_NAME,tlb.BP_CODE,tlb.BP_DESCRIPTION,asd.LAUNCH_MOC,abc.ACCOUNT_NAME_L2,"
+								+ " abc.ACCOUNT_NAME ACCOUNT_NAME,abc.depot,abc.HUL_STORE_FORMAT,abc.CLUSTER,abc.REPORTING_CODE,(CASE WHEN tvcom.FMCG_CSP_CODE IS NOT NULL "
+								+ " THEN tvcom.FMCG_CSP_CODE ELSE tvcom.COLOUR_CSP_CODE END) AS DEPO_CODE ,ROW_NUMBER() OVER (ORDER BY abc.UPDATED_DATE DESC) AS ROW_NEXT "
+								+ " FROM MODTRD.TBL_LAUNCH_BUILDUP_TEMP abc "
+								+ " INNER JOIN TBL_VAT_COMM_OUTLET_MASTER tvcom ON tvcom.HUL_OUTLET_CODE=abc.HFS_CODE "
+								+ " INNER JOIN MODTRD.TBL_LAUNCH_MASTER asd ON asd.LAUNCH_ID=abc.LAUNCH_ID "
+								+ " INNER JOIN TBL_LAUNCH_BASEPACK tlb ON tlb.LAUNCH_ID=asd.LAUNCH_ID "
+								+ " WHERE asd.LAUNCH_REJECTED !='2' AND tlb.BP_CODE = trim(substr(SKU_NAME, 1, locate(':', SKU_NAME) - 1)) "
+								+ " AND (tlb.BP_STATUS != 'REJECTED BY TME' OR tlb.BP_STATUS IS NULL) and tlb.LAUNCH_ID IN ("+launchId+")";
+						if (pageDisplayLength == 0) {
+							query2 += " ORDER BY abc.ACCOUNT_NAME,tlb.BP_CODE) AS LAUNCH_TEMP";
+						} else {
+							query2 += " ORDER BY abc.ACCOUNT_NAME,tlb.BP_CODE) AS LAUNCH_TEMP WHERE ROW_NEXT BETWEEN " + pageDisplayStart + " AND " + pageDisplayLength + " ";
+						}
+						//logger.info("Query of pagination :"+ query2);
+						Query query = sessionFactory.getCurrentSession().createNativeQuery(query2);
+						
+						Iterator<Object> itr = query.list().iterator();
+						
+						while (itr.hasNext()) {
+							Object[] obj = (Object[]) itr.next();
+							ArrayList<String> dataObj = new ArrayList<String>();
+							for (Object ob : obj) {
+								String value = "";
+								value = (ob == null) ? "" : ob.toString();
+								dataObj.add(value.replaceAll("\\^", ","));
+							}
+									String modifiedMOC = getModifiedMoc(launchId,  dataObj.get(5));
+									if(modifiedMOC!=null && !modifiedMOC.isEmpty()) {
+										String replaceDate = modifiedMOC;
+										dataObj.set(3, replaceDate);
+									}
+									else {
+										dataObj.set(3, dataObj.get(3));
+									}
+									CoeLaunchStoreListResponse launchBean = new CoeLaunchStoreListResponse();
+									launchBean.setLaunchName(obj[0]== null ? "" :obj[0].toString());
+									launchBean.setBasepackCode(obj[1]== null ? "" :obj[1].toString());
+									launchBean.setBasepackDisc(obj[2]== null ? "" :obj[2].toString());
+									launchBean.setLaunchMoc(dataObj.get(3));
+									launchBean.setL1Chain(obj[4]== null ? "" :obj[4].toString());
+									launchBean.setL2Chain(obj[5]== null ? "" :obj[5].toString());	
+									launchBean.setDepot(obj[6]== null ? "" :obj[6].toString());
+									launchBean.setStoreFormat(obj[7]== null ? "" :obj[7].toString());
+									launchBean.setCluster(obj[8]== null ? "" :obj[8].toString());
+									launchBean.setHulOlCode(obj[9]== null ? "" :obj[9].toString());
+									launchBean.setCustomerCode(obj[10]== null ? "" :obj[10].toString());
+									
+							downloadDataList.add(launchBean);		
+
+						}	
+					
+					return downloadDataList;
+
+				} catch (Exception ex) {
+					logger.debug("Exception :", ex);
+					/*ArrayList<String> arrList = new ArrayList<>();
+					arrList.add(ex.toString());
+					downloadDataList.add(arrList);*/
+					return downloadDataList;
+				}
+		}
+		@Override
+		public int getLaunchListRowCountGrid(List<String> listOfLaunchData) {
+			List<BigInteger> list = null;
+			String launchId="";
+			if(listOfLaunchData.size()>1) {
+			 launchId= listOfLaunchData.stream().collect(Collectors.joining("','", "'", "'"));
+			}
+			else {
+			 launchId =listOfLaunchData.toString().replace("[","'").replace("]","'");
+			}
+			
+			try {
+				String rowCount = "SELECT COUNT(1) FROM (SELECT DISTINCT asd.LAUNCH_NAME,tlb.BP_CODE,tlb.BP_DESCRIPTION,asd.LAUNCH_MOC,abc.ACCOUNT_NAME_L2, abc.ACCOUNT_NAME ACCOUNT_NAME,abc.depot,abc.HUL_STORE_FORMAT,abc.CLUSTER,abc.REPORTING_CODE,(CASE WHEN tvcom.FMCG_CSP_CODE IS NOT NULL  THEN tvcom.FMCG_CSP_CODE ELSE tvcom.COLOUR_CSP_CODE END) AS DEPO_CODE ,ROW_NUMBER() OVER (ORDER BY abc.UPDATED_DATE DESC) AS ROW_NEXT"
+						+ " FROM MODTRD.TBL_LAUNCH_BUILDUP_TEMP abc  "
+						+ " INNER JOIN TBL_VAT_COMM_OUTLET_MASTER tvcom ON tvcom.HUL_OUTLET_CODE=abc.HFS_CODE  "
+						+ " INNER JOIN MODTRD.TBL_LAUNCH_MASTER asd ON asd.LAUNCH_ID=abc.LAUNCH_ID  "
+						+ " INNER JOIN TBL_LAUNCH_BASEPACK tlb ON tlb.LAUNCH_ID=asd.LAUNCH_ID "
+						+ " WHERE asd.LAUNCH_REJECTED !='2' AND tlb.BP_CODE = trim(substr(SKU_NAME, 1, locate(':', SKU_NAME) - 1)) "
+						+ " AND (tlb.BP_STATUS != 'REJECTED BY TME' OR tlb.BP_STATUS IS NULL) and tlb.LAUNCH_ID IN("+launchId+") )AS LAUNCH_TEMP ";
+
+				System.out.println("Row Count Query:"+ rowCount);
+				Query query = sessionFactory.getCurrentSession().createNativeQuery(rowCount);
+				list = query.list();
+			} catch (Exception ex) {
+				logger.debug("Exception: ", ex);
+			}
+			return (list != null && list.size() > 0) ? list.get(0).intValue() : 0;
+		}
 }
+//Added by Kavitha D-SPRINT 13P1 changes-ends

@@ -110,11 +110,11 @@ public class DataFromTable {
 		String pid_update="UPDATE TBL_PROCO_PROMOTION_MASTER_TEMP_V2 SET pid='"+pid+"' WHERE MOC_NAME='"+moc+"' AND MOC_YEAR='"+year+"' AND PPM_ACCOUNT='"+ppm_account+"'"; 
 		sessionFactory.getCurrentSession().createNativeQuery(pid_update).executeUpdate();
 	}
-	public void getConbination(Map<String,String> h)
+	public void getConbination(Map<String,String> h, String moc)
 	{
 		//bean.getMoc_name() + bean.getPpm_account() + bean.getYear() + sale_cate
 //		String q_String="SELECT MOC_NAME,MOC_YEAR,PPM_ACCOUNT,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER,CR_SOL_TYPE FROM TBL_PROCO_PROMOTION_MASTER_V2 ";
-		String q_String = "SELECT MOC_NAME,MOC_YEAR,PPM_ACCOUNT,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER,CR_SOL_TYPE,IF (OFFER_TYPE = 'Ground Ops', OFFER_TYPE, OFFER_MODALITY) AS OFFER_MODALITY,CHANNEL_NAME,PROMO_TIMEPERIOD FROM TBL_PROCO_PROMOTION_MASTER_V2 PM INNER JOIN (SELECT CONCAT(SUBSTRING(MOC, 3, 4),SUBSTRING(MOC,1,2)) AS CURRENT_MOC FROM TBL_VAT_MOC_MASTER WHERE STATUS = 'Y' LIMIT 1) MM ON 1=1 WHERE CONCAT(SUBSTRING(PM.MOC, 3, 4),SUBSTRING(PM.MOC,1,2)) >= MM.CURRENT_MOC AND Status !='42'";
+		String q_String = "SELECT MOC_NAME,MOC_YEAR,PPM_ACCOUNT,BASEPACK_CODE,CREATED_BY,CREATED_DATE,CLUSTER,CR_SOL_TYPE,IF (OFFER_TYPE = 'Ground Ops', OFFER_TYPE, OFFER_MODALITY) AS OFFER_MODALITY,CHANNEL_NAME,PROMO_TIMEPERIOD FROM TBL_PROCO_PROMOTION_MASTER_V2 PM INNER JOIN (SELECT CONCAT(SUBSTRING(MOC, 3, 4),SUBSTRING(MOC,1,2)) AS CURRENT_MOC FROM TBL_VAT_MOC_MASTER WHERE STATUS = 'Y' LIMIT 1) MM ON 1=1 WHERE CONCAT(SUBSTRING(PM.MOC, 3, 4),SUBSTRING(PM.MOC,1,2)) >= MM.CURRENT_MOC AND Status !='42' AND PM.MOC='"+moc+"'";
 		List<Object[]> mapdata_list = sessionFactory.getCurrentSession().createNativeQuery(q_String).list();
 		for (Object[] data : mapdata_list) {
 			h.put(String.valueOf(data[0]).toUpperCase() + String.valueOf(data[1]).toUpperCase()
@@ -491,13 +491,13 @@ public class DataFromTable {
 	 * To handle all CR template 
 	 * @param crEntries
 	 */
-	public void getAllSOLCodeAndPromoId(Map<String,String> crEntries,Map<String,String> date_extension,Map<String,ArrayList<String>> check_existing_sol,List<List<String>> check_sol_code_ref) {
+	public void getAllSOLCodeAndPromoId(Map<String,String> crEntries,Map<String,String> date_extension,Map<String,ArrayList<String>> check_existing_sol,List<List<String>> check_sol_code_ref, String moc) {
 		// TODO Auto-generated method stub
 		//String query="SELECT DISTINCT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER,CASE WHEN LOCATE('%', A.PRICE_OFF) > 0 THEN A.PRICE_OFF ELSE ROUND(A.PRICE_OFF, 0) END AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR,B.MOC AS PMR_MOC"
 		String query="SELECT DISTINCT B.PROMOTION_ID,A.PROMO_ID,A.MOC_NAME,A.PPM_ACCOUNT,A.BASEPACK_CODE,A.CLUSTER, A.PRICE_OFF AS PRICE_OFF,A.START_DATE,A.END_DATE,A.PROMO_TIMEPERIOD,A.MOC_YEAR,B.MOC AS PMR_MOC,A.OFFER_MODALITY,IF (A.OFFER_TYPE = 'Ground Ops', A.OFFER_TYPE, A.OFFER_MODALITY) AS OFFER_TYPE"
-				+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 A INNER JOIN TBL_PROCO_MEASURE_MASTER_V2 B "
+				+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 AS A INNER JOIN TBL_PROCO_MEASURE_MASTER_V2 AS B "
 				+ "	ON A.PROMO_ID=B.PROMO_ID "
-				+ "	WHERE B.PROMOTION_STATUS IN ('Approved','AmendApproved','Submitted','AmendSubmitted') AND A.STATUS !='42'";
+				+ "	WHERE B.PROMOTION_STATUS IN ('Approved','AmendApproved','Submitted','AmendSubmitted') AND A.STATUS !='42' AND A.MOC ='"+moc+"'";
 		
 		List<Object[]> list=sessionFactory.getCurrentSession().createNativeQuery(query	).list();
 		

@@ -120,10 +120,16 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				i++;
 			}
 		}
+		
+		try{
+			moc_from_db = datafromtable.getMOC(beans[0].getMoc_name(), beans[0].getYear());
+		}catch(Exception e) {
+			return "INVALID_MOC";
+		}
 		Map<String, String> basepackmap = getAllCategory(listofcategory);
 		Map<String, String> promotimemap = getAllTDPTimeperiod();
 		Map<String, String> commanmap = new HashMap<String, String>();
-		datafromtable.getConbination(commanmap);
+		datafromtable.getConbination(commanmap,moc_from_db);
 		datafromtable.mapPPMandChannel(commanmap);
 		datafromtable.basePackAndSaleCategory(commanmap);
 //		List<String> AQlist = datafromtable.getAQEntries();
@@ -138,7 +144,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		{
 			datafromtable.getCREntries(crEntries);
 			datafromtable.getAllSOLtype(crEntries);
-			datafromtable.getAllSOLCodeAndPromoId(crEntries,date_extensionMap,check_existing_sol, check_sol_code_ref);
+			datafromtable.getAllSOLCodeAndPromoId(crEntries,date_extensionMap,check_existing_sol, check_sol_code_ref,moc_from_db);
 		}
 
 		for (CreateBeanRegular bean : beans) {
@@ -342,9 +348,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						if(!asmlMap.containsKey(bean.getOffer_mod().toUpperCase()+bean.getOfr_type().toUpperCase()))
 						{
 							if (flag == 1)
-								error_msg = error_msg + ",Invalid offer modality and offer type for AMSL";
+								error_msg = error_msg + ",Invalid offer modality and offer type for ASML";
 							else
-								error_msg = error_msg + "Invalid offer modality and offer type for AMSL";
+								error_msg = error_msg + "Invalid offer modality and offer type for ASML";
 							flag=1;
 						}
 					}
