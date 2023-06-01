@@ -103,6 +103,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		Map<String, String> offer_mod_map = datafromtable.getAllOffetTypeAndOfferMod();
 		Map<String, String> asmlMap=datafromtable.handlingASMLAc();
 		Map<String, ArrayList<String>> validationmap = datafromtable.getAllValidationRecords(template);
+		String mocList;
 
 		// Mayur Adding changes for mapping of TME user for category
 		Map<String, String> duplicateMap = new HashMap<String, String>();
@@ -139,11 +140,11 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		Map<String, ArrayList<String>> check_existing_sol = new HashMap<String,ArrayList<String>>();
 		List<List<String>> check_sol_code_ref = new ArrayList();
 		List<String> clusterList = datafromtable.getClusterList();
-		
+		 mocList = moc_from_db;
+
 		if(template.equalsIgnoreCase("cr"))
 		{
 			//Added by Kajal G IN SPRINT-13
-			String mocList = moc_from_db;
 			if(beans[0].getSol_type().trim().equalsIgnoreCase("Date Extension")) {
 				String preMOC = datafromtable.getMOCSRNO(moc_from_db);
 			    mocList +=","+preMOC;
@@ -1819,7 +1820,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			// saveTomainTable(beans, uid, template,
 			// promotimemap,branchmap,abmap,datehandle);
 			
-			datafromtable.updatePPMDescStage(uid,template);
+			datafromtable.updatePPMDescStage(uid,template,mocList );
 			
 			Session session = sessionFactory.getCurrentSession();
 			StoredProcedureQuery proc = session.createStoredProcedureQuery("PROC_PROCO_GENERATE_PROMO_ID");
