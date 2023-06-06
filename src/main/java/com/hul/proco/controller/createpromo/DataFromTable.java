@@ -41,7 +41,7 @@ public class DataFromTable {
 	 * @param uid
 	 * @return void
 	 */
-	public void updatePPMDescStage(String uid, String template_type)
+	public void updatePPMDescStage(String uid, String template_type,String mocList)
 	{
 		String update_ppm_desc = "";
 		if (template_type.equalsIgnoreCase("cr")) {
@@ -52,7 +52,7 @@ public class DataFromTable {
 					+ "INNER JOIN TBL_PROCO_SOL_TYPE S ON S.SOL_REMARK=T.CR_SOL_TYPE "
 					+ " " + "SET "
 					+ "PPM_DESC_STAGE=CONCAT(A.ACCOUNT_TYPE ,':',  B.MODALITY_KEY,':',T.PPM_ACCOUNT,':',C.SALES_CATEGORY,':',S.SOL_TYPE,':',T.OFFER_DESC,':',T.PROMOTION_ID,IF (((A.NON_UNIFY <> '') OR (A.ACCOUNT_TYPE = 'KA' AND A.NON_UNIFY <> 'NON UNIFY' AND T.CR_SOL_TYPE = 'Additional Quantity')), concat(':', 'NON UNIFY'), ''))  WHERE USER_ID='"
-					+ uid + "'  " + "";
+					+ uid + "'  " + " AND T.MOC= "+mocList+""; //moc added by kavitha D-Sprint 14 changes
 		} else {
 			
 			update_ppm_desc = "UPDATE TBL_PROCO_PROMOTION_MASTER_TEMP_V2 T "
@@ -61,8 +61,10 @@ public class DataFromTable {
 					+ "INNER JOIN  (SELECT CHANNEL_NAME,BASEPACK,SALES_CATEGORY FROM (SELECT ROW_NUMBER() OVER (PARTITION BY BASEPACK, CHANNEL_NAME ORDER BY BASEPACK,SALES_CATEGORY) AS ROW_NUM,CHANNEL_NAME,BASEPACK,SALES_CATEGORY FROM TBL_PROCO_PRODUCT_MASTER_V2 A WHERE IS_ACTIVE=1 GROUP BY CHANNEL_NAME,BASEPACK,SALES_CATEGORY) A WHERE ROW_NUM=1) C ON C.BASEPACK=T.BASEPACK_CODE AND C.CHANNEL_NAME = T.CHANNEL_NAME "
 					+ " " + "SET "
 					+ "PPM_DESC_STAGE=CONCAT(A.ACCOUNT_TYPE ,':',  B.MODALITY_KEY,':',T.PPM_ACCOUNT,':',C.SALES_CATEGORY,':',T.OFFER_DESC,IF (A.NON_UNIFY <> '', concat(':', A.NON_UNIFY), ''))  WHERE USER_ID='"
-					+ uid + "'  " + "";
+					+ uid + "'  " + "AND T.MOC= "+mocList+""; //moc added by kavitha D-Sprint 14 changes
 		}
+		
+		System.out.println("PPM desc update:"+update_ppm_desc);
 		sessionFactory.getCurrentSession().createNativeQuery(update_ppm_desc).executeUpdate();
 
 	}

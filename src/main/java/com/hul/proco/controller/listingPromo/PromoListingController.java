@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -79,8 +80,7 @@ public class PromoListingController {
 		Integer pageNumber = (pageDisplayStart / pageDisplayLength) + 1;
 		String cagetory = "", brand = "", basepack = "", custChainL1 = "", custChainL2 = "", geography = "";
 		String offerType = "", modality = "", year = "", moc = "";
-		String promobasepack="", ppmaccount="", procochannel="", prococluster="";
-		
+		String promobasepack="", ppmaccount="", procochannel="",prococluster="";	
 
 
 		if (cagetoryValue == null || cagetoryValue.isEmpty() || (cagetoryValue.equalsIgnoreCase("undefined"))
@@ -184,7 +184,8 @@ public class PromoListingController {
 		int rowCount = promoListingService.getPromoListRowCountGrid(userId,roleId,moc,promobasepack,ppmaccount,procochannel,prococluster,kamAccountsArr,fromDate,toDate);
 		List<PromoListingBean> promoList = promoListingService.getPromoTableListGrid((pageDisplayStart + 1),
 				(pageNumber * pageDisplayLength),userId,roleId,moc,promobasepack,ppmaccount,procochannel,prococluster,searchParameter, kamAccountsArr,fromDate,toDate);
-
+		
+		
 		logger.info("LOGGER OUTPUT FOR PROMOLIST:" + promoList);
 
 		PromoListingJsonObject jsonObj = new PromoListingJsonObject();

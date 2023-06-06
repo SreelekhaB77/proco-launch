@@ -125,11 +125,11 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 			headerList.add("MOC");
 			headerList.add("ACCOUNT TYPE");
 			headerList.add("CLAIM SETTLEMENT TYPE");
-			headerList.add("SECONDARY_CHANNEL");
+			//headerList.add("SECONDARY_CHANNEL"); //commented headers secondary channel,moc cycle and childpack-SPRINT 14 by kavitha D
 			headerList.add("PPM ACCOUNT");
 			headerList.add("PROMO ID");
 			headerList.add("SOL CODE");
-			headerList.add("BM/MOC CYLCLE");
+			//headerList.add("BM/MOC CYLCLE");
 			headerList.add("PROMO TIMEPERIOD");
 			headerList.add("SOL WILL RELEASE ON");
 			headerList.add("START DATE");
@@ -138,7 +138,7 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 			headerList.add("PPM DESCRIPTION");
 			headerList.add("BASEPACK CODE");
 			headerList.add("BASEPACK DESCRIPTION");
-			headerList.add("CHILDPACK");
+			//headerList.add("CHILDPACK");
 			headerList.add("OFFER TYPE");
 			headerList.add("OFFER MODALITY");
 			headerList.add("PRICE OFF");

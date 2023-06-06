@@ -127,7 +127,7 @@ margin-left:0px!important;
 						<li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 budget" style="width:19%;margin-top: 10px;">
 							<a href="http://vat.hulcd.com/VisibilityAssetTracker/procoBudget.htm" style="width:247px;">
 								<div class="proco-budget-icon "></div>
-								<div class="tab-label-proco-budget-inactive OpenSans-font">BUDGET REPORT</div>
+								<div class="tab-label-proco-budget-inactive OpenSans-font">Budget Report</div>
 							</a>
 						</li>	
 					</ul>

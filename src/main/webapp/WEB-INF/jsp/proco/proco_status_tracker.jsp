@@ -28,6 +28,8 @@
 <link rel="stylesheet" type="text/css" 	href="assets/css/fileinput.css" />
 <link rel="stylesheet" type="text/css"	href="assets/css/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
+<link rel="stylesheet" type="text/css" href="multiselect/css/jquery.multiselect.css"></head>
+<link rel="stylesheet" href="https://phpcoder.tech/multiselect/css/jquery.multiselect.css">
 
 </head>
 <!--bharati added below style for sprint-9 moc filter changes -->
@@ -128,7 +130,7 @@ margin-left:0px!important;
                        <li role="presentation"	class="col-md-3 col-sm-6 col-xs-12 budget" style="width:19%">
 							<a href="http://vat.hulcd.com/VisibilityAssetTracker/procoBudget.htm" style="width:247px;">
 								<div class="proco-budget-icon "></div>
-								<div class="tab-label-proco-budget-inactive OpenSans-font">BUDGET REPORT</div>
+								<div class="tab-label-proco-budget-inactive OpenSans-font">Budget Report</div>
 							</a>
 						</li>
 						
@@ -388,18 +390,20 @@ margin-left:0px!important;
 			<div class="form-group col-sm-4" style="margin-top: 20px;">
 						<label for="unique-id" class="control-label col-md-3" style="margin-top: 8px;">MOC</label>
 						<div class="col-md-6" >
-						<select class="form-control" id="Mocvalue" name="Mocvalue" onChange="dateDisable()">
+						<select class="form-control" id="Mocvalue" name="Mocvalue" onChange="dateDisable()" multiple>
 								 <c:forEach items="${mocList}" var="mocValue">
                                    <option value="${mocValue}"><c:out value="${mocValue}"></c:out></option>
                                  </c:forEach>
                                  </select>
 								 </div>
 					</div>
+							<div class="download-btn">
+							<input type="button" class="btn new-btn-download" value="Reset" onclick="javascript: resetdata();" style="margin-top: -28px;cursor:pointer;"></input>
+							</div>
 					 <div class="form-group col-sm-4" style="margin-top: 20px; margin-left: 2px ">
                     <label class="control-label col-md-3" for="uom" style="margin-top: 8px;">BASEPACK</label>
                     <div class="col-md-6" style="margin-left: 28px;">
-                    <select class="form-control" id="ProcoBasepack" name="ProcoBasepack">
-                    <option>SELECT BASEPACK</option>
+                    <select class="form-control" id="ProcoBasepack" name="ProcoBasepack" multiple>
                     <c:forEach  items="${procoBasepacks}" var="procoBasepack">
                     <option value="${procoBasepack}">${procoBasepack}</option>
                  </c:forEach>
@@ -409,8 +413,7 @@ margin-left:0px!important;
                 <div class="form-group col-sm-4" style="margin-top: 20px;">
                 <label class="control-label col-md-3" for="uom" >PPM ACCOUNT</label>
 				<div class="col-md-6"style="margin-left: 30px;">
-				<select class="form-control" id="PpmAccount" name="PpmAccount" >
-				<option>SELECT PPM ACCOUNT</option>
+				<select class="form-control" id="PpmAccount" name="PpmAccount" multiple>
 				<c:forEach items="${ppmAccountList}" var="ppmAccount" >
 				<option value="${ppmAccount}">${ppmAccount}</option>
 				</c:forEach>
@@ -420,8 +423,7 @@ margin-left:0px!important;
 				<div class="form-group col-sm-4"style="margin-left:-2px;">
 				<label class="control-label col-md-3" for="uom"style="margin-top: 8px;">CLUSTER</label>
 				<div class="col-md-6">
-				<select class="form-control" id="ProcoClusterList" name="ProcoClusterList">
-				<option>SELECT CLUSTER</option>
+				<select class="form-control" id="ProcoClusterList" name="ProcoClusterList" multiple>
 				<c:forEach items="${procoClusterList}" var="procoCluster" >
 				<option value="${procoCluster}">${procoCluster}</option>
 				</c:forEach>
@@ -431,8 +433,7 @@ margin-left:0px!important;
 				<div class="form-group col-sm-4">
 				<label class="control-label col-md-3" for="uom"style="margin-top: 8px;">CHANNEL</label>
 				<div class="col-md-6" style="margin-left:30px;">
-				<select class="form-control" id="ProcoChannelList" name="ProcoChannelList">
-				<option>SELECT CHANNEL</option>
+				<select class="form-control" id="ProcoChannelList" name="ProcoChannelList" multiple>
 				<c:forEach items="${procoChannelList}" var="procoChannel" >
 				<option value="${procoChannel}">${procoChannel}</option>
 				</c:forEach>
@@ -577,6 +578,8 @@ margin-left:0px!important;
 		<script type="text/javascript" src="assets/js/custom/proco/promoStatusTracker.js"></script>
 		<script type="text/javascript"
 		src="assets/js/custom/proco/alert-modal.js"></script>
+		<script type="text/javascript" src="multiselect/js/jquery.multiselect.js"></script>
+		<script src="https://phpcoder.tech/multiselect/js/jquery.multiselect.js"></script>
 		<script type="text/javascript">
 		var moc = '${mocJson}';
 		var Mocvalue = $('#Mocvalue').val(); //bharati added in sprint-9 for moc filter
@@ -614,6 +617,39 @@ margin-left:0px!important;
                       0 : Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
               };
           };
+          
+          $(document).ready(function(){
+         	 
+        	  $('#Mocvalue').multiselect({
+        		  columns: 1,
+        		  search: true
+        		  });
+        	  
+        	  $('#ProcoBasepack').multiselect({
+        		  columns: 1,
+        		  nSelectedText: 'selected', 
+        		  nonSelectedText: 'SELECT BASEPACK',
+        		  search: true
+        		  });
+        	  $('#PpmAccount').multiselect({
+        		  columns: 1,
+        		  nSelectedText: 'selected', 
+        		  nonSelectedText: 'SELECT PPM ACCOUNT',
+        		  search: true
+        		  });
+        	  $('#ProcoClusterList').multiselect({
+        		  columns: 1,
+        		  nSelectedText: 'selected', 
+        		  nonSelectedText: 'SELECT CLUSTER',
+        		  search: true
+        		  });
+        	  $('#ProcoChannelList').multiselect({
+        		  columns: 1,
+        		  nSelectedText: 'selected', 
+        		  nonSelectedText: 'SELECT CHANNEL',
+        		  search: true
+        		  });
+          });
 
 		</script>
 </body>

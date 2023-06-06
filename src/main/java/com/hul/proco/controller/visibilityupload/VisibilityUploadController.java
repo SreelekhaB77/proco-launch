@@ -59,7 +59,7 @@ public class VisibilityUploadController {
 		
 		try {
 			if (!CommonUtils.isFileEmpty(file)) {
-				if (CommonUtils.isFileSizeExceeds(file)) {
+				if (CommonUtils.isFileProcoSizeExceeds(file)) {
 					model.addAttribute("FILE_STAUS", "FILE_SIZE_EXCEED");
 					return "FILE_SIZE_EXCEED";
 				} else {

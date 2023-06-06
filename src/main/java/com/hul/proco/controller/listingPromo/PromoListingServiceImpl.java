@@ -224,11 +224,11 @@ public class PromoListingServiceImpl implements PromoListingService {
 		headerList.add("ACCOUNT TYPE");
 		headerList.add("CLAIM SETTLEMENT TYPE");
 		//headerList.add("POS_ONINVOICE");
-		headerList.add("SECONDARY_CHANNEL");
+		//headerList.add("SECONDARY_CHANNEL"); //commented headers secondary channel,moc cycle and childpack by Kavitha D-Sprint 14 changes
 		headerList.add("PPM ACCOUNT");
 		headerList.add("PROMO ID");
 		headerList.add("SOL CODE");
-		headerList.add("BM/MOC CYLCLE");
+		//headerList.add("BM/MOC CYLCLE");
 		headerList.add("PROMO TIMEPERIOD");
 		//headerList.add("AB CREATION");
 		headerList.add("SOL WILL RELEASE ON");
@@ -238,7 +238,7 @@ public class PromoListingServiceImpl implements PromoListingService {
 		headerList.add("PPM DESCRIPTION");
 		headerList.add("BASEPACK CODE");
 		headerList.add("BASEPACK DESCRIPTION");
-		headerList.add("CHILDPACK");
+		//headerList.add("CHILDPACK");
 		headerList.add("OFFER TYPE");
 		headerList.add("OFFER MODALITY");
 		headerList.add("PRICE OFF");
