@@ -2,6 +2,7 @@ package com.hul.proco.controller.createpromo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 
 import java.text.ParseException;
@@ -690,8 +691,14 @@ public class DataFromTable {
 		}
 		return false;
 	}
-	
+	//Added by Kavitha D-SPRINT 15 changes for cr dp quantity
+	 public String getDpQuantity(String Moc_name, String Year,String Ppm_account,String Basepack_code, String Cluster) {
 
+		String query=" SELECT DP_QUANTITY FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE MOC_NAME='"+Moc_name+"' AND MOC_YEAR='"+Year+"' AND PPM_ACCOUNT= '"+Ppm_account+"' AND "
+				+ " BASEPACK_CODE='"+Basepack_code+"' AND CLUSTER= '"+Cluster+"' AND TEMPLATE_TYPE= 'R' ";
+		Query getDpQunatity = sessionFactory.getCurrentSession().createNativeQuery(query);
+		return getDpQunatity.uniqueResult().toString();		
+	}
 	
 	public void getppmDescStage(Map<String, String> commanmap,String uid) {
 		String ppmdesc="SELECT PPM_DESC_STAGE,CHANNEL_NAME,MOC_NAME,PPM_ACCOUNT,BASEPACK_CODE,SALES_CATEGORY FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE USER_ID='"+uid+"'";
