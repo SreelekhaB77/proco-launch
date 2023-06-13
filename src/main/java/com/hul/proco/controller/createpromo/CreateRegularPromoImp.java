@@ -59,9 +59,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	 */
 	private static String SQL_QUERY_INSERT_INTO_PROMOTION_MASTER_TEMP = "INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2 "
 			+ "(CHANNEL_NAME,MOC_NAME,PPM_ACCOUNT,PROMO_TIMEPERIOD,BASEPACK_CODE,BASEPACK_DESC,CHILD_BASEPACK_CODE,OFFER_DESC,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,BUDGET,CLUSTER,MOC_YEAR,"
-			+ "BRANCH,USER_ID,TEMPLATE_TYPE,QUANTITY,AB_CREATION,START_DATE,END_DATE,ERROR_MSG,MOC,CR_SOL_TYPE,PROMOTION_ID,SALES_CATEGORY) " + "VALUES "
+			+ "BRANCH,USER_ID,TEMPLATE_TYPE,QUANTITY,AB_CREATION,START_DATE,END_DATE,ERROR_MSG,MOC,CR_SOL_TYPE,PROMOTION_ID,SALES_CATEGORY,DP_QUANTITY) " + "VALUES "
 			+ "(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14,"
-			+ "?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26)";
+			+ "?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27)";
 
 	/*
 	 * private static String SQL_QUERY_INSERT_INTO_PROMO_TABLE =
@@ -825,6 +825,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						globle_flag = 1;
 
 					query.setString(22, error_msg);
+					query.setString(27, "")	;
 					query.executeUpdate();
 
 					error_msg = "";
@@ -835,6 +836,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			
 			if(template.equalsIgnoreCase("cr"))
 			{
+				
+				String dpQuantity="";
 //				Map<String, String> crEntries = new HashMap<String, String>();
 //				Map<String, String> date_extensionMap = new HashMap<String, String>();
 //				Map<String, ArrayList<String>> check_existing_sol = new HashMap<String,ArrayList<String>>();
@@ -911,6 +914,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				String budget=bean.getBudget().isEmpty() ? ""
 						: String.valueOf(
 								(double) Math.round(Double.parseDouble(bean.getBudget()) * 100) / 100);
+				
 				String quantity=bean.getQuantity().isEmpty() ? ""
 						: String.valueOf(
 								(double) Math.round(Double.parseDouble(bean.getQuantity()) * 100) / 100);
@@ -1159,6 +1163,11 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							|| bean.getSol_type().trim().equalsIgnoreCase("Budget Extension")
 							|| bean.getSol_type().trim().equalsIgnoreCase("Additional Quantity"))
 					{
+						//Added by Kavitha D-SPRINT 15 changes for dp quantity
+						dpQuantity=datafromtable.getDpQuantity(bean.getMoc_name().toUpperCase(), bean.getYear().toUpperCase()
+								, bean.getPpm_account().toUpperCase(), bean.getBasepack_code().toUpperCase()
+								, bean.getCluster());
+												
 						if (!crEntries.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
 								+ bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()
 								+ bean.getCluster())) {
@@ -1733,6 +1742,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						globle_flag = 1;
 
 					query.setString(22, error_msg);
+					query.setString(27, dpQuantity); //Added Dp_Quantity by Kavitha D-SPRINT 15 changes
 					query.executeUpdate();
 
 					error_msg = "";
@@ -1852,9 +1862,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	}
 	
 	public void saveToMain(String uid,String tempString) {
-		String insertString= "INSERT INTO TBL_PROCO_PROMOTION_MASTER_V2 (CHANNEL_NAME, MOC, MOC_NAME, MOC_YEAR, PPM_ACCOUNT, PROMO_TIMEPERIOD, AB_CREATION, BASEPACK_CODE, BASEPACK_DESC, CHILD_BASEPACK_CODE, OFFER_DESC, OFFER_TYPE, OFFER_MODALITY, PRICE_OFF, BUDGET, BRANCH, CLUSTER, PROMO_ID,  PID,START_DATE, END_DATE, TEMPLATE_TYPE, USER_ID, PPM_DESC_STAGE, PPM_DESC,STATUS,ACTIVE,CREATED_BY,PROMOTION_ID,CR_SOL_TYPE,SALES_CATEGORY,QUANTITY)\r\n"
+		String insertString= "INSERT INTO TBL_PROCO_PROMOTION_MASTER_V2 (CHANNEL_NAME, MOC, MOC_NAME, MOC_YEAR, PPM_ACCOUNT, PROMO_TIMEPERIOD, AB_CREATION, BASEPACK_CODE, BASEPACK_DESC, CHILD_BASEPACK_CODE, OFFER_DESC, OFFER_TYPE, OFFER_MODALITY, PRICE_OFF, BUDGET, BRANCH, CLUSTER, PROMO_ID,  PID,START_DATE, END_DATE, TEMPLATE_TYPE, USER_ID, PPM_DESC_STAGE, PPM_DESC,STATUS,ACTIVE,CREATED_BY,PROMOTION_ID,CR_SOL_TYPE,SALES_CATEGORY,QUANTITY,DP_QUANTITY) "
 				+ "SELECT CHANNEL_NAME, MOC, MOC_NAME, MOC_YEAR, PPM_ACCOUNT, PROMO_TIMEPERIOD, AB_CREATION, BASEPACK_CODE, BASEPACK_DESC, CHILD_BASEPACK_CODE, OFFER_DESC, OFFER_TYPE, OFFER_MODALITY, PRICE_OFF, BUDGET, BRANCH, CLUSTER, PROMO_ID,  PID,START_DATE, END_DATE, TEMPLATE_TYPE, USER_ID, PPM_DESC_STAGE, PPM_DESC,'1','1','"
-				+ uid + "',PROMOTION_ID,CR_SOL_TYPE,SALES_CATEGORY,QUANTITY\r\n" + "FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE USER_ID='" + uid + "'";
+				+ uid + "',PROMOTION_ID,CR_SOL_TYPE,SALES_CATEGORY,QUANTITY,DP_QUANTITY " + "FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE USER_ID='" + uid + "'"; //Added Dp_Quantity by Kavitha D-SPRINT 15 changes
 		
 		sessionFactory.getCurrentSession().createNativeQuery(insertString).executeUpdate();
 

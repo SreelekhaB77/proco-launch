@@ -34,8 +34,8 @@ public class DPVolumeUploadDAO implements DPVolumeUpload {
 	static Logger logger = Logger.getLogger(DPVolumeUploadDAO.class);
 
 	private static String SQL_QUERY_INSERT_INTO_PROMOTION_MASTER_TEMP = "INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2"
-			+ "(CHANNEL_NAME,MOC,MOC_YEAR,MOC_NAME,PROMO_ID,PPM_ACCOUNT,PROMO_TIMEPERIOD,BASEPACK_CODE,BASEPACK_DESC,CHILD_BASEPACK_CODE,OFFER_DESC,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,QUANTITY,BRANCH,CLUSTER,TEMPLATE_TYPE,USER_ID,ERROR_MSG,BUDGET)"
-			+ "VALUES" + "(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20,?21)";
+			+ "(CHANNEL_NAME,MOC,MOC_YEAR,MOC_NAME,PROMO_ID,PPM_ACCOUNT,PROMO_TIMEPERIOD,BASEPACK_CODE,BASEPACK_DESC,CHILD_BASEPACK_CODE,OFFER_DESC,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,QUANTITY,BRANCH,CLUSTER,TEMPLATE_TYPE,USER_ID,ERROR_MSG,BUDGET,DP_QUANTITY)"
+			+ "VALUES" + "(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20,?21,?22)";
 
 	@Override
 	public List<ArrayList<String>> getDetailsofDP(ArrayList<String> header) {
@@ -176,6 +176,7 @@ public class DPVolumeUploadDAO implements DPVolumeUpload {
 			{
 			query.setString(21, bean.getBudget());
 			}
+			query.setString(22,bean.getQuantity());//Added dp original quantity column by Kavitha D-SPRINT15
 			query.executeUpdate();
 			error_msg = "";
 
@@ -217,7 +218,7 @@ public class DPVolumeUploadDAO implements DPVolumeUpload {
 		String updateQuantity = "UPDATE TBL_PROCO_PROMOTION_MASTER_V2  T1 "
 				+ "INNER JOIN TBL_PROCO_PROMOTION_MASTER_TEMP_V2 T2 ON T1.PROMO_ID=T2.PROMO_ID AND T1.MOC=T2.MOC AND T1.BASEPACK_CODE=T2.BASEPACK_CODE "
 				+ " AND T1.OFFER_DESC=T2.OFFER_DESC AND T1.CLUSTER=T2.CLUSTER AND T1.PPM_ACCOUNT=T2.PPM_ACCOUNT "
-				+ " SET T1.QUANTITY=T2.QUANTITY,T1.BUDGET=T2.BUDGET, " + " T1.STATUS='3', T1.USER_ID='" + userId + "',T2.UPDATE_STAMP='"
+				+ " SET T1.QUANTITY=T2.QUANTITY,T1.BUDGET=T2.BUDGET,T1.DP_QUANTITY=T2.DP_QUANTITY, " + " T1.STATUS='3', T1.USER_ID='" + userId + "',T1.UPDATE_STAMP='"
 				+ dateFormat.format(date) + "'" + "WHERE T1.STATUS='1' AND T1.ACTIVE=1 AND T2.USER_ID='" + userId + "'";
 		System.out.println("updateQuantity:"+updateQuantity);
 		return sessionFactory.getCurrentSession().createNativeQuery(updateQuantity).executeUpdate();
