@@ -162,8 +162,10 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 			
 				if (roleId.equalsIgnoreCase("NCMM")) {
 				
-				promoQuery += " WHERE (PM.STATUS IN('3','39') OR (PM.STATUS IN ('1','39') AND (PM.TEMPLATE_TYPE = 'NE' OR PM.CR_SOL_TYPE='Additional Quantity'))) AND PM.MOC='"+moc+"' ";// Changed by kajal G for Sprint -11
-							}
+				//promoQuery += " WHERE (PM.STATUS IN('3','39') OR (PM.STATUS IN ('1','39') AND (PM.TEMPLATE_TYPE = 'NE' OR PM.CR_SOL_TYPE='Additional Quantity'))) AND PM.MOC='"+moc+"' ";// Changed by kajal G for Sprint -11
+				promoQuery += " WHERE (PM.STATUS IN('3','39') OR (PM.STATUS IN ('1','39') AND (PM.TEMPLATE_TYPE = 'NE' OR PM.TEMPLATE_TYPE = 'CR'))) AND PM.MOC='"+moc+"' ";// Changed by Kavitha D for Sprint -15
+
+				}
 			
 				if(searchParameter!=null && searchParameter.length()>0){
 					promoQuery +="AND UCASE(PM.PROMO_ID) LIKE UCASE('%"+searchParameter+"%')";
@@ -351,7 +353,9 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 			
 			if (roleId.equalsIgnoreCase("NCMM")) {
 				
-				rowCount += " WHERE (PM.STATUS IN('3','39') OR (PM.STATUS IN ('1','39') AND (PM.TEMPLATE_TYPE = 'NE' OR PM.CR_SOL_TYPE='Additional Quantity'))) AND PM.MOC='"+moc+"'";// Changed by kajal G for Sprint -11
+				//rowCount += " WHERE (PM.STATUS IN('3','39') OR (PM.STATUS IN ('1','39') AND (PM.TEMPLATE_TYPE = 'NE' OR PM.CR_SOL_TYPE='Additional Quantity'))) AND PM.MOC='"+moc+"'";// Changed by kajal G for Sprint -11
+				rowCount += " WHERE (PM.STATUS IN('3','39') OR (PM.STATUS IN ('1','39') AND (PM.TEMPLATE_TYPE = 'NE' OR PM.TEMPLATE_TYPE = 'CR'))) AND PM.MOC='"+moc+"'";// Changed by Kavitha D  for Sprint -15
+
 			}
 		
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(rowCount);
@@ -521,8 +525,12 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 	{
 		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
 		try {
-			String downloadCrQuery= " SELECT DISTINCT PROMO_ID,PPM_ACCOUNT,OFFER_DESC FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE (PM.STATUS IN('3','39') OR (PM.STATUS IN ('1','39') "
-					+ "AND (PM.TEMPLATE_TYPE = 'NE' OR PM.CR_SOL_TYPE='Additional Quantity'))) AND PM.MOC= '"+moc+"'"; // Changed by kajal G for Sprint -11
+			String downloadCrQuery= /*" SELECT DISTINCT PROMO_ID,PPM_ACCOUNT,OFFER_DESC FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE (PM.STATUS IN('3','39') OR (PM.STATUS IN ('1','39') "
+					+ "AND (PM.TEMPLATE_TYPE = 'NE' OR PM.CR_SOL_TYPE='Additional Quantity'))) AND PM.MOC= '"+moc+"'"; */ // Changed by kajal G for Sprint -11 
+			
+					" SELECT DISTINCT CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_MODALITY,PRICE_OFF,DP_QUANTITY,QUANTITY,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE "
+					+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE (PM.STATUS IN('3','39') OR (PM.STATUS IN ('1','39') "
+					+ "AND (PM.TEMPLATE_TYPE = 'NE' OR PM.TEMPLATE_TYPE = 'CR'))) AND PM.MOC= '"+moc+"' "; //Changed by Kavitha D-SPRINT 15 changes
 			Query query1  =sessionFactory.getCurrentSession().createNativeQuery(downloadCrQuery);
 		
 			Iterator itr = query1.list().iterator();
@@ -567,24 +575,35 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 		queryToDelete.setString("userId", userId);
 		queryToDelete.executeUpdate();
 			}
-		Query query = sessionFactory.getCurrentSession().createNativeQuery(" INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2 (PROMO_ID,PPM_ACCOUNT,OFFER_DESC,REMARK,STATUS,USER_ID) VALUES(?0,?1, ?2, ?3, ?4,?5)");
+		Query query = sessionFactory.getCurrentSession().createNativeQuery("INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2 "
+				+ "(CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_MODALITY,PRICE_OFF,DP_QUANTITY,QUANTITY,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE,REMARK,STATUS,USER_ID) VALUES(?0,?1, ?2, ?3, ?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16)");
 		
 		for (int i = 0; i < beanArray.length; i++) {
 			if (beanArray[i].getRemark().equalsIgnoreCase("ACCEPTED") || beanArray[i].getRemark().equalsIgnoreCase("APPROVED") || beanArray[i].getRemark().equalsIgnoreCase("REJECTED")) {
-			query.setString(0, beanArray[i].getPromo_id());
-			query.setString(1, beanArray[i].getCustomer_chain_l1());
-			query.setString(2, beanArray[i].getOffer_desc());
-			query.setString(3, beanArray[i].getRemark());
 			
-
+			query.setString(0, beanArray[i].getChannel()); //Changed by Kavitha D-SPRINT 15 changes
+			query.setString(1, beanArray[i].getMoc());
+			query.setString(2, beanArray[i].getCategory());
+			query.setString(3, beanArray[i].getPpmaccount());
+			query.setString(4, beanArray[i].getPromo_id());
+			query.setString(5, beanArray[i].getOffer_desc());
+			query.setString(6, beanArray[i].getBasepack());
+			query.setString(7, beanArray[i].getOffer_modality());
+			query.setString(8, beanArray[i].getPriceoff());
+			query.setString(9, beanArray[i].getDpquantity());
+			query.setString(10, beanArray[i].getQuantity());
+			query.setString(11, beanArray[i].getCluster());
+			query.setString(12, beanArray[i].getTemplatetype());
+			query.setString(13, beanArray[i].getSoltype());
+			query.setString(14, beanArray[i].getRemark());
 			if(beanArray[i].getRemark().equalsIgnoreCase("ACCEPTED") || beanArray[i].getRemark().equalsIgnoreCase("APPROVED") ) {
-				query.setString(4,"38");
+				query.setString(15,"38");
 			}
 			else if(beanArray[i].getRemark().equalsIgnoreCase("REJECTED")) {
-				query.setString(4,"39");
+				query.setString(15,"39");
 			}
 			
-			query.setString(5,userId);
+			query.setString(16,userId);
 
 			int executeUpdate = query.executeUpdate();
 			

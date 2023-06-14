@@ -64,9 +64,20 @@ public class PromoCrServiceImpl implements PromoCrService {
 	@Override
 	public ArrayList<String> getHeaderListForPromoDownloadCrListing() {
 		ArrayList<String> headerList=new ArrayList<String>();
+		headerList.add("CHANNEL"); //Added by Kavitha D-SPRINT15 changes
+		headerList.add("MOC");
+		headerList.add("SALES CATEGORY");
+		headerList.add("PPM ACCOUNT");
 		headerList.add("PROMO_ID");
-		headerList.add("PPM_ACCOUNT");
 		headerList.add("OFFER_DESCRIPTION");
+		headerList.add("BASEPACK CODE");
+		headerList.add("OFFER MODALITY");
+		headerList.add("PRICE OFF");
+		headerList.add("REGULAR PROMO QUANTITY");
+		headerList.add("QUANTITY");
+		headerList.add("SALES CLUSTER");
+		headerList.add("PROMO ENTRY TYPE");
+		headerList.add("SOL TYPE");
 		headerList.add("REMARKS");
 		return headerList;
 	}
