@@ -293,7 +293,15 @@ $(document)
 						            "mData": "promotionMechanics",
 						           } ,{
 						             "mData": "solCodeStatus",
-						              }
+						           },{
+									"mData" : "category",
+								   },{
+									"mData" : "soltype",
+								   },{
+									"mData" : "templatetype",
+								   },{
+									"mData" : "remark",
+								   }
 				                ]
 				                /* added for second tab end */
 
