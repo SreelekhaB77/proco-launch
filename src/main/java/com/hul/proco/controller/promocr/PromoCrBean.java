@@ -43,8 +43,15 @@ public class PromoCrBean {
 	private String solCode;
 	private String promotionMechanics;
 	private String solCodeStatus;
-	
-	
+	//Added by Kavitha D-SPRINT 15 changes
+	private String channel;
+	private String category;
+	private String priceoff;
+	private String dpquantity;
+	private String cluster;
+	private String soltype;
+	private String templatetype;
+	private String ppmaccount;
 	
 	public String getChangesMade() {
 		return changesMade;
@@ -256,27 +263,85 @@ public class PromoCrBean {
 		this.file = file;
 	}
 
+	
+	public String getChannel() {
+		return channel;
+	}
+
+	public void setChannel(String channel) {
+		this.channel = channel;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getPriceoff() {
+		return priceoff;
+	}
+
+	public void setPriceoff(String priceoff) {
+		this.priceoff = priceoff;
+	}
+
+	public String getDpquantity() {
+		return dpquantity;
+	}
+
+	public void setDpquantity(String dpquantity) {
+		this.dpquantity = dpquantity;
+	}
+
+	public String getCluster() {
+		return cluster;
+	}
+
+	public void setCluster(String cluster) {
+		this.cluster = cluster;
+	}
+
+	public String getSoltype() {
+		return soltype;
+	}
+
+	public void setSoltype(String soltype) {
+		this.soltype = soltype;
+	}
+
+	public String getTemplatetype() {
+		return templatetype;
+	}
+
+	public void setTemplatetype(String templatetype) {
+		this.templatetype = templatetype;
+	}
+
+	
+	public String getPpmaccount() {
+		return ppmaccount;
+	}
+
+	public void setPpmaccount(String ppmaccount) {
+		this.ppmaccount = ppmaccount;
+	}
+
 	@Override
 	public String toString() {
-		return "PromoCrBean [promo_id=" + promo_id + ", basepack=" + basepack + ", offer_desc=" + offer_desc
-				+ ", offer_type=" + offer_type + ", offer_modality=" + offer_modality + ", offer_value=" + offer_value
-				+ ", geography=" + geography + ", quantity=" + quantity + ", uom=" + uom + ", moc=" + moc
+		return "PromoCrBean [file=" + file + ", promo_id=" + promo_id + ", basepack=" + basepack + ", offer_desc="
+				+ offer_desc + ", offer_type=" + offer_type + ", offer_modality=" + offer_modality + ", offer_value="
+				+ offer_value + ", geography=" + geography + ", quantity=" + quantity + ", uom=" + uom + ", moc=" + moc
 				+ ", customer_chain_l1=" + customer_chain_l1 + ", kitting_value=" + kitting_value + ", status=" + status
 				+ ", startDate=" + startDate + ", endDate=" + endDate + ", reason=" + reason + ", remark=" + remark
 				+ ", changesMade=" + changesMade + ", originalId=" + originalId + ", userId=" + userId + ", changeDate="
 				+ changeDate + ", investmentType=" + investmentType + ", solCode=" + solCode + ", promotionMechanics="
-				+ promotionMechanics + ", solCodeStatus=" + solCodeStatus + ", getChangesMade()=" + getChangesMade()
-				+ ", getRemark()=" + getRemark() + ", getReason()=" + getReason() + ", getStartDate()=" + getStartDate()
-				+ ", getEndDate()=" + getEndDate() + ", getStatus()=" + getStatus() + ", getMoc()=" + getMoc()
-				+ ", getCustomer_chain_l1()=" + getCustomer_chain_l1() + ", getKitting_value()=" + getKitting_value()
-				+ ", getPromo_id()=" + getPromo_id() + ", getBasepack()=" + getBasepack() + ", getOffer_desc()="
-				+ getOffer_desc() + ", getOffer_type()=" + getOffer_type() + ", getOffer_modality()="
-				+ getOffer_modality() + ", getOffer_value()=" + getOffer_value() + ", getGeography()=" + getGeography()
-				+ ", getQuantity()=" + getQuantity() + ", getUom()=" + getUom() + ", getOriginalId()=" + getOriginalId()
-				+ ", getUserId()=" + getUserId() + ", getChangeDate()=" + getChangeDate() + ", getInvestmentType()="
-				+ getInvestmentType() + ", getSolCode()=" + getSolCode() + ", getPromotionMechanics()="
-				+ getPromotionMechanics() + ", getSolCodeStatus()=" + getSolCodeStatus() + ", getClass()=" + getClass()
-				+ ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
+				+ promotionMechanics + ", solCodeStatus=" + solCodeStatus + ", channel=" + channel + ", category="
+				+ category + ",  priceoff=" + priceoff + ", dpquantity="
+				+ dpquantity + ", cluster=" + cluster + ", soltype=" + soltype + ", templatetype=" + templatetype
+				+ ", ppmaccount=" + ppmaccount + "]";
 	}
 
 	
