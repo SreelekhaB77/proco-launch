@@ -207,6 +207,10 @@ margin-top: -75px!important;
 						<th>SOL CODE</th>
 						<th>PROMOTION MECHANICS</th>
 						<th>SOL CODE STATUS</th>
+						<th>SALES CATEGORY</th>
+						<th>PROMO ENTRY TYPE</th>
+						<th>SOL TYPE</th>
+						<th>Remark</th>
 					</tr>
 				</thead>
 							</table>

@@ -200,7 +200,7 @@ public class PromoScController {
 						model.addAttribute("FILE_STATUS", "FILE_SIZE_EXCEED");
 						return "FILE_SIZE_EXCEED";
 					} else if (UploadUtil.movefile(file, fileName)) {
-						Map<String, List<Object>> map = ExOM.mapFromExcel(new File(fileName)).to(PromoCrBean.class).map(4, false, null);
+						Map<String, List<Object>> map = ExOM.mapFromExcel(new File(fileName)).to(PromoCrBean.class).map(15, false, null);
 
 						if (map.isEmpty()) {
 							model.addAttribute("FILE_STAUS", "FILE_EMPTY");
