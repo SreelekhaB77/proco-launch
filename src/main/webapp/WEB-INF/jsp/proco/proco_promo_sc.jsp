@@ -203,10 +203,10 @@ margin-top: -75px!important;
 						<th>QUANTITY</th>
 						<th>OFFER VALUE</th>
 						<th name="stat">STATUS</th>
-						<th>INVESTMENT TYPES</th>
+						<!--<th>INVESTMENT TYPES</th>
 						<th>SOL CODE</th>
 						<th>PROMOTION MECHANICS</th>
-						<th>SOL CODE STATUS</th>
+						<th>SOL CODE STATUS</th>--> 
 						<th>SALES CATEGORY</th>
 						<th>PROMO ENTRY TYPE</th>
 						<th>SOL TYPE</th>
