@@ -229,6 +229,7 @@ public class PromoListingServiceImpl implements PromoListingService {
 		headerList.add("PROMO ID");
 		headerList.add("SOL CODE");
 		//headerList.add("BM/MOC CYLCLE");
+		headerList.add("PPM SOL Code Reference");//Added by Kavitha D-SPRINT 15 
 		headerList.add("PROMO TIMEPERIOD");
 		//headerList.add("AB CREATION");
 		headerList.add("SOL WILL RELEASE ON");
@@ -250,12 +251,12 @@ public class PromoListingServiceImpl implements PromoListingService {
 		headerList.add("CMM NAME");
 		headerList.add("TME NAME");
 		headerList.add("SALES CATEGORY");
-		headerList.add("PSA CATEGORY");
+		//headerList.add("PSA CATEGORY");
 		headerList.add("PROMOTION STATUS");
 		headerList.add("PPM PROMOTION CREATOR");
 		headerList.add("PROMOTION MECHANICS");
 		headerList.add("INVESTMENT TYPE");
-		headerList.add("SALES CLUSTER CODE");
+		//headerList.add("SALES CLUSTER CODE");
 		headerList.add("BRAND");
 		headerList.add("SUB BRAND");
 		headerList.add("PPM BUDGET HOLDER NAME");
@@ -266,7 +267,7 @@ public class PromoListingServiceImpl implements PromoListingService {
 		headerList.add("PROMO USER TIME");
 		headerList.add("PPM APPROVED DATE");
 		headerList.add("PPM CREATION DATE");
-		headerList.add("NON UNIFY");
+		//headerList.add("NON UNIFY");
 		headerList.add("PPM SUBMISSION DATE");
 		headerList.add("PPM MODIFIED DATE");
 		headerList.add("COE REMARKS");
@@ -275,7 +276,7 @@ public class PromoListingServiceImpl implements PromoListingService {
 		headerList.add("AUDITOR SUBMIT DATE");
 		headerList.add("MRP");
 		headerList.add("AB CREATION");
-		headerList.add("BUDGET");
+		//headerList.add("BUDGET");
 		headerList.add("CURRENT STATUS"); //Added by Kavitha D-SPRINT 10 Changes
 		headerList.add("SOL TYPE");
 		headerList.add("SOL TYPE SHORTKEY");
