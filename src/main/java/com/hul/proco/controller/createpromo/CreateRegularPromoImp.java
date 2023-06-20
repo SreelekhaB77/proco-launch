@@ -145,7 +145,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		if(template.equalsIgnoreCase("cr"))
 		{
 			//Added by Kajal G IN SPRINT-13
-			if(beans[0].getSol_type().trim().equalsIgnoreCase("Date Extension")) {
+			if(beans[0].getSol_type().trim().equalsIgnoreCase("Date Extension") || beans[0].getSol_type().trim().equalsIgnoreCase("Old Month")) {
 				String preMOC = datafromtable.getMOCSRNO(moc_from_db);
 			    mocList +=","+preMOC;
 			}
