@@ -296,9 +296,9 @@ $(document)
 						           },*/{
 									"mData" : "category",
 								   },{
-									"mData" : "soltype",
-								   },{
 									"mData" : "templatetype",
+								   },{
+									"mData" : "soltype",
 								   },{
 									"mData" : "remark",
 								   }
