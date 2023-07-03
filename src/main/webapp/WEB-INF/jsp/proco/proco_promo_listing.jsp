@@ -371,7 +371,7 @@ padding-right: 135px;
 			<div class="form-group col-sm-4" style="margin-top: 20px;">
 						<label for="unique-id" class="control-label col-md-3"style="margin-left:10px;">MOC</label>
 						<div class="col-md-6" style="margin-left: 25px;" >
-						<select class="form-control" id="Mocvalue"  name="Mocvalue" onChange="dateDisable()" multiple>
+						<select class="form-control" id="Mocvalue"  name="Mocvalue" onChange="dateDisable()">
 								   <c:forEach items="${mocList}" var="mocValue">
                                    <option value="${mocValue}"><c:out value="${mocValue}">
                                    </c:out></option>
@@ -668,12 +668,13 @@ padding-right: 135px;
           };
 
           $(document).ready(function(){
-        	  $('#Mocvalue').multiselect({
+        	  /*$('#Mocvalue').multiselect({
         		  columns: 1,
         		  //nSelectedText: 'selected', 
         		  //nonSelectedText: 'SELECT BASEPACK',
         		  search: true
-        		  });
+        		  });*/
+        		  $('#Mocvalue').trigger("change");
         	  
         	  $('#ProcoBasepack').multiselect({
         		  columns: 1,
