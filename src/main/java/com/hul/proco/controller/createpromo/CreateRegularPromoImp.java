@@ -826,6 +826,8 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 					query.setString(22, error_msg);
 					query.setString(27, "")	;
+					query.setString(28, "")	;
+					query.setString(29, "")	;
 					query.executeUpdate();
 
 					error_msg = "";
