@@ -101,9 +101,32 @@ public class CreateBeanRegular {
 	@Column(name = "MOC NAME")
 	private String moc_name_dp;
 	
+	@Column(name="REGULAR PROMO QUANTITY")
+	private String regular_promo_quantity;
+	
+	@Column(name="REGULAR PROMO BUDGET")
+	private String regular_promo_budget;
+	
+	
 	
 	public String getMoc_name_dp() {
 		return moc_name_dp;
+	}
+
+	public String getRegular_promo_quantity() {
+		return regular_promo_quantity;
+	}
+
+	public void setRegular_promo_quantity(String regular_promo_quantity) {
+		this.regular_promo_quantity = regular_promo_quantity;
+	}
+
+	public String getRegular_promo_budget() {
+		return regular_promo_budget;
+	}
+
+	public void setRegular_promo_budget(String regular_promo_budget) {
+		this.regular_promo_budget = regular_promo_budget;
 	}
 
 	public void setMoc_name_dp(String moc_name_dp) {
@@ -450,10 +473,13 @@ public class CreateBeanRegular {
 				+ ", branch=" + branch + ", cluster=" + cluster + ", quantity=" + quantity + ", sol_type=" + sol_type
 				+ ", end_date=" + end_date + ", cluster_selection=" + cluster_selection + ", basepack_addition="
 				+ basepack_addition + ", topup=" + topup + ", additional_QTY=" + additional_QTY + ", promo_id="
-				+ promo_id + ", Remark=" + Remark + ", investmentType=" + investmentType + ", solCodeStatus="
-				+ solCodeStatus + ", userId=" + userId + ", customer_chain_l1=" + customer_chain_l1 + ", status="
-				+ status + ", promotionMechanics=" + promotionMechanics + ", solCode=" + solCode + ", originalId="
-				+ originalId + ", start_Date=" + start_Date + "]";
+				+ promo_id + ", Remark=" + Remark + ", sol_release_on=" + sol_release_on + ", addition_budget="
+				+ addition_budget + ", sol_code_ref=" + sol_code_ref + ", year=" + year + ", moc_name=" + moc_name
+				+ ", moc_name_dp=" + moc_name_dp + ", regular_promo_quantity=" + regular_promo_quantity
+				+ ", regular_promo_budget=" + regular_promo_budget + ", investmentType=" + investmentType
+				+ ", solCodeStatus=" + solCodeStatus + ", userId=" + userId + ", customer_chain_l1=" + customer_chain_l1
+				+ ", status=" + status + ", promotionMechanics=" + promotionMechanics + ", solCode=" + solCode
+				+ ", originalId=" + originalId + ", start_Date=" + start_Date + "]";
 	}
 
 }

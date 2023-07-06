@@ -108,8 +108,10 @@ public class RegularPromoService {
 		headerList.add("CHILDPACK CODE");
 		headerList.add("OFFER TYPE");
 		headerList.add("OFFER MODALITY");
+		headerList.add("REGULAR PROMO QUANTITY");//Added columns regular promo quantity & budget by Kavitha D-Sprint 16
 		headerList.add("QUANTITY");
 		headerList.add("PRICE OFF");
+		headerList.add("REGULAR PROMO BUDGET");
 		headerList.add("BUDGET");
 		headerList.add("BRANCH");
 		headerList.add("CLUSTER");
@@ -139,8 +141,10 @@ public class RegularPromoService {
 			headerList.add("CHILDPACK CODE");
 			headerList.add("OFFER TYPE");
 			headerList.add("OFFER MODALITY");
+			headerList.add("REGULAR PROMO QUANTITY");//Added columns regular promo quantity & budget by Kavitha D-Sprint 16
 			headerList.add("QUANTITY");
 			headerList.add("PRICE OFF");
+			headerList.add("REGULAR PROMO BUDGET");
 			headerList.add("BUDGET");
 			headerList.add("BRANCH");
 			headerList.add("CLUSTER");
