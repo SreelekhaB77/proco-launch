@@ -994,6 +994,70 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						flag = 1;
 					}
 					//Kajal G changes end
+					//Kavitha D changes -SPRINT 16 starts
+					if(!bean.getRegular_promo_quantity().isEmpty()) {
+						boolean numeric = true;
+				        try {
+				            int num = Integer.parseInt(bean.getRegular_promo_quantity());
+				        } catch (NumberFormatException e) {
+				            numeric = false;
+				        }
+
+				        if(!numeric){
+                            if (flag == 1)
+                                error_msg = error_msg + ",Invalid Regular Promo Quantity";
+                            else
+                                error_msg = error_msg + "Invalid Regular Promo Quantity";
+                            flag=1;
+                        }else {
+                        	if(Integer.parseInt(bean.getRegular_promo_quantity()) <= 0) {
+								if (flag == 1)
+									error_msg = error_msg + ",Min Regular Promo Quantity criteria not met";
+								else
+									error_msg = error_msg + "Min Regular Promo Quantity criteria not met";
+								flag = 1;
+							}
+                        }
+					}else {
+						if (flag == 1)
+							error_msg = error_msg + ",Mandatory input for Regular Promo Quantity";
+						else
+							error_msg = error_msg + "Mandatory input for Regular Promo Quantity";
+						flag = 1;
+					}
+					
+					if(!bean.getRegular_promo_budget().isEmpty()) {
+						boolean numeric = true;
+				        try {
+				            int num = Integer.parseInt(bean.getRegular_promo_budget());
+				        } catch (NumberFormatException e) {
+				            numeric = false;
+				        }
+
+				        if(!numeric){
+                            if (flag == 1)
+                                error_msg = error_msg + ",Invalid Regular Promo Budget";
+                            else
+                                error_msg = error_msg + "Invalid Regular Promo Budget";
+                            flag=1;
+                        }else {
+                        	if(Integer.parseInt(bean.getRegular_promo_budget()) <= 0) {
+								if (flag == 1)
+									error_msg = error_msg + ",Min Regular Promo Budget criteria not met";
+								else
+									error_msg = error_msg + "Min Regular Promo Budget criteria not met";
+								flag = 1;
+							}
+                        }
+					}else {
+						if (flag == 1)
+							error_msg = error_msg + ",Mandatory input for Regular Promo Budget";
+						else
+							error_msg = error_msg + "Mandatory input for Regular Promo Budget";
+						flag = 1;
+					}
+					//Kavitha D changes-SPRINT 16 ends
+					
 					if (bean.getOffer_mod().equalsIgnoreCase("MT Kitting") && bean.getC_pack_code().isEmpty()) {
 						if (flag == 1) {
 							error_msg = error_msg
@@ -1743,11 +1807,11 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					if (flag == 1)
 						globle_flag = 1;
 
-					query.setString(22, error_msg);
 					query.setString(27, dpQuantity); //Added Dp_Quantity by Kavitha D-SPRINT 15 changes
 					query.setString(28, bean.getRegular_promo_quantity());
 					query.setString(29, bean.getRegular_promo_budget()); //Added by Kavitha D-SPRINT 16 changes
-				
+					query.setString(22, error_msg);
+
 					query.executeUpdate();
 
 					error_msg = "";
@@ -2739,7 +2803,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		try {
 			String qry = "";
 			if (error_template.equalsIgnoreCase("cr")) {
-				qry = "SELECT CHANNEL_NAME,MOC_YEAR,MOC_NAME,PROMO_TIMEPERIOD,PROMOTION_ID,PPM_ACCOUNT,OFFER_DESC,BASEPACK_CODE,BASEPACK_DESC,CHILD_BASEPACK_CODE,OFFER_TYPE,OFFER_MODALITY,QUANTITY,PRICE_OFF,BUDGET,BRANCH,CLUSTER,CR_SOL_TYPE,TEMPLATE_TYPE,USER_ID,ERROR_MSG "
+				qry = "SELECT CHANNEL_NAME,MOC_YEAR,MOC_NAME,PROMO_TIMEPERIOD,PROMOTION_ID,PPM_ACCOUNT,OFFER_DESC,BASEPACK_CODE,BASEPACK_DESC,CHILD_BASEPACK_CODE,OFFER_TYPE,OFFER_MODALITY,REGULAR_PROMO_QUANTITY,QUANTITY,PRICE_OFF,REGULAR_PROMO_BUDGET,BUDGET,BRANCH,CLUSTER,CR_SOL_TYPE,TEMPLATE_TYPE,USER_ID,ERROR_MSG "
 						+ "FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE USER_ID=?0";
 			} else if (error_template.equalsIgnoreCase("R")) {
 				if (roleid.equalsIgnoreCase("dp")) {

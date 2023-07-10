@@ -697,7 +697,12 @@ public class DataFromTable {
 		String query=" SELECT DP_QUANTITY FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE MOC_NAME='"+Moc_name+"' AND MOC_YEAR='"+Year+"' AND PPM_ACCOUNT= '"+Ppm_account+"' AND "
 				+ " BASEPACK_CODE='"+Basepack_code+"' AND CLUSTER= '"+Cluster+"' AND OFFER_MODALITY= '"+offer_mod+"' AND TEMPLATE_TYPE= 'R' ";
 		Query getDpQunatity = sessionFactory.getCurrentSession().createNativeQuery(query);
-		return getDpQunatity.uniqueResult().toString();		
+		if(!(getDpQunatity.uniqueResult()==null)) {
+			return getDpQunatity.uniqueResult().toString();					
+		}else {
+			return "";
+		}
+		
 	}
 	
 	public void getppmDescStage(Map<String, String> commanmap,String uid) {
