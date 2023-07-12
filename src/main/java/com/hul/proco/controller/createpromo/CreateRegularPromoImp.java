@@ -994,6 +994,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						flag = 1;
 					}
 					//Kajal G changes end
+					
 					//Kavitha D changes -SPRINT 16 starts
 					if(!bean.getRegular_promo_quantity().isEmpty()) {
 						boolean numeric = true;
@@ -1002,7 +1003,6 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				        } catch (NumberFormatException e) {
 				            numeric = false;
 				        }
-
 				        if(!numeric){
                             if (flag == 1)
                                 error_msg = error_msg + ",Invalid Regular Promo Quantity";
@@ -1012,9 +1012,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
                         }else {
                         	if(Integer.parseInt(bean.getRegular_promo_quantity()) <= 0) {
 								if (flag == 1)
-									error_msg = error_msg + ",Min Regular Promo Quantity criteria not met";
+									error_msg = error_msg + ",Regular Promo Quantity should not be 0 or negative value";
 								else
-									error_msg = error_msg + "Min Regular Promo Quantity criteria not met";
+									error_msg = error_msg + "Regular Promo Quantity should not be 0 or negative value";
 								flag = 1;
 							}
                         }
@@ -1024,37 +1024,33 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						else
 							error_msg = error_msg + "Mandatory input for Regular Promo Quantity";
 						flag = 1;
-					}
-					
-					if(!bean.getRegular_promo_budget().isEmpty()) {
-						boolean numeric = true;
-				        try {
-				            int num = Integer.parseInt(bean.getRegular_promo_budget());
-				        } catch (NumberFormatException e) {
-				            numeric = false;
-				        }
-
-				        if(!numeric){
-                            if (flag == 1)
-                                error_msg = error_msg + ",Invalid Regular Promo Budget";
-                            else
-                                error_msg = error_msg + "Invalid Regular Promo Budget";
-                            flag=1;
-                        }else {
-                        	if(Integer.parseInt(bean.getRegular_promo_budget()) <= 0) {
-								if (flag == 1)
-									error_msg = error_msg + ",Min Regular Promo Budget criteria not met";
-								else
-									error_msg = error_msg + "Min Regular Promo Budget criteria not met";
-								flag = 1;
-							}
-                        }
-					}else {
+					}				
+					if ((bean.getRegular_promo_budget().isEmpty() || bean.getRegular_promo_budget() == null))
+					{
 						if (flag == 1)
-							error_msg = error_msg + ",Mandatory input for Regular Promo Budget";
+							error_msg = error_msg + ", Min Regular Promo Budget criteria not met";
 						else
-							error_msg = error_msg + "Mandatory input for Regular Promo Budget";
-						flag = 1;
+							error_msg = error_msg + " Min Regular Promo Budget criteria not met";
+						flag=1;
+					}else {
+			            double number = Double.parseDouble(bean.getRegular_promo_budget());
+			            if (number <= 0) {
+			            	if (flag == 1)
+								error_msg = error_msg + ",Regular Promo Budget should not be in 0 or negative values";
+							else
+			            	error_msg=	error_msg + " Regular Promo Budget should not be in 0 or negative values";
+			            	flag=1;
+			            }
+			            if (!isStringNumber(bean.getRegular_promo_budget())) {
+							query.setString(29, bean.getRegular_promo_budget());					
+							}else {
+								try {
+								double floatValue = Double.parseDouble(bean.getRegular_promo_budget()); 
+								 String resultString = Double.toString(floatValue);     
+								query.setString(29,resultString);
+							} catch (NumberFormatException e) {
+							    System.out.println("Invalid float format: " + e.getMessage());
+							}} 	
 					}
 					//Kavitha D changes-SPRINT 16 ends
 					
@@ -1808,12 +1804,9 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						globle_flag = 1;
 
 					query.setString(27, dpQuantity); //Added Dp_Quantity by Kavitha D-SPRINT 15 changes
-					query.setString(28, bean.getRegular_promo_quantity());
-					query.setString(29, bean.getRegular_promo_budget()); //Added by Kavitha D-SPRINT 16 changes
+					query.setString(28, bean.getRegular_promo_quantity()); 
 					query.setString(22, error_msg);
-
 					query.executeUpdate();
-
 					error_msg = "";
 					flag = 0;
 				}

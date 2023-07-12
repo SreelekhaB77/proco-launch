@@ -542,9 +542,17 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 			String downloadCrQuery= /*" SELECT DISTINCT PROMO_ID,PPM_ACCOUNT,OFFER_DESC FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE (PM.STATUS IN('3','39') OR (PM.STATUS IN ('1','39') "
 					+ "AND (PM.TEMPLATE_TYPE = 'NE' OR PM.CR_SOL_TYPE='Additional Quantity'))) AND PM.MOC= '"+moc+"'"; */ // Changed by kajal G for Sprint -11 
 			
-					" SELECT DISTINCT CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_MODALITY,PRICE_OFF,DP_QUANTITY,QUANTITY,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE "
+					/*" SELECT DISTINCT CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_MODALITY,PRICE_OFF,DP_QUANTITY,QUANTITY,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE "
 					+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE (PM.STATUS IN('3','39','43') OR (PM.STATUS IN ('1','39','43') "
-					+ "AND (PM.TEMPLATE_TYPE = 'NE' OR PM.TEMPLATE_TYPE = 'CR'))) AND PM.MOC= '"+moc+"' "; //Changed by Kavitha D-SPRINT 15 changes
+					+ "AND (PM.TEMPLATE_TYPE = 'NE' OR PM.TEMPLATE_TYPE = 'CR'))) AND PM.MOC= '"+moc+"' ";*/ //Changed by Kavitha D-SPRINT 15 changes
+			
+			" SELECT DISTINCT PM.CHANNEL_NAME,PM.MOC,PM.SALES_CATEGORY,PM.PPM_ACCOUNT,"
+			+ " PM.PROMO_ID,PM.OFFER_DESC,PM.BASEPACK_CODE,PM.OFFER_TYPE,PM.OFFER_MODALITY,PM.PRICE_OFF, (CASE WHEN PM.TEMPLATE_TYPE = 'R' THEN PM.DP_QUANTITY WHEN PM.TEMPLATE_TYPE='NE' THEN '' WHEN PM.TEMPLATE_TYPE='CR' THEN PM.REGULAR_PROMO_QUANTITY END) AS REGULAR_PROMO_QUANTITY,"
+			+ " PM.QUANTITY,PM.BUDGET AS FIXED_BUDGET, (CASE WHEN PM.TEMPLATE_TYPE='CR' THEN PM.REGULAR_PROMO_BUDGET ELSE PM.BUDGET END) AS REGULAR_PROMO_BUDGET,"
+			+ " PM.CLUSTER, PM.TEMPLATE_TYPE,PM.CR_SOL_TYPE,'NO',(CASE WHEN PM.CR_SOL_TYPE IN('Additional Quantity- Primary','Basepack Addition','Budget Extension','Date Extension','Missing Geo') OR PM.TEMPLATE_TYPE IN('R','NE') THEN 'YES' WHEN PM.CR_SOL_TYPE IN('Top Up','Additional Quantity- Secondary') THEN 'NA' END) AS REQUIRE_STOCK_AVAILABILITY "
+			+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE (PM.STATUS IN('3','39','43') OR (PM.STATUS IN ('1','39','43') "
+			+ "AND (PM.TEMPLATE_TYPE = 'NE' OR PM.TEMPLATE_TYPE = 'CR'))) AND PM.MOC= '"+moc+"'"; //Changed by Kavitha D-Sprint 16 
+
 			Query query1  =sessionFactory.getCurrentSession().createNativeQuery(downloadCrQuery);
 		
 			Iterator itr = query1.list().iterator();
@@ -589,11 +597,15 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 		queryToDelete.setString("userId", userId);
 		queryToDelete.executeUpdate();
 			}
-		Query query = sessionFactory.getCurrentSession().createNativeQuery("INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2 "
-				+ "(CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_MODALITY,PRICE_OFF,DP_QUANTITY,QUANTITY,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE,REMARK,STATUS,USER_ID) VALUES(?0,?1, ?2, ?3, ?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16)");
+		Query query = sessionFactory.getCurrentSession().createNativeQuery( /*"INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2 "
+				+ "(CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_MODALITY,PRICE_OFF,DP_QUANTITY,QUANTITY,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE,REMARK,STATUS,USER_ID) VALUES(?0,?1, ?2, ?3, ?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16)"*/
+				
+				" INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2 "
+				+ "(CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,REGULAR_PROMO_QUANTITY,QUANTITY,BUDGET,REGULAR_PROMO_BUDGET,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE,INCREMENTAL_BUDGET,STOCK_AVAILABILITY,REMARK,STATUS,USER_ID) VALUES(?0,?1, ?2, ?3, ?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21)"); 
+				
 		
 		for (int i = 0; i < beanArray.length; i++) {
-			if (beanArray[i].getRemark().equalsIgnoreCase("ACCEPTED") || beanArray[i].getRemark().equalsIgnoreCase("APPROVED") || beanArray[i].getRemark().equalsIgnoreCase("REJECTED")||beanArray[i].getRemark().isEmpty()) {
+			if (beanArray[i].getSignedOffWithCM().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithCM().equalsIgnoreCase("APPROVED") || beanArray[i].getSignedOffWithCM().equalsIgnoreCase("REJECTED")||beanArray[i].getSignedOffWithCM().isEmpty() ||beanArray[i].getSignedOffWithCM().isBlank() ||beanArray[i].getSignedOffWithCM()==null){
 			
 			query.setString(0, beanArray[i].getChannel()); //Changed by Kavitha D-SPRINT 15 changes
 			query.setString(1, beanArray[i].getMoc());
@@ -602,24 +614,29 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 			query.setString(4, beanArray[i].getPromo_id());
 			query.setString(5, beanArray[i].getOffer_desc());
 			query.setString(6, beanArray[i].getBasepack());
-			query.setString(7, beanArray[i].getOffer_modality());
-			query.setString(8, beanArray[i].getPriceoff());
-			query.setString(9, beanArray[i].getDpquantity());
-			query.setString(10, beanArray[i].getQuantity());
-			query.setString(11, beanArray[i].getCluster());
-			query.setString(12, beanArray[i].getTemplatetype());
-			query.setString(13, beanArray[i].getSoltype());
-			query.setString(14, beanArray[i].getRemark());
-			if(beanArray[i].getRemark().equalsIgnoreCase("ACCEPTED") || beanArray[i].getRemark().equalsIgnoreCase("APPROVED") ) {
-				query.setString(15,"38");
+			query.setString(7, beanArray[i].getOffer_type());
+			query.setString(8, beanArray[i].getOffer_modality());
+			query.setString(9, beanArray[i].getPriceoff());
+			query.setString(10, beanArray[i].getRegularPromoQuantity());
+			query.setString(11, beanArray[i].getQuantity());
+			query.setString(12, beanArray[i].getBudget());
+			query.setString(13, beanArray[i].getRegularPromoBudget());
+			query.setString(14, beanArray[i].getCluster());
+			query.setString(15, beanArray[i].getTemplatetype());
+			query.setString(16, beanArray[i].getSoltype());
+			query.setString(17, beanArray[i].getIncrementalBudget());
+			query.setString(18, beanArray[i].getStockAvailability());
+			query.setString(19, beanArray[i].getSignedOffWithCM()==null?"":beanArray[i].getSignedOffWithCM());
+			if(beanArray[i].getSignedOffWithCM().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithCM().equalsIgnoreCase("APPROVED") ) {
+				query.setString(20,"38");
 			}
-			else if(beanArray[i].getRemark().equalsIgnoreCase("REJECTED")) {
-				query.setString(15,"39");
+			else if(beanArray[i].getSignedOffWithCM().equalsIgnoreCase("REJECTED")) {
+				query.setString(20,"39");
 			}
-			else if (beanArray[i].getRemark().isEmpty()){ //Added by Kavitha D-SPRINT 15 changes 
-				query.setString(15,"43");
+			else if (beanArray[i].getSignedOffWithCM().isEmpty()||beanArray[i].getSignedOffWithCM().isBlank()||beanArray[i].getSignedOffWithCM()==null){ //Added by Kavitha D-SPRINT 15 changes 
+				query.setString(20,"43");
 			}
-			query.setString(16,userId);
+			query.setString(21,userId);
 
 			int executeUpdate = query.executeUpdate();
 			
@@ -708,7 +725,7 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 		Date date = new Date();
 		try {
 			String updateSql=" UPDATE TBL_PROCO_PROMOTION_MASTER_V2 A INNER JOIN TBL_PROCO_PROMOTION_MASTER_TEMP_V2 B ON A.PROMO_ID = B.PROMO_ID "
-					+ " SET A.STATUS=B.STATUS,A.USER_ID='" + userId + "',A.UPDATE_STAMP=' "+ dateFormat.format(date) + "' "
+					+ " SET A.STATUS=B.STATUS,A.INCREMENTAL_BUDGET=B.INCREMENTAL_BUDGET,A.STOCK_AVAILABILITY=B.STOCK_AVAILABILITY,A.REGULAR_PROMO_BUDGET=B.REGULAR_PROMO_BUDGET,A.REGULAR_PROMO_QUANTITY=B.REGULAR_PROMO_QUANTITY,A.USER_ID='" + userId + "',A.UPDATE_STAMP=' "+ dateFormat.format(date) + "' "
 					+ " WHERE B.USER_ID='" + userId + "' " ;
 			Query queryUpdateExisting = sessionFactory.getCurrentSession().createNativeQuery(updateSql);
 		queryUpdateExisting.executeUpdate();

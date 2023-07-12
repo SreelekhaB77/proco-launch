@@ -10,20 +10,21 @@ public class PromoCrBean {
 	
 	@Column(name = "PROMO_ID")
 	private String promo_id;
+	@Column(name="BASEPACK CODE")
 	private String basepack;
-	
 	@Column(name = "OFFER_DESCRIPTION")
 	private String offer_desc;
-	
+	@Column(name="OFFER TYPE")
 	private String offer_type;
+	@Column(name="OFFER MODALITY")
 	private String offer_modality;
 	private String offer_value;
 	private String geography;
+	@Column(name="QUANTITY")
 	private String quantity;
 	private String uom;
 	private String moc;
 	
-	@Column(name = "PPM_ACCOUNT")
 	private String customer_chain_l1;
 	private String kitting_value;
 	private String status;
@@ -45,14 +46,84 @@ public class PromoCrBean {
 	private String solCodeStatus;
 	//Added by Kavitha D-SPRINT 15 changes
 	private String channel;
+	@Column(name="SALES CATEGORY")
 	private String category;
+	@Column(name="PRICE OFF")
 	private String priceoff;
 	private String dpquantity;
+	@Column(name="SALES CLUSTER")
 	private String cluster;
+	@Column(name="SOL TYPE")
 	private String soltype;
+	@Column(name="PROMO ENTRY TYPE")
 	private String templatetype;
+	@Column(name = "PPM_ACCOUNT")
 	private String ppmaccount;
+	//Added by Kavitha D-SPRINT 16
+	@Column(name="FIXED BUDGET")
+	private String budget;
+	@Column(name="REGULAR PROMO QUANTITY")
+	private String regularPromoQuantity;
+	@Column(name="REGULAR PROMO BUDGET")
+	private String regularPromoBudget;
+	@Column(name="INCREMENTAL BUDGET REQUIRED")
+	private String incrementalBudget;
+	@Column(name = "REQUIRE STOCK AVAILABILITY CONFIRMATION")
+	private String stockAvailability;
+	@Column(name = "SIGNED OFF WITH CM")
+	private String signedOffWithCM;
 	
+	
+	public String getSignedOffWithCM() {
+		return signedOffWithCM;
+	}
+
+	public void setSignedOffWithCM(String signedOffWithCM) {
+		this.signedOffWithCM = signedOffWithCM;
+	}
+
+	public String getRegularPromoQuantity() {
+		return regularPromoQuantity;
+	}
+
+	public void setRegularPromoQuantity(String regularPromoQuantity) {
+		this.regularPromoQuantity = regularPromoQuantity;
+	}
+
+	
+	
+	public String getBudget() {
+		return budget;
+	}
+
+	public void setBudget(String budget) {
+		this.budget = budget;
+	}
+
+	public String getRegularPromoBudget() {
+		return regularPromoBudget;
+	}
+
+	public void setRegularPromoBudget(String regularPromoBudget) {
+		this.regularPromoBudget = regularPromoBudget;
+	}
+
+	public String getIncrementalBudget() {
+		return incrementalBudget;
+	}
+
+	public void setIncrementalBudget(String incrementalBudget) {
+		this.incrementalBudget = incrementalBudget;
+	}
+
+	public String getStockAvailability() {
+		return stockAvailability;
+	}
+
+	public void setStockAvailability(String stockAvailability) {
+		this.stockAvailability = stockAvailability;
+	}
+
 	public String getChangesMade() {
 		return changesMade;
 	}
@@ -339,12 +410,11 @@ public class PromoCrBean {
 				+ ", changesMade=" + changesMade + ", originalId=" + originalId + ", userId=" + userId + ", changeDate="
 				+ changeDate + ", investmentType=" + investmentType + ", solCode=" + solCode + ", promotionMechanics="
 				+ promotionMechanics + ", solCodeStatus=" + solCodeStatus + ", channel=" + channel + ", category="
-				+ category + ",  priceoff=" + priceoff + ", dpquantity="
-				+ dpquantity + ", cluster=" + cluster + ", soltype=" + soltype + ", templatetype=" + templatetype
-				+ ", ppmaccount=" + ppmaccount + "]";
+				+ category + ", priceoff=" + priceoff + ", dpquantity=" + dpquantity + ", cluster=" + cluster
+				+ ", soltype=" + soltype + ", templatetype=" + templatetype + ", ppmaccount=" + ppmaccount + ", budget="
+				+ budget + ", regularPromoQuantity=" + regularPromoQuantity + ", regularPromoBudget="
+				+ regularPromoBudget + ", incrementalBudget=" + incrementalBudget + ", stockAvailability="
+				+ stockAvailability + ", signedOffWithCM=" + signedOffWithCM + "]";
 	}
-
-	
-	
 
 }
