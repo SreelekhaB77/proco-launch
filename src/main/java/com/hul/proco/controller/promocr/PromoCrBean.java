@@ -72,11 +72,21 @@ public class PromoCrBean {
 	private String stockAvailability;
 	@Column(name = "SIGNED OFF WITH CM")
 	private String signedOffWithCM;
+	@Column(name="SIGNED OFF WITH AVAILABILITY")
+	private String signedOffWithAvailability;
 	
 	
 	public String getSignedOffWithCM() {
 		return signedOffWithCM;
 	}
+	public String getSignedOffWithAvailability() {
+		return signedOffWithAvailability;
+	}
+
+	public void setSignedOffWithAvailability(String signedOffWithAvailability) {
+		this.signedOffWithAvailability = signedOffWithAvailability;
+	}
+
 
 	public void setSignedOffWithCM(String signedOffWithCM) {
 		this.signedOffWithCM = signedOffWithCM;
@@ -414,7 +424,8 @@ public class PromoCrBean {
 				+ ", soltype=" + soltype + ", templatetype=" + templatetype + ", ppmaccount=" + ppmaccount + ", budget="
 				+ budget + ", regularPromoQuantity=" + regularPromoQuantity + ", regularPromoBudget="
 				+ regularPromoBudget + ", incrementalBudget=" + incrementalBudget + ", stockAvailability="
-				+ stockAvailability + ", signedOffWithCM=" + signedOffWithCM + "]";
+				+ stockAvailability + ", signedOffWithCM=" + signedOffWithCM + ", signedOffWithAvailability="
+				+ signedOffWithAvailability + "]";
 	}
 
 }
