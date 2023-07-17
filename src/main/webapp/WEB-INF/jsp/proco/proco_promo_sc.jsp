@@ -182,10 +182,10 @@ margin-top: -75px!important;
 			</form>
 				
 			<form>
-			 <table id="table-id-promo-list-table" class="table table-striped table-bordered promo-list-table"
-				cellspacing="0" style="width: 100%;overflow-x: scroll;display: block;"> 
-					<!-- <table id="table-id-promo-list-table" 
-					class="table table-striped table-bordered promo-list-table table-responsive" style="width: 100%; ">-->
+			 <!-- <table id="table-id-promo-list-table" class="table table-striped table-bordered promo-list-table"
+				cellspacing="0" style="width: 100%;overflow-x: scroll;display: block;"> -->
+					 <table id="table-id-promo-list-table" 
+					class="table table-striped table-bordered promo-list-table table-responsive" style="width: 100%; ">
 				<thead>
 					<tr>
 					    <th><input name="select_all" class="userCheck" value="1" type="checkbox" /></th>
