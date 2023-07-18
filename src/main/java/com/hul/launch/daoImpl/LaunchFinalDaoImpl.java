@@ -715,7 +715,7 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 					+ " INNER JOIN TBL_LAUNCH_MASTER tlm ON tltfc.LAUNCH_ID = tlm.LAUNCH_ID"
 					+ " LEFT OUTER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS TLK ON TLK.LAUNCH_ID = tlm.LAUNCH_ID AND TLK.LAUNCH_KAM_ACCOUNT = tltfc.MODIFIED_CHAIN AND TLK.IS_ACTIVE = 1"
 					+ " WHERE tlm.LAUNCH_ID IN (:launchId) ) L ";
-			if(launchMoc!=null) {
+			/*if(launchMoc!=null) {
 				sBuildupQry = sBuildupQry + " where LAUNCH_MOC IN (:launchMoc)";
 				query = session.createNativeQuery(sBuildupQry);
 				query.setParameterList("launchId", launchIdList);
@@ -724,7 +724,9 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 			else {
 			query = session.createNativeQuery(sBuildupQry);
 			query.setParameterList("launchId", launchIdList);
-			}
+			}*/
+			query = session.createNativeQuery(sBuildupQry);
+			query.setParameterList("launchId", launchIdList);
 			
 			Iterator<Object> itr = query.list().iterator();
 			int[] temp = { 1 };
