@@ -1025,25 +1025,23 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							error_msg = error_msg + "Mandatory input for Regular Promo Quantity";
 						flag = 1;
 					}				
-					if ((bean.getRegular_promo_budget().isEmpty() || bean.getRegular_promo_budget() == null))
-					{
-						if (flag == 1)
-							error_msg = error_msg + ", Min Regular Promo Budget criteria not met";
-						else
-							error_msg = error_msg + " Min Regular Promo Budget criteria not met";
-						flag=1;
+					
+					if ((bean.getRegular_promo_budget().isEmpty() || bean.getRegular_promo_budget() == null)) {
+						query.setString(29, "");
 					}else {
-			            double number = Double.parseDouble(bean.getRegular_promo_budget());
-			            if (number <= 0) {
-			            	if (flag == 1)
-								error_msg = error_msg + ",Regular Promo Budget should not be in 0 or negative values";
-							else
-			            	error_msg=	error_msg + " Regular Promo Budget should not be in 0 or negative values";
-			            	flag=1;
-			            }
+						 double number = Double.parseDouble(bean.getRegular_promo_budget());
+				            if (number <= 0) {
+				            	if (flag == 1)
+									error_msg = error_msg + ",Regular Promo Budget should not be in 0 or negative values";
+								else
+				            	error_msg=	error_msg + " Regular Promo Budget should not be in 0 or negative values";
+				            	flag=1;
+				            }
+						
+					}      
 			            if (!isStringNumber(bean.getRegular_promo_budget())) {
-							query.setString(29, bean.getRegular_promo_budget());					
-							}else {
+							query.setString(29, bean.getRegular_promo_budget());					   	
+			            }else {
 								try {
 								double floatValue = Double.parseDouble(bean.getRegular_promo_budget()); 
 								 String resultString = Double.toString(floatValue);     
@@ -1051,7 +1049,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 							} catch (NumberFormatException e) {
 							    System.out.println("Invalid float format: " + e.getMessage());
 							}} 	
-					}
+					
 					//Kavitha D changes-SPRINT 16 ends
 					
 					if (bean.getOffer_mod().equalsIgnoreCase("MT Kitting") && bean.getC_pack_code().isEmpty()) {
