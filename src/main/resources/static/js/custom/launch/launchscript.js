@@ -4047,6 +4047,14 @@ function getBasepackCode(obj){
 			 * $(obj).closest('tr').find("td:nth-child(6)
 			 * input").val(data.bpDesc); console.log(response);
 			 */
+			if(data.bpCode != basepack){
+		           ezBSAlert({
+    			messageText : basepack +' ' +"Basepack is not added in Unified Product Master",
+    			alertType : "info"
+    		}).done(function(e) {
+    		});
+    		return false;
+		    }
 	    	if(data.bpCode == basepack){
 		    	$(obj).closest('tr').find("td:nth-child(6) input").val(data.bpDesc);
 		    	$(obj).closest('tr').find("td:nth-child(12) select").val(data.bpClassification == "" ?  'Select Classification' : data.bpClassification);
