@@ -4101,5 +4101,15 @@ public class LaunchBasePacksDaoImpl implements LaunchBasePacksDao {
 		}
 		return "Sucessfully Written to TEMP Table";
 	}// Added by Harsha for sptinr 7 us 7 -- End's
+	
+	//Added Kajal G in Sprint-17
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional(rollbackOn = Exception.class)
+	public Integer validateBasepack(String basepack) {
+		String query = "SELECT COUNT(*) from TBL_VAT_COMM_PRODUCT_MASTER where BASEPACK ='"+ basepack + "'";
+		Query session_query = sessionFactory.getCurrentSession().createNativeQuery(query);
+		return ((BigInteger)session_query.uniqueResult()).intValue();
+	}
 
 }

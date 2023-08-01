@@ -122,5 +122,7 @@ public interface LaunchBasePacksDao {
 	
 	public List<ArrayList<String>> getLaunchClusterErrorDataforStoreFormat(ArrayList<String> headerDetail,
 			String userId, String launchID);
+	
+	public Integer validateBasepack(String basepack);
 
 	}
