@@ -1278,7 +1278,8 @@ public class TMELaunchPlanController {
 				flg = false;
 				successMessage = "File Upload is UnSuccessful.";
 			} else if (!savedData.equals("Basepack Code can not repeat")
-					&& !savedData.equals("Basepack Description can not repeat")) {
+					&& !savedData.equals("Basepack Description can not repeat")
+					&& !savedData.contains("Basepack is not added in Unified Product Master")) {
 				successMessage = "SUCCESS_FILE";
 			}
 		} catch (Exception e) {
