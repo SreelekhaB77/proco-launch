@@ -112,7 +112,7 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 				} else {
 					basepackCode.put(obj.getCODE(), "");
 				}
-				if(obj.getCODE().isBlank() || obj.getCODE().isEmpty()) {
+				if(obj.getCODE().isEmpty()) {
 					return "Basepack should not be empty";
 				}
 				else {
