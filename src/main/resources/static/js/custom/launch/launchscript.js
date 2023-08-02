@@ -4047,6 +4047,7 @@ function getBasepackCode(obj){
 			 * $(obj).closest('tr').find("td:nth-child(6)
 			 * input").val(data.bpDesc); console.log(response);
 			 */
+			if(basepack !=''){
 			if(data.bpCode != basepack){
 		           ezBSAlert({
     			messageText : basepack +' ' +"Basepack is not added in Unified Product Master",
@@ -4054,6 +4055,7 @@ function getBasepackCode(obj){
     		}).done(function(e) {
     		});
     		return false;
+		    }
 		    }
 	    	if(data.bpCode == basepack){
 		    	$(obj).closest('tr').find("td:nth-child(6) input").val(data.bpDesc);
