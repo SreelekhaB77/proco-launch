@@ -4053,6 +4053,7 @@ function getBasepackCode(obj){
     			messageText : basepack +' ' +"Basepack is not added in Unified Product Master",
     			alertType : "info"
     		}).done(function(e) {
+				$(obj).closest('tr').find("td:nth-child(5) input").val('');
     		});
     		return false;
 		    }
