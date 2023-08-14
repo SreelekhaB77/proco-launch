@@ -243,7 +243,9 @@ public class PromoListingServiceImpl implements PromoListingService {
 		headerList.add("OFFER TYPE");
 		headerList.add("OFFER MODALITY");
 		headerList.add("PRICE OFF");
+		headerList.add("REGULAR PROMO QUANTITY");
 		headerList.add("QUANTITY");
+		headerList.add("REGULAR PROMO BUDGET");
 		headerList.add("FIXED BUDGET");
 		headerList.add("BRANCH");
 		headerList.add("SALES CLUSTER");
@@ -280,6 +282,10 @@ public class PromoListingServiceImpl implements PromoListingService {
 		headerList.add("CURRENT STATUS"); //Added by Kavitha D-SPRINT 10 Changes
 		headerList.add("SOL TYPE");
 		headerList.add("SOL TYPE SHORTKEY");
+		headerList.add("INCREMENTAL BUDGET REQUIRED"); //Added by Kavitha D-SPRINT 17 changes
+		headerList.add("REQUIRE STOCK AVAILABILITY CONFIRMATION");
+		headerList.add("SIGNED OFF WITH CM");
+		headerList.add("SIGNED OFF WITH AVAILABILITY");
 	
 		
 		return headerList;
