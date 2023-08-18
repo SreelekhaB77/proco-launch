@@ -504,11 +504,21 @@ function coeSaveBasepacks(){
 
 //download screen 3 
 function coedownloadLaunchBuildTemplate() {
-	var launchIdsArr =  getlaunchId().toString();
-	var LaunchMocArr =  getLauncheckedMoc().toString();   //sprint-5 chnages added by bharati for coe download Launch Build Template issue sep-21
-	
-	window.location.href = "/VisibilityAssetTracker/"+launchIdsArr+"/"+LaunchMocArr+"/downloadLaunchBuildUpCoeTemplate.htm"
-	
+if($(".coechecklaunch").is(":checked")){
+    var launchIdsArr =  getlaunchId().toString();
+    var LaunchMocArr =  getLauncheckedMoc().toString();   //sprint-5 chnages added by bharati for coe download Launch Build Template issue sep-21
+
+    window.location.href = "/VisibilityAssetTracker/"+launchIdsArr+"/"+LaunchMocArr+"/downloadLaunchBuildUpCoeTemplate.htm"
+  }
+             else{
+                 ezBSAlert({
+                    messageText : "Please select launch",
+                    alertType : "info"
+                }).done(function(e) {
+                });
+                return false;
+             }
+
 }
 
 //get screen 4 data

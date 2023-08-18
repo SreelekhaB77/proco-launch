@@ -291,13 +291,17 @@ $(document)
 					                 "mData": "kitting_value",
 					              },*/{
 					                 "mData": "status",
-					              },/*{
-					                 "mData": "reason",
+					              },{
+					                 "mData": "category",
+					              },{
+					                 "mData": "templatetype",
+					              },{
+					                 "mData": "soltype",
 					              },{
 					                 "mData": "remark",
-					              },{
+					              },/*{
 					                 "mData": "changesMade",
-					              },*/{
+					              },{
 					              	 "mData": "investmentType",
 						           } ,{
 						            "mData": "solCode",
@@ -305,7 +309,7 @@ $(document)
 						            "mData": "promotionMechanics",
 						           } ,{
 						             "mData": "solCodeStatus",
-						              }
+						              }*/
 				                ]
 				                /* added for second tab end */
 

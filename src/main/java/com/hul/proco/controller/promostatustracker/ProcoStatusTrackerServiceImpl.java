@@ -130,6 +130,7 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 			headerList.add("PROMO ID");
 			headerList.add("SOL CODE");
 			//headerList.add("BM/MOC CYLCLE");
+			headerList.add("PPM SOL Code Reference");//Added by Kavitha D-SPRINT 15 
 			headerList.add("PROMO TIMEPERIOD");
 			headerList.add("SOL WILL RELEASE ON");
 			headerList.add("START DATE");
@@ -142,7 +143,9 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 			headerList.add("OFFER TYPE");
 			headerList.add("OFFER MODALITY");
 			headerList.add("PRICE OFF");
+			headerList.add("REGULAR PROMO QUANTITY");
 			headerList.add("QUANTITY");
+			headerList.add("REGULAR PROMO BUDGET");
 			headerList.add("FIXED BUDGET");
 			headerList.add("BRANCH");
 			headerList.add("SALES CLUSTER");
@@ -150,12 +153,12 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 			headerList.add("CMM NAME");
 			headerList.add("TME NAME");
 			headerList.add("SALES CATEGORY");
-			headerList.add("PSA CATEGORY");
+			//headerList.add("PSA CATEGORY");
 			headerList.add("PROMOTION STATUS");
 			headerList.add("PPM PROMOTION CREATOR");
 			headerList.add("PROMOTION MECHANICS");
 			headerList.add("INVESTMENT TYPE");
-			headerList.add("SALES CLUSTER CODE");
+			//headerList.add("SALES CLUSTER CODE");
 			headerList.add("BRAND");
 			headerList.add("SUB BRAND");
 			headerList.add("PPM BUDGET HOLDER NAME");
@@ -166,7 +169,7 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 			headerList.add("PROMO USER TIME");
 			headerList.add("PPM APPROVED DATE");
 			headerList.add("PPM CREATION DATE");
-			headerList.add("NON UNIFY");
+			//headerList.add("NON UNIFY");
 			headerList.add("PPM SUBMISSION DATE");
 			headerList.add("PPM MODIFIED DATE");
 			headerList.add("COE REMARKS");
@@ -175,10 +178,14 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 			headerList.add("AUDITOR SUBMIT DATE");
 			headerList.add("MRP");
 			headerList.add("AB CREATION");
-			headerList.add("BUDGET");
+			//headerList.add("BUDGET");
 			headerList.add("CURRENT STATUS"); //Added by Kavitha D-SPRINT 10 Changes
 			headerList.add("SOL TYPE");
 			headerList.add("SOL TYPE SHORTKEY");
+			headerList.add("INCREMENTAL BUDGET REQUIRED"); //Added by Kavitha D-SPRINT 17 changes
+			headerList.add("REQUIRE STOCK AVAILABILITY CONFIRMATION");
+			headerList.add("SIGNED OFF WITH CM");
+			headerList.add("SIGNED OFF WITH AVAILABILITY");
 		} else {
 			headerList = getHeaderListForPromoStatusTracker();
 		}

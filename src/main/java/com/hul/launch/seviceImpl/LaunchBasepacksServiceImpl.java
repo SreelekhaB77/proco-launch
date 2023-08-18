@@ -112,6 +112,15 @@ public class LaunchBasepacksServiceImpl implements LaunchBasepacksService {
 				} else {
 					basepackCode.put(obj.getCODE(), "");
 				}
+				if(obj.getCODE().isEmpty()) {
+					return "Basepack should not be empty";
+				}
+				else {
+					int basepack = launchBacePacksDao.validateBasepack(obj.getCODE());
+					if(basepack<=0) {
+						return "'"+ obj.getCODE() + "' Basepack is not added in Unified Product Master";
+					}
+				}
 				saveLaunchBasepackRequest.setCode(obj.getCODE());
 
 				if (basepackDesc.containsKey(obj.getDESCRIPTION())) {

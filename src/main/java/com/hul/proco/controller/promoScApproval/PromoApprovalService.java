@@ -38,10 +38,27 @@ public class PromoApprovalService {
 
 	public ArrayList<String> getHeaderListForPromoDownloadScListing() {
 			ArrayList<String> headerList=new ArrayList<String>();
+			headerList.add("CHANNEL");
+			headerList.add("MOC");
+			headerList.add("SALES CATEGORY");
+			headerList.add("PPM ACCOUNT");
 			headerList.add("PROMO_ID");
-			headerList.add("PPM_ACCOUNT");
 			headerList.add("OFFER_DESCRIPTION");
-			headerList.add("REMARKS");
+			headerList.add("BASEPACK CODE");
+			headerList.add("OFFER TYPE");
+			headerList.add("OFFER MODALITY");
+			headerList.add("PRICE OFF");
+			headerList.add("REGULAR PROMO QUANTITY");
+			headerList.add("QUANTITY");
+			headerList.add("FIXED BUDGET");
+			headerList.add("REGULAR PROMO BUDGET");
+			headerList.add("SALES CLUSTER");
+			headerList.add("PROMO ENTRY TYPE");
+			headerList.add("SOL TYPE");
+			headerList.add("INCREMENTAL BUDGET REQUIRED");
+			headerList.add("REQUIRE STOCK AVAILABILITY CONFIRMATION");
+			headerList.add("SIGNED OFF WITH CM");
+			headerList.add("SIGNED OFF WITH AVAILABILITY");
 			return headerList;
 		}
 	@Transactional(rollbackFor = { Exception.class })

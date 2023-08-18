@@ -2,6 +2,7 @@ package com.hul.proco.controller.createpromo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 
 import java.text.ParseException;
@@ -52,7 +53,7 @@ public class DataFromTable {
 					+ "INNER JOIN TBL_PROCO_SOL_TYPE S ON S.SOL_REMARK=T.CR_SOL_TYPE "
 					+ " " + "SET "
 					+ "PPM_DESC_STAGE=CONCAT(A.ACCOUNT_TYPE ,':',  B.MODALITY_KEY,':',T.PPM_ACCOUNT,':',C.SALES_CATEGORY,':',S.SOL_TYPE,':',T.OFFER_DESC,':',T.PROMOTION_ID,IF (((A.NON_UNIFY <> '') OR (A.ACCOUNT_TYPE = 'KA' AND A.NON_UNIFY <> 'NON UNIFY' AND T.CR_SOL_TYPE = 'Additional Quantity')), concat(':', 'NON UNIFY'), ''))  WHERE USER_ID='"
-					+ uid + "'  " + " AND T.MOC= "+mocList+""; //moc added by kavitha D-Sprint 14 changes
+					+ uid + "'  " + " AND T.MOC IN( "+mocList+")"; //moc added by kavitha D-Sprint 14 changes
 		} else {
 			
 			update_ppm_desc = "UPDATE TBL_PROCO_PROMOTION_MASTER_TEMP_V2 T "
@@ -61,10 +62,10 @@ public class DataFromTable {
 					+ "INNER JOIN  (SELECT CHANNEL_NAME,BASEPACK,SALES_CATEGORY FROM (SELECT ROW_NUMBER() OVER (PARTITION BY BASEPACK, CHANNEL_NAME ORDER BY BASEPACK,SALES_CATEGORY) AS ROW_NUM,CHANNEL_NAME,BASEPACK,SALES_CATEGORY FROM TBL_PROCO_PRODUCT_MASTER_V2 A WHERE IS_ACTIVE=1 GROUP BY CHANNEL_NAME,BASEPACK,SALES_CATEGORY) A WHERE ROW_NUM=1) C ON C.BASEPACK=T.BASEPACK_CODE AND C.CHANNEL_NAME = T.CHANNEL_NAME "
 					+ " " + "SET "
 					+ "PPM_DESC_STAGE=CONCAT(A.ACCOUNT_TYPE ,':',  B.MODALITY_KEY,':',T.PPM_ACCOUNT,':',C.SALES_CATEGORY,':',T.OFFER_DESC,IF (A.NON_UNIFY <> '', concat(':', A.NON_UNIFY), ''))  WHERE USER_ID='"
-					+ uid + "'  " + "AND T.MOC= "+mocList+""; //moc added by kavitha D-Sprint 14 changes
+					+ uid + "'  " + "AND T.MOC IN("+mocList+")"; //moc added by kavitha D-Sprint 14 changes
 		}
 		
-		System.out.println("PPM desc update:"+update_ppm_desc);
+		//System.out.println("PPM desc update:"+update_ppm_desc);
 		sessionFactory.getCurrentSession().createNativeQuery(update_ppm_desc).executeUpdate();
 
 	}
@@ -690,8 +691,19 @@ public class DataFromTable {
 		}
 		return false;
 	}
-	
+	//Added by Kavitha D-SPRINT 15 changes for cr dp quantity
+	 public String getDpQuantity(String Moc_name, String Year,String Ppm_account,String Basepack_code, String Cluster, String offer_mod) {
 
+		String query=" SELECT DP_QUANTITY FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE MOC_NAME='"+Moc_name+"' AND MOC_YEAR='"+Year+"' AND PPM_ACCOUNT= '"+Ppm_account+"' AND "
+				+ " BASEPACK_CODE='"+Basepack_code+"' AND CLUSTER= '"+Cluster+"' AND OFFER_MODALITY= '"+offer_mod+"' AND TEMPLATE_TYPE= 'R' ";
+		Query getDpQunatity = sessionFactory.getCurrentSession().createNativeQuery(query);
+		if(!(getDpQunatity.uniqueResult()==null)) {
+			return getDpQunatity.uniqueResult().toString();					
+		}else {
+			return "";
+		}
+		
+	}
 	
 	public void getppmDescStage(Map<String, String> commanmap,String uid) {
 		String ppmdesc="SELECT PPM_DESC_STAGE,CHANNEL_NAME,MOC_NAME,PPM_ACCOUNT,BASEPACK_CODE,SALES_CATEGORY FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE USER_ID='"+uid+"'";

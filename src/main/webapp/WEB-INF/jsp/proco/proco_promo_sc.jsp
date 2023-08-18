@@ -182,10 +182,10 @@ margin-top: -75px!important;
 			</form>
 				
 			<form>
-			 <table id="table-id-promo-list-table" class="table table-striped table-bordered promo-list-table"
-				cellspacing="0" style="width: 100%;overflow-x: scroll;display: block;"> 
-					<!-- <table id="table-id-promo-list-table" 
-					class="table table-striped table-bordered promo-list-table table-responsive" style="width: 100%; ">-->
+			 <!-- <table id="table-id-promo-list-table" class="table table-striped table-bordered promo-list-table"
+				cellspacing="0" style="width: 100%;overflow-x: scroll;display: block;"> -->
+					 <table id="table-id-promo-list-table" 
+					class="table table-striped table-bordered promo-list-table table-responsive" style="width: 100%; ">
 				<thead>
 					<tr>
 					    <th><input name="select_all" class="userCheck" value="1" type="checkbox" /></th>
@@ -203,10 +203,14 @@ margin-top: -75px!important;
 						<th>QUANTITY</th>
 						<th>OFFER VALUE</th>
 						<th name="stat">STATUS</th>
-						<th>INVESTMENT TYPES</th>
+						<!--<th>INVESTMENT TYPES</th>
 						<th>SOL CODE</th>
 						<th>PROMOTION MECHANICS</th>
-						<th>SOL CODE STATUS</th>
+						<th>SOL CODE STATUS</th>--> 
+						<th>SALES CATEGORY</th>
+						<th>PROMO ENTRY TYPE</th>
+						<th>SOL TYPE</th>
+						<th>Remark</th>
 					</tr>
 				</thead>
 							</table>

@@ -62,7 +62,7 @@ public class PromoApprovalImp implements PromoApproval{
 
 			String rowCount = " SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM "
 					+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.PPM_ACCOUNT AND CM.CHANNEL_NAME = PM.CHANNEL_NAME "
-					+ " INNER JOIN TBL_PROCO_STATUS_MASTER PSM ON PSM.STATUS_ID = PM.STATUS  WHERE PM.STATUS IN('38','41') AND PM.MOC='"+moc+"'";
+					+ " INNER JOIN TBL_PROCO_STATUS_MASTER PSM ON PSM.STATUS_ID = PM.STATUS  WHERE PM.STATUS IN('38','41','40','44') AND PM.MOC='"+moc+"'";
 			
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(rowCount);
 					
@@ -84,10 +84,12 @@ public class PromoApprovalImp implements PromoApproval{
 			promoQuery = " SELECT * FROM (SELECT PM.PROMO_ID AS UNIQUE_ID,PM.PROMO_ID AS ORIGINAL_ID,PM.START_DATE,PM.END_DATE,"
 					+ " PM.MOC,PM.PPM_ACCOUNT,PM.BASEPACK_CODE AS BASEPACK,PM.OFFER_DESC,PM.OFFER_TYPE,PM.OFFER_MODALITY, "
 					+ " PM.CLUSTER AS GEOGRAPHY,PM.QUANTITY,PM.PRICE_OFF AS OFFER_VALUE,PSM.STATUS, PM.CREATED_BY, SUBSTRING(PM.CREATED_DATE,1,10) AS CREATED_DATE, PM.TEMPLATE_TYPE AS REMARKS, "
-					+ " 'NA' AS INVESTMENT_TYPE, 'NA' AS SOL_CODE, 'NA' AS PROMOTION_MECHANICS, 'NA' AS SOL_CODE_STATUS,ROW_NUMBER() OVER (ORDER BY PM.UPDATE_STAMP DESC) AS ROW_NEXT "
+					+ " 'NA' AS INVESTMENT_TYPE, 'NA' AS SOL_CODE, 'NA' AS PROMOTION_MECHANICS, 'NA' AS SOL_CODE_STATUS,PM.SALES_CATEGORY, PM.TEMPLATE_TYPE, PM.CR_SOL_TYPE,"
+					+ " (CASE WHEN PM.STATUS=40 THEN 'ACCEPTED' WHEN PM.STATUS=41 THEN 'REJECTED' WHEN PM.STATUS=44 THEN 'PENDING' END) AS REMARK,"
+					+ " ROW_NUMBER() OVER (ORDER BY PM.UPDATE_STAMP DESC) AS ROW_NEXT "
 					+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 PM "
 					+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.PPM_ACCOUNT AND CM.CHANNEL_NAME = PM.CHANNEL_NAME "
-					+ " INNER JOIN TBL_PROCO_STATUS_MASTER PSM ON PSM.STATUS_ID = PM.STATUS  WHERE PM.STATUS IN('38','41') AND PM.MOC='"+moc+"' ";
+					+ " INNER JOIN TBL_PROCO_STATUS_MASTER PSM ON PSM.STATUS_ID = PM.STATUS  WHERE PM.STATUS IN('38','41','40','44') AND PM.MOC='"+moc+"' ";
 							
 			
 				if(searchParameter!=null && searchParameter.length()>0){
@@ -120,12 +122,17 @@ public class PromoApprovalImp implements PromoApproval{
 				promoScBean.setStatus(obj[13]== null ? "" :obj[13].toString());
 				promoScBean.setUserId(obj[14]== null ? "" :obj[14].toString());
 				promoScBean.setChangeDate(obj[15]== null ? "" :obj[15].toString());
-				promoScBean.setRemark(obj[16]== null ? "" :obj[16].toString());
+				promoScBean.setRemark(obj[16]== null ? "" :obj[16].toString());// commented by Kajal G
 				promoScBean.setInvestmentType(obj[17]== null ? "" :obj[17].toString());
 				promoScBean.setSolCode(obj[18]== null ? "" :obj[18].toString());
 				promoScBean.setPromotionMechanics(obj[19]== null ? "" :obj[19].toString());
 				promoScBean.setSolCodeStatus(obj[20]== null ? "" :obj[20].toString());
+				promoScBean.setCategory(obj[21]== null ? "" :obj[21].toString());
+				promoScBean.setTemplatetype(obj[22]== null ? "" :obj[22].toString());
+				promoScBean.setSoltype(obj[23]== null ? "" :obj[23].toString());
+				promoScBean.setRemark(obj[24]== null ? "" :obj[24].toString());
 				promoList.add(promoScBean);
+				
 			}
 		} catch (Exception ex) {
 			logger.debug("Exception :", ex);
@@ -148,7 +155,7 @@ public class PromoApprovalImp implements PromoApproval{
 			for (int i = 0; i < split.length; i++) {
 				String promo = split[i];				
 				String approvalCrStatus=" UPDATE TBL_PROCO_PROMOTION_MASTER_V2  T1 SET T1.STATUS='40', T1.USER_ID='" + userId + "',T1.UPDATE_STAMP=' "+ dateFormat.format(date) + "'"
-						+ " WHERE T1.STATUS IN('38','41') AND T1.ACTIVE=1 AND T1.PROMO_ID='" + promoId + "' ";
+						+ " WHERE T1.STATUS IN('38','41','44') AND T1.ACTIVE=1 AND T1.PROMO_ID='" + promoId + "' ";
 				
 				Query query = sessionFactory.getCurrentSession().createNativeQuery(approvalCrStatus);
 				query.executeUpdate();
@@ -168,7 +175,14 @@ public class PromoApprovalImp implements PromoApproval{
 		{
 			List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
 			try {
-				String downloadScQuery= " SELECT DISTINCT PROMO_ID,PPM_ACCOUNT,OFFER_DESC FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE PM.STATUS IN('38','41') AND PM.MOC= '"+moc+"'";
+				String downloadScQuery= /*" SELECT DISTINCT CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_MODALITY,"
+						+ "PRICE_OFF,DP_QUANTITY,QUANTITY,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE PM.STATUS IN('38','41','44') AND PM.MOC= '"+moc+"'";*/
+				
+				" SELECT DISTINCT CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_TYPE,"
+				+ "OFFER_MODALITY,PRICE_OFF,REGULAR_PROMO_QUANTITY,QUANTITY,BUDGET AS FIXED_BUDGET,REGULAR_PROMO_BUDGET,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE,"
+				+ "INCREMENTAL_BUDGET,STOCK_AVAILABILITY,'YES' "
+				+ "FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE STATUS IN('38','41','44') AND MOC= '"+moc+"'"; //Added by Kavitha D-SPRINT 16 changes
+				
 				Query query1  =sessionFactory.getCurrentSession().createNativeQuery(downloadScQuery);
 			
 				Iterator itr = query1.list().iterator();
@@ -210,24 +224,47 @@ public class PromoApprovalImp implements PromoApproval{
 		queryToDelete.setString("userId", userId);
 		queryToDelete.executeUpdate();
 			}
-		Query query = sessionFactory.getCurrentSession().createNativeQuery(" INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2 (PROMO_ID,PPM_ACCOUNT,OFFER_DESC,REMARK,STATUS,USER_ID) VALUES(?0,?1, ?2, ?3, ?4,?5)");
+		Query query = sessionFactory.getCurrentSession().createNativeQuery(
+				/*" INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2 (CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_MODALITY,"
+					+ "PRICE_OFF,DP_QUANTITY,QUANTITY,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE,REMARK,STATUS,USER_ID) VALUES(?0,?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16)"*/
+				//Changed by Kavitha D-SPRINT 16 
+				"INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2 (CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,REGULAR_PROMO_QUANTITY,QUANTITY,BUDGET,REGULAR_PROMO_BUDGET,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE,INCREMENTAL_BUDGET,STOCK_AVAILABILITY,"
+				+ "SIGNED_OFF_WITH_CM,REMARK,STATUS,USER_ID) VALUES(?0,?1, ?2, ?3, ?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22)");
 		
 		for (int i = 0; i < beanArray.length; i++) {
-			if (beanArray[i].getRemark().equalsIgnoreCase("ACCEPTED") || beanArray[i].getRemark().equalsIgnoreCase("APPROVED") || beanArray[i].getRemark().equalsIgnoreCase("REJECTED")) {
-			query.setString(0, beanArray[i].getPromo_id());
-			query.setString(1, beanArray[i].getCustomer_chain_l1());
-			query.setString(2, beanArray[i].getOffer_desc());
-			query.setString(3, beanArray[i].getRemark());
-			
-			if(beanArray[i].getRemark().equalsIgnoreCase("ACCEPTED") || beanArray[i].getRemark().equalsIgnoreCase("APPROVED") ) {
-				query.setString(4,"40");
+			if (beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("REJECTED") ||beanArray[i].getSignedOffWithAvailability().isEmpty()) {
+		
+			query.setString(0, beanArray[i].getChannel()); //Changed by Kajal G-SPRINT 15 changes
+			query.setString(1, beanArray[i].getMoc());
+			query.setString(2, beanArray[i].getCategory());
+			query.setString(3, beanArray[i].getPpmaccount());
+			query.setString(4, beanArray[i].getPromo_id());
+			query.setString(5, beanArray[i].getOffer_desc());
+			query.setString(6, beanArray[i].getBasepack());
+			query.setString(7, beanArray[i].getOffer_type());
+			query.setString(8, beanArray[i].getOffer_modality());
+			query.setString(9, beanArray[i].getPriceoff());
+			query.setString(10, beanArray[i].getRegularPromoQuantity());
+			query.setString(11, beanArray[i].getQuantity());
+			query.setString(12, beanArray[i].getBudget());
+			query.setString(13, beanArray[i].getRegularPromoBudget());
+			query.setString(14, beanArray[i].getCluster());
+			query.setString(15, beanArray[i].getTemplatetype());
+			query.setString(16, beanArray[i].getSoltype());
+			query.setString(17, beanArray[i].getIncrementalBudget());
+			query.setString(18, beanArray[i].getStockAvailability());
+			query.setString(19, beanArray[i].getSignedOffWithCM());
+			query.setString(20, beanArray[i].getSignedOffWithAvailability());
+			if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED") ) {
+				query.setString(21,"40");
 			}
-			else if(beanArray[i].getRemark().equalsIgnoreCase("REJECTED")) {
-				query.setString(4,"41");
+			else if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("REJECTED")) {
+				query.setString(21,"41");
 			}
-			
-			query.setString(5,userId);
-
+			else if(beanArray[i].getSignedOffWithAvailability().isEmpty()){ //Added by Kajal G-SPRINT 15 changes 
+				query.setString(21,"44");
+			}
+			query.setString(22,userId);
 			int executeUpdate = query.executeUpdate();
 			
 	
@@ -315,7 +352,7 @@ public class PromoApprovalImp implements PromoApproval{
 		Date date = new Date();
 		try {
 			String updateSql=" UPDATE TBL_PROCO_PROMOTION_MASTER_V2 A INNER JOIN TBL_PROCO_PROMOTION_MASTER_TEMP_V2 B ON A.PROMO_ID = B.PROMO_ID "
-					+ " SET A.STATUS=B.STATUS,A.USER_ID='" + userId + "',A.UPDATE_STAMP=' "+ dateFormat.format(date) + "' "
+					+ " SET A.STATUS=B.STATUS,A.SIGNED_OFF_WITH_CM=B.SIGNED_OFF_WITH_CM,A.USER_ID='" + userId + "',A.UPDATE_STAMP=' "+ dateFormat.format(date) + "' "
 					+ " WHERE B.USER_ID='" + userId + "' " ;
 			Query queryUpdateExisting = sessionFactory.getCurrentSession().createNativeQuery(updateSql);
 		queryUpdateExisting.executeUpdate();

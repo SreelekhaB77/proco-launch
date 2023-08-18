@@ -715,7 +715,7 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 					+ " INNER JOIN TBL_LAUNCH_MASTER tlm ON tltfc.LAUNCH_ID = tlm.LAUNCH_ID"
 					+ " LEFT OUTER JOIN TBL_LAUNCH_KAM_CHANGE_MOC_DETAILS TLK ON TLK.LAUNCH_ID = tlm.LAUNCH_ID AND TLK.LAUNCH_KAM_ACCOUNT = tltfc.MODIFIED_CHAIN AND TLK.IS_ACTIVE = 1"
 					+ " WHERE tlm.LAUNCH_ID IN (:launchId) ) L ";
-			if(launchMoc!=null) {
+			/*if(launchMoc!=null) {
 				sBuildupQry = sBuildupQry + " where LAUNCH_MOC IN (:launchMoc)";
 				query = session.createNativeQuery(sBuildupQry);
 				query.setParameterList("launchId", launchIdList);
@@ -724,7 +724,9 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 			else {
 			query = session.createNativeQuery(sBuildupQry);
 			query.setParameterList("launchId", launchIdList);
-			}
+			}*/
+			query = session.createNativeQuery(sBuildupQry);
+			query.setParameterList("launchId", launchIdList);
 			
 			Iterator<Object> itr = query.list().iterator();
 			int[] temp = { 1 };
@@ -747,7 +749,7 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 				launchBuildUpTempCal.setSELLIN_VALUE_N2((String) obj[13]);
 				launchBuildUpTempCal.setLAUNCH_NAME((String) obj[14]);
 
-				Query query1 = session.createNativeQuery(
+				/*Query query1 = session.createNativeQuery(
 						"SELECT DISTINCT LOWER(KAM_MAIL_ID) FROM TBL_VAT_COMM_OUTLET_MASTER tvcom WHERE ACCOUNT_NAME = :accountName");
 				query1.setParameter("accountName", (String) obj[3]);
 				List<String> kamId = query1.list();
@@ -768,7 +770,8 @@ public class LaunchFinalDaoImpl implements LaunchFinalDao {
 					}
 				}
 
-				launchBuildUpTempCal.setLAUNCH_MOC(launchMoc1);
+				launchBuildUpTempCal.setLAUNCH_MOC(launchMoc1);*/
+				launchBuildUpTempCal.setLAUNCH_MOC((String) obj[15]);
 				launchBuildUpTempCal.setLAUNCH_ID(Integer.toString((Integer) obj[16]));
 				liReturn.add(launchBuildUpTempCal);
 				temp[0]++;
