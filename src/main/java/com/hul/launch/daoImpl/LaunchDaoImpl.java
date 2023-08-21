@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.apache.poi.util.SystemOutLogger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.cache.spi.support.AbstractReadWriteAccess.Item;
 import org.hibernate.internal.SessionImpl;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -816,7 +817,7 @@ public class LaunchDaoImpl implements LaunchDao {
 								+" AND (tlb.BP_STATUS != 'REJECTED BY TME' OR tlb.BP_STATUS IS NULL) and tlb.LAUNCH_ID IN (:listOfLaunchData)");*/
 
 				//Added by Kavitha D-Sprint 13P1 changes
-				Query query2 = sessionFactory.getCurrentSession().createNativeQuery(" SELECT DISTINCT asd.LAUNCH_NAME,tlb.BP_CODE,tlb.BP_DESCRIPTION,asd.LAUNCH_MOC,abc.ACCOUNT_NAME_L2,"
+				/*Query query2 = sessionFactory.getCurrentSession().createNativeQuery(" SELECT DISTINCT asd.LAUNCH_NAME,tlb.BP_CODE,tlb.BP_DESCRIPTION,asd.LAUNCH_MOC,abc.ACCOUNT_NAME_L2,"
 						+ " abc.ACCOUNT_NAME ACCOUNT_NAME,abc.depot,abc.HUL_STORE_FORMAT,abc.CLUSTER,abc.REPORTING_CODE,(CASE WHEN tvcom.FMCG_CSP_CODE IS NOT NULL "
 						+ " THEN tvcom.FMCG_CSP_CODE ELSE tvcom.COLOUR_CSP_CODE END) AS DEPO_CODE "
 						+ " FROM MODTRD.TBL_LAUNCH_BUILDUP_TEMP abc "
@@ -824,7 +825,7 @@ public class LaunchDaoImpl implements LaunchDao {
 						+ " INNER JOIN MODTRD.TBL_LAUNCH_MASTER asd ON asd.LAUNCH_ID=abc.LAUNCH_ID "
 						+ " INNER JOIN TBL_LAUNCH_BASEPACK tlb ON tlb.LAUNCH_ID=asd.LAUNCH_ID "
 						+ " WHERE asd.LAUNCH_REJECTED !='2' AND tlb.BP_CODE = trim(substr(SKU_NAME, 1, locate(':', SKU_NAME) - 1)) "
-						+ " AND (tlb.BP_STATUS != 'REJECTED BY TME' OR tlb.BP_STATUS IS NULL) and tlb.LAUNCH_ID IN (:listOfLaunchData)");
+						+ " AND (tlb.BP_STATUS != 'REJECTED BY TME' OR tlb.BP_STATUS IS NULL) and tlb.LAUNCH_ID IN ("+launchId+")");
 
 				query2.setParameter("listOfLaunchData", launchId);
 				
@@ -849,8 +850,74 @@ public class LaunchDaoImpl implements LaunchDao {
 							}
 
 					obj = null;
-					downloadDataList.add(dataObj);
-				}	
+					downloadDataList.add(dataObj);*/
+				
+				//Kajal G commeted above code and Start changes for SPRINT-17
+				String query2 = " SELECT DISTINCT asd.LAUNCH_NAME,tlb.BP_CODE,tlb.BP_DESCRIPTION,asd.LAUNCH_MOC,abc.ACCOUNT_NAME_L2,"
+						+ " abc.ACCOUNT_NAME ACCOUNT_NAME,abc.depot,abc.HUL_STORE_FORMAT,abc.CLUSTER,abc.REPORTING_CODE,(CASE WHEN tvcom.FMCG_CSP_CODE IS NOT NULL "
+						+ " THEN tvcom.FMCG_CSP_CODE ELSE tvcom.COLOUR_CSP_CODE END) AS DEPO_CODE "
+						+ " FROM MODTRD.TBL_LAUNCH_BUILDUP_TEMP abc "
+						+ " INNER JOIN TBL_VAT_COMM_OUTLET_MASTER tvcom ON tvcom.HUL_OUTLET_CODE=abc.HFS_CODE "
+						+ " INNER JOIN MODTRD.TBL_LAUNCH_MASTER asd ON asd.LAUNCH_ID=abc.LAUNCH_ID "
+						+ " INNER JOIN TBL_LAUNCH_BASEPACK tlb ON tlb.LAUNCH_ID=asd.LAUNCH_ID "
+						+ " WHERE asd.LAUNCH_REJECTED !='2' AND tlb.BP_CODE = trim(substr(SKU_NAME, 1, locate(':', SKU_NAME) - 1)) "
+						+ " AND (tlb.BP_STATUS != 'REJECTED BY TME' OR tlb.BP_STATUS IS NULL) and tlb.LAUNCH_ID IN ("+launchId+")";
+
+				Query query = sessionFactory.getCurrentSession().createNativeQuery(query2);
+				Iterator<Object> itr = query.list().iterator();
+				Query query3 = sessionFactory.getCurrentSession()
+						.createNativeQuery("SELECT REJECT_IDS FROM TBL_LAUNCH_REQUEST WHERE CHANGES_REQUIRED='STORE REJECTED' AND FINAL_STATUS='APPROVED' AND LAUNCH_ID = '" + launchId + "'");
+				List<String> listOfStore = query3.list();
+				List<String> storeIds = new ArrayList<>();
+				while (itr.hasNext()) {
+
+					ArrayList<String> dataObj = new ArrayList<String>();
+					if (!listOfStore.isEmpty()) {
+						String StringList="";
+						for (String abc: listOfStore) {
+							StringList += ","+abc.trim();
+							}
+						storeIds = Arrays.asList(StringList.toString().split(","));
+						Object[] obj = (Object[]) itr.next();
+						for (Object ob : obj) {
+							String value = "";
+							value = (ob == null) ? "" : ob.toString();
+							dataObj.add(value.replaceAll("\\^", ","));
+						}
+						if (!storeIds.contains(dataObj.get(9).toString())) {							
+									String modifiedMOC = getModifiedMoc(launchId,  dataObj.get(5));
+									if(modifiedMOC!=null && !modifiedMOC.isEmpty()) {
+										String replaceDate = modifiedMOC;
+										dataObj.set(3, replaceDate);
+									}
+									else {
+										dataObj.set(3, dataObj.get(3));
+									}
+
+							obj = null;
+							downloadDataList.add(dataObj);
+						}
+					}
+					else  {
+						Object[] obj = (Object[]) itr.next();
+						for (Object ob : obj) {
+							String value = "";
+							value = (ob == null) ? "" : ob.toString();
+							dataObj.add(value.replaceAll("\\^", ","));
+						}
+								String modifiedMOC = getModifiedMoc(launchId,  dataObj.get(5));
+								if(modifiedMOC!=null && !modifiedMOC.isEmpty()) {
+									String replaceDate = modifiedMOC;
+									dataObj.set(3, replaceDate);
+								}
+								else {
+									dataObj.set(3, dataObj.get(3));
+								}
+
+						obj = null;
+						downloadDataList.add(dataObj);
+					}
+				}
 			}
 			return downloadDataList;
 
@@ -861,6 +928,7 @@ public class LaunchDaoImpl implements LaunchDao {
 			downloadDataList.add(arrList);
 			return downloadDataList;
 		}
+		//Kajal G changes End
 	}
 	
 	// Added By Harsha as part of Sprint -8 starts
@@ -2159,8 +2227,9 @@ public class LaunchDaoImpl implements LaunchDao {
 					return downloadDataList;
 				*/
 				//Kajal G commeted above code and Start changes for SPRINT-17
+			try {
 				for(String launchId:listOfLaunchData){
-					try {
+					
 						String query2 = " SELECT * FROM ( SELECT DISTINCT asd.LAUNCH_NAME,tlb.BP_CODE,tlb.BP_DESCRIPTION,asd.LAUNCH_MOC,abc.ACCOUNT_NAME_L2,"
 								+ " abc.ACCOUNT_NAME ACCOUNT_NAME,abc.depot,abc.HUL_STORE_FORMAT,abc.CLUSTER,abc.REPORTING_CODE,(CASE WHEN tvcom.FMCG_CSP_CODE IS NOT NULL "
 								+ " THEN tvcom.FMCG_CSP_CODE ELSE tvcom.COLOUR_CSP_CODE END) AS DEPO_CODE ,ROW_NUMBER() OVER (ORDER BY abc.UPDATED_DATE DESC) AS ROW_NEXT "
@@ -2182,12 +2251,16 @@ public class LaunchDaoImpl implements LaunchDao {
 								.createNativeQuery("SELECT REJECT_IDS FROM TBL_LAUNCH_REQUEST WHERE CHANGES_REQUIRED='STORE REJECTED' AND FINAL_STATUS='APPROVED' AND LAUNCH_ID = '" + launchId + "'");
 						List<String> listOfStore = query3.list();
 						List<String> storeIds = new ArrayList<>();
+						
 						while (rs.next()) {
 							
 							CoeLaunchStoreListResponse launchBean = new CoeLaunchStoreListResponse();
-							if (!listOfStore.isEmpty()) {
-								storeIds = Arrays.asList(listOfStore.toString().split(","));
-								
+							if (!listOfStore.isEmpty()) {					
+								String StringList="";
+								for (String abc: listOfStore) {
+									StringList += ","+abc.trim();
+									}
+								storeIds = Arrays.asList(StringList.toString().split(","));
 								if (!storeIds.contains(rs.getString("REPORTING_CODE").toString())) {
 									launchBean.setLaunchName(rs.getString("LAUNCH_NAME"));
 									launchBean.setBasepackCode(rs.getString("BP_CODE"));
@@ -2220,8 +2293,12 @@ public class LaunchDaoImpl implements LaunchDao {
 								downloadDataList.add(launchBean);
 							}
 						}
-
-					}catch (Exception ex) {
+					}	
+					if(pageDisplayLength >downloadDataList.size())
+					pageDisplayLength=downloadDataList.size();
+					finalMap.put(downloadDataList.subList(pageDisplayStart-1, pageDisplayLength), downloadDataList.size());
+					return finalMap;
+				}catch (Exception ex) {
 						logger.debug("Exception :", ex);
 						/*ArrayList<String> arrList = new ArrayList<>();
 						arrList.add(ex.toString());
@@ -2230,12 +2307,7 @@ public class LaunchDaoImpl implements LaunchDao {
 							pageDisplayLength=downloadDataList.size();
 						finalMap.put(downloadDataList.subList(pageDisplayStart-1, pageDisplayLength), downloadDataList.size());
 						return finalMap;
-					}
 				}
-				if(pageDisplayLength >downloadDataList.size())
-					pageDisplayLength=downloadDataList.size();
-				finalMap.put(downloadDataList.subList(pageDisplayStart-1, pageDisplayLength), downloadDataList.size());
-				return finalMap;
 				//Kajal G changes End 
 		}
 		@Override
