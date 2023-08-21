@@ -135,7 +135,7 @@ public class LaunchServiceImpl implements LaunchService {
 	}
 
 	@Override
-	public List<CoeLaunchStoreListResponse> getLaunchStoreListDumpPagination(List<String> listOfLaunchData,int pageDisplayStart, int pageDisplayLength){
+	public Map<List<CoeLaunchStoreListResponse>, Integer> getLaunchStoreListDumpPagination(List<String> listOfLaunchData,int pageDisplayStart, int pageDisplayLength){
 		return launchDao.getLaunchStoreListDumpPagination(listOfLaunchData,pageDisplayStart,pageDisplayLength);
 	}
 	@Override
