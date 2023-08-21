@@ -999,7 +999,12 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					
 					//Kavitha D changes -SPRINT 16 starts
 					if(bean.getSol_type().trim().equalsIgnoreCase("Additional Quantity- Primary") 
-							|| bean.getSol_type().trim().equalsIgnoreCase("Additional Quantity- Customer Closing")) 
+							|| bean.getSol_type().trim().equalsIgnoreCase("Additional Quantity- Customer Closing")
+							|| bean.getSol_type().trim().equalsIgnoreCase("Missing Geo") 
+							|| bean.getSol_type().trim().equalsIgnoreCase("Top Up")
+							|| bean.getSol_type().trim().equalsIgnoreCase("Basepack Addition") 
+							|| bean.getSol_type().trim().equalsIgnoreCase("Date Extension")
+							|| bean.getSol_type().trim().equalsIgnoreCase("Budget Extension") ) 	
 					{
 					
 						if(!bean.getRegular_promo_quantity().isEmpty()) {
