@@ -586,14 +586,15 @@ public class CoeLaunchPlanController {
 			String[] launchId = launchIds.split(",");
 			List<String> listOfLaunchData = Arrays.asList(launchId);
 			//listOfLaunch = launchService.getLaunchStoreListDump(headerDetail, userId,listOfLaunchData);
-			int rowCount = launchService.getLaunchListRowCountGrid(listOfLaunchData);
-			List<CoeLaunchStoreListResponse> listOfLaunch = launchService.getLaunchStoreListDumpPagination(listOfLaunchData,(pageDisplayStart + 1),(pageNumber * pageDisplayLength));
-			
-			jsonObj.setJsonBean(listOfLaunch);
+//			int rowCount = launchService.getLaunchListRowCountGrid(listOfLaunchData);
+			Map<List<CoeLaunchStoreListResponse>, Integer> listOfLaunch = launchService.getLaunchStoreListDumpPagination(listOfLaunchData,(pageDisplayStart + 1),(pageNumber * pageDisplayLength));
+			List<CoeLaunchStoreListResponse> listOfStoreLaunch = listOfLaunch.keySet().iterator().next();
+			int rowCount = listOfLaunch.get(listOfStoreLaunch);
+			jsonObj.setJsonBean(listOfStoreLaunch);
 			jsonObj.setiTotalDisplayRecords(rowCount);
 			jsonObj.setiTotalRecords(rowCount);
 			
-			if (null == listOfLaunch.get(0)) {
+			if (null == listOfLaunch) {
 				throw new Exception("Record Not Found");
 			}
 		} catch (Exception e) {
