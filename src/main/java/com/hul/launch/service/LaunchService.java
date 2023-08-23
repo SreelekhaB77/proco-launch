@@ -59,7 +59,7 @@ public interface LaunchService {
 	public List<ArrayList<String>> getLaunchStoreListDump(ArrayList<String> headerDetail, String userId,
 			List<String> listOfLaunchData);
 	
-	public List<CoeLaunchStoreListResponse> getLaunchStoreListDumpPagination(List<String> listOfLaunchData,int pageDisplayStart, int pageDisplayLength);
+	public Map<List<CoeLaunchStoreListResponse>, Integer> getLaunchStoreListDumpPagination(List<String> listOfLaunchData,int pageDisplayStart, int pageDisplayLength);
 	
 	
 	public String saveLaunchStatus(String result, String userId);
