@@ -72,9 +72,13 @@ public class PromoCrBean {
 	private String stockAvailability;
 	@Column(name = "NCMM REMARKS")
 	private String signedOffWithCM;
-	@Column(name="SIGNED OFF WITH AVAILABILITY")
+	@Column(name="SC REMARKS")
 	private String signedOffWithAvailability;
-	
+	//Added by Kavitha D-SPRINT 18 chnages
+	@Column(name="SC APPROVED QTY")
+	private String scApprovedQty;
+	@Column(name="SC APPROVED BUDGET")
+	private String scApprovedBdg;
 	
 	public String getSignedOffWithCM() {
 		return signedOffWithCM;
