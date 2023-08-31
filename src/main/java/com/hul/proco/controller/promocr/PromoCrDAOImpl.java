@@ -545,17 +545,34 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 					/*" SELECT DISTINCT CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_MODALITY,PRICE_OFF,DP_QUANTITY,QUANTITY,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE "
 					+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE (PM.STATUS IN('3','39','43') OR (PM.STATUS IN ('1','39','43') "
 					+ "AND (PM.TEMPLATE_TYPE = 'NE' OR PM.TEMPLATE_TYPE = 'CR'))) AND PM.MOC= '"+moc+"' ";*/ //Changed by Kavitha D-SPRINT 15 changes
-			
-			" SELECT DISTINCT PM.CHANNEL_NAME,PM.MOC,PM.SALES_CATEGORY,PM.PPM_ACCOUNT,"
+			//Kajal G changes start here for SPRINT-18		
+			" CREATE TEMPORARY TABLE TT_NCMM_PROMO_DOWNLOAD SELECT DISTINCT PM.CHANNEL_NAME,PM.MOC,PM.SALES_CATEGORY,PM.PPM_ACCOUNT,"
 			+ " PM.PROMO_ID,PM.OFFER_DESC,PM.BASEPACK_CODE,PM.OFFER_TYPE,PM.OFFER_MODALITY,PM.PRICE_OFF, (CASE WHEN (PM.TEMPLATE_TYPE = 'R' OR PM.TEMPLATE_TYPE='NE') THEN '' WHEN PM.TEMPLATE_TYPE='CR' THEN PM.REGULAR_PROMO_QUANTITY END) AS REGULAR_PROMO_QUANTITY,"
-			+ " PM.QUANTITY,PM.BUDGET AS FIXED_BUDGET, (CASE WHEN PM.TEMPLATE_TYPE='CR' THEN PM.REGULAR_PROMO_BUDGET WHEN (PM.TEMPLATE_TYPE = 'R' OR PM.TEMPLATE_TYPE='NE') THEN '' END) AS REGULAR_PROMO_BUDGET,"
-			+ " PM.CLUSTER, PM.TEMPLATE_TYPE,PM.CR_SOL_TYPE,'NO',(CASE WHEN PM.CR_SOL_TYPE IN('Additional Quantity- Primary','Basepack Addition','Budget Extension','Date Extension','Missing Geo') OR PM.TEMPLATE_TYPE IN('R','NE') THEN 'YES' WHEN PM.CR_SOL_TYPE IN('Top Up','Additional Quantity- Customer Closing') THEN 'NA' END) AS REQUIRE_STOCK_AVAILABILITY "
+			+ " PM.QUANTITY,PM.BUDGET AS FIXED_BUDGET, (CASE WHEN PM.TEMPLATE_TYPE='CR' THEN PM.REGULAR_PROMO_BUDGET WHEN (PM.TEMPLATE_TYPE = 'R' OR PM.TEMPLATE_TYPE='NE') THEN '' END) AS REGULAR_PROMO_BUDGET,PM.CLUSTER,"
+//			+ " PM.CLUSTER, PM.TEMPLATE_TYPE,PM.CR_SOL_TYPE," // Commented by KAJAL G in SPRINT-18
+			+ " CASE WHEN PM.TEMPLATE_TYPE = 'R' THEN 'Regular' WHEN PM.TEMPLATE_TYPE = 'NE' THEN 'New Entry' ELSE PM.TEMPLATE_TYPE END AS PROMO_ENTRY_TYPE," // Added by KAJAL G in SPRINT-18
+			+ " CASE WHEN PM.TEMPLATE_TYPE = 'R' THEN 'Regular' WHEN PM.TEMPLATE_TYPE = 'NE' THEN 'New Entry' ELSE PM.CR_SOL_TYPE END AS CR_SOL_TYPE," // Added by KAJAL G in SPRINT-18
+			+ " CASE WHEN PM.TEMPLATE_TYPE = 'R' THEN 'REG' WHEN PM.TEMPLATE_TYPE = 'NE' THEN 'NE' ELSE '     ' END AS CR_SOL_TYPE_SHORTKEY,"  // Added by KAJAL G in SPRINT-18
+			+ " 'NO' AS INCREMENTAL_BUDGET_REQUIRED,(CASE WHEN PM.CR_SOL_TYPE IN('Additional Quantity- Primary','Basepack Addition','Budget Extension','Date Extension','Missing Geo') OR PM.TEMPLATE_TYPE IN('R','NE') THEN 'YES' WHEN PM.CR_SOL_TYPE IN('Top Up','Additional Quantity- Customer Closing') THEN 'NA' END) AS REQUIRE_STOCK_AVAILABILITY "
 			+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE (PM.STATUS IN('3','39','43') OR (PM.STATUS IN ('1','39','43') "
 			+ "AND (PM.TEMPLATE_TYPE = 'NE' OR PM.TEMPLATE_TYPE = 'CR'))) AND PM.MOC= '"+moc+"'"; //Changed by Kavitha D-Sprint 16 
 
-			Query query1  =sessionFactory.getCurrentSession().createNativeQuery(downloadCrQuery);
-		
-			Iterator itr = query1.list().iterator();
+			Query query = sessionFactory.getCurrentSession().createNativeQuery(downloadCrQuery);
+			query.executeUpdate();
+
+			String updateTempTable = "UPDATE TT_NCMM_PROMO_DOWNLOAD LR INNER JOIN TBL_PROCO_SOL_TYPE CR ON CR.SOL_REMARK= LR.CR_SOL_TYPE "
+					+ "SET LR.CR_SOL_TYPE_SHORTKEY=CR.SOL_TYPE";
+			
+			Query query1 = sessionFactory.getCurrentSession().createNativeQuery(updateTempTable);
+			query1.executeUpdate();
+			
+			String downloadNcmmEntry = "SELECT DISTINCT PM.CHANNEL_NAME,PM.MOC,PM.SALES_CATEGORY,PM.PPM_ACCOUNT,PM.PROMO_ID,PM.OFFER_DESC,PM.BASEPACK_CODE,PM.OFFER_TYPE,PM.OFFER_MODALITY,PM.PRICE_OFF,"
+					+ " PM.REGULAR_PROMO_QUANTITY,PM.QUANTITY,PM.FIXED_BUDGET,PM.REGULAR_PROMO_BUDGET,PM.CLUSTER,PM.PROMO_ENTRY_TYPE,PM.CR_SOL_TYPE,PM.CR_SOL_TYPE_SHORTKEY,PM.INCREMENTAL_BUDGET_REQUIRED,"
+					+ " PM.REQUIRE_STOCK_AVAILABILITY FROM TT_NCMM_PROMO_DOWNLOAD AS PM";
+			
+			Query query2  = sessionFactory.getCurrentSession().createNativeQuery(downloadNcmmEntry);
+			Iterator itr = query2.list().iterator();
+
 			downloadDataList.add(headerList);
 			while (itr.hasNext()) {
 				Object[] obj = (Object[]) itr.next();
@@ -568,12 +585,15 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 				obj = null;
 				downloadDataList.add(dataObj);
 			}
+			Query dropTable = sessionFactory.getCurrentSession().createNativeQuery("DROP TEMPORARY TABLE TT_NCMM_PROMO_DOWNLOAD");
+			dropTable.executeUpdate();
+			//Kajal G changes END here for SPRINT-18	
 			return downloadDataList;
 		} catch (Exception ex) {
 			logger.debug("Exception :", ex);
 			return null;
 		
-}
+		}
 	}
 	
 	

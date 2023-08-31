@@ -10,7 +10,7 @@ public class PromoCrBean {
 	
 	@Column(name = "PROMO_ID")
 	private String promo_id;
-	@Column(name="BASEPACK CODE")
+	@Column(name="BP CODE")
 	private String basepack;
 	@Column(name = "OFFER_DESCRIPTION")
 	private String offer_desc;
@@ -62,15 +62,15 @@ public class PromoCrBean {
 	//Added by Kavitha D-SPRINT 16
 	@Column(name="FIXED BUDGET")
 	private String budget;
-	@Column(name="REGULAR PROMO QUANTITY")
+	@Column(name="PARENT SOL QTY")
 	private String regularPromoQuantity;
-	@Column(name="REGULAR PROMO BUDGET")
+	@Column(name="PARENT SOL BUDGET")
 	private String regularPromoBudget;
-	@Column(name="INCREMENTAL BUDGET REQUIRED")
+	@Column(name="CSP APPROVAL (Y/N)")
 	private String incrementalBudget;
-	@Column(name = "REQUIRE STOCK AVAILABILITY CONFIRMATION")
+	@Column(name = "SC APPROVAL(Y/N)")
 	private String stockAvailability;
-	@Column(name = "SIGNED OFF WITH CM")
+	@Column(name = "NCMM REMARKS")
 	private String signedOffWithCM;
 	@Column(name="SIGNED OFF WITH AVAILABILITY")
 	private String signedOffWithAvailability;
