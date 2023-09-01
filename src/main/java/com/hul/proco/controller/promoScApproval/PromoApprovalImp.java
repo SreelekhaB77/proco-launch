@@ -179,14 +179,32 @@ public class PromoApprovalImp implements PromoApproval{
 						+ "PRICE_OFF,DP_QUANTITY,QUANTITY,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE PM.STATUS IN('38','41','44') AND PM.MOC= '"+moc+"'";*/
 				
 						//SC APPROVAL QTY & BUDGET ADDED BY KAVITHA D-SPRINT 18
-				" SELECT DISTINCT CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_TYPE,"
-				+ "OFFER_MODALITY,PRICE_OFF,REGULAR_PROMO_QUANTITY,SC_APPROVED_QTY,QUANTITY,BUDGET AS FIXED_BUDGET,REGULAR_PROMO_BUDGET,SC_APPROVED_BDG,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE,"
-				+ "INCREMENTAL_BUDGET,STOCK_AVAILABILITY,'YES' "
+				//Kajal G changes start here for SPRINT-18		
+				" CREATE TEMPORARY TABLE TT_SC_PROMO_DOWNLOAD SELECT DISTINCT CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_TYPE,"
+				+ "OFFER_MODALITY,PRICE_OFF,REGULAR_PROMO_QUANTITY,SC_APPROVED_QTY,QUANTITY,BUDGET AS FIXED_BUDGET,REGULAR_PROMO_BUDGET,SC_APPROVED_BDG,CLUSTER,"
+//				+ "TEMPLATE_TYPE,CR_SOL_TYPE,"
+				+ " CASE WHEN TEMPLATE_TYPE = 'R' THEN 'Regular' WHEN TEMPLATE_TYPE = 'NE' THEN 'New Entry' ELSE TEMPLATE_TYPE END AS PROMO_ENTRY_TYPE," // Added by KAJAL G in SPRINT-18
+				+ " CASE WHEN TEMPLATE_TYPE = 'R' THEN 'Regular' WHEN TEMPLATE_TYPE = 'NE' THEN 'New Entry' ELSE CR_SOL_TYPE END AS CR_SOL_TYPE," // Added by KAJAL G in SPRINT-18
+				+ " CASE WHEN TEMPLATE_TYPE = 'R' THEN 'REG' WHEN TEMPLATE_TYPE = 'NE' THEN 'NE' ELSE '     ' END AS CR_SOL_TYPE_SHORTKEY,"  // Added by KAJAL G in SPRINT-18
+				+ "INCREMENTAL_BUDGET,STOCK_AVAILABILITY,'YES' AS NCMM_REMARKS "
 				+ "FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE STATUS IN('38','41','44') AND MOC= '"+moc+"'"; //Added by Kavitha D-SPRINT 16 changes
 				
-				Query query1  =sessionFactory.getCurrentSession().createNativeQuery(downloadScQuery);
+				Query query = sessionFactory.getCurrentSession().createNativeQuery(downloadScQuery);
+				query.executeUpdate();
+
+				String updateTempTable = "UPDATE TT_SC_PROMO_DOWNLOAD LR INNER JOIN TBL_PROCO_SOL_TYPE CR ON CR.SOL_REMARK= LR.CR_SOL_TYPE "
+						+ "SET LR.CR_SOL_TYPE_SHORTKEY=CR.SOL_TYPE";
+				
+				Query query1 = sessionFactory.getCurrentSession().createNativeQuery(updateTempTable);
+				query1.executeUpdate();
+				
+				String downloadNcmmEntry = "SELECT DISTINCT CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,"
+						+ " REGULAR_PROMO_QUANTITY,SC_APPROVED_QTY,QUANTITY,FIXED_BUDGET,REGULAR_PROMO_BUDGET,SC_APPROVED_BDG,CLUSTER,PROMO_ENTRY_TYPE,CR_SOL_TYPE,CR_SOL_TYPE_SHORTKEY,"
+						+ " INCREMENTAL_BUDGET,STOCK_AVAILABILITY,NCMM_REMARKS FROM TT_SC_PROMO_DOWNLOAD";
+				
+				Query query2  = sessionFactory.getCurrentSession().createNativeQuery(downloadNcmmEntry);
 			
-				Iterator itr = query1.list().iterator();
+				Iterator itr = query2.list().iterator();
 				downloadDataList.add(headerList);
 				while (itr.hasNext()) {
 					Object[] obj = (Object[]) itr.next();
@@ -199,6 +217,9 @@ public class PromoApprovalImp implements PromoApproval{
 					obj = null;
 					downloadDataList.add(dataObj);
 				}
+				Query dropTable = sessionFactory.getCurrentSession().createNativeQuery("DROP TEMPORARY TABLE TT_SC_PROMO_DOWNLOAD");
+				dropTable.executeUpdate();
+				//Kajal G changes END here for SPRINT-18	
 				return downloadDataList;
 			} catch (Exception ex) {
 				logger.debug("Exception :", ex);

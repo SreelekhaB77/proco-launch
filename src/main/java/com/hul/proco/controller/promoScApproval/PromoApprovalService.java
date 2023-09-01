@@ -57,6 +57,7 @@ public class PromoApprovalService {
 			headerList.add("SALES CLUSTER");
 			headerList.add("PROMO ENTRY TYPE");
 			headerList.add("SOL TYPE");
+			headerList.add("SOL TYPE SHORTKEY");//Added by Kajal G-Sprint 18 
 			headerList.add("CSP APPROVAL (Y/N)");
 			headerList.add("SC APPROVAL(Y/N)");
 			headerList.add("NCMM REMARKS");
