@@ -20,16 +20,16 @@ public class CreateBeanRegular {
 	@Column(name = "PPM ACCOUNT")
 	private String ppm_account;
 
-	@Column(name = "PROMO TIMEPERIOD")
+	@Column(name = "CUST PROMO CYCLE")
 	private String promo_time_period;
 
 	@Column(name = "AB CREATION (ONLY FOR KA Accounts)")
 	private String ab_creation;
 
-	@Column(name = "BASEPACK CODE")
+	@Column(name = "BP CODE")
 	private String basepack_code;
 
-	@Column(name = "BASEPACK DESCRIPTION")
+	@Column(name = "BP DESC")
 	private String baseback_desc;
 
 	@Column(name = "CHILDPACK CODE")
@@ -89,7 +89,7 @@ public class CreateBeanRegular {
 	@Column(name = "ADDITIONAL BUDGET")
 	private String addition_budget;
 
-	@Column(name = "PPM SOL Code Reference")
+	@Column(name = "PARENT SOL CODE")
 	private String sol_code_ref;
 
 	@Column(name = "YEAR")
@@ -101,10 +101,10 @@ public class CreateBeanRegular {
 	@Column(name = "MOC NAME")
 	private String moc_name_dp;
 	
-	@Column(name="REGULAR PROMO QUANTITY")
+	@Column(name="PARENT SOL QTY")
 	private String regular_promo_quantity;
 	
-	@Column(name="REGULAR PROMO BUDGET")
+	@Column(name="PARENT SOL BUDGET")
 	private String regular_promo_budget;
 	
 	
