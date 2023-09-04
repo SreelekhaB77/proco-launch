@@ -863,7 +863,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						&& !bean.getSol_type().trim().equalsIgnoreCase("Top Up") 
 						&& !bean.getSol_type().trim().equalsIgnoreCase("Budget Extension")
 						&& !bean.getSol_type().trim().equalsIgnoreCase("Additional Quantity")
-						&&	!bean.getSol_type().trim().equalsIgnoreCase("Additional Quantity- Primary") 
+						&& !bean.getSol_type().trim().equalsIgnoreCase("Additional Quantity- Primary") 
 						&& !bean.getSol_type().trim().equalsIgnoreCase("Additional Quantity- Customer Closing")
 						&& !bean.getSol_type().trim().equalsIgnoreCase("Date Extension")
 						&& !bean.getOfr_type().equalsIgnoreCase("Visibility")
