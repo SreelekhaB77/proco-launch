@@ -347,7 +347,7 @@ public class PromoApprovalImp implements PromoApproval{
 						flag = 1;
 					} 
                 	
-                	if(Integer.parseInt(beanArray[i].getScApprovedBdg())>Integer.parseInt(beanArray[i].getBudget())) {
+                	if(Double.parseDouble(beanArray[i].getScApprovedBdg())>Double.parseDouble(beanArray[i].getBudget())) {
                 		if (flag == 1)
 							error_msg = error_msg + ",Sc Approved Quantity should not exceed tme uploaded value";
 						else
@@ -456,13 +456,29 @@ public class PromoApprovalImp implements PromoApproval{
 		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
 		try {
 			String qry = "";
-			qry=" SELECT CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,REGULAR_PROMO_QUANTITY,"
-					+ "SC_APPROVED_QTY,QUANTITY,BUDGET,REGULAR_PROMO_BUDGET,SC_APPROVED_BDG,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE,INCREMENTAL_BUDGET,STOCK_AVAILABILITY,"
+			qry=" CREATE TEMPORARY TABLE TT_SC_PROMO_ERROR_DOWNLOAD SELECT CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,REGULAR_PROMO_QUANTITY,"
+					+ "SC_APPROVED_QTY,QUANTITY,BUDGET,REGULAR_PROMO_BUDGET,SC_APPROVED_BDG,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE,"
+					+ " CASE WHEN TEMPLATE_TYPE = 'Regular' THEN 'REG' WHEN TEMPLATE_TYPE = 'New Entry' THEN 'NE' ELSE '     ' END AS CR_SOL_TYPE_SHORTKEY,"  // Added by KAJAL G in SPRINT-18
+					+ "INCREMENTAL_BUDGET,STOCK_AVAILABILITY,"
 					+ "SIGNED_OFF_WITH_CM,REMARK,ERROR_MSG FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE USER_ID=:userId";
-		
-		Query query = sessionFactory.getCurrentSession().createNativeQuery(qry);
-		query.setParameter("userId", userId);
-		Iterator itr = query.list().iterator();
+
+			Query query = sessionFactory.getCurrentSession().createNativeQuery(qry);
+			query.setParameter("userId", userId);
+			query.executeUpdate();
+
+			String updateTempTable = "UPDATE TT_SC_PROMO_ERROR_DOWNLOAD LR INNER JOIN TBL_PROCO_SOL_TYPE CR ON CR.SOL_REMARK= LR.CR_SOL_TYPE "
+					+ "SET LR.CR_SOL_TYPE_SHORTKEY=CR.SOL_TYPE";
+			
+			Query query1 = sessionFactory.getCurrentSession().createNativeQuery(updateTempTable);
+			query1.executeUpdate();
+			
+			String downloadScEntry = "SELECT DISTINCT CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,"
+					+ " REGULAR_PROMO_QUANTITY,SC_APPROVED_QTY,QUANTITY,BUDGET,REGULAR_PROMO_BUDGET,SC_APPROVED_BDG,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE,CR_SOL_TYPE_SHORTKEY,"
+					+ " INCREMENTAL_BUDGET,STOCK_AVAILABILITY,SIGNED_OFF_WITH_CM,REMARK,ERROR_MSG FROM TT_SC_PROMO_ERROR_DOWNLOAD";
+
+		Query query2 = sessionFactory.getCurrentSession().createNativeQuery(downloadScEntry);
+
+		Iterator itr = query2.list().iterator();
 		downloadDataList.add(headerList);
 		while (itr.hasNext()) {
 			Object[] obj = (Object[]) itr.next();
