@@ -57,7 +57,7 @@ public class PromoCrBean {
 	private String soltype;
 	@Column(name="PROMO ENTRY TYPE")
 	private String templatetype;
-	@Column(name = "PPM_ACCOUNT")
+	@Column(name = "PPM ACCOUNT")
 	private String ppmaccount;
 	//Added by Kavitha D-SPRINT 16
 	@Column(name="FIXED BUDGET")
