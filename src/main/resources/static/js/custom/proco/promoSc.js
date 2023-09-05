@@ -574,7 +574,7 @@ $("#KAMVolumeUpload").click(function (event) {
             
             else if(resdata.includes('EXCEL_NOT_UPLOADED')){
 				$('#ProcoApprovalUploaderrorblock').show();
-	            $('#errorblockApprovalUpload').show();
+	            //$('#errorblockApprovalUpload').show();
 	            $('#ProcoApprovalUploadsuccessblock').hide();
 	            //$('#errorblockVolumeUpload').hide();
             }

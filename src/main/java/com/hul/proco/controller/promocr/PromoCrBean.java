@@ -80,6 +80,19 @@ public class PromoCrBean {
 	@Column(name="SC APPROVED BUDGET")
 	private String scApprovedBdg;
 	
+	
+	public String getScApprovedQty() {
+		return scApprovedQty;
+	}
+	public void setScApprovedQty(String scApprovedQty) {
+		this.scApprovedQty = scApprovedQty;
+	}
+	public String getScApprovedBdg() {
+		return scApprovedBdg;
+	}
+	public void setScApprovedBdg(String scApprovedBdg) {
+		this.scApprovedBdg = scApprovedBdg;
+	}
 	public String getSignedOffWithCM() {
 		return signedOffWithCM;
 	}
@@ -429,7 +442,8 @@ public class PromoCrBean {
 				+ budget + ", regularPromoQuantity=" + regularPromoQuantity + ", regularPromoBudget="
 				+ regularPromoBudget + ", incrementalBudget=" + incrementalBudget + ", stockAvailability="
 				+ stockAvailability + ", signedOffWithCM=" + signedOffWithCM + ", signedOffWithAvailability="
-				+ signedOffWithAvailability + "]";
+				+ signedOffWithAvailability + ", scApprovedQty=" + scApprovedQty + ", scApprovedBdg=" + scApprovedBdg
+				+ "]";
 	}
 
 }

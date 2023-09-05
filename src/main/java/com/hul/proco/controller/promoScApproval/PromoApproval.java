@@ -21,4 +21,7 @@ public interface PromoApproval {
 
 	public String uploadScApprovalData(PromoCrBean[] beanArray, String userId) throws Exception;
 
+	public List<ArrayList<String>> getPromotionApprovalScErrorDetails(ArrayList<String> headerList, String userId,
+			String roleId);
+
 }
