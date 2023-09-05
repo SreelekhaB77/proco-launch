@@ -286,9 +286,9 @@ public class PromoApprovalImp implements PromoApproval{
 		        }
 		        if(!numeric){
                     if (flag == 1)
-                        error_msg = error_msg + ",Invalid Sc Approved Quantity";
+                        error_msg = error_msg + ",Invalid Sc Approved Quantity/Non Decimal Sc Approved Quantity not allowed";
                     else
-                        error_msg = error_msg + "Invalid Sc Approved Quantity";
+                        error_msg = error_msg + "Invalid Sc Approved Quantity/Non Decimal Sc Approved Quantity not allowed";
                     flag=1;
                 }else {
                 	if(Integer.parseInt(beanArray[i].getScApprovedQty()) <= 0) {
@@ -334,9 +334,9 @@ public class PromoApprovalImp implements PromoApproval{
 		        }
 		        if(!numeric){
                     if (flag == 1)
-                        error_msg = error_msg + ",Invalid Sc Approved Budget";
+                        error_msg = error_msg + ",Invalid Sc Approved Budget/Non Decimal Sc Approved Budget not allowed";
                     else
-                        error_msg = error_msg + "Invalid Sc Approved Budget";
+                        error_msg = error_msg + "Invalid Sc Approved Budget/Non Decimal Sc Approved Budget not allowed";
                     flag=1;
                 }else {
                 	if(Integer.parseInt(beanArray[i].getScApprovedBdg()) <= 0) {
@@ -349,9 +349,9 @@ public class PromoApprovalImp implements PromoApproval{
                 	
                 	if(Double.parseDouble(beanArray[i].getScApprovedBdg())>Double.parseDouble(beanArray[i].getBudget())) {
                 		if (flag == 1)
-							error_msg = error_msg + ",Sc Approved Quantity should not exceed tme uploaded value";
+							error_msg = error_msg + ",Sc Approved Budget should not exceed tme uploaded value";
 						else
-							error_msg = error_msg + "Sc Approved Quantity should not exceed tme uploaded value";
+							error_msg = error_msg + "Sc Approved Budget should not exceed tme uploaded value";
 						flag = 1;
                 	}
                 	
