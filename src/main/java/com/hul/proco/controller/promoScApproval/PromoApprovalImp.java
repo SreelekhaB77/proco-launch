@@ -10,10 +10,13 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureQuery;
 import javax.transaction.Transactional;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +33,9 @@ public class PromoApprovalImp implements PromoApproval{
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	
+	private String error_msg = "";
+	private int flag = 0;
+	private int globle_flag = 0;
 	@SuppressWarnings("unchecked")
 	public String insertToportalUsage(String userId, String roleID, String module) {
 		String res = "";
@@ -178,7 +183,7 @@ public class PromoApprovalImp implements PromoApproval{
 				String downloadScQuery= /*" SELECT DISTINCT CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_MODALITY,"
 						+ "PRICE_OFF,DP_QUANTITY,QUANTITY,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE PM.STATUS IN('38','41','44') AND PM.MOC= '"+moc+"'";*/
 				
-						//SC APPROVAL QTY & BUDGET ADDED BY KAVITHA D-SPRINT 18
+				//SC APPROVAL QTY & BUDGET ADDED BY KAVITHA D-SPRINT 18
 				//Kajal G changes start here for SPRINT-18		
 				" CREATE TEMPORARY TABLE TT_SC_PROMO_DOWNLOAD SELECT DISTINCT CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_TYPE,"
 				+ "OFFER_MODALITY,PRICE_OFF,REGULAR_PROMO_QUANTITY,SC_APPROVED_QTY,QUANTITY,BUDGET AS FIXED_BUDGET,REGULAR_PROMO_BUDGET,SC_APPROVED_BDG,CLUSTER,"
@@ -255,7 +260,7 @@ public class PromoApprovalImp implements PromoApproval{
 		
 				//Added by Kavitha D-SPRINT 18 
 				"INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2 (CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,REGULAR_PROMO_QUANTITY,SC_APPROVED_QTY,QUANTITY,BUDGET,REGULAR_PROMO_BUDGET,SC_APPROVED_BDG,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE,INCREMENTAL_BUDGET,STOCK_AVAILABILITY,"
-				+ "SIGNED_OFF_WITH_CM,REMARK,STATUS,USER_ID) VALUES(?0,?1, ?2, ?3, ?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24)");
+				+ "SIGNED_OFF_WITH_CM,REMARK,STATUS,USER_ID,ERROR_MSG) VALUES(?0,?1, ?2, ?3, ?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25)");
 
 		for (int i = 0; i < beanArray.length; i++) {
 			if (beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("REJECTED") ||beanArray[i].getSignedOffWithAvailability().isEmpty()) {
@@ -271,96 +276,144 @@ public class PromoApprovalImp implements PromoApproval{
 			query.setString(8, beanArray[i].getOffer_modality());
 			query.setString(9, beanArray[i].getPriceoff());
 			query.setString(10, beanArray[i].getRegularPromoQuantity());
-			query.setString(11, beanArray[i].getQuantity());
-			query.setString(12, beanArray[i].getBudget());
-			query.setString(13, beanArray[i].getRegularPromoBudget());
-			query.setString(14, beanArray[i].getCluster());
-			query.setString(15, beanArray[i].getTemplatetype());
-			query.setString(16, beanArray[i].getSoltype());
-			query.setString(17, beanArray[i].getIncrementalBudget());
-			query.setString(18, beanArray[i].getStockAvailability());
-			query.setString(19, beanArray[i].getSignedOffWithCM());
-			query.setString(20, beanArray[i].getSignedOffWithAvailability());
+			if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR")) {
+			if(!beanArray[i].getScApprovedQty().isEmpty()) {
+				boolean numeric = true;
+		        try {
+		            int num = Integer.parseInt(beanArray[i].getScApprovedQty());
+		        } catch (NumberFormatException e) {
+		            numeric = false;
+		        }
+		        if(!numeric){
+                    if (flag == 1)
+                        error_msg = error_msg + ",Invalid Sc Approved Quantity/Non Decimal Sc Approved Quantity not allowed";
+                    else
+                        error_msg = error_msg + "Invalid Sc Approved Quantity/Non Decimal Sc Approved Quantity not allowed";
+                    flag=1;
+                }else {
+                	if(Integer.parseInt(beanArray[i].getScApprovedQty()) <= 0) {
+						if (flag == 1)
+							error_msg = error_msg + ",Sc Approved Quantity should not be 0 or negative value";
+						else
+							error_msg = error_msg + "Sc Approved Quantity should not be 0 or negative value";
+						flag = 1;
+					}    
+                	
+                	if(Integer.parseInt(beanArray[i].getScApprovedQty())>Integer.parseInt(beanArray[i].getQuantity())) {
+                		if (flag == 1)
+							error_msg = error_msg + ",Sc Approved Quantity should not exceed tme uploaded value";
+						else
+							error_msg = error_msg + "Sc Approved Quantity should not exceed tme uploaded value";
+						flag = 1;
+                	}
+                	
+                }
+		        
+		        }else {
+				if (flag == 1)
+					error_msg = error_msg + ",Mandatory input for Sc Approved Quantity";
+				else
+					error_msg = error_msg + "Mandatory input for Sc Approved Quantity";
+				flag = 1;
+			}	
+			query.setString(11, beanArray[i].getScApprovedQty());
+			}
+			else {
+				query.setString(11, "");
+			}
+			query.setString(12, beanArray[i].getQuantity());
+			query.setString(13, beanArray[i].getBudget());
+			query.setString(14, beanArray[i].getRegularPromoBudget());
+			if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR")) {
+			if(!beanArray[i].getScApprovedBdg().isEmpty()) {
+				boolean numeric = true;
+		        try {
+		            int num = Integer.parseInt(beanArray[i].getScApprovedBdg());
+		        } catch (NumberFormatException e) {
+		            numeric = false;
+		        }
+		        if(!numeric){
+                    if (flag == 1)
+                        error_msg = error_msg + ",Invalid Sc Approved Budget/Non Decimal Sc Approved Budget not allowed";
+                    else
+                        error_msg = error_msg + "Invalid Sc Approved Budget/Non Decimal Sc Approved Budget not allowed";
+                    flag=1;
+                }else {
+                	if(Integer.parseInt(beanArray[i].getScApprovedBdg()) <= 0) {
+						if (flag == 1)
+							error_msg = error_msg + ",Sc Approved Budget should not be 0 or negative value";
+						else
+							error_msg = error_msg + " Sc Approved Budget should not be 0 or negative value";
+						flag = 1;
+					} 
+                	
+                	if(Double.parseDouble(beanArray[i].getScApprovedBdg())>Double.parseDouble(beanArray[i].getBudget())) {
+                		if (flag == 1)
+							error_msg = error_msg + ",Sc Approved Budget should not exceed tme uploaded value";
+						else
+							error_msg = error_msg + "Sc Approved Budget should not exceed tme uploaded value";
+						flag = 1;
+                	}
+                	
+                }
+		        
+		        }else {
+				if (flag == 1)
+					error_msg = error_msg + ",Mandatory input for Sc Approved Budget";
+				else
+					error_msg = error_msg + "Mandatory input for Sc Approved Budget";
+				flag = 1;
+			}	
+			
+			query.setString(15, beanArray[i].getScApprovedBdg());
+			}
+			else {
+				query.setString(15, "");
+			}
+			query.setString(16, beanArray[i].getCluster());
+			query.setString(17, beanArray[i].getTemplatetype());
+			query.setString(18, beanArray[i].getSoltype());
+			query.setString(19, beanArray[i].getIncrementalBudget());
+			query.setString(20, beanArray[i].getStockAvailability());
+			query.setString(21, beanArray[i].getSignedOffWithCM());
+			query.setString(22, beanArray[i].getSignedOffWithAvailability());
 			if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED") ) {
-				query.setString(21,"40");
+				query.setString(23,"40");
 			}
 			else if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("REJECTED")) {
-				query.setString(21,"41");
+				query.setString(23,"41");
 			}
 			else if(beanArray[i].getSignedOffWithAvailability().isEmpty()){ //Added by Kajal G-SPRINT 15 changes 
-				query.setString(21,"44");
+				query.setString(23,"44");
 			}
-			query.setString(22,userId);
-			int executeUpdate = query.executeUpdate();
+			query.setString(24,userId);
 			
-	
-			if (executeUpdate > 0) {
-				response = validatePromo(beanArray[i], i);
-				if (response.equals("EXCEL_NOT_UPLOADED")) {
-					responseList.add(response);
-				}
+			if (flag == 1)
+				globle_flag = 1;
+			query.setString(25, error_msg);
+			
+			int executeUpdate = query.executeUpdate();
+			error_msg = "";
+			flag = 0;
 			}
 		}
-		}
+			if (globle_flag == 0) {
+				
+				saveToMainTable(userId);
+				globle_flag = 0;
+				response= "EXCEL_UPLOADED";
 
-		if (!responseList.contains("EXCEL_NOT_UPLOADED")) {
-			if (!this.saveTotMainTable(userId)) {
-				response = "ERROR";
 			} else {
-				response = "EXCEL_UPLOADED";
+				globle_flag = 0;
+				response= "EXCEL_NOT_UPLOADED";
 			}
-		} else {
-			response = "EXCEL_NOT_UPLOADED";
-		}
-
-
-	} catch (Exception e) {
-		logger.debug("Exception:", e);
-		throw new Exception();
-	}
-	if(responseList.contains("EXCEL_NOT_UPLOADED")) {
-		response = "EXCEL_NOT_UPLOADED";
-	}
-	return response;
-}
-	
-	private synchronized String validatePromo(PromoCrBean bean,  int row) throws Exception {
-		String res = "EXCEL_UPLOADED";
-		String errorMsg = "";
-		try {
-			Query queryToCheckvisiRefNo = sessionFactory.getCurrentSession().createNativeQuery(
-					"SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE PROMO_ID=:promoId");
-			queryToCheckvisiRefNo.setString("promoId", bean.getPromo_id());
-			Integer promoid = ((BigInteger) queryToCheckvisiRefNo.uniqueResult()).intValue();			
-
-			if(promoid!=null && promoid == 0){
-				res = "EXCEL_NOT_UPLOADED";
-				errorMsg = errorMsg + "Entered promoid is not exist..";
-				updateErrorMessageInTemp(errorMsg,  row);
+			}catch(Exception e) {
+				logger.info(e);
 			}
-			
-		} catch (Exception e) {
-			logger.debug("Exception: ", e);
-			throw new Exception();
+		return response;
 		}
-		return res;
-	}
-	private synchronized int updateErrorMessageInTemp(String errorMsg,  int row) {
-		try {
-			String qry = "UPDATE TBL_PROCO_PROMOTION_MASTER_TEMP_V2 SET ERROR_MSG=:errorMsg WHERE ROW_ID=:row";
-			Query query = sessionFactory.getCurrentSession().createNativeQuery(qry);
-			query.setString("errorMsg", errorMsg);
-			query.setInteger("row", row);
-			int executeUpdate = query.executeUpdate();
-			return executeUpdate;
-		} catch (Exception e) {
-			logger.debug("Exception: ", e);
-			return 0;
-		}
-	}
-	
 
-	public synchronized boolean saveTotMainTable(String userId) {
+	public synchronized boolean saveToMainTable(String userId) {
 		try {
 			insertIntoMaster(userId);
 			return true;
@@ -378,23 +431,82 @@ public class PromoApprovalImp implements PromoApproval{
 		Date date = new Date();
 		try {
 			String updateSql=" UPDATE TBL_PROCO_PROMOTION_MASTER_V2 A INNER JOIN TBL_PROCO_PROMOTION_MASTER_TEMP_V2 B ON A.PROMO_ID = B.PROMO_ID "
-					+ " SET A.STATUS=B.STATUS,A.SIGNED_OFF_WITH_CM=B.SIGNED_OFF_WITH_CM,A.USER_ID='" + userId + "',A.UPDATE_STAMP=' "+ dateFormat.format(date) + "' "
+					+ " SET A.STATUS=B.STATUS,A.SIGNED_OFF_WITH_CM=B.SIGNED_OFF_WITH_CM,"
+					+ " A.USER_ID='" + userId + "',A.UPDATE_STAMP=' "+ dateFormat.format(date) + "', "
+					+ " A.SC_APPROVED_QTY=B.SC_APPROVED_QTY,A.SC_APPROVED_BDG=B.SC_APPROVED_BDG "   //Added by Kavitha D-SPRINT 18 changes
 					+ " WHERE B.USER_ID='" + userId + "' " ;
+			logger.info("Updated query in sc:"+updateSql);
 			Query queryUpdateExisting = sessionFactory.getCurrentSession().createNativeQuery(updateSql);
-		queryUpdateExisting.executeUpdate();
+			queryUpdateExisting.executeUpdate();
 
 
 	} catch (Exception e) {
 		logger.error("Error in com.hul.proco.controller.promocrImpl.insertIntoTotMaster(String)", e);
 	}
 
-}
-	//Added by Kavitha D for PromoApproval Upload ends-SPRINT 10
+} 	//Added by Kavitha D for PromoApproval Upload ends-SPRINT 10
 
+
+	//Added by Kavitha D for PromoApproval error file download-SPRINT 18
+
+	@Override
+	public List<ArrayList<String>> getPromotionApprovalScErrorDetails(ArrayList<String> headerList, String userId,
+			String roleId) {
+		// TODO Auto-generated method stub
+		List<ArrayList<String>> downloadDataList = new ArrayList<ArrayList<String>>();
+		try {
+			String qry = "";
+			qry=" CREATE TEMPORARY TABLE TT_SC_PROMO_ERROR_DOWNLOAD SELECT CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,REGULAR_PROMO_QUANTITY,"
+					+ "SC_APPROVED_QTY,QUANTITY,BUDGET,REGULAR_PROMO_BUDGET,SC_APPROVED_BDG,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE,"
+					+ " CASE WHEN TEMPLATE_TYPE = 'Regular' THEN 'REG' WHEN TEMPLATE_TYPE = 'New Entry' THEN 'NE' ELSE '     ' END AS CR_SOL_TYPE_SHORTKEY,"  // Added by KAJAL G in SPRINT-18
+					+ "INCREMENTAL_BUDGET,STOCK_AVAILABILITY,"
+					+ "SIGNED_OFF_WITH_CM,REMARK,ERROR_MSG FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE USER_ID=:userId";
+
+			Query query = sessionFactory.getCurrentSession().createNativeQuery(qry);
+			query.setParameter("userId", userId);
+			query.executeUpdate();
+
+			String updateTempTable = "UPDATE TT_SC_PROMO_ERROR_DOWNLOAD LR INNER JOIN TBL_PROCO_SOL_TYPE CR ON CR.SOL_REMARK= LR.CR_SOL_TYPE "
+					+ "SET LR.CR_SOL_TYPE_SHORTKEY=CR.SOL_TYPE";
+			
+			Query query1 = sessionFactory.getCurrentSession().createNativeQuery(updateTempTable);
+			query1.executeUpdate();
+			
+			String downloadScEntry = "SELECT DISTINCT CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,"
+					+ " REGULAR_PROMO_QUANTITY,SC_APPROVED_QTY,QUANTITY,BUDGET,REGULAR_PROMO_BUDGET,SC_APPROVED_BDG,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE,CR_SOL_TYPE_SHORTKEY,"
+					+ " INCREMENTAL_BUDGET,STOCK_AVAILABILITY,SIGNED_OFF_WITH_CM,REMARK,ERROR_MSG FROM TT_SC_PROMO_ERROR_DOWNLOAD";
+
+		Query query2 = sessionFactory.getCurrentSession().createNativeQuery(downloadScEntry);
+
+		Iterator itr = query2.list().iterator();
+		downloadDataList.add(headerList);
+		while (itr.hasNext()) {
+			Object[] obj = (Object[]) itr.next();
+			ArrayList<String> dataObj = new ArrayList<String>();
+			for (Object ob : obj) {
+				String value = "";
+				value = (ob == null) ? "" : ob.toString();
+				dataObj.add(value.replaceAll("\\^", ","));
+			}
+			obj = null;
+			downloadDataList.add(dataObj);
+		}
+		return downloadDataList;
+
+	} catch (Exception e) {
+		logger.debug(e);
+	}
+	return downloadDataList;
+}
+	
+
+}
+
+	
 	
 
 
-}
+
 	
 	
 		
