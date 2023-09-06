@@ -276,7 +276,7 @@ public class PromoApprovalImp implements PromoApproval{
 			query.setString(8, beanArray[i].getOffer_modality());
 			query.setString(9, beanArray[i].getPriceoff());
 			query.setString(10, beanArray[i].getRegularPromoQuantity());
-			if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR")) {
+			if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR") && beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED")){
 			if(!beanArray[i].getScApprovedQty().isEmpty()) {
 				boolean numeric = true;
 		        try {
@@ -286,9 +286,9 @@ public class PromoApprovalImp implements PromoApproval{
 		        }
 		        if(!numeric){
                     if (flag == 1)
-                        error_msg = error_msg + ",Invalid Sc Approved Quantity/Non Decimal Sc Approved Quantity not allowed";
+                        error_msg = error_msg + ",Invalid Sc Approved Quantity/ Sc Approved Qunatity Value should not be in decimal";
                     else
-                        error_msg = error_msg + "Invalid Sc Approved Quantity/Non Decimal Sc Approved Quantity not allowed";
+                        error_msg = error_msg + "Invalid Sc Approved Quantity/ Sc Approved Qunatity Value should not be in decimal";
                     flag=1;
                 }else {
                 	if(Integer.parseInt(beanArray[i].getScApprovedQty()) <= 0) {
@@ -324,7 +324,7 @@ public class PromoApprovalImp implements PromoApproval{
 			query.setString(12, beanArray[i].getQuantity());
 			query.setString(13, beanArray[i].getBudget());
 			query.setString(14, beanArray[i].getRegularPromoBudget());
-			if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR")) {
+			if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR") && beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED")) {
 			if(!beanArray[i].getScApprovedBdg().isEmpty()) {
 				boolean numeric = true;
 		        try {
@@ -334,9 +334,9 @@ public class PromoApprovalImp implements PromoApproval{
 		        }
 		        if(!numeric){
                     if (flag == 1)
-                        error_msg = error_msg + ",Invalid Sc Approved Budget/Non Decimal Sc Approved Budget not allowed";
+                        error_msg = error_msg + ",Invalid Sc Approved Budget/Sc Approved Budget Value should not be in decimal";
                     else
-                        error_msg = error_msg + "Invalid Sc Approved Budget/Non Decimal Sc Approved Budget not allowed";
+                        error_msg = error_msg + "Invalid Sc Approved Budget/ Sc Approved Budget Value should not be in decimal";
                     flag=1;
                 }else {
                 	if(Integer.parseInt(beanArray[i].getScApprovedBdg()) <= 0) {
