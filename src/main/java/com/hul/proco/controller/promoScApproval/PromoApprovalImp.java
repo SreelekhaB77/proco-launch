@@ -67,7 +67,7 @@ public class PromoApprovalImp implements PromoApproval{
 
 			String rowCount = " SELECT COUNT(1) FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM "
 					+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.PPM_ACCOUNT AND CM.CHANNEL_NAME = PM.CHANNEL_NAME "
-					+ " INNER JOIN TBL_PROCO_STATUS_MASTER PSM ON PSM.STATUS_ID = PM.STATUS  WHERE PM.STATUS IN('38','41','40','44') AND PM.MOC='"+moc+"'";
+					+ " INNER JOIN TBL_PROCO_STATUS_MASTER PSM ON PSM.STATUS_ID = PM.STATUS  WHERE PM.STATUS IN('38','41','40','44','45') AND PM.MOC='"+moc+"'";
 			
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(rowCount);
 					
@@ -94,7 +94,7 @@ public class PromoApprovalImp implements PromoApproval{
 					+ " ROW_NUMBER() OVER (ORDER BY PM.UPDATE_STAMP DESC) AS ROW_NEXT "
 					+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 PM "
 					+ " INNER JOIN TBL_PROCO_CUSTOMER_MASTER_V2 CM ON CM.PPM_ACCOUNT = PM.PPM_ACCOUNT AND CM.CHANNEL_NAME = PM.CHANNEL_NAME "
-					+ " INNER JOIN TBL_PROCO_STATUS_MASTER PSM ON PSM.STATUS_ID = PM.STATUS  WHERE PM.STATUS IN('38','41','40','44') AND PM.MOC='"+moc+"' ";
+					+ " INNER JOIN TBL_PROCO_STATUS_MASTER PSM ON PSM.STATUS_ID = PM.STATUS  WHERE PM.STATUS IN('38','41','40','44','45') AND PM.MOC='"+moc+"' ";
 							
 			
 				if(searchParameter!=null && searchParameter.length()>0){
@@ -160,7 +160,7 @@ public class PromoApprovalImp implements PromoApproval{
 			for (int i = 0; i < split.length; i++) {
 				String promo = split[i];				
 				String approvalCrStatus=" UPDATE TBL_PROCO_PROMOTION_MASTER_V2  T1 SET T1.STATUS='40', T1.USER_ID='" + userId + "',T1.UPDATE_STAMP=' "+ dateFormat.format(date) + "'"
-						+ " WHERE T1.STATUS IN('38','41','44') AND T1.ACTIVE=1 AND T1.PROMO_ID='" + promoId + "' ";
+						+ " WHERE T1.STATUS IN('38','41','44','45') AND T1.ACTIVE=1 AND T1.PROMO_ID='" + promoId + "' ";
 				
 				Query query = sessionFactory.getCurrentSession().createNativeQuery(approvalCrStatus);
 				query.executeUpdate();
@@ -192,7 +192,7 @@ public class PromoApprovalImp implements PromoApproval{
 				+ " CASE WHEN TEMPLATE_TYPE = 'R' THEN 'Regular' WHEN TEMPLATE_TYPE = 'NE' THEN 'New Entry' ELSE CR_SOL_TYPE END AS CR_SOL_TYPE," // Added by KAJAL G in SPRINT-18
 				+ " CASE WHEN TEMPLATE_TYPE = 'R' THEN 'REG' WHEN TEMPLATE_TYPE = 'NE' THEN 'NE' ELSE '     ' END AS CR_SOL_TYPE_SHORTKEY,"  // Added by KAJAL G in SPRINT-18
 				+ "INCREMENTAL_BUDGET,STOCK_AVAILABILITY,'YES' AS NCMM_REMARKS "
-				+ "FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE STATUS IN('38','41','44') AND MOC= '"+moc+"'"; //Added by Kavitha D-SPRINT 16 changes
+				+ "FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE STATUS IN('38','41','44','45') AND MOC= '"+moc+"'"; //Added by Kavitha D-SPRINT 16 changes
 				
 				Query query = sessionFactory.getCurrentSession().createNativeQuery(downloadScQuery);
 				query.executeUpdate();
@@ -238,6 +238,8 @@ public class PromoApprovalImp implements PromoApproval{
 	public String uploadScApprovalData(PromoCrBean[] beanArray, String userId) throws Exception {
 		String response = null;
 		ArrayList<String> responseList = new ArrayList<String>();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
 		try {
 			Query queryToCheck = sessionFactory.getCurrentSession()
 					.createNativeQuery("select count(1) from TBL_PROCO_PROMOTION_MASTER_TEMP_V2 where USER_ID=:user");
@@ -260,10 +262,10 @@ public class PromoApprovalImp implements PromoApproval{
 		
 				//Added by Kavitha D-SPRINT 18 
 				"INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2 (CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,REGULAR_PROMO_QUANTITY,SC_APPROVED_QTY,QUANTITY,BUDGET,REGULAR_PROMO_BUDGET,SC_APPROVED_BDG,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE,INCREMENTAL_BUDGET,STOCK_AVAILABILITY,"
-				+ "SIGNED_OFF_WITH_CM,REMARK,STATUS,USER_ID,ERROR_MSG) VALUES(?0,?1, ?2, ?3, ?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25)");
+				+ "SIGNED_OFF_WITH_CM,REMARK,STATUS,USER_ID,SC_DOA,ERROR_MSG) VALUES(?0,?1, ?2, ?3, ?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26)");
 
 		for (int i = 0; i < beanArray.length; i++) {
-			if (beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("REJECTED") ||beanArray[i].getSignedOffWithAvailability().isEmpty()) {
+			if (beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("REJECTED") ||beanArray[i].getSignedOffWithAvailability().isEmpty() ||beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("PARTIAL APPROVED")) {
 		
 			query.setString(0, beanArray[i].getChannel()); //Changed by Kajal G-SPRINT 15 changes
 			query.setString(1, beanArray[i].getMoc());
@@ -377,20 +379,52 @@ public class PromoApprovalImp implements PromoApproval{
 			query.setString(20, beanArray[i].getStockAvailability());
 			query.setString(21, beanArray[i].getSignedOffWithCM());
 			query.setString(22, beanArray[i].getSignedOffWithAvailability());
-			if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED") ) {
+			//Added by Kavitha D-SPRINT 18 changes
+			if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR")) {
+			if((beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED")) &&(Integer.parseInt(beanArray[i].getScApprovedQty())== Integer.parseInt(beanArray[i].getQuantity()))) {
 				query.setString(23,"40");
+				query.setString(25,dateFormat.format(date));
+
 			}
 			else if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("REJECTED")) {
 				query.setString(23,"41");
+				query.setString(25,null);
+
 			}
 			else if(beanArray[i].getSignedOffWithAvailability().isEmpty()){ //Added by Kajal G-SPRINT 15 changes 
 				query.setString(23,"44");
+				query.setString(25,null);
+
+			}
+			else if((beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("PARTIAL APPROVED")) && ((Integer.parseInt(beanArray[i].getScApprovedQty()) < Integer.parseInt(beanArray[i].getQuantity())))) {
+				query.setString(23,"45");
+				query.setString(25,null);
+
+			}}
+			else if(beanArray[i].getTemplatetype().equalsIgnoreCase("NE")|| beanArray[i].getTemplatetype().equalsIgnoreCase("R")) {
+
+				if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED")) {
+					query.setString(23,"40");
+					query.setString(25,dateFormat.format(date));
+
+				}
+				else if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("REJECTED")) {
+					query.setString(23,"41");
+					query.setString(25,null);
+
+				}
+				else if(beanArray[i].getSignedOffWithAvailability().isEmpty()){  
+					query.setString(23,"44");
+					query.setString(25,null);
+
+				}
+				
 			}
 			query.setString(24,userId);
 			
 			if (flag == 1)
 				globle_flag = 1;
-			query.setString(25, error_msg);
+			query.setString(26, error_msg);
 			
 			int executeUpdate = query.executeUpdate();
 			error_msg = "";
@@ -431,7 +465,7 @@ public class PromoApprovalImp implements PromoApproval{
 		Date date = new Date();
 		try {
 			String updateSql=" UPDATE TBL_PROCO_PROMOTION_MASTER_V2 A INNER JOIN TBL_PROCO_PROMOTION_MASTER_TEMP_V2 B ON A.PROMO_ID = B.PROMO_ID "
-					+ " SET A.STATUS=B.STATUS,A.SIGNED_OFF_WITH_CM=B.SIGNED_OFF_WITH_CM,"
+					+ " SET A.SC_DOA=B.SC_DOA,A.STATUS=B.STATUS,A.SIGNED_OFF_WITH_CM=B.SIGNED_OFF_WITH_CM,"
 					+ " A.USER_ID='" + userId + "',A.UPDATE_STAMP=' "+ dateFormat.format(date) + "', "
 					+ " A.SC_APPROVED_QTY=B.SC_APPROVED_QTY,A.SC_APPROVED_BDG=B.SC_APPROVED_BDG "   //Added by Kavitha D-SPRINT 18 changes
 					+ " WHERE B.USER_ID='" + userId + "' " ;
