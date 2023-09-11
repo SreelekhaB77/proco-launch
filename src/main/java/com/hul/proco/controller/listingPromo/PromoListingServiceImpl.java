@@ -254,7 +254,6 @@ public class PromoListingServiceImpl implements PromoListingService {
 		headerList.add("BRANCH");
 		headerList.add("SALES CLUSTER");
 		headerList.add("PPM CUSTOMER");
-
 		headerList.add("SALES CATEGORY");
 		//headerList.add("PSA CATEGORY");
 		headerList.add("PROMOTION STATUS");

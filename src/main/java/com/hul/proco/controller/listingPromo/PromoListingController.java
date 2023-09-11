@@ -944,7 +944,6 @@ public class PromoListingController {
 	public @ResponseBody String downloadPromosForListing(@ModelAttribute("CreateBeanRegular") CreateBeanRegular createBeanRegular,@PathVariable("moc") String moc,
 			@PathVariable("promobasepack") String procoBasepack,@PathVariable("ppmaccount") String ppmAccount,@PathVariable("procochannel") String procoChannel,@PathVariable("prococluster") String procoCluster,
 			@PathVariable("startDate1") @DateTimeFormat(pattern="MMddyyyy") String fromDate,@PathVariable("endDate1") @DateTimeFormat(pattern="MMddyyyy") String toDate,Model model,HttpServletRequest request, HttpServletResponse response) {
-		logger.info("START downloadPromos for listing():");
 		try {
 			InputStream is;
 			String roleId = (String) request.getSession().getAttribute("roleId");
@@ -995,6 +994,8 @@ public class PromoListingController {
 			
 			ArrayList<String> headerList = promoListingService.getHeaderListForPromoDownloadListing();
 			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc,promobasepack,ppmaccount,procochannel,prococluster,roleId, kamAccounts,fromDate,toDate);
+			logger.info("START downloadPromos for listing():" + downloadedData);
+
 			if (downloadedData != null) {
 				UploadUtil.writeXLSXFile(downloadFileName, downloadedData, null,".xlsx");
 				downloadLink = downloadFileName + ".xlsx";

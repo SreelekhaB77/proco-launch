@@ -124,34 +124,36 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 			headerList.add("YEAR");
 			headerList.add("MOC");
 			headerList.add("ACCOUNT TYPE");
-			headerList.add("CLAIM SETTLEMENT TYPE");
+			headerList.add("CLAIM TYPE");
 			//headerList.add("SECONDARY_CHANNEL"); //commented headers secondary channel,moc cycle and childpack-SPRINT 14 by kavitha D
 			headerList.add("PPM ACCOUNT");
 			headerList.add("PROMO ID");
 			headerList.add("SOL CODE");
 			//headerList.add("BM/MOC CYLCLE");
-			headerList.add("PPM SOL Code Reference");//Added by Kavitha D-SPRINT 15 
-			headerList.add("PROMO TIMEPERIOD");
-			headerList.add("SOL WILL RELEASE ON");
+			headerList.add("PARENT SOL CODE");//Added by Kavitha D-SPRINT 15 
+			headerList.add("CUST PROMO CYCLE");//Renaming header names by Kavitha D-SPRINT 18
+			headerList.add("SOL RELEASE TYPE");
 			headerList.add("START DATE");
 			headerList.add("END DATE");
 			headerList.add("OFFER DESCRIPTION");
 			headerList.add("PPM DESCRIPTION");
-			headerList.add("BASEPACK CODE");
-			headerList.add("BASEPACK DESCRIPTION");
+			headerList.add("BP CODE");
+			headerList.add("BP DESC");
 			//headerList.add("CHILDPACK");
 			headerList.add("OFFER TYPE");
 			headerList.add("OFFER MODALITY");
 			headerList.add("PRICE OFF");
-			headerList.add("REGULAR PROMO QUANTITY");
+			headerList.add("PARENT SOL QTY");
+			headerList.add("TME CR QTY");
+			headerList.add("SC APPROVED QTY");
 			headerList.add("QUANTITY");
-			headerList.add("REGULAR PROMO BUDGET");
+			headerList.add("PARENT SOL BUDGET");
+			headerList.add("TME CR BUDGET");	
+			headerList.add("SC APPROVED BUDGET");
 			headerList.add("FIXED BUDGET");
 			headerList.add("BRANCH");
 			headerList.add("SALES CLUSTER");
 			headerList.add("PPM CUSTOMER");
-			headerList.add("CMM NAME");
-			headerList.add("TME NAME");
 			headerList.add("SALES CATEGORY");
 			//headerList.add("PSA CATEGORY");
 			headerList.add("PROMOTION STATUS");
@@ -161,31 +163,36 @@ public class ProcoStatusTrackerServiceImpl implements ProcoStatusTrackerService 
 			//headerList.add("SALES CLUSTER CODE");
 			headerList.add("BRAND");
 			headerList.add("SUB BRAND");
-			headerList.add("PPM BUDGET HOLDER NAME");
+			headerList.add("PPM BUDGET HOLDER");
 			headerList.add("FUND TYPE");
 			headerList.add("INVESTMENT AMOUNT");
 			headerList.add("PROMO ENTRY TYPE");
-			headerList.add("PROMO USER NAME");
-			headerList.add("PROMO USER TIME");
+			//headerList.add("PROMO USER NAME");
+			headerList.add("CMM NAME");
+			headerList.add("TME USER NAME");
+			headerList.add("PROCO CREATION TIME");
 			headerList.add("PPM APPROVED DATE");
 			headerList.add("PPM CREATION DATE");
 			//headerList.add("NON UNIFY");
 			headerList.add("PPM SUBMISSION DATE");
 			headerList.add("PPM MODIFIED DATE");
 			headerList.add("COE REMARKS");
-			headerList.add("STATUS IN CENTRAL UNIFY");
+			headerList.add("CU REMARKS");
 			headerList.add("TME SUBMIT DATE");
 			headerList.add("AUDITOR SUBMIT DATE");
 			headerList.add("MRP");
-			headerList.add("AB CREATION");
+			headerList.add("AB STATUS");
 			//headerList.add("BUDGET");
 			headerList.add("CURRENT STATUS"); //Added by Kavitha D-SPRINT 10 Changes
 			headerList.add("SOL TYPE");
 			headerList.add("SOL TYPE SHORTKEY");
-			headerList.add("INCREMENTAL BUDGET REQUIRED"); //Added by Kavitha D-SPRINT 17 changes
-			headerList.add("REQUIRE STOCK AVAILABILITY CONFIRMATION");
-			headerList.add("SIGNED OFF WITH CM");
-			headerList.add("SIGNED OFF WITH AVAILABILITY");
+			headerList.add("CSP APPROVAL (Y/N)"); //Added by Kavitha D-SPRINT 17 changes
+			headerList.add("SC APPROVAL(Y/N)");
+			headerList.add("NCMM REMARKS");
+			headerList.add("SC REMARKS");
+			headerList.add("NCMM DOA");
+			headerList.add("SC DOA");
+		
 		} else {
 			headerList = getHeaderListForPromoStatusTracker();
 		}
