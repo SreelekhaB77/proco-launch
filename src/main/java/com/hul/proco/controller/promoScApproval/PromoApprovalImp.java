@@ -400,8 +400,9 @@ public class PromoApprovalImp implements PromoApproval{
 				query.setString(23,"45");
 				query.setString(25,null);
 
-			}}
-			else if(beanArray[i].getTemplatetype().equalsIgnoreCase("NE")|| beanArray[i].getTemplatetype().equalsIgnoreCase("R")) {
+			}
+			}
+			else if(beanArray[i].getTemplatetype().equalsIgnoreCase("New Entry") || beanArray[i].getTemplatetype().equalsIgnoreCase("Regular")) {
 
 				if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED")) {
 					query.setString(23,"40");
@@ -420,6 +421,7 @@ public class PromoApprovalImp implements PromoApproval{
 				}
 				
 			}
+			
 			query.setString(24,userId);
 			
 			if (flag == 1)
