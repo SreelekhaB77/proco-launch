@@ -278,7 +278,7 @@ public class PromoApprovalImp implements PromoApproval{
 			query.setString(8, beanArray[i].getOffer_modality());
 			query.setString(9, beanArray[i].getPriceoff());
 			query.setString(10, beanArray[i].getRegularPromoQuantity());
-			if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR") && beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED")){
+			if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR") && (beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("PARTIAL APPROVED"))){
 			if(!beanArray[i].getScApprovedQty().isEmpty()) {
 				boolean numeric = true;
 		        try {
@@ -326,7 +326,7 @@ public class PromoApprovalImp implements PromoApproval{
 			query.setString(12, beanArray[i].getQuantity());
 			query.setString(13, beanArray[i].getBudget());
 			query.setString(14, beanArray[i].getRegularPromoBudget());
-			if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR") && beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED")) {
+			if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR") && (beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("PARTIAL APPROVED"))) {
 			if(!beanArray[i].getScApprovedBdg().isEmpty()) {
 				boolean numeric = true;
 		        try {
@@ -396,10 +396,23 @@ public class PromoApprovalImp implements PromoApproval{
 				query.setString(25,null);
 
 			}
-			else if((beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("PARTIAL APPROVED")) && ((Integer.parseInt(beanArray[i].getScApprovedQty()) < Integer.parseInt(beanArray[i].getQuantity())))) {
-				query.setString(23,"45");
-				query.setString(25,null);
+			else if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("PARTIAL APPROVED"))  {
+				if (beanArray[i].getScApprovedQty().isEmpty()) {
+					query.setString(23,"38");
+					query.setString(25,null); 
+				}
+				else {
+					if (Integer.parseInt(beanArray[i].getScApprovedQty()) < Integer.parseInt(beanArray[i].getQuantity())) {
+						query.setString(23,"45");
+						query.setString(25,null); 						
+					}
+					else {
+						query.setString(23,"38");
+						query.setString(25,null); 
+						
+					}
 
+				}
 			}
 			}
 			else if(beanArray[i].getTemplatetype().equalsIgnoreCase("New Entry") || beanArray[i].getTemplatetype().equalsIgnoreCase("Regular")) {
