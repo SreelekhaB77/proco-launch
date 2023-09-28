@@ -629,7 +629,7 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 				
 		
 		for (int i = 0; i < beanArray.length; i++) {
-			if (beanArray[i].getSignedOffWithCM().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithCM().equalsIgnoreCase("APPROVED") || beanArray[i].getSignedOffWithCM().equalsIgnoreCase("REJECTED")||beanArray[i].getSignedOffWithCM().isEmpty() ||beanArray[i].getSignedOffWithCM().isBlank() ||beanArray[i].getSignedOffWithCM()==null){
+			if (beanArray[i].getSignedOffWithCM().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithCM().equalsIgnoreCase("APPROVED") || beanArray[i].getSignedOffWithCM().equalsIgnoreCase("REJECTED")||beanArray[i].getSignedOffWithCM().isEmpty() ||beanArray[i].getSignedOffWithCM()==null){
 			
 			query.setString(0, beanArray[i].getChannel()); //Changed by Kavitha D-SPRINT 15 changes
 			query.setString(1, beanArray[i].getMoc());
@@ -660,7 +660,7 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 				query.setString(22, null);		
 
 			}
-			else if (beanArray[i].getSignedOffWithCM().isEmpty()||beanArray[i].getSignedOffWithCM().isBlank()||beanArray[i].getSignedOffWithCM()==null){ //Added by Kavitha D-SPRINT 15 changes 
+			else if (beanArray[i].getSignedOffWithCM().isEmpty()||beanArray[i].getSignedOffWithCM()==null){ //Added by Kavitha D-SPRINT 15 changes 
 				query.setString(20,"43");
 				query.setString(22, null);		
 
