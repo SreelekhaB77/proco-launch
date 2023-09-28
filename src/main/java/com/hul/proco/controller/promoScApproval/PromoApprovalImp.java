@@ -288,9 +288,9 @@ public class PromoApprovalImp implements PromoApproval{
 		        }
 		        if(!numeric){
                     if (flag == 1)
-                        error_msg = error_msg + ",Invalid Sc Approved Quantity/ Sc Approved Qunatity Value should not be in decimal";
+                        error_msg = error_msg + ",Invalid Sc Approved Quantity/ Sc Approved Quantity should not be in decimal";
                     else
-                        error_msg = error_msg + "Invalid Sc Approved Quantity/ Sc Approved Qunatity Value should not be in decimal";
+                        error_msg = error_msg + "Invalid Sc Approved Quantity/ Sc Approved Quantity should not be in decimal";
                     flag=1;
                 }else {
                 	if(Integer.parseInt(beanArray[i].getScApprovedQty()) <= 0) {
@@ -336,9 +336,9 @@ public class PromoApprovalImp implements PromoApproval{
 		        }
 		        if(!numeric){
                     if (flag == 1)
-                        error_msg = error_msg + ",Invalid Sc Approved Budget/Sc Approved Budget Value should not be in decimal";
+                        error_msg = error_msg + ",Invalid Sc Approved Budget/Sc Approved Budget should not be in decimal";
                     else
-                        error_msg = error_msg + "Invalid Sc Approved Budget/ Sc Approved Budget Value should not be in decimal";
+                        error_msg = error_msg + "Invalid Sc Approved Budget/ Sc Approved Budget should not be in decimal";
                     flag=1;
                 }else {
                 	if(Integer.parseInt(beanArray[i].getScApprovedBdg()) <= 0) {
@@ -381,7 +381,7 @@ public class PromoApprovalImp implements PromoApproval{
 			query.setString(22, beanArray[i].getSignedOffWithAvailability());
 			//Added by Kavitha D-SPRINT 18 changes
 			if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR")) {
-			if((beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED")) &&(Integer.parseInt(beanArray[i].getScApprovedQty())== Integer.parseInt(beanArray[i].getQuantity()))) {
+			if((beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED")) &&(Double.parseDouble(beanArray[i].getScApprovedQty())== Double.parseDouble(beanArray[i].getQuantity()))) {
 				query.setString(23,"40");
 				query.setString(25,dateFormat.format(date));
 
@@ -402,7 +402,7 @@ public class PromoApprovalImp implements PromoApproval{
 					query.setString(25,null); 
 				}
 				else {
-					if (Integer.parseInt(beanArray[i].getScApprovedQty()) < Integer.parseInt(beanArray[i].getQuantity())) {
+					if (Double.parseDouble(beanArray[i].getScApprovedQty()) < Double.parseDouble(beanArray[i].getQuantity())) {
 						query.setString(23,"45");
 						query.setString(25,null); 						
 					}
@@ -413,6 +413,10 @@ public class PromoApprovalImp implements PromoApproval{
 					}
 
 				}
+			}
+			else {
+				query.setString(23,"38");
+				query.setString(25,null); 
 			}
 			}
 			else if(beanArray[i].getTemplatetype().equalsIgnoreCase("New Entry") || beanArray[i].getTemplatetype().equalsIgnoreCase("Regular")) {
@@ -431,6 +435,10 @@ public class PromoApprovalImp implements PromoApproval{
 					query.setString(23,"44");
 					query.setString(25,null);
 
+				}
+				else {
+					query.setString(23,"38");
+					query.setString(25,null); 
 				}
 				
 			}
