@@ -19,6 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 
 /**
@@ -29,6 +30,7 @@ import org.hibernate.SessionFactory;
  */
 @Component
 public class DataFromTable {
+	private Logger logger = Logger.getLogger(DataFromTable.class);
 
 	@Autowired
 	SessionFactory sessionFactory;
@@ -65,6 +67,7 @@ public class DataFromTable {
 					+ uid + "'  " + "AND T.MOC IN("+mocList+")"; //moc added by kavitha D-Sprint 14 changes
 		}
 		
+		logger.info("PPM desc update:"+update_ppm_desc);
 		//System.out.println("PPM desc update:"+update_ppm_desc);
 		sessionFactory.getCurrentSession().createNativeQuery(update_ppm_desc).executeUpdate();
 
