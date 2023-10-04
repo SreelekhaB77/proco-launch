@@ -98,7 +98,6 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 
 		Map<String, ArrayList<String>> clusterandppm = new HashMap<String, ArrayList<String>>();
 		datafromtable.getAllClusterBasedOnPPM(clusterandppm);
-
 		Query query = (Query) sessionFactory.getCurrentSession()
 				.createNativeQuery(SQL_QUERY_INSERT_INTO_PROMOTION_MASTER_TEMP);
 		Map<String, String> branchmap = getValidBranch();

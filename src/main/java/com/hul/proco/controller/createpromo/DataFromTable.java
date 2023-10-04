@@ -100,9 +100,13 @@ public class DataFromTable {
 	}
 	
 	public void updatePromoIdInTemp(String promoid, String moc_name, String ppm_account, String basepack_code,String pid,String year) {
+	try {
 	String updateintemp="UPDATE TBL_PROCO_PROMOTION_MASTER_TEMP_V2 SET PROMO_ID='"+promoid+"',PID='"+pid+"',PPM_DESC=CONCAT('"+promoid+"',':',PPM_DESC_STAGE) WHERE MOC_NAME='"+moc_name+"' AND PPM_ACCOUNT='"+ppm_account+"'"+
 				" AND BASEPACK_CODE='"+basepack_code+"' AND MOC_YEAR='"+year+"'";
 	sessionFactory.getCurrentSession().createNativeQuery(updateintemp).executeUpdate();
+	}catch(Exception e) {
+		logger.info(e);
+	}
 	}
 	/**
 	 * 
@@ -696,7 +700,6 @@ public class DataFromTable {
 	}
 	//Added by Kavitha D-SPRINT 15 changes for cr dp quantity
 	 public String getDpQuantity(String Moc_name, String Year,String Ppm_account,String Basepack_code, String Cluster, String offer_mod) {
-
 		String query=" SELECT DP_QUANTITY FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE MOC_NAME='"+Moc_name+"' AND MOC_YEAR='"+Year+"' AND PPM_ACCOUNT= '"+Ppm_account+"' AND "
 				+ " BASEPACK_CODE='"+Basepack_code+"' AND CLUSTER= '"+Cluster+"' AND OFFER_MODALITY= '"+offer_mod+"' AND TEMPLATE_TYPE= 'R' ";
 		Query getDpQunatity = sessionFactory.getCurrentSession().createNativeQuery(query);
