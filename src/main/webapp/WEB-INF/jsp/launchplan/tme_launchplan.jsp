@@ -75,25 +75,25 @@
 
 						<li role="presentation"
 							class="active col-md-3 col-sm-8 col-xs-12 launch-icon-active">
-							<a href="https://vat.hulcd.com/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
+							<a href="http://vat.hulcd.com/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
 								<div class="tab-label-launch">Launch Plannning</div>
 						</a>
 						</li>
 						<li role="presentation"
 							class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
-							<a href="https://vat.hulcd.com/VisibilityAssetTracker/getAllLaunchData.htm"> <!-- <div class="launch-icon"></div> -->
+							<a href="http://vat.hulcd.com/VisibilityAssetTracker/getAllLaunchData.htm"> <!-- <div class="launch-icon"></div> -->
 								<div class="tab-label-launch">Edit & Approve <span id="NotificationBadge" class="notification-number"></span></div>
 						</a>
 						</li>
 						<li role="presentation"
 							class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
-							<a href="https://vat.hulcd.com/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
+							<a href="http://vat.hulcd.com/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
 								<div class="tab-label-launch">Performance</div>
 						</a>
 						</li>
 						<li role="presentation"
 							class="active col-md-3 col-sm-8 col-xs-12 launch-icon-inactive">
-							<a href="https://vat.hulcd.com/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
+							<a href="http://vat.hulcd.com/VisibilityAssetTracker/getLaunchPlanPage.htm"> <!-- <div class="launch-icon"></div> -->
 								<div class="tab-label-launch">Timelines</div>
 						</a>
 						</li>
@@ -217,7 +217,7 @@
 						aria-labelledby="headingOne" aria-expanded="false"
 						style="height: 0px; display: block;">
 						<div class="card-block">
-							<form action="https://vat.hulcd.com/VisibilityAssetTracker/saveLaunchDetails.htm" method="POST"
+							<form action="http://vat.hulcd.com/VisibilityAssetTracker/saveLaunchDetails.htm" method="POST"
 								enctype="multipart/form-data" id="tmeLaunchBean"
 								class="form-horizontal" name="tmeLaunchBean"
 								onClick="javascript: submitLaunchForm();">
@@ -1319,7 +1319,7 @@ function ajaxLoader(w, h) {
 
 		$.ajax({
             type: "POST",
-            url: "https://vat.hulcd.com/VisibilityAssetTracker/getSalesCatOnBasepack.htm",
+            url: "http://vat.hulcd.com/VisibilityAssetTracker/getSalesCatOnBasepack.htm",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             beforeSend: function() {
@@ -1370,7 +1370,7 @@ function ajaxLoader(w, h) {
         					
         					$.ajax({
         			            type: "POST",
-        			            url: "https://vat.hulcd.com/VisibilityAssetTracker/getPsaCategory.htm?salesCategory=" +salesCat,
+        			            url: "http://vat.hulcd.com/VisibilityAssetTracker/getPsaCategory.htm?salesCategory=" +salesCat,
         			            contentType: "application/json; charset=utf-8",
         			            dataType: "json",
         			            beforeSend: function() {
@@ -1394,7 +1394,7 @@ function ajaxLoader(w, h) {
         			                	var salesCatStr = encodeURIComponent(salesCatVal);
                 						$.ajax({
                 				            type: "POST",
-                				            url: "https://vat.hulcd.com/VisibilityAssetTracker/getBrandOnPsaCat.htm?psaCategory="+branvalStr+"&salesCategory="+salesCatStr,
+                				            url: "http://vat.hulcd.com/VisibilityAssetTracker/getBrandOnPsaCat.htm?psaCategory="+branvalStr+"&salesCategory="+salesCatStr,
                 				            contentType: "application/json; charset=utf-8",
                 				            dataType: "json",
                 				            beforeSend: function() {
@@ -1641,7 +1641,7 @@ function ajaxLoader(w, h) {
 		var launchId = $("#dynamicLaunchId").val();
 		if(lenvisi > 0){                                   
 		$.ajax({
-		    url: 'https://vat.hulcd.com/VisibilityAssetTracker/getLaunchVisiPlan.htm?launchId='+launchId,
+		    url: 'http://vat.hulcd.com/VisibilityAssetTracker/getLaunchVisiPlan.htm?launchId='+launchId,
 		    dataType: 'json',
 		    type: 'get',
 		    contentType: 'application/json',
