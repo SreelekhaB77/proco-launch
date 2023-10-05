@@ -26,9 +26,9 @@ public class DPVolumeUploadService {
 		 headerList.add("MOC NAME");
 		 headerList.add("PROMO ID");
 		 headerList.add("PPM Account");
-		 headerList.add("Promo Timeperiod");
-		 headerList.add("Basepack Code");
-		 headerList.add("Basepack Description");
+		 headerList.add("CUST PROMO CYCLE");
+		 headerList.add("BP CODE");
+		 headerList.add("BP DESC");
 		 headerList.add("Child Pack Code");
 		 headerList.add("Offer description");
 		 headerList.add("Offer Type");

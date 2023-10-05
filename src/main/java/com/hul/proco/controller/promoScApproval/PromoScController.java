@@ -2,6 +2,8 @@ package com.hul.proco.controller.promoScApproval;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -200,7 +202,7 @@ public class PromoScController {
 						model.addAttribute("FILE_STATUS", "FILE_SIZE_EXCEED");
 						return "FILE_SIZE_EXCEED";
 					} else if (UploadUtil.movefile(file, fileName)) {
-						Map<String, List<Object>> map = ExOM.mapFromExcel(new File(fileName)).to(PromoCrBean.class).map(21, false, null);
+						Map<String, List<Object>> map = ExOM.mapFromExcel(new File(fileName)).to(PromoCrBean.class).map(24, false, null);
 
 						if (map.isEmpty()) {
 							model.addAttribute("FILE_STAUS", "FILE_EMPTY");
@@ -248,6 +250,41 @@ public class PromoScController {
 		}
 		
 		//Added by kavitha D for promo approval upload starts-SPRINT 10
+		
+		
+		@RequestMapping(value = "downloadSCApprovalPromotionErrorFile.htm", method = RequestMethod.GET)
+		public @ResponseBody String downloadScPromosForListing(@ModelAttribute("PromoCrBean") PromoCrBean promoCrBean,
+				Model model,HttpServletRequest request, HttpServletResponse response) {
+			try {
+				InputStream is;
+				String roleId = (String) request.getSession().getAttribute("roleId");
+				String downloadLink = "", absoluteFilePath = "";
+				List<ArrayList<String>> downloadedData = null;
+				absoluteFilePath = FilePaths.FILE_TEMPDOWNLOAD_PATH;
+				String fileName = UploadUtil.getFileName("Promotion.Download.Template.file", "",
+						CommonUtils.getCurrDateTime_YYYY_MM_DD_HHMMSS());
+				String downloadFileName = absoluteFilePath + fileName;
+				String userId = (String) request.getSession().getAttribute("UserID");
+				
+				ArrayList<String> headerList = promoApprovalService.getHeaderListForSCPromotionErrorDownload();
+				downloadedData = promoApprovalService.getPromotionApprovalScErrorDetails(headerList, userId,roleId);
+				if (downloadedData != null) {
+					UploadUtil.writeDeletePromoXLSXFile(downloadFileName, downloadedData, null,".xlsx");
+					downloadLink = downloadFileName + ".xlsx";
+					is = new FileInputStream(new File(downloadLink));
+					// copy it to response's OutputStream
+					response.setContentType("application/force-download");
+					response.setHeader("Content-Disposition", "attachment; filename=ScApprovalPromoErrorDownloadFile"
+							+ CommonUtils.getCurrDateTime_YYYY_MM_DD_HH_MM_SS_WithOutA() + ".xlsx");
+					IOUtils.copy(is, response.getOutputStream());
+					response.flushBuffer();
+				}
+			} catch (Exception e) {
+				logger.debug("Exception: ", e);
+				return null;
+			}
+			return null;
+		}
 
 	
 	}

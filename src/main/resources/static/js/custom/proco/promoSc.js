@@ -566,13 +566,15 @@ $("#KAMVolumeUpload").click(function (event) {
         	 $('.loader').hide();
         	if(resdata.includes('EXCEL_UPLOADED')) {
                 $('#errorblockApprovalUpload').hide();
+                $('#ProcoApprovalUploaderrorblock').hide();
             	//$('#ProcoVolumeerrorblockUpload').hide();
             	$('#ProcoApprovalUploadsuccessblock').show().find('span').html(' File Uploaded Successfully !!!');
             	 
             }
             
             else if(resdata.includes('EXCEL_NOT_UPLOADED')){
-	            $('#errorblockApprovalUpload').show();
+				$('#ProcoApprovalUploaderrorblock').show();
+	            //$('#errorblockApprovalUpload').show();
 	            $('#ProcoApprovalUploadsuccessblock').hide();
 	            //$('#errorblockVolumeUpload').hide();
             }
@@ -580,22 +582,26 @@ $("#KAMVolumeUpload").click(function (event) {
 				$('#errorblockApprovalUpload').show().find('span').html('Error While Uploading Empty File');
 				//$('#ProcoVolumeerrorblockUpload').hide();
 				$('#ProcoApprovalUploadsuccessblock').hide();
+				$('#ProcoApprovalUploaderrorblock').hide();
 			}
 			else if(resdata.includes('CHECK_COL_MISMATCH')){
 				$('#errorblockApprovalUpload').show().find('span').html('Please Check Uploaded File');
 				//$('#ProcoVolumeerrorblockUpload').hide();
 				$('#ProcoApprovalUploadsuccessblock').hide();
+				$('#ProcoApprovalUploaderrorblock').hide();
 			}
 			//Added by kajal G for empty rows in excel in SPRINT-13
 			else if (resdata.includes('EMPTY_ROW')) {
 				$('#errorblockApprovalUpload').show().find('span').html('File having some empty rows, Please remove empty rows while uploading');
 				$('#ProcoVolumeerrorblockUpload').hide();
 				$('#ProcoApprovalUploadsuccessblock').hide();
+				$('#ProcoApprovalUploaderrorblock').hide();
 			}
 			else {
 				
             	$('#errorblockApprovalUpload').show().find('span').html('Error While Uploading File');
             	$('#ProcoApprovalUploadsuccessblock').hide();
+            	$('#ProcoApprovalUploaderrorblock').hide();
             	//$('#ProcoVolumeerrorblockUpload').hide();
             	 
           	 }

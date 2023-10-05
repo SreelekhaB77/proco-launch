@@ -2,8 +2,6 @@ package com.hul.proco.controller.procoLiveBudget;
 
 import java.util.List;
 
-import com.hul.proco.controller.promocr.PromoCrBean;
-
 public class ProcoJsonObject {
 
 

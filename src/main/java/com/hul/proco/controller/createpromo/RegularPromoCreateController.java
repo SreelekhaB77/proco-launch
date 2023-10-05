@@ -128,15 +128,15 @@ public class RegularPromoCreateController {
 			logger.error("Exception: ", e);
 			model.addAttribute("FILE_STAUS",  e);
 			 //PrintStream printStream = new PrintStream(new File("C:\\logs\\log.text"));
-			PrintStream printStream = new PrintStream(new File("/home/appuser/logs/exception.txt"));
-			e.printStackTrace(printStream);
+			//PrintStream printStream = new PrintStream(new File("/home/appuser/logs/exception.txt"));
+			//e.printStackTrace(printStream);
 			return e.toString();
 		} catch (Throwable e) {
 			logger.error("Exception: ", e);
 			model.addAttribute("FILE_STAUS",  e);
 			//PrintStream printStream = new PrintStream(new File("C:\\logs\\log.text"));
-		    PrintStream printStream = new PrintStream(new File("/home/appuser/logs/exception.txt"));	
-			e.printStackTrace(printStream);
+		    //PrintStream printStream = new PrintStream(new File("/home/appuser/logs/exception.txt"));	
+			//e.printStackTrace(printStream);
 			return e.toString();
 		}
 

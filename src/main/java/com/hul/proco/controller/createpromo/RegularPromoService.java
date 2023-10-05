@@ -30,11 +30,11 @@ public class RegularPromoService {
 		headerList.add("MOC");
 		//headerList.add("SECONDARY CHANNEL");
 		headerList.add("PPM ACCOUNT");
-		headerList.add("PROMO TIMEPERIOD");
+		headerList.add("CUST PROMO CYCLE");
 		//headerList.add("AB CREATION (ONLY FOR KA Accounts)");
 		headerList.add("OFFER DESCRIPTION");
-		headerList.add("BASEPACK CODE");
-		headerList.add("BASEPACK DESCRIPTION");
+		headerList.add("BP CODE");
+		headerList.add("BP DESC");
 		headerList.add("CHILDPACK CODE");
 		
 		headerList.add("OFFER TYPE");
@@ -64,11 +64,11 @@ public class RegularPromoService {
 		headerList.add("MOC");
 		//headerList.add("SECONDARY CHANNEL");
 		headerList.add("PPM ACCOUNT");
-		headerList.add("PROMO TIMEPERIOD");
+		headerList.add("CUST PROMO CYCLE");
 		//headerList.add("AB CREATION (ONLY FOR KA Accounts)");
 		headerList.add("OFFER DESCRIPTION");
-		headerList.add("BASEPACK CODE");
-		headerList.add("BASEPACK DESCRIPTION");
+		headerList.add("BP CODE");
+		headerList.add("BP DESC");
 		headerList.add("CHILDPACK CODE");
 		headerList.add("OFFER TYPE");
 		headerList.add("OFFER MODALITY");
@@ -99,19 +99,19 @@ public class RegularPromoService {
 		headerList.add("CHANNEL");
 		headerList.add("YEAR");
 		headerList.add("MOC");
-		headerList.add("Promo Timeperiod");
-		headerList.add("PPM SOL Code Reference");
+		headerList.add("CUST PROMO CYCLE");
+		headerList.add("PARENT SOL CODE");
 		headerList.add("PPM ACCOUNT");
 		headerList.add("OFFER DESCRIPTION");
-		headerList.add("BASEPACK CODE");
-		headerList.add("BASEPACK DESCRIPTION");
+		headerList.add("BP CODE");
+		headerList.add("BP DESC");
 		headerList.add("CHILDPACK CODE");
 		headerList.add("OFFER TYPE");
 		headerList.add("OFFER MODALITY");
-		headerList.add("REGULAR PROMO QUANTITY");//Added columns regular promo quantity & budget by Kavitha D-Sprint 16
+		headerList.add("PARENT SOL QTY");//Added columns regular promo quantity & budget by Kavitha D-Sprint 16
 		headerList.add("QUANTITY");
 		headerList.add("PRICE OFF");
-		headerList.add("REGULAR PROMO BUDGET");
+		headerList.add("PARENT SOL BUDGET");
 		headerList.add("BUDGET");
 		headerList.add("BRANCH");
 		headerList.add("CLUSTER");
@@ -132,19 +132,19 @@ public class RegularPromoService {
 			headerList.add("CHANNEL");
 			headerList.add("YEAR");
 			headerList.add("MOC");
-			headerList.add("Promo Timeperiod");
-			headerList.add("PPM SOL Code Reference");
+			headerList.add("CUST PROMO CYCLE");
+			headerList.add("PARENT SOL CODE");
 			headerList.add("PPM ACCOUNT");
 			headerList.add("OFFER DESCRIPTION");
-			headerList.add("BASEPACK CODE");
-			headerList.add("BASEPACK DESCRIPTION");
+			headerList.add("BP CODE");
+			headerList.add("BP DESC");
 			headerList.add("CHILDPACK CODE");
 			headerList.add("OFFER TYPE");
 			headerList.add("OFFER MODALITY");
-			headerList.add("REGULAR PROMO QUANTITY");//Added columns regular promo quantity & budget by Kavitha D-Sprint 16
+			headerList.add("PARENT SOL QTY");//Added columns regular promo quantity & budget by Kavitha D-Sprint 16
 			headerList.add("QUANTITY");
 			headerList.add("PRICE OFF");
-			headerList.add("REGULAR PROMO BUDGET");
+			headerList.add("PARENT SOL BUDGET");
 			headerList.add("BUDGET");
 			headerList.add("BRANCH");
 			headerList.add("CLUSTER");
@@ -163,9 +163,9 @@ public class RegularPromoService {
 				headerList.add("MOC NAME");
 				headerList.add("PROMO ID");
 				headerList.add("PPM ACCOUNT");
-				headerList.add("PROMO TIMEPERIOD");
-				headerList.add("BASEPACK CODE");
-				headerList.add("BASEPACK DESC");
+				headerList.add("CUST PROMO CYCLE");
+				headerList.add("BP CODE");
+				headerList.add("BP DESC");
 				headerList.add("CHILD BASEPACK CODE");
 				headerList.add("OFFER DESC");
 				headerList.add("OFFER TYPE");
@@ -184,11 +184,11 @@ public class RegularPromoService {
 				headerList.add("MOC");
 				// headerList.add("SECONDARY CHANNEL");
 				headerList.add("PPM ACCOUNT");
-				headerList.add("PROMO TIMEPERIOD");
+				headerList.add("CUST PROMO CYCLE");
 				headerList.add("OFFER DESCRIPTION");
 				// headerList.add("AB CREATION (ONLY FOR KA Accounts)");
-				headerList.add("BASEPACK CODE");
-				headerList.add("BASEPACK DESCRIPTION");
+				headerList.add("BP CODE");
+				headerList.add("BP DESC");
 				headerList.add("CHILDPACK CODE");
 				headerList.add("OFFER TYPE");
 				headerList.add("OFFER MODALITY");

@@ -10,7 +10,7 @@ public class PromoCrBean {
 	
 	@Column(name = "PROMO_ID")
 	private String promo_id;
-	@Column(name="BASEPACK CODE")
+	@Column(name="BP CODE")
 	private String basepack;
 	@Column(name = "OFFER_DESCRIPTION")
 	private String offer_desc;
@@ -57,25 +57,42 @@ public class PromoCrBean {
 	private String soltype;
 	@Column(name="PROMO ENTRY TYPE")
 	private String templatetype;
-	@Column(name = "PPM_ACCOUNT")
+	@Column(name = "PPM ACCOUNT")
 	private String ppmaccount;
 	//Added by Kavitha D-SPRINT 16
 	@Column(name="FIXED BUDGET")
 	private String budget;
-	@Column(name="REGULAR PROMO QUANTITY")
+	@Column(name="PARENT SOL QTY")
 	private String regularPromoQuantity;
-	@Column(name="REGULAR PROMO BUDGET")
+	@Column(name="PARENT SOL BUDGET")
 	private String regularPromoBudget;
-	@Column(name="INCREMENTAL BUDGET REQUIRED")
+	@Column(name="CSP APPROVAL (Y/N)")
 	private String incrementalBudget;
-	@Column(name = "REQUIRE STOCK AVAILABILITY CONFIRMATION")
+	@Column(name = "SC APPROVAL(Y/N)")
 	private String stockAvailability;
-	@Column(name = "SIGNED OFF WITH CM")
+	@Column(name = "NCMM REMARKS")
 	private String signedOffWithCM;
-	@Column(name="SIGNED OFF WITH AVAILABILITY")
+	@Column(name="SC REMARKS")
 	private String signedOffWithAvailability;
+	//Added by Kavitha D-SPRINT 18 chnages
+	@Column(name="SC APPROVED QTY")
+	private String scApprovedQty;
+	@Column(name="SC APPROVED BUDGET")
+	private String scApprovedBdg;
 	
 	
+	public String getScApprovedQty() {
+		return scApprovedQty;
+	}
+	public void setScApprovedQty(String scApprovedQty) {
+		this.scApprovedQty = scApprovedQty;
+	}
+	public String getScApprovedBdg() {
+		return scApprovedBdg;
+	}
+	public void setScApprovedBdg(String scApprovedBdg) {
+		this.scApprovedBdg = scApprovedBdg;
+	}
 	public String getSignedOffWithCM() {
 		return signedOffWithCM;
 	}
@@ -425,7 +442,8 @@ public class PromoCrBean {
 				+ budget + ", regularPromoQuantity=" + regularPromoQuantity + ", regularPromoBudget="
 				+ regularPromoBudget + ", incrementalBudget=" + incrementalBudget + ", stockAvailability="
 				+ stockAvailability + ", signedOffWithCM=" + signedOffWithCM + ", signedOffWithAvailability="
-				+ signedOffWithAvailability + "]";
+				+ signedOffWithAvailability + ", scApprovedQty=" + scApprovedQty + ", scApprovedBdg=" + scApprovedBdg
+				+ "]";
 	}
 
 }

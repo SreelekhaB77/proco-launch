@@ -148,7 +148,7 @@ margin-top: -75px!important;
 	                               <button type="button" class="close" data-hide="alert">&times;</button>
 	                              
 	                                   <span>File contains error...</span>
-	                                   <a href="#" id="downloadTempFileLink">Click here to Download Error File</a>
+	                                   <a href="http://34.120.128.205/VisibilityAssetTracker/downloadSCApprovalPromotionErrorFile.htm" id="downloadTempFileLink">Click here to Download Error File</a>
 	                           </div>
 			<div class="alert alert-danger" style="display: none;margin-top:35px;margin-bottom: -23px" id="errorblockApprovalUpload">
 			         <button type="button" class="close" data-hide="alert">&times;</button>

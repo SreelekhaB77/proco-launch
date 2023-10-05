@@ -545,17 +545,34 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 					/*" SELECT DISTINCT CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_MODALITY,PRICE_OFF,DP_QUANTITY,QUANTITY,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE "
 					+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE (PM.STATUS IN('3','39','43') OR (PM.STATUS IN ('1','39','43') "
 					+ "AND (PM.TEMPLATE_TYPE = 'NE' OR PM.TEMPLATE_TYPE = 'CR'))) AND PM.MOC= '"+moc+"' ";*/ //Changed by Kavitha D-SPRINT 15 changes
-			
-			" SELECT DISTINCT PM.CHANNEL_NAME,PM.MOC,PM.SALES_CATEGORY,PM.PPM_ACCOUNT,"
+			//Kajal G changes start here for SPRINT-18		
+			" CREATE TEMPORARY TABLE TT_NCMM_PROMO_DOWNLOAD SELECT DISTINCT PM.CHANNEL_NAME,PM.MOC,PM.SALES_CATEGORY,PM.PPM_ACCOUNT,"
 			+ " PM.PROMO_ID,PM.OFFER_DESC,PM.BASEPACK_CODE,PM.OFFER_TYPE,PM.OFFER_MODALITY,PM.PRICE_OFF, (CASE WHEN (PM.TEMPLATE_TYPE = 'R' OR PM.TEMPLATE_TYPE='NE') THEN '' WHEN PM.TEMPLATE_TYPE='CR' THEN PM.REGULAR_PROMO_QUANTITY END) AS REGULAR_PROMO_QUANTITY,"
-			+ " PM.QUANTITY,PM.BUDGET AS FIXED_BUDGET, (CASE WHEN PM.TEMPLATE_TYPE='CR' THEN PM.REGULAR_PROMO_BUDGET WHEN (PM.TEMPLATE_TYPE = 'R' OR PM.TEMPLATE_TYPE='NE') THEN '' END) AS REGULAR_PROMO_BUDGET,"
-			+ " PM.CLUSTER, PM.TEMPLATE_TYPE,PM.CR_SOL_TYPE,'NO',(CASE WHEN PM.CR_SOL_TYPE IN('Additional Quantity- Primary','Basepack Addition','Budget Extension','Date Extension','Missing Geo') OR PM.TEMPLATE_TYPE IN('R','NE') THEN 'YES' WHEN PM.CR_SOL_TYPE IN('Top Up','Additional Quantity- Customer Closing') THEN 'NA' END) AS REQUIRE_STOCK_AVAILABILITY "
+			+ " PM.QUANTITY,PM.BUDGET AS FIXED_BUDGET, (CASE WHEN PM.TEMPLATE_TYPE='CR' THEN PM.REGULAR_PROMO_BUDGET WHEN (PM.TEMPLATE_TYPE = 'R' OR PM.TEMPLATE_TYPE='NE') THEN '' END) AS REGULAR_PROMO_BUDGET,PM.CLUSTER,"
+//			+ " PM.CLUSTER, PM.TEMPLATE_TYPE,PM.CR_SOL_TYPE," // Commented by KAJAL G in SPRINT-18
+			+ " CASE WHEN PM.TEMPLATE_TYPE = 'R' THEN 'Regular' WHEN PM.TEMPLATE_TYPE = 'NE' THEN 'New Entry' ELSE PM.TEMPLATE_TYPE END AS PROMO_ENTRY_TYPE," // Added by KAJAL G in SPRINT-18
+			+ " CASE WHEN PM.TEMPLATE_TYPE = 'R' THEN 'Regular' WHEN PM.TEMPLATE_TYPE = 'NE' THEN 'New Entry' ELSE PM.CR_SOL_TYPE END AS CR_SOL_TYPE," // Added by KAJAL G in SPRINT-18
+			+ " CASE WHEN PM.TEMPLATE_TYPE = 'R' THEN 'REG' WHEN PM.TEMPLATE_TYPE = 'NE' THEN 'NE' ELSE '     ' END AS CR_SOL_TYPE_SHORTKEY,"  // Added by KAJAL G in SPRINT-18
+			+ " 'NO' AS INCREMENTAL_BUDGET_REQUIRED,(CASE WHEN PM.CR_SOL_TYPE IN('Additional Quantity- Primary','Basepack Addition','Budget Extension','Date Extension','Missing Geo') OR PM.TEMPLATE_TYPE IN('R','NE') THEN 'YES' WHEN PM.CR_SOL_TYPE IN('Top Up','Additional Quantity- Customer Closing') THEN 'NA' END) AS REQUIRE_STOCK_AVAILABILITY "
 			+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE (PM.STATUS IN('3','39','43') OR (PM.STATUS IN ('1','39','43') "
 			+ "AND (PM.TEMPLATE_TYPE = 'NE' OR PM.TEMPLATE_TYPE = 'CR'))) AND PM.MOC= '"+moc+"'"; //Changed by Kavitha D-Sprint 16 
 
-			Query query1  =sessionFactory.getCurrentSession().createNativeQuery(downloadCrQuery);
-		
-			Iterator itr = query1.list().iterator();
+			Query query = sessionFactory.getCurrentSession().createNativeQuery(downloadCrQuery);
+			query.executeUpdate();
+
+			String updateTempTable = "UPDATE TT_NCMM_PROMO_DOWNLOAD LR INNER JOIN TBL_PROCO_SOL_TYPE CR ON CR.SOL_REMARK= LR.CR_SOL_TYPE "
+					+ "SET LR.CR_SOL_TYPE_SHORTKEY=CR.SOL_TYPE";
+			
+			Query query1 = sessionFactory.getCurrentSession().createNativeQuery(updateTempTable);
+			query1.executeUpdate();
+			
+			String downloadNcmmEntry = "SELECT DISTINCT PM.CHANNEL_NAME,PM.MOC,PM.SALES_CATEGORY,PM.PPM_ACCOUNT,PM.PROMO_ID,PM.OFFER_DESC,PM.BASEPACK_CODE,PM.OFFER_TYPE,PM.OFFER_MODALITY,PM.PRICE_OFF,"
+					+ " PM.REGULAR_PROMO_QUANTITY,PM.QUANTITY,PM.FIXED_BUDGET,PM.REGULAR_PROMO_BUDGET,PM.CLUSTER,PM.PROMO_ENTRY_TYPE,PM.CR_SOL_TYPE,PM.CR_SOL_TYPE_SHORTKEY,PM.INCREMENTAL_BUDGET_REQUIRED,"
+					+ " PM.REQUIRE_STOCK_AVAILABILITY FROM TT_NCMM_PROMO_DOWNLOAD AS PM";
+			
+			Query query2  = sessionFactory.getCurrentSession().createNativeQuery(downloadNcmmEntry);
+			Iterator itr = query2.list().iterator();
+
 			downloadDataList.add(headerList);
 			while (itr.hasNext()) {
 				Object[] obj = (Object[]) itr.next();
@@ -568,12 +585,15 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 				obj = null;
 				downloadDataList.add(dataObj);
 			}
+			Query dropTable = sessionFactory.getCurrentSession().createNativeQuery("DROP TEMPORARY TABLE TT_NCMM_PROMO_DOWNLOAD");
+			dropTable.executeUpdate();
+			//Kajal G changes END here for SPRINT-18	
 			return downloadDataList;
 		} catch (Exception ex) {
 			logger.debug("Exception :", ex);
 			return null;
 		
-}
+		}
 	}
 	
 	
@@ -584,6 +604,10 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 		String response = null;
 		
 		ArrayList<String> responseList = new ArrayList<String>();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		Date date = new Date();
+		
 		try {
 			Query queryToCheck = sessionFactory.getCurrentSession()
 					.createNativeQuery("select count(1) from TBL_PROCO_PROMOTION_MASTER_TEMP_V2 where USER_ID=:user");
@@ -601,11 +625,11 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 				+ "(CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_MODALITY,PRICE_OFF,DP_QUANTITY,QUANTITY,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE,REMARK,STATUS,USER_ID) VALUES(?0,?1, ?2, ?3, ?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16)"*/
 				
 				" INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2 "
-				+ "(CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,REGULAR_PROMO_QUANTITY,QUANTITY,BUDGET,REGULAR_PROMO_BUDGET,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE,INCREMENTAL_BUDGET,STOCK_AVAILABILITY,REMARK,STATUS,USER_ID) VALUES(?0,?1, ?2, ?3, ?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21)"); 
+				+ "(CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,REGULAR_PROMO_QUANTITY,QUANTITY,BUDGET,REGULAR_PROMO_BUDGET,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE,INCREMENTAL_BUDGET,STOCK_AVAILABILITY,REMARK,STATUS,USER_ID,NCMM_DOA) VALUES(?0,?1, ?2, ?3, ?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22)"); 
 				
 		
 		for (int i = 0; i < beanArray.length; i++) {
-			if (beanArray[i].getSignedOffWithCM().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithCM().equalsIgnoreCase("APPROVED") || beanArray[i].getSignedOffWithCM().equalsIgnoreCase("REJECTED")||beanArray[i].getSignedOffWithCM().isEmpty() ||beanArray[i].getSignedOffWithCM().isBlank() ||beanArray[i].getSignedOffWithCM()==null){
+			if (beanArray[i].getSignedOffWithCM().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithCM().equalsIgnoreCase("APPROVED") || beanArray[i].getSignedOffWithCM().equalsIgnoreCase("REJECTED")||beanArray[i].getSignedOffWithCM().isEmpty() ||beanArray[i].getSignedOffWithCM()==null){
 			
 			query.setString(0, beanArray[i].getChannel()); //Changed by Kavitha D-SPRINT 15 changes
 			query.setString(1, beanArray[i].getMoc());
@@ -629,14 +653,20 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 			query.setString(19, beanArray[i].getSignedOffWithCM()==null?"":beanArray[i].getSignedOffWithCM());
 			if(beanArray[i].getSignedOffWithCM().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithCM().equalsIgnoreCase("APPROVED") ) {
 				query.setString(20,"38");
+				query.setString(22, dateFormat.format(date));		
 			}
 			else if(beanArray[i].getSignedOffWithCM().equalsIgnoreCase("REJECTED")) {
 				query.setString(20,"39");
+				query.setString(22, null);		
+
 			}
-			else if (beanArray[i].getSignedOffWithCM().isEmpty()||beanArray[i].getSignedOffWithCM().isBlank()||beanArray[i].getSignedOffWithCM()==null){ //Added by Kavitha D-SPRINT 15 changes 
+			else if (beanArray[i].getSignedOffWithCM().isEmpty()||beanArray[i].getSignedOffWithCM()==null){ //Added by Kavitha D-SPRINT 15 changes 
 				query.setString(20,"43");
+				query.setString(22, null);		
+
 			}
 			query.setString(21,userId);
+			
 
 			int executeUpdate = query.executeUpdate();
 			
@@ -725,7 +755,7 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 		Date date = new Date();
 		try {
 			String updateSql=" UPDATE TBL_PROCO_PROMOTION_MASTER_V2 A INNER JOIN TBL_PROCO_PROMOTION_MASTER_TEMP_V2 B ON A.PROMO_ID = B.PROMO_ID "
-					+ " SET A.STATUS=B.STATUS,A.INCREMENTAL_BUDGET=B.INCREMENTAL_BUDGET,A.STOCK_AVAILABILITY=B.STOCK_AVAILABILITY,A.REGULAR_PROMO_BUDGET=B.REGULAR_PROMO_BUDGET,A.REGULAR_PROMO_QUANTITY=B.REGULAR_PROMO_QUANTITY,A.USER_ID='" + userId + "',A.UPDATE_STAMP=' "+ dateFormat.format(date) + "' "
+					+ " SET A.NCMM_DOA=B.NCMM_DOA,A.STATUS=B.STATUS,A.INCREMENTAL_BUDGET=B.INCREMENTAL_BUDGET,A.STOCK_AVAILABILITY=B.STOCK_AVAILABILITY,A.REGULAR_PROMO_BUDGET=B.REGULAR_PROMO_BUDGET,A.REGULAR_PROMO_QUANTITY=B.REGULAR_PROMO_QUANTITY,A.USER_ID='" + userId + "',A.UPDATE_STAMP=' "+ dateFormat.format(date) + "' "
 					+ " WHERE B.USER_ID='" + userId + "' " ;
 			Query queryUpdateExisting = sessionFactory.getCurrentSession().createNativeQuery(updateSql);
 		queryUpdateExisting.executeUpdate();
