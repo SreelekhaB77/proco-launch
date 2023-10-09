@@ -102,6 +102,7 @@ public class RegularPromoCreateController {
 								.toArray(new CreateBeanRegular[datafromexcel.size()]);
 						
 						save_data = createCRPromo.createCRPromo(beanArray, userId, template,categories);
+						logger.info("Upload file data:" +save_data);
 					}
 
 				} else {

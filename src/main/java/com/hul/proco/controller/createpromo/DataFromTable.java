@@ -19,6 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 
 /**
@@ -29,6 +30,7 @@ import org.hibernate.SessionFactory;
  */
 @Component
 public class DataFromTable {
+	private Logger logger = Logger.getLogger(DataFromTable.class);
 
 	@Autowired
 	SessionFactory sessionFactory;
@@ -65,6 +67,7 @@ public class DataFromTable {
 					+ uid + "'  " + "AND T.MOC IN("+mocList+")"; //moc added by kavitha D-Sprint 14 changes
 		}
 		
+		logger.info("PPM desc update:"+update_ppm_desc);
 		//System.out.println("PPM desc update:"+update_ppm_desc);
 		sessionFactory.getCurrentSession().createNativeQuery(update_ppm_desc).executeUpdate();
 
@@ -97,9 +100,13 @@ public class DataFromTable {
 	}
 	
 	public void updatePromoIdInTemp(String promoid, String moc_name, String ppm_account, String basepack_code,String pid,String year) {
+	try {
 	String updateintemp="UPDATE TBL_PROCO_PROMOTION_MASTER_TEMP_V2 SET PROMO_ID='"+promoid+"',PID='"+pid+"',PPM_DESC=CONCAT('"+promoid+"',':',PPM_DESC_STAGE) WHERE MOC_NAME='"+moc_name+"' AND PPM_ACCOUNT='"+ppm_account+"'"+
 				" AND BASEPACK_CODE='"+basepack_code+"' AND MOC_YEAR='"+year+"'";
 	sessionFactory.getCurrentSession().createNativeQuery(updateintemp).executeUpdate();
+	}catch(Exception e) {
+		logger.info(e);
+	}
 	}
 	/**
 	 * 
@@ -692,11 +699,11 @@ public class DataFromTable {
 		return false;
 	}
 	//Added by Kavitha D-SPRINT 15 changes for cr dp quantity
-	 public String getDpQuantity(String Moc_name, String Year,String Ppm_account,String Basepack_code, String Cluster, String offer_mod) {
-
+	 public String getDpQuantity(String Moc_name, String Year,String Ppm_account,String Basepack_code, String Cluster, String offer_mod,String uid) {
 		String query=" SELECT DP_QUANTITY FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE MOC_NAME='"+Moc_name+"' AND MOC_YEAR='"+Year+"' AND PPM_ACCOUNT= '"+Ppm_account+"' AND "
-				+ " BASEPACK_CODE='"+Basepack_code+"' AND CLUSTER= '"+Cluster+"' AND OFFER_MODALITY= '"+offer_mod+"' AND TEMPLATE_TYPE= 'R' ";
+				+ " BASEPACK_CODE='"+Basepack_code+"' AND CLUSTER= '"+Cluster+"' AND OFFER_MODALITY= '"+offer_mod+"' AND USER_ID='"+uid+"' AND TEMPLATE_TYPE= 'R' AND STATUS NOT IN('42') ";
 		Query getDpQunatity = sessionFactory.getCurrentSession().createNativeQuery(query);
+		logger.info("Dp Qunatity value" + getDpQunatity );
 		if(!(getDpQunatity.uniqueResult()==null)) {
 			return getDpQunatity.uniqueResult().toString();					
 		}else {
