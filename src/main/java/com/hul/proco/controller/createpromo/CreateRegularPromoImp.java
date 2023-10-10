@@ -85,17 +85,19 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 		// TODO Auto-generated method stub
 		
 		Map<String,String> pid_map= new HashMap<String, String>();
-		
+		try {
 		Query queryToDelete = sessionFactory.getCurrentSession()
 				.createNativeQuery("DELETE from TBL_PROCO_PROMOTION_MASTER_TEMP_V2 where USER_ID=:userId");
 		queryToDelete.setString("userId", uid);
-		queryToDelete.executeUpdate();
+		queryToDelete.executeUpdate(); 
+		}catch(Exception e) {
+			logger.info(e);
+		}
 
 		Map<String, String> datehandle = datafromtable.handleDates();
 
 		Map<String, ArrayList<String>> clusterandppm = new HashMap<String, ArrayList<String>>();
 		datafromtable.getAllClusterBasedOnPPM(clusterandppm);
-
 		Query query = (Query) sessionFactory.getCurrentSession()
 				.createNativeQuery(SQL_QUERY_INSERT_INTO_PROMOTION_MASTER_TEMP);
 		Map<String, String> branchmap = getValidBranch();
@@ -1247,7 +1249,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						//Added by Kavitha D-SPRINT 15 changes for dp quantity
 						dpQuantity=datafromtable.getDpQuantity(bean.getMoc_name().toUpperCase(), bean.getYear().toUpperCase()
 								, bean.getPpm_account().toUpperCase(), bean.getBasepack_code().toUpperCase()
-								, bean.getCluster(), bean.getOffer_mod());
+								, bean.getCluster(), bean.getOffer_mod(),bean.getUserId());
 												
 						if (!crEntries.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
 								+ bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()
@@ -1920,8 +1922,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			
 			saveToMain(uid,template);
 			globle_flag = 0;
-			return "EXCEL_UPLOADED";
-
+			return "EXCEL_UPLOADED";			
 		} else {
 			globle_flag = 0;
 			return "EXCEL_NOT_UPLOADED";
@@ -1946,8 +1947,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				+ "SELECT CHANNEL_NAME, MOC, MOC_NAME, MOC_YEAR, PPM_ACCOUNT, PROMO_TIMEPERIOD, AB_CREATION, BASEPACK_CODE, BASEPACK_DESC, CHILD_BASEPACK_CODE, OFFER_DESC, OFFER_TYPE, OFFER_MODALITY, PRICE_OFF, BUDGET, BRANCH, CLUSTER, PROMO_ID,  PID,START_DATE, END_DATE, TEMPLATE_TYPE, USER_ID, PPM_DESC_STAGE, PPM_DESC,'1','1','"
 				+ uid + "',PROMOTION_ID,CR_SOL_TYPE,SALES_CATEGORY,QUANTITY,DP_QUANTITY,REGULAR_PROMO_QUANTITY,REGULAR_PROMO_BUDGET " + "FROM TBL_PROCO_PROMOTION_MASTER_TEMP_V2 WHERE USER_ID='" + uid + "'"; //Added Dp_Quantity by Kavitha D-SPRINT 15 changes
 		
-		sessionFactory.getCurrentSession().createNativeQuery(insertString).executeUpdate();
-
+		sessionFactory.getCurrentSession().createNativeQuery(insertString).executeUpdate();	
 	}
 
 	private Map<String, String> getAllTDPTimeperiod() {
