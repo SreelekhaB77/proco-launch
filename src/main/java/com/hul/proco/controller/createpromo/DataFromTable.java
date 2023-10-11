@@ -703,7 +703,7 @@ public class DataFromTable {
 		String query=" SELECT DP_QUANTITY FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE MOC_NAME='"+Moc_name+"' AND MOC_YEAR='"+Year+"' AND PPM_ACCOUNT= '"+Ppm_account+"' AND "
 				+ " BASEPACK_CODE='"+Basepack_code+"' AND CLUSTER= '"+Cluster+"' AND OFFER_MODALITY= '"+offer_mod+"' AND USER_ID='"+uid+"' AND TEMPLATE_TYPE= 'R' AND STATUS NOT IN('42') ";
 		Query getDpQunatity = sessionFactory.getCurrentSession().createNativeQuery(query);
-		logger.info("Dp Qunatity value" + getDpQunatity );
+		logger.info(" Dp Qunatity value " + query );
 		if(!(getDpQunatity.uniqueResult()==null)) {
 			return getDpQunatity.uniqueResult().toString();					
 		}else {
