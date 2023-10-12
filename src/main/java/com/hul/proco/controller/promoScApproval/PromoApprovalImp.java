@@ -159,7 +159,7 @@ public class PromoApprovalImp implements PromoApproval{
 			String[] split = promoId.split(",");
 			for (int i = 0; i < split.length; i++) {
 				String promo = split[i];				
-				String approvalCrStatus=" UPDATE TBL_PROCO_PROMOTION_MASTER_V2  T1 SET T1.STATUS='40', T1.USER_ID='" + userId + "',T1.UPDATE_STAMP=' "+ dateFormat.format(date) + "'"
+				String approvalCrStatus=" UPDATE TBL_PROCO_PROMOTION_MASTER_V2  T1 SET T1.STATUS='40', T1.USER_ID='" + userId + "',T1.UPDATE_STAMP='"+ dateFormat.format(date) +"'"
 						+ " WHERE T1.STATUS IN('38','41','44','45') AND T1.ACTIVE=1 AND T1.PROMO_ID='" + promoId + "' ";
 				
 				Query query = sessionFactory.getCurrentSession().createNativeQuery(approvalCrStatus);
@@ -489,7 +489,7 @@ public class PromoApprovalImp implements PromoApproval{
 		try {
 			String updateSql=" UPDATE TBL_PROCO_PROMOTION_MASTER_V2 A INNER JOIN TBL_PROCO_PROMOTION_MASTER_TEMP_V2 B ON A.PROMO_ID = B.PROMO_ID "
 					+ " SET A.SC_DOA=B.SC_DOA,A.STATUS=B.STATUS,A.SIGNED_OFF_WITH_CM=B.SIGNED_OFF_WITH_CM,"
-					+ " A.USER_ID='" + userId + "',A.UPDATE_STAMP=' "+ dateFormat.format(date) + "', "
+					+ " A.USER_ID='" + userId + "',A.UPDATE_STAMP='"+ dateFormat.format(date) +"', "
 					+ " A.SC_APPROVED_QTY=B.SC_APPROVED_QTY,A.SC_APPROVED_BDG=B.SC_APPROVED_BDG "   //Added by Kavitha D-SPRINT 18 changes
 					+ " WHERE B.USER_ID='" + userId + "' " ;
 			logger.info("Updated query in sc:"+updateSql);
