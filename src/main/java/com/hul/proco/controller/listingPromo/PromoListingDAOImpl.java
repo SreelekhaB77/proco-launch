@@ -2849,7 +2849,7 @@ public class PromoListingDAOImpl implements PromoListingDAO {
 		Date date = new Date();
 		try {
 			String updateSql=" UPDATE TBL_PROCO_PROMOTION_MASTER_V2 A INNER JOIN TBL_PROCO_PROMOTION_MASTER_TEMP_V2 B ON A.PROMO_ID = B.PROMO_ID "
-					+ " SET A.STATUS=B.STATUS,A.USER_ID='" + userId + "',A.UPDATE_STAMP=' "+ dateFormat.format(date) + "' "
+					+ " SET A.STATUS=B.STATUS,A.USER_ID='" + userId + "',A.UPDATE_STAMP='"+ dateFormat.format(date) +"'"
 					+ " WHERE B.USER_ID='" + userId + "' " ;
 			Query queryUpdateExisting = sessionFactory.getCurrentSession().createNativeQuery(updateSql);
 		queryUpdateExisting.executeUpdate();

@@ -396,7 +396,7 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 				String promo = split[i];
 				//createPromoDaoImpl.saveStatusInStatusTracker(promo, status, "", userId);
 				
-				String approvalCrStatus=" UPDATE TBL_PROCO_PROMOTION_MASTER_V2  T1 SET T1.STATUS='38', T1.USER_ID='" + userId + "',T1.UPDATE_STAMP=' "+ dateFormat.format(date) + "'"
+				String approvalCrStatus=" UPDATE TBL_PROCO_PROMOTION_MASTER_V2  T1 SET T1.STATUS='38', T1.USER_ID='" + userId + "',T1.UPDATE_STAMP='"+ dateFormat.format(date) +"'"
 						+ " WHERE T1.STATUS IN('1','3','39','43') AND T1.ACTIVE=1 AND T1.PROMO_ID='" + promoId + "' ";
 				
 				Query query = sessionFactory.getCurrentSession().createNativeQuery(approvalCrStatus);
@@ -755,7 +755,7 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 		Date date = new Date();
 		try {
 			String updateSql=" UPDATE TBL_PROCO_PROMOTION_MASTER_V2 A INNER JOIN TBL_PROCO_PROMOTION_MASTER_TEMP_V2 B ON A.PROMO_ID = B.PROMO_ID "
-					+ " SET A.NCMM_DOA=B.NCMM_DOA,A.STATUS=B.STATUS,A.INCREMENTAL_BUDGET=B.INCREMENTAL_BUDGET,A.STOCK_AVAILABILITY=B.STOCK_AVAILABILITY,A.REGULAR_PROMO_BUDGET=B.REGULAR_PROMO_BUDGET,A.REGULAR_PROMO_QUANTITY=B.REGULAR_PROMO_QUANTITY,A.USER_ID='" + userId + "',A.UPDATE_STAMP=' "+ dateFormat.format(date) + "' "
+					+ " SET A.NCMM_DOA=B.NCMM_DOA,A.STATUS=B.STATUS,A.INCREMENTAL_BUDGET=B.INCREMENTAL_BUDGET,A.STOCK_AVAILABILITY=B.STOCK_AVAILABILITY,A.REGULAR_PROMO_BUDGET=B.REGULAR_PROMO_BUDGET,A.REGULAR_PROMO_QUANTITY=B.REGULAR_PROMO_QUANTITY,A.USER_ID='" + userId + "',A.UPDATE_STAMP='"+dateFormat.format(date)+"'"
 					+ " WHERE B.USER_ID='" + userId + "' " ;
 			Query queryUpdateExisting = sessionFactory.getCurrentSession().createNativeQuery(updateSql);
 		queryUpdateExisting.executeUpdate();
