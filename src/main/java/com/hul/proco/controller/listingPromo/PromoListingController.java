@@ -186,7 +186,7 @@ public class PromoListingController {
 				(pageNumber * pageDisplayLength),userId,roleId,moc,promobasepack,ppmaccount,procochannel,prococluster,searchParameter, kamAccountsArr,fromDate,toDate);
 		
 		
-		logger.info("LOGGER OUTPUT FOR PROMOLIST:" + promoList);
+		//logger.info("LOGGER OUTPUT FOR PROMOLIST:" + promoList);
 
 		PromoListingJsonObject jsonObj = new PromoListingJsonObject();
 		jsonObj.setJsonBean(promoList);
@@ -994,7 +994,7 @@ public class PromoListingController {
 			
 			ArrayList<String> headerList = promoListingService.getHeaderListForPromoDownloadListing();
 			downloadedData = promoListingService.getPromotionListingDownload(headerList, userId,moc,promobasepack,ppmaccount,procochannel,prococluster,roleId, kamAccounts,fromDate,toDate);
-			logger.info("START downloadPromos for listing():" + downloadedData);
+			//logger.info("START downloadPromos for listing():" + downloadedData);
 
 			if (downloadedData != null) {
 				UploadUtil.writeXLSXFile(downloadFileName, downloadedData, null,".xlsx");
