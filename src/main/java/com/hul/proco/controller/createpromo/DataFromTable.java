@@ -699,11 +699,11 @@ public class DataFromTable {
 		return false;
 	}
 	//Added by Kavitha D-SPRINT 15 changes for cr dp quantity
-	 public String getDpQuantity(String Moc_name, String Year,String Ppm_account,String Basepack_code, String Cluster, String offer_mod,String uid) {
+	 public String getDpQuantity(String Moc_name, String Year,String Ppm_account,String Basepack_code, String Cluster, String offer_mod) {
 		String query=" SELECT DP_QUANTITY FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE MOC_NAME='"+Moc_name+"' AND MOC_YEAR='"+Year+"' AND PPM_ACCOUNT= '"+Ppm_account+"' AND "
-				+ " BASEPACK_CODE='"+Basepack_code+"' AND CLUSTER= '"+Cluster+"' AND OFFER_MODALITY= '"+offer_mod+"' AND USER_ID='"+uid+"' AND TEMPLATE_TYPE= 'R' AND STATUS NOT IN('42') ";
+				+ " BASEPACK_CODE='"+Basepack_code+"' AND CLUSTER= '"+Cluster+"' AND OFFER_MODALITY= '"+offer_mod+"' AND TEMPLATE_TYPE= 'R' AND STATUS NOT IN('42') ";
 		Query getDpQunatity = sessionFactory.getCurrentSession().createNativeQuery(query);
-		logger.info(" Dp Qunatity value " + query );
+		//logger.info(" Dp Qunatity value " + query );
 		if(!(getDpQunatity.uniqueResult()==null)) {
 			return getDpQunatity.uniqueResult().toString();					
 		}else {

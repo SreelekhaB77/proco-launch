@@ -1249,7 +1249,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						//Added by Kavitha D-SPRINT 15 changes for dp quantity
 						dpQuantity=datafromtable.getDpQuantity(bean.getMoc_name().toUpperCase(), bean.getYear().toUpperCase()
 								, bean.getPpm_account().toUpperCase(), bean.getBasepack_code().toUpperCase()
-								, bean.getCluster(), bean.getOffer_mod(),bean.getUserId());
+								, bean.getCluster(), bean.getOffer_mod());
 												
 						if (!crEntries.containsKey(bean.getMoc_name().toUpperCase() + bean.getYear().toUpperCase()
 								+ bean.getPpm_account().toUpperCase() + bean.getBasepack_code().toUpperCase()
