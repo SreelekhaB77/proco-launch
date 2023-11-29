@@ -238,8 +238,10 @@ public class PromoApprovalImp implements PromoApproval{
 	public String uploadScApprovalData(PromoCrBean[] beanArray, String userId) throws Exception {
 		String response = null;
 		ArrayList<String> responseList = new ArrayList<String>();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = new Date();
+		/*DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();*/
+		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date()); //Kavitha D changes-SPRINT 22
+
 		try {
 			Query queryToCheck = sessionFactory.getCurrentSession()
 					.createNativeQuery("select count(1) from TBL_PROCO_PROMOTION_MASTER_TEMP_V2 where USER_ID=:user");
@@ -383,7 +385,7 @@ public class PromoApprovalImp implements PromoApproval{
 			if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR")) {
 			if((beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED")) &&(Double.parseDouble(beanArray[i].getScApprovedQty())== Double.parseDouble(beanArray[i].getQuantity()))) {
 				query.setString(23,"40");
-				query.setString(25,dateFormat.format(date));
+				query.setString(25,timeStamp);
 
 			}
 			else if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("REJECTED")) {
@@ -423,7 +425,7 @@ public class PromoApprovalImp implements PromoApproval{
 
 				if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED")) {
 					query.setString(23,"40");
-					query.setString(25,dateFormat.format(date));
+					query.setString(25,timeStamp);
 
 				}
 				else if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("REJECTED")) {

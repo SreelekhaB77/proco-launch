@@ -604,9 +604,9 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 		String response = null;
 		
 		ArrayList<String> responseList = new ArrayList<String>();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		
-		Date date = new Date();
+		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date()); //Kavitha D changes-SPRINT 22
+		//DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		//Date date = new Date();
 		
 		try {
 			Query queryToCheck = sessionFactory.getCurrentSession()
@@ -653,7 +653,7 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 			query.setString(19, beanArray[i].getSignedOffWithCM()==null?"":beanArray[i].getSignedOffWithCM());
 			if(beanArray[i].getSignedOffWithCM().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithCM().equalsIgnoreCase("APPROVED") ) {
 				query.setString(20,"38");
-				query.setString(22, dateFormat.format(date));		
+				query.setString(22,timeStamp);		
 			}
 			else if(beanArray[i].getSignedOffWithCM().equalsIgnoreCase("REJECTED")) {
 				query.setString(20,"39");
