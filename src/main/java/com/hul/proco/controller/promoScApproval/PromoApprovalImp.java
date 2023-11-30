@@ -406,7 +406,7 @@ public class PromoApprovalImp implements PromoApproval{
 				else {
 					if (Double.parseDouble(beanArray[i].getScApprovedQty()) < Double.parseDouble(beanArray[i].getQuantity())) {
 						query.setString(23,"45");
-						query.setString(25,null); 						
+						query.setString(25,timeStamp); 						
 					}
 					else {
 						query.setString(23,"38");
