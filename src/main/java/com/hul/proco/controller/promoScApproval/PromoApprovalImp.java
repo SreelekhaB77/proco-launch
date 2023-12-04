@@ -7,8 +7,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.ParameterMode;
 import javax.persistence.StoredProcedureQuery;
@@ -22,6 +24,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.hul.proco.controller.createpromo.DataFromTable;
 import com.hul.proco.controller.promocr.PromoCrBean;
 import com.hul.proco.controller.promocr.PromoCrDAOImpl;
 
@@ -32,6 +35,9 @@ public class PromoApprovalImp implements PromoApproval{
 
 	@Autowired
 	private SessionFactory sessionFactory;
+	
+	@Autowired
+	DataFromTable datafromtable;
 
 	private String error_msg = "";
 	private int flag = 0;
@@ -241,7 +247,8 @@ public class PromoApprovalImp implements PromoApproval{
 		/*DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();*/
 		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date()); //Kavitha D changes-SPRINT 22
-
+		Map<String, String> commanmap = new HashMap<String, String>();
+		datafromtable.basePackAndSaleCategory(commanmap);
 		try {
 			Query queryToCheck = sessionFactory.getCurrentSession()
 					.createNativeQuery("select count(1) from TBL_PROCO_PROMOTION_MASTER_TEMP_V2 where USER_ID=:user");
@@ -329,7 +336,7 @@ public class PromoApprovalImp implements PromoApproval{
 			query.setString(13, beanArray[i].getBudget());
 			query.setString(14, beanArray[i].getRegularPromoBudget());
 			if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR") && (beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("PARTIAL APPROVED"))) {
-			if(!beanArray[i].getScApprovedBdg().isEmpty()) {
+			/*if(!beanArray[i].getScApprovedBdg().isEmpty()) {
 				boolean numeric = true;
 		        try {
 		            int num = Integer.parseInt(beanArray[i].getScApprovedBdg());
@@ -367,9 +374,25 @@ public class PromoApprovalImp implements PromoApproval{
 				else
 					error_msg = error_msg + "Mandatory input for Sc Approved Budget";
 				flag = 1;
-			}	
-			
-			query.setString(15, beanArray[i].getScApprovedBdg());
+			}	*/
+				
+				//Commented above code and Added by Kajal G in Sprint-22 -- Start
+				if(!beanArray[i].getPriceoff().contains("%"))
+				{
+					Double price=Double.valueOf(beanArray[i].getPriceoff());
+					Double quanti=Double.valueOf(beanArray[i].getScApprovedQty());
+					query.setString(15, String.valueOf(price*quanti));
+				}else
+				{
+					Double price=Double.valueOf(beanArray[i].getPriceoff().substring(0,beanArray[i].getPriceoff().length()-1));
+					Double quanti=Double.valueOf(beanArray[i].getScApprovedQty());
+					if(commanmap.get(beanArray[i].getBasepack()+"_MRP") != null)
+						query.setString(15,String.valueOf(price*quanti*Double.parseDouble(commanmap.get(beanArray[i].getBasepack()+"_MRP"))));
+					else
+						query.setString(15,String.valueOf(price*quanti*0));
+				}
+				//Commented above code and Added by Kajal G in Sprint-22 -- End
+
 			}
 			else {
 				query.setString(15, "");
@@ -382,8 +405,8 @@ public class PromoApprovalImp implements PromoApproval{
 			query.setString(21, beanArray[i].getSignedOffWithCM());
 			query.setString(22, beanArray[i].getSignedOffWithAvailability());
 			//Added by Kavitha D-SPRINT 18 changes
-			if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR")) {
-			if((beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED")) &&(Double.parseDouble(beanArray[i].getScApprovedQty())== Double.parseDouble(beanArray[i].getQuantity()))) {
+			if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR") && flag != 1) {
+			if((beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED")) &&(Integer.parseInt(beanArray[i].getScApprovedQty())== Integer.parseInt(beanArray[i].getQuantity()))) {
 				query.setString(23,"40");
 				query.setString(25,timeStamp);
 
@@ -417,9 +440,14 @@ public class PromoApprovalImp implements PromoApproval{
 				}
 			}
 			else {
+				if (flag == 1)
+					error_msg = error_msg + ",SC APPROVED QTY is not correct according to SC REMARKS";
+				else
+					error_msg = error_msg + "SC APPROVED QTY is not correct according to SC REMARKS";
+				flag = 1;
 				query.setString(23,"38");
 				query.setString(25,null); 
-			}
+				}
 			}
 			else if(beanArray[i].getTemplatetype().equalsIgnoreCase("New Entry") || beanArray[i].getTemplatetype().equalsIgnoreCase("Regular")) {
 
@@ -442,6 +470,11 @@ public class PromoApprovalImp implements PromoApproval{
 					query.setString(23,"38");
 					query.setString(25,null); 
 				}
+				
+			}
+			else {
+				query.setString(23,"38");
+				query.setString(25,null); 
 				
 			}
 			
