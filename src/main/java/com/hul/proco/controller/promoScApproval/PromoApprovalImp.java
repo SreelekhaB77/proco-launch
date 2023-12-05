@@ -335,7 +335,7 @@ public class PromoApprovalImp implements PromoApproval{
 			query.setString(12, beanArray[i].getQuantity());
 			query.setString(13, beanArray[i].getBudget());
 			query.setString(14, beanArray[i].getRegularPromoBudget());
-			if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR") && (beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("PARTIAL APPROVED"))) {
+			if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR") && (beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("PARTIAL APPROVED")) && !beanArray[i].getScApprovedQty().isEmpty()) {
 			/*if(!beanArray[i].getScApprovedBdg().isEmpty()) {
 				boolean numeric = true;
 		        try {
