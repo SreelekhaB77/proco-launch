@@ -497,7 +497,7 @@ public class DataFromTable {
 				Double price=Double.valueOf(price_off.substring(0,price_off.length()-1));
 				Double quanti=Double.valueOf(quantity);
 				//Added by Kajal G for SPRINT-10
-				if(map.get(basepack) != null)
+				if(map.get(basepack+"_MRP") != null)
 					return  String.valueOf(price*quanti*Double.parseDouble(map.get(basepack+"_MRP")));
 				else
 					return String.valueOf(price*quanti*0);

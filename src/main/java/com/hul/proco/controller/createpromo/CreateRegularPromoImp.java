@@ -917,6 +917,11 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					}
 				}
 				
+				String CRPriceOff = bean.getPrice_off();
+                if((bean.getPrice_off().contains("%"))) {
+                    CRPriceOff = bean.getPrice_off().split("%")[0];
+                }
+                
 				String budget=bean.getBudget().isEmpty() ? ""
 						: String.valueOf(
 								(double) Math.round(Double.parseDouble(bean.getBudget()) * 100) / 100);
@@ -924,7 +929,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				String quantity=bean.getQuantity().isEmpty() ? ""
 						: String.valueOf(
 								(double) Math.round(Double.parseDouble(bean.getQuantity()) * 100) / 100);
-				if (!bean.getPrice_off().isEmpty() && isStringNumber(bean.getPrice_off() ) && !bean.getQuantity().isEmpty()) {
+				if (!bean.getPrice_off().isEmpty() && isStringNumber(CRPriceOff) && !bean.getQuantity().isEmpty()) {
 					query.setString(12, datafromtable.calculateBudget(bean.getChannel(), quantity, bean.getPrice_off(),
 							budget, bean.getBasepack_code(), commanmap));
 				} else {
