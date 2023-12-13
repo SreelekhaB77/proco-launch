@@ -256,13 +256,11 @@ public class PromoApprovalImp implements PromoApproval{
 			Integer recCount = ((BigInteger)queryToCheck.uniqueResult()).intValue();
 
 			if (recCount.intValue() > 0) {
-		
-		Query queryToDelete = sessionFactory.getCurrentSession()
-				.createNativeQuery("DELETE from TBL_PROCO_PROMOTION_MASTER_TEMP_V2 where USER_ID=:userId");
-		queryToDelete.setString("userId", userId);
-		queryToDelete.executeUpdate();
+				Query queryToDelete = sessionFactory.getCurrentSession().createNativeQuery("DELETE from TBL_PROCO_PROMOTION_MASTER_TEMP_V2 where USER_ID=:userId");
+				queryToDelete.setString("userId", userId);
+				queryToDelete.executeUpdate();
 			}
-		Query query = sessionFactory.getCurrentSession().createNativeQuery(
+			Query query = sessionFactory.getCurrentSession().createNativeQuery(
 				/*" INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2 (CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_MODALITY,"
 					+ "PRICE_OFF,DP_QUANTITY,QUANTITY,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE,REMARK,STATUS,USER_ID) VALUES(?0,?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16)"*/
 				//Changed by Kavitha D-SPRINT 16 
@@ -273,220 +271,285 @@ public class PromoApprovalImp implements PromoApproval{
 				"INSERT INTO TBL_PROCO_PROMOTION_MASTER_TEMP_V2 (CHANNEL_NAME,MOC,SALES_CATEGORY,PPM_ACCOUNT,PROMO_ID,OFFER_DESC,BASEPACK_CODE,OFFER_TYPE,OFFER_MODALITY,PRICE_OFF,REGULAR_PROMO_QUANTITY,SC_APPROVED_QTY,QUANTITY,BUDGET,REGULAR_PROMO_BUDGET,SC_APPROVED_BDG,CLUSTER,TEMPLATE_TYPE,CR_SOL_TYPE,INCREMENTAL_BUDGET,STOCK_AVAILABILITY,"
 				+ "SIGNED_OFF_WITH_CM,REMARK,STATUS,USER_ID,SC_DOA,ERROR_MSG) VALUES(?0,?1, ?2, ?3, ?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26)");
 
-		for (int i = 0; i < beanArray.length; i++) {
-			if (beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("REJECTED") ||beanArray[i].getSignedOffWithAvailability().isEmpty() ||beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("PARTIAL APPROVED")) {
-		
-			query.setString(0, beanArray[i].getChannel()); //Changed by Kajal G-SPRINT 15 changes
-			query.setString(1, beanArray[i].getMoc());
-			query.setString(2, beanArray[i].getCategory());
-			query.setString(3, beanArray[i].getPpmaccount());
-			query.setString(4, beanArray[i].getPromo_id());
-			query.setString(5, beanArray[i].getOffer_desc());
-			query.setString(6, beanArray[i].getBasepack());
-			query.setString(7, beanArray[i].getOffer_type());
-			query.setString(8, beanArray[i].getOffer_modality());
-			query.setString(9, beanArray[i].getPriceoff());
-			query.setString(10, beanArray[i].getRegularPromoQuantity());
-			if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR") && (beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("PARTIAL APPROVED"))){
-			if(!beanArray[i].getScApprovedQty().isEmpty()) {
-				boolean numeric = true;
-		        try {
-		            int num = Integer.parseInt(beanArray[i].getScApprovedQty());
-		        } catch (NumberFormatException e) {
-		            numeric = false;
-		        }
-		        if(!numeric){
-                    if (flag == 1)
-                        error_msg = error_msg + ",Invalid Sc Approved Quantity/ Sc Approved Qunatity Value should not be in decimal";
-                    else
-                        error_msg = error_msg + "Invalid Sc Approved Quantity/ Sc Approved Qunatity Value should not be in decimal";
-                    flag=1;
-                }else {
-                	if(Integer.parseInt(beanArray[i].getScApprovedQty()) <= 0) {
-						if (flag == 1)
-							error_msg = error_msg + ",Sc Approved Quantity should not be 0 or negative value";
-						else
-							error_msg = error_msg + "Sc Approved Quantity should not be 0 or negative value";
-						flag = 1;
-					}    
-                	
-                	if(Integer.parseInt(beanArray[i].getScApprovedQty())>Integer.parseInt(beanArray[i].getQuantity())) {
-                		if (flag == 1)
-							error_msg = error_msg + ",Sc Approved Quantity should not exceed tme uploaded value";
-						else
-							error_msg = error_msg + "Sc Approved Quantity should not exceed tme uploaded value";
-						flag = 1;
-                	}
-                	
-                }
-		        
-		        }else {
-				if (flag == 1)
-					error_msg = error_msg + ",Mandatory input for Sc Approved Quantity";
-				else
-					error_msg = error_msg + "Mandatory input for Sc Approved Quantity";
-				flag = 1;
-			}	
-			query.setString(11, beanArray[i].getScApprovedQty());
-			}
-			else {
-				query.setString(11, "");
-			}
-			query.setString(12, beanArray[i].getQuantity());
-			query.setString(13, beanArray[i].getBudget());
-			query.setString(14, beanArray[i].getRegularPromoBudget());
-			if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR") && (beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("PARTIAL APPROVED")) && !beanArray[i].getScApprovedQty().isEmpty()) {
-			/*if(!beanArray[i].getScApprovedBdg().isEmpty()) {
-				boolean numeric = true;
-		        try {
-		            int num = Integer.parseInt(beanArray[i].getScApprovedBdg());
-		        } catch (NumberFormatException e) {
-		            numeric = false;
-		        }
-		        if(!numeric){
-                    if (flag == 1)
-                        error_msg = error_msg + ",Invalid Sc Approved Budget/Sc Approved Budget Value should not be in decimal";
-                    else
-                        error_msg = error_msg + "Invalid Sc Approved Budget/ Sc Approved Budget Value should not be in decimal";
-                    flag=1;
-                }else {
-                	if(Integer.parseInt(beanArray[i].getScApprovedBdg()) <= 0) {
-						if (flag == 1)
-							error_msg = error_msg + ",Sc Approved Budget should not be 0 or negative value";
-						else
-							error_msg = error_msg + " Sc Approved Budget should not be 0 or negative value";
-						flag = 1;
-					} 
-                	
-                	if(Double.parseDouble(beanArray[i].getScApprovedBdg())>Double.parseDouble(beanArray[i].getBudget())) {
-                		if (flag == 1)
-							error_msg = error_msg + ",Sc Approved Budget should not exceed tme uploaded value";
-						else
-							error_msg = error_msg + "Sc Approved Budget should not exceed tme uploaded value";
-						flag = 1;
-                	}
-                	
-                }
-		        
-		        }else {
-				if (flag == 1)
-					error_msg = error_msg + ",Mandatory input for Sc Approved Budget";
-				else
-					error_msg = error_msg + "Mandatory input for Sc Approved Budget";
-				flag = 1;
-			}	*/
-				
-				//Commented above code and Added by Kajal G in Sprint-22 -- Start
-				if(!beanArray[i].getPriceoff().contains("%"))
-				{
-					Double price=Double.valueOf(beanArray[i].getPriceoff());
-					Double quanti=Double.valueOf(beanArray[i].getScApprovedQty());
-					query.setString(15, String.valueOf(price*quanti));
-				}else
-				{
-					Double price=Double.valueOf(beanArray[i].getPriceoff().substring(0,beanArray[i].getPriceoff().length()-1));
-					Double quanti=Double.valueOf(beanArray[i].getScApprovedQty());
-					if(commanmap.get(beanArray[i].getBasepack()+"_MRP") != null)
-						query.setString(15,String.valueOf(price*quanti*Double.parseDouble(commanmap.get(beanArray[i].getBasepack()+"_MRP"))));
-					else
-						query.setString(15,String.valueOf(price*quanti*0));
-				}
-				//Commented above code and Added by Kajal G in Sprint-22 -- End
-
-			}
-			else {
-				query.setString(15, "");
-			}
-			query.setString(16, beanArray[i].getCluster());
-			query.setString(17, beanArray[i].getTemplatetype());
-			query.setString(18, beanArray[i].getSoltype());
-			query.setString(19, beanArray[i].getIncrementalBudget());
-			query.setString(20, beanArray[i].getStockAvailability());
-			query.setString(21, beanArray[i].getSignedOffWithCM());
-			query.setString(22, beanArray[i].getSignedOffWithAvailability());
-			//Added by Kavitha D-SPRINT 18 changes
-			if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR") && flag != 1) {
-			if((beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED")) &&(Integer.parseInt(beanArray[i].getScApprovedQty())== Integer.parseInt(beanArray[i].getQuantity()))) {
-				query.setString(23,"40");
-				query.setString(25,timeStamp);
-
-			}
-			else if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("REJECTED")) {
-				query.setString(23,"41");
-				query.setString(25,null);
-
-			}
-			else if(beanArray[i].getSignedOffWithAvailability().isEmpty()){ //Added by Kajal G-SPRINT 15 changes 
-				query.setString(23,"44");
-				query.setString(25,null);
-
-			}
-			else if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("PARTIAL APPROVED"))  {
-				if (beanArray[i].getScApprovedQty().isEmpty()) {
-					query.setString(23,"38");
-					query.setString(25,null); 
+			for (int i = 0; i < beanArray.length; i++) {
+				query.setString(0, beanArray[i].getChannel());
+				query.setString(1, beanArray[i].getMoc());
+				query.setString(2, beanArray[i].getCategory());
+				query.setString(3, beanArray[i].getPpmaccount());
+				query.setString(4, beanArray[i].getPromo_id());
+				query.setString(5, beanArray[i].getOffer_desc());
+				query.setString(6, beanArray[i].getBasepack());
+				query.setString(7, beanArray[i].getOffer_type());
+				query.setString(8, beanArray[i].getOffer_modality());
+				query.setString(9, beanArray[i].getPriceoff());
+				query.setString(10, beanArray[i].getRegularPromoQuantity());
+				if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR")) {
+					if(!beanArray[i].getScApprovedQty().isEmpty()) {
+						boolean numeric = true;
+				        try {
+				            int num = Integer.parseInt(beanArray[i].getScApprovedQty());
+				        } catch (NumberFormatException e) {
+				            numeric = false;
+				        }
+				        if(!numeric){
+		                    if (flag == 1)
+		                        error_msg = error_msg + ",Invalid Sc Approved Quantity/ Sc Approved Qunatity Value should not be in decimal";
+		                    else
+		                        error_msg = error_msg + "Invalid Sc Approved Quantity/ Sc Approved Qunatity Value should not be in decimal";
+		                    flag=1;
+		                }else {
+		                	if(Integer.parseInt(beanArray[i].getScApprovedQty()) < 0) {
+								if (flag == 1)
+									error_msg = error_msg + ",Sc Approved Quantity should not be negative value";
+								else
+									error_msg = error_msg + "Sc Approved Quantity should not be negative value";
+								flag = 1;
+							}    
+		                	if(Integer.parseInt(beanArray[i].getScApprovedQty())>Integer.parseInt(beanArray[i].getQuantity())) {
+		                		if (flag == 1)
+									error_msg = error_msg + ",Sc Approved Quantity should not exceed tme uploaded value";
+								else
+									error_msg = error_msg + "Sc Approved Quantity should not exceed tme uploaded value";
+								flag = 1;
+		                	}
+		                }
+				        if(!beanArray[i].getPriceoff().contains("%"))
+						{
+							Double price=Double.valueOf(beanArray[i].getPriceoff());
+							Double quanti=Double.valueOf(beanArray[i].getScApprovedQty());
+							query.setString(15, String.valueOf(price*quanti));
+						}else
+						{
+							Double price=Double.valueOf(beanArray[i].getPriceoff().substring(0,beanArray[i].getPriceoff().length()-1));
+							Double quanti=Double.valueOf(beanArray[i].getScApprovedQty());
+							if(commanmap.get(beanArray[i].getBasepack()+"_MRP") != null)
+								query.setString(15,String.valueOf(price*quanti*Double.parseDouble(commanmap.get(beanArray[i].getBasepack()+"_MRP"))));
+							else
+								query.setString(15,String.valueOf(price*quanti*0));
+						}
+				        
+						if(Integer.parseInt(beanArray[i].getScApprovedQty()) == Integer.parseInt(beanArray[i].getQuantity())) {
+							query.setString(23,"40");
+							query.setString(25,timeStamp);
+						}
+						else if(Integer.parseInt(beanArray[i].getScApprovedQty()) == 0) {
+							query.setString(23,"41");
+							query.setString(25,timeStamp);
+						}
+						else if(Integer.parseInt(beanArray[i].getScApprovedQty()) < Integer.parseInt(beanArray[i].getQuantity())) {
+							query.setString(23,"45");
+							query.setString(25,timeStamp);
+						}
+						else {
+							query.setString(23,"38");
+							query.setString(25,null);
+						}
+			        }else {
+			        	query.setString(23,"44");
+						query.setString(25,null);
+						query.setString(15,"");
+			        }	
+					query.setString(11, beanArray[i].getScApprovedQty());
+				}else if(beanArray[i].getTemplatetype().equalsIgnoreCase("New Entry") || beanArray[i].getTemplatetype().equalsIgnoreCase("Regular")) {
+					if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED")) {
+						query.setString(23,"40");
+						query.setString(25,timeStamp);
+					}
+					else if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("REJECTED")) {
+						query.setString(23,"41");
+						query.setString(25,null);
+					}
+					else if(beanArray[i].getSignedOffWithAvailability().isEmpty()){  
+						query.setString(23,"44");
+						query.setString(25,null);
+					}
+					query.setString(11, "");
+					query.setString(15, "");
 				}
 				else {
-					if (Integer.parseInt(beanArray[i].getScApprovedQty()) < Integer.parseInt(beanArray[i].getQuantity())) {
-						query.setString(23,"45");
-						query.setString(25,timeStamp); 						
+					query.setString(11, "");
+					query.setString(15, "");
+					query.setString(23,"38");
+					query.setString(25,null);
+				}
+				query.setString(12, beanArray[i].getQuantity());
+				query.setString(13, beanArray[i].getBudget());
+				query.setString(14, beanArray[i].getRegularPromoBudget());
+				query.setString(16, beanArray[i].getCluster());
+				query.setString(17, beanArray[i].getTemplatetype());
+				query.setString(18, beanArray[i].getSoltype());
+				query.setString(19, beanArray[i].getIncrementalBudget());
+				query.setString(20, beanArray[i].getStockAvailability());
+				query.setString(21, beanArray[i].getSignedOffWithCM());
+				query.setString(22, beanArray[i].getSignedOffWithAvailability());
+				query.setString(24,userId);
+				
+				if (flag == 1)
+					globle_flag = 1;
+				query.setString(26, error_msg);
+				
+				int executeUpdate = query.executeUpdate();
+				error_msg = "";
+				flag = 0;
+				
+		
+				/*if (beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("REJECTED") ||beanArray[i].getSignedOffWithAvailability().isEmpty() ||beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("PARTIAL APPROVED")) {
+					query.setString(0, beanArray[i].getChannel()); //Changed by Kajal G-SPRINT 15 changes
+					query.setString(1, beanArray[i].getMoc());
+					query.setString(2, beanArray[i].getCategory());
+					query.setString(3, beanArray[i].getPpmaccount());
+					query.setString(4, beanArray[i].getPromo_id());
+					query.setString(5, beanArray[i].getOffer_desc());
+					query.setString(6, beanArray[i].getBasepack());
+					query.setString(7, beanArray[i].getOffer_type());
+					query.setString(8, beanArray[i].getOffer_modality());
+					query.setString(9, beanArray[i].getPriceoff());
+					query.setString(10, beanArray[i].getRegularPromoQuantity());
+					if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR") && (beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("PARTIAL APPROVED"))){
+						if(!beanArray[i].getScApprovedQty().isEmpty()) {
+							boolean numeric = true;
+					        try {
+					            int num = Integer.parseInt(beanArray[i].getScApprovedQty());
+					        } catch (NumberFormatException e) {
+					            numeric = false;
+					        }
+					        if(!numeric){
+			                    if (flag == 1)
+			                        error_msg = error_msg + ",Invalid Sc Approved Quantity/ Sc Approved Qunatity Value should not be in decimal";
+			                    else
+			                        error_msg = error_msg + "Invalid Sc Approved Quantity/ Sc Approved Qunatity Value should not be in decimal";
+			                    flag=1;
+			                }else {
+			                	if(Integer.parseInt(beanArray[i].getScApprovedQty()) <= 0) {
+									if (flag == 1)
+										error_msg = error_msg + ",Sc Approved Quantity should not be 0 or negative value";
+									else
+										error_msg = error_msg + "Sc Approved Quantity should not be 0 or negative value";
+									flag = 1;
+								}    
+	                	
+			                	if(Integer.parseInt(beanArray[i].getScApprovedQty())>Integer.parseInt(beanArray[i].getQuantity())) {
+			                		if (flag == 1)
+										error_msg = error_msg + ",Sc Approved Quantity should not exceed tme uploaded value";
+									else
+										error_msg = error_msg + "Sc Approved Quantity should not exceed tme uploaded value";
+									flag = 1;
+			                	}
+			                }
+				        }else {
+							if (flag == 1)
+								error_msg = error_msg + ",Mandatory input for Sc Approved Quantity";
+							else
+								error_msg = error_msg + "Mandatory input for Sc Approved Quantity";
+							flag = 1;
+				        }	
+						query.setString(11, beanArray[i].getScApprovedQty());
+					}
+					else {
+						query.setString(11, "");
+					}
+					query.setString(12, beanArray[i].getQuantity());
+					query.setString(13, beanArray[i].getBudget());
+					query.setString(14, beanArray[i].getRegularPromoBudget());
+					if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR") && (beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("PARTIAL APPROVED")) && !beanArray[i].getScApprovedQty().isEmpty()) {
+						//Added by Kajal G in Sprint-22 -- Start
+						if(!beanArray[i].getPriceoff().contains("%"))
+						{
+							Double price=Double.valueOf(beanArray[i].getPriceoff());
+							Double quanti=Double.valueOf(beanArray[i].getScApprovedQty());
+							query.setString(15, String.valueOf(price*quanti));
+						}else
+						{
+							Double price=Double.valueOf(beanArray[i].getPriceoff().substring(0,beanArray[i].getPriceoff().length()-1));
+							Double quanti=Double.valueOf(beanArray[i].getScApprovedQty());
+							if(commanmap.get(beanArray[i].getBasepack()+"_MRP") != null)
+								query.setString(15,String.valueOf(price*quanti*Double.parseDouble(commanmap.get(beanArray[i].getBasepack()+"_MRP"))));
+							else
+								query.setString(15,String.valueOf(price*quanti*0));
+						}
+						//Added by Kajal G in Sprint-22 -- End
+	
+					}
+					else {
+						query.setString(15, "");
+					}
+					query.setString(16, beanArray[i].getCluster());
+					query.setString(17, beanArray[i].getTemplatetype());
+					query.setString(18, beanArray[i].getSoltype());
+					query.setString(19, beanArray[i].getIncrementalBudget());
+					query.setString(20, beanArray[i].getStockAvailability());
+					query.setString(21, beanArray[i].getSignedOffWithCM());
+					query.setString(22, beanArray[i].getSignedOffWithAvailability());
+					//Added by Kavitha D-SPRINT 18 changes
+					if(beanArray[i].getTemplatetype().equalsIgnoreCase("CR") && flag != 1) {
+						if((beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED")) &&(Integer.parseInt(beanArray[i].getScApprovedQty())== Integer.parseInt(beanArray[i].getQuantity()))) {
+							query.setString(23,"40");
+							query.setString(25,timeStamp);
+						}
+						else if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("REJECTED")) {
+							query.setString(23,"41");
+							query.setString(25,null);
+						}
+						else if(beanArray[i].getSignedOffWithAvailability().isEmpty()){ //Added by Kajal G-SPRINT 15 changes 
+							query.setString(23,"44");
+							query.setString(25,null);
+						}
+						else if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("PARTIAL APPROVED"))  {
+							if (beanArray[i].getScApprovedQty().isEmpty()) {
+								query.setString(23,"38");
+								query.setString(25,null); 
+							}
+							else {
+								if (Integer.parseInt(beanArray[i].getScApprovedQty()) < Integer.parseInt(beanArray[i].getQuantity())) {
+									query.setString(23,"45");
+									query.setString(25,timeStamp); 						
+								}
+								else {
+									query.setString(23,"38");
+									query.setString(25,null); 	
+								}
+							}
+						}
+						else {
+							if (flag == 1)
+								error_msg = error_msg + ",SC APPROVED QTY is not correct according to SC REMARKS";
+							else
+								error_msg = error_msg + "SC APPROVED QTY is not correct according to SC REMARKS";
+							flag = 1;
+							query.setString(23,"38");
+							query.setString(25,null); 
+						}
+					}
+					else if(beanArray[i].getTemplatetype().equalsIgnoreCase("New Entry") || beanArray[i].getTemplatetype().equalsIgnoreCase("Regular")) {
+						if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED")) {
+							query.setString(23,"40");
+							query.setString(25,timeStamp);
+						}
+						else if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("REJECTED")) {
+							query.setString(23,"41");
+							query.setString(25,null);
+						}
+						else if(beanArray[i].getSignedOffWithAvailability().isEmpty()){  
+							query.setString(23,"44");
+							query.setString(25,null);
+						}
 					}
 					else {
 						query.setString(23,"38");
-						query.setString(25,null); 
-						
+						query.setString(25,null); 	
 					}
-
-				}
-			}
-			else {
-				if (flag == 1)
-					error_msg = error_msg + ",SC APPROVED QTY is not correct according to SC REMARKS";
-				else
-					error_msg = error_msg + "SC APPROVED QTY is not correct according to SC REMARKS";
-				flag = 1;
-				query.setString(23,"38");
-				query.setString(25,null); 
-				}
-			}
-			else if(beanArray[i].getTemplatetype().equalsIgnoreCase("New Entry") || beanArray[i].getTemplatetype().equalsIgnoreCase("Regular")) {
-
-				if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("ACCEPTED") || beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("APPROVED")) {
-					query.setString(23,"40");
-					query.setString(25,timeStamp);
-
-				}
-				else if(beanArray[i].getSignedOffWithAvailability().equalsIgnoreCase("REJECTED")) {
-					query.setString(23,"41");
-					query.setString(25,null);
-
-				}
-				else if(beanArray[i].getSignedOffWithAvailability().isEmpty()){  
-					query.setString(23,"44");
-					query.setString(25,null);
-
-				}
+					query.setString(24,userId);
 				
+					if (flag == 1)
+						globle_flag = 1;
+					query.setString(26, error_msg);
+					
+					int executeUpdate = query.executeUpdate();
+					error_msg = "";
+					flag = 0;
+				}*/
 			}
-			else {
-				query.setString(23,"38");
-				query.setString(25,null); 
-				
-			}
-			
-			query.setString(24,userId);
-			
-			if (flag == 1)
-				globle_flag = 1;
-			query.setString(26, error_msg);
-			
-			int executeUpdate = query.executeUpdate();
-			error_msg = "";
-			flag = 0;
-			}
-		}
 			if (globle_flag == 0) {
-				
 				saveToMainTable(userId);
 				globle_flag = 0;
 				response= "EXCEL_UPLOADED";
@@ -495,11 +558,11 @@ public class PromoApprovalImp implements PromoApproval{
 				globle_flag = 0;
 				response= "EXCEL_NOT_UPLOADED";
 			}
-			}catch(Exception e) {
-				logger.info(e);
-			}
-		return response;
+		}catch(Exception e) {
+			logger.info(e);
 		}
+		return response;
+	}
 
 	public synchronized boolean saveToMainTable(String userId) {
 		try {
