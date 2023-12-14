@@ -198,7 +198,7 @@ public class PromoApprovalImp implements PromoApproval{
 				+ " CASE WHEN TEMPLATE_TYPE = 'R' THEN 'Regular' WHEN TEMPLATE_TYPE = 'NE' THEN 'New Entry' ELSE CR_SOL_TYPE END AS CR_SOL_TYPE," // Added by KAJAL G in SPRINT-18
 				+ " CASE WHEN TEMPLATE_TYPE = 'R' THEN 'REG' WHEN TEMPLATE_TYPE = 'NE' THEN 'NE' ELSE '     ' END AS CR_SOL_TYPE_SHORTKEY,"  // Added by KAJAL G in SPRINT-18
 				+ "INCREMENTAL_BUDGET,STOCK_AVAILABILITY,'YES' AS NCMM_REMARKS "
-				+ "FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE STATUS IN('38','41','44','45') AND MOC= '"+moc+"'"; //Added by Kavitha D-SPRINT 16 changes
+				+ "FROM TBL_PROCO_PROMOTION_MASTER_V2 WHERE STATUS IN('38','44') AND MOC= '"+moc+"'"; //Added by Kavitha D-SPRINT 16 changes
 				
 				Query query = sessionFactory.getCurrentSession().createNativeQuery(downloadScQuery);
 				query.executeUpdate();
