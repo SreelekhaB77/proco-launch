@@ -554,7 +554,7 @@ public class PromoCrDAOImpl implements PromoCrDAO {
 			+ " CASE WHEN PM.TEMPLATE_TYPE = 'R' THEN 'Regular' WHEN PM.TEMPLATE_TYPE = 'NE' THEN 'New Entry' ELSE PM.CR_SOL_TYPE END AS CR_SOL_TYPE," // Added by KAJAL G in SPRINT-18
 			+ " CASE WHEN PM.TEMPLATE_TYPE = 'R' THEN 'REG' WHEN PM.TEMPLATE_TYPE = 'NE' THEN 'NE' ELSE '     ' END AS CR_SOL_TYPE_SHORTKEY,"  // Added by KAJAL G in SPRINT-18
 			+ " 'NO' AS INCREMENTAL_BUDGET_REQUIRED,(CASE WHEN PM.CR_SOL_TYPE IN('Additional Quantity- Primary','Basepack Addition','Budget Extension','Date Extension','Missing Geo') OR PM.TEMPLATE_TYPE IN('R','NE') THEN 'YES' WHEN PM.CR_SOL_TYPE IN('Top Up','Additional Quantity- Customer Closing') THEN 'NA' END) AS REQUIRE_STOCK_AVAILABILITY "
-			+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE (PM.STATUS IN('3','39','43') OR (PM.STATUS IN ('1','39','43') "
+			+ " FROM TBL_PROCO_PROMOTION_MASTER_V2 AS PM WHERE (PM.STATUS IN('3','43') OR (PM.STATUS IN ('1','43') "
 			+ "AND (PM.TEMPLATE_TYPE = 'NE' OR PM.TEMPLATE_TYPE = 'CR'))) AND PM.MOC= '"+moc+"'"; //Changed by Kavitha D-Sprint 16 
 
 			Query query = sessionFactory.getCurrentSession().createNativeQuery(downloadCrQuery);
