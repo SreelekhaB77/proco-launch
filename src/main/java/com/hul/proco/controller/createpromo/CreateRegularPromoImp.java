@@ -228,7 +228,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 						//Added by Kajal G for SPRINT-22
 						String priceOff = bean.getPrice_off();
 						if(bean.getOffer_mod().contains("%")) {
-							if((bean.getPrice_off().contains("%"))) {
+							if(bean.getPrice_off().contains("%")) {
 	                            priceOff = bean.getPrice_off().split("%")[0];
 	                        }
 							else {
@@ -239,7 +239,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 			                    flag=1;
 							}
 						}else if(bean.getOffer_mod().toUpperCase().contains("RS.")) {
-							if((bean.getPrice_off().contains("%"))) {
+							if(bean.getPrice_off().contains("%")) {
 	                            priceOff = bean.getPrice_off().split("%")[0];
 	                            if (flag == 1)
 	                                error_msg = error_msg + ",Invalid price off according to OFFER MODALITY";
@@ -248,7 +248,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	                            flag=1;
 	                        }
 						}else {
-							if((bean.getPrice_off().contains("%"))) {
+							if(bean.getPrice_off().contains("%")) {
 	                            priceOff = bean.getPrice_off().split("%")[0];
 	                        }
 						}
@@ -447,6 +447,23 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					if(template.equalsIgnoreCase("regular"))
 					{
 						 query.setString(17, "R");
+						 if(bean.getOffer_mod().contains("%")) {
+							 if(!bean.getPrice_off().contains("%")) {
+									if (flag == 1)
+				                        error_msg = error_msg + ",Invalid price off according to OFFER MODALITY";
+				                    else
+				                        error_msg = error_msg + "Invalid price off according to OFFER MODALITY";
+				                    flag=1;
+								}
+						 }else if(bean.getOffer_mod().toUpperCase().contains("RS.")) {
+							 if(bean.getPrice_off().contains("%")) {
+		                            if (flag == 1)
+		                                error_msg = error_msg + ",Invalid price off according to OFFER MODALITY";
+		                            else
+		                                error_msg = error_msg + "Invalid price off according to OFFER MODALITY";
+		                            flag=1;
+		                        }
+						}
 						 if(bean.getPrice_off().contains("%"))
 							{
 								if(!isStringNumber(bean.getPrice_off().split("%")[0]))
@@ -943,7 +960,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 				//Added by Kajal G for SPRINT-22
 				String CRPriceOff = bean.getPrice_off();
 				if(bean.getOffer_mod().contains("%")) {
-					if((bean.getPrice_off().contains("%"))) {
+					if(bean.getPrice_off().contains("%")) {
 						CRPriceOff = bean.getPrice_off().split("%")[0];
                     }
 					else {
@@ -954,7 +971,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	                    flag=1;
 					}
 				}else if(bean.getOffer_mod().toUpperCase().contains("RS.")) {
-					if((bean.getPrice_off().contains("%"))) {
+					if(bean.getPrice_off().contains("%")) {
 						CRPriceOff = bean.getPrice_off().split("%")[0];
 						if (flag == 1)
 	                        error_msg = error_msg + ",Invalid price off according to OFFER MODALITY";
@@ -963,7 +980,7 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 	                    flag=1;
                     }
 				}else {
-					if((bean.getPrice_off().contains("%"))) {
+					if(bean.getPrice_off().contains("%")) {
 						CRPriceOff = bean.getPrice_off().split("%")[0];
                     }
 				}
