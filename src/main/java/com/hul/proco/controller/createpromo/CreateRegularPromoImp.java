@@ -225,11 +225,34 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 								: String.valueOf(
 										(double) Math.round(Double.parseDouble(bean.getQuantity()) * 100) / 100);
 					
-						//Added by Kajal G for SPRINT-10
+						//Added by Kajal G for SPRINT-22
 						String priceOff = bean.getPrice_off();
-                        if((bean.getPrice_off().contains("%"))) {
-                            priceOff = bean.getPrice_off().split("%")[0];
-                        }
+						if(bean.getOffer_mod().contains("%")) {
+							if((bean.getPrice_off().contains("%"))) {
+	                            priceOff = bean.getPrice_off().split("%")[0];
+	                        }
+							else {
+								if (flag == 1)
+			                        error_msg = error_msg + ",Invalid price off according to OFFER MODALITY";
+			                    else
+			                        error_msg = error_msg + "Invalid price off according to OFFER MODALITY";
+			                    flag=1;
+							}
+						}else if(bean.getOffer_mod().toUpperCase().contains("RS.")) {
+							if((bean.getPrice_off().contains("%"))) {
+	                            priceOff = bean.getPrice_off().split("%")[0];
+	                            if (flag == 1)
+	                                error_msg = error_msg + ",Invalid price off according to OFFER MODALITY";
+	                            else
+	                                error_msg = error_msg + "Invalid price off according to OFFER MODALITY";
+	                            flag=1;
+	                        }
+						}else {
+							if((bean.getPrice_off().contains("%"))) {
+	                            priceOff = bean.getPrice_off().split("%")[0];
+	                        }
+						}
+						
                         if(!isStringNumber(priceOff))
                         {
                             if (flag == 1)
@@ -917,9 +940,41 @@ public class CreateRegularPromoImp implements CreatePromoRegular {
 					}
 				}
 				
+				//Added by Kajal G for SPRINT-22
 				String CRPriceOff = bean.getPrice_off();
-                if((bean.getPrice_off().contains("%"))) {
-                    CRPriceOff = bean.getPrice_off().split("%")[0];
+				if(bean.getOffer_mod().contains("%")) {
+					if((bean.getPrice_off().contains("%"))) {
+						CRPriceOff = bean.getPrice_off().split("%")[0];
+                    }
+					else {
+						if (flag == 1)
+	                        error_msg = error_msg + ",Invalid price off according to OFFER MODALITY";
+	                    else
+	                        error_msg = error_msg + "Invalid price off according to OFFER MODALITY";
+	                    flag=1;
+					}
+				}else if(bean.getOffer_mod().toUpperCase().contains("RS.")) {
+					if((bean.getPrice_off().contains("%"))) {
+						CRPriceOff = bean.getPrice_off().split("%")[0];
+						if (flag == 1)
+	                        error_msg = error_msg + ",Invalid price off according to OFFER MODALITY";
+	                    else
+	                        error_msg = error_msg + "Invalid price off according to OFFER MODALITY";
+	                    flag=1;
+                    }
+				}else {
+					if((bean.getPrice_off().contains("%"))) {
+						CRPriceOff = bean.getPrice_off().split("%")[0];
+                    }
+				}
+				
+                if(!isStringNumber(CRPriceOff))
+                {
+                    if (flag == 1)
+                        error_msg = error_msg + ",Invalid price off";
+                    else
+                        error_msg = error_msg + "Invalid price off";
+                    flag=1;
                 }
                 
 				String budget=bean.getBudget().isEmpty() ? ""
