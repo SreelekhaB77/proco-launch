@@ -1,32 +1,25 @@
 steps:
-- id: "Fetching source" 
-  name: gcr.io/cloud-builders/gcloud
-  args:
-    - source
-    - repos
-    - clone 
-    - moderntrade-common-util
-- id: "Building Artifacts"
-  name: gcr.io/cloud-builders/mvn
-  entrypoint: bash
-  args:
-    - -c
-    - | 
-      mvn -f /workspace/moderntrade-common-util/pom.xml clean install
-      mvn clean install
-- id: "Deploying into master VM"
-  name: gcr.io/cloud-builders/gcloud
-  args:
-    - compute
-    - scp
-    - target/$_ARTIFACT_NAME
-    - $_VM_NAME:/home/app_user
-    - --zone=$_VM_ZONE
-    - --impersonate-service-account=$_SERVICE_ACCOUNT_EMAIL
-- id: "Restarting the service in master VM"
-  name: gcr.io/cloud-builders/gcloud
-  entrypoint: bash
-  args:
-    - -c
-    - |
-      gcloud compute ssh $_VM_NAME --zone=$_VM_ZONE --command="kill -9 `ps -ef | grep 'java -jar $_ARTIFACT_NAME' | head -1 | awk '{print $2}'`;nohup java -jar $_ARTIFACT_NAME > $_ARTIFACT_LOG_FILE_NAME &"
+  # Step 1: Clone the project from Cloud Storage (replace gs://your-bucket/your-project.zip with your actual project zip location)
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: ['cp', '-r', 'gs://bucket-2507a/java/', '.']
+
+  # Step 2: Unzip the project
+  #- name: 'gcr.io/cloud-builders/unzip'
+  # args: ['-o', 'your-project.zip']
+
+  # Step 3: Build the project using Maven (replace pom.xml with your actual Maven configuration file)
+  - name: 'maven:3.6.3-jdk-11-slim'
+    entrypoint: 'mvn'
+    args: ['clean', 'package', '-DskipTests']
+
+  # Step 4: Copy the WAR file to the VM instance (replace vm-1907 and /path/to/destination/war with your VM instance and path)
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['compute', 'scp', '--zone', 'us-central1-b', 'target/procolaunch.war', 'sree@instance-2507:home/sree/']
+
+  # Step 5: SSH into the VM instance and deploy the WAR file to Tomcat
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud compute ssh --zone=us-central1-b sree@instance-2507 --command="sudo cp /home/sree/target/procolaunch.war /var/lib/tomcat9/webapps/ROOT.war && sudo systemctl restart tomcat9"
